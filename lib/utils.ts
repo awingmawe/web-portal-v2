@@ -135,8 +135,8 @@ export function mapProductsToCardData(
       rating:
         product.meccaHotel || product.medinaHotel
           ? getMaximumNonZeroPrice(
-              Number(product.meccaHotel.rating),
-              Number(product.medinaHotel.rating)
+              Number(product.meccaHotel?.rating),
+              Number(product.medinaHotel?.rating)
             )
           : 'Belum ada rating',
       slugOrganization: product.organizationInstance?.slug || '',

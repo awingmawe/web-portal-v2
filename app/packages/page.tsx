@@ -1,9 +1,14 @@
 import { metadata } from '@/app/shared-metadata'
 import SearchTopbar from '@/components/pages/search-product/1-SearchTopbar/SearchTopbar'
 import FilterLeftbar from '@/components/pages/search-product/2-FilterLeftbar'
+import { PackageResults } from '@/components/pages/search-product/3-PackageList/PackageList'
 import Topbar from '@/components/shared/Topbar'
 import { getFacilityEnum } from '@/services/general-service'
-import { getMinMaxPrice, getTagPackagesEnum } from '@/services/umrah-service'
+import {
+  getMinMaxPrice,
+  getPackageList,
+  getTagPackagesEnum,
+} from '@/services/umrah-service'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -26,41 +31,40 @@ export default async function SearchGeneral({
   searchParams: any
 }) {
   const awaitedParams = await searchParams
-  console.log(awaitedParams)
 
-  // const page = parseInt(awaitedParams.page || '1', 20)
-  // const size = parseInt(awaitedParams.size || '10', 20)
-  // const query = awaitedParams.query || ''
-  // const produk = awaitedParams.produk || ''
-  // const tagPackage = awaitedParams.tagPackage || ''
-  // const hargaMin = awaitedParams.hargaMin || ''
-  // const hargaMax = awaitedParams.hargaMax || ''
-  // const lokasi = awaitedParams.lokasi || ''
-  // const medinaHotel = awaitedParams.medinaHotel || ''
-  // const meccaHotel = awaitedParams.meccaHotel || ''
-  // const maskapai = awaitedParams.maskapai || ''
-  // const airport = awaitedParams.airport || ''
-  // const month = awaitedParams.month || ''
-  // const year = awaitedParams.year || ''
+  const page = parseInt(awaitedParams.page || '1', 10)
+  const size = parseInt(awaitedParams.size || '12', 10)
+  const query = awaitedParams.query || undefined
+  const endDate = awaitedParams.eD || undefined
+  const startDate = awaitedParams.sD || undefined
+  const departureFromAirportCode = awaitedParams.dptArpt || undefined
+  const arrivalFromAirportCode = awaitedParams.arrArpt || undefined
+  const departureAirlineName = awaitedParams.trvl || undefined
+  const minPrice = awaitedParams.prMin || undefined
+  const maxPrice = awaitedParams.prMax || undefined
+  const hotelRating = awaitedParams.hR || undefined
+  const facilityCode = awaitedParams.fC || undefined
+  const section = awaitedParams.sC || undefined
+  const tagSlug = awaitedParams.tS || undefined
 
-  // const dataPackage = await getPackageList({
-  //   page,
-  //   size,
-  //   [`title:likeLower`]: query ? `%${query}%` : undefined,
-  //   [`packageType:likeLower`]: produk || undefined,
-  //   ...(tagPackage === 'is-last-call'
-  //     ? { isLastCall: true }
-  //     : { [`tagPackage.tagSlug:likeLower`]: tagPackage || undefined }),
-  //   minPrice: hargaMin ? parseInt(hargaMin, 10) : undefined,
-  //   maxPrice: hargaMax ? parseInt(hargaMax, 10) : undefined,
-  //   organizationInstanceCity: lokasi || undefined,
-  //   medinaHotel: medinaHotel || undefined,
-  //   meccaHotel: meccaHotel || undefined,
-  //   departureAirlineName: maskapai || undefined,
-  //   departureFromAirportCode: airport || undefined,
-  //   month: month || undefined,
-  //   year: year || undefined,
-  // })
+  const dataPackage = await getPackageList({
+    page,
+    size,
+    [`title:likeLower`]: query ? `%${query}%` : undefined,
+    startDate,
+    endDate,
+    departureFromAirportCode,
+    arrivalFromAirportCode,
+    departureAirlineName,
+    minPrice,
+    maxPrice,
+    hotelRating,
+    facilityCode,
+    section,
+    tagSlug,
+  })
+
+  console.log(dataPackage)
 
   const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
     getMinMaxPrice(),
@@ -81,7 +85,13 @@ export default async function SearchGeneral({
               dataFacility={dataFacility}
             />
           </div>
-          <div className="col-span-8">sss</div>
+          <div className="col-span-8">
+            <PackageResults
+              dataPackages={dataPackage}
+              currentPage={page}
+              pageSize={size}
+            />
+          </div>
         </section>
       </main>
     </Fragment>

@@ -23,7 +23,7 @@ export const FacilityOptions: React.FC<FacilityOptionsProps> = ({
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: selectedFacility,
     onSelectionChange: onFacilityChange,
-    paramName: 'facilityCode',
+    paramName: 'fC',
   })
 
   if (isLoadingSkeleton) {

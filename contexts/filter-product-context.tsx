@@ -57,7 +57,6 @@ interface FilterProductContextType {
   isLoading: boolean
   isLoadingSkeleton: boolean
   handleSubmit: () => void
-  searchResults: any | null
 }
 
 const FilterProductContext = createContext<
@@ -77,7 +76,6 @@ export const FilterProductProvider: React.FC<{
   const [isDisabled, setIsDisabled] = useState<boolean>(initialDisabled)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLoadingSkeleton, setIsLoadingSkeleton] = useState<boolean>(true)
-  const [searchResults, setSearchResults] = useState<any | null>(null)
 
   // Filter state setters
   const setHotelStars = useCallback((stars: number) => {
@@ -133,15 +131,15 @@ export const FilterProductProvider: React.FC<{
       let hasUpdates = false
 
       // Set hotel stars if exists
-      const starsParam = params.get('hotelRating')
+      const starsParam = params.get('hR')
       if (starsParam) {
         newFilters.hotelStars = parseInt(starsParam, 10)
         hasUpdates = true
       }
 
       // Set date range if exists
-      const departureDateParam = params.get('startDate')
-      const returnDateParam = params.get('endDate')
+      const departureDateParam = params.get('sD')
+      const returnDateParam = params.get('eD')
       if (departureDateParam || returnDateParam) {
         const range: DateRange = {
           from: undefined,
@@ -159,35 +157,35 @@ export const FilterProductProvider: React.FC<{
       }
 
       // Set price min if exists
-      const minPriceParam = params.get('hargaMin')
+      const minPriceParam = params.get('prMin')
       if (minPriceParam) {
         newFilters.hargaMin = minPriceParam
         hasUpdates = true
       }
 
       // Set price max if exists
-      const maxPriceParam = params.get('hargaMax')
+      const maxPriceParam = params.get('prMax')
       if (maxPriceParam) {
         newFilters.hargaMax = maxPriceParam
         hasUpdates = true
       }
 
       // Set facility code if exists
-      const facilityCodeParam = params.get('facilityCode')
+      const facilityCodeParam = params.get('fC')
       if (facilityCodeParam) {
         newFilters.facilityCode = facilityCodeParam
         hasUpdates = true
       }
 
       // Set section if exists
-      const sectionParam = params.get('section')
+      const sectionParam = params.get('sC')
       if (sectionParam) {
         newFilters.section = sectionParam
         hasUpdates = true
       }
 
       // Set tag slug if exists
-      const tagSlugParam = params.get('tagSlug')
+      const tagSlugParam = params.get('tS')
       if (tagSlugParam) {
         newFilters.tagSlug = tagSlugParam
         hasUpdates = true
@@ -202,7 +200,7 @@ export const FilterProductProvider: React.FC<{
       const promises = []
 
       // Set departure airport
-      const departureAirportParam = params.get('departureAirport')
+      const departureAirportParam = params.get('dptArpt')
       if (departureAirportParam) {
         promises.push(
           fetchAirportByCode(departureAirportParam).then((airport) => {
@@ -214,7 +212,7 @@ export const FilterProductProvider: React.FC<{
       }
 
       // Set arrival airport
-      const arrivalAirportParam = params.get('arrivalAirport')
+      const arrivalAirportParam = params.get('arrArpt')
       if (arrivalAirportParam) {
         promises.push(
           fetchAirportByCode(arrivalAirportParam).then((airport) => {
@@ -226,7 +224,7 @@ export const FilterProductProvider: React.FC<{
       }
 
       // Set airline
-      const airlineParam = params.get('maskapai')
+      const airlineParam = params.get('trvl')
       if (airlineParam) {
         promises.push(
           fetchAirlineByName(airlineParam).then((airline) => {
@@ -283,11 +281,6 @@ export const FilterProductProvider: React.FC<{
         departureAirport,
         arrivalAirport,
         airline,
-        hargaMin,
-        hargaMax,
-        facilityCode,
-        section,
-        tagSlug,
       } = filters
 
       // Set loading state
@@ -299,55 +292,37 @@ export const FilterProductProvider: React.FC<{
 
       // Add all parameters that need to be included in the URL
       if (hotelStars) {
-        keys.push('hotelRating')
+        keys.push('hR')
         values.push(hotelStars.toString())
       }
 
       if (dateRange?.from) {
-        keys.push('startDate')
+        keys.push('sD')
         values.push(formatDateToYYYYMMDD(dateRange.from)) // Format as YYYY-MM-DD
       }
 
       if (dateRange?.to) {
-        keys.push('endDate')
+        keys.push('eD')
         values.push(formatDateToYYYYMMDD(dateRange.to)) // Format as YYYY-MM-DD
       }
 
       if (departureAirport?.code) {
-        keys.push('departureAirport')
+        keys.push('dptArpt')
         values.push(departureAirport.code)
       }
 
       if (arrivalAirport?.code) {
-        keys.push('arrivalAirport')
+        keys.push('arrArpt')
         values.push(arrivalAirport.code)
       }
 
       if (airline?.name) {
-        keys.push('maskapai')
+        keys.push('trvl')
         values.push(airline.name)
-      }
-
-      // Create the search results data for state
-      const formData = {
-        hotelStars: hotelStars ?? undefined,
-        startDate: dateRange?.from ? dateRange.from.toISOString() : undefined,
-        endDate: dateRange?.to ? dateRange.to.toISOString() : undefined,
-        departureAirport: departureAirport?.code ?? undefined,
-        arrivalAirport: arrivalAirport?.code ?? undefined,
-        airline: airline?.name ?? undefined,
-        hargaMin: hargaMin ?? undefined,
-        hargaMax: hargaMax ?? undefined,
-        facilityCode: facilityCode ?? undefined,
-        section: section ?? undefined,
-        tagSlug: tagSlug ?? undefined,
       }
 
       // Simulate API call with setTimeout
       setTimeout(() => {
-        // Update search results
-        setSearchResults(formData)
-
         // Reset loading
         setIsLoading(false)
 
@@ -398,7 +373,6 @@ export const FilterProductProvider: React.FC<{
     isLoading,
     isLoadingSkeleton,
     handleSubmit,
-    searchResults,
   }
 
   return (

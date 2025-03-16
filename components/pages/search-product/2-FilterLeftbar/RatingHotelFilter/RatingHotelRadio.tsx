@@ -27,9 +27,10 @@ export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
     (value: string) => {
       const rating = parseInt(value)
       onRatingChange(rating)
-      updateQueryParams(['hotelRating'], [value])
+      updateQueryParams(['hR'], [value])
     },
-    [onRatingChange, updateQueryParams]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   )
 
   // Render stars based on count

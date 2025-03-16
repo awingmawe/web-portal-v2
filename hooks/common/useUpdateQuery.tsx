@@ -1,28 +1,39 @@
-import { isEmpty } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import queryString from 'query-string'
 import { useCallback } from 'react'
 
 // Create a custom hook to use in components
-export function useUpdateQueryParams() {
+export const useUpdateQueryParams = () => {
   const pathname = usePathname()
 
-  // Return the function wrapped in useCallback
   return useCallback(
-    (key: string[], value: string[] | number[], to?: string) => {
+    (keys: string[], values: (string | number)[], redirectPath?: string) => {
       const parsedUrl = queryString.parseUrl(window.location.href)
-      const query: any = parsedUrl.query
-      if (value) {
-        key.map((res, index) => {
-          query[res] = value[index].toString()
+      const query = parsedUrl.query
+
+      if (values && values.length > 0) {
+        keys.forEach((key, index) => {
+          // Convert the value to string if it's not already
+          const valueStr = values[index]?.toString() || ''
+
+          // Don't encode the value here - queryString library will handle it properly
+          if (valueStr) {
+            query[key] = valueStr
+          } else {
+            delete query[key]
+          }
         })
       } else {
-        key.map((res) => {
-          delete query[res]
+        keys.forEach((key) => {
+          delete query[key]
         })
       }
 
-      window.location.href = `${!isEmpty(to) && to !== pathname ? to + '/' : ''}${pathname}?${queryString.stringify(query)}`
+      // Use the redirectPath if provided, otherwise use the current pathname
+      const path = redirectPath || pathname
+
+      // The queryString.stringify will properly encode values for URL
+      window.location.href = `${path}?${queryString.stringify(query)}`
     },
     [pathname]
   )

@@ -22,7 +22,7 @@ export const TagPackageOptions: React.FC<TagPackageOptionsProps> = ({
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: selectedTagPackage,
     onSelectionChange: onTagPackageChange,
-    paramName: 'tagSlug',
+    paramName: 'tS',
   })
 
   if (isLoadingSkeleton) {
