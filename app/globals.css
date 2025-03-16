@@ -161,6 +161,38 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  ::-webkit-scrollbar-button {
+    width: 2px;
+    height: 2px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #5d5d5d;
+    border-radius: 50px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #737373;
+  }
+  ::-webkit-scrollbar-thumb:active {
+    background: #545454;
+  }
+  ::-webkit-scrollbar-track {
+    background: #d9d9d9;
+    border-radius: 50px;
+  }
+  ::-webkit-scrollbar-track:hover {
+    background: #f5f5f5;
+  }
+  ::-webkit-scrollbar-track:active {
+    background: #bdbdbd;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }
 
 @theme inline {
@@ -252,6 +284,27 @@
 
   --animate-dissolveIn: dissolveIn 300ms ease-out;
   --animate-dissolveOut: dissolveOut 300ms ease-out;
+
+  --animate-accordion-down: accordion-down 0.3s ease-out;
+  --animate-accordion-up: accordion-up 0.3s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
 
   @keyframes dissolveIn {
     from {

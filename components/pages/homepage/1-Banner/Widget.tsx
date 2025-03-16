@@ -9,6 +9,7 @@ import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
+import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 
 // Tab option types
@@ -121,7 +122,12 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
                 <span className="text-s-regular text-neutral-900">
                   Lihat Semua Paket
                 </span>
-                <MaximizeIcon size={14} className="text-neutral-900" />
+                <Link href="/packages">
+                  <MaximizeIcon
+                    size={14}
+                    className="cursor-pointer text-neutral-900"
+                  />
+                </Link>
               </div>
             </div>
             {/* Filter */}

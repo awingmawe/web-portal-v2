@@ -1,11 +1,9 @@
 import { metadata } from '@/app/shared-metadata'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
-import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
-import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
 import { Fragment, Suspense } from 'react'
 
@@ -50,42 +48,47 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const [dataBannerCarousel, dataTravels, dataPromo, dataPlus, dataRegular] =
-    await Promise.all([
-      getBanner({
-        page: 1,
-        size: 10,
-        order: 'desc',
-        orderBy: 'createdAt',
-      }),
-      getTravels({
-        page: 1,
-        size: 12,
-        order: 'desc',
-        orderBy: 'organizationInstance.createdAt',
-      }),
-      getPackageList({
-        page: 1,
-        size: 12,
-        section: 'promo',
-        order: 'desc',
-        orderBy: 'package.createdAt',
-      }),
-      getPackageList({
-        page: 1,
-        size: 12,
-        section: 'plus',
-        order: 'desc',
-        orderBy: 'package.createdAt',
-      }),
-      getPackageList({
-        page: 1,
-        size: 12,
-        section: 'regular',
-        order: 'desc',
-        orderBy: 'package.createdAt',
-      }),
-    ])
+  const [
+    dataBannerCarousel,
+    // dataTravels,
+    dataPromo,
+    dataPlus,
+    dataRegular,
+  ] = await Promise.all([
+    getBanner({
+      page: 1,
+      size: 10,
+      order: 'desc',
+      orderBy: 'createdAt',
+    }),
+    // getTravels({
+    //   page: 1,
+    //   size: 12,
+    //   order: 'desc',
+    //   orderBy: 'organizationInstance.createdAt',
+    // }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      section: 'promo',
+      order: 'desc',
+      orderBy: 'package.createdAt',
+    }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      section: 'plus',
+      order: 'desc',
+      orderBy: 'package.createdAt',
+    }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      section: 'regular',
+      order: 'desc',
+      orderBy: 'package.createdAt',
+    }),
+  ])
 
   return (
     <Fragment>
@@ -96,9 +99,9 @@ export default async function Home() {
           <CarouselBanner dataBanner={dataBannerCarousel} />
         </Suspense>
 
-        <Suspense fallback={<TravelCarouselSkeleton />}>
+        {/* <Suspense fallback={<TravelCarouselSkeleton />}>
           <CarouselTravel dataTravel={dataTravels} />
-        </Suspense>
+        </Suspense> */}
 
         <PackageListEvent
           dataPromo={mapProductsToCardData(dataPromo)}

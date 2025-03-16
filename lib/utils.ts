@@ -7,6 +7,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Add this utility function at the top or in a separate utils file
+export const formatDateToYYYYMMDD = (date: Date): string => {
+  return date.toISOString().split('T')[0] // This converts to YYYY-MM-DD format
+}
+
 export const isEmpty = (value: unknown): boolean => {
   if (value === null || value === undefined) return true
   if (typeof value === 'string' && value.trim() === '') return true

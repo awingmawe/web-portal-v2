@@ -1,6 +1,9 @@
 import { metadata } from '@/app/shared-metadata'
 import SearchTopbar from '@/components/pages/search-product/1-SearchTopbar/SearchTopbar'
+import FilterLeftbar from '@/components/pages/search-product/2-FilterLeftbar'
 import Topbar from '@/components/shared/Topbar'
+import { getFacilityEnum } from '@/services/general-service'
+import { getMinMaxPrice, getTagPackagesEnum } from '@/services/umrah-service'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -59,12 +62,27 @@ export default async function SearchGeneral({
   //   year: year || undefined,
   // })
 
+  const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
+    getMinMaxPrice(),
+    getTagPackagesEnum(),
+    getFacilityEnum(),
+  ])
+
   return (
     <Fragment>
       <Topbar type="normal" />
       <SearchTopbar />
-      <main className="mt-7.5 px-20">
-        <section className="grid grid-cols-3 gap-5"></section>
+      <main className="mt-7.5 mb-7.5 px-20">
+        <section className="grid grid-cols-12 gap-5">
+          <div className="col-span-4">
+            <FilterLeftbar
+              dataMinMax={dataMinMax}
+              dataTagPackages={dataTagPackages}
+              dataFacility={dataFacility}
+            />
+          </div>
+          <div className="col-span-8">sss</div>
+        </section>
       </main>
     </Fragment>
   )

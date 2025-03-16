@@ -45,7 +45,7 @@ const Checkbox = React.forwardRef<
       </CheckboxPrimitive.Root>
 
       {(label || description) && (
-        <div className="grid gap-1">
+        <div className="flex items-center gap-1">
           {label && (
             <label
               htmlFor={props.id || id}
@@ -55,7 +55,7 @@ const Checkbox = React.forwardRef<
             </label>
           )}
           {description && (
-            <p className="text-xs text-neutral-600">{description}</p>
+            <p className="text-s-regular text-neutral-500">({description})</p>
           )}
         </div>
       )}

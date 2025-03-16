@@ -11,18 +11,12 @@ import DateFilter from './DateFilter'
 import RatingFilter from './RatingFilter'
 
 const SearchFilters: React.FC = () => {
-  const { setFilters, isDisabled, isLoading, handleSubmit } = useFilterProduct()
+  const { resetFilters, isDisabled, isLoading, handleSubmit } =
+    useFilterProduct()
 
   // Reset filter when first load and when back to homepage
   useEffect(() => {
-    setFilters({
-      hotelStars: 0,
-      dateRange: undefined,
-      selectedAirport: null,
-      departureAirport: null,
-      arrivalAirport: null,
-      airline: null,
-    })
+    resetFilters()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (

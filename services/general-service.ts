@@ -3,6 +3,7 @@ import { Airline, GetAirlinesParams } from '@/constant/types/AirlineProps'
 
 import { Airport, GetAirportsParams } from '@/constant/types/AirportProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
+import { Facility } from '@/constant/types/FacilityProps'
 
 export async function getAirports({
   page = 1,
@@ -40,6 +41,22 @@ export async function getAirline({
     return response.data
   } catch (error) {
     console.error('Error fetching airline:', error)
+    throw error
+  }
+}
+
+export async function getFacilityEnum(
+  type?: string
+): Promise<GenericResponse<Facility>> {
+  try {
+    const response = await api.get(`/public/general/v1/reference`, {
+      params: {
+        type,
+      },
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching facility:', error)
     throw error
   }
 }

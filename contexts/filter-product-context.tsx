@@ -3,6 +3,8 @@
 import { Airline } from '@/constant/types/AirlineProps'
 import { Airport } from '@/constant/types/AirportProps'
 import { FilterState } from '@/constant/types/FilterProps'
+import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
+import { formatDateToYYYYMMDD } from '@/lib/utils'
 import { getAirline, getAirports } from '@/services/general-service'
 import React, {
   createContext,
@@ -18,11 +20,15 @@ import { toast } from 'sonner'
 const initialFilterState: FilterState = {
   hotelStars: 0,
   dateRange: undefined,
-  selectedAirport: null,
   departureAirport: null,
   arrivalAirport: null,
   airline: null,
   // Add new attributes if there's a new state for filter
+  hargaMin: '',
+  hargaMax: '',
+  facilityCode: '',
+  section: '',
+  tagSlug: '',
 }
 
 interface FilterProductContextType {
@@ -33,10 +39,17 @@ interface FilterProductContextType {
   // Filter state setters
   setHotelStars: (stars: number) => void
   setDateRange: (range: DateRange | undefined) => void
-  setSelectedAirport: (airport: Airport) => void
   setDepartureAirport: (airport: Airport) => void
   setArrivalAirport: (airport: Airport) => void
   setAirline: (airline: Airline) => void
+  setHargaMin: (price: string) => void
+  setHargaMax: (price: string) => void
+  setFacilityCode: (code: string) => void
+  setSection: (section: string) => void
+  setTagSlug: (slug: string) => void
+
+  // Reset filter state
+  resetFilters: (filters?: typeof initialFilterState) => void
 
   // Form submission
   isDisabled: boolean
@@ -55,6 +68,8 @@ export const FilterProductProvider: React.FC<{
   children: React.ReactNode
   initialDisabled?: boolean
 }> = ({ children, initialDisabled = false }) => {
+  const updateQueryParams = useUpdateQueryParams()
+
   // Combined filter state
   const [filters, setFilters] = useState<FilterState>(initialFilterState)
 
@@ -73,10 +88,6 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, dateRange: range }))
   }, [])
 
-  const setSelectedAirport = useCallback((airport: Airport) => {
-    setFilters((prev) => ({ ...prev, selectedAirport: airport }))
-  }, [])
-
   const setDepartureAirport = useCallback((airport: Airport) => {
     setFilters((prev) => ({ ...prev, departureAirport: airport }))
   }, [])
@@ -89,6 +100,31 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, airline: airline }))
   }, [])
 
+  const setHargaMin = useCallback((price: string) => {
+    setFilters((prev) => ({ ...prev, hargaMin: price }))
+  }, [])
+
+  const setHargaMax = useCallback((price: string) => {
+    setFilters((prev) => ({ ...prev, hargaMax: price }))
+  }, [])
+
+  const setFacilityCode = useCallback((code: string) => {
+    setFilters((prev) => ({ ...prev, facilityCode: code }))
+  }, [])
+
+  const setSection = useCallback((section: string) => {
+    setFilters((prev) => ({ ...prev, section: section }))
+  }, [])
+
+  const setTagSlug = useCallback((slug: string) => {
+    setFilters((prev) => ({ ...prev, tagSlug: slug }))
+  }, [])
+
+  // Reset filter
+  const resetFilters = useCallback((filters = initialFilterState) => {
+    setFilters(filters)
+  }, [])
+
   // Set default value states filter from search params
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -97,26 +133,63 @@ export const FilterProductProvider: React.FC<{
       let hasUpdates = false
 
       // Set hotel stars if exists
-      const starsParam = params.get('hotelStars')
+      const starsParam = params.get('hotelRating')
       if (starsParam) {
         newFilters.hotelStars = parseInt(starsParam, 10)
         hasUpdates = true
       }
 
       // Set date range if exists
-      const departureDateParam = params.get('departureDate')
-      const returnDateParam = params.get('returnDate')
+      const departureDateParam = params.get('startDate')
+      const returnDateParam = params.get('endDate')
       if (departureDateParam || returnDateParam) {
         const range: DateRange = {
           from: undefined,
         }
         if (departureDateParam) {
+          // Parse the YYYY-MM-DD format
           range.from = new Date(departureDateParam)
         }
         if (returnDateParam) {
+          // Parse the YYYY-MM-DD format
           range.to = new Date(returnDateParam)
         }
         newFilters.dateRange = range
+        hasUpdates = true
+      }
+
+      // Set price min if exists
+      const minPriceParam = params.get('hargaMin')
+      if (minPriceParam) {
+        newFilters.hargaMin = minPriceParam
+        hasUpdates = true
+      }
+
+      // Set price max if exists
+      const maxPriceParam = params.get('hargaMax')
+      if (maxPriceParam) {
+        newFilters.hargaMax = maxPriceParam
+        hasUpdates = true
+      }
+
+      // Set facility code if exists
+      const facilityCodeParam = params.get('facilityCode')
+      if (facilityCodeParam) {
+        newFilters.facilityCode = facilityCodeParam
+        hasUpdates = true
+      }
+
+      // Set section if exists
+      const sectionParam = params.get('section')
+      if (sectionParam) {
+        newFilters.section = sectionParam
+        hasUpdates = true
+      }
+
+      // Set tag slug if exists
+      const tagSlugParam = params.get('tagSlug')
+      if (tagSlugParam) {
+        newFilters.tagSlug = tagSlugParam
         hasUpdates = true
       }
 
@@ -127,18 +200,6 @@ export const FilterProductProvider: React.FC<{
 
       // Async updates for airports and airline
       const promises = []
-
-      // Set airport if exists in params
-      const airportParam = params.get('airport')
-      if (airportParam) {
-        promises.push(
-          fetchAirportByCode(airportParam).then((airport) => {
-            if (airport) {
-              setFilters((prev) => ({ ...prev, selectedAirport: airport }))
-            }
-          })
-        )
-      }
 
       // Set departure airport
       const departureAirportParam = params.get('departureAirport')
@@ -219,42 +280,68 @@ export const FilterProductProvider: React.FC<{
       const {
         hotelStars,
         dateRange,
-        selectedAirport,
         departureAirport,
         arrivalAirport,
         airline,
+        hargaMin,
+        hargaMax,
+        facilityCode,
+        section,
+        tagSlug,
       } = filters
-
-      // Collect all filter values
-      const formData = {
-        hotelStars: hotelStars ?? undefined,
-        departureDate: dateRange?.from
-          ? dateRange.from.toISOString()
-          : undefined,
-        returnDate: dateRange?.to ? dateRange.to.toISOString() : undefined,
-        airport: selectedAirport?.code ?? undefined,
-        departureAirport: departureAirport?.code ?? undefined,
-        arrivalAirport: arrivalAirport?.code ?? undefined,
-        airline: airline?.name ?? undefined,
-      }
 
       // Set loading state
       setIsLoading(true)
 
-      const currentUrlParams = new URLSearchParams(window.location.search)
+      // Collect all filter values as keys and values arrays for updateQueryParams
+      const keys: string[] = []
+      const values: string[] = []
 
-      if (formData.hotelStars)
-        currentUrlParams.set('hotelStars', formData.hotelStars.toString())
-      if (formData.departureDate)
-        currentUrlParams.set('departureDate', formData.departureDate)
-      if (formData.returnDate)
-        currentUrlParams.set('returnDate', formData.returnDate)
-      if (formData.airport) currentUrlParams.set('airport', formData.airport)
-      if (formData.departureAirport)
-        currentUrlParams.set('departureAirport', formData.departureAirport)
-      if (formData.arrivalAirport)
-        currentUrlParams.set('arrivalAirport', formData.arrivalAirport)
-      if (formData.airline) currentUrlParams.set('maskapai', formData.airline)
+      // Add all parameters that need to be included in the URL
+      if (hotelStars) {
+        keys.push('hotelRating')
+        values.push(hotelStars.toString())
+      }
+
+      if (dateRange?.from) {
+        keys.push('startDate')
+        values.push(formatDateToYYYYMMDD(dateRange.from)) // Format as YYYY-MM-DD
+      }
+
+      if (dateRange?.to) {
+        keys.push('endDate')
+        values.push(formatDateToYYYYMMDD(dateRange.to)) // Format as YYYY-MM-DD
+      }
+
+      if (departureAirport?.code) {
+        keys.push('departureAirport')
+        values.push(departureAirport.code)
+      }
+
+      if (arrivalAirport?.code) {
+        keys.push('arrivalAirport')
+        values.push(arrivalAirport.code)
+      }
+
+      if (airline?.name) {
+        keys.push('maskapai')
+        values.push(airline.name)
+      }
+
+      // Create the search results data for state
+      const formData = {
+        hotelStars: hotelStars ?? undefined,
+        startDate: dateRange?.from ? dateRange.from.toISOString() : undefined,
+        endDate: dateRange?.to ? dateRange.to.toISOString() : undefined,
+        departureAirport: departureAirport?.code ?? undefined,
+        arrivalAirport: arrivalAirport?.code ?? undefined,
+        airline: airline?.name ?? undefined,
+        hargaMin: hargaMin ?? undefined,
+        hargaMax: hargaMax ?? undefined,
+        facilityCode: facilityCode ?? undefined,
+        section: section ?? undefined,
+        tagSlug: tagSlug ?? undefined,
+      }
 
       // Simulate API call with setTimeout
       setTimeout(() => {
@@ -265,7 +352,13 @@ export const FilterProductProvider: React.FC<{
         setIsLoading(false)
 
         // Navigate to search results page
-        window.location.href = `/packages?${currentUrlParams.toString()}`
+        // Only update the query parameters if we have keys/values to update
+        if (keys.length > 0) {
+          updateQueryParams(keys, values, '/packages')
+        } else {
+          // Fallback if no parameters to add
+          window.location.href = '/packages'
+        }
       }, 1000)
     } catch (err) {
       // Handle errors
@@ -276,6 +369,7 @@ export const FilterProductProvider: React.FC<{
       )
       setIsLoading(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
   const value = {
@@ -286,10 +380,17 @@ export const FilterProductProvider: React.FC<{
     // Filter state setters
     setHotelStars,
     setDateRange,
-    setSelectedAirport,
     setDepartureAirport,
     setArrivalAirport,
     setAirline,
+    setHargaMin,
+    setHargaMax,
+    setFacilityCode,
+    setSection,
+    setTagSlug,
+
+    // Reset filter
+    resetFilters,
 
     // Form states
     isDisabled,

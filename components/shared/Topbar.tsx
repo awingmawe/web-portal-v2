@@ -370,7 +370,7 @@ const Topbar: React.FC<TopbarProps> = ({
       {type === 'normal' && (
         <header
           className={cn(
-            'z-50 flex h-[72px] w-screen items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7',
+            'z-50 flex h-[72px] w-full items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7',
             className
           )}
         >
