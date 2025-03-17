@@ -11,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn, isEmpty } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -186,26 +187,12 @@ const Topbar: React.FC<TopbarProps> = ({
 
   // Extract topbar content to its own component to prevent unnecessary rerenders
   const TopbarContent = React.memo(() => {
-    const [searchQuery, setSearchQuery] = useState('')
-    const [loading, setLoading] = useState(false)
-
-    const handleSearch = useCallback(
-      (e: any) => {
-        setLoading(true)
-        e.preventDefault()
-        const currentUrlParams = new URLSearchParams(window.location.search)
-        if (searchQuery) {
-          currentUrlParams.set('query', searchQuery)
-        } else if (searchQuery === '') {
-          currentUrlParams.delete('query')
-        }
-        setTimeout(() => {
-          setLoading(false)
-          window.location.href = `/packages?${currentUrlParams.toString()}`
-        }, 1000)
-      },
-      [searchQuery]
-    )
+    const { searchQuery, loading, handleSearchChange, handleSearch } =
+      useSearchQuery({
+        redirectPath: '/packages',
+        delay: 1000,
+        searchParamName: 'query',
+      })
     return (
       <Fragment>
         {/* Logo */}
@@ -246,7 +233,7 @@ const Topbar: React.FC<TopbarProps> = ({
                   endIcon={<SearchIcon className="text-primary-900" />}
                   className="w-[310px]"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handleSearchChange}
                 />
                 <Button
                   type="submit"
@@ -370,7 +357,7 @@ const Topbar: React.FC<TopbarProps> = ({
       {type === 'normal' && (
         <header
           className={cn(
-            'z-50 flex h-[72px] w-screen items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7',
+            'z-50 flex h-[72px] w-full items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7',
             className
           )}
         >

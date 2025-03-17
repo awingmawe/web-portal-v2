@@ -103,6 +103,14 @@ const config: Config = {
         },
       },
       keyframes: {
+        'accordion-down': {
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' },
+        },
         dissolveIn: {
           from: { opacity: 0 },
           to: { opacity: 1 },
@@ -115,6 +123,8 @@ const config: Config = {
       animation: {
         'dissolve-in': 'dissolveIn 300ms ease-out',
         'dissolve-out': 'dissolveOut 300ms ease-out',
+        'accordion-down': 'accordion-down 0.3s ease-out',
+        'accordion-up': 'accordion-up 0.3s ease-out',
       },
     },
   },

@@ -18,6 +18,11 @@ export interface PackageVariant {
   originalPriceTriple: number
 }
 
+export interface PriceParams {
+  min: string
+  max: string
+}
+
 export interface CardData {
   id: number
   src: string

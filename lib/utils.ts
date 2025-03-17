@@ -1,10 +1,16 @@
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { CardData, Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
+import { format } from 'date-fns'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+// Add this utility function at the top or in a separate utils file
+export const formatDateToYYYYMMDD = (date: Date): any => {
+  return format(date, 'yyyy-MM-dd') // This converts to YYYY-MM-DD format
 }
 
 export const isEmpty = (value: unknown): boolean => {
@@ -130,8 +136,8 @@ export function mapProductsToCardData(
       rating:
         product.meccaHotel || product.medinaHotel
           ? getMaximumNonZeroPrice(
-              Number(product.meccaHotel.rating),
-              Number(product.medinaHotel.rating)
+              Number(product.meccaHotel?.rating),
+              Number(product.medinaHotel?.rating)
             )
           : 'Belum ada rating',
       slugOrganization: product.organizationInstance?.slug || '',

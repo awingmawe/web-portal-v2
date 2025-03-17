@@ -1,6 +1,15 @@
 import { metadata } from '@/app/shared-metadata'
-import SearchTopbar from '@/components/pages/search-product/1-SearchTopbar/SearchTopbar'
+import SearchTopbar from '@/components/pages/search-packages/1-SearchTopbar/SearchTopbar'
+import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
+import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
 import Topbar from '@/components/shared/Topbar'
+import { mapProductsToCardData } from '@/lib/utils'
+import { getFacilityEnum } from '@/services/general-service'
+import {
+  getMinMaxPrice,
+  getPackageList,
+  getTagPackagesEnum,
+} from '@/services/umrah-service'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -23,48 +32,91 @@ export default async function SearchGeneral({
   searchParams: any
 }) {
   const awaitedParams = await searchParams
-  console.log(awaitedParams)
 
-  // const page = parseInt(awaitedParams.page || '1', 20)
-  // const size = parseInt(awaitedParams.size || '10', 20)
-  // const query = awaitedParams.query || ''
-  // const produk = awaitedParams.produk || ''
-  // const tagPackage = awaitedParams.tagPackage || ''
-  // const hargaMin = awaitedParams.hargaMin || ''
-  // const hargaMax = awaitedParams.hargaMax || ''
-  // const lokasi = awaitedParams.lokasi || ''
-  // const medinaHotel = awaitedParams.medinaHotel || ''
-  // const meccaHotel = awaitedParams.meccaHotel || ''
-  // const maskapai = awaitedParams.maskapai || ''
-  // const airport = awaitedParams.airport || ''
-  // const month = awaitedParams.month || ''
-  // const year = awaitedParams.year || ''
+  const page = parseInt(awaitedParams.page || '1', 10)
+  const size = parseInt(awaitedParams.size || '9', 10)
+  const query = awaitedParams.query || undefined
+  const endDate = awaitedParams.eD || undefined
+  const startDate = awaitedParams.sD || undefined
+  const departureFromAirportCode = awaitedParams.dptArpt || undefined
+  const arrivalFromAirportCode = awaitedParams.arrArpt || undefined
+  const departureAirlineName = awaitedParams.trvl || undefined
+  const minPrice = awaitedParams.prMin || undefined
+  const maxPrice = awaitedParams.prMax || undefined
+  const hotelRating = awaitedParams.hR || undefined
+  const facilityCode = awaitedParams.fC || undefined
+  const section = awaitedParams.sC || undefined
+  const tagSlug = awaitedParams.tS || undefined
 
-  // const dataPackage = await getPackageList({
-  //   page,
-  //   size,
-  //   [`title:likeLower`]: query ? `%${query}%` : undefined,
-  //   [`packageType:likeLower`]: produk || undefined,
-  //   ...(tagPackage === 'is-last-call'
-  //     ? { isLastCall: true }
-  //     : { [`tagPackage.tagSlug:likeLower`]: tagPackage || undefined }),
-  //   minPrice: hargaMin ? parseInt(hargaMin, 10) : undefined,
-  //   maxPrice: hargaMax ? parseInt(hargaMax, 10) : undefined,
-  //   organizationInstanceCity: lokasi || undefined,
-  //   medinaHotel: medinaHotel || undefined,
-  //   meccaHotel: meccaHotel || undefined,
-  //   departureAirlineName: maskapai || undefined,
-  //   departureFromAirportCode: airport || undefined,
-  //   month: month || undefined,
-  //   year: year || undefined,
-  // })
+  // Order Filter
+  // Handle sorting options
+  let orderBy = 'packageVariant.priceQuad' // Default sort field
+  let order = 'asc' // Default sort order
+
+  // Price sorting
+  if (awaitedParams.sort === 'price-low') {
+    orderBy = 'packageVariant.priceQuad'
+    order = 'asc'
+  } else if (awaitedParams.sort === 'price-high') {
+    orderBy = 'packageVariant.priceDouble'
+    order = 'desc'
+  }
+  // Departure date sorting
+  else if (awaitedParams.sort === 'depart-early') {
+    orderBy = 'packageVariant.departureDate'
+    order = 'asc'
+  } else if (awaitedParams.sort === 'depart-late') {
+    orderBy = 'packageVariant.departureDate'
+    order = 'desc'
+  }
+
+  const dataPackage = await getPackageList({
+    page,
+    size,
+    orderBy,
+    order,
+    [`title:likeLower`]: query ? `%${query}%` : undefined,
+    startDate,
+    endDate,
+    departureFromAirportCode,
+    arrivalFromAirportCode,
+    departureAirlineName,
+    minPrice,
+    maxPrice,
+    hotelRating,
+    facilityCode,
+    section,
+    tagSlug,
+  })
+
+  const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
+    getMinMaxPrice(),
+    getTagPackagesEnum(),
+    getFacilityEnum(),
+  ])
 
   return (
     <Fragment>
       <Topbar type="normal" />
       <SearchTopbar />
-      <main className="mt-7.5 px-20">
-        <section className="grid grid-cols-3 gap-5"></section>
+      <main className="mt-7.5 mb-7.5 px-20">
+        <section className="grid grid-cols-12 gap-5">
+          <div className="col-span-4">
+            <FilterLeftbar
+              dataMinMax={dataMinMax}
+              dataTagPackages={dataTagPackages}
+              dataFacility={dataFacility}
+            />
+          </div>
+          <div className="col-span-8">
+            <PackageResults
+              total={dataPackage?.total}
+              dataPackages={mapProductsToCardData(dataPackage)}
+              currentPage={page}
+              pageSize={size}
+            />
+          </div>
+        </section>
       </main>
     </Fragment>
   )

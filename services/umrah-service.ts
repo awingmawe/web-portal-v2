@@ -1,8 +1,9 @@
 import { api } from '@/services/common/http'
 import { Banner } from '@/constant/types/BannerProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
-import { Package } from '@/constant/types/PackageProps'
+import { Package, PriceParams } from '@/constant/types/PackageProps'
 import qs from 'query-string'
+import { TagPackages } from '@/constant/types/TagPackageProps'
 
 export async function getBanner(
   query: GetListQuery
@@ -28,6 +29,26 @@ export async function getPackageList(
     return response.data
   } catch (error) {
     console.error('Error fetching package data list:', error)
+    throw error
+  }
+}
+
+export async function getMinMaxPrice(): Promise<PriceParams> {
+  try {
+    const response = await api.get(`/public/umrah/v1/package-variant/opt/price`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching get min max price:', error)
+    throw error
+  }
+}
+
+export async function getTagPackagesEnum(): Promise<TagPackages[]> {
+  try {
+    const response = await api.get(`/public/umrah/v1/tag/stats/count`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching get tag packages enum:', error)
     throw error
   }
 }
