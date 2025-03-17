@@ -3,6 +3,7 @@ import SearchTopbar from '@/components/pages/search-product/1-SearchTopbar/Searc
 import FilterLeftbar from '@/components/pages/search-product/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-product/3-PackageList/PackageList'
 import Topbar from '@/components/shared/Topbar'
+import { mapProductsToCardData } from '@/lib/utils'
 import { getFacilityEnum } from '@/services/general-service'
 import {
   getMinMaxPrice,
@@ -33,7 +34,7 @@ export default async function SearchGeneral({
   const awaitedParams = await searchParams
 
   const page = parseInt(awaitedParams.page || '1', 10)
-  const size = parseInt(awaitedParams.size || '12', 10)
+  const size = parseInt(awaitedParams.size || '9', 10)
   const query = awaitedParams.query || undefined
   const endDate = awaitedParams.eD || undefined
   const startDate = awaitedParams.sD || undefined
@@ -47,9 +48,33 @@ export default async function SearchGeneral({
   const section = awaitedParams.sC || undefined
   const tagSlug = awaitedParams.tS || undefined
 
+  // Order Filter
+  // Handle sorting options
+  let orderBy = 'packageVariant.priceQuad' // Default sort field
+  let order = 'asc' // Default sort order
+
+  // Price sorting
+  if (awaitedParams.sort === 'price-low') {
+    orderBy = 'packageVariant.priceQuad'
+    order = 'asc'
+  } else if (awaitedParams.sort === 'price-high') {
+    orderBy = 'packageVariant.priceDouble'
+    order = 'desc'
+  }
+  // Departure date sorting
+  else if (awaitedParams.sort === 'depart-early') {
+    orderBy = 'packageVariant.departureDate'
+    order = 'asc'
+  } else if (awaitedParams.sort === 'depart-late') {
+    orderBy = 'packageVariant.departureDate'
+    order = 'desc'
+  }
+
   const dataPackage = await getPackageList({
     page,
     size,
+    orderBy,
+    order,
     [`title:likeLower`]: query ? `%${query}%` : undefined,
     startDate,
     endDate,
@@ -63,8 +88,6 @@ export default async function SearchGeneral({
     section,
     tagSlug,
   })
-
-  console.log(dataPackage)
 
   const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
     getMinMaxPrice(),
@@ -87,7 +110,8 @@ export default async function SearchGeneral({
           </div>
           <div className="col-span-8">
             <PackageResults
-              dataPackages={dataPackage}
+              total={dataPackage?.total}
+              dataPackages={mapProductsToCardData(dataPackage)}
               currentPage={page}
               pageSize={size}
             />
