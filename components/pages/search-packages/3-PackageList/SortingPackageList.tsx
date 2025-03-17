@@ -60,22 +60,16 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
       </PopoverTrigger>
       <PopoverContent align="end" sideOffset={8}>
         {SORT_OPTIONS.map((option, index) => (
-          <>
-            {index > 0 && (
-              <div
-                key={`divider-${option.value}`}
-                className="mx-1 h-px bg-neutral-100"
-              />
-            )}
+          <div key={`sortBy-${option.value}-${index}`}>
+            {index > 0 && <div className="mx-1 h-px bg-neutral-100" />}
             <Link
-              key={option.value}
               href={createSortUrl(option.value)}
               className={`text-m-regular flex w-full cursor-pointer items-center justify-between px-3 py-2.5 hover:bg-neutral-100 ${dissolve} ${isActive(option.value) ? 'bg-primary-50 text-primary-600 font-medium' : ''}`}
             >
               <span>{option.label}</span>
               {isActive(option.value) && <CheckIcon className="h-4 w-4" />}
             </Link>
-          </>
+          </div>
         ))}
       </PopoverContent>
     </Popover>

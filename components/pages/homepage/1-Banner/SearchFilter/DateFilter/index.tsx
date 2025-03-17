@@ -74,6 +74,7 @@ const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
           onSelect={setDateRange}
           numberOfMonths={2}
           locale={id}
+          fromDate={new Date()}
         />
       </PopoverContent>
     </Popover>

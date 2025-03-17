@@ -1,6 +1,7 @@
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { CardData, Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
+import { format } from 'date-fns'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -8,8 +9,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Add this utility function at the top or in a separate utils file
-export const formatDateToYYYYMMDD = (date: Date): string => {
-  return date.toISOString().split('T')[0] // This converts to YYYY-MM-DD format
+export const formatDateToYYYYMMDD = (date: Date): any => {
+  return format(date, 'yyyy-MM-dd') // This converts to YYYY-MM-DD format
 }
 
 export const isEmpty = (value: unknown): boolean => {

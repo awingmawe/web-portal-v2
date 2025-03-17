@@ -1,7 +1,7 @@
 'use client'
 
 import { StarIconPrimary } from '@/components/icons/star'
-import { HotelRatingSkeleton } from '@/components/pages/search-product/2-FilterLeftbar/RatingHotelFilter/RatingHotelSkeleton'
+import { HotelRatingSkeleton } from '@/components/pages/search-packages/2-FilterLeftbar/RatingHotelFilter/RatingHotelSkeleton'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import React, { useCallback, useMemo } from 'react'

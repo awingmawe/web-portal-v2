@@ -1,6 +1,6 @@
 'use client'
 
-import { TagPackageSkeleton } from '@/components/pages/search-product/2-FilterLeftbar/TagPackageFilter/TagPackageSkeleton'
+import { TagPackageSkeleton } from '@/components/pages/search-packages/2-FilterLeftbar/TagPackageFilter/TagPackageSkeleton'
 import { Checkbox } from '@/components/ui/checkbox'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useCheckboxSelection } from '@/hooks/filter-product-hooks'
