@@ -355,7 +355,7 @@ const Topbar: React.FC<TopbarProps> = ({
 
                     {/* Menu Items */}
                     <Link
-                      href="#"
+                      href="/transaction"
                       className="text-m-regular mx-0 flex w-full items-center justify-start px-6 py-3 font-normal hover:bg-neutral-50"
                     >
                       <ReceiptItemIcon className="mr-4 h-5 w-5 stroke-[.5] text-gray-800" />
