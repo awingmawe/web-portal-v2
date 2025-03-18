@@ -5,8 +5,10 @@ import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
+import { cookieNames } from '@/services/common/cookie'
 import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
+import { cookies } from 'next/headers'
 import { Fragment, Suspense } from 'react'
 
 // Skeleton loaders for the carousels
@@ -50,6 +52,9 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
+
   const [dataBannerCarousel, dataTravels, dataPromo, dataPlus, dataRegular] =
     await Promise.all([
       getBanner({
@@ -89,7 +94,7 @@ export default async function Home() {
 
   return (
     <Fragment>
-      <Topbar type="homepage" />
+      <Topbar type="homepage" token={token} />
       <Banner />
       <main className="container mx-auto">
         <Suspense fallback={<BannerCarouselSkeleton />}>

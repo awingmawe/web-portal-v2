@@ -1,9 +1,9 @@
 'use client'
 
+import AuthProvider from '@/contexts/auth/providers'
 import { ReactNode } from 'react'
 import { FilterProductProvider } from './filter-product-context'
 // Import other providers as needed, for example:
-// import { AuthProvider } from './AuthContext'
 // import { ThemeProvider } from './ThemeContext'
 
 interface ProvidersProps {
@@ -18,9 +18,8 @@ export function ContextProviders({ children }: ProvidersProps) {
     // Nest providers inside each other, with the most global one at the top
     <FilterProductProvider>
       {/* Add other providers here as needed */}
-      {/* <AuthProvider> */}
       {/* <ThemeProvider> */}
-      {children}
+      <AuthProvider>{children}</AuthProvider>
       {/* </ThemeProvider> */}
       {/* </AuthProvider> */}
     </FilterProductProvider>

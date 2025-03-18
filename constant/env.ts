@@ -3,4 +3,4 @@ export const URL = process.env.NEXT_PUBLIC_URL
 export const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY
 export const SNAP_URL = process.env.NEXT_PUBLIC_SNAP_URL
 export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
-export const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
+export const ACCOUNT_URL = process.env.NEXT_PUBLIC_ACCOUNT_URL

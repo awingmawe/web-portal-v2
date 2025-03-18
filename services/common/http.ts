@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'
 import { redirect } from 'next/navigation'
 import { getAccessToken } from './auth'
-import { API_URL, LOGIN_URL } from '@/constant/env'
+import { ACCOUNT_URL, API_URL } from '@/constant/env'
 
 // More specific header type
 interface RequestHeaders {
@@ -48,7 +48,7 @@ function handleApiError(error: AxiosError<ApiErrorResponse>): never {
         ? window.location.href
         : response.config?.url || '/'
 
-    const redirectUrl = `${LOGIN_URL}?redirectUri=${encodeURIComponent(currentUrl)}&logout=1`
+    const redirectUrl = `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(currentUrl)}&logout=1`
 
     if (typeof window !== 'undefined') {
       window.location.href = redirectUrl
