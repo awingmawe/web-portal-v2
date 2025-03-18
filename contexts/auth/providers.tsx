@@ -78,7 +78,7 @@ export default function AuthProvider({
     headersManager.setHeader('X-API-Key', '')
     setTimeout(() => {
       router.push(
-        `${ACCOUNT_URL}?redirectUri=${window.location.href}&logout=1&redirectBack=1`
+        `${ACCOUNT_URL}/auth/logout?redirectUri=${window.location.href}&logout=1&redirectBack=1`
       )
     }, 1000)
     return Promise.resolve()
