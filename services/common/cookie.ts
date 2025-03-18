@@ -1,7 +1,5 @@
 import * as cookieCutter from 'cookie-cutter'
 
-console.log(cookieCutter)
-
 export const cookieNames = {
   USER_ACCESS_TOKEN: 'user_access_token',
   USER_ACCOUNT: 'user_account',
