@@ -1,7 +1,9 @@
 'use client'
 
 import { ChevronIcon } from '@/components/icons/chevron'
+import { LogoutIcon } from '@/components/icons/logout'
 import { Muslim101Logo } from '@/components/icons/muslim101'
+import { ReceiptItemIcon } from '@/components/icons/receipt-item'
 import { SearchIcon } from '@/components/icons/search'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -11,10 +13,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { ACCOUNT_URL } from '@/constant/env'
+import { useAuth } from '@/contexts/auth/context'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn, isEmpty } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, {
@@ -79,6 +84,8 @@ const Topbar: React.FC<TopbarProps> = ({
   const pathname = usePathname()
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
   const [showFixedHeader, setShowFixedHeader] = useState(false)
+  const [redirectUri, setRedirectUri] = useState<string | null>(null)
+  const { profile, logout } = useAuth()
 
   // Memoize navigation links to prevent recreating on each render
   const navLinks = useMemo(
@@ -100,6 +107,7 @@ const Topbar: React.FC<TopbarProps> = ({
     window.addEventListener('scroll', updateFixedHeader)
     // Initial check
     updateFixedHeader()
+    setRedirectUri(window.location.href)
 
     return () => {
       window.removeEventListener('scroll', updateFixedHeader)
@@ -263,7 +271,10 @@ const Topbar: React.FC<TopbarProps> = ({
               <div className="h-5 border border-[#D2D2D1]" />
 
               {/* Login */}
-              <Link href="/login" className="text-m-regular text-neutral-900">
+              <Link
+                href={`${ACCOUNT_URL}/auth/login?redirectUri=${redirectUri}`}
+                className="text-m-regular text-neutral-900"
+              >
                 Masuk
               </Link>
 
@@ -297,17 +308,70 @@ const Topbar: React.FC<TopbarProps> = ({
           ) : (
             <Fragment>
               <div className="h-5 border border-[#D2D2D1]"></div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage
+                        src={profile?.avatarProvider}
+                        alt="User avatar"
+                      />
+                      <AvatarFallback className="fw-semibold text-neutral-600">
+                        {profile?.name?.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <p className="text-m-regular cursor-pointer">
+                      {profile?.name}
+                    </p>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-[300px] rounded-3xl border-none p-0"
+                  align="center"
+                >
+                  <div className="flex flex-col">
+                    {/* Profile Section */}
+                    <Link href={`${ACCOUNT_URL}/dashboard/profile`}>
+                      <div className="flex items-center gap-4 px-6 pt-6 pb-3 hover:bg-neutral-50">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage
+                            src={profile?.avatarProvider}
+                            alt="User avatar"
+                          />
+                          <AvatarFallback className="font-bold text-neutral-600">
+                            {profile?.name?.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="text-m-regular cursor-pointer">
+                          {profile?.name}
+                        </p>
+                        <div className="flex-1 text-2xl font-normal"></div>
+                        <ChevronRight className="h-6 w-6" />
+                      </div>
+                    </Link>
 
-              <div className="flex items-center gap-2">
-                <Avatar>
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="User avatar"
-                  />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <p className="text-m-regular">John Doe</p>
-              </div>
+                    {/* Divider */}
+                    <div className="mx-6 h-px bg-gray-200" />
+
+                    {/* Menu Items */}
+                    <Link
+                      href="#"
+                      className="text-m-regular mx-0 flex w-full items-center justify-start px-6 py-3 font-normal hover:bg-neutral-50"
+                    >
+                      <ReceiptItemIcon className="mr-4 h-5 w-5 stroke-[.5] text-gray-800" />
+                      <span>Transaksi</span>
+                    </Link>
+                    <Link
+                      href="#"
+                      onClick={logout}
+                      className="text-m-regular text-error-500 mx-0 flex w-full items-center justify-start px-6 pt-3 pb-6 font-normal hover:bg-neutral-50"
+                    >
+                      <LogoutIcon className="text-error-500 mr-4 h-5 w-5 stroke-[.5]" />
+                      <span className="text-error-500">Keluar</span>
+                    </Link>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </Fragment>
           )}
         </div>
