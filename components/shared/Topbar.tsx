@@ -17,7 +17,7 @@ import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { dissolve, springTransition } from '@/lib/animation-setup'
-import { cn, isEmpty } from '@/lib/utils'
+import { cn, ellipsis, isEmpty } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
@@ -321,7 +321,7 @@ const Topbar: React.FC<TopbarProps> = ({
                       </AvatarFallback>
                     </Avatar>
                     <p className="text-m-regular cursor-pointer">
-                      {profile?.name}
+                      {profile?.name?.split(' ')[0]}
                     </p>
                   </div>
                 </PopoverTrigger>
@@ -332,7 +332,7 @@ const Topbar: React.FC<TopbarProps> = ({
                   <div className="flex flex-col">
                     {/* Profile Section */}
                     <Link href={`${ACCOUNT_URL}/dashboard/profile`}>
-                      <div className="flex items-center gap-4 px-6 pt-6 pb-3 hover:bg-neutral-50">
+                      <div className="flex items-center gap-4 px-6 pt-4 pb-3 hover:bg-neutral-50">
                         <Avatar className="h-10 w-10">
                           <AvatarImage
                             src={profile?.avatarProvider}
@@ -343,7 +343,7 @@ const Topbar: React.FC<TopbarProps> = ({
                           </AvatarFallback>
                         </Avatar>
                         <p className="text-m-regular cursor-pointer">
-                          {profile?.name}
+                          {ellipsis(profile?.name || '', 40)}
                         </p>
                         <div className="flex-1 text-2xl font-normal"></div>
                         <ChevronRight className="h-6 w-6" />
