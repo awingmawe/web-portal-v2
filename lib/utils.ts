@@ -151,3 +151,11 @@ export function mapProductsToCardData(
     })) || []
   )
 }
+
+export const ellipsis = (str: string, maxLength: number) => {
+  return str.length > maxLength
+    ? String(str)
+        .slice(0, maxLength - 3)
+        .padEnd(maxLength, '...')
+    : str
+}

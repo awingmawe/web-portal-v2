@@ -4,12 +4,14 @@ import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
+import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
 import {
   getMinMaxPrice,
   getPackageList,
   getTagPackagesEnum,
 } from '@/services/umrah-service'
+import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -32,6 +34,8 @@ export default async function SearchGeneral({
   searchParams: any
 }) {
   const awaitedParams = await searchParams
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
   const page = parseInt(awaitedParams.page || '1', 10)
   const size = parseInt(awaitedParams.size || '9', 10)
@@ -97,7 +101,7 @@ export default async function SearchGeneral({
 
   return (
     <Fragment>
-      <Topbar type="normal" />
+      <Topbar type="normal" token={token} />
       <SearchTopbar />
       <main className="mt-7.5 mb-7.5 px-20">
         <section className="grid grid-cols-12 gap-5">
