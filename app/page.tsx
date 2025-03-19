@@ -96,14 +96,16 @@ export default async function Home() {
     <Fragment>
       <Topbar type="homepage" token={token} />
       <Banner />
-      <main className="container mx-auto">
-        <Suspense fallback={<BannerCarouselSkeleton />}>
-          <CarouselBanner dataBanner={dataBannerCarousel} />
-        </Suspense>
+      <main className="container mx-auto max-sm:px-4">
+        <div className="flex flex-col max-sm:flex-col-reverse">
+          <Suspense fallback={<BannerCarouselSkeleton />}>
+            <CarouselBanner dataBanner={dataBannerCarousel} />
+          </Suspense>
 
-        <Suspense fallback={<TravelCarouselSkeleton />}>
-          <CarouselTravel dataTravel={dataTravels} />
-        </Suspense>
+          <Suspense fallback={<TravelCarouselSkeleton />}>
+            <CarouselTravel dataTravel={dataTravels} />
+          </Suspense>
+        </div>
 
         <PackageListEvent
           dataPromo={mapProductsToCardData(dataPromo)}

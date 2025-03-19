@@ -20,6 +20,59 @@ interface PackageListEventProps {
   isLoading?: boolean
 }
 
+interface PackageSectionProps {
+  title: string
+  description: string
+  type: 'promo' | 'regular' | 'plus'
+  data: CardData[]
+  isLoading: boolean
+  renderSkeletonItems: (count: number, isLoading: boolean) => React.ReactNode
+}
+
+// Reusable Package Section Component
+const PackageSection = ({
+  title,
+  description,
+  type,
+  data,
+  isLoading,
+  renderSkeletonItems,
+}: PackageSectionProps) => {
+  // Memoize the package items
+  const packageItems = useMemo(
+    () =>
+      data?.map((item, index) => (
+        <CarouselItem
+          key={`package-items-${item.title}-${index}`}
+          className="basis-4/5 items-center pl-4.5 md:basis-1/2 lg:basis-1/4"
+        >
+          <CardPackage data={item} />
+        </CarouselItem>
+      )),
+    [data]
+  )
+
+  return (
+    <>
+      <HeaderPackageList title={title} desc={description} type={type} />
+      <Carousel
+        opts={{
+          align: 'start',
+          inViewThreshold: 1,
+          watchDrag: true,
+        }}
+        className="my-7 w-full max-sm:mt-0"
+      >
+        <CarouselContent className="-ml-4.5 px-2">
+          {isLoading ? renderSkeletonItems(4, true) : packageItems}
+        </CarouselContent>
+        <CarouselPrevious className="top-[35%] max-sm:hidden" />
+        <CarouselNext className="top-[35%] max-sm:hidden" />
+      </Carousel>
+    </>
+  )
+}
+
 export const PackageListEvent: React.FC<PackageListEventProps> = ({
   dataPromo,
   dataRegular,
@@ -46,53 +99,13 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       return Array.from({ length: count }).map((_, index) => (
         <CarouselItem
           key={`skeleton-${index}`}
-          className="items-center pl-4.5 md:basis-1/2 lg:basis-1/4"
+          className="basis-4/5 items-center pl-4.5 md:basis-1/2 lg:basis-1/4"
         >
           <CardPackageSkeleton isLoading={isLoading} />
         </CarouselItem>
       ))
     },
     []
-  )
-
-  // Memoize the package items for each section
-  const promoItems = useMemo(
-    () =>
-      dataPromo?.map((item, index) => (
-        <CarouselItem
-          key={`package-items-${item.title}-${index}`}
-          className="items-center pl-4.5 md:basis-1/2 lg:basis-1/4"
-        >
-          <CardPackage data={item} />
-        </CarouselItem>
-      )),
-    [dataPromo]
-  )
-
-  const regularItems = useMemo(
-    () =>
-      dataRegular?.map((item, index) => (
-        <CarouselItem
-          key={`package-items-${item.title}-${index}`}
-          className="items-center overflow-hidden pl-4.5 md:basis-1/2 lg:basis-1/4"
-        >
-          <CardPackage data={item} />
-        </CarouselItem>
-      )),
-    [dataRegular]
-  )
-
-  const plusItems = useMemo(
-    () =>
-      dataPlus?.map((item, index) => (
-        <CarouselItem
-          key={`package-items-${item.title}-${index}`}
-          className="items-center overflow-hidden pl-4.5 md:basis-1/2 lg:basis-1/4"
-        >
-          <CardPackage data={item} />
-        </CarouselItem>
-      )),
-    [dataPlus]
   )
 
   // Simulate loading or respect the external loading state
@@ -111,71 +124,45 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
     }
   }, [externalLoading])
 
+  // Package section configurations
+  const sections = [
+    {
+      title: 'Paket Promo',
+      description: 'Promo menarik Muslim101 untukmu',
+      type: 'promo' as const,
+      data: dataPromo,
+      isLoading: isPromoLoading || loading,
+    },
+    {
+      title: 'Umroh Reguler',
+      description:
+        'Umroh tanpa khawatir, tinggal berangkat dan ibadah dengan nyaman!',
+      type: 'regular' as const,
+      data: dataRegular,
+      isLoading: isRegularLoading || loading,
+    },
+    {
+      title: 'Umroh Plus',
+      description: 'Umroh istimewa plus jalan-jalan ke destinasi pilihan!',
+      type: 'plus' as const,
+      data: dataPlus,
+      isLoading: isPlusLoading || loading,
+    },
+  ]
+
   return (
-    <section className="mt-[60px] flex flex-col gap-7">
-      <HeaderPackageList
-        title="Paket Promo"
-        desc="Promo menarik Muslim101 untukmu"
-        type="promo"
-      />
-      <Carousel
-        opts={{
-          align: 'start',
-          inViewThreshold: 1,
-          watchDrag: true,
-        }}
-        className="my-7 w-full"
-      >
-        <CarouselContent className="-ml-4.5 px-2">
-          {isPromoLoading || loading
-            ? renderSkeletonItems(4, true)
-            : promoItems}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-
-      <HeaderPackageList
-        title="Umroh Reguler"
-        desc="Umroh tanpa khawatir, tinggal berangkat dan ibadah dengan nyaman!"
-        type="regular"
-      />
-      <Carousel
-        opts={{
-          align: 'start',
-          inViewThreshold: 1,
-          watchDrag: true,
-        }}
-        className="my-7 w-full"
-      >
-        <CarouselContent className="-ml-4.5 px-2">
-          {isPromoLoading || loading
-            ? renderSkeletonItems(4, true)
-            : regularItems}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-
-      <HeaderPackageList
-        title="Umroh Plus"
-        desc="Umroh istimewa plus jalan-jalan ke destinasi pilihan!"
-        type="plus"
-      />
-      <Carousel
-        opts={{
-          align: 'start',
-          inViewThreshold: 1,
-          watchDrag: true,
-        }}
-        className="my-7 w-full"
-      >
-        <CarouselContent className="-ml-4.5 px-2">
-          {isPromoLoading || loading ? renderSkeletonItems(4, true) : plusItems}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+    <section className="mt-[60px] flex flex-col gap-7 max-sm:mt-6 max-sm:gap-2">
+      {sections.map((section) => (
+        <PackageSection
+          key={section.type}
+          title={section.title}
+          description={section.description}
+          type={section.type}
+          data={section.data}
+          isLoading={section.isLoading}
+          renderSkeletonItems={renderSkeletonItems}
+        />
+      ))}
     </section>
   )
 }

@@ -15,12 +15,18 @@ export const HeaderPackageList = memo(function HeaderPackageList({
   type,
 }: HeaderPackageProps) {
   return (
-    <div className="mb flex justify-between">
-      <div className="flex flex-col gap-2">
-        <p className="heading-2-bold">{title}</p>
-        <p className="text-m-regular">{desc}</p>
+    <div className="flex justify-between">
+      <div className="flex flex-col gap-0.5">
+        <p className="heading-2-bold max-sm:text-xl max-sm:leading-6.5">
+          {title}
+        </p>
+        <p className="text-m-regular max-sm:text-xs max-sm:leading-4">{desc}</p>
       </div>
-      <Link href={`/packages?section=${type}`} id={`link-see-all-${type}`}>
+      <Link
+        href={`/packages?section=${type}`}
+        id={`link-see-all-${type}`}
+        className="max-sm:hidden"
+      >
         <Button className="items-center gap-1 px-3 py-2" size="xs">
           <p className="text-m-regular text-neutral-900">Lihat Paket Lainnya</p>
           <ArrowIcon size={24} className="-rotate-45" />

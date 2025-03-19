@@ -17,11 +17,11 @@ const Banner: React.FC<BannerProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'relative aspect-[14/9] overflow-hidden rounded-[20px] bg-white p-6',
+        'relative aspect-[14/9] overflow-hidden bg-white p-6 max-sm:p-0',
         className
       )}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-[20px]">
+      <div className="relative h-full w-full overflow-hidden rounded-[20px] max-sm:rounded-none">
         {/* Sky background */}
         <motion.div
           initial={{ scale: 4, y: '150%', x: '2.5%' }}

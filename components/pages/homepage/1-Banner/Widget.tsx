@@ -72,7 +72,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
       }}
       transition={springTransition}
       className={cn(
-        'absolute left-1/2 z-10 mx-auto w-full max-w-[1200px] -translate-x-1/2 -translate-y-1/3',
+        'absolute left-1/2 z-10 mx-auto w-full max-w-[1200px] -translate-x-1/2 -translate-y-1/3 max-sm:hidden',
         className
       )}
     >
