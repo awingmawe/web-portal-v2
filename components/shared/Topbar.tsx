@@ -2,9 +2,11 @@
 
 import { ChevronIcon } from '@/components/icons/chevron'
 import { LogoutIcon } from '@/components/icons/logout'
+import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { ReceiptItemIcon } from '@/components/icons/receipt-item'
 import { SearchIcon } from '@/components/icons/search'
+import { DialogConfirm } from '@/components/shared/DialogConfirm'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -86,6 +88,7 @@ const Topbar: React.FC<TopbarProps> = ({
   const [showFixedHeader, setShowFixedHeader] = useState(false)
   const [redirectUri, setRedirectUri] = useState<string | null>(null)
   const { profile, logout } = useAuth()
+  const [loadingLogout, setLoadingLogout] = useState(false)
 
   // Memoize navigation links to prevent recreating on each render
   const navLinks = useMemo(
@@ -361,20 +364,37 @@ const Topbar: React.FC<TopbarProps> = ({
                       <ReceiptItemIcon className="mr-4 h-5 w-5 stroke-[.5] text-gray-800" />
                       <span>Transaksi</span>
                     </Link>
-                    <Link
-                      href="#"
-                      onClick={logout}
-                      className="text-m-regular text-error-500 mx-0 flex w-full items-center justify-start px-6 pt-3 pb-6 font-normal hover:bg-neutral-50"
+                    <DialogConfirm
+                      title="Apakah kamu yakin ingin keluar?"
+                      icon={
+                        <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-amber-100 p-4">
+                          <MessageQuestionIcon size={36} />
+                        </div>
+                      }
+                      content="Kamu harus masuk ke akun jika ingin menggunakan kembali akun kamu."
+                      confirmText="Ya, Keluar"
+                      cancelText="Batal"
+                      confirmVariant="default"
+                      cancelVariant="ghost"
+                      onSubmit={() => {
+                        setLoadingLogout(true)
+                        logout()
+                      }}
+                      isLoading={loadingLogout}
                     >
-                      <LogoutIcon className="text-error-500 mr-4 h-5 w-5 stroke-[.5]" />
-                      <span className="text-error-500">Keluar</span>
-                    </Link>
+                      <p className="text-m-regular text-error-500 mx-0 flex w-full cursor-pointer items-center justify-start px-6 pt-3 pb-6 font-normal hover:bg-neutral-50">
+                        <LogoutIcon className="text-error-500 mr-4 h-5 w-5 stroke-[.5]" />
+                        <span className="text-error-500">Keluar</span>
+                      </p>
+                    </DialogConfirm>
                   </div>
                 </PopoverContent>
               </Popover>
             </Fragment>
           )}
         </div>
+
+        {/* Dialog Logout */}
       </Fragment>
     )
   })
