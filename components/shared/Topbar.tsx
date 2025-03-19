@@ -261,7 +261,7 @@ const Topbar: React.FC<TopbarProps> = ({
             <Fragment>
               {/* Register */}
               <Link
-                href="/register"
+                href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${redirectUri}`}
                 className="text-m-regular text-neutral-900"
               >
                 Daftar
