@@ -1,12 +1,14 @@
 import { metadata } from '@/app/shared-metadata'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
+import ProgramCards from '@/components/pages/homepage/1-Banner/mobile/ProgramCards'
+import SubmenuCards from '@/components/pages/homepage/1-Banner/mobile/SubmenuCards'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
-import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
+import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
-import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
 import { Fragment, Suspense } from 'react'
@@ -55,56 +57,68 @@ export default async function Home() {
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
-  const [dataBannerCarousel, dataTravels, dataPromo, dataPlus, dataRegular] =
-    await Promise.all([
-      getBanner({
-        page: 1,
-        size: 10,
-        order: 'desc',
-        orderBy: 'createdAt',
-      }),
-      getTravels({
-        page: 1,
-        size: 12,
-        order: 'desc',
-        orderBy: 'organizationInstance.createdAt',
-      }),
-      getPackageList({
-        page: 1,
-        size: 12,
-        section: 'promo',
-        order: 'desc',
-        orderBy: 'package.createdAt',
-      }),
-      getPackageList({
-        page: 1,
-        size: 12,
-        section: 'plus',
-        order: 'desc',
-        orderBy: 'package.createdAt',
-      }),
-      getPackageList({
-        page: 1,
-        size: 12,
-        section: 'regular',
-        order: 'desc',
-        orderBy: 'package.createdAt',
-      }),
-    ])
+  const [
+    dataBannerCarousel,
+    //  dataTravels,
+    dataPromo,
+    dataPlus,
+    dataRegular,
+  ] = await Promise.all([
+    getBanner({
+      page: 1,
+      size: 10,
+      order: 'desc',
+      orderBy: 'createdAt',
+    }),
+    // getTravels({
+    //   page: 1,
+    //   size: 12,
+    //   order: 'desc',
+    //   orderBy: 'organizationInstance.createdAt',
+    // }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      section: 'promo',
+      order: 'desc',
+      orderBy: 'package.createdAt',
+    }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      section: 'plus',
+      order: 'desc',
+      orderBy: 'package.createdAt',
+    }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      section: 'regular',
+      order: 'desc',
+      orderBy: 'package.createdAt',
+    }),
+  ])
 
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
+      <MobileTopbar
+        variant="search"
+        showBackButton={false}
+        searchPlaceholder="Cari paket, travel, hotel atau airline..."
+      />
       <Banner />
-      <main className="container mx-auto max-sm:px-4">
+      <main className="relative container mx-auto max-sm:px-4">
+        <ProgramCards />
+        <SubmenuCards />
         <div className="flex flex-col max-sm:flex-col-reverse">
           <Suspense fallback={<BannerCarouselSkeleton />}>
             <CarouselBanner dataBanner={dataBannerCarousel} />
           </Suspense>
-
+          {/* 
           <Suspense fallback={<TravelCarouselSkeleton />}>
             <CarouselTravel dataTravel={dataTravels} />
-          </Suspense>
+          </Suspense> */}
         </div>
 
         <PackageListEvent
@@ -112,6 +126,7 @@ export default async function Home() {
           dataPlus={mapProductsToCardData(dataPlus)}
           dataRegular={mapProductsToCardData(dataRegular)}
         />
+        <BottomNavigation />
       </main>
     </Fragment>
   )
