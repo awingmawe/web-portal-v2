@@ -16,7 +16,7 @@ permissions:
 
 env:
   SERVICE_NAME: staging-web-portal-v2
-  SERVICE_PORT: 8110
+  SERVICE_PORT: 7110
   MAIN_SERVICE_PATH: /opt/staging-moslem101.com/
   SERVICE_PATH: web-portal-v2
 
@@ -95,15 +95,15 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.DEV_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.STAGING_PRIVATE_KEY }}
 
       - name: Deploy with PM2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEV_SSH_HOST }}
-          username: ${{ secrets.DEV_SSH_USERNAME }}
-          key: ${{ secrets.DEV_PRIVATE_KEY }}
-          port: ${{ secrets.DEV_PORT_SSH }}
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USERNAME }}
+          key: ${{ secrets.STAGING_PRIVATE_KEY }}
+          port: ${{ secrets.STAGING_PORT_SSH }}
           script: |
             cd ${{ env.MAIN_SERVICE_PATH }}/${{ env.SERVICE_PATH }}/
 
