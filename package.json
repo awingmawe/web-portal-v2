@@ -58,5 +58,6 @@
     "tailwindcss": "^4",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "yarn@4.7.0"
 }
