@@ -35,7 +35,7 @@ import React, {
 interface TopbarProps {
   className?: string
   token?: string
-  type: 'normal' | 'homepage'
+  type: 'normal' | 'homepage' | 'shadow'
 }
 
 // Animation variants defined outside component to prevent recreation on each render
@@ -442,6 +442,16 @@ const Topbar: React.FC<TopbarProps> = ({
         <header
           className={cn(
             'z-50 flex h-[72px] w-full items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7',
+            className
+          )}
+        >
+          <TopbarContent />
+        </header>
+      )}
+      {type === 'shadow' && (
+        <header
+          className={cn(
+            'fixed top-0 z-50 flex h-[72px] w-full items-center gap-[60px] border-neutral-300 bg-white px-20 py-7 shadow-lg',
             className
           )}
         >
