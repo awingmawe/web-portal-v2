@@ -15,16 +15,16 @@ interface BannerProps {
 const ImageText = motion.create(Image)
 
 const Banner: React.FC<BannerProps> = ({ className }) => {
-  const { xs } = useTailwindBreakpoint()
+  const { lg } = useTailwindBreakpoint()
 
   return (
     <div
       className={cn(
-        'relative aspect-[14/9] overflow-hidden bg-white p-6 max-sm:p-0',
+        'relative aspect-[14/9] overflow-hidden bg-white p-6 max-lg:p-0',
         className
       )}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-[20px] max-sm:rounded-none">
+      <div className="relative h-full w-full overflow-hidden rounded-[20px] max-lg:rounded-none">
         {/* Sky background */}
         <motion.div
           initial={{
@@ -37,7 +37,7 @@ const Banner: React.FC<BannerProps> = ({ className }) => {
             y: 'var(--y-to, 0px)',
             x: 'var(--x-to, 0px)',
           }}
-          transition={xs ? springTransitionMobile : springTransition}
+          transition={lg ? springTransitionMobile : springTransition}
           style={{
             backgroundImage: "url('/images/Sky.png')",
             backgroundSize: 'contain',
@@ -45,12 +45,12 @@ const Banner: React.FC<BannerProps> = ({ className }) => {
             backgroundRepeat: 'no-repeat',
           }}
           className="
-          max-sm:[--scale-from:4] 
-          max-sm:[--scale-to:1.8] 
-          max-sm:[--x-from:2.5%] 
-          max-sm:[--x-to:2.5%] 
-          max-sm:[--y-from:150%] 
-          max-sm:[--y-to:40%]
+          max-lg:[--scale-from:4] 
+          max-lg:[--scale-to:1.8] 
+          max-lg:[--x-from:2.5%] 
+          max-lg:[--x-to:2.5%] 
+          max-lg:[--y-from:150%] 
+          max-lg:[--y-to:40%]
 
           sm:[--scale-from:4] 
           sm:[--scale-to:1.7] 
@@ -69,10 +69,10 @@ const Banner: React.FC<BannerProps> = ({ className }) => {
           animate={{
             bottom: 'var(--bottom-to, 0px)',
           }}
-          transition={xs ? springTransitionMobile : springTransition}
+          transition={lg ? springTransitionMobile : springTransition}
           className={cn(
-            'absolute right-0 left-0 z-2 mx-auto w-full bg-contain max-sm:bg-cover',
-            'max-sm:[--bottom-from:-100%] max-sm:[--bottom-to:-20%]',
+            'absolute right-0 left-0 z-2 mx-auto w-full bg-contain max-lg:bg-cover',
+            'max-lg:[--bottom-from:-100%] max-lg:[--bottom-to:-20%]',
             'sm:[--bottom-from:-100%] sm:[--bottom-to:0%]'
           )}
           style={{
@@ -91,10 +91,10 @@ const Banner: React.FC<BannerProps> = ({ className }) => {
           animate={{
             top: 'var(--top-to, 0px)',
           }}
-          transition={xs ? springTransitionMobile : springTransition}
+          transition={lg ? springTransitionMobile : springTransition}
           className={cn(
             'absolute left-1/2 z-1 mx-auto -translate-x-1/2 -translate-y-1/2',
-            'max-sm:w-[95%] max-sm:[--top-from:150%] max-sm:[--top-to:45%]',
+            'max-lg:w-[95%] max-lg:[--top-from:150%] max-lg:[--top-to:45%]',
             'sm:w-[90%] sm:[--top-from:150%] sm:[--top-to:30%]'
           )}
           src={Text}

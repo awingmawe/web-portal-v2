@@ -28,7 +28,7 @@ export function CarouselTravel({
 
   return (
     <section>
-      <Separator className="mt-[60px] max-sm:mt-7.5" />
+      <Separator className="mt-[60px] max-lg:mt-7.5" />
       <Carousel
         opts={{
           align: 'end',
@@ -41,7 +41,7 @@ export function CarouselTravel({
             delay: 1500,
           }),
         ]}
-        className="my-7 w-full max-sm:my-4"
+        className="my-7 w-full max-lg:my-4"
       >
         <CarouselContent className="-ml-10">
           {dataTravel?.results.map((item, index) => (
@@ -59,7 +59,7 @@ export function CarouselTravel({
                   height={0}
                   sizes="100vw"
                   alt={`logo-travel-${item.organizationInstance?.tagline}`}
-                  className={`m-auto aspect-square h-[80px] w-auto object-contain transition-opacity duration-300 max-sm:h-[60px] ${
+                  className={`m-auto aspect-square h-[80px] w-auto object-contain transition-opacity duration-300 max-lg:h-[60px] ${
                     imagesLoaded[index] ? 'opacity-100' : 'opacity-0'
                   }`}
                   loading="lazy"

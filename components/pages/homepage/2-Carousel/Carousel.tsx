@@ -31,10 +31,10 @@ export function CarouselBanner({
 
   return (
     <section>
-      <p className="heading-2-bold mt-16 mb-0.5 text-neutral-900 max-sm:mt-[30px] max-sm:text-xl max-sm:leading-6.5">
+      <p className="heading-2-bold mt-16 mb-0.5 text-neutral-900 max-lg:mt-[30px] max-lg:text-xl max-lg:leading-6.5">
         Program Muslim101
       </p>
-      <p className="text-l-regular mb-7 text-neutral-900 max-sm:mb-2 max-sm:text-xs max-sm:leading-4">
+      <p className="text-l-regular mb-7 text-neutral-900 max-lg:mb-2 max-lg:text-xs max-lg:leading-4">
         Jangan lewatkan program menarik dari Muslim 101
       </p>
       <Carousel

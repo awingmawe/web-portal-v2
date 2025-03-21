@@ -12,7 +12,7 @@ export function useTailwindBreakpoint() {
   const xs = useResponsiveMediaQuery({ query: '(max-width: 639px)' })
   const sm = useResponsiveMediaQuery({ query: '(min-width: 640px)' })
   const md = useResponsiveMediaQuery({ query: '(min-width: 768px)' })
-  const lg = useResponsiveMediaQuery({ query: '(min-width: 1024px)' })
+  const lg = useResponsiveMediaQuery({ query: '(max-width: 1024px)' })
   const xl = useResponsiveMediaQuery({ query: '(min-width: 1280px)' })
   const xxl = useResponsiveMediaQuery({ query: '(min-width: 1536px)' }) // 2xl in Tailwind
 

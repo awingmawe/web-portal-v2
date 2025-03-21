@@ -86,7 +86,7 @@ const ProgramCards: React.FC = () => {
   ]
 
   return (
-    <div className="absolute -top-19 left-0 z-99 grid w-full grid-cols-3 gap-3 px-4 py-3">
+    <div className="absolute -top-19 left-0 z-99 hidden w-full grid-cols-3 gap-3 px-4 py-3 max-lg:grid">
       {programsData.map((program) => (
         <ProgramCard
           key={program.id}

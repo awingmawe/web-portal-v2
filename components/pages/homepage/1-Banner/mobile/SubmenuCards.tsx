@@ -42,7 +42,7 @@ const SubmenuCards = () => {
 
   return (
     <div
-      className="mt-[30px] hidden justify-between gap-2 rounded-xl border-[0.5px] border-[#e1e1e1] px-3 py-[15px] backdrop-blur-[6px] max-sm:flex"
+      className="mt-[30px] hidden justify-between gap-2 rounded-xl border-[0.5px] border-[#e1e1e1] px-3 py-[15px] backdrop-blur-[6px] max-lg:flex"
       style={{
         background:
           'linear-gradient(94deg, rgba(255, 255, 255, 0.30) 0.15%, rgba(255, 192, 18, 0.30) 47.01%, rgba(255, 255, 255, 0.30) 99.85%)',

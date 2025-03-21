@@ -61,7 +61,7 @@ const PackageSection = ({
           inViewThreshold: 1,
           watchDrag: true,
         }}
-        className="my-7 w-full max-sm:mt-0"
+        className="my-7 w-full max-lg:mt-0"
       >
         <CarouselContent className="-ml-4.5 px-2">
           {isLoading ? renderSkeletonItems(4, true) : packageItems}
@@ -151,7 +151,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   ]
 
   return (
-    <section className="mt-[60px] flex flex-col gap-7 max-sm:mt-6 max-sm:gap-2">
+    <section className="mt-[60px] flex flex-col gap-7 max-lg:mt-6 max-lg:gap-2">
       {sections.map((section) => (
         <PackageSection
           key={section.type}

@@ -92,7 +92,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = ({
 
   return (
     <div
-      className="absolute top-3.5 z-99 flex w-full items-center px-4 py-3 sm:hidden"
+      className="absolute top-3.5 z-99 flex w-full items-center px-4 py-3 lg:hidden"
       style={{ backgroundColor, color: textColor }}
     >
       {showBackButton && (

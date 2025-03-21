@@ -412,7 +412,7 @@ const Topbar: React.FC<TopbarProps> = ({
             animate={{ y: 50 }}
             transition={springTransition}
             className={cn(
-              'absolute left-1/2 z-10 flex h-[72px] w-[90%] -translate-x-1/2 items-center gap-[60px] rounded-[100px] bg-white py-7 pr-3 pl-6 backdrop-blur-[100px] max-sm:hidden',
+              'absolute left-1/2 z-10 flex h-[72px] w-[90%] -translate-x-1/2 items-center gap-[60px] rounded-[100px] bg-white py-7 pr-3 pl-6 backdrop-blur-[100px] max-lg:hidden',
               className
             )}
           >
@@ -428,7 +428,7 @@ const Topbar: React.FC<TopbarProps> = ({
                 animate="visible"
                 exit="hidden"
                 className={cn(
-                  'fixed top-0 left-1/2 z-50 flex h-[72px] w-screen -translate-x-1/2 items-center gap-[60px] bg-white px-20 py-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-sm:hidden',
+                  'fixed top-0 left-1/2 z-50 flex h-[72px] w-screen -translate-x-1/2 items-center gap-[60px] bg-white px-20 py-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden',
                   className
                 )}
               >
@@ -441,7 +441,7 @@ const Topbar: React.FC<TopbarProps> = ({
       {type === 'normal' && (
         <header
           className={cn(
-            'z-50 flex h-[72px] w-full items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7 max-sm:hidden',
+            'z-50 flex h-[72px] w-full items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7 max-lg:hidden',
             className
           )}
         >
