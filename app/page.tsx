@@ -1,8 +1,12 @@
 import { metadata } from '@/app/shared-metadata'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
+import ProgramCards from '@/components/pages/homepage/1-Banner/mobile/ProgramCards'
+import SubmenuCards from '@/components/pages/homepage/1-Banner/mobile/SubmenuCards'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
 import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
+import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
@@ -95,21 +99,31 @@ export default async function Home() {
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
+      <MobileTopbar
+        variant="search"
+        showBackButton={false}
+        searchPlaceholder="Cari paket, travel, hotel atau airline..."
+      />
       <Banner />
-      <main className="container mx-auto">
-        <Suspense fallback={<BannerCarouselSkeleton />}>
-          <CarouselBanner dataBanner={dataBannerCarousel} />
-        </Suspense>
+      <main className="relative container mx-auto max-lg:px-4">
+        <ProgramCards />
+        <SubmenuCards />
+        <div className="flex flex-col max-lg:flex-col-reverse">
+          <Suspense fallback={<BannerCarouselSkeleton />}>
+            <CarouselBanner dataBanner={dataBannerCarousel} />
+          </Suspense>
 
-        <Suspense fallback={<TravelCarouselSkeleton />}>
-          <CarouselTravel dataTravel={dataTravels} />
-        </Suspense>
+          <Suspense fallback={<TravelCarouselSkeleton />}>
+            <CarouselTravel dataTravel={dataTravels} />
+          </Suspense>
+        </div>
 
         <PackageListEvent
           dataPromo={mapProductsToCardData(dataPromo)}
           dataPlus={mapProductsToCardData(dataPlus)}
           dataRegular={mapProductsToCardData(dataRegular)}
         />
+        <BottomNavigation />
       </main>
     </Fragment>
   )
