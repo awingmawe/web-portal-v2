@@ -72,7 +72,8 @@ jobs:
               # Pull repository dan build project
               git add .
               git stash
-              git pull origin main
+              
+              git pull 
               yarn install
               yarn build
 
@@ -107,7 +108,7 @@ jobs:
               # Pull repository dan build project
               git add .
               git stash
-              git pull origin main
+              git pull 
               yarn install
               yarn build
 
