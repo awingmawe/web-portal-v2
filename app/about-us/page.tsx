@@ -4,6 +4,7 @@ import Journey from '@/components/pages/about-us/2-Journey/Journey'
 import Visi from '@/components/pages/about-us/3-Visi/Visi'
 import Moment from '@/components/pages/about-us/4-Moment/Moment'
 import UnderService from '@/components/pages/about-us/5-UnderService/UnderService'
+import Footer from '@/components/shared/Footer'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
@@ -40,6 +41,8 @@ export default async function SearchGeneral() {
       <Moment />
       {/* UnderService */}
       <UnderService />
+      {/* Footer */}
+      <Footer />
     </Fragment>
   )
 }
