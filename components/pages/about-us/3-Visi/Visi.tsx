@@ -16,11 +16,11 @@ export default function BreadCrumb() {
         <div className="mt-10 grid items-center gap-20 md:grid-cols-2">
           {/* Left Column - Image */}
           <Image
-            src="/images/no-image-placeholder.png"
+            src="https://storage.googleapis.com/m101-prods/about-us/Frame%201000007197%20(1)%20(1).png"
             alt="Muslim101 Platform"
             width={300}
             height={200}
-            className="h-[600] w-full rounded-lg"
+            className="h-[700] w-full rounded-lg"
           />
 
           {/* Right Column - Mission */}

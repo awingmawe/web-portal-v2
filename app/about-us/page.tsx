@@ -1,7 +1,9 @@
 import { metadata } from '@/app/shared-metadata'
 import Breadcrumb from '@/components/pages/about-us/1-Breadcrumb/Breadcrumb'
+import Journey from '@/components/pages/about-us/2-Journey/Journey'
 import Visi from '@/components/pages/about-us/3-Visi/Visi'
 import Moment from '@/components/pages/about-us/4-Moment/Moment'
+import UnderService from '@/components/pages/about-us/5-UnderService/UnderService'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
@@ -30,10 +32,14 @@ export default async function SearchGeneral() {
       <Topbar type="shadow" token={token} />
       {/* BreadCrumb */}
       <Breadcrumb />
+      {/* Journey */}
+      <Journey />
       {/* Visi */}
       <Visi />
       {/* Moment */}
       <Moment />
+      {/* UnderService */}
+      <UnderService />
     </Fragment>
   )
 }
