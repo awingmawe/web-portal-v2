@@ -51,6 +51,9 @@
   .heading-4-semibold {
     @apply text-xl leading-[26px] font-semibold;
   }
+  .heading-4-bold {
+    @apply text-xl leading-[26px] font-bold;
+  }
 
   /* Heading 3 (24px/30px) */
   .heading-3-regular {

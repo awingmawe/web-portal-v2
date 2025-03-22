@@ -4,7 +4,7 @@ export default function Breadcrumb() {
     <div className="relative mt-18">
       <div className="relative z-10 h-[300px] w-full bg-[#00000080]"></div>
       <Image
-        src="https://storage.cloud.google.com/m101-prods/about-us/b933a87636c0d0bd4ae44d8864c30458.jpeg"
+        src="https://storage.googleapis.com/m101-prods/about-us/b933a87636c0d0bd4ae44d8864c30458.jpeg"
         alt="about-us"
         width={0}
         height={0}
