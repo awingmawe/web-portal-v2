@@ -37,7 +37,7 @@ interface TopbarProps {
   token?: string
   shadow?: boolean
   scrolled?: boolean
-  type: 'normal' | 'homepage'
+  type?: 'normal' | 'homepage'
 }
 
 // Animation variants defined outside component to prevent recreation on each render
