@@ -30,7 +30,7 @@ export default async function SearchGeneral() {
 
   return (
     <Fragment>
-      <Topbar type="shadow" token={token} />
+      <Topbar type="normal" shadow scrolled token={token} />
       {/* BreadCrumb */}
       <Breadcrumb />
       {/* Journey */}

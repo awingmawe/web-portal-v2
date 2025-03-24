@@ -35,7 +35,9 @@ import React, {
 interface TopbarProps {
   className?: string
   token?: string
-  type: 'normal' | 'homepage' | 'shadow'
+  shadow?: boolean
+  scrolled?: boolean
+  type: 'normal' | 'homepage'
 }
 
 // Animation variants defined outside component to prevent recreation on each render
@@ -82,6 +84,8 @@ const Topbar: React.FC<TopbarProps> = ({
   className = '',
   token,
   type = 'normal',
+  shadow = false,
+  scrolled = false,
 }) => {
   const pathname = usePathname()
   const [hoveredLink, setHoveredLink] = useState<string | null>(null)
@@ -441,23 +445,15 @@ const Topbar: React.FC<TopbarProps> = ({
       {type === 'normal' && (
         <header
           className={cn(
-            'z-50 flex h-[72px] w-full items-center gap-[60px] border-b-1 border-neutral-300 bg-white px-20 py-7 max-lg:hidden',
+            `flex h-[72px] w-full items-center gap-[60px] bg-white px-20 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
             className
           )}
         >
           <TopbarContent />
         </header>
       )}
-      {type === 'shadow' && (
-        <header
-          className={cn(
-            'fixed top-0 z-50 flex h-[72px] w-full items-center gap-[60px] border-neutral-300 bg-white px-20 py-7 shadow-lg',
-            className
-          )}
-        >
-          <TopbarContent />
-        </header>
-      )}
+      {/* add space divider for top if scrolled is active */}
+      {scrolled && <div className="h-[72px] w-full"></div>}
     </Fragment>
   )
 }

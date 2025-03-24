@@ -1,7 +1,7 @@
 import Image from 'next/image'
 export default function Breadcrumb() {
   return (
-    <div className="relative mt-18">
+    <div className="relative">
       <div className="relative z-10 h-[300px] w-full bg-[#00000080]"></div>
       <Image
         src="https://storage.googleapis.com/m101-prods/about-us/b933a87636c0d0bd4ae44d8864c30458.jpeg"
