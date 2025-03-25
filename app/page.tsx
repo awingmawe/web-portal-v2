@@ -6,7 +6,6 @@ import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
 import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import { PackageListPlus } from '@/components/pages/homepage/4-PackageList/PackageListPlus'
-import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScroll'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
@@ -131,7 +130,7 @@ export default async function Home() {
       <main className="sticky top-30 container mx-auto max-lg:px-4">
         <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
       </main>
-      <OverscrollTracker></OverscrollTracker>
+      {/* <OverscrollTracker></OverscrollTracker> */}
 
       <Footer />
     </Fragment>
