@@ -45,11 +45,12 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
             className="w-full"
           >
             <div
-              className="flex h-screen items-center justify-center bg-cover bg-fixed bg-center bg-no-repeat"
+              className="h-screen items-center justify-center bg-cover bg-fixed bg-center bg-no-repeat"
               style={{
                 backgroundImage:
-                  'url(https://s3-alpha-sig.figma.com/img/31d5/8361/674c820fbd0e8e39b03a4958c7e13970?Expires=1743984000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=r1IzPLQVQ5lMcBh-xAXgWslX~mlzB9XzujifrbWttvpeii-lMGAazluuoMB22f6bpBkCpZt8sY6GREzUXGDSSfcQHyGoC0hRKgKoFbLgdxw38pFc5gcMenRRaQKygUPOBf8xLD7yvQZJKpYjK5De7Rw2wXyIShjtoKRimOQjkbuz5vUL0ZCd1dZ1pV5zXwbWrbHlvt6S4fLc-2~BcbOZtLip1eqSnY96CtLYo2cMK9aYqqz5VktbsdWENoY1Fu0Xx6i0PbnwobAoA8WoCC~PG7vhUVWtaxX8hq74CSGlasyMOJBezAZwwt1xf0279-xpqulm52LzNthSyKj~~qw1FA__)',
+                  'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
               }}
+              id="image-kabbah"
             >
               <div className="relative w-full">
                 <Animator
@@ -71,8 +72,22 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                       {
                         out: {
                           style: {
-                            transform: (value: number) =>
-                              `scale(${SimpleInterpolation(0, 220, value)})`,
+                            transform: (value: number) => {
+                              const element =
+                                document.getElementById('100kjamaah')
+
+                              if (value < 0.5) {
+                                if (element) {
+                                  element.style.opacity = '0'
+                                }
+                                return `scale(${SimpleInterpolation(0, 220, value)})`
+                              } else {
+                                if (element) {
+                                  element.style.opacity = '1'
+                                }
+                                return `scale(${SimpleInterpolation(0, 220, 0.5)}`
+                              }
+                            },
                           },
                         },
                       },
@@ -80,7 +95,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                         out: {
                           style: {
                             transform: (value: number) =>
-                              `translate(${SimpleInterpolation(-50, -80, value)}px, ${SimpleInterpolation(50, 100, value)}px)`,
+                              `translate(${SimpleInterpolation(-50, -60, value)}px, ${SimpleInterpolation(50, 90, value)}px)`,
                           },
                         },
                       },
@@ -110,12 +125,12 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
             </div>
           </Animator>
         </ScrollPage>
-        {/* <ScrollPage>
+        <ScrollPage>
           <Animator
             animation={batch({
               in: {
                 style: {
-                  opacity: 0,
+                  opacity: (value: number) => value,
                 },
               },
               out: {
@@ -124,21 +139,58 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                   top: () => `50%`,
                   transform: 'translate(-50%, -50%)',
                   position: 'fixed',
-                  opacity: 1,
+                  transition: 'opacity 0.3s ease-in-out',
                 },
               },
             })}
-            className="w-full"
+            className="h-screen w-full"
           >
             <div
-              className="flex h-screen items-center justify-center bg-cover bg-fixed bg-center bg-no-repeat"
+              className="h-screen items-center justify-center bg-cover bg-fixed bg-center bg-no-repeat"
               style={{
                 backgroundImage:
-                  'url(https://s3-alpha-sig.figma.com/img/31d5/8361/674c820fbd0e8e39b03a4958c7e13970?Expires=1743984000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=r1IzPLQVQ5lMcBh-xAXgWslX~mlzB9XzujifrbWttvpeii-lMGAazluuoMB22f6bpBkCpZt8sY6GREzUXGDSSfcQHyGoC0hRKgKoFbLgdxw38pFc5gcMenRRaQKygUPOBf8xLD7yvQZJKpYjK5De7Rw2wXyIShjtoKRimOQjkbuz5vUL0ZCd1dZ1pV5zXwbWrbHlvt6S4fLc-2~BcbOZtLip1eqSnY96CtLYo2cMK9aYqqz5VktbsdWENoY1Fu0Xx6i0PbnwobAoA8WoCC~PG7vhUVWtaxX8hq74CSGlasyMOJBezAZwwt1xf0279-xpqulm52LzNthSyKj~~qw1FA__)',
+                  'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
               }}
-            ></div>
+              id="100kjamaah"
+            >
+              <div className="h-full w-full bg-[#00000080] p-5" id="">
+                <h1 className="mt-20 block text-center text-[92px] text-white">
+                  <span className="font-bold text-white">100.000+</span> Jamaah
+                  <br />
+                  telah memilih travel pilihan kami
+                </h1>
+              </div>
+              <div className="h-full w-full bg-[#00000080] p-5" id="">
+                <h1 className="mt-20 block text-center text-[92px] text-white">
+                  <span className="font-bold text-white">100.000+</span> Jamaah
+                  <br />
+                  telah memilih travel pilihan kami
+                </h1>
+              </div>
+              <div className="h-full w-full bg-[#00000080] p-5" id="">
+                <h1 className="mt-20 block text-center text-[92px] text-white">
+                  <span className="font-bold text-white">100.000+</span> Jamaah
+                  <br />
+                  telah memilih travel pilihan kami
+                </h1>
+              </div>
+              <div className="h-full w-full bg-[#00000080] p-5" id="">
+                <h1 className="mt-20 block text-center text-[92px] text-white">
+                  <span className="font-bold text-white">100.000+</span> Jamaah
+                  <br />
+                  telah memilih travel pilihan kami
+                </h1>
+              </div>
+              <div className="h-full w-full bg-[#00000080] p-5" id="">
+                <h1 className="mt-20 block text-center text-[92px] text-white">
+                  <span className="font-bold text-white">100.000+</span> Jamaah
+                  <br />
+                  telah memilih travel pilihan kami
+                </h1>
+              </div>
+            </div>
           </Animator>
-        </ScrollPage> */}
+        </ScrollPage>
       </ScrollContainer>
     </Fragment>
   )
