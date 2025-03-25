@@ -5,6 +5,9 @@ import SubmenuCards from '@/components/pages/homepage/1-Banner/mobile/SubmenuCar
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
 import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
+import { PackageListPlus } from '@/components/pages/homepage/4-PackageList/PackageListPlus'
+import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScroll'
+import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
@@ -49,7 +52,7 @@ const TravelCarouselSkeleton = () => (
 export async function generateMetadata() {
   return {
     ...metadata(
-      'Muslim 101 | Homepage',
+      'Muslim 101 | All in One Islamic Digital Platform',
       'Daftar paket umrah yang ada di Muslim101'
     ),
   }
@@ -120,11 +123,17 @@ export default async function Home() {
 
         <PackageListEvent
           dataPromo={mapProductsToCardData(dataPromo)}
-          dataPlus={mapProductsToCardData(dataPlus)}
           dataRegular={mapProductsToCardData(dataRegular)}
         />
         <BottomNavigation />
+        {/* </div> */}
       </main>
+      <main className="sticky top-30 container mx-auto max-lg:px-4">
+        <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
+      </main>
+      <OverscrollTracker></OverscrollTracker>
+
+      <Footer />
     </Fragment>
   )
 }

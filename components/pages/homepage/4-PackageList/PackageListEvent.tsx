@@ -16,7 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 interface PackageListEventProps {
   dataPromo: CardData[]
   dataRegular: CardData[]
-  dataPlus: CardData[]
+  dataPlus?: CardData[]
   isLoading?: boolean
 }
 
@@ -145,10 +145,14 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       title: 'Umroh Plus',
       description: 'Umroh istimewa plus jalan-jalan ke destinasi pilihan!',
       type: 'plus' as const,
-      data: dataPlus,
+      data: dataPlus || [],
       isLoading: isPlusLoading || loading,
     },
   ]
+
+  if (!dataPlus) {
+    sections.pop()
+  }
 
   return (
     <section className="mt-[60px] flex flex-col gap-7 max-lg:mt-6 max-lg:gap-2">

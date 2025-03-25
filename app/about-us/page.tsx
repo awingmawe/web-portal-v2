@@ -10,17 +10,9 @@ import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: any
-}) {
-  const resolvedSearchParams = await searchParams
+export async function generateMetadata() {
   return {
-    ...metadata(
-      'Muslim 101 | Daftar Paket Muslim101',
-      `Daftar pencarian paket ${resolvedSearchParams.query || ''}`
-    ),
+    ...metadata('Muslim 101 | About Us', `Muslim 101 About Us`),
   }
 }
 
