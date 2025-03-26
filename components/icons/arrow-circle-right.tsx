@@ -1,0 +1,37 @@
+import { IconProps } from '@/constant/types/IconProps'
+import { cn } from '@/lib/utils'
+import React from 'react'
+
+export const ArrowCircleRight: React.FC<IconProps> = ({
+  className = '',
+  size,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('strokecurrent', className)}
+      {...props}
+    >
+      <path
+        d="M7.00008 12.8337C10.2217 12.8337 12.8334 10.222 12.8334 7.00033C12.8334 3.77866 10.2217 1.16699 7.00008 1.16699C3.77842 1.16699 1.16675 3.77866 1.16675 7.00033C1.16675 10.222 3.77842 12.8337 7.00008 12.8337Z"
+        stroke="#30302F"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.26489 9.05876L8.31823 6.9996L6.26489 4.94043"
+        stroke="#30302F"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}

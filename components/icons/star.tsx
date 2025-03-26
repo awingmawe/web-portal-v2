@@ -48,3 +48,39 @@ export const StarIconPrimary: React.FC<IconProps> = ({
     </svg>
   )
 }
+
+export const StarIconPrimaryGradient: React.FC<IconProps> = ({
+  className = '',
+  size,
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      className={className && cn('stroke-current', className)}
+      {...props}
+    >
+      <path
+        d="M13.0473 14.9558C12.5141 15.3356 9.09322 12.9284 8.43804 12.9231C7.78286 12.9178 4.32346 15.2697 3.79653 14.8814C3.26961 14.4931 4.50838 10.505 4.31097 9.88208C4.11356 9.25914 0.801385 6.70512 1.00886 6.08541C1.21638 5.46571 5.40288 5.40815 5.93602 5.0284C6.46917 4.6487 7.88157 0.718393 8.5368 0.723638C9.19193 0.728929 10.5405 4.68145 11.0675 5.06972C11.5944 5.45796 15.7795 5.58293 15.9769 6.20587C16.1743 6.82881 12.8213 9.3292 12.6138 9.9489C12.4063 10.5686 13.5804 14.5761 13.0473 14.9558Z"
+        fill="url(#paint0_linear_4440_65546)"
+      />
+      <defs>
+        <linearGradient
+          id="paint0_linear_4440_65546"
+          x1="0.999531"
+          y1="7.86005"
+          x2="15.9853"
+          y2="7.86005"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#FCD635" />
+          <stop offset="1" stopColor="#F7A928" />
+        </linearGradient>
+      </defs>
+    </svg>
+  )
+}

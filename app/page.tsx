@@ -5,6 +5,9 @@ import SubmenuCards from '@/components/pages/homepage/1-Banner/mobile/SubmenuCar
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
 import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
+import BankingSection from '@/components/pages/homepage/6-Banking/BankingSection'
+import PreparationSection from '@/components/pages/homepage/7-Preparation/PreparationSection'
+import TestimoniSection from '@/components/pages/homepage/8-Testimoni/TestimoniSection'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
@@ -125,8 +128,10 @@ export default async function Home() {
           dataPlus={mapProductsToCardData(dataPlus)}
         />
         <BottomNavigation />
-        {/* </div> */}
       </main>
+      <BankingSection />
+      <PreparationSection />
+      <TestimoniSection />
       {/* <main className="sticky top-30 container mx-auto max-lg:px-4">
         <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
       </main> */}
