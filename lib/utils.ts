@@ -267,3 +267,72 @@ export function formatToShortDate(date: Date): string {
     return ''
   }
 }
+
+export const formatDistance = (meters: any) => {
+  if (!meters || isNaN(meters)) return '0 m'
+
+  // Convert to absolute value for calculation
+  const absoluteMeters = Math.abs(meters)
+
+  if (absoluteMeters < 1000) {
+    // Less than 1 km, show in meters
+    return `${meters}m`
+  } else {
+    // Convert to kilometers with 2 decimal places
+    const kilometers = (meters / 1000).toFixed(2)
+    // Remove trailing zeros after decimal point
+    const formattedKm = kilometers.replace(/\.?0+$/, '')
+    return `${formattedKm}km`
+  }
+}
+
+export function formatCurrencyIndonesia(
+  value: number | string,
+  decimalPlaces = 0
+): string {
+  // Handle empty, null, or undefined values
+  if (value === null || value === undefined || value === '') {
+    return '0'
+  }
+
+  // Convert to number if string
+  const numValue =
+    typeof value === 'string'
+      ? parseFloat(value.replace(/[^\d.-]/g, ''))
+      : value
+
+  // Handle NaN
+  if (isNaN(numValue)) {
+    return '0'
+  }
+
+  // Get the absolute value for calculation
+  const absValue = Math.abs(numValue)
+
+  let formattedValue: string
+  let suffix: string
+
+  // Format based on magnitude
+  if (absValue >= 1000000000) {
+    // Billion (Milyar)
+    formattedValue = (numValue / 1000000000).toFixed(decimalPlaces)
+    suffix = 'M'
+  } else if (absValue >= 1000000) {
+    // Million (Juta)
+    formattedValue = (numValue / 1000000).toFixed(decimalPlaces)
+    suffix = 'jt'
+  } else if (absValue >= 1000) {
+    // Thousand (Ribu)
+    formattedValue = (numValue / 1000).toFixed(decimalPlaces)
+    suffix = 'rb'
+  } else {
+    // Less than 1000
+    formattedValue = numValue.toFixed(decimalPlaces)
+    suffix = ''
+  }
+
+  // Remove trailing zeros and decimal point if no decimal places
+  formattedValue = formattedValue.replace(/\.0+$/, '')
+
+  return `${formattedValue}${suffix}`
+}

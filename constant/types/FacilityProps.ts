@@ -6,3 +6,8 @@ export interface Facility {
   level: number
   image: string
 }
+
+export interface OthersFacilities {
+  items: string[]
+  label: string
+}

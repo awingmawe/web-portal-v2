@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 
 // Room type options
-export type RoomType = 'quad' | 'triple' | 'double'
+export type RoomType = 'quad' | 'triple' | 'double' | null
 
 // Context state interface
 interface PackageVariantContextState {
@@ -28,7 +28,7 @@ interface PackageVariantContextState {
 const initialState: PackageVariantContextState = {
   selectedVariant: null,
   variants: [],
-  selectedRoomType: 'quad',
+  selectedRoomType: null,
   setSelectedVariant: () => {},
   setVariants: () => {},
   setSelectedRoomType: () => {},
@@ -53,7 +53,7 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   children,
   initialVariants = [],
   initialSelectedVariant = null,
-  initialRoomType = 'quad',
+  initialRoomType = null,
 }) => {
   const [selectedVariant, setSelectedVariant] = useState<PackageVariant | null>(
     initialSelectedVariant

@@ -25,7 +25,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 // Define the props interface with all possible options
 interface MobileTopbarProps {
   variant: 'search' | 'title' | 'dateRange' | 'plain' | 'transparent'
-  titleLink: string
+  titleLink?: string
   title?: string
   dateRange?: {
     startDate: string
@@ -56,7 +56,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = ({
   onBackClick,
   titleLink,
 }) => {
-  const { shareViaCopyLink, shareViaWhatsApp } = useGallerySharing(titleLink)
+  const { shareViaCopyLink, shareViaWhatsApp } = useGallerySharing()
 
   const [showFixedHeader, setShowFixedHeader] = useState(false)
 
@@ -180,7 +180,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = ({
                   variant="outline"
                   className="w-full"
                   size="xs"
-                  onClick={shareViaWhatsApp}
+                  onClick={() => shareViaWhatsApp(titleLink || '')}
                 >
                   <WhatsappIcon size={24} className="mr-[9px]" />
                   Share ke WhatsApp

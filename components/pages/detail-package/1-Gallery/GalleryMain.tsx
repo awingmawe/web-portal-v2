@@ -219,6 +219,7 @@ const GalleryListContent: React.FC<{ title: string }> = ({ title }) => {
           {/* Thumbnail Carousel */}
           <GalleryThumbnails />
 
+          {/* Custom Close Icon on Desktop */}
           <DialogClose
             className="bg-neutral-0 absolute top-[20px] right-[20px] cursor-pointer rounded-full p-2.5 max-lg:hidden"
             aria-label="Close dialog"

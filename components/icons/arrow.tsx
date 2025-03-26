@@ -36,3 +36,31 @@ export const ArrowIcon: React.FC<IconProps> = ({
     </svg>
   )
 }
+export const ArrowLongIcon: React.FC<IconProps> = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="62"
+      height="19"
+      viewBox="0 0 62 19"
+      fill="none"
+    >
+      <path
+        d="M56.3223 4.94751L60.8748 9.50001L56.3223 14.0525"
+        stroke="#BBBBB9"
+        strokeWidth="1.125"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M1 9.5L61 9.50001"
+        stroke="#BBBBB9"
+        strokeWidth="1.125"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}

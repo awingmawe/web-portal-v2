@@ -1,3 +1,4 @@
+import { Facility, OthersFacilities } from '@/constant/types/FacilityProps'
 import { Hotel } from '@/constant/types/HotelProps'
 import { AdditionalCountry } from '@/constant/types/LocationProps'
 import { OrganizationInstance, TravelRoute } from '@/constant/types/TravelProps'
@@ -10,7 +11,7 @@ export interface PackageVariant {
   priceDouble: number
   priceTriple: number
   discountType: string
-  discountAmount: number
+  discountAmount: number | string
   departureDate: string
   arrivalDate: string
   isLastCall: boolean
@@ -55,34 +56,31 @@ export interface PackageDetail {
   termsCondition: string
   facility: string
   additionalInfo: {
-    facilities: Array<{
-      code: string
-      name: string
-      image: string
-    }>
-    otherFacilities: Array<{
-      label: string
-      items: string[]
-    }>
+    facilities: Facility[]
+    otherFacilities: OthersFacilities[]
   }
 }
 
 export interface PackageItinerary {
   id: number
   packageId: number
-  agenda: Array<{
-    title: string
-    activities: Array<{
-      time: string
-      activity: string
-      location: string
-      image?: string
-    }>
-  }>
+  agenda: Agenda[]
   createdAt: string
   modifiedAt: string
   createdBy: string
   modifiedBy: string
+}
+
+export interface Activities {
+  time: string
+  activity: string
+  location: string
+  image?: string
+}
+
+export interface Agenda {
+  title: string
+  activities: Activities[]
 }
 
 export interface Package {
@@ -119,6 +117,6 @@ export interface Package {
   additionalCountry?: AdditionalCountry[]
   // New attributes
   itinerary?: PackageItinerary
-  detail?: PackageDetail
+  detail: PackageDetail
   tag?: null | any
 }

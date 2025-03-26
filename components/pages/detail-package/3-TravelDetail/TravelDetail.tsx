@@ -1,7 +1,6 @@
 'use client'
 
 import WhatsappIcon from '@/components/icons/whatsapp'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
@@ -11,13 +10,16 @@ import {
   formatPhoneNumber,
 } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
+import Image from 'next/image'
 
 const TravelDetail = ({
   organizationInstance,
   title,
+  mobile = false,
 }: {
   organizationInstance: OrganizationInstance
   title: string
+  mobile?: boolean
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
 
@@ -37,11 +39,20 @@ const TravelDetail = ({
     : formatPhoneNumber(bdm?.persona?.phoneNumber ?? '628888755101')
 
   return (
-    <div className="flex items-center justify-between border-b border-neutral-200 pb-4 max-lg:pb-2">
+    <div
+      className={`items-center justify-between border-b border-neutral-200 pb-4 ${mobile ? 'hidden max-lg:flex' : 'flex max-lg:hidden'}`}
+    >
       <div className="flex items-center gap-3">
-        <Avatar className="h-9 w-9">
-          <AvatarImage src={thumbnail ?? Placeholder?.src} alt="User avatar" />
-        </Avatar>
+        <div className="rounded-full border border-neutral-200 p-[15px] max-lg:p-[7px]">
+          <Image
+            src={thumbnail ?? Placeholder?.src}
+            alt="User avatar"
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="aspect-square h-15 w-15 object-contain max-lg:h-[27px] max-lg:w-[27px]"
+          />
+        </div>
         <div className="flex flex-col">
           <p className="heading-4-medium text-neutral-900 max-lg:text-xs max-lg:leading-4 max-lg:font-semibold">
             {name}

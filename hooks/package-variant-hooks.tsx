@@ -50,7 +50,7 @@ export const usePricing = () => {
   // Check if there's a discount
   const hasDiscount = useMemo(() => {
     if (!selectedVariant) return false
-    return selectedVariant.discountAmount > 0
+    return (selectedVariant.discountAmount as number) > 0
   }, [selectedVariant])
 
   // Get discount amount formatted based on discount type
@@ -64,7 +64,7 @@ export const usePricing = () => {
         style: 'currency',
         currency: 'IDR',
         minimumFractionDigits: 0,
-      }).format(selectedVariant.discountAmount)
+      }).format(selectedVariant.discountAmount as number)
     }
   }, [selectedVariant, hasDiscount])
 
