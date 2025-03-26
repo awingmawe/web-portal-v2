@@ -85,6 +85,38 @@ export const getMaximumNonZeroPrice = (
   return Math.max(...prices.map(Number).filter((price) => price > 0)) || 0
 }
 
+export const formatPhoneNumber = (phone: string): string => {
+  if (phone.startsWith('0')) {
+    return '+62' + phone.slice(1)
+  }
+  return phone
+}
+
+export function formatJoinedDate(dateString: string) {
+  // Parse the given date
+  const joinedDate = new Date(dateString)
+  const currentDate = new Date()
+
+  // Calculate difference in milliseconds
+  const diffTime = currentDate.getTime() - joinedDate.getTime()
+
+  // Convert to days, months, years
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  const diffMonths = Math.floor(diffDays / 30)
+  const diffYears = Math.floor(diffDays / 365)
+
+  // Format the message
+  if (diffYears > 0) {
+    return `Telah bergabung dari ${diffYears} Tahun yang lalu`
+  } else if (diffMonths > 0) {
+    return `Telah bergabung dari ${diffMonths} Bulan yang lalu`
+  } else if (diffDays > 0) {
+    return `Telah bergabung dari ${diffDays} Hari yang lalu`
+  } else {
+    return 'Telah bergabung hari ini'
+  }
+}
+
 export const handleDiscountType = (
   discountType: string,
   discount: string | number
@@ -148,6 +180,7 @@ export function mapProductsToCardData(
       departureDate: product?.packageVariant?.departureDate,
       arrivalDate: product?.packageVariant?.arrivalDate,
       releasedAt: product?.packageVariant?.releasedAt,
+      packageType: product?.packageType || 'umrah',
     })) || []
   )
 }
@@ -166,4 +199,71 @@ export const SimpleInterpolation = (
   value: number
 ): number => {
   return from * (1 - value) + to * value
+}
+
+/**
+ * Formats a date to DD Month YYYY format in Indonesian
+ */
+export function formatDateToRangeString(date: Date): string {
+  if (!date) return ''
+
+  try {
+    // Indonesian month names
+    const monthNames = [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ]
+
+    const day = date.getDate()
+    const month = monthNames[date.getMonth()]
+    const year = date.getFullYear()
+
+    return `${String(day).padStart(2, '0')} ${month} ${year}`
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return ''
+  }
+}
+
+/**
+ * Formats a date to day and month only (DD MMM)
+ */
+export function formatToShortDate(date: Date): string {
+  if (!date) return ''
+
+  try {
+    // Short month names
+    const monthNames = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Ags',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ]
+
+    const day = date.getDate()
+    const month = monthNames[date.getMonth()]
+
+    return `${String(day).padStart(2, '0')} ${month}`
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return ''
+  }
 }

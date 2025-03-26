@@ -1,9 +1,14 @@
 import { api } from '@/services/common/http'
 import { Banner } from '@/constant/types/BannerProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
-import { Package, PriceParams } from '@/constant/types/PackageProps'
+import {
+  Package,
+  PackageVariant,
+  PriceParams,
+} from '@/constant/types/PackageProps'
 import qs from 'query-string'
 import { TagPackages } from '@/constant/types/TagPackageProps'
+import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 
 export async function getBanner(
   query: GetListQuery
@@ -29,6 +34,45 @@ export async function getPackageList(
     return response.data
   } catch (error) {
     console.error('Error fetching package data list:', error)
+    throw error
+  }
+}
+export async function getPackageVariantList(
+  query: GetListQuery
+): Promise<GenericResponse<PackageVariant>> {
+  try {
+    const response = await api.get(
+      `/public/umrah/v1/package-variant?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching package variant data list:', error)
+    throw error
+  }
+}
+
+export async function getPackageDetail(slug: string): Promise<Package> {
+  try {
+    const response = await api.get(`/public/umrah/v1/package/slug/${slug}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching package detail:', error)
+    throw error
+  }
+}
+
+export async function getGalleryPackage(
+  packageId: number
+): Promise<PackageGalleryImage[]> {
+  try {
+    const response = await api.get(`/public/umrah/v1/package-gallery`, {
+      params: {
+        packageId,
+      },
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching gallery package:', error)
     throw error
   }
 }

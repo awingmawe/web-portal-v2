@@ -3,7 +3,9 @@ import { AdditionalCountry } from '@/constant/types/LocationProps'
 import { OrganizationInstance, TravelRoute } from '@/constant/types/TravelProps'
 
 export interface PackageVariant {
+  soldCount: number
   id: number
+  name?: string
   priceQuad: number
   priceDouble: number
   priceTriple: number
@@ -43,6 +45,44 @@ export interface CardData {
   arrivalDate: string
   codeCountry?: AdditionalCountry[]
   releasedAt: string
+  packageType: string
+}
+
+export interface PackageDetail {
+  id: number
+  packageId: number
+  description: string
+  termsCondition: string
+  facility: string
+  additionalInfo: {
+    facilities: Array<{
+      code: string
+      name: string
+      image: string
+    }>
+    otherFacilities: Array<{
+      label: string
+      items: string[]
+    }>
+  }
+}
+
+export interface PackageItinerary {
+  id: number
+  packageId: number
+  agenda: Array<{
+    title: string
+    activities: Array<{
+      time: string
+      activity: string
+      location: string
+      image?: string
+    }>
+  }>
+  createdAt: string
+  modifiedAt: string
+  createdBy: string
+  modifiedBy: string
 }
 
 export interface Package {
@@ -77,4 +117,8 @@ export interface Package {
   packageVariant: PackageVariant
   tagPackage: null | any
   additionalCountry?: AdditionalCountry[]
+  // New attributes
+  itinerary?: PackageItinerary
+  detail?: PackageDetail
+  tag?: null | any
 }

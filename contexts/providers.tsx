@@ -1,6 +1,8 @@
 'use client'
 
 import AuthProvider from '@/contexts/auth/providers'
+import { GalleryProvider } from '@/contexts/gallery-package-context'
+import { PackageVariantProvider } from '@/contexts/package-variant-context'
 import { ReactNode } from 'react'
 import { FilterProductProvider } from './filter-product-context'
 // Import other providers as needed, for example:
@@ -17,11 +19,14 @@ export function ContextProviders({ children }: ProvidersProps) {
   return (
     // Nest providers inside each other, with the most global one at the top
     <FilterProductProvider>
-      {/* Add other providers here as needed */}
-      {/* <ThemeProvider> */}
-      <AuthProvider>{children}</AuthProvider>
-      {/* </ThemeProvider> */}
-      {/* </AuthProvider> */}
+      <GalleryProvider>
+        <PackageVariantProvider>
+          {/* Add other providers here as needed */}
+          {/* <ThemeProvider> */}
+          <AuthProvider>{children}</AuthProvider>
+          {/* </ThemeProvider> */}
+        </PackageVariantProvider>
+      </GalleryProvider>
     </FilterProductProvider>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { toast } from '@/components/ui/sonner'
 import { Airline } from '@/constant/types/AirlineProps'
 import { Airport } from '@/constant/types/AirportProps'
 import { FilterState } from '@/constant/types/FilterProps'
@@ -14,7 +15,6 @@ import React, {
   useState,
 } from 'react'
 import { DateRange } from 'react-day-picker'
-import { toast } from 'sonner'
 
 // Initial filter state
 const initialFilterState: FilterState = {
