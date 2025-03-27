@@ -109,29 +109,31 @@ export default async function Home() {
         searchPlaceholder="Cari paket, travel, hotel atau airline..."
       />
       <Banner />
-      <main className="relative container mx-auto max-lg:px-4">
-        <ProgramCards />
-        <SubmenuCards />
-        <div className="flex flex-col max-lg:flex-col-reverse">
-          <Suspense fallback={<BannerCarouselSkeleton />}>
-            <CarouselBanner dataBanner={dataBannerCarousel} />
-          </Suspense>
+      <main className="relative">
+        <div className="container mx-auto max-lg:px-4">
+          <ProgramCards />
+          <SubmenuCards />
+          <div className="flex flex-col max-lg:flex-col-reverse">
+            <Suspense fallback={<BannerCarouselSkeleton />}>
+              <CarouselBanner dataBanner={dataBannerCarousel} />
+            </Suspense>
 
-          <Suspense fallback={<TravelCarouselSkeleton />}>
-            <CarouselTravel dataTravel={dataTravels} />
-          </Suspense>
+            <Suspense fallback={<TravelCarouselSkeleton />}>
+              <CarouselTravel dataTravel={dataTravels} />
+            </Suspense>
+          </div>
+
+          <PackageListEvent
+            dataPromo={mapProductsToCardData(dataPromo)}
+            dataRegular={mapProductsToCardData(dataRegular)}
+            dataPlus={mapProductsToCardData(dataPlus)}
+          />
         </div>
-
-        <PackageListEvent
-          dataPromo={mapProductsToCardData(dataPromo)}
-          dataRegular={mapProductsToCardData(dataRegular)}
-          dataPlus={mapProductsToCardData(dataPlus)}
-        />
+        <BankingSection />
+        <PreparationSection />
+        <TestimoniSection />
         <BottomNavigation />
       </main>
-      <BankingSection />
-      <PreparationSection />
-      <TestimoniSection />
       {/* <main className="sticky top-30 container mx-auto max-lg:px-4">
         <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
       </main> */}

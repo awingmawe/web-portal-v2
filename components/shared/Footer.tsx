@@ -15,7 +15,7 @@ export default function Footer({
 }: FooterProps) {
   return (
     <footer
-      className={`${cn('w-full border border-t border-neutral-200 bg-white py-5', className)}`}
+      className={`${cn('w-full border border-t border-neutral-200 bg-white py-5  pb-30 lg:pb-0', className)}`}
     >
       <div className="mx-auto px-20">
         {type == 'normal' && (

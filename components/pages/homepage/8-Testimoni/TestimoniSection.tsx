@@ -14,7 +14,7 @@ interface Testimonial {
   name: string
   image: string
   rating: number
-  quote: string
+  quote: React.ReactNode
 }
 
 export default function TestimoniSection() {
@@ -25,8 +25,12 @@ export default function TestimoniSection() {
       image:
         'https://storage.googleapis.com/m101-prods/about-us/uyfwgyev61bdubd121.jpg',
       rating: 5,
-      quote:
-        '“Pendaftaran dan pemesanan paket umroh jadi lebih mudah dengan Muslim101. Banyak pilihan travel agent terpercaya.”',
+      quote: (
+        <p className="mb-2 text-gray-700">
+          “Pendaftaran dan pemesanan paket umroh jadi lebih mudah dengan
+          Muslim101. Banyak pilihan travel agent terpercaya.”
+        </p>
+      ),
     },
     {
       id: 2,
@@ -34,8 +38,12 @@ export default function TestimoniSection() {
       image:
         'https://storage.googleapis.com/m101-prods/about-us/7198gbhub642bubd2.jpg',
       rating: 5,
-      quote:
-        '“Aplikasi ini benar-benar membantu saya dalam mencari paket umroh yang sesuai dengan kebutuhan dan budget.”',
+      quote: (
+        <p className="mb-2 text-gray-700">
+          “Aplikasi ini benar-benar membantu saya dalam mencari paket umroh yang
+          sesuai dengan kebutuhan dan budget. ”
+        </p>
+      ),
     },
     {
       id: 3,
@@ -43,19 +51,27 @@ export default function TestimoniSection() {
       image:
         'https://storage.googleapis.com/m101-prods/about-us/uhadsiuohasoduhaosuhdu3.jpg',
       rating: 5,
-      quote:
-        '“Alhamdulillah memberikan solusi terbaik dan Alhamdulillah sesuai dengan budget, dan jarak terdekat dari rumah kami.\nAlhamdulillah juga memberikan service terbaik.”',
+      quote: (
+        <p className="mb-2 text-gray-700">
+          “Alhamdulillah memberikan solusi terbaik dan Alhamdulillah sesuai
+          dengan budget, dan jarak terdekat dari rumah kami.
+          <br />
+          <br />
+          Alhamdulillah juga memberikan service terbaik.”
+        </p>
+      ),
     },
   ]
 
   return (
-    <div className="relative container mx-auto pt-5 pb-35">
+    <div className="relative container mx-auto pt-0 pb-25 max-lg:px-4 lg:pt-5 lg:pb-35 lg:max-lg:px-0">
       <svg
         width="224"
         height="168"
         viewBox="0 0 224 168"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="absolute top-0 h-auto w-20 lg:relative lg:w-fit"
       >
         <path
           opacity="0.1"
@@ -64,14 +80,16 @@ export default function TestimoniSection() {
         />
       </svg>
 
-      <h1 className="text-xl-semibold text-center">Kata Mereka Tentang Kami</h1>
+      <h1 className="px-20 py-10 text-center text-3xl font-semibold lg:pt-0 lg:text-5xl">
+        Kata Mereka Tentang Kami
+      </h1>
       <Carousel
         opts={{
           align: 'start',
           inViewThreshold: 1,
           watchDrag: true,
         }}
-        className="my-7 w-full max-lg:mt-0"
+        className="mt-7 mb-0 w-full max-lg:mt-0 lg:my-7"
       >
         <CarouselContent className="-ml-4.5 px-2">
           {testimonials.map((testi) => (
@@ -98,7 +116,7 @@ export default function TestimoniSection() {
         viewBox="0 0 224 148"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute right-0 bottom-0"
+        className="absolute right-5 -bottom-10 w-20 lg:right-0 lg:w-fit"
       >
         <path
           opacity="0.1"

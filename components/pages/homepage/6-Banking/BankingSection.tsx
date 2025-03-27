@@ -3,6 +3,7 @@
 import { ArrowCircleRight } from '@/components/icons/arrow-circle-right'
 import { LockIcon2 } from '@/components/icons/lock2'
 import OrnamentBanking from '@/components/icons/ornament-banking'
+import OrnamentBankingMobile from '@/components/icons/ornament-banking-mobile'
 import { WalletIcon } from '@/components/icons/wallet'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -14,9 +15,10 @@ export default function BankingSection() {
   return (
     <div className="relative w-full bg-white">
       {/* Background accent pattern */}
-      <OrnamentBanking className="absolute top-0 right-0 z-10" />
+      <OrnamentBanking className="absolute top-0 right-0 z-10 hidden lg:block" />
+      <OrnamentBankingMobile className="absolute top-0 right-0 z-10 block" />
 
-      <div className="relative z-20 container mx-auto">
+      <div className="relative z-20 container mx-auto max-lg:px-4 lg:max-lg:px-0">
         <div className="flex flex-col items-start gap-8 md:flex-row md:gap-16">
           {/* Left side - Image */}
           <div className="relative h-full w-full justify-end md:w-1/3">
@@ -25,14 +27,14 @@ export default function BankingSection() {
               alt="Hand saving coins in jar"
               width={500}
               height={700}
-              className="xxl:ml-50 ml-25 w-120"
+              className="xxl:ml-50 mx-auto w-70 md:mr-0 lg:ml-25 lg:w-120"
               priority
             />
           </div>
 
           {/* Right side - Content */}
-          <div className="xxl:mt-5 flex w-full flex-col items-center py-12 text-center md:mt-18 md:ml-18 md:w-7/12 md:items-start md:py-20 md:text-left">
-            <h1 className="text-xxl-medium  mb-4">
+          <div className="xxl:mt-5 items-left flex w-full flex-col pt-0 pb-12 text-left md:mt-18 md:ml-18 md:w-7/12 md:py-20 lg:items-center lg:items-start lg:py-12">
+            <h1 className="mb-4 text-3xl font-semibold lg:mb-10 lg:text-7xl lg:font-medium">
               Pembiayaan & <br />
               Tabungan Umroh
             </h1>
@@ -44,12 +46,12 @@ export default function BankingSection() {
               mitra institusi keuangan tepercaya.
             </p>
 
-            <div className="mb-12 flex w-full max-w-md flex-col gap-4 sm:flex-row">
+            <div className="mb-12 flex w-full max-w-md gap-4">
               <Link href={'/banking?page=tabungan'}>
                 <Button
                   variant="outline"
                   intent="primary"
-                  className="px-8"
+                  className="px-5 lg:px-8"
                   type="button"
                 >
                   Mulai Menabung <ArrowCircleRight className="ml-2" size={14} />
@@ -69,7 +71,7 @@ export default function BankingSection() {
             </div>
 
             {/* Features */}
-            <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-3">
+            <div className="grid w-full grid-cols-3 gap-8">
               <div className="flex">
                 <div className="mr-5 flex flex-col items-center">
                   <div className="border-primary-100 text-primary-500 mb-3 flex h-12 w-12 items-center justify-center rounded-lg border">
