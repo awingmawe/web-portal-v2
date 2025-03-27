@@ -4,10 +4,10 @@
     "details": [
       {
         "appIDs": [
-          "HL7U3FQMJL.com.muslim101.muslimapps"
+          "6CTU6LL73A.com.muslim101.muslimapp.dev"
         ],
         "paths": [
-          "*"
+            "/umrah/*"
         ],
         "components": [
           {
@@ -19,7 +19,7 @@
   },
   "webcredentials": {
     "apps": [
-      "HL7U3FQMJL.com.muslim101.muslimapps"
+      "6CTU6LL73A.com.muslim101.muslimapp.dev"
     ]
   }
 }
