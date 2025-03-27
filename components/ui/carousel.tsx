@@ -174,8 +174,9 @@ function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
 
 function CarouselPrevious({
   className,
+  iconColor,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & { iconColor?: string }) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
   return (
@@ -196,15 +197,16 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronIcon className="rotate-90" />
+      <ChevronIcon className="rotate-90" color={iconColor} />
     </button>
   )
 }
 
 function CarouselNext({
   className,
+  iconColor,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & { iconColor?: string }) {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
   return (
@@ -225,7 +227,7 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ChevronIcon className="-rotate-90" />
+      <ChevronIcon className="-rotate-90" color={iconColor} />
     </button>
   )
 }

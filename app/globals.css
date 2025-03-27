@@ -130,6 +130,10 @@
   body {
     font-family: 'BeVietnamPro', sans-serif;
   }
+  ul,
+  ol {
+    list-style: inside;
+  }
 }
 
 @layer utilities {
@@ -323,4 +327,27 @@
       opacity: 0;
     }
   }
+}
+
+/* Add these styles to your CSS file */
+.list-terms-condition ul {
+  list-style-type: disc;
+}
+
+.list-terms-condition ul li {
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  text-overflow: ellipsis;
+}
+
+/* For the drawer content, we don't need ellipsis */
+.drawer-content ul li {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
