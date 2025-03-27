@@ -8,7 +8,7 @@ name: Staging V2 RUNNER web-portal CI/CD Staging
 # Staging Trigger untuk Pre-release dan Published Release
 on:
   release:
-    types: [prereleased, published]
+    types: [prereleased]
 
 permissions:
   contents: write
