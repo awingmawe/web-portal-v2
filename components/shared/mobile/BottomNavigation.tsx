@@ -4,6 +4,7 @@ import { HeartIcon, HeartIconFilled } from '@/components/icons/heart'
 import { HomeIcon, HomeIconFilled } from '@/components/icons/home'
 import { ReceiptIcon, ReceiptIconFilled } from '@/components/icons/receipt'
 import { UserIconCircle } from '@/components/icons/user'
+import { ACCOUNT_URL } from '@/constant/env'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -23,9 +24,14 @@ export default function BottomNavigation() {
       name: 'Transaksi',
       icon: ReceiptIcon,
       activeIcon: ReceiptIconFilled,
-      path: '/transaksi',
+      path: '/transaction',
     },
-    { name: 'Akun', icon: UserIconCircle, activeIcon: '', path: '/akun' },
+    {
+      name: 'Akun',
+      icon: UserIconCircle,
+      activeIcon: '',
+      path: `${ACCOUNT_URL}/dashboard/profile`,
+    },
   ]
 
   return (

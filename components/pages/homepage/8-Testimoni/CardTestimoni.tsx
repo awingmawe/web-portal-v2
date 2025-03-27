@@ -7,7 +7,7 @@ interface CardTestimoniProps {
   name: string
   image: string
   rating: number
-  quote: string
+  quote: React.ReactNode
 }
 
 export const CardTestimoni = memo(function CardTestimoni({
@@ -18,7 +18,7 @@ export const CardTestimoni = memo(function CardTestimoni({
 }: CardTestimoniProps) {
   return (
     <Card className="gap-2 overflow-hidden rounded-xl border border-neutral-200 py-0 shadow-sm">
-      <div className="h-70">
+      <div className="h-40 lg:h-70">
         <Image
           src={image || '/placeholder.svg'}
           alt={name}
@@ -27,7 +27,7 @@ export const CardTestimoni = memo(function CardTestimoni({
           className="aspect-video h-full w-full object-cover object-center"
         />
       </div>
-      <CardContent className="h-[200px]">
+      <CardContent className="h-[240px] lg:h-[220px]">
         <p className="text-l-semibold mb-2">{name}</p>
         <div className="mb-3 flex text-white">
           {Array.from({ length: rating }).map((_, i) => (
@@ -38,7 +38,7 @@ export const CardTestimoni = memo(function CardTestimoni({
             />
           ))}
         </div>
-        <p className="mb-2 text-gray-700">{quote}</p>
+        {quote}
       </CardContent>
     </Card>
   )

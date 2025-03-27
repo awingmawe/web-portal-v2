@@ -113,7 +113,7 @@ export const CardPackage = memo(function CardPackage({
       {/* Image */}
       {showDiscount && (
         <div
-          className={`absolute top-[4%] -left-[7px] z-10 flex h-8 w-[100px] items-center rounded-full rounded-bl-none bg-[#F0143E] py-1 pr-2 pl-2.5`}
+          className={`absolute top-[4%] -left-[7px] z-10 flex h-8 items-center rounded-full rounded-bl-none bg-[#F0143E] py-1 pr-2 pl-2.5 text-nowrap`}
         >
           <div className="text-m-regular text-neutral-0 w-auto font-bold -tracking-[0.28px]">
             PROMO 🎉
