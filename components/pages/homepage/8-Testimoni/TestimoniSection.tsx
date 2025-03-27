@@ -116,7 +116,7 @@ export default function TestimoniSection() {
         viewBox="0 0 224 148"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute right-5 -bottom-10 w-20 lg:right-0 lg:w-fit"
+        className="absolute right-5 -bottom-10 w-20 lg:right-0 lg:bottom-0 lg:w-fit"
       >
         <path
           opacity="0.1"
