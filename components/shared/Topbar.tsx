@@ -204,7 +204,7 @@ const Topbar: React.FC<TopbarProps> = ({
   const TopbarContent = React.memo(() => {
     const { searchQuery, loading, handleSearchChange, handleSearch } =
       useSearchQuery({
-        redirectPath: '/packages',
+        redirectPath: '/search',
         delay: 1000,
         searchParamName: 'query',
       })

@@ -23,7 +23,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
         <p className="text-m-regular max-sm:text-xs max-sm:leading-4">{desc}</p>
       </div>
       <Link
-        href={`/packages?section=${type}`}
+        href={`/search?section=${type}`}
         id={`link-see-all-${type}`}
         className="max-sm:hidden"
       >

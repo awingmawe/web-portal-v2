@@ -329,10 +329,10 @@ export const FilterProductProvider: React.FC<{
         // Navigate to search results page
         // Only update the query parameters if we have keys/values to update
         if (keys.length > 0) {
-          updateQueryParams(keys, values, '/packages')
+          updateQueryParams(keys, values, '/search')
         } else {
           // Fallback if no parameters to add
-          window.location.href = '/packages'
+          window.location.href = '/search'
         }
       }, 1000)
     } catch (err) {
