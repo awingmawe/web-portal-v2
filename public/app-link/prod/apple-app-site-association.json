@@ -1,0 +1,26 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": [
+          "HL7U3FQMJL.com.muslim101.muslimapps"
+        ],
+        "paths": [
+          "/umrah/*"
+
+        ],
+        "components": [
+          {
+            "/": "/*"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "HL7U3FQMJL.com.muslim101.muslimapps"
+    ]
+  }
+}
