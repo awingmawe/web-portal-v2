@@ -13,18 +13,19 @@ import {
 } from '@/components/ui/popover'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
+import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
-import { usePricing } from '@/hooks/package-variant-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import {
   formatCurrency,
   formatCurrencyIndonesia,
+  formatDateToRangeString,
   formatPhoneNumber,
   isEmpty,
 } from '@/lib/utils'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { ChevronDownIcon } from 'lucide-react'
-import { useCallback } from 'react'
+import { useEffect } from 'react'
 
 interface PackageVariantComponentProps {
   variants: PackageVariant[]
@@ -38,19 +39,61 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   titlePackage,
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
+  const {
+    selectedVariant,
+    selectedVariantId,
+    selectedRoomType,
+    isLoading,
+    setVariants,
+    setSelectedVariantId,
+    setSelectedRoomType,
+    getPrice,
+    getOriginalPrice,
+    hasDiscount,
+  } = usePackageVariant()
 
-  const { selectedRoomType, setSelectedRoomType, currentPrice } = usePricing()
+  // Initialize variants in context when component mounts
+  useEffect(() => {
+    if (variants?.length > 0) {
+      setVariants(variants)
+    }
+  }, [variants, setVariants])
 
-  // Change room type handler
-  const handleRoomTypeChange = useCallback(
-    (roomType: 'quad' | 'triple' | 'double') => {
-      setSelectedRoomType(roomType)
-    },
-    [setSelectedRoomType]
-  )
+  // Format departure and arrival dates for display
+  const formattedDeparture = selectedVariant?.departureDate
+    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
+    : '-'
+
+  const formattedArrival = selectedVariant?.arrivalDate
+    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
+    : '-'
+
+  const numberOfDays =
+    selectedVariant?.departureDate && selectedVariant?.arrivalDate
+      ? Math.ceil(
+          (new Date(selectedVariant.arrivalDate).getTime() -
+            new Date(selectedVariant.departureDate).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1
+      : '-'
+
+  const handleBadgePromo = (discountType: string, amount: number | string) => {
+    if (discountType === 'percentage') {
+      return `${amount}%`
+    } else if (discountType === 'nominal') {
+      return `${formatCurrencyIndonesia(amount as number)}`
+    }
+    return null
+  }
+
+  const phoneNumberUsed = organization?.directContact
+    ? formatPhoneNumber(organization?.phoneNumber)
+    : formatPhoneNumber(
+        organization?.bdm?.persona?.phoneNumber ?? '628888755101'
+      )
 
   // Get room type label
-  const getRoomTypeLabel = useCallback(() => {
+  const getRoomTypeLabel = () => {
     switch (selectedRoomType) {
       case 'double':
         return 'Double (1 Kamar sendiri)'
@@ -61,24 +104,54 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       default:
         return 'Pilih kamar hotel'
     }
-  }, [selectedRoomType])
-
-  const handleBadgePromo = (discountType: string, amount: number | string) => {
-    if (discountType === 'percentage') {
-      return `${amount}%`
-    } else if (discountType === 'nominal') {
-      return `${formatCurrencyIndonesia(amount as number)}`
-    }
   }
 
-  const phoneNumberUsed = organization?.directContact
-    ? formatPhoneNumber(organization?.phoneNumber)
-    : formatPhoneNumber(
-        organization?.bdm?.persona?.phoneNumber ?? '628888755101'
-      )
+  // Show skeleton loader when loading
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-3 rounded-[20px] border border-neutral-100 bg-white p-4 max-lg:gap-2 max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:border-b max-lg:border-b-neutral-200 max-lg:px-0 max-lg:pt-0 max-lg:pb-4">
+        <div className="flex items-center justify-between">
+          <div className="h-6 w-28 animate-pulse rounded bg-neutral-200 max-lg:hidden"></div>
+          <div className="h-5 w-24 animate-pulse rounded bg-neutral-200 lg:hidden"></div>
+        </div>
+        <div className="max-lg:h-[60px]">
+          <div className="mb-8 h-4 w-16 animate-pulse rounded bg-neutral-200 max-lg:hidden"></div>
+          <div className="no-scrollbar flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
+            {[1, 2, 3].map((_, index) => (
+              <div
+                key={index}
+                className="h-12 w-24 animate-pulse rounded-lg bg-neutral-200 max-lg:flex-shrink-0"
+              ></div>
+            ))}
+          </div>
+        </div>
+        <div className="h-[1px] w-full bg-neutral-200 max-lg:hidden"></div>
+        <div className="flex items-center justify-between max-lg:my-2">
+          <div className="flex flex-col items-center justify-center gap-1">
+            <div className="h-4 w-32 animate-pulse rounded bg-neutral-200"></div>
+            <div className="mt-1 h-5 w-24 animate-pulse rounded bg-neutral-200"></div>
+          </div>
+          <div className="h-6 w-16 animate-pulse rounded bg-neutral-200"></div>
+          <div className="flex flex-col items-center justify-center gap-1">
+            <div className="h-4 w-32 animate-pulse rounded bg-neutral-200"></div>
+            <div className="mt-1 h-5 w-24 animate-pulse rounded bg-neutral-200"></div>
+          </div>
+        </div>
+        <div className="h-[1px] w-full bg-neutral-200 max-lg:hidden"></div>
+        <div className="h-12 w-full animate-pulse rounded-full bg-neutral-200 max-lg:hidden"></div>
+        <div className="flex items-center justify-between max-lg:hidden">
+          <div className="h-5 w-24 animate-pulse rounded bg-neutral-200"></div>
+          <div className="h-7 w-32 animate-pulse rounded bg-neutral-200"></div>
+        </div>
+        <div className="h-12 w-full animate-pulse rounded-full bg-neutral-200 max-lg:hidden"></div>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex flex-col gap-3 rounded-[20px] border border-neutral-100 bg-white p-4 max-lg:gap-2 max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:border-b max-lg:border-b-neutral-200 max-lg:px-0 max-lg:pt-0 max-lg:pb-4">
+    <div
+      className={`flex flex-col gap-3 rounded-[20px] border border-neutral-100 bg-white p-4 max-lg:gap-2 max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:border-b max-lg:border-b-neutral-200 max-lg:px-0 max-lg:pt-0 max-lg:pb-4 ${dissolve}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between">
         <p className="heading-4-medium text-neutral-900 max-lg:hidden">
@@ -87,11 +160,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         <p className="text-m-semibold text-neutral-900 lg:hidden">
           Varian Paket
         </p>
-        {/* {variants.length > 0 && (
-          <div className="text-s-regular text-neutral-500">
-            Terjual {variants[0]?.soldCount || 300}
-          </div>
-        )} */}
       </div>
 
       {/* Variants selection */}
@@ -105,25 +173,23 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               <div
                 key={variant.id}
                 id={`variant-btn-${variant.id}`}
-                // onClick={() => handleVariantSelect(variant.id)}
-                className={
-                  `hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 max-lg:flex-shrink-0 ${dissolve}`
-                  //   ${
-                  //   selectedVariant?.id === variant.id
-                  //     ? 'border-primary-500 bg-primary-100 border-2'
-                  //     : 'border-1 border-neutral-200 bg-transparent'
-                  // }
-                }
+                onClick={() => setSelectedVariantId(variant.id)}
+                className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 max-lg:flex-shrink-0 ${
+                  selectedVariantId === variant.id
+                    ? 'border-primary-500 bg-primary-100 border-2'
+                    : 'border-2 border-neutral-200 bg-transparent'
+                }`}
               >
                 <p className="text-m-regular text-neutral-900">
-                  {variant.name}
+                  {variant.name || `Varian ${variant.id}`}
                 </p>
-                {variant.discountAmount != '0' && (
-                  <BadgePromo
-                    className="!text-s-semibold -top-[60%]"
-                    title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
-                  />
-                )}
+                {variant.discountAmount &&
+                  Number(variant.discountAmount) > 0 && (
+                    <BadgePromo
+                      className="!text-s-semibold -top-[60%]"
+                      title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
+                    />
+                  )}
               </div>
             ))}
           </div>
@@ -144,21 +210,20 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       )}
 
       {/* Travel dates */}
-      {variants.length > 0 && (
+      {variants.length > 0 && selectedVariant && (
         <div className="flex items-center justify-between max-lg:my-2">
           <div className="flex flex-col items-center justify-center gap-1">
             <div className="text-s-medium text-neutral-500">
               Tanggal Berangkat
             </div>
             <span className="text-m-regular text-neutral-900">
-              {/* {formattedDeparture} */}
+              {formattedDeparture}
             </span>
           </div>
 
           <div className="flex flex-col items-center">
             <div className="text-s-regular -mb-2 text-neutral-300">
-              {/* {numberOfDays} */}
-              Hari
+              {numberOfDays} Hari
             </div>
             <ArrowLongIcon />
           </div>
@@ -166,7 +231,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="flex flex-col items-center justify-center gap-1">
             <div className="text-s-medium text-neutral-500">Tanggal Pulang</div>
             <span className="text-m-regular text-neutral-900">
-              {/* {formattedDeparture} */}
+              {formattedArrival}
             </span>
           </div>
         </div>
@@ -187,7 +252,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                 <div className="flex items-center gap-1">
                   <BedIcon />
                   <span
-                    className={`text-m-regular text-neutral-300 ${selectedRoomType !== null && 'text-neutral-900'}`}
+                    className={`text-m-regular ${!selectedRoomType ? 'text-neutral-300' : 'text-neutral-900'}`}
                   >
                     {getRoomTypeLabel()}
                   </span>
@@ -203,7 +268,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               <PopoverClose>
                 <div
                   className="flex cursor-pointer items-center gap-2 px-3 py-2.5 hover:bg-neutral-50"
-                  onClick={() => handleRoomTypeChange('double')}
+                  onClick={() => setSelectedRoomType('double')}
                 >
                   <span className="text-m-regular">
                     Double (1 Kamar berdua)
@@ -228,7 +293,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               <PopoverClose>
                 <div
                   className="flex cursor-pointer items-center gap-2 border-b border-neutral-100 px-3 py-2.5 hover:bg-neutral-50"
-                  onClick={() => handleRoomTypeChange('triple')}
+                  onClick={() => setSelectedRoomType('triple')}
                 >
                   <span className="text-m-regular">
                     Triple (1 Kamar bertiga)
@@ -253,7 +318,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               <PopoverClose>
                 <div
                   className="flex cursor-pointer items-center gap-2 border-b border-neutral-100 px-3 py-2.5 hover:bg-neutral-50"
-                  onClick={() => handleRoomTypeChange('quad')}
+                  onClick={() => setSelectedRoomType('quad')}
                 >
                   <span className="text-m-regular">
                     Quad (1 Kamar berempat)
@@ -284,17 +349,13 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <div className="flex items-center justify-between max-lg:hidden">
         <div className="text-m-regular text-neutral-500">Total Harga</div>
         <div className="flex items-center">
-          {/* {hasDiscount && (
+          {hasDiscount() && (
             <span className="text-s-regular mr-2 text-neutral-500 line-through">
-              {new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-              }).format(originalPrice || 0)}
+              {formatCurrency(getOriginalPrice())}
             </span>
-          )} */}
+          )}
           <span className="heading-4-bold text-neutral-900">
-            {isEmpty(currentPrice) ? '-' : formatCurrency(currentPrice)}
+            {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice())}
           </span>
         </div>
       </div>
@@ -306,6 +367,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             className="w-full rounded-full py-3 max-lg:hidden"
             variant="default"
             size="lg"
+            id="btn-checkout-desktop"
           >
             Checkout Sekarang
           </Button>
@@ -318,6 +380,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
             variant="outline"
             size="lg"
+            id="btn-pay-later-desktop"
           >
             Pesan Sekarang, Bayar Nanti
           </Button>
@@ -326,6 +389,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             className="w-full rounded-full py-2 lg:hidden"
             variant="outline"
             size="lg"
+            id="btn-check-quota"
           >
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
@@ -345,82 +409,15 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {/* Bottom actions */}
       {variants.length > 0 && (
         <div className="flex items-center justify-between max-lg:hidden">
-          {/* <button className="flex items-center gap-1.5 text-neutral-700">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-            >
-              <path
-                d="M12.62 20.81C12.28 20.93 11.72 20.93 11.38 20.81C8.48 19.82 2 15.69 2 8.68998C2 5.59998 4.49 3.09998 7.56 3.09998C9.38 3.09998 10.99 3.97998 12 5.33998C13.01 3.97998 14.63 3.09998 16.44 3.09998C19.51 3.09998 22 5.59998 22 8.68998C22 15.69 15.52 19.82 12.62 20.81Z"
-                stroke="#30302F"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="text-s-regular">Wishlist</span>
-          </button> */}
           <div className="text-s-regular text-neutral-200"></div>
           <div
             onClick={() => shareViaWhatsApp(titlePackage, phoneNumberUsed)}
-            className="flex items-center gap-1"
+            className="hover:text-primary-500 flex cursor-pointer items-center gap-1 transition-colors"
           >
             <span className="text-s-medium">Konsultasi</span>
             <WhatsappIcon size={16} />
           </div>
           <div className="text-s-regular text-neutral-200"></div>
-
-          {/* <Link href="#" className="flex items-center gap-1.5 text-neutral-700">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-            >
-              <path
-                d="M16.9998 6.99994C18.1998 6.99994 19.1998 6.00008 19.1998 4.80008C19.1998 3.60008 18.1998 2.59998 16.9998 2.59998C15.7998 2.59998 14.7998 3.60008 14.7998 4.80008C14.7998 6.00008 15.7998 6.99994 16.9998 6.99994Z"
-                stroke="#30302F"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M6.99988 14.1998C8.19988 14.1998 9.19974 13.2 9.19974 12C9.19974 10.8 8.19988 9.79993 6.99988 9.79993C5.79988 9.79993 4.80078 10.8 4.80078 12C4.80078 13.2 5.79988 14.1998 6.99988 14.1998Z"
-                stroke="#30302F"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M17.0004 21.3999C18.2004 21.3999 19.2003 20.4 19.2003 19.2C19.2003 18 18.2004 17 17.0004 17C15.8004 17 14.8008 18 14.8008 19.2C14.8008 20.4 15.8004 21.3999 17.0004 21.3999Z"
-                stroke="#30302F"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.96875 13.3999L15.0312 17.7999"
-                stroke="#30302F"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M15.0312 6.19995L8.96875 10.6"
-                stroke="#30302F"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="text-s-regular">Cek Kuota</span>
-          </Link> */}
         </div>
       )}
     </div>

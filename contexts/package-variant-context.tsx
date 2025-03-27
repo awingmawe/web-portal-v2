@@ -6,6 +6,7 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react'
 
@@ -15,25 +16,35 @@ export type RoomType = 'quad' | 'triple' | 'double' | null
 // Context state interface
 interface PackageVariantContextState {
   selectedVariant: PackageVariant | null
+  selectedVariantId: number | null
   variants: PackageVariant[]
   selectedRoomType: RoomType
+  isLoading: boolean
   setSelectedVariant: (variant: PackageVariant | null) => void
+  setSelectedVariantId: (id: number | null) => void
   setVariants: (variants: PackageVariant[]) => void
   setSelectedRoomType: (roomType: RoomType) => void
+  setIsLoading: (loading: boolean) => void
   getPrice: () => number
   getOriginalPrice: () => number
+  hasDiscount: () => boolean
 }
 
 // Initial state
 const initialState: PackageVariantContextState = {
   selectedVariant: null,
+  selectedVariantId: null,
   variants: [],
   selectedRoomType: null,
+  isLoading: true,
   setSelectedVariant: () => {},
+  setSelectedVariantId: () => {},
   setVariants: () => {},
   setSelectedRoomType: () => {},
+  setIsLoading: () => {},
   getPrice: () => 0,
   getOriginalPrice: () => 0,
+  hasDiscount: () => false,
 }
 
 // Create context
@@ -46,6 +57,7 @@ interface PackageVariantProviderProps {
   initialVariants?: PackageVariant[]
   initialSelectedVariant?: PackageVariant | null
   initialRoomType?: RoomType
+  initialLoading?: boolean
 }
 
 // Provider component
@@ -54,16 +66,48 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   initialVariants = [],
   initialSelectedVariant = null,
   initialRoomType = null,
+  initialLoading = true,
 }) => {
   const [selectedVariant, setSelectedVariant] = useState<PackageVariant | null>(
     initialSelectedVariant
   )
+  const [selectedVariantId, setSelectedVariantId] = useState<number | null>(
+    initialSelectedVariant?.id || null
+  )
   const [variants, setVariants] = useState<PackageVariant[]>(initialVariants)
   const [selectedRoomType, setSelectedRoomType] =
     useState<RoomType>(initialRoomType)
+  const [isLoading, setIsLoading] = useState<boolean>(initialLoading)
+
+  // Effect to automatically select the first variant when variants are loaded
+  useEffect(() => {
+    if (variants.length > 0 && !selectedVariant && !selectedVariantId) {
+      setSelectedVariant(variants[0])
+      setSelectedVariantId(variants[0].id)
+
+      // Default to quad room type if none selected
+      if (!selectedRoomType) {
+        setSelectedRoomType('quad')
+      }
+
+      // Turn off loading after a short delay to allow for smoother transitions
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500)
+    }
+  }, [variants, selectedVariant, selectedVariantId, selectedRoomType])
+
+  // Effect to update selected variant when selected variant ID changes
+  useEffect(() => {
+    if (selectedVariantId && variants.length > 0) {
+      const variant = variants.find((v) => v.id === selectedVariantId)
+      if (variant) {
+        setSelectedVariant(variant)
+      }
+    }
+  }, [selectedVariantId, variants])
 
   // Helper function to get current price based on selected variant and room type
-  // Use useCallback to memoize this function
   const getPrice = useCallback((): number => {
     if (!selectedVariant) return 0
 
@@ -79,7 +123,6 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   }, [selectedVariant, selectedRoomType])
 
   // Helper function to get original price based on selected variant and room type
-  // Use useCallback to memoize this function
   const getOriginalPrice = useCallback((): number => {
     if (!selectedVariant) return 0
 
@@ -94,32 +137,30 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     }
   }, [selectedVariant, selectedRoomType])
 
-  // Memoize state setter functions to prevent unnecessary recreations
-  const memoizedSetSelectedVariant = useCallback(
-    (variant: PackageVariant | null) => {
-      setSelectedVariant(variant)
-    },
-    []
-  )
+  // Helper function to check if the selected variant has a discount
+  const hasDiscount = useCallback((): boolean => {
+    if (!selectedVariant) return false
+    return (
+      !!selectedVariant.discountAmount &&
+      Number(selectedVariant.discountAmount) > 0
+    )
+  }, [selectedVariant])
 
-  const memoizedSetVariants = useCallback((newVariants: PackageVariant[]) => {
-    setVariants(newVariants)
-  }, [])
-
-  const memoizedSetSelectedRoomType = useCallback((roomType: RoomType) => {
-    setSelectedRoomType(roomType)
-  }, [])
-
-  // Memoize the context value to prevent unnecessary re-renders of consumers
+  // Context value
   const value = {
     selectedVariant,
+    selectedVariantId,
     variants,
     selectedRoomType,
-    setSelectedVariant: memoizedSetSelectedVariant,
-    setVariants: memoizedSetVariants,
-    setSelectedRoomType: memoizedSetSelectedRoomType,
+    isLoading,
+    setSelectedVariant,
+    setSelectedVariantId,
+    setVariants,
+    setSelectedRoomType,
+    setIsLoading,
     getPrice,
     getOriginalPrice,
+    hasDiscount,
   }
 
   return (

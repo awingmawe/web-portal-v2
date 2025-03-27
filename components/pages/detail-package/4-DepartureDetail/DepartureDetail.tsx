@@ -1,7 +1,12 @@
+'use client'
+
 import { AirlineIcon } from '@/components/icons/airline'
 import { BuildingIcon } from '@/components/icons/building'
 import { DateIcon } from '@/components/icons/date'
 import { TravelRoute } from '@/constant/types/TravelProps'
+import { usePackageVariant } from '@/contexts/package-variant-context'
+import { dissolve } from '@/lib/animation-setup'
+import { formatDateToRangeString } from '@/lib/utils'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import React from 'react'
 
@@ -18,31 +23,30 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   meccaHotel,
   madinahHotel,
 }) => {
-  const {
-    airline: { name: airlineName },
-    to: {
-      airport: { code: departureAirportTo },
-    },
-    from: {
-      airport: { code: departureAirportFrom },
-    },
-  } = departure
+  const { isLoading, selectedVariant } = usePackageVariant()
 
-  const {
-    to: {
-      airport: { code: arrivelAirportTo },
-    },
-    from: {
-      airport: { code: arrivelAirportFrom },
-    },
-  } = arrival
+  // Format departure and arrival dates from the selected variant
+  const formattedDeparture = selectedVariant?.departureDate
+    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
+    : '-'
+
+  const formattedArrival = selectedVariant?.arrivalDate
+    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
+    : '-'
+
+  // Handle missing data gracefully
+  const departureAirportFrom = departure?.from?.airport?.code || '-'
+  const departureAirportTo = departure?.to?.airport?.code || '-'
+  const arrivelAirportFrom = arrival?.from?.airport?.code || '-'
+  const arrivelAirportTo = arrival?.to?.airport?.code || '-'
+  const airlineName = departure?.airline?.name || '-'
 
   // Left column items
   const leftColumnItems = [
     {
       icon: <DateIcon size={24} />,
       title: 'Tanggal Keberangkatan dan Kepulangan',
-      value: '',
+      value: `${formattedDeparture} - ${formattedArrival}`,
       className: 'max-lg:hidden', // Hide on mobile
     },
     {
@@ -62,19 +66,52 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
     {
       icon: <AirlineIcon size={24} />,
       title: 'Maskapai Penerbangan',
-      value: airlineName || '',
+      value: airlineName,
     },
     {
       icon: <BuildingIcon size={24} color="neutral-900" />,
-      title: 'Building Makkah',
-      value: meccaHotel || '',
+      title: 'Hotel Makkah',
+      value: meccaHotel || '-',
     },
     {
       icon: <BuildingIcon size={24} color="neutral-900" />,
       title: 'Hotel Madinah',
-      value: madinahHotel || '',
+      value: madinahHotel || '-',
     },
   ]
+
+  // Render skeleton for loading state
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-12 flex-col border-b border-b-neutral-200 pb-4 max-lg:flex max-lg:gap-2">
+        {/* Left Column Skeleton */}
+        <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
+          {[1, 2, 3].map((_, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <div className="h-6 w-6 animate-pulse rounded-full bg-neutral-200"></div>
+              <div>
+                <div className="mb-1 h-4 w-32 animate-pulse rounded bg-neutral-200"></div>
+                <div className="h-5 w-48 animate-pulse rounded bg-neutral-200"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Right Column Skeleton */}
+        <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
+          {[1, 2, 3].map((_, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <div className="h-6 w-6 animate-pulse rounded-full bg-neutral-200"></div>
+              <div>
+                <div className="mb-1 h-4 w-32 animate-pulse rounded bg-neutral-200"></div>
+                <div className="h-5 w-48 animate-pulse rounded bg-neutral-200"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   // Render item function for both columns
   const renderItem = (item: (typeof leftColumnItems)[0], index: number) => (
@@ -95,7 +132,9 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   )
 
   return (
-    <div className="grid grid-cols-12 flex-col border-b border-b-neutral-200 pb-4 max-lg:flex max-lg:gap-2">
+    <div
+      className={`grid grid-cols-12 flex-col border-b border-b-neutral-200 pb-4 max-lg:flex max-lg:gap-2 ${dissolve}`}
+    >
       {/* Left Column */}
       <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
         {leftColumnItems.map(renderItem)}
