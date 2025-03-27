@@ -17,14 +17,14 @@ export default function Footer({
     <footer
       className={`${cn('w-full border border-t border-neutral-200 bg-white py-5  pb-30 lg:pb-0', className)}`}
     >
-      <div className="container mx-auto px-4">
+      <div className="mx-auto px-20">
         {type == 'normal' && (
           <Fragment>
             <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
               {/* Column 1 */}
               <div className="space-y-4">
                 <h3 className="text-m-semibold text-neutral-800">Muslim101</h3>
-                <ul className="space-y-2">
+                <ul className="list-none space-y-2">
                   <li>
                     <Link
                       href="/about-us"
@@ -49,7 +49,7 @@ export default function Footer({
               {/* Column 2 */}
               <div className="space-y-4">
                 <h3 className="text-m-semibold text-neutral-800">101</h3>
-                <ul className="space-y-2">
+                <ul className="list-none space-y-2">
                   <li>
                     <Link
                       href="#"
@@ -81,7 +81,7 @@ export default function Footer({
                 <h3 className="text-m-semibold text-neutral-800">
                   Kemitraan 101
                 </h3>
-                <ul className="space-y-2">
+                <ul className="list-none space-y-2">
                   <li>
                     <Link href="#" className="text-m-regular text-neutral-900">
                       Perusahaan
@@ -113,7 +113,7 @@ export default function Footer({
               {/* Column 4 */}
               <div className="space-y-4">
                 <h3 className="text-m-semibold text-neutral-800">Ikuti Kami</h3>
-                <ul className="space-y-2">
+                <ul className="list-none space-y-2">
                   <li>
                     <Link
                       href="https://www.instagram.com/muslim101.id/"

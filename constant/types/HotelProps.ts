@@ -6,5 +6,19 @@ export interface Hotel {
   rating: number
   address: string
   cityName: string
-  hotelDestination: any[]
+  latitude: string
+  longitude: string
+  hotelDestination: HotelDestination[]
+}
+
+export interface HotelDestination {
+  id: number
+  hotelId: number
+  distance: number
+  priority: boolean
+  createdAt: string
+  createdBy: string
+  modifiedAt: string
+  modifiedBy: string | null
+  destinationName: string
 }

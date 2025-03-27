@@ -5,6 +5,7 @@ import React from 'react'
 export const ChevronIcon: React.FC<IconProps> = ({
   className = '',
   size,
+  color = 'stroke-current',
   ...props
 }) => {
   return (
@@ -14,7 +15,7 @@ export const ChevronIcon: React.FC<IconProps> = ({
       viewBox={`0 0 16 16`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn('stroke-neutral-900', className)}
+      className={cn(`${color}`, className)}
       {...props}
     >
       <path

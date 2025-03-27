@@ -6,12 +6,12 @@ import {
   setAccessToken,
 } from '@/services/common/auth'
 
+import { toast } from '@/components/ui/sonner'
 import { Context } from '@/contexts/auth/context'
 import { usePermission, useProfile } from '@/contexts/auth/shared/api'
 import { headersManager } from '@/services/common/http'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 
 export default function AuthProvider({
   children,

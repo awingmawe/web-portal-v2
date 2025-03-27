@@ -1,9 +1,9 @@
 import { BuildingIcon } from '@/components/icons/building'
-import { CornerIcon } from '@/components/icons/corner'
 import { CalendarIcon } from '@/components/icons/date'
 import { InfoIcon } from '@/components/icons/info'
 import { StarIconPrimary } from '@/components/icons/star'
 import { StoreIcon } from '@/components/icons/store'
+import BadgePromo from '@/components/shared/Badge'
 import { CardData } from '@/constant/types/PackageProps'
 import {
   capitalizeText,
@@ -42,6 +42,7 @@ export const CardPackage = memo(function CardPackage({
     isPlus,
     codeCountry,
     releasedAt,
+    packageType,
   } = data
 
   // Memoize complex calculations
@@ -106,21 +107,12 @@ export const CardPackage = memo(function CardPackage({
 
   return (
     <Link
-      href={`/umrah/${slugOrganization}/${slugPackage}`}
+      href={`/${packageType}/${slugOrganization}/${slugPackage}`}
       className="relative"
       id="card-package"
     >
       {/* Image */}
-      {showDiscount && (
-        <div
-          className={`absolute top-[4%] -left-[7px] z-10 flex h-8 items-center rounded-full rounded-bl-none bg-[#F0143E] py-1 pr-2 pl-2.5 text-nowrap`}
-        >
-          <div className="text-m-regular text-neutral-0 w-auto font-bold -tracking-[0.28px]">
-            PROMO 🎉
-          </div>
-          <CornerIcon className="absolute -bottom-[7px] left-0" />
-        </div>
-      )}
+      {showDiscount && <BadgePromo title="PROMO 🎉" />}
       <div className="relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md">
         <Image
           src={!isEmpty(src) && isValidImage(src) ? src : NoImagePlaceholder}
