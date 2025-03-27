@@ -63,7 +63,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = ({
   const router = useRouter()
   // Use the same search hook as desktop version
   const { searchQuery, handleSearchChange, handleSearch } = useSearchQuery({
-    redirectPath: '/packages',
+    redirectPath: '/search',
     delay: 1000,
     searchParamName: 'query',
   })

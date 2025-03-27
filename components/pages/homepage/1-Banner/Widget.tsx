@@ -122,7 +122,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
                 <span className="text-s-regular text-neutral-900">
                   Lihat Semua Paket
                 </span>
-                <Link href="/packages">
+                <Link href="/search">
                   <MaximizeIcon
                     size={14}
                     className="cursor-pointer text-neutral-900"

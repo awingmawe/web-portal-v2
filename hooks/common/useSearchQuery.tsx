@@ -10,7 +10,7 @@ interface UseSearchQueryProps {
 
 export function useSearchQuery({
   initialQuery = '',
-  redirectPath = '/packages',
+  redirectPath = '/search',
   delay = 500,
   searchParamName = 'query',
 }: UseSearchQueryProps = {}) {
