@@ -15,9 +15,9 @@ export default function Footer({
 }: FooterProps) {
   return (
     <footer
-      className={`${cn('w-full border border-t border-neutral-200 bg-white py-5  pb-30 lg:pb-0', className)}`}
+      className={`${cn('w-full border border-t border-neutral-200 bg-white py-5  pb-30 lg:pb-5', className)}`}
     >
-      <div className="mx-auto px-20">
+      <div className="mx-auto px-10 lg:px-20">
         {type == 'normal' && (
           <Fragment>
             <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
@@ -41,6 +41,22 @@ export default function Footer({
                   <li>
                     <Link href="#" className="text-m-regular text-neutral-900">
                       Bantuan
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/legal/syarat-ketentuan"
+                      className="text-m-regular text-neutral-900"
+                    >
+                      Syarat & Ketentuan
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/legal/kebijakan-privasi"
+                      className="text-m-regular text-neutral-900"
+                    >
+                      Kebijakan Privasi
                     </Link>
                   </li>
                 </ul>
