@@ -5,10 +5,10 @@ name: Staging V2 RUNNER web-portal CI/CD Staging
 #     branches:
 #       - main
 
-# Staging Trigger Prerelease
+# Staging Trigger untuk Pre-release dan Published Release
 on:
   release:
-    types: [prereleased]
+    types: [prereleased, published]
 
 permissions:
   contents: write
