@@ -3,7 +3,7 @@ import { JourneyTimeline } from '@/components/pages/about-us/2-Journey/JourneyTi
 export default function Journey() {
   return (
     <section className="w-full">
-      <div className="container mx-auto px-4 py-16 max-lg:pt-3.5 max-lg:pb-6">
+      <div className="py-16 max-lg:pt-3.5 max-lg:pb-6">
         <h1 className="text-xl-medium text-primary-900 mb-6 max-lg:text-xl max-lg:leading-6.5 max-lg:font-bold">
           Perjalanan Kami
         </h1>
