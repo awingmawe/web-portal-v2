@@ -2,8 +2,9 @@
 
 import BankingSection from '@/components/pages/homepage/5-ScrollAnimation/BankingSection'
 import PreparationSection from '@/components/pages/homepage/5-ScrollAnimation/PreparationSection'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Image from 'next/image'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import {
   Animator,
   batch,
@@ -19,10 +20,7 @@ import TravelImageSection from './TravelImageSection'
 function OverscrollTracker({ children }: { children?: React.ReactNode }) {
   const [endExperience, setEndExperience] = useState(false)
   const sh = useRef<number>(800)
-
-  useEffect(() => {
-    sh.current = window.screen.height
-  }, [])
+  const { lg: isMobile } = useTailwindBreakpoint()
 
   return (
     <Fragment>
@@ -75,15 +73,15 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                     },
                   })}
                 >
-                  <p className="text-xl-regular absolute top-60 left-55 z-10 inline-block">
-                    Not just a service, It’s an...
+                  <p className="text-xl-regular absolute z-10 inline-block max-lg:top-60 max-lg:left-7 lg:top-40 lg:left-32.5">
+                    Not just a service, It&apos;s an...
                   </p>
                 </Animator>
                 <div
                   className="absolute top-[0] left-[0] h-full w-full bg-[#00000080]"
                   id="bg-overlay-1"
                 />
-                <div className="flex h-screen w-full items-center justify-center bg-white px-2.5 py-1.5 text-center text-[220px] font-bold text-black mix-blend-screen">
+                <div className="flex h-screen w-full items-center justify-center bg-white px-2.5 py-1.5 text-center text-[220px] font-bold text-black mix-blend-screen max-lg:text-[48px]">
                   <Animator
                     animation={batch(
                       {
@@ -108,8 +106,13 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                           style: {
                             transform: (value: number) => {
                               const offset = value / 0.18
-                              const tx = -58.5 * (offset > 1 ? 1 : offset)
-                              const ty = 74 * (offset > 1 ? 1 : offset)
+                              // Adjust the transform values based on screen size
+                              const tx = isMobile
+                                ? -12.5 * (offset > 1 ? 1 : offset)
+                                : -58.5 * (offset > 1 ? 1 : offset)
+                              const ty = isMobile
+                                ? 15 * (offset > 1 ? 1 : offset)
+                                : 74 * (offset > 1 ? 1 : offset)
                               return `translate(${tx}px, ${ty}px)`
                             },
                           },
@@ -165,7 +168,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
             >
               <Animator animation={batch(MoveIn(0, sh.current * 2), Sticky())}>
                 <div className="relative z-2 w-full p-5" id="">
-                  <h1 className="none block text-center text-[92px] text-white">
+                  <h1 className="none block text-center text-white max-lg:text-4xl sm:max-lg:text-5xl lg:text-[92px]">
                     <span className="whitespace-nowrap text-white">
                       <span className="relative font-bold text-white">
                         100.000+{' '}
@@ -174,10 +177,10 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                           width={490}
                           height={68}
                           alt="line"
+                          className="absolute max-lg:h-auto max-lg:w-48 lg:h-[68px] lg:w-[490px]"
                           style={{
-                            position: 'absolute',
-                            top: 80,
-                            left: -48,
+                            top: isMobile ? 36 : 80,
+                            left: isMobile ? -18 : -48,
                           }}
                         />
                       </span>
@@ -209,7 +212,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
             />
             <div className="fixed top-[0] left-[0] h-full w-full bg-[#00000080]" />
             <div className="flex-column fixed top-[0px] z-2 flex h-dvh w-dvw items-center justify-center p-5">
-              <h1 className="none block text-center text-[92px] text-white">
+              <h1 className="none block text-center text-white max-lg:text-4xl sm:max-lg:text-5xl lg:text-[92px]">
                 <span className="relative font-bold text-white">
                   100.000+{' '}
                   <Image
@@ -217,10 +220,10 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                     width={490}
                     height={68}
                     alt="line"
+                    className="absolute max-lg:h-auto max-lg:w-48 lg:h-[68px] lg:w-[490px]"
                     style={{
-                      position: 'absolute',
-                      top: 80,
-                      left: -48,
+                      top: isMobile ? 36 : 80,
+                      left: isMobile ? -18 : -48,
                     }}
                   />
                 </span>
