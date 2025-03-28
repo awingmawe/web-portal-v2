@@ -1,6 +1,6 @@
 'use client'
 
-import { CardTestimoni } from '@/components/pages/homepage/8-Testimoni/CardTestimoni'
+import { CardTestimoni } from '@/components/pages/homepage/6-Testimoni/CardTestimoni'
 import {
   Carousel,
   CarouselContent,
@@ -64,7 +64,7 @@ export default function TestimoniSection() {
   ]
 
   return (
-    <div className="relative container mx-auto pt-0 pb-25 max-lg:px-4 lg:pt-5 lg:pb-35 lg:max-lg:px-0">
+    <div className="bg-neutral-0 relative z-6 w-full">
       <svg
         width="224"
         height="168"
@@ -79,37 +79,38 @@ export default function TestimoniSection() {
           fill="black"
         />
       </svg>
-
-      <h1 className="px-20 py-10 text-center text-3xl font-semibold lg:pt-0 lg:text-5xl">
-        Kata Mereka Tentang Kami
-      </h1>
-      <Carousel
-        opts={{
-          align: 'start',
-          inViewThreshold: 1,
-          watchDrag: true,
-        }}
-        className="mt-7 mb-0 w-full max-lg:mt-0 lg:my-7"
-      >
-        <CarouselContent className="-ml-4.5 px-2">
-          {testimonials.map((testi) => (
-            <CarouselItem
-              key={`testimoni-${testi.id}`}
-              className="basis-4/5 items-center pl-4.5 md:basis-1/2 lg:basis-1/3"
-            >
-              <CardTestimoni
-                name={testi.name}
-                image={testi.image}
-                rating={testi.rating}
-                quote={testi.quote}
-                id={testi.id}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="top-[35%] max-sm:hidden" />
-        <CarouselNext className="top-[35%] max-sm:hidden" />
-      </Carousel>
+      <div className="px-20 pt-0 pb-35 max-lg:px-2">
+        <h1 className="px-20 py-10 text-center text-3xl font-semibold lg:pt-0 lg:text-5xl">
+          Kata Mereka Tentang Kami
+        </h1>
+        <Carousel
+          opts={{
+            align: 'start',
+            inViewThreshold: 1,
+            watchDrag: true,
+          }}
+          className="mt-7 mb-0 w-full max-lg:mt-0 lg:my-7"
+        >
+          <CarouselContent className="-ml-4.5 px-2">
+            {testimonials.map((testi) => (
+              <CarouselItem
+                key={`testimoni-${testi.id}`}
+                className="basis-4/5 items-center pl-4.5 md:basis-1/2 lg:basis-1/3"
+              >
+                <CardTestimoni
+                  name={testi.name}
+                  image={testi.image}
+                  rating={testi.rating}
+                  quote={testi.quote}
+                  id={testi.id}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="top-[35%] max-sm:hidden" />
+          <CarouselNext className="top-[35%] max-sm:hidden" />
+        </Carousel>
+      </div>
       <svg
         width="224"
         height="148"

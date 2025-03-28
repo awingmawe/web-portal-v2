@@ -10,7 +10,7 @@ import { Trophy } from '@/components/icons/trophy'
 
 export default function PreparationSection() {
   return (
-    <div className="bg-primary-500 relative w-full">
+    <div className="bg-primary-500 relative z-5 w-full">
       {/* Background accent pattern */}
       <OrnamentBanking2 className="absolute top-0 left-0 z-10 hidden lg:block" />
       <OrnamentBanking2Mobile className="absolute -top-30 left-0 z-10 block lg:hidden" />

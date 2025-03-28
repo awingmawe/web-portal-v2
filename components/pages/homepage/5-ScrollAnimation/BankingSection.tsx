@@ -13,7 +13,7 @@ import Link from 'next/link'
 
 export default function BankingSection() {
   return (
-    <div className="relative w-full bg-white">
+    <div className="relative z-4 w-full bg-white">
       {/* Background accent pattern */}
       <OrnamentBanking className="absolute top-0 right-0 z-10 hidden lg:block" />
       <OrnamentBankingMobile className="absolute top-0 right-0 z-10 block" />
@@ -33,7 +33,7 @@ export default function BankingSection() {
           </div>
 
           {/* Right side - Content */}
-          <div className="xxl:mt-5 items-left flex w-full flex-col pt-0 pb-12 text-left md:mt-18 md:ml-18 md:w-7/12 md:py-20 lg:items-center lg:items-start lg:py-12">
+          <div className="xxl:mt-5 items-left flex w-full flex-col pt-0 pb-12 text-left md:mt-18 md:ml-18 md:w-7/12 md:py-20 lg:items-start lg:py-12">
             <h1 className="mb-4 text-3xl font-semibold lg:mb-10 lg:text-7xl lg:font-medium">
               Pembiayaan & <br />
               Tabungan Umroh

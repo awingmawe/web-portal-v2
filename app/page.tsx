@@ -5,9 +5,7 @@ import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import { PackageListPlus } from '@/components/pages/homepage/4-PackageList/PackageListPlus'
 import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScroll'
-import BankingSection from '@/components/pages/homepage/6-Banking/BankingSection'
-import PreparationSection from '@/components/pages/homepage/7-Preparation/PreparationSection'
-import TestimoniSection from '@/components/pages/homepage/8-Testimoni/TestimoniSection'
+import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
@@ -135,9 +133,7 @@ export default async function Home() {
       <main className="sticky top-30 container mx-auto max-lg:px-4">
         <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
       </main>
-      <OverscrollTracker></OverscrollTracker>
-      <BankingSection />
-      <PreparationSection />
+      <OverscrollTracker />
       <TestimoniSection />
       <BottomNavigation />
       <Footer className="relative z-2" />
