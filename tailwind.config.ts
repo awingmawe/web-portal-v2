@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         sans: ['BeVietnamPro', 'sans-serif'],
         bevietnam: ['BeVietnamPro', 'sans-serif'],
+        playball: ['Playball', 'serif'],
       },
       colors: {
         // Neutral colors

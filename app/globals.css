@@ -7,6 +7,13 @@
 /* Be Vietnam Pro Font */
 @font-face {
   font-family: 'BeVietnamPro';
+  src: url('/fonts/BeVietnamPro-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'BeVietnamPro';
   src: url('/fonts/BeVietnamPro-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
@@ -33,6 +40,14 @@
   font-family: 'BeVietnamPro';
   src: url('/fonts/BeVietnamPro-Bold.woff2') format('woff2');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playball';
+  src: url('/fonts/Playball-Regular.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
