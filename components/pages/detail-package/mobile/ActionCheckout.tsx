@@ -83,7 +83,7 @@ export default function ActionCheckoutMobile({
             </Button>
           </Link>
           <Link
-            href={`https://dev.v1.moslem101.com/checkout?packageId=${selectedVariant?.id}&roomType=${selectedRoomType}`}
+            href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
             className="w-full"
           >
             <Button
