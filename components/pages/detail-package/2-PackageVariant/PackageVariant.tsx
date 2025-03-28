@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowIcon, ArrowLongIcon } from '@/components/icons/arrow'
+import { ArrowLongIcon } from '@/components/icons/arrow'
 import { BedIcon } from '@/components/icons/bed'
 import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
@@ -25,6 +25,7 @@ import {
 } from '@/lib/utils'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { ChevronDownIcon } from 'lucide-react'
+import Link from 'next/link'
 import { useEffect } from 'react'
 
 interface PackageVariantComponentProps {
@@ -363,29 +364,36 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {/* Action buttons */}
       {variants.length > 0 ? (
         <div>
-          <Button
-            className="w-full rounded-full py-3 max-lg:hidden"
-            variant="default"
-            size="lg"
-            id="btn-checkout-desktop"
+          <Link
+            href={`https://dev.v1.moslem101.com/checkout?packageId=${selectedVariant?.id}&roomType=${selectedRoomType}`}
           >
-            Checkout Sekarang
-          </Button>
+            <Button
+              className="w-full rounded-full py-3 max-lg:hidden"
+              variant="default"
+              size="lg"
+              id="btn-checkout-desktop"
+              disabled={isEmpty(selectedRoomType) && isEmpty(selectedVariant)}
+            >
+              Checkout Sekarang
+            </Button>
+          </Link>
 
           <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
             atau
           </div>
+          <Link href={`https://dev.v1.moslem101.com/banking/credit`}>
+            <Button
+              className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
+              variant="outline"
+              size="lg"
+              id="btn-pay-later-desktop"
+            >
+              Pesan Sekarang, Bayar Nanti
+            </Button>
+          </Link>
 
-          <Button
-            className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
-            variant="outline"
-            size="lg"
-            id="btn-pay-later-desktop"
-          >
-            Pesan Sekarang, Bayar Nanti
-          </Button>
-
-          <Button
+          {/* Next Sprint */}
+          {/* <Button
             className="w-full rounded-full py-2 lg:hidden"
             variant="outline"
             size="lg"
@@ -393,7 +401,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           >
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
-          </Button>
+          </Button> */}
         </div>
       ) : (
         <Button

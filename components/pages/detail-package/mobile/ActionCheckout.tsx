@@ -7,7 +7,8 @@ import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
-import { formatPhoneNumber } from '@/lib/utils'
+import { formatPhoneNumber, isEmpty } from '@/lib/utils'
+import Link from 'next/link'
 import { useEffect } from 'react'
 
 interface ActionCheckoutProps {
@@ -22,7 +23,8 @@ export default function ActionCheckoutMobile({
   organization,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
-  const { isLoading, selectedVariant, setVariants } = usePackageVariant()
+  const { isLoading, selectedVariant, setVariants, selectedRoomType } =
+    usePackageVariant()
 
   // Initialize variants in context when component mounts
   useEffect(() => {
@@ -70,22 +72,33 @@ export default function ActionCheckoutMobile({
           >
             <WhatsappIcon size={48} />
           </div>
-          <Button
-            variant="outline"
-            className="border-primary-500 w-full rounded-full"
-            size="md"
-            id="btn-pay-later-mobile"
+          <Link
+            href={`https://dev.v1.moslem101.com/banking/credit`}
+            className="w-full"
           >
-            <p className="text-xs-semibold">Bayar Nanti</p>
-          </Button>
-          <Button
-            variant="default"
-            className="w-full rounded-full"
-            size="md"
-            id="btn-checkout-mobile"
+            <Button
+              variant="outline"
+              className="border-primary-500 w-full rounded-full"
+              size="md"
+              id="btn-pay-later-mobile"
+            >
+              <p className="text-xs-semibold">Bayar Nanti</p>
+            </Button>
+          </Link>
+          <Link
+            href={`https://dev.v1.moslem101.com/checkout?packageId=${selectedVariant?.id}&roomType=${selectedRoomType}`}
+            className="w-full"
           >
-            <p className="text-xs-semibold">Checkout Sekarang!</p>
-          </Button>
+            <Button
+              variant="default"
+              className="w-full rounded-full"
+              size="md"
+              id="btn-checkout-mobile"
+              disabled={isEmpty(selectedRoomType)}
+            >
+              <p className="text-xs-semibold">Checkout Sekarang</p>
+            </Button>
+          </Link>
         </>
       ) : (
         <Button
