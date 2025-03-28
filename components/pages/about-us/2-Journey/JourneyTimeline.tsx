@@ -67,11 +67,7 @@ export function JourneyTimeline() {
   const autoPlayTimerRef = useRef<NodeJS.Timeout | null>(null)
   const stepsContainerRef = useRef<HTMLDivElement>(null)
   const dotsRef = useRef<(HTMLDivElement | null)[]>([])
-  const [linePosition, setLinePosition] = useState({
-    left: 0,
-    width: 0,
-    activeWidth: 0,
-  })
+  const activeStepRef = useRef<HTMLDivElement | null>(null)
 
   // Set up auto-play timer
   const setupAutoPlayTimer = () => {
@@ -104,40 +100,38 @@ export function JourneyTimeline() {
     setAnimationDirection(newStep > activeStep ? 'right' : 'left')
     setActiveStep(newStep)
 
-    // Reset the timer to give full 2 seconds on the new step
+    // Reset the timer to give full 3 seconds on the new step
     setupAutoPlayTimer()
   }
 
-  // Calculate dot positions and line dimensions
+  // Scroll to active step
   useEffect(() => {
-    if (
-      stepsContainerRef.current &&
-      dotsRef.current.filter(Boolean).length === journeySteps.length
-    ) {
-      const containerRect = stepsContainerRef.current.getBoundingClientRect()
+    if (activeStepRef.current && stepsContainerRef.current) {
+      const container = stepsContainerRef.current
+      const activeEl = activeStepRef.current
+      const activeElRect = activeEl.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
 
-      // Calculate center position of each dot
-      const positions = dotsRef.current.map((dot) => {
-        if (!dot) return 0
-        const dotRect = dot.getBoundingClientRect()
-        return dotRect.left + dotRect.width / 2 - containerRect.left
-      })
+      // If the active element is not fully visible in the container
+      if (
+        activeElRect.left < containerRect.left ||
+        activeElRect.right > containerRect.right
+      ) {
+        // Calculate scroll position to center the active element
+        const scrollLeft =
+          activeElRect.left +
+          container.scrollLeft -
+          containerRect.left -
+          containerRect.width / 2 +
+          activeElRect.width / 2
 
-      // Calculate line dimensions
-      if (positions.length >= 2) {
-        const firstDotPos = positions[0]
-        const lastDotPos = positions[positions.length - 1]
-        const activeDotPos = positions[activeStep]
-
-        setLinePosition({
-          left: firstDotPos,
-          width: lastDotPos - firstDotPos,
-          activeWidth: activeDotPos - firstDotPos,
+        container.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth',
         })
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep, journeySteps.length])
+  }, [activeStep])
 
   const handleNext = () => {
     if (activeStep < journeySteps.length - 1) {
@@ -158,23 +152,27 @@ export function JourneyTimeline() {
   const currentStep = journeySteps[activeStep]
 
   return (
-    <div className="space-y-12">
-      {/* Stepper */}
-      <div className="relative" ref={stepsContainerRef}>
-        <div className="flex items-end justify-between">
+    <div className="space-y-6 md:space-y-8 lg:space-y-12">
+      {/* Stepper with overflow handling */}
+      <div
+        className="scrollbar-hide relative overflow-x-auto"
+        ref={stepsContainerRef}
+      >
+        <div className="flex min-w-max items-end justify-between space-x-4 pb-4">
           {journeySteps.map((step, index) => (
             <div
               key={step.id}
-              className="z-10 flex cursor-pointer flex-col items-center"
+              ref={index === activeStep ? activeStepRef : null}
+              className="relative z-10 flex w-full cursor-pointer flex-col  items-center max-lg:w-[100px]"
               onClick={() => changeStep(index)}
             >
-              <div className="mb-2 flex h-[80px] items-end justify-center">
+              <div className="mb-2 flex h-[60px] items-end justify-center md:h-[70px] lg:h-[80px]">
                 <span
                   className={cn(
-                    'text-center transition-all duration-300 ease-in-out',
+                    'text-center transition-all duration-300 ease-in-out sm:text-sm md:text-lg lg:text-[20px]',
                     index === activeStep
-                      ? 'text-primary-500 text-[32px] font-semibold'
-                      : 'text-[26px] text-neutral-500'
+                      ? 'text-primary-500 scale-150 font-semibold max-lg:scale-120'
+                      : 'text-neutral-500'
                   )}
                 >
                   {step.title}
@@ -185,7 +183,7 @@ export function JourneyTimeline() {
                   dotsRef.current[index] = el
                 }}
                 className={cn(
-                  'bg-primary-500 step-dot h-4 w-4 rounded-full transition-all duration-300'
+                  'bg-primary-500 step-dot absolute -bottom-3.5 h-4 w-4 rounded-full transition-all duration-300'
                 )}
               />
             </div>
@@ -193,27 +191,12 @@ export function JourneyTimeline() {
         </div>
 
         {/* Background line (gray) */}
-        <div
-          className="absolute bottom-[8px] -z-0 h-[2px] bg-gray-300"
-          style={{
-            left: `${linePosition.left}px`,
-            width: `${linePosition.width}px`,
-          }}
-        />
-
-        {/* Active progress line (yellow) */}
-        <div
-          className="absolute bottom-[8px] -z-0 h-[2px] bg-gray-300 transition-all duration-300 ease-in-out"
-          style={{
-            left: `${linePosition.left}px`,
-            width: `${linePosition.activeWidth}px`,
-          }}
-        />
+        <div className="absolute bottom-[8px] -z-0 h-[2px] w-full bg-gray-300" />
       </div>
 
       {/* Content */}
-      <div className="grid gap-20 md:grid-cols-2">
-        <div className="flex flex-col space-y-6 overflow-hidden">
+      <div className="grid gap-6 md:grid-cols-2 md:gap-10 lg:gap-20">
+        <div className="flex flex-col space-y-4 md:space-y-6">
           <div
             key={`title-${activeStep}`}
             className={cn(
@@ -221,7 +204,7 @@ export function JourneyTimeline() {
               animationDirection === 'right' ? 'translate-x-0' : 'translate-x-0'
             )}
           >
-            <h2 className="heading-2-semibold text-primary-900">
+            <h2 className="text-primary-900 lg:heading-2-semibold text-xl font-semibold md:text-2xl">
               {currentStep.content.title}
             </h2>
           </div>
@@ -233,24 +216,24 @@ export function JourneyTimeline() {
               animationDirection === 'right' ? 'translate-x-0' : 'translate-x-0'
             )}
           >
-            <p className="text-primary-900 text-l-regular">
+            <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
               {currentStep.content.description}
             </p>
           </div>
 
-          <div className="mt-auto flex space-x-4 pt-4">
+          <div className="mt-4 flex space-x-4 md:mt-auto md:pt-4">
             <Button
-              className="h-12 w-12 rounded-full border-none transition-all duration-200 hover:scale-105"
+              className="h-10 w-10 rounded-full border-none transition-all duration-200 hover:scale-105 md:h-12 md:w-12"
               onClick={handlePrev}
             >
-              <ChevronLeft className="h-6 w-6 text-white" />
+              <ChevronLeft className="h-5 w-5 text-white md:h-6 md:w-6" />
               <span className="sr-only">Previous</span>
             </Button>
             <Button
-              className="h-12 w-12 rounded-full border-none transition-all duration-200 hover:scale-105"
+              className="h-10 w-10 rounded-full border-none transition-all duration-200 hover:scale-105 md:h-12 md:w-12"
               onClick={handleNext}
             >
-              <ChevronRight className="h-6 w-6 text-white" />
+              <ChevronRight className="h-5 w-5 text-white md:h-6 md:w-6" />
               <span className="sr-only">Next</span>
             </Button>
           </div>
@@ -265,7 +248,7 @@ export function JourneyTimeline() {
             alt={currentStep.content.title}
             width={300}
             height={400}
-            className="h-[400px] w-full rounded-md"
+            className="h-[250px] w-full rounded-md object-cover sm:h-[300px] md:h-[350px] lg:h-[400px]"
           />
         </div>
       </div>

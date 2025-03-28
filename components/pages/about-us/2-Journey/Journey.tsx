@@ -2,12 +2,12 @@ import { JourneyTimeline } from '@/components/pages/about-us/2-Journey/JourneyTi
 
 export default function Journey() {
   return (
-    <div className="w-full">
-      <div className="container mx-auto px-4 py-16 md:py-24">
-        <h1 className="text-xl-medium text-primary-900 mb-6">
+    <section className="w-full">
+      <div className="py-16 max-lg:pt-3.5 max-lg:pb-6">
+        <h1 className="text-xl-medium text-primary-900 mb-6 max-lg:text-xl max-lg:leading-6.5 max-lg:font-bold">
           Perjalanan Kami
         </h1>
-        <p className="text-l-regular text-primary-900 mb-12">
+        <p className="text-l-regular text-primary-900">
           Muslim101 merupakan digital platform, marketplace, e-commerce, dan
           ekosistem muamalah muslim yang berbasis web dan mobile apps yang
           saling terintegrasi. Salah satu layanannya adalah marketplace Umroh,
@@ -18,6 +18,6 @@ export default function Journey() {
 
         <JourneyTimeline />
       </div>
-    </div>
+    </section>
   )
 }

@@ -25,14 +25,16 @@ export default async function SearchGeneral() {
       <Topbar shadow scrolled token={token} />
       {/* BreadCrumb */}
       <Breadcrumb />
-      {/* Journey */}
-      <Journey />
-      {/* Visi */}
-      <Visi />
-      {/* Moment */}
-      <Moment />
-      {/* UnderService */}
-      <UnderService />
+      <main className="px-20 max-lg:px-4">
+        {/* Journey */}
+        <Journey />
+        {/* Visi */}
+        <Visi />
+        {/* Moment */}
+        <Moment />
+        {/* UnderService */}
+        <UnderService />
+      </main>
       {/* Footer */}
       <Footer />
     </Fragment>
