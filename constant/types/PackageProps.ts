@@ -6,6 +6,7 @@ import { OrganizationInstance, TravelRoute } from '@/constant/types/TravelProps'
 export interface PackageVariant {
   soldCount: number
   id: number
+  packageId?: number
   name?: string
   priceQuad: number
   priceDouble: number
@@ -19,6 +20,9 @@ export interface PackageVariant {
   originalPriceQuad: number
   originalPriceDouble: number
   originalPriceTriple: number
+  package: {
+    dpAmount: number
+  }
 }
 
 export interface PriceParams {

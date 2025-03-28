@@ -112,7 +112,7 @@ export default async function Home() {
       />
       <Banner />
       <main className="relative">
-        <div className="container mx-auto max-lg:px-4">
+        <div className="px-20 max-lg:px-4">
           <ProgramCards />
           <SubmenuCards />
           <div className="flex flex-col max-lg:flex-col-reverse">

@@ -107,6 +107,21 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     }
   }
 
+  // When all version 2 muslim101 released, remove this
+  const handleLocalStorage = () => {
+    localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
+    localStorage.setItem(
+      'selectedVariant',
+      JSON.stringify({
+        netAmount: selectedVariant?.package?.dpAmount,
+        packageId: selectedVariant?.packageId,
+        price: getPrice(),
+        roomType: selectedRoomType,
+        variantId: selectedVariant?.id,
+      })
+    )
+  }
+
   // Show skeleton loader when loading
   if (isLoading) {
     return (
@@ -365,13 +380,15 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {variants.length > 0 ? (
         <div>
           <Link
-            href={`/checkout?packageId=${selectedVariant?.id}&roomType=${selectedRoomType}`}
+            href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
           >
             <Button
               className="w-full rounded-full py-3 max-lg:hidden"
               variant="default"
               size="lg"
               id="btn-checkout-desktop"
+              // When all version 2 muslim101 released, remove this
+              onClick={handleLocalStorage}
               disabled={isEmpty(selectedRoomType) && isEmpty(selectedVariant)}
             >
               Checkout Sekarang
@@ -381,7 +398,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
             atau
           </div>
-          <Link href={`https://dev.v1.moslem101.com/banking/credit`}>
+          <Link href={`/banking/credit`}>
             <Button
               className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
               variant="outline"
