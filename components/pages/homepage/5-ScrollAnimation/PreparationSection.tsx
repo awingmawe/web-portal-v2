@@ -13,87 +13,88 @@ export default function PreparationSection() {
     <div className="bg-primary-500 relative z-5 w-full">
       {/* Background accent pattern */}
       <OrnamentBanking2 className="absolute top-0 left-0 z-10 hidden lg:block" />
-      <OrnamentBanking2Mobile className="absolute -top-30 left-0 z-10 block lg:hidden" />
-      <div className="relative z-20 container mx-auto py-10 max-lg:px-4 lg:py-25 lg:max-lg:px-0">
+      <OrnamentBanking2Mobile className="absolute -top-8 left-0 z-10 block lg:hidden" />
+
+      <div className="relative z-20 container mx-auto px-4 py-10 sm:px-6 lg:px-8 lg:py-20">
         {/* Hero Content */}
-        <div className="mb-16 flex flex-col gap-5 px-5 md:flex-row md:items-center lg:gap-15 lg:px-25">
+        <div className="mb-8 flex flex-col gap-5 lg:mb-16 lg:flex-row lg:items-start lg:gap-10 xl:gap-16">
           {/* Left Column - Heading */}
-          <div className="flex flex-col gap-2 lg:gap-10">
-            <h1 className="text-3xl font-medium lg:text-6xl">
+          <div className="flex flex-col gap-2 sm:gap-4 lg:gap-6">
+            <h1 className="text-2xl font-medium sm:text-3xl lg:text-5xl xl:text-6xl">
               Persiapan{' '}
               <span className="relative font-bold">
                 Matang
-                <LineMatang className="absolute -right-3 -bottom-7 w-40 lg:w-70" />
+                <LineMatang className="absolute -right-2 -bottom-3 w-24 sm:-right-3 sm:-bottom-4 sm:w-32 lg:-right-3 lg:-bottom-6 lg:w-40 xl:-bottom-7 xl:w-60" />
               </span>
             </h1>
-            <h1 className="text-3xl font-medium lg:text-6xl">
+            <h1 className="text-2xl font-medium sm:text-3xl lg:text-5xl xl:text-6xl">
               Umroh Lebih{' '}
               <span className="relative font-bold">
                 Tenang
-                <LineMatang className="absolute -right-5 -bottom-7 w-40 lg:w-70" />
+                <LineMatang className="absolute -right-2 -bottom-3 w-24 sm:-right-3 sm:-bottom-4 sm:w-32 lg:-right-3 lg:-bottom-6 lg:w-40 xl:-bottom-7 xl:w-60" />
               </span>
             </h1>
           </div>
 
           {/* Right Column - Description */}
-          <div className="ml-0 flex flex-col gap-5 lg:ml-auto">
-            <p className="text-l-regular">
-              Dengan berbagai pilihan paket dari mitra <br />
-              travel tepercaya, Anda bisa merencanakan <br />
-              Umroh dengan lebih mudah. Kami siap <br />
-              mendukung kelancaran prosesnya hingga <br />
-              Anda bisa berangkat untuk Umroh.
+          <div className="mt-6 flex flex-col gap-4 lg:mt-0 lg:ml-auto">
+            <p className="text-m-regular sm:text-l-regular max-w-md">
+              Dengan berbagai pilihan paket dari mitra travel tepercaya, Anda
+              bisa merencanakan Umroh dengan lebih mudah. Kami siap mendukung
+              kelancaran prosesnya hingga Anda bisa berangkat untuk Umroh.
             </p>
           </div>
         </div>
 
         {/* Feature Boxes */}
-        <div className="grid grid-cols-2 gap-0 md:grid-cols-4 md:gap-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Feature 1 */}
-          <div className="flex flex-col items-center border-r border-r-neutral-100 pb-5 text-center lg:pb-0">
-            <div className="mb-4 flex items-center justify-center rounded-lg border border-white p-3">
-              <Trophy className="h-12 w-12 text-white" />
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg border border-white p-3">
+              <Trophy className="h-10 w-10 text-white" />
             </div>
-            <p className="tex-l-medium mb-2">Tepercaya</p>
-            <p className="text-xs-regular text-primary-700">
-              Telah dipercaya oleh ribuan <br />
-              jamaah Umroh
+            <p className="mb-2 text-base font-medium sm:text-lg">Tepercaya</p>
+            <p className="text-primary-700 text-xs sm:text-sm">
+              Telah dipercaya oleh ribuan jamaah Umroh
             </p>
           </div>
 
           {/* Feature 2 */}
-          <div className="flex flex-col items-center pb-5 pl-5 text-center lg:border-r lg:border-r-neutral-100 lg:pb-0 lg:pl-0">
-            <div className="mb-4 flex items-center justify-center rounded-lg border border-white p-3">
-              <Calendar className="h-12 w-12 text-white" />
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg border border-white p-3">
+              <Calendar className="h-10 w-10 text-white" />
             </div>
-            <p className="tex-l-medium mb-2">Tanggal Booking Fleksibel</p>
-            <p className="text-xs-regular text-primary-700">
-              Cari tanggal terbaik untuk Anda <br />
-              berangkat Umroh
+            <p className="mb-2 text-base font-medium sm:text-lg">
+              Tanggal Booking Fleksibel
+            </p>
+            <p className="text-primary-700 text-xs sm:text-sm">
+              Cari tanggal terbaik untuk Anda berangkat Umroh
             </p>
           </div>
 
           {/* Feature 3 */}
-          <div className="flex flex-col items-center border-t border-r border-t-neutral-100 border-r-neutral-100 pt-5 text-center lg:border-t-0 lg:pt-0">
-            <div className="mb-4 flex items-center justify-center rounded-lg border border-white p-3">
-              <ApprovedShield className="h-12 w-12 text-white" />
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg border border-white p-3">
+              <ApprovedShield className="h-10 w-10 text-white" />
             </div>
-            <p className="tex-l-medium mb-2">Dukungan Hingga Keberangkatan</p>
-            <p className="text-xs-regular text-primary-700">
-              Kami memastikan <br />
-              keberangkatan Umroh Anda
+            <p className="mb-2 text-base font-medium sm:text-lg">
+              Dukungan Hingga Keberangkatan
+            </p>
+            <p className="text-primary-700 text-xs sm:text-sm">
+              Kami memastikan keberangkatan Umroh Anda
             </p>
           </div>
 
           {/* Feature 4 */}
-          <div className="flex flex-col items-center border-t  border-t-neutral-100  pt-5 pl-5 text-center lg:border-t-0 lg:pt-0 lg:pl-0">
-            <div className="mb-4 flex items-center justify-center rounded-lg border border-white p-3">
-              <AirPlane className="h-12 w-12 text-white" />
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg border border-white p-3">
+              <AirPlane className="h-10 w-10 text-white" />
             </div>
-            <p className="tex-l-medium mb-2">Perjalanan Nyaman</p>
-            <p className="text-xs-regular text-primary-700">
-              Nikmati perjalanan yang <br />
-              nyaman dan aman
+            <p className="mb-2 text-base font-medium sm:text-lg">
+              Perjalanan Nyaman
+            </p>
+            <p className="text-primary-700 text-xs sm:text-sm">
+              Nikmati perjalanan yang nyaman dan aman
             </p>
           </div>
         </div>
