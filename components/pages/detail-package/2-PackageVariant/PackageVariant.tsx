@@ -365,7 +365,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {variants.length > 0 ? (
         <div>
           <Link
-            href={`https://dev.v1.moslem101.com/checkout?packageId=${selectedVariant?.id}&roomType=${selectedRoomType}`}
+            href={`/checkout?packageId=${selectedVariant?.id}&roomType=${selectedRoomType}`}
           >
             <Button
               className="w-full rounded-full py-3 max-lg:hidden"

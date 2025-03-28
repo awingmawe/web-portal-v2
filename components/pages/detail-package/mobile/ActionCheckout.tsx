@@ -72,10 +72,7 @@ export default function ActionCheckoutMobile({
           >
             <WhatsappIcon size={48} />
           </div>
-          <Link
-            href={`https://dev.v1.moslem101.com/banking/credit`}
-            className="w-full"
-          >
+          <Link href={`/banking/credit`} className="w-full">
             <Button
               variant="outline"
               className="border-primary-500 w-full rounded-full"
