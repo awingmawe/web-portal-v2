@@ -1,6 +1,6 @@
 'use client'
 import { BusIcon } from '@/components/icons/bus'
-import { MoonIcon } from '@/components/icons/moon'
+import MoneySavingIcon from '@/components/icons/money-saving'
 import { SavingIcon } from '@/components/icons/saving'
 import WukalaIcon from '@/components/icons/wukala'
 import Link from 'next/link'
@@ -13,12 +13,12 @@ const SubmenuCards = () => {
       href: '/wukala',
       background: 'bg-primary-500',
     },
-    // {
-    //   icon: <MoneySavingIcon size={20} color="white" />,
-    //   label: 'Tabungan Umroh',
-    //   href: '/tabungan-umroh',
-    //   background: 'bg-[#EC9200]',
-    // },
+    {
+      icon: <MoneySavingIcon size={20} color="white" />,
+      label: 'Tabungan Umroh',
+      href: '/tabungan-umroh',
+      background: 'bg-[#EC9200]',
+    },
     {
       icon: <BusIcon size={20} color="white" />,
       label: 'Daftar Travel',
@@ -31,12 +31,12 @@ const SubmenuCards = () => {
       href: '/pembiayaan',
       background: 'bg-[#03DAC8]',
     },
-    {
-      icon: <MoonIcon size={20} />,
-      label: 'Artikel',
-      href: '/articles',
-      background: 'bg-[#00B97D]',
-    },
+    // {
+    //   icon: <MoonIcon size={20} />,
+    //   label: 'Artikel',
+    //   href: '/articles',
+    //   background: 'bg-[#00B97D]',
+    // },
   ]
 
   return (
