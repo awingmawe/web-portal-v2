@@ -42,7 +42,7 @@ const SubmenuCards = () => {
 
   return (
     <div
-      className="mt-[30px] hidden justify-between gap-2 rounded-xl border-[0.5px] border-[#e1e1e1] px-3 py-[15px] backdrop-blur-[6px] max-lg:flex"
+      className="mt-[30px] hidden justify-between gap-2 rounded-xl border-[0.5px] border-[#e1e1e1] px-3 py-[10px] backdrop-blur-[6px] max-lg:flex"
       style={{
         background:
           'linear-gradient(94deg, rgba(255, 255, 255, 0.30) 0.15%, rgba(255, 192, 18, 0.30) 47.01%, rgba(255, 255, 255, 0.30) 99.85%)',
@@ -52,14 +52,14 @@ const SubmenuCards = () => {
         <Link
           key={index}
           href={item.href}
-          className="flex flex-col items-center gap-1"
+          className="flex min-h-[90px] w-[70px] flex-col items-center gap-[10px] text-center"
         >
           <div
-            className={`${item.background} flex items-center justify-center rounded-full p-1.5`}
+            className={`${item.background} flex h-[36px] w-[36px] items-center justify-center rounded-full`}
           >
             {item.icon}
           </div>
-          <p className="text-center text-[10px] text-neutral-900">
+          <p className="flex h-[28px] items-center justify-center text-[10px] leading-tight break-words text-neutral-900">
             {item.label}
           </p>
         </Link>
