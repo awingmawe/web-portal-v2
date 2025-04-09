@@ -108,6 +108,7 @@ export default async function DetailPackage({ params }: { params: any }) {
       source: 'mecca',
     })
   )
+
   return (
     <GalleryProvider
       packageImages={packageImages || []}

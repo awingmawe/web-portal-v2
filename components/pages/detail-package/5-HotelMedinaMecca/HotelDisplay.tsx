@@ -162,7 +162,6 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
 
   // If no hotel data, don't render anything
   if (!hotel) return null
-
   return (
     <div className="border-b border-b-neutral-200 pb-4">
       {/* Header section */}
