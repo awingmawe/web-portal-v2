@@ -1,6 +1,5 @@
 'use client'
 import { BusIcon } from '@/components/icons/bus'
-import { MoneySavingIcon } from '@/components/icons/money-saving'
 import { MoonIcon } from '@/components/icons/moon'
 import { SavingIcon } from '@/components/icons/saving'
 import WukalaIcon from '@/components/icons/wukala'
@@ -14,12 +13,12 @@ const SubmenuCards = () => {
       href: '/wukala',
       background: 'bg-primary-500',
     },
-    {
-      icon: <MoneySavingIcon size={20} color="white" />,
-      label: 'Tabungan Umroh',
-      href: '/tabungan-umroh',
-      background: 'bg-[#EC9200]',
-    },
+    // {
+    //   icon: <MoneySavingIcon size={20} color="white" />,
+    //   label: 'Tabungan Umroh',
+    //   href: '/tabungan-umroh',
+    //   background: 'bg-[#EC9200]',
+    // },
     {
       icon: <BusIcon size={20} color="white" />,
       label: 'Daftar Travel',
