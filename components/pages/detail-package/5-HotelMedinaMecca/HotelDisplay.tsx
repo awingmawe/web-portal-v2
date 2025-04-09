@@ -173,15 +173,17 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
             {title}
           </p>
         </div>
-        <Link
-          href={googleMapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-l-regular text-info-500 flex items-center gap-1.5 underline max-lg:text-sm max-lg:leading-5"
-        >
-          Lihat Lokasi
-          <MaximizeIcon size={20} color="text-info-500" />
-        </Link>
+        {longitude && latitude && (
+          <Link
+            href={googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-l-regular text-info-500 flex items-center gap-1.5 underline max-lg:text-sm max-lg:leading-5"
+          >
+            Lihat Lokasi
+            <MaximizeIcon size={20} color="text-info-500" />
+          </Link>
+        )}
       </div>
 
       {/* Distance information */}
