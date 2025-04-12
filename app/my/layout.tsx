@@ -1,9 +1,11 @@
 import { Sidebar } from '@/components/pages/my/Sidebar'
+import Footer from '@/components/shared/Footer'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
 import type React from 'react'
 import { Fragment } from 'react'
+
 export default async function LayoutMy({
   children,
 }: Readonly<{
@@ -18,10 +20,10 @@ export default async function LayoutMy({
 
       <div className="container mx-auto flex gap-5 py-8">
         <Sidebar />
-        <div className="w-full  rounded-3xl border border-gray-100 bg-white shadow-sm">
-          {children}
-        </div>
+        <div className="w-full ">{children}</div>
       </div>
+
+      <Footer type="compact" />
     </Fragment>
   )
 }

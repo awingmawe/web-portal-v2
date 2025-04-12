@@ -73,12 +73,12 @@ export default function AuthProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
-  function handleLogout() {
+  function handleLogout(isRedirect?: boolean, redirectUri?: string) {
     clearAuth()
     headersManager.setHeader('X-API-Key', '')
     setTimeout(() => {
       router.push(
-        `${ACCOUNT_URL}/auth/logout?redirectUri=${window.location.href}&logout=1&redirectBack=1`
+        `${ACCOUNT_URL}/auth/logout?redirectUri=${redirectUri ?? window.location.href}&logout=1&redirectBack=${isRedirect ? 1 : 0}`
       )
     }, 1000)
     return Promise.resolve()
@@ -112,7 +112,8 @@ export default function AuthProvider({
         hasPermission,
         permissions,
         refetchPermissions,
-        logout: () => handleLogout(),
+        logout: (isRedirectBack?: boolean, redirectUri?: string) =>
+          handleLogout(isRedirectBack, redirectUri),
       }}
     >
       {children}

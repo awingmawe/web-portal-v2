@@ -1,9 +1,5 @@
-import { Fragment } from 'react'
+import { redirect } from 'next/navigation'
 
 export default function MyPage() {
-  return (
-    <Fragment>
-      <div>MyPage</div>
-    </Fragment>
-  )
+  redirect('/my/profile')
 }

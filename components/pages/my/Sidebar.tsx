@@ -1,6 +1,8 @@
+'use client'
 import { ChevronRightIcon } from '@/components/icons/chevron'
 import { HeartIcon } from '@/components/icons/heart'
 import { LogoutIcon } from '@/components/icons/logout'
+import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { MoneyTimeIcon } from '@/components/icons/money-time'
 import { MoneysIcon } from '@/components/icons/moneys'
 import { PilotSeatIcon } from '@/components/icons/pilot-seat'
@@ -8,15 +10,24 @@ import { PointIcon } from '@/components/icons/point'
 import { ReceiptIcon } from '@/components/icons/receipt'
 import { SettingIcon } from '@/components/icons/setting'
 import { VoucherIcon } from '@/components/icons/voucher'
+import { DialogConfirm } from '@/components/shared/DialogConfirm'
 import { Referral } from '@/components/shared/Referral'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
+import { useAuth } from '@/contexts/auth/context'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Fragment, useState } from 'react'
 
 interface MenuItemProps {
   icon: React.ReactNode
-  label: string
+  label: string | React.ReactNode
   isActive?: boolean
   hasChevron?: boolean
+  loading?: boolean
+  href?: string
+  onClick?: () => void
 }
 
 const MenuItem = ({
@@ -24,39 +35,75 @@ const MenuItem = ({
   label,
   isActive = false,
   hasChevron = false,
-  href,
-}: MenuItemProps & { href?: string }) => (
-  <a
+  loading = false,
+  href = '#',
+  onClick,
+}: MenuItemProps) => (
+  <Link
     href={href}
+    onClick={onClick}
     className={cn(
       'flex cursor-pointer items-center px-5 py-4 transition-colors hover:bg-gray-50',
       isActive && 'bg-primary-100'
     )}
   >
-    <div className="flex flex-1 items-center">
-      <div className="mr-3">{icon}</div>
-      <span className={cn(isActive ? 'text-m-medium' : 'text-m-regular')}>
-        {label}
-      </span>
-    </div>
-    {hasChevron && <ChevronRightIcon size={28} />}
-  </a>
+    {loading ? (
+      <Fragment>
+        <div className="flex flex-1 items-center">
+          <div className="mr-3 h-5 w-5 animate-pulse rounded-full bg-neutral-200"></div>
+          <div className="h-5 w-full animate-pulse rounded bg-neutral-200"></div>
+        </div>
+      </Fragment>
+    ) : (
+      <Fragment>
+        <div className="flex flex-1 items-center">
+          <div className="mr-3">{icon}</div>
+          <span className={cn(isActive ? 'text-m-medium' : 'text-m-regular')}>
+            {label}
+          </span>
+        </div>
+        {hasChevron && <ChevronRightIcon size={28} />}
+      </Fragment>
+    )}
+  </Link>
 )
 
 export const Sidebar = () => {
+  const { profile, logout } = useAuth()
+  const [loadingLogout, setLoadingLogout] = useState(false)
+  const pathname = usePathname()
+
   return (
     <div className="w-full max-w-sm">
       <div className="rounded-3xl border border-neutral-100 bg-white shadow-sm">
         {/* Profile Section */}
         <div className="flex items-center gap-4 p-5">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 shadow-md">
-            <span className="text-2xl font-medium text-gray-500">JD</span>
+            {profile ? (
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={profile.avatarProvider} alt="User avatar" />
+                <AvatarFallback className="fw-semibold text-neutral-600">
+                  {String(profile.name).slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <div className="h-16 w-16 animate-pulse rounded-full bg-neutral-200"></div>
+            )}
           </div>
-          <div>
-            <h2 className="text-l-semibold">John Doe</h2>
-            <p className="text-m-regular text-neutral-500">
-              Google/[email pengguna]
-            </p>
+          <div className="w-full">
+            {profile ? (
+              <Fragment>
+                <h2 className="text-l-semibold">{profile.name}</h2>
+                <p className="text-m-regular text-neutral-500">
+                  {profile.email}
+                </p>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <div className="h-5 w-3/4 animate-pulse rounded bg-neutral-200"></div>
+                <div className="mt-1 h-4 w-1/2 animate-pulse rounded bg-neutral-200"></div>
+              </Fragment>
+            )}
           </div>
         </div>
 
@@ -64,29 +111,89 @@ export const Sidebar = () => {
         <Separator className="mx-auto !w-[90%] bg-neutral-100" />
         <MenuItem
           icon={<PointIcon />}
-          label="Poin Muslim101 : 10.000"
+          label={
+            <span>
+              Poin Muslim101 : <b className="text-m-semibold">10.000</b>
+            </span>
+          }
           hasChevron={true}
+          loading={profile ? false : true}
         />
         <Separator className="mx-auto !w-[90%] bg-neutral-100" />
 
         {/* Menu Items */}
-        <MenuItem icon={<VoucherIcon />} label="Voucher" />
-        <MenuItem icon={<MoneyTimeIcon />} label="Butuh Dibayar" />
+        <MenuItem
+          icon={<VoucherIcon />}
+          label="Voucher"
+          loading={profile ? false : true}
+        />
+        <MenuItem
+          icon={<MoneyTimeIcon />}
+          label="Butuh Dibayar"
+          loading={profile ? false : true}
+        />
         <MenuItem
           icon={<ReceiptIcon size={24} />}
           label="Transaksi"
-          isActive={true}
+          href="/my/transaction"
+          isActive={pathname === '/my/transaction'}
+          loading={profile ? false : true}
         />
-        <MenuItem icon={<MoneysIcon />} label="Pembiayaan" />
+        <MenuItem
+          icon={<MoneysIcon />}
+          label="Pembiayaan"
+          loading={profile ? false : true}
+        />
         <Separator className="mx-auto !w-[90%] bg-neutral-100" />
 
-        <MenuItem icon={<PilotSeatIcon />} label="Permintaan Paket Custom" />
-        <MenuItem icon={<PilotSeatIcon />} label="Cek Ketersediaan Kursi" />
-        <MenuItem icon={<HeartIcon />} label="Wishlist" />
+        <MenuItem
+          icon={<PilotSeatIcon />}
+          label="Permintaan Paket Custom"
+          loading={profile ? false : true}
+        />
+        <MenuItem
+          icon={<PilotSeatIcon />}
+          label="Cek Ketersediaan Kursi"
+          loading={profile ? false : true}
+        />
+        <MenuItem
+          icon={<HeartIcon />}
+          label="Wishlist"
+          isActive={pathname === '/my/wishlist'}
+          loading={profile ? false : true}
+        />
         <Separator className="mx-auto !w-[90%] bg-neutral-100" />
 
-        <MenuItem icon={<SettingIcon />} label="Pengaturan Akun" />
-        <MenuItem icon={<LogoutIcon size={24} />} label="Log Out" />
+        <MenuItem
+          icon={<SettingIcon />}
+          label="Pengaturan Akun"
+          isActive={pathname === '/my/profile'}
+          loading={profile ? false : true}
+        />
+        <DialogConfirm
+          title="Apakah kamu yakin ingin keluar?"
+          icon={
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-amber-100 p-4">
+              <MessageQuestionIcon size={36} />
+            </div>
+          }
+          content="Kamu harus masuk ke akun jika ingin menggunakan kembali akun kamu."
+          confirmText="Ya, Keluar"
+          cancelText="Batal"
+          confirmVariant="default"
+          cancelVariant="ghost"
+          onSubmit={() => {
+            setLoadingLogout(true)
+            logout(true, `${window.location.origin}/`)
+          }}
+          isLoading={loadingLogout}
+        >
+          <MenuItem
+            icon={<LogoutIcon size={24} />}
+            label="Log Out"
+            loading={profile ? false : true}
+          />
+        </DialogConfirm>
       </div>
       {/* Referral Section */}
       <Referral referral="HB70KLM" />

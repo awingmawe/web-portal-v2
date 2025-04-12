@@ -318,18 +318,26 @@ const Topbar: React.FC<TopbarProps> = ({
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="flex items-center gap-2">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage
-                        src={profile?.avatarProvider}
-                        alt="User avatar"
-                      />
-                      <AvatarFallback className="fw-semibold text-neutral-600">
-                        {profile?.name?.slice(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <p className="text-m-regular cursor-pointer">
-                      {profile?.name?.split(' ')[0]}
-                    </p>
+                    {profile ? (
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage
+                          src={profile?.avatarProvider}
+                          alt="User avatar"
+                        />
+                        <AvatarFallback className="fw-semibold text-neutral-600">
+                          {profile?.name?.slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <div className="h-10 w-10 animate-pulse rounded-full bg-neutral-200"></div>
+                    )}
+                    {profile ? (
+                      <p className="text-m-regular cursor-pointer">
+                        {profile?.name?.split(' ')[0]}
+                      </p>
+                    ) : (
+                      <div className="h-3 w-20 animate-pulse rounded bg-neutral-200"></div>
+                    )}
                   </div>
                 </PopoverTrigger>
                 <PopoverContent
@@ -338,7 +346,7 @@ const Topbar: React.FC<TopbarProps> = ({
                 >
                   <div className="flex flex-col">
                     {/* Profile Section */}
-                    <Link href={`${ACCOUNT_URL}/dashboard/profile`}>
+                    <Link href={`/my/profile`}>
                       <div className="flex items-center gap-4 px-6 pt-4 pb-3 hover:bg-neutral-50">
                         <Avatar className="h-10 w-10">
                           <AvatarImage
@@ -362,7 +370,7 @@ const Topbar: React.FC<TopbarProps> = ({
 
                     {/* Menu Items */}
                     <Link
-                      href="/transaction"
+                      href="/my/transaction"
                       className="text-m-regular mx-0 flex w-full items-center justify-start px-6 py-3 font-normal hover:bg-neutral-50"
                     >
                       <ReceiptItemIcon className="mr-4 h-5 w-5 stroke-[.5] text-gray-800" />

@@ -19,7 +19,7 @@ export const ArrowIcon: React.FC<IconProps> = ({
     >
       <path
         d="M11.3223 4.44751L15.8748 9.00001L11.3223 13.5525"
-        stroke="#30302F"
+        stroke="currentColor"
         strokeWidth="1.125"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -27,7 +27,7 @@ export const ArrowIcon: React.FC<IconProps> = ({
       />
       <path
         d="M3.125 9H15.7475"
-        stroke="#30302F"
+        stroke="currentColor"
         strokeWidth="1.125"
         strokeMiterlimit="10"
         strokeLinecap="round"
