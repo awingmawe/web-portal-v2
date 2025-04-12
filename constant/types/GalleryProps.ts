@@ -31,3 +31,11 @@ export interface HotelGalleryImage {
   createdBy: string
   modifiedBy: string | null
 }
+
+export interface GalleryHomepage {
+  id: number
+  category: string
+  imageUrl: string
+  title: string
+  caption: string
+}

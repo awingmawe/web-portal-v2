@@ -85,7 +85,7 @@ export default function UnderService() {
         {/* Image 5 */}
         <div className="group relative h-[300px] overflow-hidden rounded-lg md:-mt-[75px] md:h-[350px] lg:-mt-[100px] lg:h-[400px]">
           <Image
-            src="https://s3-alpha-sig.figma.com/img/28b5/cb94/a6fcfe74226bbb54d8922aafc39af248?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=EYmEpiGhmig0QuoRdhOMxMRbCk~~kUvw~gaXbrImHnSPQ18jAgz2vZW8adHYCpvyftHEL-mJkMU5IsylBSG4eRVeI~9d2urQGCirtglfimfAHCoRuNL0NGlmBrqRdq3ZNhEDAfF4PkLrSoQiXLdh5JiDVwfMY8Nwv5wf2Uj9OmKeiqYadI9Nem97mcDTDfKQTgjbHOJ72W8e~WkTlRED2iRLQiZmqsAwMYgmKsSU~NmMbYPOg8ZzEeu3MB~vu7mOq~D0Ej9cvelfRmUDTVQiiVt2D0HVcYvgSGuwgZfUXkVIKnSR-3kFwBXGC7U2OSHwv0z0CvzRoQwMRIqYma~EYQ__"
+            src="https://storage.googleapis.com/m101-prods/about-us/f9b6cbd5368fa3c37ac44331ac384d13_2.png"
             alt="BnB101: Makan Bersama"
             fill
             className="object-cover transition-transform duration-500"

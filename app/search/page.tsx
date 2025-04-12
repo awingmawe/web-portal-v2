@@ -103,8 +103,8 @@ export default async function SearchGeneral({
     <Fragment>
       <Topbar type="normal" token={token} />
       <SearchTopbar />
-      <main className="mt-7.5 mb-7.5 px-20">
-        <section className="grid grid-cols-12 gap-5">
+      <main className="mt-7.5 mb-7.5">
+        <section className="container mx-auto grid grid-cols-12 gap-5">
           <div className="col-span-4">
             <FilterLeftbar
               dataMinMax={dataMinMax}

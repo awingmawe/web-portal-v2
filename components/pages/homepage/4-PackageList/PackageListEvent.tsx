@@ -11,11 +11,11 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { CardData } from '@/constant/types/PackageProps'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 
 interface PackageListEventProps {
-  dataPromo: CardData[]
-  dataRegular: CardData[]
+  dataPromo?: CardData[]
+  dataRegular?: CardData[]
   dataPlus?: CardData[]
   isLoading?: boolean
 }
@@ -53,23 +53,27 @@ const PackageSection = ({
   )
 
   return (
-    <>
-      <HeaderPackageList title={title} desc={description} type={type} />
-      <Carousel
-        opts={{
-          align: 'start',
-          inViewThreshold: 1,
-          watchDrag: true,
-        }}
-        className="my-7 w-full max-lg:mt-0"
-      >
-        <CarouselContent className="-ml-4.5 px-2">
-          {isLoading ? renderSkeletonItems(4, true) : packageItems}
-        </CarouselContent>
-        <CarouselPrevious className="top-[35%] max-sm:hidden" />
-        <CarouselNext className="top-[35%] max-sm:hidden" />
-      </Carousel>
-    </>
+    <Fragment>
+      {data.length !== 0 && (
+        <>
+          <HeaderPackageList title={title} desc={description} type={type} />
+          <Carousel
+            opts={{
+              align: 'start',
+              inViewThreshold: 1,
+              watchDrag: true,
+            }}
+            className="my-7 w-full max-lg:mt-0"
+          >
+            <CarouselContent className="-ml-4.5 px-2">
+              {isLoading ? renderSkeletonItems(4, true) : packageItems}
+            </CarouselContent>
+            <CarouselPrevious className="top-[35%] max-sm:hidden" />
+            <CarouselNext className="top-[35%] max-sm:hidden" />
+          </Carousel>
+        </>
+      )}
+    </Fragment>
   )
 }
 
@@ -162,7 +166,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
           title={section.title}
           description={section.description}
           type={section.type}
-          data={section.data}
+          data={section.data ?? []}
           isLoading={section.isLoading}
           renderSkeletonItems={renderSkeletonItems}
         />

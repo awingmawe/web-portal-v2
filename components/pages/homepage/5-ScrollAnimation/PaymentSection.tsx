@@ -10,8 +10,8 @@ const PaymentSection = () => {
   const { lg: isMobile } = useTailwindBreakpoint()
 
   return (
-    <div className="relative z-3 bg-[#0000001A] py-2 backdrop-blur-[50px]">
-      <div className="relative container m-auto flex max-lg:flex-col">
+    <div className="relative z-3 bg-[#0000001A] py-2 backdrop-blur-[50px] max-lg:py-0">
+      <div className="relative container m-auto flex max-lg:flex-col max-lg:px-4">
         {/* Content Section */}
         <div className="flex-auto pt-10 text-white sm:pt-16 lg:pt-32">
           <div className="mb-6 lg:mb-8">
@@ -48,7 +48,7 @@ const PaymentSection = () => {
 
           <Link href="/packages">
             <Button
-              className="mb-8 flex h-10 items-center rounded-full px-4 text-xs whitespace-nowrap sm:h-12 sm:px-6 md:px-8 lg:mb-8"
+              className="my-8 flex h-10 items-center rounded-full px-4 text-xs whitespace-nowrap sm:h-12 sm:px-6 md:px-8 lg:mb-8"
               variant="default"
             >
               Cari Paket Umroh Sekarang

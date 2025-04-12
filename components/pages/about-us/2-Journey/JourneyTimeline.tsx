@@ -15,7 +15,7 @@ const journeySteps = [
       title: 'Ide (Founded)',
       description:
         'Muslim101 bergerak sejak tahun 2023. Bermula dari nama Umroh101, kami berfokus pada pengembangan jasa layanan ibadah Umroh di Indonesia berbasis teknologi. Kini, pada tahun 2024, Muslim101 memperluas visi dan misi sebagai pilihan utama platform marketplace dan e-commerce yang menyediakan kemudahan akses informasi digital, khususnya Umroh, Haji, dan Halal Trip.',
-      image: '/images/no-image-placeholder.png',
+      image: '/images/foto-ceo.png',
     },
   },
   {
@@ -163,7 +163,7 @@ export function JourneyTimeline() {
             <div
               key={step.id}
               ref={index === activeStep ? activeStepRef : null}
-              className="relative z-10 flex w-full cursor-pointer flex-col  items-center max-lg:w-[100px]"
+              className="relative z-10 flex w-full cursor-pointer flex-col items-center max-lg:w-[100px]"
               onClick={() => changeStep(index)}
             >
               <div className="mb-2 flex h-[60px] items-end justify-center md:h-[70px] lg:h-[80px]">
@@ -183,19 +183,32 @@ export function JourneyTimeline() {
                   dotsRef.current[index] = el
                 }}
                 className={cn(
-                  'bg-primary-500 step-dot absolute -bottom-3.5 h-4 w-4 rounded-full transition-all duration-300'
+                  'bg-primary-500 step-dot absolute -bottom-3.5 h-4 w-4 rounded-full transition-all duration-300',
+                  index !== journeySteps.length - 1 &&
+                    'after:absolute after:top-1/2 after:left-4 after:h-[1px] after:w-[calc(100%+15vw)] after:-translate-y-1/2 after:bg-current after:content-[""] max-sm:after:w-[calc(100%+27vw)]'
                 )}
               />
             </div>
           ))}
         </div>
-
-        {/* Background line (gray) */}
-        <div className="absolute bottom-[8px] -z-0 h-[2px] w-full bg-gray-300" />
       </div>
 
       {/* Content */}
       <div className="grid gap-6 md:grid-cols-2 md:gap-10 lg:gap-20">
+        <div
+          key={`image-${activeStep}`}
+          className="animate-dissolve-in transition-all delay-200 duration-500 max-lg:order-first lg:order-last"
+        >
+          <Image
+            src={currentStep.content.image || '/placeholder.svg'}
+            alt={currentStep.content.title}
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="aspect-[4/3] h-auto w-full rounded-md"
+          />
+        </div>
+
         <div className="flex flex-col space-y-4 md:space-y-6">
           <div
             key={`title-${activeStep}`}
@@ -237,19 +250,6 @@ export function JourneyTimeline() {
               <span className="sr-only">Next</span>
             </Button>
           </div>
-        </div>
-
-        <div
-          key={`image-${activeStep}`}
-          className="animate-dissolve-in transition-all delay-200 duration-500"
-        >
-          <Image
-            src={currentStep.content.image || '/placeholder.svg'}
-            alt={currentStep.content.title}
-            width={300}
-            height={400}
-            className="h-[250px] w-full rounded-md object-cover sm:h-[300px] md:h-[350px] lg:h-[400px]"
-          />
         </div>
       </div>
     </div>
