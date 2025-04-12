@@ -17,7 +17,7 @@ export default function BreadCrumb() {
           </div>
         </div>
 
-        <div className="grid items-center gap-8 lg:mt-10 lg:grid-cols-2 lg:gap-20">
+        <div className="grid items-center gap-4 lg:mt-10 lg:grid-cols-2 lg:gap-20">
           {/* Left Column - Image (Full width on mobile) */}
           <Image
             src="https://storage.googleapis.com/m101-prods/about-us/Frame%201000007197%20(1)%20(1).png"
@@ -29,9 +29,9 @@ export default function BreadCrumb() {
 
           {/* Mobile view - Vision appears after image */}
           <div className="lg:hidden">
-            <div className="mb-8 text-center">
-              <p className="text-m-medium text-neutral-900">Visi Muslim101</p>
-              <h1 className="text-2xl leading-tight font-normal sm:text-3xl md:text-4xl">
+            <div className="mb-4 text-center">
+              <p className="text-s-regular text-neutral-500">Visi Muslim101</p>
+              <h1 className="text-l-medium leading-6 font-normal">
                 Menjadi pilihan utama digital <i>platform marketplace</i> dan{' '}
                 <i>e-commerce</i> dalam ekosistem muamalah Muslim Indonesia.
               </h1>
