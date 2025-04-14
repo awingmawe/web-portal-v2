@@ -15,9 +15,9 @@ export default function Footer({
 }: FooterProps) {
   return (
     <footer
-      className={`${cn('w-full border border-t border-neutral-200 bg-white py-5  pb-30 lg:pb-5', className)}`}
+      className={`${cn('w-full border border-t border-neutral-200 bg-white py-5 pb-30 lg:pb-5', className)}`}
     >
-      <div className="mx-auto px-10 lg:px-20">
+      <section className="container mx-auto max-lg:px-4">
         {type == 'normal' && (
           <Fragment>
             <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
@@ -214,7 +214,7 @@ export default function Footer({
             </Link>
           </div>
         </div>
-      </div>
+      </section>
     </footer>
   )
 }

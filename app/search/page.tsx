@@ -103,16 +103,16 @@ export default async function SearchGeneral({
     <Fragment>
       <Topbar type="normal" token={token} />
       <SearchTopbar />
-      <main className="mt-7.5 mb-7.5 px-20">
-        <section className="grid grid-cols-12 gap-5">
-          <div className="col-span-4">
+      <main className="mt-7.5 mb-7.5">
+        <section className="container mx-auto grid grid-cols-12 gap-5 max-lg:px-4">
+          <div className="col-span-4 max-lg:hidden">
             <FilterLeftbar
               dataMinMax={dataMinMax}
               dataTagPackages={dataTagPackages}
               dataFacility={dataFacility}
             />
           </div>
-          <div className="col-span-8">
+          <div className="col-span-8 max-lg:col-span-12">
             <PackageResults
               total={dataPackage?.total}
               dataPackages={mapProductsToCardData(dataPackage)}

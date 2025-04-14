@@ -1,4 +1,3 @@
-import { StarIconPrimaryGradient } from '@/components/icons/star'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import { memo } from 'react'
@@ -6,14 +5,13 @@ interface CardTestimoniProps {
   id: number
   name: string
   image: string
-  rating: number
+  rating?: number
   quote: React.ReactNode
 }
 
 export const CardTestimoni = memo(function CardTestimoni({
   name,
   image,
-  rating,
   quote,
 }: CardTestimoniProps) {
   return (
@@ -29,7 +27,7 @@ export const CardTestimoni = memo(function CardTestimoni({
       </div>
       <CardContent className="h-[240px] lg:h-[220px]">
         <p className="text-l-semibold mb-2">{name}</p>
-        <div className="mb-3 flex text-white">
+        {/* <div className="mb-3 flex text-white">
           {Array.from({ length: rating }).map((_, i) => (
             <StarIconPrimaryGradient
               key={`start-${i}`}
@@ -37,7 +35,7 @@ export const CardTestimoni = memo(function CardTestimoni({
               size={20}
             />
           ))}
-        </div>
+        </div> */}
         {quote}
       </CardContent>
     </Card>

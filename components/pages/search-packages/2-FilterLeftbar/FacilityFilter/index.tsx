@@ -17,12 +17,30 @@ interface FacilityFilterProps {
 }
 
 const FacilityFilter: React.FC<FacilityFilterProps> = ({ dataFacility }) => {
-  const { filters, setFacilityCode, isLoadingSkeleton } = useFilterProduct()
+  const { filters, setFacilityCode, isLoadingSkeleton, resetFilter } =
+    useFilterProduct()
+
+  // Handle reset click with event stopping
+  const handleResetClick = (e: React.MouseEvent) => {
+    // Stop the event from bubbling up to the accordion trigger
+    e.stopPropagation()
+
+    // Reset the specific filter
+    resetFilter('facilityCode')
+  }
 
   return (
     <AccordionItem value="item-3">
       <AccordionTrigger>
-        <p className="text-l-medium text-neutral-900">Fasilitas</p>
+        <div className="flex w-full items-center justify-between">
+          <p className="text-l-medium text-neutral-900">Fasilitas</p>
+          <span
+            className="text-s-medium text-error-500 cursor-pointer"
+            onClick={handleResetClick}
+          >
+            Reset Fasilitas
+          </span>
+        </div>
       </AccordionTrigger>
       <AccordionContent>
         <FacilityOptions

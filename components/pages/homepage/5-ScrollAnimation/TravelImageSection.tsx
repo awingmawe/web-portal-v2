@@ -1,173 +1,165 @@
+import { GalleryHomepage } from '@/constant/types/GalleryProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Image from 'next/image'
 
-const TravelImageSection: React.FC = () => {
+interface TravelImageSectionProps {
+  dataGallery: GalleryHomepage[]
+}
+
+const TravelImageSection: React.FC<TravelImageSectionProps> = ({
+  dataGallery,
+}) => {
   const { lg: isMobile } = useTailwindBreakpoint()
 
   return (
-    <div className="relative z-2 mb-[560px] flex flex-row justify-center max-lg:mb-[300px]">
+    <div className="relative z-2 mb-[560px] flex flex-row justify-center max-lg:mb-[500px] max-md:mb-[200px]">
       <div
-        className="relative flex w-full items-center justify-center max-lg:px-4"
+        className="relative flex w-full items-center justify-center max-lg:max-w-[320px] max-lg:px-4 lg:container"
         style={{
-          maxWidth: 1360,
           paddingTop: isMobile ? 120 : 240,
         }}
       >
-        {/* Dashed line - hide on mobile or display a shorter version */}
         <Image
           src="/images/experience-dashed.svg"
-          width={878}
-          height={2250}
+          width={0}
+          height={0}
           alt="dashed"
-          className="max-lg:hidden"
+          sizes="100vw"
+          className="h-[2250px] w-[878px] max-lg:hidden"
+        />
+        <Image
+          src="/images/dashed-mobile.svg"
+          width={0}
+          height={0}
+          alt="dashed"
+          sizes="100vw"
+          className="h-auto w-[280px] lg:hidden"
         />
 
-        {/* Mobile-specific dashed line - a shorter version */}
-        {isMobile && (
+        {/* First Image */}
+        <div
+          className={`absolute top-[0] left-[0] flex w-[757px] flex-col rounded-[20px] bg-white p-2 max-xl:top-[50px] max-xl:w-[500px] max-lg:top-[20px] max-lg:-left-[40px] max-lg:w-[233px] max-sm:left-0`}
+        >
           <Image
-            src="/images/experience-dashed.svg"
-            width={320}
-            height={1000}
-            alt="dashed-mobile"
-            className="lg:hidden"
-          />
-        )}
-
-        {/* First travel card */}
-        <div
-          className={`absolute flex flex-col rounded-[20px] bg-white p-2
-            ${isMobile ? 'top-[0] left-[5%] h-auto w-[90%]' : 'top-[0] left-[0] h-[534px] w-[756px]'}`}
-        >
-          <div
-            className={`rounded-[20px] bg-[black] 
-              ${isMobile ? 'h-[240px] w-full' : 'h-[415px] w-full'}`}
-            style={{
-              backgroundImage: `url(https://storage.googleapis.com/m101-prods/about-us/9960aefdd2be50e21cbef5da7c8e120b.jpg)`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
+            src={dataGallery[0].imageUrl}
+            className="h-auto w-full rounded-[20px] object-contain"
+            alt="travel image"
+            width={0}
+            height={0}
+            sizes="100vw"
           />
           <div
-            className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
+            className={`color-[#30302F] flex items-center justify-center text-center font-[Playball]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
-            Noor Abika Tours & Travel <br />
-            Oktober 2024
+            {dataGallery[0].title} <br />
+            {dataGallery[0].caption}
           </div>
         </div>
 
-        {/* Second travel card */}
+        {/* Second Image */}
         <div
-          className={`absolute flex flex-col rounded-[20px] bg-white p-2
-            ${isMobile ? 'top-[320px] right-[5%] h-auto w-[90%]' : 'top-[420px] right-[0] h-[675px] w-[432px]'}`}
+          className={`absolute top-[420px] right-[0] flex w-[400px] flex-col rounded-[20px] bg-white p-2 max-lg:top-[300px]  max-lg:-right-[40px] max-lg:w-[233px] max-sm:-right-0`}
         >
-          <div
-            className={`rounded-[20px] bg-[black] 
-              ${isMobile ? 'h-[240px] w-full' : 'h-[572px] w-full'}`}
-            style={{
-              backgroundImage: `url(https://storage.googleapis.com/m101-prods/about-us/9960aefdd2be50e21cbef5da7c8e120b.jpg)`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
+          <Image
+            src={dataGallery[2].imageUrl}
+            className="aspect-[4/5] h-auto w-full rounded-[20px] object-cover"
+            alt="travel image"
+            width={0}
+            height={0}
+            sizes="100vw"
           />
           <div
             className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
-            Tazkia Tours & Travel <br />
-            Juni 2024
+            {dataGallery[2].title} <br />
+            {dataGallery[2].caption}
           </div>
         </div>
 
-        {/* Third travel card */}
+        {/* Third Image */}
         <div
-          className={`absolute flex flex-col rounded-[20px] bg-white p-2
-            ${isMobile ? 'top-[640px] left-[5%] h-auto w-[90%]' : 'top-[800px] left-[48px] h-[509px] w-[626px]'}`}
+          className={`absolute top-[900px] left-[60px] flex w-[600px] flex-col rounded-[20px] bg-white p-2 max-xl:left-[35px] max-xl:w-[500px] max-lg:top-[675px] max-lg:-left-[40px] max-lg:w-[233px] max-sm:left-[0px]`}
         >
-          <div
-            className={`rounded-[20px] bg-[black] 
-              ${isMobile ? 'h-[240px] w-full' : 'h-[405px] w-full'}`}
-            style={{
-              backgroundImage: `url(https://storage.googleapis.com/m101-prods/about-us/9960aefdd2be50e21cbef5da7c8e120b.jpg)`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
+          <Image
+            src={dataGallery[0].imageUrl}
+            className="h-auto w-full rounded-[20px] object-cover"
+            alt="travel image"
+            width={0}
+            height={0}
+            sizes="100vw"
           />
           <div
             className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
-            ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
+            ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px] max-sm:w-[233px]'}`}
           >
-            Amarcy Travel <br />
-            Agustus 2024
+            {dataGallery[0].title} <br />
+            {dataGallery[0].caption}
           </div>
         </div>
 
-        {/* Fourth travel card */}
+        {/* Fourth Image */}
         <div
-          className={`absolute flex flex-col rounded-[20px] bg-white p-2
-            ${isMobile ? 'top-[960px] right-[5%] h-auto w-[90%]' : 'top-[1400px] right-[120px] h-[477px] w-[526px]'}`}
+          className={`absolute top-[1400px] right-[50px] flex w-[526px]
+            flex-col rounded-[20px] bg-white p-2 max-xl:right-0 max-xl:w-[500px] max-lg:top-[950px] max-lg:-right-[40px] max-lg:w-[233px] max-sm:right-[0px]`}
         >
-          <div
-            className={`rounded-[20px] bg-[black] 
-              ${isMobile ? 'h-[240px] w-full' : 'h-[373px] w-full'}`}
-            style={{
-              backgroundImage: `url(https://storage.googleapis.com/m101-prods/about-us/9960aefdd2be50e21cbef5da7c8e120b.jpg)`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
+          <Image
+            src={dataGallery[1].imageUrl}
+            className={`h-auto w-full rounded-[20px] object-cover`}
+            alt="travel image"
+            width={0}
+            height={0}
+            sizes="100vw"
           />
           <div
             className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
-            Berkah Cinta Sholawat <br />
-            November 2024
+            {dataGallery[1].title} <br />
+            {dataGallery[1].caption}
           </div>
         </div>
 
-        {/* Fifth travel card */}
+        {/* Fifth Image */}
         <div
-          className={`absolute flex flex-col rounded-[20px] bg-white p-2
-            ${isMobile ? 'top-[1280px] left-[5%] h-auto w-[90%]' : 'top-[1680px] left-[0] h-[761px] w-[513px]'}`}
+          className={`absolute top-[1680px] left-[0] flex w-[513px] flex-col rounded-[20px] bg-white p-2 max-xl:w-[420px] max-lg:top-[1200px] max-lg:-left-[30px] max-lg:w-[144px] max-sm:top-[1225px] max-sm:left-[0px]`}
         >
-          <div
-            className={`rounded-[20px] bg-[black] 
-              ${isMobile ? 'h-[240px] w-full' : 'h-[657px] w-full'}`}
-            style={{
-              backgroundImage: `url(https://storage.googleapis.com/m101-prods/about-us/9960aefdd2be50e21cbef5da7c8e120b.jpg)`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
+          <Image
+            src={dataGallery[4].imageUrl}
+            className="aspect-[4/5] h-auto w-full rounded-[20px] object-cover"
+            alt="travel image"
+            width={0}
+            height={0}
+            sizes="100vw"
           />
           <div
             className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
-            Jejak Imani <br />
-            Oktober 2024
+            {dataGallery[4].title} <br />
+            {dataGallery[4].caption}
           </div>
         </div>
 
-        {/* Sixth travel card */}
+        {/* Sixth Image */}
         <div
-          className={`absolute flex flex-col rounded-[20px] bg-white p-2
-            ${isMobile ? 'top-[1600px] right-[5%] h-auto w-[90%]' : 'top-[2160px] right-[0px] h-[700px] w-[498px]'}`}
+          className={`absolute top-[2160px] right-[0px] flex w-[498px] flex-col rounded-[20px] bg-white p-2 max-xl:w-[420px] max-lg:top-[1450px] max-lg:-right-[10px] max-lg:w-[144px] max-sm:top-[1500px] max-sm:right-[0px]`}
         >
-          <div
-            className={`rounded-[20px] bg-[black] 
-              ${isMobile ? 'h-[240px] w-full' : 'h-[596px] w-full'}`}
-            style={{
-              backgroundImage: `url(https://storage.googleapis.com/m101-prods/about-us/9960aefdd2be50e21cbef5da7c8e120b.jpg)`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
+          <Image
+            src={dataGallery[3].imageUrl}
+            className="aspect-[4/5] h-auto w-full rounded-[20px] object-cover"
+            alt="travel image"
+            width={0}
+            height={0}
+            sizes="100vw"
           />
           <div
             className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
-            Madani Travel <br />
-            November 2024
+            {dataGallery[3].title} <br />
+            {dataGallery[3].caption}
           </div>
         </div>
       </div>

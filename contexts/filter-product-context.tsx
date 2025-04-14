@@ -31,6 +31,9 @@ const initialFilterState: FilterState = {
   tagSlug: '',
 }
 
+// Define filter property names for individual resets
+export type FilterKey = keyof FilterState
+
 interface FilterProductContextType {
   // Combined filter state
   filters: FilterState
@@ -48,8 +51,9 @@ interface FilterProductContextType {
   setSection: (section: string) => void
   setTagSlug: (slug: string) => void
 
-  // Reset filter state
+  // Reset filter state - full and individual
   resetFilters: (filters?: typeof initialFilterState) => void
+  resetFilter: (filterKey: FilterKey) => void // New function to reset individual filter
 
   // Form submission
   isDisabled: boolean
@@ -118,10 +122,48 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, tagSlug: slug }))
   }, [])
 
-  // Reset filter
+  // Reset all filters
   const resetFilters = useCallback((filters = initialFilterState) => {
     setFilters(filters)
   }, [])
+
+  // Reset individual filter
+  const resetFilter = useCallback(
+    (filterKey: FilterKey) => {
+      setFilters((prev) => ({
+        ...prev,
+        [filterKey]: initialFilterState[filterKey],
+      }))
+
+      // Also update the URL if needed
+      const urlParamMap: Record<FilterKey, string | null> = {
+        hotelStars: 'hR',
+        dateRange: null, // Special case - has two params
+        departureAirport: 'dptArpt',
+        arrivalAirport: 'arrArpt',
+        airline: 'trvl',
+        hargaMin: 'prMin',
+        hargaMax: 'prMax',
+        facilityCode: 'fC',
+        section: 'sC',
+        tagSlug: 'tS',
+      }
+
+      // Special handling for dateRange which maps to two URL params
+      if (filterKey === 'dateRange') {
+        // Remove both start and end date params
+        updateQueryParams(['sD', 'eD'], ['', ''])
+        return
+      }
+
+      const urlParam = urlParamMap[filterKey]
+      if (urlParam) {
+        // Remove the param from URL
+        updateQueryParams([urlParam], [''])
+      }
+    },
+    [updateQueryParams]
+  )
 
   // Set default value states filter from search params
   useEffect(() => {
@@ -364,8 +406,9 @@ export const FilterProductProvider: React.FC<{
     setSection,
     setTagSlug,
 
-    // Reset filter
+    // Reset filter state - full and individual
     resetFilters,
+    resetFilter,
 
     // Form states
     isDisabled,

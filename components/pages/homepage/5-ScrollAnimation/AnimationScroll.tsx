@@ -1,7 +1,10 @@
 'use client'
 
 import BankingSection from '@/components/pages/homepage/5-ScrollAnimation/BankingSection'
+import PaymentSection from '@/components/pages/homepage/5-ScrollAnimation/PaymentSection'
 import PreparationSection from '@/components/pages/homepage/5-ScrollAnimation/PreparationSection'
+import TravelImageSection from '@/components/pages/homepage/5-ScrollAnimation/TravelImageSection'
+import { GalleryHomepage } from '@/constant/types/GalleryProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Image from 'next/image'
 import { Fragment, useRef, useState } from 'react'
@@ -14,10 +17,14 @@ import {
   ScrollPage,
   Sticky,
 } from 'react-scroll-motion'
-import PaymentSection from './PaymentSection'
-import TravelImageSection from './TravelImageSection'
 
-function OverscrollTracker({ children }: { children?: React.ReactNode }) {
+function OverscrollTracker({
+  children,
+  dataGallery,
+}: {
+  children?: React.ReactNode
+  dataGallery?: GalleryHomepage[]
+}) {
   const [endExperience, setEndExperience] = useState(false)
   const sh = useRef<number>(800)
   const { lg: isMobile } = useTailwindBreakpoint()
@@ -27,9 +34,9 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
       {children}
       <ScrollContainer>
         <ScrollPage>
-          <Animator animation={batch(FadeIn())} className="w-full">
+          <Animator animation={batch(FadeIn())} className="h-full w-full">
             <div
-              className="h-screen w-full bg-white shadow-lg"
+              className="h-full w-full bg-white shadow-lg"
               style={{
                 transform: 'translate(0%, 50%) !important',
                 background:
@@ -60,6 +67,8 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
               style={{
                 backgroundImage:
                   'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
+                backgroundPositionY: '35%',
+                backgroundPositionX: '50%',
               }}
               id="image-kabah"
             >
@@ -68,12 +77,13 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                   animation={batch({
                     out: {
                       style: {
-                        display: 'none',
+                        opacity: 0,
+                        transition: 'opacity 0.3s ease-in-out',
                       },
                     },
                   })}
                 >
-                  <p className="text-xl-regular absolute z-10 inline-block max-lg:top-60 max-lg:left-7 lg:top-40 lg:left-32.5">
+                  <p className="text-xl-regular absolute top-1/4 z-10 w-full -translate-y-1/2 text-center max-lg:top-3/7  max-lg:text-[16px]">
                     Not just a service, It&apos;s an...
                   </p>
                 </Animator>
@@ -81,7 +91,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                   className="absolute top-[0] left-[0] h-full w-full bg-[#00000080]"
                   id="bg-overlay-1"
                 />
-                <div className="flex h-screen w-full items-center justify-center bg-white px-2.5 py-1.5 text-center text-[220px] font-bold text-black mix-blend-screen max-lg:text-[48px]">
+                <div className="flex h-screen w-full items-center justify-center bg-white px-2.5 pb-1.5 text-center text-[220px] font-bold text-black mix-blend-screen max-lg:text-[48px]">
                   <Animator
                     animation={batch(
                       {
@@ -95,7 +105,10 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                                 element.style.opacity = String(value)
                               }
 
-                              const val = value > 0.02 ? (value / 0.5) * 32 : 1
+                              const val =
+                                value > 0.02
+                                  ? (value / 0.5) * (isMobile ? 70 : 32)
+                                  : 1
                               return `scale(${val})`
                             },
                           },
@@ -108,7 +121,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                               const offset = value / 0.18
                               // Adjust the transform values based on screen size
                               const tx = isMobile
-                                ? -12.5 * (offset > 1 ? 1 : offset)
+                                ? -12.65 * (offset > 1 ? 1 : offset)
                                 : -58.5 * (offset > 1 ? 1 : offset)
                               const ty = isMobile
                                 ? 15 * (offset > 1 ? 1 : offset)
@@ -153,6 +166,8 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                   backgroundImage:
                     'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
                   backgroundSize: 'cover',
+                  backgroundPositionX: '50%',
+                  backgroundPositionY: '35%',
                   display: () => {
                     setEndExperience(true)
                     return 'none'
@@ -167,30 +182,26 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
               id="100kjamaah"
             >
               <Animator animation={batch(MoveIn(0, sh.current * 2), Sticky())}>
-                <div className="relative z-2 w-full p-5" id="">
+                <div className="flex-column z-2 flex h-dvh w-dvw items-center justify-center p-5">
                   <h1 className="none block text-center text-white max-lg:text-4xl sm:max-lg:text-5xl lg:text-[92px]">
-                    <span className="whitespace-nowrap text-white">
-                      <span className="relative font-bold text-white">
-                        100.000+{' '}
-                        <Image
-                          src="/images/yellow-underline.svg"
-                          width={490}
-                          height={68}
-                          alt="line"
-                          className="absolute max-lg:h-auto max-lg:w-48 lg:h-[68px] lg:w-[490px]"
-                          style={{
-                            top: isMobile ? 36 : 80,
-                            left: isMobile ? -18 : -48,
-                          }}
-                        />
-                      </span>
-                      Jamaah
+                    <span className="relative font-bold text-white">
+                      100.000+{' '}
+                      <Image
+                        src="/images/yellow-underline.svg"
+                        width={490}
+                        height={68}
+                        alt="line"
+                        className="absolute max-lg:h-auto max-lg:w-48 lg:h-[68px] lg:w-[490px]"
+                        style={{
+                          top: isMobile ? 36 : 80,
+                          left: isMobile ? -18 : -48,
+                        }}
+                      />
                     </span>
+                    Jamaah
                     <br />
-                    <span className="whitespace-nowrap text-white">
-                      telah memilih travel <br />
-                      pilihan kami
-                    </span>
+                    telah memilih travel <br />
+                    pilihan kami
                   </h1>
                 </div>
               </Animator>
@@ -202,12 +213,14 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
         {endExperience && (
           <>
             <div
-              className="fixed h-dvh w-dvw items-center justify-center bg-cover bg-fixed bg-no-repeat"
+              className="fixed h-full w-full items-center justify-center bg-cover bg-fixed bg-no-repeat"
               style={{
                 top: 0,
                 left: 0,
                 backgroundImage:
                   'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
+                backgroundPositionX: '50%',
+                backgroundPositionY: '35%',
               }}
             />
             <div className="fixed top-[0] left-[0] h-full w-full bg-[#00000080]" />
@@ -236,7 +249,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
           </>
         )}
         {/* Travel Image Section */}
-        <TravelImageSection />
+        <TravelImageSection dataGallery={dataGallery || []} />
         {/* Payment Section  */}
         <PaymentSection />
         {/* Banking Section */}

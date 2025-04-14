@@ -16,7 +16,7 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
   createSortUrl,
 }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between max-lg:hidden">
       <h2 className="text-m-regular text-neutral-500">
         Menampilkan {resultsCount} hasil dari {totalCount} paket
       </h2>
