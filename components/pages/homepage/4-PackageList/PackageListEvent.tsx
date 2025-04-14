@@ -63,7 +63,7 @@ const PackageSection = ({
               inViewThreshold: 1,
               watchDrag: true,
             }}
-            className="my-7 w-full max-lg:mt-0"
+            className="w-full max-lg:mt-0"
           >
             <CarouselContent className="-ml-4.5 px-2">
               {isLoading ? renderSkeletonItems(4, true) : packageItems}

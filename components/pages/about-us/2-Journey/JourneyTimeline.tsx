@@ -205,7 +205,7 @@ export function JourneyTimeline() {
             width={0}
             height={0}
             sizes="100vw"
-            className="aspect-[4/3] h-auto w-full rounded-md"
+            className="aspect-[4/3] h-auto w-full rounded-md object-contain"
           />
         </div>
 

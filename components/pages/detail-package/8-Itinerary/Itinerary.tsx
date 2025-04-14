@@ -17,10 +17,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // Separate memoized component for each activity
 const Activity = React.memo(
   ({ time, activity }: { time: string; activity: string }) => (
-    <div className="flex items-center gap-3">
-      <p className="text-m-regular text-neutral-900">{time}</p>
-      <p className="text-m-regular text-neutral-900">-</p>
-      <p className="text-m-regular text-neutral-900">{activity}</p>
+    <div className="flex items-center justify-between gap-3">
+      <p className="text-m-regular flex-1 text-neutral-900">{time}</p>
+      <p className="text-m-regular  text-neutral-900">-</p>
+      <p className="text-m-regular flex-16 text-neutral-900 max-lg:flex-6">
+        {activity}
+      </p>
     </div>
   )
 )
