@@ -12,8 +12,6 @@ export async function generateMetadata() {
 export default function TransactionPage() {
   return (
     <div className="mx-auto max-w-7xl px-4">
-      {/* <TransactionSkeletonLoading /> */}
-
       <Tabs defaultValue="upcoming" className="w-full">
         <TabsList className="grid h-auto w-full grid-cols-3 rounded-none  bg-transparent p-0">
           <TabsTrigger

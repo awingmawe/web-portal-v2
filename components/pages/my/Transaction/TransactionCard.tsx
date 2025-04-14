@@ -1,5 +1,9 @@
+'use client'
+
 import { ArrowIcon } from '@/components/icons/arrow'
 import { Calendar, Calendar2 } from '@/components/icons/calendar'
+import { ChecklistCircle } from '@/components/icons/checkbox'
+import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { UsersIcon } from '@/components/icons/user'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,32 +12,43 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { formatCurrency } from '@/lib/utils'
+import { getPaymentStatement } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
-import { MoreHorizontal } from 'lucide-react'
+import { Loader2, MoreHorizontal } from 'lucide-react'
 import Image from 'next/image'
+import { useCallback, useEffect, useState } from 'react'
 
 export interface TransactionCardProps {
   status: string
   id: string
+  bookingId: string
   packageName: string
+  thumbnail: string
   startDate: string
   endDate: string
   createdDate: string
-  participants: number
-  balance: number
+  jemaah: number
+  isCompletedManifest: boolean
+  isPaidOff: boolean
 }
 
 export default function TransactionCard({
   status,
   id,
   packageName,
+  thumbnail,
+  bookingId,
   startDate,
   endDate,
   createdDate,
-  participants,
-  balance,
+  jemaah,
+  isCompletedManifest,
+  isPaidOff,
 }: TransactionCardProps) {
+  const [loadingStatement, setLoadingStatement] = useState(false)
+  const [paymentStatement, setPaymentStatement] = useState<any>(null)
+
   const renderStatusColor = (status: string) => {
     if (status === 'waiting-approval') {
       return 'bg-warning-100 text-warning-700'
@@ -62,9 +77,29 @@ export default function TransactionCard({
     ) {
       return 'Dalam Proses Pembatalan'
     } else {
-      return 'Menunggu kelengkapan data jamaah dan pelunasan pembayaran'
+      return 'Menunggu kelengkapan data jemaah dan pelunasan pembayaran'
     }
   }
+
+  const fetchPaymentStatement = useCallback(async () => {
+    setLoadingStatement(true)
+
+    try {
+      // Build query parameters
+      const response = await getPaymentStatement(bookingId)
+
+      // Update state with response data
+      setPaymentStatement(response)
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    } finally {
+      setLoadingStatement(false)
+    }
+  }, [bookingId])
+
+  useEffect(() => {
+    fetchPaymentStatement()
+  }, [fetchPaymentStatement])
 
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200">
@@ -89,7 +124,7 @@ export default function TransactionCard({
           <div className="flex gap-4 md:col-span-2">
             <div className="h-32 w-32 flex-shrink-0">
               <Image
-                src="https://s3-alpha-sig.figma.com/img/feee/b274/22eb8956f0d8154ae410af99ccd96506?Expires=1745193600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=BNJXpIr2wi2nLXK7DuVCBORx6ncIO~EogGeFCb3gg128XTspQLH9SnTR2V4qyST5WjEc4T98N-YDJQ9YPPnFU6M0ZE25YQzywyA8QuhIxjJ9aleeu2uq8TBRWrj6jY-6tL6c~jKyi~A0xRUGymPj8oNqglNC4UOptfZkFyYrD~I1u7g4Nr7PEadjoRL6-TxQ0BkW4hOIRagSI~22PflOhfx2I7ECq4jiw~a7yDFdtWRasoR26b2nBHloIWe~gLAxW3Ut5N8A4LA8u9a-y5MCjb5nds6K4pR7bhB8ljue1gymYeFRP82N9e4UksvjPzH7yNKkR65fjuPKC53SqH8Yhg__"
+                src={thumbnail}
                 alt="Umroh Package"
                 width={128}
                 height={128}
@@ -110,16 +145,41 @@ export default function TransactionCard({
                 <div className="mt-4 flex items-center gap-2">
                   <UsersIcon className="h-5 w-5 text-neutral-500" />
                   <p className="text-m-regular text-neutral-500">
-                    {participants} Jamaah
+                    {jemaah} Jemaah
                   </p>
+                  {isCompletedManifest ? (
+                    <div className="bg-success-100 text-success-700 flex items-center gap-1 rounded-full px-3 py-1">
+                      <ChecklistCircle />
+                      <p className="text-s-regular text-success-700 ">
+                        Data Lengkap
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="bg-warning-100 text-warning-700 flex items-center gap-1 rounded-full px-3 py-1">
+                      <InfoCircleIcon />
+                      <p className="text-s-regular text-warning-700 ">
+                        Segera lengkapi data jemaah
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-col border-t border-neutral-100 pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4">
-            <p className="text-m-medium text-neutral-500">Sisa Pembayaran</p>
-            <p className="text-l-semibold">{formatCurrency(balance)}</p>
-          </div>
+          {loadingStatement ? (
+            <div className="flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : paymentStatement ? (
+            <div className="flex flex-col border-t border-neutral-100 pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4">
+              <p className="text-m-medium text-neutral-500">Sisa Pembayaran</p>
+              <p className="text-l-semibold">
+                {isPaidOff
+                  ? '-'
+                  : formatCurrency(paymentStatement.remainingPayment)}
+              </p>
+            </div>
+          ) : null}
         </div>
         <div className="flex items-center justify-between border-t border-neutral-200 p-4">
           <div className="flex items-center gap-2 text-gray-500">
@@ -133,22 +193,25 @@ export default function TransactionCard({
             <p className="text-s-regular mr-4 font-medium text-nowrap text-gray-900">
               Lihat Detail Pesanan
             </p>
-            {/* <Button
-              variant="outline"
-              className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
-              disabled
-            >
-              <ChecklistCircle />
-              Pelunasan
-            </Button> */}
-            <Button
-              variant="outline"
-              className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-            >
-              Bayar Pelunasan
-            </Button>
+            {isPaidOff ? (
+              <Button
+                variant="outline"
+                className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                disabled
+              >
+                <ChecklistCircle />
+                Pelunasan
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+              >
+                Bayar Pelunasan
+              </Button>
+            )}
             <Button className="w-full px-4 py-3 text-nowrap">
-              Lengkapi Data Jamaah
+              Lengkapi Data Jemaah
             </Button>
             <Popover>
               <PopoverTrigger asChild>

@@ -55,7 +55,7 @@ export default function PreparationSection() {
             </div>
             <p className="mb-2 text-base font-medium sm:text-lg">Tepercaya</p>
             <p className="text-primary-700 text-xs sm:text-sm">
-              Telah dipercaya oleh ribuan jamaah Umroh
+              Telah dipercaya oleh ribuan jemaah Umroh
             </p>
           </div>
 

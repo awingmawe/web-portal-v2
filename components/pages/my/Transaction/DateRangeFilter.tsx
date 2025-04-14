@@ -10,9 +10,13 @@ import {
 } from '@/components/ui/popover'
 import { format, isSameDay, subDays } from 'date-fns'
 import { useState } from 'react'
-import type { DateRange } from 'react-day-picker'
+import { DateRange } from 'react-day-picker'
 
-export default function DateRangePicker() {
+export interface DateRangePickerProps {
+  onChange?: (dateRange: DateRange | undefined) => void
+}
+
+export default function DateRangePicker({ onChange }: DateRangePickerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<
     '30days' | '90days' | 'custom'
@@ -110,12 +114,14 @@ export default function DateRangePicker() {
   // Handle apply button click
   const handleApply = () => {
     // Here you would typically handle the application of the filter
+    onChange?.(dateRange)
     setIsOpen(false)
   }
 
   // Handle reset button click
   const handleReset = () => {
     setDateRange(undefined)
+    onChange?.(undefined)
     setSelectedOption('custom')
   }
 

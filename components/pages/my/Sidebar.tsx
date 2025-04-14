@@ -74,129 +74,131 @@ export const Sidebar = () => {
   const pathname = usePathname()
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="rounded-3xl border border-neutral-100 bg-white shadow-sm">
-        {/* Profile Section */}
-        <div className="flex items-center gap-4 p-5">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 shadow-md">
-            {profile ? (
-              <Avatar className="h-16 w-16">
-                <AvatarImage src={profile.avatarProvider} alt="User avatar" />
-                <AvatarFallback className="fw-semibold text-neutral-600">
-                  {String(profile.name).slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            ) : (
-              <div className="h-16 w-16 animate-pulse rounded-full bg-neutral-200"></div>
-            )}
-          </div>
-          <div className="w-full">
-            {profile ? (
-              <Fragment>
-                <h2 className="text-l-semibold">{profile.name}</h2>
-                <p className="text-m-regular text-neutral-500">
-                  {profile.email}
-                </p>
-              </Fragment>
-            ) : (
-              <Fragment>
-                <div className="h-5 w-3/4 animate-pulse rounded bg-neutral-200"></div>
-                <div className="mt-1 h-4 w-1/2 animate-pulse rounded bg-neutral-200"></div>
-              </Fragment>
-            )}
-          </div>
-        </div>
-
-        {/* Points Section */}
-        <Separator className="mx-auto !w-[90%] bg-neutral-100" />
-        <MenuItem
-          icon={<PointIcon />}
-          label={
-            <span>
-              Poin Muslim101 : <b className="text-m-semibold">10.000</b>
-            </span>
-          }
-          hasChevron={true}
-          loading={profile ? false : true}
-        />
-        <Separator className="mx-auto !w-[90%] bg-neutral-100" />
-
-        {/* Menu Items */}
-        <MenuItem
-          icon={<VoucherIcon />}
-          label="Voucher"
-          loading={profile ? false : true}
-        />
-        <MenuItem
-          icon={<MoneyTimeIcon />}
-          label="Butuh Dibayar"
-          loading={profile ? false : true}
-        />
-        <MenuItem
-          icon={<ReceiptIcon size={24} />}
-          label="Transaksi"
-          href="/my/transaction"
-          isActive={pathname === '/my/transaction'}
-          loading={profile ? false : true}
-        />
-        <MenuItem
-          icon={<MoneysIcon />}
-          label="Pembiayaan"
-          loading={profile ? false : true}
-        />
-        <Separator className="mx-auto !w-[90%] bg-neutral-100" />
-
-        <MenuItem
-          icon={<PilotSeatIcon />}
-          label="Permintaan Paket Custom"
-          loading={profile ? false : true}
-        />
-        <MenuItem
-          icon={<PilotSeatIcon />}
-          label="Cek Ketersediaan Kursi"
-          loading={profile ? false : true}
-        />
-        <MenuItem
-          icon={<HeartIcon />}
-          label="Wishlist"
-          isActive={pathname === '/my/wishlist'}
-          loading={profile ? false : true}
-        />
-        <Separator className="mx-auto !w-[90%] bg-neutral-100" />
-
-        <MenuItem
-          icon={<SettingIcon />}
-          label="Pengaturan Akun"
-          isActive={pathname === '/my/profile'}
-          loading={profile ? false : true}
-        />
-        <DialogConfirm
-          title="Apakah kamu yakin ingin keluar?"
-          icon={
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-amber-100 p-4">
-              <MessageQuestionIcon size={36} />
+    <div className=" w-full max-w-sm">
+      <div className="sticky top-26">
+        <div className="rounded-3xl border border-neutral-100 bg-white shadow-sm ">
+          {/* Profile Section */}
+          <div className="flex items-center gap-4 p-5">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 shadow-md">
+              {profile ? (
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src={profile.avatarProvider} alt="User avatar" />
+                  <AvatarFallback className="fw-semibold text-neutral-600">
+                    {String(profile.name).slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <div className="h-16 w-16 animate-pulse rounded-full bg-neutral-200"></div>
+              )}
             </div>
-          }
-          content="Kamu harus masuk ke akun jika ingin menggunakan kembali akun kamu."
-          confirmText="Ya, Keluar"
-          cancelText="Batal"
-          confirmVariant="default"
-          cancelVariant="ghost"
-          onSubmit={() => {
-            setLoadingLogout(true)
-            logout(true, `${window.location.origin}/`)
-          }}
-          isLoading={loadingLogout}
-        >
+            <div className="w-full">
+              {profile ? (
+                <Fragment>
+                  <h2 className="text-l-semibold">{profile.name}</h2>
+                  <p className="text-m-regular text-neutral-500">
+                    {profile.email}
+                  </p>
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <div className="h-5 w-3/4 animate-pulse rounded bg-neutral-200"></div>
+                  <div className="mt-1 h-4 w-1/2 animate-pulse rounded bg-neutral-200"></div>
+                </Fragment>
+              )}
+            </div>
+          </div>
+
+          {/* Points Section */}
+          <Separator className="mx-auto !w-[90%] bg-neutral-100" />
           <MenuItem
-            icon={<LogoutIcon size={24} />}
-            label="Log Out"
+            icon={<PointIcon />}
+            label={
+              <span>
+                Poin Muslim101 : <b className="text-m-semibold">10.000</b>
+              </span>
+            }
+            hasChevron={true}
             loading={profile ? false : true}
           />
-        </DialogConfirm>
+          <Separator className="mx-auto !w-[90%] bg-neutral-100" />
+
+          {/* Menu Items */}
+          <MenuItem
+            icon={<VoucherIcon />}
+            label="Voucher"
+            loading={profile ? false : true}
+          />
+          <MenuItem
+            icon={<MoneyTimeIcon />}
+            label="Butuh Dibayar"
+            loading={profile ? false : true}
+          />
+          <MenuItem
+            icon={<ReceiptIcon size={24} />}
+            label="Transaksi"
+            href="/my/transaction"
+            isActive={pathname === '/my/transaction'}
+            loading={profile ? false : true}
+          />
+          <MenuItem
+            icon={<MoneysIcon />}
+            label="Pembiayaan"
+            loading={profile ? false : true}
+          />
+          <Separator className="mx-auto !w-[90%] bg-neutral-100" />
+
+          <MenuItem
+            icon={<PilotSeatIcon />}
+            label="Permintaan Paket Custom"
+            loading={profile ? false : true}
+          />
+          <MenuItem
+            icon={<PilotSeatIcon />}
+            label="Cek Ketersediaan Kursi"
+            loading={profile ? false : true}
+          />
+          <MenuItem
+            icon={<HeartIcon />}
+            label="Wishlist"
+            isActive={pathname === '/my/wishlist'}
+            loading={profile ? false : true}
+          />
+          <Separator className="mx-auto !w-[90%] bg-neutral-100" />
+
+          <MenuItem
+            icon={<SettingIcon />}
+            label="Pengaturan Akun"
+            isActive={pathname === '/my/profile'}
+            loading={profile ? false : true}
+          />
+          <DialogConfirm
+            title="Apakah kamu yakin ingin keluar?"
+            icon={
+              <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-amber-100 p-4">
+                <MessageQuestionIcon size={36} />
+              </div>
+            }
+            content="Kamu harus masuk ke akun jika ingin menggunakan kembali akun kamu."
+            confirmText="Ya, Keluar"
+            cancelText="Batal"
+            confirmVariant="default"
+            cancelVariant="ghost"
+            onSubmit={() => {
+              setLoadingLogout(true)
+              logout(true, `${window.location.origin}/`)
+            }}
+            isLoading={loadingLogout}
+          >
+            <MenuItem
+              icon={<LogoutIcon size={24} />}
+              label="Log Out"
+              loading={profile ? false : true}
+            />
+          </DialogConfirm>
+        </div>
+        {/* Referral Section */}
+        <Referral referral="HB70KLM" />
       </div>
-      {/* Referral Section */}
-      <Referral referral="HB70KLM" />
     </div>
   )
 }

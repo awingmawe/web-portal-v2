@@ -12,7 +12,7 @@ export default function Journey() {
           ekosistem muamalah muslim yang berbasis web dan mobile apps yang
           saling terintegrasi. Salah satu layanannya adalah marketplace Umroh,
           Haji, dan Halal Trip, yang menjembatani pilihan paket perjalanan dari
-          berbagai mitra travel tepercaya dengan para calon jamaah yang tersebar
+          berbagai mitra travel tepercaya dengan para calon jemaah yang tersebar
           di seluruh Indonesia.
         </p>
 

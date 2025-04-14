@@ -164,7 +164,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
           >
             <div
               className="relative flex h-screen items-center justify-center bg-cover bg-no-repeat"
-              id="100kjamaah"
+              id="100kjemaah"
             >
               <Animator animation={batch(MoveIn(0, sh.current * 2), Sticky())}>
                 <div className="relative z-2 w-full p-5" id="">
@@ -184,7 +184,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                           }}
                         />
                       </span>
-                      Jamaah
+                      Jemaah
                     </span>
                     <br />
                     <span className="whitespace-nowrap text-white">
@@ -227,7 +227,7 @@ function OverscrollTracker({ children }: { children?: React.ReactNode }) {
                     }}
                   />
                 </span>
-                Jamaah
+                Jemaah
                 <br />
                 telah memilih travel <br />
                 pilihan kami

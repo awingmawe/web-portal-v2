@@ -1,38 +1,51 @@
 'use client'
 
 import { Skeleton } from '@/components/ui/skeleton'
+export interface TransactionSkeletonLoadingProps {
+  noTabs?: boolean
+  noFilter?: boolean
+  noPagination?: boolean
+}
 
-export default function BookingSkeletonLoading() {
+export default function TransactionSkeletonLoading({
+  noTabs = false,
+  noFilter = false,
+  noPagination = false,
+}: TransactionSkeletonLoadingProps) {
   return (
     <div className="mx-auto w-full max-w-7xl px-4">
       {/* Tabs */}
-      <div className="mb-6 flex w-full border-b border-neutral-200">
-        <div className="w-1/3 border-b-2 border-neutral-200 pb-2 text-center font-medium">
-          <Skeleton className="mx-auto h-6 w-32" />
+      {!noTabs && (
+        <div className="mb-6 flex w-full border-b border-neutral-200">
+          <div className="w-1/3 border-b-2 border-neutral-200 pb-2 text-center font-medium">
+            <Skeleton className="mx-auto h-6 w-32" />
+          </div>
+          <div className="w-1/3 pb-2 text-center text-gray-400">
+            <Skeleton className="mx-auto h-6 w-32" />
+          </div>
+          <div className="w-1/3 pb-2 text-center text-gray-400">
+            <Skeleton className="mx-auto h-6 w-32" />
+          </div>
         </div>
-        <div className="w-1/3 pb-2 text-center text-gray-400">
-          <Skeleton className="mx-auto h-6 w-32" />
-        </div>
-        <div className="w-1/3 pb-2 text-center text-gray-400">
-          <Skeleton className="mx-auto h-6 w-32" />
-        </div>
-      </div>
+      )}
 
       {/* Search and Filters */}
-      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
-        <div className="relative">
-          <Skeleton className="h-12 w-full rounded-full" />
+      {!noFilter && (
+        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
+          <div className="relative">
+            <Skeleton className="h-12 w-full rounded-full" />
+          </div>
+          <div className="relative">
+            <Skeleton className="h-12 w-full rounded-full" />
+          </div>
+          <div className="relative">
+            <Skeleton className="h-12 w-full rounded-full" />
+          </div>
+          <div className="relative">
+            <Skeleton className="h-12 w-full rounded-full" />
+          </div>
         </div>
-        <div className="relative">
-          <Skeleton className="h-12 w-full rounded-full" />
-        </div>
-        <div className="relative">
-          <Skeleton className="h-12 w-full rounded-full" />
-        </div>
-        <div className="relative">
-          <Skeleton className="h-12 w-full rounded-full" />
-        </div>
-      </div>
+      )}
 
       {/* Booking Card */}
       <div className="mb-6 overflow-hidden rounded-lg border border-neutral-200">
@@ -87,13 +100,15 @@ export default function BookingSkeletonLoading() {
       </div>
 
       {/* Pagination */}
-      <div className="my-6 flex items-center justify-center gap-2">
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <Skeleton className="h-8 w-8 rounded-full" />
-      </div>
+      {!noPagination && (
+        <div className="my-6 flex items-center justify-center gap-2">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </div>
+      )}
     </div>
   )
 }
