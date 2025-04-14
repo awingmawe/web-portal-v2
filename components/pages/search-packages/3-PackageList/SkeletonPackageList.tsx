@@ -4,7 +4,7 @@ import { CardPackageSkeleton } from '@/components/shared/SkeletonCardPackage'
 
 // Header Skeleton Component
 export const ResultsHeaderSkeleton = () => (
-  <div className="flex items-center justify-between">
+  <div className="flex items-center justify-between max-lg:hidden">
     <div className="h-5 w-64 animate-pulse rounded-md bg-neutral-200"></div>
     <div className="flex items-center gap-3">
       <div className="h-5 w-40 animate-pulse rounded-md bg-neutral-200"></div>
@@ -15,7 +15,7 @@ export const ResultsHeaderSkeleton = () => (
 
 // Pagination Skeleton Component
 export const PaginationSkeleton = () => (
-  <div className="mt-8 flex justify-center">
+  <div className="mt-8 flex justify-center max-lg:hidden">
     <div className="flex items-center gap-2">
       <div className="h-10 w-10 animate-pulse rounded-md bg-neutral-200"></div>
       <div className="h-10 w-10 animate-pulse rounded-md bg-neutral-200"></div>

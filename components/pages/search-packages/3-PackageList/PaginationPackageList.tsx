@@ -109,7 +109,7 @@ export const CustomPagination: React.FC<CustomPaginationProps> = ({
   }
 
   return (
-    <Pagination className="mt-8">
+    <Pagination className="mt-8 max-lg:hidden">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

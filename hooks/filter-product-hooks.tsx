@@ -24,6 +24,33 @@ interface UseSearchResult<T> {
   loadMore: () => Promise<void>
 }
 
+interface UsePriceRangeFilterProps {
+  initialMin: number
+  initialMax: number
+  filters: {
+    hargaMin: string
+    hargaMax: string
+  }
+  setHargaMin: (value: string) => void
+  setHargaMax: (value: string) => void
+}
+
+interface UsePriceRangeFilterResult {
+  range: [number, number]
+  handleSliderChange: (value: [number, number]) => void
+  handleSliderChangeEnd: (value: [number, number]) => void
+  handleHargaMinChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleHargaMaxChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleHargaMinBlur: () => void
+  handleHargaMaxBlur: () => void
+}
+
+interface UseCheckboxSelectionProps {
+  selectedValues?: string
+  onSelectionChange: (value: string) => void
+  paramName: string
+}
+
 export function useAirportSearch({
   initialQuery = '',
   pageSize = 15,
@@ -196,27 +223,6 @@ export function useAirlineSearch({
   }
 }
 
-interface UsePriceRangeFilterProps {
-  initialMin: number
-  initialMax: number
-  filters: {
-    hargaMin: string
-    hargaMax: string
-  }
-  setHargaMin: (value: string) => void
-  setHargaMax: (value: string) => void
-}
-
-interface UsePriceRangeFilterResult {
-  range: [number, number]
-  handleSliderChange: (value: [number, number]) => void
-  handleSliderChangeEnd: (value: [number, number]) => void
-  handleHargaMinChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleHargaMaxChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  handleHargaMinBlur: () => void
-  handleHargaMaxBlur: () => void
-}
-
 export function usePriceRangeFilter({
   initialMin,
   initialMax,
@@ -379,12 +385,6 @@ export function usePriceRangeFilter({
     handleHargaMinBlur,
     handleHargaMaxBlur,
   }
-}
-
-interface UseCheckboxSelectionProps {
-  selectedValues?: string
-  onSelectionChange: (value: string) => void
-  paramName: string
 }
 
 export function useCheckboxSelection({
