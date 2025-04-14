@@ -1,5 +1,5 @@
-# Base image V3 web-portal-v2
-FROM node:22-alpine
+# Base V2 web-account-console-v2
+FROM node:22.14.0
 
 # Set working directory
 WORKDIR /app
