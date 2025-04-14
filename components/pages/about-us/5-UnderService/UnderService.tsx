@@ -19,7 +19,7 @@ export default function UnderService() {
         </div>
         {/* DESKTOP VIEW */}
         {/* Image grid - keeping the original layout */}
-        <div className="mx-auto my-8 grid grid-cols-3 gap-4 max-lg:hidden">
+        <div className="mx-auto my-8 grid max-w-4xl grid-cols-3 gap-4 max-lg:hidden">
           {/* Image 1 */}
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:h-[350px] lg:h-[400px]">
             <Image

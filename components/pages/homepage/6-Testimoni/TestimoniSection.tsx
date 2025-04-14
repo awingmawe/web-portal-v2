@@ -51,7 +51,7 @@ export default function TestimoniSection({
               >
                 <CardTestimoni
                   name={testi.title}
-                  image={testi.imageUrl}
+                  image={testi?.imageUrl}
                   quote={testi.caption}
                   id={testi.id}
                 />

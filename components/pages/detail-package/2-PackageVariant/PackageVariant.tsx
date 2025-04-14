@@ -26,7 +26,7 @@ import {
 import { PopoverClose } from '@radix-ui/react-popover'
 import { ChevronDownIcon } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 interface PackageVariantComponentProps {
   variants: PackageVariant[]
@@ -93,11 +93,26 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         organization?.bdm?.persona?.phoneNumber ?? '628888755101'
       )
 
-  // Get room type label
+  // Check room type availability based on price
+  const availableRoomTypes = useMemo(() => {
+    if (!selectedVariant) return { double: false, triple: false, quad: false }
+
+    return {
+      double:
+        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
+      triple:
+        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
+      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
+    }
+  }, [selectedVariant])
+
+  // Get room type label with availability status
   const getRoomTypeLabel = () => {
+    if (!selectedRoomType) return 'Pilih kamar hotel'
+
     switch (selectedRoomType) {
       case 'double':
-        return 'Double (1 Kamar sendiri)'
+        return 'Double (1 Kamar berdua)'
       case 'triple':
         return 'Triple (1 Kamar bertiga)'
       case 'quad':
@@ -106,6 +121,26 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         return 'Pilih kamar hotel'
     }
   }
+
+  // Check if any room type is available
+  const hasAvailableRoomTypes = useMemo(() => {
+    return Object.values(availableRoomTypes).some((available) => available)
+  }, [availableRoomTypes])
+
+  // Set initial room type if current selection is not available
+  useEffect(() => {
+    if (selectedVariant && selectedRoomType) {
+      // If the current room type is not available, clear the selection
+      if (!availableRoomTypes[selectedRoomType]) {
+        setSelectedRoomType(null)
+      }
+    }
+  }, [
+    selectedVariant,
+    selectedRoomType,
+    availableRoomTypes,
+    setSelectedRoomType,
+  ])
 
   // When all version 2 muslim101 released, remove this
   const handleLocalStorage = () => {
@@ -264,7 +299,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           </div>
           <Popover>
             <PopoverTrigger asChild>
-              <button className="flex w-full cursor-pointer items-center justify-between rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-left">
+              <button
+                className="flex w-full cursor-pointer items-center justify-between rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-left"
+                disabled={!hasAvailableRoomTypes}
+              >
                 <div className="flex items-center gap-1">
                   <BedIcon />
                   <span
@@ -281,65 +319,100 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               align="start"
               sideOffset={4}
             >
-              <PopoverClose>
+              <PopoverClose className="w-full">
                 <div
-                  className="flex cursor-pointer items-center gap-2 px-3 py-2.5 hover:bg-neutral-50"
-                  onClick={() => setSelectedRoomType('double')}
+                  className={`flex w-full items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
+                    availableRoomTypes.double
+                      ? 'cursor-pointer hover:bg-neutral-50'
+                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
+                  }`}
+                  onClick={() =>
+                    availableRoomTypes.double && setSelectedRoomType('double')
+                  }
                 >
                   <span className="text-m-regular">
                     Double (1 Kamar berdua)
                   </span>
-                  {selectedRoomType === 'double' && (
-                    <svg
-                      className="text-primary-500 ml-auto h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+                  {!availableRoomTypes.double && (
+                    <span className="text-s-regular text-error-500 ml-auto">
+                      Tidak tersedia
+                    </span>
                   )}
+                  {selectedRoomType === 'double' &&
+                    availableRoomTypes.double && (
+                      <svg
+                        className="text-primary-500 ml-auto h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
                 </div>
               </PopoverClose>
-              <PopoverClose>
+              <PopoverClose className="w-full">
                 <div
-                  className="flex cursor-pointer items-center gap-2 border-b border-neutral-100 px-3 py-2.5 hover:bg-neutral-50"
-                  onClick={() => setSelectedRoomType('triple')}
+                  className={`flex items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
+                    availableRoomTypes.triple
+                      ? 'cursor-pointer hover:bg-neutral-50'
+                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
+                  }`}
+                  onClick={() =>
+                    availableRoomTypes.triple && setSelectedRoomType('triple')
+                  }
                 >
                   <span className="text-m-regular">
                     Triple (1 Kamar bertiga)
                   </span>
-                  {selectedRoomType === 'triple' && (
-                    <svg
-                      className="text-primary-500 ml-auto h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+                  {!availableRoomTypes.triple && (
+                    <span className="text-s-regular text-error-500 ml-auto">
+                      Tidak tersedia
+                    </span>
                   )}
+                  {selectedRoomType === 'triple' &&
+                    availableRoomTypes.triple && (
+                      <svg
+                        className="text-primary-500 ml-auto h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
                 </div>
               </PopoverClose>
-              <PopoverClose>
+              <PopoverClose className="w-full">
                 <div
-                  className="flex cursor-pointer items-center gap-2 border-b border-neutral-100 px-3 py-2.5 hover:bg-neutral-50"
-                  onClick={() => setSelectedRoomType('quad')}
+                  className={`flex items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
+                    availableRoomTypes.quad
+                      ? 'cursor-pointer hover:bg-neutral-50'
+                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
+                  }`}
+                  onClick={() =>
+                    availableRoomTypes.quad && setSelectedRoomType('quad')
+                  }
                 >
                   <span className="text-m-regular">
                     Quad (1 Kamar berempat)
                   </span>
-                  {selectedRoomType === 'quad' && (
+                  {!availableRoomTypes.quad && (
+                    <span className="text-s-regular text-error-500 ml-auto">
+                      Tidak tersedia
+                    </span>
+                  )}
+                  {selectedRoomType === 'quad' && availableRoomTypes.quad && (
                     <svg
                       className="text-primary-500 ml-auto h-5 w-5"
                       fill="none"
@@ -356,6 +429,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   )}
                 </div>
               </PopoverClose>
+              {!hasAvailableRoomTypes && (
+                <div className="bg-error-100 text-error-700 text-s-regular p-3">
+                  Mohon maaf, semua tipe kamar untuk varian ini sudah habis
+                  terjual.
+                </div>
+              )}
             </PopoverContent>
           </Popover>
         </div>
@@ -389,7 +468,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               id="btn-checkout-desktop"
               // When all version 2 muslim101 released, remove this
               onClick={handleLocalStorage}
-              disabled={isEmpty(selectedRoomType) && isEmpty(selectedVariant)}
             >
               Checkout Sekarang
             </Button>

@@ -71,11 +71,6 @@ export const CardPackage = memo(function CardPackage({
     [arrivalDate, departureDate]
   )
 
-  const limitBookingDate = useMemo(
-    () => differenceInDays(departureDate, releasedAt) + 1,
-    [departureDate, releasedAt]
-  )
-
   // Memoize the stars rendering
   const ratingStars = useMemo(
     () =>
@@ -142,7 +137,7 @@ export const CardPackage = memo(function CardPackage({
 
       {/* Content */}
       <div className="mt-3 flex flex-col gap-1">
-        {limitBookingDate <= 10 && (
+        {differenceInDays(releasedAt, new Date()) <= 10 && (
           <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1">
             <InfoIcon size={20} className="text-primary-700 stroke-0" />
             <p className="text-s-regular text-primary-700">
@@ -150,8 +145,9 @@ export const CardPackage = memo(function CardPackage({
             </p>
           </div>
         )}
+
         {/* Title */}
-        <h3 className="text-l-regular text-neutral-900 max-sm:text-sm max-sm:leading-5">
+        <h3 className="text-l-regular line-clamp-2 break-all text-neutral-900 max-sm:text-sm max-sm:leading-5">
           {title}
         </h3>
 
