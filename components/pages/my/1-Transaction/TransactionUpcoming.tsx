@@ -2,10 +2,10 @@
 
 import type React from 'react'
 
-import DateRangePicker from '@/components/pages/my/Transaction/DateRangeFilter'
-import EmptyState from '@/components/pages/my/Transaction/EmptyState'
-import TransactionCard from '@/components/pages/my/Transaction/TransactionCard'
-import TransactionSkeletonLoading from '@/components/pages/my/Transaction/TransactionSkeletonLoading'
+import TransactionCard from '@/components/pages/my/1-Transaction/Card/TransactionCard'
+import DateRangePicker from '@/components/pages/my/1-Transaction/DateRangeFilter'
+import EmptyState from '@/components/pages/my/1-Transaction/EmptyState'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
 import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
 import { Input } from '@/components/ui/input'
 import {

@@ -1,6 +1,6 @@
 import { metadata } from '@/app/shared-metadata'
-import TransactionCompleted from '@/components/pages/my/Transaction/TransactionCompleted'
-import TransactionUpcoming from '@/components/pages/my/Transaction/TransactionUpcoming'
+import TransactionCompleted from '@/components/pages/my/1-Transaction/TransactionCompleted'
+import TransactionUpcoming from '@/components/pages/my/1-Transaction/TransactionUpcoming'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Link from 'next/link'
 

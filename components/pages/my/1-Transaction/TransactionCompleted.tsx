@@ -2,10 +2,10 @@
 
 import type React from 'react'
 
-import DateRangePicker from '@/components/pages/my/Transaction/DateRangeFilter'
-import EmptyState from '@/components/pages/my/Transaction/EmptyState'
-import TransactionCard from '@/components/pages/my/Transaction/TransactionCard'
-import TransactionSkeletonLoading from '@/components/pages/my/Transaction/TransactionSkeletonLoading'
+import TransactionCard from '@/components/pages/my/1-Transaction/Card/TransactionCard'
+import DateRangePicker from '@/components/pages/my/1-Transaction/DateRangeFilter'
+import EmptyState from '@/components/pages/my/1-Transaction/EmptyState'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
 import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
 import { Input } from '@/components/ui/input'
 import { GetListQuery } from '@/constant/types/GeneralProps'
@@ -15,7 +15,7 @@ import { Search } from 'lucide-react'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
-export default function TransactionCancelled() {
+export default function TransactionCompleted() {
   // State for pagination and filters
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
@@ -40,7 +40,7 @@ export default function TransactionCancelled() {
         order: 'desc',
         orderBy: 'createdAt',
         'bookingCode:likeLower': `%${searchQuery}%`,
-        'status.slug:in': 'canceled-by-user,canceled-by-travel',
+        'status.slug': 'completed',
       }
 
       if (dateRange?.from && dateRange.to) {
@@ -126,7 +126,6 @@ export default function TransactionCancelled() {
           {transactions.map((transaction) => {
             return (
               <Fragment key={transaction.id}>
-                {transaction.status.slug}
                 {/* Transaction Cards */}
                 <TransactionCard
                   status={transaction.status.slug}
@@ -142,15 +141,7 @@ export default function TransactionCancelled() {
                   bookingId={String(transaction.id)}
                   isCompletedManifest={transaction.isCompletedManifest}
                   isPaidOff={transaction.isPaidOff}
-                  statusTahapan={
-                    transaction.status.slug == 'waiting-cancellation'
-                      ? 'Dalam Proses Pembatalan'
-                      : transaction.status.slug == 'canceled-by-travel'
-                        ? 'Dibatalkan Travel'
-                        : transaction.status.slug == 'canceled-by-user'
-                          ? 'Dibatalkan Jemaah'
-                          : ''
-                  }
+                  statusTahapan="Selesai"
                   noHeader
                   noAmountLeft
                   detailOnly
