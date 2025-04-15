@@ -7,7 +7,7 @@ type AuthContext = {
   isMobile: boolean
   state: any
   setState: (_key: string, _value: any) => void
-  logout: () => void
+  logout: (isRedirectBack?: boolean, redirectUri?: string) => void
   permissions?: { identity: string[] }
   refetchPermissions: () => void
   hasPermission: (

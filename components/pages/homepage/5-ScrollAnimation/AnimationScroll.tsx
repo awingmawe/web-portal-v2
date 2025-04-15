@@ -179,7 +179,7 @@ function OverscrollTracker({
           >
             <div
               className="relative flex h-screen items-center justify-center bg-cover bg-no-repeat"
-              id="100kjamaah"
+              id="100kjemaah"
             >
               <Animator animation={batch(MoveIn(0, sh.current * 2), Sticky())}>
                 <div className="flex-column z-2 flex h-dvh w-dvw items-center justify-center p-5">
@@ -240,7 +240,7 @@ function OverscrollTracker({
                     }}
                   />
                 </span>
-                Jamaah
+                Jemaah
                 <br />
                 telah memilih travel <br />
                 pilihan kami
