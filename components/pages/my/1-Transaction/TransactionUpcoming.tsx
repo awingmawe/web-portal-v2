@@ -64,8 +64,12 @@ export default function TransactionUpcoming() {
         queryParams['isCompletedManifest'] = true
         queryParams['isPaidOff'] = true
       }
-      if (dateRange?.from && dateRange.to) {
+
+      if (dateRange?.from) {
         queryParams[`createdAt:gte`] = dateRange.from.toISOString()
+      }
+
+      if (dateRange?.to) {
         queryParams[`createdAt:lte`] = dateRange.to.toISOString()
       }
 

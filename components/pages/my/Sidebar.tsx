@@ -127,6 +127,8 @@ export const Sidebar = () => {
           <MenuItem
             icon={<MoneyTimeIcon />}
             label="Butuh Dibayar"
+            href="/my/need-payment"
+            isActive={pathname === '/my/need-payment'}
             loading={profile ? false : true}
           />
           <MenuItem
