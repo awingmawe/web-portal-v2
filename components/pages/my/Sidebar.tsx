@@ -5,13 +5,9 @@ import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { MoneyTimeIcon } from '@/components/icons/money-time'
 import { MoneysIcon } from '@/components/icons/moneys'
-import { PilotSeatIcon } from '@/components/icons/pilot-seat'
-import { PointIcon } from '@/components/icons/point'
 import { ReceiptIcon } from '@/components/icons/receipt'
 import { SettingIcon } from '@/components/icons/setting'
-import { VoucherIcon } from '@/components/icons/voucher'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
-import { Referral } from '@/components/shared/Referral'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/contexts/auth/context'
@@ -109,7 +105,7 @@ export const Sidebar = () => {
           </div>
 
           {/* Points Section */}
-          <Separator className="mx-auto !w-[90%] bg-neutral-100" />
+          {/* <Separator className="mx-auto !w-[90%] bg-neutral-100" />
           <MenuItem
             icon={<PointIcon />}
             label={
@@ -120,14 +116,14 @@ export const Sidebar = () => {
             hasChevron={true}
             loading={profile ? false : true}
           />
-          <Separator className="mx-auto !w-[90%] bg-neutral-100" />
+          <Separator className="mx-auto !w-[90%] bg-neutral-100" /> */}
 
           {/* Menu Items */}
-          <MenuItem
+          {/* <MenuItem
             icon={<VoucherIcon />}
             label="Voucher"
             loading={profile ? false : true}
-          />
+          /> */}
           <MenuItem
             icon={<MoneyTimeIcon />}
             label="Butuh Dibayar"
@@ -144,9 +140,10 @@ export const Sidebar = () => {
             icon={<MoneysIcon />}
             label="Pembiayaan"
             loading={profile ? false : true}
+            href="/banking?page=pembiayaan"
           />
           <Separator className="mx-auto !w-[90%] bg-neutral-100" />
-
+          {/* 
           <MenuItem
             icon={<PilotSeatIcon />}
             label="Permintaan Paket Custom"
@@ -156,7 +153,7 @@ export const Sidebar = () => {
             icon={<PilotSeatIcon />}
             label="Cek Ketersediaan Kursi"
             loading={profile ? false : true}
-          />
+          /> */}
           <MenuItem
             icon={<HeartIcon />}
             label="Wishlist"
@@ -197,7 +194,7 @@ export const Sidebar = () => {
           </DialogConfirm>
         </div>
         {/* Referral Section */}
-        <Referral referral="HB70KLM" />
+        {/* <Referral referral="HB70KLM" /> */}
       </div>
     </div>
   )
