@@ -2,11 +2,9 @@
 
 import { AirlineIcon } from '@/components/icons/airline'
 import { BuildingIcon } from '@/components/icons/building'
-import { DateIcon } from '@/components/icons/date'
 import { TravelRoute } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
-import { formatDateToRangeString } from '@/lib/utils'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import React from 'react'
 
@@ -23,16 +21,7 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   meccaHotel,
   madinahHotel,
 }) => {
-  const { isLoading, selectedVariant } = usePackageVariant()
-
-  // Format departure and arrival dates from the selected variant
-  const formattedDeparture = selectedVariant?.departureDate
-    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
-    : '-'
-
-  const formattedArrival = selectedVariant?.arrivalDate
-    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
-    : '-'
+  const { isLoading } = usePackageVariant()
 
   // Handle missing data gracefully
   const departureAirportFrom = departure?.from?.airport?.code || '-'
@@ -44,30 +33,24 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   // Left column items
   const leftColumnItems = [
     {
-      icon: <DateIcon size={24} />,
-      title: 'Tanggal Keberangkatan dan Kepulangan',
-      value: `${formattedDeparture} - ${formattedArrival}`,
-      className: 'max-lg:hidden', // Hide on mobile
-    },
-    {
       icon: <PlaneTakeoff size={24} />,
       title: 'Keberangkatan',
       value: `${departureAirportFrom} → ${departureAirportTo}`,
     },
     {
       icon: <PlaneLanding size={24} />,
-      title: 'Kedatangan',
+      title: 'Kepulangan',
       value: `${arrivelAirportFrom} → ${arrivelAirportTo}`,
     },
-  ]
-
-  // Right column items
-  const rightColumnItems = [
     {
       icon: <AirlineIcon size={24} />,
       title: 'Maskapai Penerbangan',
       value: airlineName,
     },
+  ]
+
+  // Right column items
+  const rightColumnItems = [
     {
       icon: <BuildingIcon size={24} color="neutral-900" />,
       title: 'Hotel Makkah',
@@ -99,7 +82,7 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
 
         {/* Right Column Skeleton */}
         <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
-          {[1, 2, 3].map((_, index) => (
+          {[1, 2].map((_, index) => (
             <div key={index} className="flex items-center gap-3">
               <div className="h-6 w-6 animate-pulse rounded-full bg-neutral-200"></div>
               <div>
@@ -115,10 +98,7 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
 
   // Render item function for both columns
   const renderItem = (item: (typeof leftColumnItems)[0], index: number) => (
-    <div
-      key={index}
-      className={`flex items-center gap-3 ${item.className || ''}`}
-    >
+    <div key={index} className={`flex items-center gap-3`}>
       {item.icon}
       <div>
         <p className="text-s-medium font-medium text-neutral-500 max-lg:text-xs max-lg:leading-4">

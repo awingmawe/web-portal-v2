@@ -2,6 +2,7 @@ import { metadata } from '@/app/shared-metadata'
 import SearchTopbar from '@/components/pages/search-packages/1-SearchTopbar/SearchTopbar'
 import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
+import { NavigationMenuDemo } from '@/components/pages/search-packages/mobile/TopFilter'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
@@ -103,16 +104,17 @@ export default async function SearchGeneral({
     <Fragment>
       <Topbar type="normal" token={token} />
       <SearchTopbar />
-      <main className="mt-7.5 mb-7.5 px-20">
-        <section className="grid grid-cols-12 gap-5">
-          <div className="col-span-4">
+      <main className="mt-7.5 mb-7.5">
+        <section className="container mx-auto grid grid-cols-12 gap-5 max-lg:px-4">
+          <div className="col-span-4 max-lg:hidden">
             <FilterLeftbar
               dataMinMax={dataMinMax}
               dataTagPackages={dataTagPackages}
               dataFacility={dataFacility}
             />
           </div>
-          <div className="col-span-8">
+          <div className="col-span-8 max-lg:col-span-12">
+            <NavigationMenuDemo />
             <PackageResults
               total={dataPackage?.total}
               dataPackages={mapProductsToCardData(dataPackage)}

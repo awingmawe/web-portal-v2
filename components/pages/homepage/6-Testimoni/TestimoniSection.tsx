@@ -8,61 +8,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { GalleryHomepage } from '@/constant/types/GalleryProps'
 
-interface Testimonial {
-  id: number
-  name: string
-  image: string
-  rating: number
-  quote: React.ReactNode
-}
-
-export default function TestimoniSection() {
-  const testimonials: Testimonial[] = [
-    {
-      id: 1,
-      name: 'Dwi Argo dan Hani Nur Hanifah',
-      image:
-        'https://storage.googleapis.com/m101-prods/about-us/uyfwgyev61bdubd121.jpg',
-      rating: 5,
-      quote: (
-        <p className="mb-2 text-gray-700">
-          “Pendaftaran dan pemesanan paket umroh jadi lebih mudah dengan
-          Muslim101. Banyak pilihan travel agent terpercaya.”
-        </p>
-      ),
-    },
-    {
-      id: 2,
-      name: 'Endah Resianawati',
-      image:
-        'https://storage.googleapis.com/m101-prods/about-us/7198gbhub642bubd2.jpg',
-      rating: 5,
-      quote: (
-        <p className="mb-2 text-gray-700">
-          “Aplikasi ini benar-benar membantu saya dalam mencari paket umroh yang
-          sesuai dengan kebutuhan dan budget. ”
-        </p>
-      ),
-    },
-    {
-      id: 3,
-      name: 'Teddy Asmoro dan Mutia',
-      image:
-        'https://storage.googleapis.com/m101-prods/about-us/uhadsiuohasoduhaosuhdu3.jpg',
-      rating: 5,
-      quote: (
-        <p className="mb-2 text-gray-700">
-          “Alhamdulillah memberikan solusi terbaik dan Alhamdulillah sesuai
-          dengan budget, dan jarak terdekat dari rumah kami.
-          <br />
-          <br />
-          Alhamdulillah juga memberikan service terbaik.”
-        </p>
-      ),
-    },
-  ]
-
+export default function TestimoniSection({
+  dataCarousel,
+}: {
+  dataCarousel: GalleryHomepage[]
+}) {
   return (
     <div className="bg-neutral-0 relative z-6 w-full">
       <svg
@@ -92,23 +44,22 @@ export default function TestimoniSection() {
           className="mt-7 mb-0 w-full max-lg:mt-0 lg:my-7"
         >
           <CarouselContent className="-ml-4.5 px-2">
-            {testimonials.map((testi) => (
+            {dataCarousel.map((testi) => (
               <CarouselItem
                 key={`testimoni-${testi.id}`}
                 className="basis-4/5 items-center pl-4.5 md:basis-1/2 lg:basis-1/3"
               >
                 <CardTestimoni
-                  name={testi.name}
-                  image={testi.image}
-                  rating={testi.rating}
-                  quote={testi.quote}
+                  name={testi.title}
+                  image={testi?.imageUrl}
+                  quote={testi.caption}
                   id={testi.id}
                 />
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="top-[35%] max-sm:hidden" />
-          <CarouselNext className="top-[35%] max-sm:hidden" />
+          <CarouselPrevious className="top-[35%] max-lg:hidden" />
+          <CarouselNext className="top-[35%] max-lg:hidden" />
         </Carousel>
       </div>
       <svg

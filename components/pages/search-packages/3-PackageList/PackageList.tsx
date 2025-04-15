@@ -1,8 +1,12 @@
 'use client'
 
 import { CardPackage } from '@/components/shared/CardPackage'
+import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { CardData } from '@/constant/types/PackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
+import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { Loader2 } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
@@ -30,6 +34,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { isLoadingSkeleton, resetFilters } = useFilterProduct()
+  const { loadMore, hasMore, loading, packages } = useInfiniteScroll()
+  const { lg } = useTailwindBreakpoint()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
 
@@ -92,12 +98,33 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <PackageGridSkeleton />
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {dataPackages?.map((packageData, index) => (
-            <CardPackage
-              key={`packages-${packageData.slugPackage}-${index}`}
-              data={packageData}
-            />
-          ))}
+          {lg ? (
+            <>
+              {packages?.map((packageData, index) => (
+                <CardPackage
+                  key={`packages-${packageData.slugPackage}-${index}`}
+                  data={packageData}
+                />
+              ))}
+              <InfiniteScroll
+                isLoading={loading}
+                hasMore={hasMore}
+                next={loadMore}
+                threshold={0.8}
+              >
+                {hasMore && (
+                  <Loader2 className="mx-auto my-4 h-8 w-8 animate-spin" />
+                )}
+              </InfiniteScroll>
+            </>
+          ) : (
+            dataPackages?.map((packageData, index) => (
+              <CardPackage
+                key={`packages-${packageData.slugPackage}-${index}`}
+                data={packageData}
+              />
+            ))
+          )}
         </div>
       )}
 

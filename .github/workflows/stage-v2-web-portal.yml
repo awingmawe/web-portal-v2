@@ -1,266 +1,177 @@
-name: Staging V2 RUNNER web-portal CI/CD Staging
-
-# on:
-#   push:
-#     branches:
-#       - main
+name: Staging RUNNER web-portal-v2 CI/CD with Docker on Registry env64 & uniq Tags 
 
 # Staging Trigger untuk Pre-release dan Published Release
 on:
   release:
     types: [prereleased]
 
-permissions:
-  contents: write
-  pull-requests: write
-
 env:
-  SERVICE_NAME: staging-web-portal-v2
-  SERVICE_PORT: 7110
-  MAIN_SERVICE_PATH: /opt/staging-moslem101.com/
-  SERVICE_PATH: web-portal-v2
+  IMAGE_NAME: registry.digitalocean.com/imgreg-m101/stage-web-portal-v2
+  CONTAINER_NAME: stage-web-portal-v2
+  PORT: 7110
+  PORT_CONTAINER : 7110
+  ENV_FILE_CONTAINER : "/opt/Store/.env_v2portal"
 
 jobs:
   # CI Phase: Build and Test
   build-and-test:
-    name: CI-phase-BuildTest-Staging
+    name: CI-phase-BuildTest
     runs-on: ubuntu-latest
-    # if: endsWith(github.event.release.tag_name, '-staging') # <-- Filter Tags Staging
+    outputs:
+      docker_tag: ${{ steps.tag.outputs.docker_tag }}  # Pass tag to next job
+    
     steps:
-      - name: Checkout code Latest release tags 
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name }} 
-          fetch-depth: 0  
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Verifikasi checkout version
-        run: |
-          echo "Checked out version:"
-          git describe --tags
-          git branch --show-current
-          git status
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 22        
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22'
+    - name: Create SSH key file from secret
+      run: |
+        mkdir -p /home/runner/.ssh  
+        echo "${{ secrets.STAGING_PRIVATE_KEY }}" > /home/runner/.ssh/id_rsa
+        chmod 600 /home/runner/.ssh/id_rsa  
+        cat /home/runner/.ssh/id_rsa  
+          
+    - name: Fetch .env file as base64
+      run: |
+        echo "Fetching env_account from remote server..."
+        ssh -o StrictHostKeyChecking=no -i /home/runner/.ssh/id_rsa ${{ secrets.STAGING_SSH_USERNAME }}@${{ secrets.STAGING_SSH_HOST }} -p ${{ secrets.STAGING_PORT_SSH }} \
+          "cat ${{ env.ENV_FILE_CONTAINER }} | base64" > ENV64
 
-      - name: Install dependencies
-        run: yarn install
+        echo "Fetched base64 encoded file:"
+        cat ENV64
 
-      - name: Run Linter
-        run: yarn lint
+    - name: Decode ENV64 to .env file
+      run: |
+        echo "Decoding ENV64 to .env..."
+        cat ENV64 | base64 --decode > .env
+        cat ENV64 | base64 --decode > .env.local
+        
+    - name: Verify .env.local 
+      run: |
+        ls -latrh
+        pwd
 
-      - name: Build project
-        run: yarn build
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Run Linter
+      run: yarn lint
+
+    - name: Build project
+      run: yarn build
+
+    - name: Generate Docker Image Tag
+      id: tag
+      run: |
+        # Generate format: DDMMYY-4char
+        DATE=$(date +'%d%m%y')
+        RANDOM_ID=$(head /dev/urandom | tr -dc a-z0-9 | head -c 4)
+        TAG="${DATE}-${RANDOM_ID}"
+        echo "Generated Tag: $TAG"
+        echo "DOCKER_IMAGE_TAG=$TAG" >> $GITHUB_ENV
+        echo "docker_tag=$TAG" >> $GITHUB_OUTPUT  # Replace set-output
+        echo "::set-output name=docker_tag::$TAG"  # Set output for passing
+
+    - name: Build Docker image
+      run: |
+        docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ env.DOCKER_IMAGE_TAG }} .
+
+    - name: Docker login to DigitalOcean Registry
+      run: |
+        echo "${{ secrets.REGISTRYDO_TOKEN }}" | docker login registry.digitalocean.com -u "${{ secrets.REGISTRYDO_USERNAME }}" --password-stdin
+
+    - name: Push Docker image
+      run: |
+        docker push $IMAGE_NAME:latest
+        docker push $IMAGE_NAME:${{ env.DOCKER_IMAGE_TAG }}
+
+    - name: Clean up Runner
+      run: |
+        rm -f ~/.ssh/id_rsa
+        rm -f /home/runner/.ssh/id_rsa
+        echo "SSH key removed for security."
 
   # CD Phase: Deployment
   delivery-and-deploy:
-    name: CD-phase-Deployment-Staging
+    name: CD-phase-Deployment
     runs-on: ubuntu-latest
     needs: build-and-test
-    # if: "contains(github.event.release.tag_name, 'staging')" # Hanya jalankan job ini jika tag mengandung "staging"
+    env:
+      IMAGE_TAG: ${{ needs.build-and-test.outputs.docker_tag }}  # Use output from previous job
+    
     steps:
-      - name: Checkout code Latest release tags 
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name }} 
-          fetch-depth: 0  
+    - name: Deploy Container 
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.STAGING_SSH_HOST }}
+        username: ${{ secrets.STAGING_SSH_USERNAME }}
+        port: ${{ secrets.STAGING_PORT_SSH }}
+        key: ${{ secrets.STAGING_PRIVATE_KEY }}
+        script: |
+          IMAGE_NAME=${{ env.IMAGE_NAME }}
+          IMAGE_TAG=${{ env.IMAGE_TAG }}
+          CONTAINER_NAME=${{ env.CONTAINER_NAME }}
+          PORT=${{ env.PORT }}
+          PORT_CONTAINER=${{ env.PORT_CONTAINER }}
 
-      - name: Checkout latest release tag
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  
-          fetch-tags: true  
-      
-      - name: Get latest release tag
-        run: |
-          git fetch --tags
-          LATEST_TAG=$(git tag --sort=-creatordate | head -n 1)
-          echo "Latest release tag: $LATEST_TAG"
-          echo "TAG_NAME=$LATEST_TAG" >> $GITHUB_ENV
-      
-      - name: Checkout latest release
-        run: |
-          git checkout $TAG_NAME
-          git status
+          # Pull Image (Fallback ke 'latest' jika tag kosong)
+          if [ -z "$IMAGE_TAG" ]; then
+            echo "⚠️ IMAGE_TAG is empty. Fallback to 'latest'."
+            IMAGE_TAG="latest"
+          fi
 
-      - name: Verifikasi checkout version
-        run: |
-          echo "Checked out version:"
-          git describe --tags
-          git branch --show-current
-          git status
+          echo "Pulling Docker image: $IMAGE_NAME:$IMAGE_TAG"
+          docker pull $IMAGE_NAME:$IMAGE_TAG || {
+            echo "❌ Failed to pull $IMAGE_NAME:$IMAGE_TAG"            
+          }
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.STAGING_PRIVATE_KEY }}
+          echo "Checking if container $CONTAINER_NAME exists..."
+          if docker ps -a --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME; then
+            echo "Stopping and removing existing container $CONTAINER_NAME..."
+            docker stop $CONTAINER_NAME || true
+            docker rm -f $CONTAINER_NAME || true
+          else
+            echo "No existing container found. Proceeding with deployment..."
+          fi
 
-      - name: Deploy with PM2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.STAGING_SSH_HOST }}
-          username: ${{ secrets.STAGING_SSH_USERNAME }}
-          key: ${{ secrets.STAGING_PRIVATE_KEY }}
-          port: ${{ secrets.STAGING_PORT_SSH }}
-          script: |
-            cd ${{ env.MAIN_SERVICE_PATH }}/${{ env.SERVICE_PATH }}/
-
-            # Cek apakah service sudah ada di pm2 list
-            if pm2 list | grep -q "${{ env.SERVICE_NAME }}"; then
-              echo "🔄 Service ${{ env.SERVICE_NAME }} exists. Restarting..."
-              
-              # Latest Git Checkout  
-              git add .
-              git stash
-
-              # Ambil tag terbaru
-              git fetch --all --tags
-              LATEST_TAG=$(git tag --sort=-creatordate | head -n 1)
-              echo "Latest release tag: $LATEST_TAG"
-              
-              # Checkout ke tag terbaru
-              git checkout $LATEST_TAG
-              git status
-              
-              # Verifikasi tag setelah checkout
-              echo "Checked out version:"
-              git describe --tags
-              git branch --show-current
-              git status
-              
-              # Build & Install
-              yarn install
-              yarn build
-
-              pm2 restart ${{ env.SERVICE_NAME }}
-              pm2 reload ${{ env.SERVICE_NAME }}
-              
-              # Lanjutkan ke health check
-              sleep 5
-              echo "Checking service ..."
-              pm2 show ${{ env.SERVICE_NAME }}
-            else
-              echo "⚠️ Service ${{ env.SERVICE_NAME }} does not exist. Initializing deployment..."
-
-              # Validasi Node.js, Yarn, PM2, dan nc
-              if ! command -v node &> /dev/null; then
-                echo "⚠️ Node.js is not installed. Installing..."
-                curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-                sudo apt-get install -y nodejs
-              fi
-              if ! command -v yarn &> /dev/null; then
-                echo "⚠️ Yarn is not installed. Installing..."
-                npm install -g yarn
-              fi
-              if ! command -v pm2 &> /dev/null; then
-                echo "⚠️ PM2 is not installed. Installing..."
-                npm install -g pm2
-              fi
-              if ! command -v nc &> /dev/null; then
-                echo "⚠️ Netcat (nc) is not installed. Installing..."
-                sudo apt-get install -y netcat
-              fi
-
-              # Latest Git Checkout  
-              git add .
-              git stash
-              
-              # Ambil tag terbaru
-              git fetch --all --tags
-              LATEST_TAG=$(git tag --sort=-creatordate | head -n 1)
-              echo "Latest release tag: $LATEST_TAG"
-              
-              # Checkout ke tag terbaru
-              git checkout $LATEST_TAG
-              git status
-              
-              # Verifikasi tag setelah checkout
-              echo "Checked out version:"
-              git describe --tags
-              git branch --show-current
-              git status
-              
-              # Build & Install
-              yarn install
-              yarn build
-
-              pm2 restart ${{ env.SERVICE_NAME }}
-              pm2 reload ${{ env.SERVICE_NAME }}
-
-              # Validasi file pm2.config.js
-              pm2 reload ${{ env.SERVICE_NAME }}
-              cd dist
-              if [ ! -f "pm2.config.js" ]; then
-                echo "❌ File pm2.config.js not found. Exiting..."
-                echo "⚠️⚠️⚠️ Please Add pm2.config.js Production ⚠️⚠️⚠️"
-              fi
-              echo "✅ pm2.config.js file exists."
-
-              # Ekstrak dan validasi PORT
-              CONFIG_PORT=$(grep -oP '(?<="PORT":")[0-9]+' pm2.config.js | head -1)
-              echo "Extracted PORT: $CONFIG_PORT"
-              if [ "$CONFIG_PORT" != "${{ env.SERVICE_PORT }}" ]; then
-                echo "❌ Configured PORT ($CONFIG_PORT) does not match expected SERVICE_PORT (${{ env.SERVICE_PORT }}). Exiting..."
-              fi
-              echo "✅ PORT validation passed."
-
-              # Jalankan service dengan PM2
-              pm2 reload ${{ env.SERVICE_NAME }}
-              pm2 start pm2.config.js --name ${{ env.SERVICE_NAME }}
-              sleep 5
-              pm2 show ${{ env.SERVICE_NAME }} 
-            fi
+          # Run New Container
+          echo "Running new container..."
+          docker run -d --name $CONTAINER_NAME -p $PORT:$PORT_CONTAINER --restart always $IMAGE_NAME:$IMAGE_TAG || {
+            echo "❌ Failed to start container $CONTAINER_NAME. Retrying with unique name..."
             
-            # Validasi Status Service
-            echo "📚 Validation Service PM2 Status:"
-            pm2 list
+            RANDOM_ID=$(head /dev/urandom | tr -dc a-z0-9 | head -c 6)
+            NEW_CONTAINER_NAME="${CONTAINER_NAME}-${RANDOM_ID}"
+            
+            echo "Running container with name: $NEW_CONTAINER_NAME"
+            docker run -d --name $NEW_CONTAINER_NAME -p $PORT:$PORT_CONTAINER --restart always $IMAGE_NAME:$IMAGE_TAG || {
+              echo "❌ Failed to start container $NEW_CONTAINER_NAME"              
+            }
+          }
 
-            # Health Check Service & Validasi PORT local
-            echo "🔄 Checking if port ${{ env.SERVICE_PORT }} is open on localhost..."
-            if nc -zv localhost ${{ env.SERVICE_PORT }}; then
-              echo "✅ Remote port ${{ env.SERVICE_PORT }} is open."
+          # Validate Container Status
+          echo "Validating container is running..."
+          sleep 15
+          if docker ps --filter "name=$CONTAINER_NAME" --filter "status=running" | grep -q $CONTAINER_NAME; then
+            echo "✅ Container $CONTAINER_NAME is running successfully."
+          else
+            echo "⚠️ Container $CONTAINER_NAME might be replaced by $NEW_CONTAINER_NAME"
+            if docker ps --filter "name=$NEW_CONTAINER_NAME" --filter "status=running" | grep -q $NEW_CONTAINER_NAME; then
+              echo "✅ $NEW_CONTAINER_NAME is running."
             else
-              echo "❌ Remote port ${{ env.SERVICE_PORT }} is closed. Health check failed ⚠️."
+              echo "❌ Deployment failed. No running containers found."
             fi
+          fi
 
-# # Separate job for branch creation
-#   create-branch:
-#     name: Create New Branch for Release
-#     runs-on: ubuntu-latest
-#     needs: delivery-and-deploy
-#     if: "contains(github.event.release.tag_name, 'staging')"
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-#         with:
-#           ref: ${{ github.event.release.tag_name }}
-#           fetch-depth: 0
-      
-#       - name: Verify Checkout
-#         run: |
-#           echo "Checked out version:"
-#           git describe --tags
-#           git branch --show-current
-#           git status
-      
-#       # Create and push new branch
-#       - name: Create and push new branch
-#         run: |
-#           BRANCH_NAME="release-${{ github.event.release.tag_name }}"
-#           echo "Creating branch: $BRANCH_NAME"
-#           git checkout -b "$BRANCH_NAME" || git checkout "$BRANCH_NAME"
-#           git status
-          
-#           # Add a commit to ensure the branch has content (if needed)
-#           echo "# Release ${{ github.event.release.tag_name }}" >> RELEASE_NOTES.md
-#           git add RELEASE_NOTES.md
-#           git config --global user.email "github-actions@github.com"
-#           git config --global user.name "GitHub Actions"
-#           git commit -m "Initialize branch for release ${{ github.event.release.tag_name }}" || echo "No changes to commit"
-          
-#           # Push the branch to remote
-#           git push -f origin "$BRANCH_NAME"
-#           echo "Branch $BRANCH_NAME pushed successfully."
-  
+          # Health Check Container (local)
+          echo "🔄 Checking if port $PORT is open on localhost..."
+          if nc -zv localhost $PORT; then
+            echo "✅ Local port $PORT is open."
+          else
+            echo "❌ Local port $PORT is closed. Health check failed."
+          fi
+     

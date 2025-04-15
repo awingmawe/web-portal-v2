@@ -440,11 +440,13 @@ const Topbar: React.FC<TopbarProps> = ({
                 animate="visible"
                 exit="hidden"
                 className={cn(
-                  'fixed top-0 left-1/2 z-50 flex h-[72px] w-screen -translate-x-1/2 items-center gap-[60px] bg-white px-20 py-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden',
+                  'fixed top-0 left-1/2 z-50 h-[72px] w-screen -translate-x-1/2 bg-white py-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden',
                   className
                 )}
               >
-                <TopbarContent />
+                <section className="container m-auto flex h-full w-full items-center gap-[60px]">
+                  <TopbarContent />
+                </section>
               </motion.header>
             )}
           </AnimatePresence>
@@ -453,11 +455,13 @@ const Topbar: React.FC<TopbarProps> = ({
       {type === 'normal' && (
         <header
           className={cn(
-            `flex h-[72px] w-full items-center gap-[60px] bg-white px-20 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
+            `h-[72px] w-full bg-white py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
             className
           )}
         >
-          <TopbarContent />
+          <section className="container m-auto flex h-full w-full items-center gap-[60px]">
+            <TopbarContent />
+          </section>
         </header>
       )}
       {/* add space divider for top if scrolled is active */}

@@ -50,8 +50,8 @@ const GalleryListContent: React.FC<{ title: string }> = ({ title }) => {
 
   return (
     <div className="w-full bg-white" id="gallery-list">
-      <div className="mb-6 flex items-center justify-between max-lg:hidden">
-        <p className="heading-3-semibold text-neutral-900">{title}</p>
+      <div className="mb-6 flex items-center justify-between gap-3 max-lg:hidden">
+        <p className="heading-3-semibold break-all text-neutral-900">{title}</p>
         <div className="flex items-center gap-2">
           <p className="text-l-regular text-neutral-500">Share: </p>
           <button

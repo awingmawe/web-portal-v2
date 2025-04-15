@@ -59,8 +59,8 @@ export default async function DetailPackage({ params }: { params: any }) {
         packageId: idDetailPackage,
         page: 1,
         size: 50,
-        orderBy: 'discountAmount',
-        order: 'desc',
+        orderBy: 'createdAt',
+        order: 'asc',
       }),
       getGalleryHotel(
         {
@@ -108,6 +108,7 @@ export default async function DetailPackage({ params }: { params: any }) {
       source: 'mecca',
     })
   )
+
   return (
     <GalleryProvider
       packageImages={packageImages || []}

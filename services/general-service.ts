@@ -4,7 +4,10 @@ import { Airline, GetAirlinesParams } from '@/constant/types/AirlineProps'
 import { Airport, GetAirportsParams } from '@/constant/types/AirportProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import { Facility } from '@/constant/types/FacilityProps'
-import { HotelGalleryImage } from '@/constant/types/GalleryProps'
+import {
+  GalleryHomepage,
+  HotelGalleryImage,
+} from '@/constant/types/GalleryProps'
 import qs from 'query-string'
 
 export async function getAirports({
@@ -74,6 +77,20 @@ export async function getGalleryHotel(
     return response.data
   } catch (error) {
     console.error('Error fetching gallery hotel:', error)
+    throw error
+  }
+}
+
+export async function getGalleryHomepage(
+  query: GetListQuery
+): Promise<GenericResponse<GalleryHomepage>> {
+  try {
+    const response = await api.get(
+      `/public/general/v1/gallery?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching gallery homepage:', error)
     throw error
   }
 }
