@@ -5,10 +5,10 @@ export default function Journey() {
     <section className="w-full">
       <div className="container mx-auto max-lg:px-4">
         <div className="py-16 max-lg:pt-3.5 max-lg:pb-6">
-          <h1 className="text-xl-medium text-primary-900 mb-6 max-lg:text-xl max-lg:leading-6.5 max-lg:font-bold">
+          <h1 className="text-primary-900 mb-[12px] text-[60px] max-lg:text-xl max-lg:leading-6.5 max-lg:font-medium">
             Perjalanan Kami
           </h1>
-          <p className="text-l-regular text-primary-900">
+          <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
             Muslim101 merupakan digital platform, marketplace, e-commerce, dan
             ekosistem muamalah muslim yang berbasis web dan mobile apps yang
             saling terintegrasi. Salah satu layanannya adalah marketplace Umroh,

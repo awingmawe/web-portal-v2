@@ -46,48 +46,27 @@ export default function BreadCrumb() {
 
             {/* Mission Points */}
             <div className="space-y-3 lg:space-y-6">
-              {/* Point 1 */}
-              <div className="border-primary-300 flex flex-row items-start gap-2 rounded-lg border p-3 sm:items-center sm:gap-4 lg:p-4">
-                <div className="bg-primary-500 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-xl font-semibold text-white sm:h-14 sm:w-14 lg:h-16 lg:w-16 lg:text-2xl">
-                  1
+              {[
+                `Menyediakan informasi digital terkait Umroh, Haji, Halal Trip,
+              serta produk dan jasa lainnya secara lengkap`,
+                `Kemudahan akses informasi oleh siapa saja dan dari mana saja`,
+                `Media pemasaran digital produk dan jasa pelaku usaha B2B2C,
+              B2C2C, B2B, dan B2C`,
+                `Penerapan dan pelaksanaan prinsip-prinsip syariah dalam
+              seluruh aktivitas dan transaksi`,
+              ].map((each, i: number) => (
+                <div
+                  key={i}
+                  className="border-primary-300 flex flex-row items-start gap-4 rounded-lg border p-4 max-lg:gap-4 max-lg:p-4 sm:items-center"
+                >
+                  <div className="bg-primary-500 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-xl font-semibold text-white sm:h-14 sm:w-14 lg:h-16 lg:w-16 lg:text-2xl">
+                    {i + 1}
+                  </div>
+                  <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
+                    {each}
+                  </p>
                 </div>
-                <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
-                  Menyediakan informasi digital terkait Umroh, Haji, Halal Trip,
-                  serta produk dan jasa lainnya secara lengkap
-                </p>
-              </div>
-
-              {/* Point 2 */}
-              <div className="border-primary-300 flex flex-row items-start gap-2 rounded-lg border p-3 sm:items-center sm:gap-4 lg:p-4">
-                <div className="bg-primary-500 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-xl font-semibold text-white sm:h-14 sm:w-14 lg:h-16 lg:w-16 lg:text-2xl">
-                  2
-                </div>
-                <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
-                  Kemudahan akses informasi oleh siapa saja dan dari mana saja
-                </p>
-              </div>
-
-              {/* Point 3 */}
-              <div className="border-primary-300 flex flex-row items-start gap-2 rounded-lg border p-3 sm:items-center sm:gap-4 lg:p-4">
-                <div className="bg-primary-500 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-xl font-semibold text-white sm:h-14 sm:w-14 lg:h-16 lg:w-16 lg:text-2xl">
-                  3
-                </div>
-                <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
-                  Media pemasaran digital produk dan jasa pelaku usaha B2B2C,
-                  B2C2C, B2B, dan B2C
-                </p>
-              </div>
-
-              {/* Point 4 */}
-              <div className="border-primary-300 flex flex-row items-start gap-2 rounded-lg border p-3 sm:items-center sm:gap-4 lg:p-4">
-                <div className="bg-primary-500 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-xl font-semibold text-white sm:h-14 sm:w-14 lg:h-16 lg:w-16 lg:text-2xl">
-                  4
-                </div>
-                <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
-                  Penerapan dan pelaksanaan prinsip-prinsip syariah dalam
-                  seluruh aktivitas dan transaksi
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>

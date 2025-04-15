@@ -83,7 +83,7 @@ export function JourneyTimeline() {
         setAnimationDirection(nextStep > prev ? 'right' : 'left')
         return nextStep
       })
-    }, 3000)
+    }, 12000)
   }
 
   useEffect(() => {
@@ -152,42 +152,45 @@ export function JourneyTimeline() {
   const currentStep = journeySteps[activeStep]
 
   return (
-    <div className="space-y-6 md:space-y-8 lg:space-y-12">
+    <div className="my-8 space-y-8 max-lg:my-2 md:space-y-8 lg:space-y-12">
       {/* Stepper with overflow handling */}
       <div
         className="scrollbar-hide relative overflow-x-auto"
         ref={stepsContainerRef}
       >
-        <div className="flex min-w-max items-end justify-between space-x-4 pb-4">
+        <div className="flex min-w-max items-center justify-between">
           {journeySteps.map((step, index) => (
             <div
               key={step.id}
               ref={index === activeStep ? activeStepRef : null}
-              className="relative z-10 flex w-full cursor-pointer flex-col items-center max-lg:w-[100px]"
+              className={cn(
+                'first:max-lg:w[80px] relative z-10 flex w-full cursor-pointer flex-col items-center max-lg:w-[180px]',
+                'after:absolute after:bottom-[8px] after:left-[calc(100%/2)] after:z-0 after:z-[1] after:mt-[6px] after:h-[1px] after:w-[calc(100%/2)] after:bg-current after:content-[""] max-lg:after:bottom-[12px]',
+                'before:absolute before:bottom-[8px] before:left-[0] before:z-[0] before:mt-[6px] before:h-[1px] before:w-[calc(100%/2)] before:bg-current before:content-[""] max-lg:before:bottom-[12px]',
+                'first:before:hidden last:after:hidden'
+              )}
               onClick={() => changeStep(index)}
             >
-              <div className="mb-2 flex h-[60px] items-end justify-center md:h-[70px] lg:h-[80px]">
+              <div className="mb-2 flex h-[60px] flex-col items-center justify-center">
                 <span
                   className={cn(
-                    'text-center transition-all duration-300 ease-in-out sm:text-sm md:text-lg lg:text-[20px]',
+                    'text-center transition-all duration-300 ease-in-out max-lg:text-[14px] max-md:whitespace-nowrap lg:text-[20px]',
                     index === activeStep
-                      ? 'text-primary-500 scale-150 font-semibold max-lg:scale-120'
+                      ? 'text-primary-500 scale-120 font-semibold max-lg:scale-120'
                       : 'text-neutral-500'
                   )}
                 >
                   {step.title}
                 </span>
+                <div
+                  ref={(el) => {
+                    dotsRef.current[index] = el
+                  }}
+                  className={cn(
+                    'bg-primary-500 step-dot relative -bottom-3.5 z-[2] z-[10] h-[12px] w-[12px] rounded-full transition-all duration-300'
+                  )}
+                />
               </div>
-              <div
-                ref={(el) => {
-                  dotsRef.current[index] = el
-                }}
-                className={cn(
-                  'bg-primary-500 step-dot absolute -bottom-3.5 h-4 w-4 rounded-full transition-all duration-300',
-                  index !== journeySteps.length - 1 &&
-                    'after:absolute after:top-1/2 after:left-4 after:h-[1px] after:w-[calc(100%+15vw)] after:-translate-y-1/2 after:bg-current after:content-[""] max-sm:after:w-[calc(100%+27vw)]'
-                )}
-              />
             </div>
           ))}
         </div>
@@ -239,14 +242,20 @@ export function JourneyTimeline() {
               className="h-10 w-10 rounded-full border-none transition-all duration-200 hover:scale-105 md:h-12 md:w-12"
               onClick={handlePrev}
             >
-              <ChevronLeft className="h-5 w-5 text-white md:h-6 md:w-6" />
+              <ChevronLeft
+                className="h-5 w-5 text-white md:h-6 md:w-6"
+                style={{ color: 'black' }}
+              />
               <span className="sr-only">Previous</span>
             </Button>
             <Button
               className="h-10 w-10 rounded-full border-none transition-all duration-200 hover:scale-105 md:h-12 md:w-12"
               onClick={handleNext}
             >
-              <ChevronRight className="h-5 w-5 text-white md:h-6 md:w-6" />
+              <ChevronRight
+                className="h-5 w-5 text-white md:h-6 md:w-6"
+                style={{ color: 'black' }}
+              />
               <span className="sr-only">Next</span>
             </Button>
           </div>

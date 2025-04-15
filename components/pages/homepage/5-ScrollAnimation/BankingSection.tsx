@@ -47,15 +47,15 @@ export default function BankingSection() {
               mitra institusi keuangan tepercaya.
             </p>
 
-            <div className="mx-auto mb-8 flex w-full max-w-md flex-row gap-3 max-lg:justify-between sm:gap-4 lg:mx-0 lg:mb-12">
+            <div className="mx-auto mb-8 flex w-full max-w-md flex-row gap-3 max-lg:justify-between max-lg:gap-2 lg:mx-0 lg:mb-12">
               <Link
                 href={'/banking?page=tabungan'}
-                className="w-fit sm:w-1/2 lg:w-auto"
+                className="flex max-lg:flex-1 sm:w-1/2 lg:w-auto"
               >
                 <Button
                   variant="outline"
                   intent="primary"
-                  className="flex w-full px-4 max-lg:gap-[6px] lg:px-8"
+                  className="flex w-full px-4 whitespace-nowrap max-lg:gap-[6px] lg:px-8"
                   type="button"
                 >
                   Mulai Menabung <ArrowCircleRight size={14} />
@@ -63,12 +63,12 @@ export default function BankingSection() {
               </Link>
               <Link
                 href={'/banking?page=pembiayaan'}
-                className="w-fit sm:w-1/2 lg:w-auto"
+                className="w-fit max-lg:flex-1 sm:w-1/2 lg:w-auto"
               >
                 <Button
                   variant="outline"
                   intent="primary"
-                  className="flex w-full px-4 max-lg:gap-[6px] lg:px-8"
+                  className="flex w-full px-4 whitespace-nowrap max-lg:gap-[6px] lg:px-8"
                   type="button"
                 >
                   Ajukan Pembiayaan <ArrowCircleRight size={14} />
@@ -77,37 +77,37 @@ export default function BankingSection() {
             </div>
 
             {/* Features */}
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:flex lg:justify-between lg:gap-4">
+            <div className="flex gap-4 max-lg:gap-2 lg:justify-between">
               {/* Feature 1 */}
               <div className="flex flex-col items-center text-center">
                 <div className="border-primary-100 text-primary-500 mb-3 flex h-12 w-12 items-center justify-center rounded-lg border">
-                  <LockIcon2 className="h-7 w-7 lg:h-10 lg:w-10" />
+                  <LockIcon2 className="h-16 w-16 lg:h-10 lg:w-10" size={600} />
                 </div>
                 <h3 className="lg:text-l-regular mb-2 text-base font-medium">
                   Aman
                 </h3>
-                <p className="sm:text-s-regular text-sm text-neutral-500">
+                <p className="text-sm text-neutral-500 max-lg:text-[10px]">
                   Dana tabungan dan pembiayaan dikelola sesuai prinsip syariah
                   dan diawasi oleh lembaga keuangan terpercaya.
                 </p>
               </div>
               {/* Separator */}
-              <div className="h-auto w-px bg-neutral-100 max-lg:hidden" />
+              <div className="h-auto w-px flex-none bg-neutral-100" />
               {/* Feature 2 */}
               <div className="flex flex-col items-center text-center">
                 <div className="border-primary-100 text-primary-500 mb-3 flex h-12 w-12 items-center justify-center rounded-lg border">
-                  <WalletIcon className="h-7 w-7 lg:h-10 lg:w-10" />
+                  <WalletIcon className="h-14 w-14 lg:h-10 lg:w-10" />
                 </div>
                 <h3 className="lg:text-l-regular mb-2 text-base font-medium">
                   Fleksibel
                 </h3>
-                <p className="sm:text-s-regular text-sm text-neutral-500">
+                <p className="text-sm text-neutral-500 max-lg:text-[10px]">
                   Nikmati pilihan paket pembiayaan yang dapat disesuaikan dengan
                   kebutuhan serta kemampuan finansial kamu.
                 </p>
               </div>
               {/* Separator */}
-              <div className="h-auto w-px bg-neutral-100 max-lg:hidden" />
+              <div className="h-auto w-px flex-none bg-neutral-100" />
               {/* Feature 3 */}
               <div className="flex flex-col items-center text-center">
                 <div className="border-primary-100 text-primary-500 mb-3 flex h-12 w-12 items-center justify-center rounded-lg border">
@@ -116,7 +116,7 @@ export default function BankingSection() {
                 <h3 className="lg:text-l-regular mb-2 text-base font-medium">
                   Terpercaya
                 </h3>
-                <p className="sm:text-s-regular text-sm text-neutral-500">
+                <p className="text-sm text-neutral-500 max-lg:text-[10px]">
                   Bekerja sama dengan institusi keuangan yang telah berizin
                   resmi untuk menjamin keamanan dan transparansi dana.
                 </p>
