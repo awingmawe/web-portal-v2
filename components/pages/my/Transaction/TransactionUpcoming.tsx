@@ -57,12 +57,13 @@ export default function TransactionUpcoming() {
           'waiting-cancellation,waiting-approval,approved'
       } else if (statusFilter == 'waiting-approval') {
         queryParams['status.slug:in'] = 'waiting-approval'
+      } else if (statusFilter == 'coming-soon') {
+        queryParams['status.slug:in'] = 'coming-soon'
       } else if (statusFilter == 'siap-berangkat') {
         queryParams['status.slug:in'] = 'approved'
         queryParams['isCompletedManifest'] = true
         queryParams['isPaidOff'] = true
       }
-      console.log(dateRange)
       if (dateRange?.from && dateRange.to) {
         queryParams[`createdAt:gte`] = dateRange.from.toISOString()
         queryParams[`createdAt:lte`] = dateRange.to.toISOString()
@@ -143,7 +144,7 @@ export default function TransactionUpcoming() {
                 <SelectItem className="rounded-2xl" value="waiting-approval">
                   Menunggu Konfirmasi
                 </SelectItem>
-                <SelectItem className="rounded-2xl" value="waiting-payment">
+                <SelectItem className="rounded-2xl" value="coming-soon">
                   Menunggu Pelunasan & Data Jemaah
                 </SelectItem>
                 <SelectItem className="rounded-2xl" value="siap-berangkat">
@@ -195,8 +196,8 @@ export default function TransactionUpcoming() {
                   bookingId={String(transaction.id)}
                   isCompletedManifest={transaction.isCompletedManifest}
                   isPaidOff={transaction.isPaidOff}
+                  statusTahapan="Akan Datang"
                 />
-                {JSON.stringify(transaction.isCompletedManifest)}
               </Fragment>
             )
           })}

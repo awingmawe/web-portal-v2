@@ -11,6 +11,7 @@ import { TagPackages } from '@/constant/types/TagPackageProps'
 import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { PaymentStatement } from '@/constant/types/PaymentStatement'
+import { PaymentTransaction } from '@/constant/types/PaymentTransaction'
 
 export async function getBanner(
   query: GetListQuery
@@ -123,6 +124,20 @@ export async function getPaymentStatement(
     return response.data
   } catch (error) {
     console.error('Error fetching payment statement:', error)
+    throw error
+  }
+}
+
+export async function getPaymentTransaction(
+  bookingId: string
+): Promise<PaymentTransaction> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/booking/${bookingId}/transaction?order=desc&orderBy=createdAt&size=1`
+    )
+    return response.data.results[0]
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
     throw error
   }
 }
