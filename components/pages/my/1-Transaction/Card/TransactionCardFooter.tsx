@@ -1,36 +1,51 @@
+'use client'
+
 import { ChecklistCircle } from '@/components/icons/checkbox'
 import { Button } from '@/components/ui/button'
-import { Fragment } from 'react'
+import { getPaymentTransaction } from '@/services/umrah-service'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 
 export interface TransactionCardFooter {
   detailOnly?: boolean
-  isCompletedManifest?: boolean
+  isCompletedManifest: boolean
   isPaidOff: boolean
+  showDpButton?: boolean
+  bookingId: string
 }
-
-// function renderCancelAction() {
-//   return (
-//     <div className="flex gap-3">
-//       <Button
-//         variant="outline"
-//         className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-//       >
-//         Proses Refund
-//       </Button>
-//       <Link href={'/search'}>
-//         <Button className="w-full px-7 py-3 text-nowrap">
-//           Cari Paket Lain
-//         </Button>
-//       </Link>
-//     </div>
-//   )
-// }
 
 export default function TransactionCardFooter({
   detailOnly,
   isCompletedManifest,
   isPaidOff,
+  showDpButton,
+  bookingId,
 }: TransactionCardFooter) {
+  const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
+    useState(false)
+  const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
+
+  const fetcPaymentTransaction = useCallback(async () => {
+    setLoadingPaymentTransaction(true)
+
+    try {
+      // Build query parameters
+      const response = await getPaymentTransaction(bookingId)
+
+      // Update state with response data
+      setPaymentTransaction(response)
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    } finally {
+      setLoadingPaymentTransaction(false)
+    }
+  }, [bookingId])
+
+  useEffect(() => {
+    if (showDpButton) {
+      fetcPaymentTransaction()
+    }
+  }, [fetcPaymentTransaction, showDpButton])
+
   return (
     <div className="flex items-center gap-2">
       <p className="text-s-regular mr-4 font-medium text-nowrap text-gray-900">
@@ -82,6 +97,19 @@ export default function TransactionCardFooter({
           </PopoverContent>
         </Popover> */}
         </Fragment>
+      )}
+      {showDpButton && (
+        <a
+          href={paymentTransaction ? paymentTransaction.paymentLink : ''}
+          target="_blank"
+        >
+          <Button
+            className="w-full px-8 py-3 text-nowrap"
+            disabled={loadingPaymentTransaction}
+          >
+            Bayar Uang Muka
+          </Button>
+        </a>
       )}
 
       {/* {renderCancelAction()} */}

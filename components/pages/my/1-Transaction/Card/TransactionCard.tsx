@@ -4,6 +4,7 @@ import { ArrowIcon } from '@/components/icons/arrow'
 import { Calendar, Calendar2 } from '@/components/icons/calendar'
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
+import { TimerIcon } from '@/components/icons/timer'
 import { UsersIcon } from '@/components/icons/user'
 import TransactionCardFooter from '@/components/pages/my/1-Transaction/Card/TransactionCardFooter'
 import TransactionCardHeader from '@/components/pages/my/1-Transaction/Card/TransactionCardHeader'
@@ -29,6 +30,7 @@ export interface TransactionCardProps {
   noAmountLeft?: boolean
   detailOnly?: boolean
   noLabelNotif?: boolean
+  showDpButton?: boolean
 }
 
 function renderManifestComplete(isCompletedManifest: boolean) {
@@ -68,6 +70,7 @@ export default function TransactionCard({
   noAmountLeft,
   detailOnly,
   noLabelNotif,
+  showDpButton,
 }: TransactionCardProps) {
   const renderStatusTahapanColor = (status: string) => {
     if (status == 'Akan Datang') {
@@ -79,9 +82,27 @@ export default function TransactionCard({
       status == 'Dibatalkan Travel' ||
       status == 'Dalam Proses Pembatalan'
     ) {
-      return 'bg-error-100 text-error-700'
+    } else if (status == 'Waiting') {
+      return 'bg-warning-100 text-warning-700'
     } else {
       return 'bg-neutral-100 text-neutral-700'
+    }
+  }
+
+  const renderStatusTahapanText = (status: string) => {
+    if (status === 'Waiting') {
+      return (
+        <span className="text-warning-700 flex">
+          <TimerIcon className="mr-2" />
+          Harap bayar uang muka sebelum{' '}
+          {dayjs(createdDate)
+            .add(1, 'day')
+            .locale('id')
+            .format('DD MMMM YYYY HH:mm')}
+        </span>
+      )
+    } else {
+      return status
     }
   }
 
@@ -105,7 +126,7 @@ export default function TransactionCard({
           <p
             className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2`}
           >
-            {statusTahapan}
+            {renderStatusTahapanText(statusTahapan)}
           </p>
         </div>
         <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-3">
@@ -159,6 +180,8 @@ export default function TransactionCard({
             detailOnly={detailOnly}
             isPaidOff={isPaidOff}
             isCompletedManifest={isCompletedManifest}
+            showDpButton={showDpButton}
+            bookingId={bookingId}
           />
         </div>
       </div>
