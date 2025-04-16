@@ -12,11 +12,9 @@ import { useFilterProduct } from '@/contexts/filter-product-context'
 import { format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import React, { useMemo } from 'react'
-import { DateSkeleton } from './DateSkeleton'
 
-const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
-  const { filters, setDateRange, isDisabled, isLoadingSkeleton } =
-    useFilterProduct()
+const DateFilter: React.FC<OtherProps> = ({ colorIcon }) => {
+  const { filters, setDateRange, isDisabled } = useFilterProduct()
 
   const dateRange = filters.dateRange
   // Memoized date display text
@@ -35,9 +33,9 @@ const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
     return null
   }, [dateRange])
 
-  if (whatPage === 'filter_search' && isLoadingSkeleton) {
-    return <DateSkeleton />
-  }
+  // if (whatPage === 'filter_search' && isLoadingSkeleton) {
+  //   return <DateSkeleton />
+  // }
 
   return (
     <Popover>

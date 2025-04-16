@@ -5,20 +5,17 @@ import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { useCheckboxSelection } from '@/hooks/filter-product-hooks'
 import React from 'react'
-import { FacilitySkeleton } from './FacilitySkeleton'
 
 interface FacilityOptionsProps {
   dataFacility: GenericResponse<Facility>
   selectedFacility?: string
   onFacilityChange: (facilityCode: string) => void
-  isLoadingSkeleton?: boolean
 }
 
 export const FacilityOptions: React.FC<FacilityOptionsProps> = ({
   dataFacility,
   selectedFacility,
   onFacilityChange,
-  isLoadingSkeleton,
 }) => {
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: selectedFacility,
@@ -26,9 +23,9 @@ export const FacilityOptions: React.FC<FacilityOptionsProps> = ({
     paramName: 'fC',
   })
 
-  if (isLoadingSkeleton) {
-    return <FacilitySkeleton count={dataFacility.results.length || 5} />
-  }
+  // if (isLoadingSkeleton) {
+  //   return <FacilitySkeleton count={dataFacility.results.length || 5} />
+  // }
 
   return (
     <div className="max-h-[200px] space-y-2 overflow-y-auto">

@@ -15,7 +15,6 @@ interface PriceRangeSliderProps {
   }
   setHargaMin: (value: string) => void
   setHargaMax: (value: string) => void
-  isLoadingSkeleton: boolean
 }
 
 export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
@@ -23,7 +22,6 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   filters,
   setHargaMin,
   setHargaMax,
-  isLoadingSkeleton,
 }) => {
   const { min, max } = minMax
   const formattedMin = Number(min)
@@ -94,26 +92,26 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   })
 
   // Memoized skeleton components
-  const sliderSkeleton = useMemo(
-    () => (
-      <div className="mt-4 h-2 w-full animate-pulse rounded-lg bg-neutral-200" />
-    ),
-    []
-  )
+  // const sliderSkeleton = useMemo(
+  //   () => (
+  //     <div className="mt-4 h-2 w-full animate-pulse rounded-lg bg-neutral-200" />
+  //   ),
+  //   []
+  // )
 
-  const minPriceSkeleton = useMemo(
-    () => (
-      <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
-    ),
-    []
-  )
+  // const minPriceSkeleton = useMemo(
+  //   () => (
+  //     <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
+  //   ),
+  //   []
+  // )
 
-  const maxPriceSkeleton = useMemo(
-    () => (
-      <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
-    ),
-    []
-  )
+  // const maxPriceSkeleton = useMemo(
+  //   () => (
+  //     <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
+  //   ),
+  //   []
+  // )
 
   // Modified slider for using local state
   const priceSlider = useMemo(() => {
@@ -197,13 +195,13 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         <p className="text-m-regular text-right text-neutral-500">Hingga</p>
       </div>
       <div className="flex items-center justify-between self-stretch">
-        {isLoadingSkeleton ? minPriceSkeleton : minPriceInput}
+        {minPriceInput}
         <div className="h-px w-5 flex-none bg-[#D2D2D1] sm:mx-5 xl:mx-10" />
-        {isLoadingSkeleton ? maxPriceSkeleton : maxPriceInput}
+        {maxPriceInput}
       </div>
 
       {/* Price Range Slider */}
-      {isLoadingSkeleton ? sliderSkeleton : priceSlider}
+      {priceSlider}
 
       {/* Min/Max Labels */}
       <div className="mt-2 flex items-center justify-between">

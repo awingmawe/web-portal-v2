@@ -12,16 +12,10 @@ import { useFilterProduct } from '@/contexts/filter-product-context'
 import { capitalizeText } from '@/lib/utils'
 import React, { Fragment, useMemo } from 'react'
 import AirportList from './AirportList'
-import { AirportFilterSkeleton } from './AirportSkeleton'
 
-const AirportFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
-  const {
-    setDepartureAirport,
-    setArrivalAirport,
-    isDisabled,
-    isLoadingSkeleton,
-    filters,
-  } = useFilterProduct()
+const AirportFilter: React.FC<OtherProps> = ({ colorIcon }) => {
+  const { setDepartureAirport, setArrivalAirport, isDisabled, filters } =
+    useFilterProduct()
 
   const departureAirport = filters.departureAirport
   const arrivalAirport = filters.arrivalAirport
@@ -51,10 +45,6 @@ const AirportFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
       )
     }
   }, [arrivalAirport, departureAirport])
-
-  if (whatPage === 'filter_search' && isLoadingSkeleton) {
-    return <AirportFilterSkeleton />
-  }
 
   return (
     <Popover>

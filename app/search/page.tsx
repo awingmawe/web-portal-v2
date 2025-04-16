@@ -80,7 +80,7 @@ export default async function SearchGeneral({
     size,
     orderBy,
     order,
-    [`title:likeLower`]: query ? `%${query}%` : undefined,
+    [`search`]: query ? `%${query}%` : undefined,
     startDate,
     endDate,
     departureFromAirportCode,

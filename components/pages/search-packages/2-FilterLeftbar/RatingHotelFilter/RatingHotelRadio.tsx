@@ -1,7 +1,6 @@
 'use client'
 
 import { StarIconPrimary } from '@/components/icons/star'
-import { HotelRatingSkeleton } from '@/components/pages/search-packages/2-FilterLeftbar/RatingHotelFilter/RatingHotelSkeleton'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -9,13 +8,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 interface HotelRatingOptionsProps {
   selectedRating?: number
   onRatingChange: (rating: number) => void
-  isLoadingSkeleton?: boolean
 }
 
 export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
   selectedRating,
   onRatingChange,
-  isLoadingSkeleton,
 }) => {
   const updateQueryParams = useUpdateQueryParams()
   const [localRating, setLocalRating] = useState<number | undefined>(
@@ -73,10 +70,6 @@ export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
         <StarIconPrimary key={`star-${count}-${index}`} size={24} />
       ))
   }, [])
-
-  if (isLoadingSkeleton) {
-    return <HotelRatingSkeleton starOptions={starOptions} />
-  }
 
   return (
     <RadioGroup
