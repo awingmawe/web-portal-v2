@@ -102,7 +102,7 @@ export default async function Home() {
         <div className="container mx-auto max-lg:px-4">
           <ProgramCards />
           <SubmenuCards />
-          <div className="flex flex-col max-lg:flex-col-reverse">
+          <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
             <Suspense>
               <CarouselBanner dataBanner={dataBannerCarousel} />
             </Suspense>
@@ -119,7 +119,7 @@ export default async function Home() {
         </div>
       </main>
       <main
-        className={`${!token && 'sticky top-0 max-lg:top-15'} container mx-auto -mt-[60px] max-lg:mt-0 max-lg:px-4`}
+        className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-lg:mt-0 max-lg:px-4`}
       >
         <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
       </main>

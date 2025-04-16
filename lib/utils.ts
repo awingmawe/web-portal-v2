@@ -146,7 +146,7 @@ export function mapProductsToCardData(
       discount: product.packageVariant?.discountAmount ?? '0',
       discountType: product.packageVariant?.discountType,
       title: product.title || 'No Title',
-      location: product.organizationInstance?.name || 'Unknown',
+      location: product.organizationInstance?.city?.name || 'Unknown',
       district: product.organizationInstance?.city?.name || 'Unknown',
       organizationName: product.organizationInstance?.name || 'Unknown',
       originalPrice: product.packageVariant
