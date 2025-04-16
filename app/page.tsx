@@ -130,7 +130,7 @@ export default async function Home() {
         </Fragment>
       )}
       <BottomNavigation />
-      <Footer className="relative z-2 mt-30" />
+      <Footer className="relative z-2" />
     </Fragment>
   )
 }

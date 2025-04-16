@@ -39,17 +39,19 @@ const Banner: React.FC<BannerProps> = ({ className }) => {
           }}
           transition={lg ? springTransitionMobile : springTransition}
           style={{
-            backgroundImage: "url('/images/Sky.png')",
-            backgroundSize: 'contain',
+            backgroundImage: "url('/images/Sky-sm.jpg')",
+            // backgroundSize: 'contain',
             aspectRatio: '16/9',
             backgroundRepeat: 'no-repeat',
           }}
           className="
+          bg-contain
+          max-lg:bg-cover 
           max-lg:[--scale-from:4] 
           max-lg:[--scale-to:1.8] 
           max-lg:[--x-from:2.5%] 
           max-lg:[--x-to:2.5%] 
-          max-lg:[--y-from:150%] 
+          max-lg:[--y-from:150%]
           max-lg:[--y-to:40%]
 
           sm:[--scale-from:4] 

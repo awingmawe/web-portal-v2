@@ -231,7 +231,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                     : 'border-2 border-neutral-200 bg-transparent'
                 }`}
               >
-                <p className="text-m-regular text-neutral-900">
+                <p className="text-m-regular text-center text-neutral-900">
                   {variant.name || `Varian ${variant.id}`}
                 </p>
                 {variant.discountAmount &&

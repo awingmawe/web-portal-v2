@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/popover'
 import { OtherProps } from '@/constant/types/GeneralProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
-import { format } from 'date-fns'
+import { formatDateRangeShort } from '@/lib/utils'
 import { id } from 'date-fns/locale'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { DateSkeleton } from './DateSkeleton'
 
 const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
@@ -19,21 +19,6 @@ const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
     useFilterProduct()
 
   const dateRange = filters.dateRange
-  // Memoized date display text
-  const dateDisplayText = useMemo(() => {
-    if (dateRange?.from) {
-      if (dateRange.to) {
-        return (
-          <>
-            {format(dateRange.from, 'dd LLL y', { locale: id })} -{' '}
-            {format(dateRange.to, 'dd LLL y', { locale: id })}
-          </>
-        )
-      }
-      return format(dateRange.from, 'dd LLL y', { locale: id })
-    }
-    return null
-  }, [dateRange])
 
   if (whatPage === 'filter_search' && isLoadingSkeleton) {
     return <DateSkeleton />
@@ -48,9 +33,9 @@ const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
         >
           <DateIcon size={32} color={colorIcon} />
           <div className="flex flex-col">
-            {dateDisplayText ? (
+            {dateRange?.from ? (
               <p className="text-s-regular text-neutral-900">
-                {dateDisplayText}
+                {formatDateRangeShort(dateRange)}
               </p>
             ) : (
               <>

@@ -7,7 +7,7 @@ import TravelImageSection from '@/components/pages/homepage/5-ScrollAnimation/Tr
 import { GalleryHomepage } from '@/constant/types/GalleryProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Image from 'next/image'
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import {
   Animator,
   batch,
@@ -28,6 +28,10 @@ function OverscrollTracker({
   const [endExperience, setEndExperience] = useState(false)
   const sh = useRef<number>(800)
   const { lg: isMobile } = useTailwindBreakpoint()
+
+  useEffect(() => {
+    setEndExperience(window.scrollY > 2239)
+  }, [])
 
   return (
     <Fragment>
@@ -66,7 +70,7 @@ function OverscrollTracker({
               className="relative h-dvh items-center justify-center bg-cover bg-fixed bg-no-repeat"
               style={{
                 backgroundImage:
-                  'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
+                  'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970-2.jpg)',
                 backgroundPositionY: '35%',
                 backgroundPositionX: '50%',
               }}
@@ -78,7 +82,7 @@ function OverscrollTracker({
                     out: {
                       style: {
                         opacity: 0,
-                        transition: 'opacity 0.3s ease-in-out',
+                        transition: 'opacity 0.8s ease-in-out',
                       },
                     },
                   })}
@@ -164,7 +168,7 @@ function OverscrollTracker({
                   position: 'fixed',
                   top: 0,
                   backgroundImage:
-                    'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
+                    'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970-2.jpg)',
                   backgroundSize: 'cover',
                   backgroundPositionX: '50%',
                   backgroundPositionY: '35%',
@@ -181,7 +185,9 @@ function OverscrollTracker({
               className="relative flex h-screen items-center justify-center bg-cover bg-no-repeat"
               id="100kjemaah"
             >
-              <Animator animation={batch(MoveIn(0, sh.current * 2), Sticky())}>
+              <Animator
+                animation={batch(MoveIn(0, sh.current * 1.2), Sticky())}
+              >
                 <div className="flex-column z-2 flex h-dvh w-dvw items-center justify-center p-5">
                   <h1 className="none block text-center text-white max-lg:text-4xl sm:max-lg:text-5xl lg:text-[92px]">
                     <span className="relative font-bold text-white">
@@ -191,14 +197,15 @@ function OverscrollTracker({
                         width={490}
                         height={68}
                         alt="line"
-                        className="absolute max-lg:h-auto max-lg:w-48 lg:h-[68px] lg:w-[490px]"
+                        className="max-lg:top:[-0px] absolute top-[800px] left-[-48px] max-lg:left-[-18px] max-lg:h-auto max-lg:w-48 lg:h-[68px] lg:w-[490px]"
                         style={{
                           top: isMobile ? 36 : 80,
                           left: isMobile ? -18 : -48,
+                          display: 'none',
                         }}
                       />
                     </span>
-                    Jamaah
+                    Jemaah
                     <br />
                     telah memilih travel <br />
                     pilihan kami
@@ -218,7 +225,7 @@ function OverscrollTracker({
                 top: 0,
                 left: 0,
                 backgroundImage:
-                  'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970.jpg)',
+                  'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970-2.jpg)',
                 backgroundPositionX: '50%',
                 backgroundPositionY: '35%',
               }}
