@@ -93,7 +93,7 @@ const TermsConditionTemplate = ({
   }
 
   return (
-    <div className="flex flex-col gap-3 border-b border-b-neutral-200 pb-4">
+    <div className="flex flex-col gap-3 pb-4 max-lg:border-b max-lg:border-b-neutral-200">
       <div className="flex gap-3">
         <div className="bg-primary-500 h-auto w-[6px] rounded-full" />
         <p className="heading-3-semibold font-semibold max-lg:text-sm max-lg:leading-5">

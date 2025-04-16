@@ -1,4 +1,4 @@
-import { api } from '@/services/common/http'
+import { api, apiWithAuth } from '@/services/common/http'
 import { Banner } from '@/constant/types/BannerProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import {
@@ -9,6 +9,9 @@ import {
 import qs from 'query-string'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { PackageGalleryImage } from '@/constant/types/GalleryProps'
+import { Transaction } from '@/constant/types/Transaction'
+import { PaymentStatement } from '@/constant/types/PaymentStatement'
+import { PaymentTransaction } from '@/constant/types/PaymentTransaction'
 
 export async function getBanner(
   query: GetListQuery
@@ -93,6 +96,48 @@ export async function getTagPackagesEnum(): Promise<TagPackages[]> {
     return response.data
   } catch (error) {
     console.error('Error fetching get tag packages enum:', error)
+    throw error
+  }
+}
+
+export async function getTransactionListUmrah(
+  query: GetListQuery
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/booking?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction umrah:', error)
+    throw error
+  }
+}
+
+export async function getPaymentStatement(
+  bookingId: string
+): Promise<PaymentStatement> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/booking/${bookingId}/payment-statement`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching payment statement:', error)
+    throw error
+  }
+}
+
+export async function getPaymentTransaction(
+  bookingId: string
+): Promise<PaymentTransaction> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/booking/${bookingId}/transaction?order=desc&orderBy=createdAt&size=1`
+    )
+    return response.data.results[0]
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
     throw error
   }
 }

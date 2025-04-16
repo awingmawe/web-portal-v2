@@ -23,3 +23,74 @@ export const Calendar: React.FC<IconProps> = ({
     </svg>
   )
 }
+export const Calendar2: React.FC<IconProps> = ({
+  size,
+  className = '',
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size || 60}
+      height={size || 60}
+      viewBox="0 0 20 21"
+      fill="none"
+      className={className}
+      {...props}
+    >
+      <path
+        d="M6.66602 2.16666V4.66666"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13.334 2.16666V4.66666"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M2.91602 8.075H17.0827"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M17.5 7.58333V14.6667C17.5 17.1667 16.25 18.8333 13.3333 18.8333H6.66667C3.75 18.8333 2.5 17.1667 2.5 14.6667V7.58333C2.5 5.08333 3.75 3.41666 6.66667 3.41666H13.3333C16.25 3.41666 17.5 5.08333 17.5 7.58333Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.99607 11.9167H10.0036"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.91209 11.9167H6.91957"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.91209 14.4167H6.91957"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}

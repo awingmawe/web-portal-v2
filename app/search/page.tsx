@@ -2,6 +2,7 @@ import { metadata } from '@/app/shared-metadata'
 import SearchTopbar from '@/components/pages/search-packages/1-SearchTopbar/SearchTopbar'
 import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
+import { NavigationMenuDemo } from '@/components/pages/search-packages/mobile/TopFilter'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
@@ -112,6 +113,7 @@ export default async function SearchGeneral({
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12">
+            <NavigationMenuDemo />
             <PackageResults
               total={dataPackage?.total}
               dataPackages={mapProductsToCardData(dataPackage)}

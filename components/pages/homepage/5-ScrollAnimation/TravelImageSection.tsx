@@ -34,6 +34,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           alt="dashed"
           sizes="100vw"
           className="h-auto w-[280px] lg:hidden"
+          style={{ marginTop: -100 }}
         />
 
         {/* First Image */}
@@ -41,7 +42,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           className={`absolute top-[0] left-[0] flex w-[757px] flex-col rounded-[20px] bg-white p-2 max-xl:top-[50px] max-xl:w-[500px] max-lg:top-[20px] max-lg:-left-[40px] max-lg:w-[233px] max-sm:left-0`}
         >
           <Image
-            src={dataGallery[0].imageUrl}
+            src={dataGallery[0]?.imageUrl}
             className="h-auto w-full rounded-[20px] object-contain"
             alt="travel image"
             width={0}
@@ -49,8 +50,8 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
             sizes="100vw"
           />
           <div
-            className={`color-[#30302F] flex items-center justify-center text-center font-[Playball]
-            ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
+            className={`color-[#30302F] flex items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
+            ${isMobile ? 'py-1 text-[12px]' : 'text-[28px] leading-[32px]'}`}
           >
             {dataGallery[0].title} <br />
             {dataGallery[0].caption}
@@ -62,7 +63,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           className={`absolute top-[420px] right-[0] flex w-[400px] flex-col rounded-[20px] bg-white p-2 max-lg:top-[300px]  max-lg:-right-[40px] max-lg:w-[233px] max-sm:-right-0`}
         >
           <Image
-            src={dataGallery[2].imageUrl}
+            src={dataGallery[2]?.imageUrl}
             className="aspect-[4/5] h-auto w-full rounded-[20px] object-cover"
             alt="travel image"
             width={0}
@@ -70,7 +71,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
             sizes="100vw"
           />
           <div
-            className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
+            className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
             {dataGallery[2].title} <br />
@@ -83,7 +84,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           className={`absolute top-[900px] left-[60px] flex w-[600px] flex-col rounded-[20px] bg-white p-2 max-xl:left-[35px] max-xl:w-[500px] max-lg:top-[675px] max-lg:-left-[40px] max-lg:w-[233px] max-sm:left-[0px]`}
         >
           <Image
-            src={dataGallery[0].imageUrl}
+            src={dataGallery[0]?.imageUrl}
             className="h-auto w-full rounded-[20px] object-cover"
             alt="travel image"
             width={0}
@@ -91,7 +92,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
             sizes="100vw"
           />
           <div
-            className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
+            className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px] max-sm:w-[233px]'}`}
           >
             {dataGallery[0].title} <br />
@@ -105,7 +106,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
             flex-col rounded-[20px] bg-white p-2 max-xl:right-0 max-xl:w-[500px] max-lg:top-[950px] max-lg:-right-[40px] max-lg:w-[233px] max-sm:right-[0px]`}
         >
           <Image
-            src={dataGallery[1].imageUrl}
+            src={dataGallery[1]?.imageUrl}
             className={`h-auto w-full rounded-[20px] object-cover`}
             alt="travel image"
             width={0}
@@ -113,7 +114,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
             sizes="100vw"
           />
           <div
-            className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
+            className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
             {dataGallery[1].title} <br />
@@ -126,7 +127,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           className={`absolute top-[1680px] left-[0] flex w-[513px] flex-col rounded-[20px] bg-white p-2 max-xl:w-[420px] max-lg:top-[1200px] max-lg:-left-[30px] max-lg:w-[144px] max-sm:top-[1225px] max-sm:left-[0px]`}
         >
           <Image
-            src={dataGallery[4].imageUrl}
+            src={dataGallery[4]?.imageUrl}
             className="aspect-[4/5] h-auto w-full rounded-[20px] object-cover"
             alt="travel image"
             width={0}
@@ -134,7 +135,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
             sizes="100vw"
           />
           <div
-            className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
+            className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
             {dataGallery[4].title} <br />
@@ -147,7 +148,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           className={`absolute top-[2160px] right-[0px] flex w-[498px] flex-col rounded-[20px] bg-white p-2 max-xl:w-[420px] max-lg:top-[1450px] max-lg:-right-[10px] max-lg:w-[144px] max-sm:top-[1500px] max-sm:right-[0px]`}
         >
           <Image
-            src={dataGallery[3].imageUrl}
+            src={dataGallery[3]?.imageUrl}
             className="aspect-[4/5] h-auto w-full rounded-[20px] object-cover"
             alt="travel image"
             width={0}
@@ -155,7 +156,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
             sizes="100vw"
           />
           <div
-            className={`color-[#30302F] flex flex-auto items-center justify-center text-center font-[Playball]
+            className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
           >
             {dataGallery[3].title} <br />

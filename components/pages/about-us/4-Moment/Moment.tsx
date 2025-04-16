@@ -10,7 +10,7 @@ export default function Moment() {
   const [showMore, setShowMore] = useState(false)
 
   return (
-    <section className="py-8 md:py-10 lg:py-15">
+    <section className="py-8">
       <div className="container mx-auto max-lg:px-4">
         <div className="text-center">
           <h1 className="lg:text-xl-regular text-2xl font-normal sm:text-3xl md:text-4xl">
@@ -29,8 +29,6 @@ export default function Moment() {
             title="International Islamic Expo (IIE)"
             images={[
               'https://storage.googleapis.com/m101-prods/about-us/1d71989927a049dfb0345f87a1ff8c70.png',
-              'https://storage.googleapis.com/m101-prods/about-us/expo-event-2.jpg',
-              'https://storage.googleapis.com/m101-prods/about-us/expo-event-3.jpg',
             ]}
             date="01 Juni 2025"
             content="Muslim101, sebelumnya Umroh101, berpartisipasi dalam
@@ -45,8 +43,6 @@ export default function Moment() {
             title="Mini Travel Fair: Jelajahi Negeri Impian at PermataBank Syariah"
             images={[
               'https://storage.googleapis.com/m101-prods/about-us/ffd540a12ee15164d8d9981892fdd747.png',
-              'https://storage.googleapis.com/m101-prods/about-us/b7a59a8cd226c95b36caa250c29dc995.png',
-              'https://storage.googleapis.com/m101-prods/about-us/4661c2f950e4bf4efab9d37db6061b66.jpeg',
             ]}
             date="01 Juni 2025"
             content={`Bersama PermataBank Syariah, Muslim101 berhasil menyelenggarakan acara Mini Travel Fair yang bertema "Jelajahi Negeri Impian" selama dua pekan, mulai dari tanggal 3-7 hingga 10-14 Februari 2025. Diikuti para mitra travel Muslim101, yaitu Aqabah, Sahid Tour, Goldy, Antara, Tazkia, Syawal, Al-Azhar, dan Mulia Tour.`}
@@ -106,7 +102,7 @@ export default function Moment() {
             </Fragment>
           )}
         </div>
-        <div className="mt-4 text-center md:mt-5">
+        <div className="mt-8 text-center">
           <Button
             className="px-6 py-2 text-sm sm:px-8 md:px-10 lg:px-[40px]"
             onClick={() => setShowMore(!showMore)}

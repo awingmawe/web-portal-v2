@@ -118,16 +118,18 @@ export default async function Home() {
           />
         </div>
       </main>
+      <main
+        className={`${!token && 'sticky top-0 max-lg:top-15'} container mx-auto -mt-[60px] max-lg:mt-0 max-lg:px-4`}
+      >
+        <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
+      </main>
       {!token && (
         <Fragment>
-          <main className="sticky top-0 container mx-auto max-lg:top-15 max-lg:px-4">
-            <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
-          </main>
           <OverscrollTracker dataGallery={dataGallery.results} />
           <TestimoniSection dataCarousel={dataCarousel.results} />
-          <BottomNavigation />
         </Fragment>
       )}
+      <BottomNavigation />
       <Footer className="relative z-2" />
     </Fragment>
   )
