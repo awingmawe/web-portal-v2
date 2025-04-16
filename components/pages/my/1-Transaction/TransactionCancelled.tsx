@@ -129,7 +129,6 @@ export default function TransactionCancelled() {
           {transactions.map((transaction) => {
             return (
               <Fragment key={transaction.id}>
-                {transaction.status.slug}
                 {/* Transaction Cards */}
                 <TransactionCard
                   status={transaction.status.slug}
