@@ -12,17 +12,15 @@ import { useFilterProduct } from '@/contexts/filter-product-context'
 import { formatDateRangeShort } from '@/lib/utils'
 import { id } from 'date-fns/locale'
 import React from 'react'
-import { DateSkeleton } from './DateSkeleton'
 
-const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
-  const { filters, setDateRange, isDisabled, isLoadingSkeleton } =
-    useFilterProduct()
+const DateFilter: React.FC<OtherProps> = ({ colorIcon }) => {
+  const { filters, setDateRange, isDisabled } = useFilterProduct()
 
   const dateRange = filters.dateRange
 
-  if (whatPage === 'filter_search' && isLoadingSkeleton) {
-    return <DateSkeleton />
-  }
+  // if (whatPage === 'filter_search' && isLoadingSkeleton) {
+  //   return <DateSkeleton />
+  // }
 
   return (
     <Popover>

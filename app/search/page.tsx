@@ -81,7 +81,7 @@ export default async function SearchGeneral({
     size,
     orderBy,
     order,
-    [`title:likeLower`]: query ? `%${query}%` : undefined,
+    [`search`]: query ? `%${query}%` : undefined,
     startDate,
     endDate,
     departureFromAirportCode,
@@ -98,9 +98,8 @@ export default async function SearchGeneral({
   const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
     getMinMaxPrice(),
     getTagPackagesEnum(),
-    getFacilityEnum(),
+    getFacilityEnum('umrah-facility'),
   ])
-
   return (
     <Fragment>
       <Topbar type="normal" token={token} />

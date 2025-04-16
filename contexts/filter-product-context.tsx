@@ -389,6 +389,14 @@ export const FilterProductProvider: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
+  useEffect(() => {
+    setIsLoadingSkeleton(true)
+
+    setTimeout(() => {
+      setIsLoadingSkeleton(false)
+    }, 1000)
+  }, [filters])
+
   const value = {
     // Combined filter state
     filters,

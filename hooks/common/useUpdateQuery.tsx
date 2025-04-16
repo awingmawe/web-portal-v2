@@ -1,40 +1,38 @@
-import { usePathname } from 'next/navigation'
+'use client'
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import queryString from 'query-string'
 import { useCallback } from 'react'
 
-// Create a custom hook to use in components
 export const useUpdateQueryParams = () => {
+  const router = useRouter()
   const pathname = usePathname()
+  const currentParams = useSearchParams()
 
   return useCallback(
     (keys: string[], values: (string | number)[], redirectPath?: string) => {
-      const parsedUrl = queryString.parseUrl(window.location.href)
-      const query = parsedUrl.query
+      const currentQuery = Object.fromEntries(currentParams.entries())
 
       if (values && values.length > 0) {
         keys.forEach((key, index) => {
-          // Convert the value to string if it's not already
           const valueStr = values[index]?.toString() || ''
-
-          // Don't encode the value here - queryString library will handle it properly
           if (valueStr) {
-            query[key] = valueStr
+            currentQuery[key] = valueStr
           } else {
-            delete query[key]
+            delete currentQuery[key]
           }
         })
       } else {
         keys.forEach((key) => {
-          delete query[key]
+          delete currentQuery[key]
         })
       }
 
-      // Use the redirectPath if provided, otherwise use the current pathname
-      const path = redirectPath || pathname
+      const query = queryString.stringify(currentQuery)
+      const newPath = `${redirectPath || pathname}?${query}`
 
-      // The queryString.stringify will properly encode values for URL
-      window.location.href = `${path}?${queryString.stringify(query)}`
+      router.push(newPath)
     },
-    [pathname]
+    [router, pathname, currentParams]
   )
 }

@@ -12,17 +12,12 @@ import { useFilterProduct } from '@/contexts/filter-product-context'
 import { capitalizeText } from '@/lib/utils'
 import React, { Fragment } from 'react'
 import AirlineList from './AirlineList'
-import { AirlineFilterSkeleton } from './AirlineSkeleton'
 
 const IS_NOT_TRANSIT = ['GA', 'SV', 'JT']
 
-const AirlineFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
-  const { filters, setAirline, isDisabled, isLoadingSkeleton } =
-    useFilterProduct()
+const AirlineFilter: React.FC<OtherProps> = ({ colorIcon }) => {
+  const { filters, setAirline, isDisabled } = useFilterProduct()
   const airline = filters.airline
-  if (whatPage === 'filter_search' && isLoadingSkeleton) {
-    return <AirlineFilterSkeleton />
-  }
 
   return (
     <Popover>

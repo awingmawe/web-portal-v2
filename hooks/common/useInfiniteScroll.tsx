@@ -73,7 +73,7 @@ export function useInfiniteScroll({ pageSize = 9 }: UseSearchParams = {}) {
           size: pageSize,
           orderBy,
           order,
-          [`title:likeLower`]: query ? `%${query}%` : undefined,
+          [`search`]: query ? `%${query}%` : undefined,
           startDate,
           endDate,
           departureFromAirportCode,
