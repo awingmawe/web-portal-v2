@@ -34,7 +34,7 @@ export default function TitlePackageMobile({ title }: TitlePackageMobileProps) {
 
   return (
     <div className={`flex w-full flex-col gap-0.5 lg:hidden ${dissolve}`}>
-      <h1 className="text-l-semibold text-neutral-900">{title}</h1>
+      <h1 className="text-l-semibold break-all text-neutral-900">{title}</h1>
       {selectedVariant && (
         <>
           <p className="text-s-regular text-neutral-600">{variantName}</p>
