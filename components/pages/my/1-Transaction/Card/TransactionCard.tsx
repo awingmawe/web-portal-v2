@@ -82,6 +82,7 @@ export default function TransactionCard({
       status == 'Dibatalkan Travel' ||
       status == 'Dalam Proses Pembatalan'
     ) {
+      return 'bg-error-100 text-error-700'
     } else if (status == 'Waiting') {
       return 'bg-warning-100 text-warning-700'
     } else {
@@ -182,6 +183,8 @@ export default function TransactionCard({
             isCompletedManifest={isCompletedManifest}
             showDpButton={showDpButton}
             bookingId={bookingId}
+            id={id}
+            status={status}
           />
         </div>
       </div>

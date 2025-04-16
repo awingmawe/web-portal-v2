@@ -2,7 +2,7 @@ import { metadata } from '@/app/shared-metadata'
 import SearchTopbar from '@/components/pages/search-packages/1-SearchTopbar/SearchTopbar'
 import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
-import { NavigationMenuDemo } from '@/components/pages/search-packages/mobile/TopFilter'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
@@ -13,6 +13,7 @@ import {
   getTagPackagesEnum,
 } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
+import Image from 'next/image'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -102,9 +103,29 @@ export default async function SearchGeneral({
   return (
     <Fragment>
       <Topbar type="normal" token={token} />
+      <MobileTopbar variant="filter" showBackButton />
       <SearchTopbar />
-      <main className="mt-7.5 mb-7.5">
-        <section className="container mx-auto grid grid-cols-12 gap-5 max-lg:px-4">
+      <main className="max-lg:bg-primary-500 relative my-7.5 max-lg:mt-auto max-lg:mb-0 max-lg:h-[100vh] max-lg:overflow-hidden">
+        {/* Circle Background for mobile */}
+        <Image
+          src="images/circle-1.svg"
+          alt="bg-search"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="absolute top-5 right-0 h-auto w-1/4 lg:hidden"
+        />
+        <Image
+          src="images/circle-2.svg"
+          alt="bg-search"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="absolute top-0 left-0 h-auto w-1/2 lg:hidden"
+        />
+        {/* End of Circle Background for Mobile */}
+
+        <section className="scrollbar-hide container mx-auto grid grid-cols-12 gap-5 max-lg:absolute max-lg:bottom-0 max-lg:h-[90%] max-lg:w-full max-lg:max-w-full max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:px-4 max-lg:py-7.5 max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
           <div className="col-span-4 max-lg:hidden">
             <FilterLeftbar
               dataMinMax={dataMinMax}
@@ -113,7 +134,7 @@ export default async function SearchGeneral({
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12">
-            <NavigationMenuDemo />
+            {/* <NavigationMenuDemo /> */}
             <PackageResults
               total={dataPackage?.total}
               dataPackages={mapProductsToCardData(dataPackage)}

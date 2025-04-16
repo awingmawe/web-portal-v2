@@ -159,7 +159,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   }
 
   return (
-    <section className="mt-[60px] flex flex-col gap-7 max-lg:mt-6 max-lg:gap-2">
+    <section className="flex flex-col">
       {sections.map((section) => (
         <PackageSection
           key={section.type}

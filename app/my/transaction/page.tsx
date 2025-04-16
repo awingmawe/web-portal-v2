@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import TransactionCancelled from '@/components/pages/my/1-Transaction/TransactionCancelled'
 import TransactionCompleted from '@/components/pages/my/1-Transaction/TransactionCompleted'
 import TransactionUpcoming from '@/components/pages/my/1-Transaction/TransactionUpcoming'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -21,7 +22,7 @@ export default async function TransactionPage({
   return (
     <div className="mx-auto max-w-7xl px-4">
       <Tabs defaultValue={defaultTab} className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-2 rounded-none  bg-transparent p-0">
+        <TabsList className="grid h-auto w-full grid-cols-3 rounded-none  bg-transparent p-0">
           <TabsTrigger
             value="upcoming"
             className="cursor-pointer rounded-none border-b-2 p-0 py-4 data-[state=active]:border-neutral-400 data-[state=active]:border-neutral-900 data-[state=active]:text-neutral-900 data-[state=active]:shadow-none data-[state=inactive]:text-neutral-400"
@@ -44,7 +45,7 @@ export default async function TransactionPage({
               Perjalanan Selesai
             </Link>
           </TabsTrigger>
-          {/* <TabsTrigger
+          <TabsTrigger
             value="cancelled"
             className="cursor-pointer rounded-none border-b-2 p-0 py-4 data-[state=active]:border-neutral-400 data-[state=active]:border-neutral-900 data-[state=active]:text-neutral-900 data-[state=active]:shadow-none data-[state=inactive]:text-neutral-400"
           >
@@ -54,7 +55,7 @@ export default async function TransactionPage({
             >
               Dibatalkan
             </Link>
-          </TabsTrigger> */}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="upcoming" className="mt-6">
@@ -65,9 +66,9 @@ export default async function TransactionPage({
           <TransactionCompleted />
         </TabsContent>
 
-        {/* <TabsContent value="cancelled" className="mt-6">
+        <TabsContent value="cancelled" className="mt-6">
           <TransactionCancelled />
-        </TabsContent> */}
+        </TabsContent>
       </Tabs>
     </div>
   )
