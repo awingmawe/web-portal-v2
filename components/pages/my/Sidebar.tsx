@@ -70,7 +70,7 @@ export const Sidebar = () => {
   const pathname = usePathname()
 
   return (
-    <div className=" w-full max-w-sm">
+    <div className="w-full max-w-sm max-lg:hidden">
       <div className="sticky top-26">
         <div className="rounded-3xl border border-neutral-100 bg-white shadow-sm ">
           {/* Profile Section */}
