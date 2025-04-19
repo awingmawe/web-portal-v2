@@ -115,10 +115,10 @@ export function useInfiniteScroll({ pageSize = 9 }: UseSearchParams = {}) {
     const loadInitialData = async () => {
       setInitialLoading(true)
 
-      const data = await fetchPackage(1)
-      setPackages(mapProductsToCardData(data))
-      setHasMore(data.results.length < data.total)
-      setPage(1)
+      // const data = await fetchPackage(1)
+      // setPackages(mapProductsToCardData(data))
+      // setHasMore(data.results.length < data.total)
+      // setPage(1)
 
       setTimeout(() => setInitialLoading(false), 500)
     }
