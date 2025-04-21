@@ -35,14 +35,37 @@ export default function TransactionUpcoming() {
 
   // State for filters
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>(
+    searchParams.get('status') || 'all'
+  )
   const [statusFilterMobile, setStatusFilterMobile] = useState<string>('all')
-  const [dateRange, setDateRange] = useState<DateRange | undefined>()
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
+    const dateString = searchParams.get('date')
+    if (!dateString) return undefined
+    const [fromString, toString] = dateString.split(' - ')
+    const fromDate = new Date(fromString)
+    const toDate = new Date(toString)
+    return {
+      from: fromDate,
+      to: toDate,
+    } as DateRange
+  })
 
   // Function to fetch transactions
   const fetchTransactions = useCallback(async () => {
     setIsLoading(true)
     setError(null)
+
+    const rangeFilter =
+      dateRange?.from && dateRange?.to
+        ? `${dateRange?.from.toISOString()} - ${dateRange?.to.toISOString()}`
+        : ''
+
+    const statusFilterParams = lg ? statusFilterMobile : statusFilter
+
+    router.push(
+      `/my/transaction?type=upcoming&page=${currentPage}&status=${statusFilterParams}&date=${rangeFilter}`
+    )
 
     try {
       // Build query parameters
@@ -80,23 +103,22 @@ export default function TransactionUpcoming() {
       const response = await getTransactionListUmrah(queryParams)
 
       // Update state with response data
+
       if (lg && currentPage > 1) {
         setTransactions((prev) => [...prev, ...response.results])
       } else {
         setTransactions(response.results)
-        if (!lg) {
-          router.push(`/my/transaction?type=upcoming&page=${currentPage}`)
-        }
       }
+
       setTotalPages(Math.ceil(response.total / 10))
+      setIsLoading(false)
+      setIsLoadingMobileFilter(false)
     } catch (err) {
       console.error('Error fetching transactions:', err)
       setError('Failed to load transactions. Please try again.')
-    } finally {
-      setIsLoading(false)
-      setIsLoadingMobileFilter(false)
     }
-  }, [currentPage, searchQuery, statusFilter, dateRange, router, lg])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, searchQuery, statusFilter, dateRange, lg, router])
 
   // Handle page change
   const goToPage = useCallback((page: number) => {
@@ -150,7 +172,11 @@ export default function TransactionUpcoming() {
       {lg && (
         <SearchAndFilterMobile
           statusFilterMobile={statusFilterMobile}
+          dateFilterMobile={dateRange}
+          handleSearchChange={handleSearchChange}
+          searchQuery={searchQuery}
           handleStatusFilterChange={handleStatusFilterChange}
+          handleDateRangeChange={handleDateRangeChange}
           setStatusFilterMobile={setStatusFilterMobile}
           setIsLoadingMobile={setIsLoadingMobileFilter}
         />
@@ -165,7 +191,7 @@ export default function TransactionUpcoming() {
         </div>
       )}
 
-      {/* Loading state */}
+      {/* List state */}
       <List
         isLoading={isLoading}
         isLoadingMobile={isLoadingMobile}

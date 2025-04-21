@@ -23,17 +23,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { format } from 'date-fns/format'
 import { Search } from 'lucide-react'
+import { ChangeEvent, SetStateAction, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
 interface SearchAndFilterProps {
   searchQuery: string
-  handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleSearchChange: (event: ChangeEvent<HTMLInputElement>) => void
   statusFilter: string
   handleStatusFilterChange: (value: string) => void
-  handleDateRangeChange: (
-    date: React.SetStateAction<DateRange | undefined>
-  ) => void
+  handleDateRangeChange: (date: SetStateAction<DateRange | undefined>) => void
 }
 
 export const SearchAndFilter = ({
@@ -94,17 +94,36 @@ export const SearchAndFilter = ({
 
 interface SearchAndFilterMobileProps {
   statusFilterMobile: string
+  searchQuery: string
+  dateFilterMobile: DateRange | undefined
+  handleSearchChange: (event: ChangeEvent<HTMLInputElement>) => void
   handleStatusFilterChange: (value: string) => void
   setStatusFilterMobile: (value: string) => void
   setIsLoadingMobile: (value: boolean) => void
+  handleDateRangeChange: (dateRange: DateRange | undefined) => void
 }
 
 export const SearchAndFilterMobile = ({
   statusFilterMobile,
+  searchQuery,
+  dateFilterMobile,
+  handleSearchChange,
   handleStatusFilterChange,
   setStatusFilterMobile,
   setIsLoadingMobile,
+  handleDateRangeChange,
 }: SearchAndFilterMobileProps) => {
+  const [resetCounter, setResetCounter] = useState(0)
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(
+    dateFilterMobile
+  )
+
+  const handleReset = () => {
+    // Increment the reset counter to trigger a reset in the component
+
+    setResetCounter((prev) => prev + 1)
+  }
+
   const renderStatusFilterTahapanText = (value: string) => {
     switch (value) {
       case 'all':
@@ -121,8 +140,38 @@ export const SearchAndFilterMobile = ({
     }
   }
 
+  const formatDateRange = () => {
+    if (!dateFilterMobile?.from) {
+      return 'Pilih tanggal'
+    }
+
+    if (dateFilterMobile.to) {
+      return `${format(dateFilterMobile.from, 'MMM d, yyyy')} - ${format(dateFilterMobile.to, 'MMM d, yyyy')}`
+    }
+
+    return format(dateFilterMobile.from, 'MMM d, yyyy')
+  }
+
+  const dateChange = (date: DateRange | undefined) => {
+    setDateRange(date)
+  }
+
   return (
-    <div className="scrollbar-hide flex gap-2 overflow-x-scroll pl-5">
+    <div className="scrollbar-hide flex gap-2 overflow-x-hidden pl-5">
+      <div className={`pr-t absolute -top-13.5 left-3.5 w-11/12 md:w-10/12`}>
+        <Input
+          model="compact"
+          startIcon={<Search size={16} className="text-neutral-300" />}
+          placeholder="Cari ID Transaksi"
+          className="w-full py-1.5"
+          value={searchQuery}
+          onChange={(e) => {
+            setIsLoadingMobile(true)
+            handleSearchChange(e)
+          }}
+        />
+      </div>
+
       <Drawer>
         <DrawerTrigger asChild>
           <button
@@ -230,7 +279,7 @@ export const SearchAndFilterMobile = ({
             className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700
 "
           >
-            {renderStatusFilterTahapanText(statusFilterMobile)}
+            {formatDateRange()}
             <ChevronIcon />
           </button>
         </DrawerTrigger>
@@ -243,13 +292,19 @@ export const SearchAndFilterMobile = ({
                   Tanggal Transaksi
                 </p>
               </div>
-              <Button className="ml-auto" variant="ghost">
+              <Button className="ml-auto" variant="ghost" onClick={handleReset}>
                 <span className="text-error-500">Reset Tanggal</span>
               </Button>
             </DrawerTitle>
           </DrawerHeader>
-          <div className="space-y-2 overflow-y-auto px-4 pb-4 text-sm">
-            <DateRangeFilterMobile />
+          <div className="space-y-2 overflow-y-hidden px-4 pb-4 text-sm">
+            <DateRangeFilterMobile
+              onChange={(date) => {
+                dateChange(date)
+              }}
+              reset={resetCounter}
+              selectedDate={dateRange}
+            />
           </div>
           <div className="flex w-full px-3 pt-3 pb-5">
             <DrawerClose className="mr-3 w-full" asChild>
@@ -266,7 +321,7 @@ export const SearchAndFilterMobile = ({
                 className="w-full py-3"
                 type="button"
                 onClick={() => {
-                  handleStatusFilterChange(statusFilterMobile)
+                  handleDateRangeChange(dateRange)
                   setIsLoadingMobile(true)
                 }}
               >

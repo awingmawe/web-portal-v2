@@ -129,7 +129,6 @@ export function useInfiniteScroll({ pageSize = 9 }: UseSearchParams = {}) {
   // Function to load more packages
   const loadMore = useCallback(async () => {
     if (loading) return
-    console.log('masuk')
 
     setLoading(true)
     const nextPage = page + 1

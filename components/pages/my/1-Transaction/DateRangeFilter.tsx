@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { format, isSameDay, subDays } from 'date-fns'
+import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
@@ -17,6 +18,7 @@ export interface DateRangePickerProps {
 }
 
 export default function DateRangePicker({ onChange }: DateRangePickerProps) {
+  const searchParams = useSearchParams()
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState<
     '30days' | '90days' | 'custom'
@@ -25,7 +27,17 @@ export default function DateRangePicker({ onChange }: DateRangePickerProps) {
   const today = new Date()
 
   // Initialize with a date range (last 20 days to match the highlighted dates in the image)
-  const [dateRange, setDateRange] = useState<DateRange | undefined>()
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
+    const dateString = searchParams.get('date')
+    if (!dateString) return undefined
+    const [fromString, toString] = dateString.split(' - ')
+    const fromDate = new Date(fromString)
+    const toDate = new Date(toString)
+    return {
+      from: fromDate,
+      to: toDate,
+    } as DateRange
+  })
 
   // Store the preset date ranges for comparison
   const [presetRanges, setPresetRanges] = useState({
