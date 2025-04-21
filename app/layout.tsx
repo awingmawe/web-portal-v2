@@ -3,6 +3,7 @@ import { GTM_ID } from '@/constant/env'
 import { ContextProviders } from '@/contexts/providers'
 import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import './globals.css'
 export const metadata: Metadata = {
   title: 'Muslim 101 | All in One Islamic Digital Platform',
@@ -16,13 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
-      <GoogleTagManager gtmId={GTM_ID as string} />
-      <body>
-        <ContextProviders>
-          {children}
-          <Toaster />
-        </ContextProviders>
-      </body>
+      <Suspense>
+        <GoogleTagManager gtmId={GTM_ID as string} />
+        <body>
+          <ContextProviders>
+            {children}
+            <Toaster />
+          </ContextProviders>
+        </body>
+      </Suspense>
     </html>
   )
 }

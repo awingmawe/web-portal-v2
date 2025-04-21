@@ -1,6 +1,7 @@
 import { metadata } from '@/app/shared-metadata'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
+import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
 import {
   PackageListEvent,
   PackageListEvent as PackageListPlus,
@@ -16,9 +17,10 @@ import Topbar from '@/components/shared/Topbar'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
+import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
-import { Fragment, Suspense } from 'react'
+import { Fragment } from 'react'
 
 export async function generateMetadata() {
   return {
@@ -35,7 +37,7 @@ export default async function Home() {
 
   const [
     dataBannerCarousel,
-    // dataTravels,
+    dataTravels,
     dataPromo,
     dataPlus,
     dataRegular,
@@ -48,12 +50,12 @@ export default async function Home() {
       order: 'desc',
       orderBy: 'createdAt',
     }),
-    // getTravels({
-    //   page: 1,
-    //   size: 12,
-    //   order: 'desc',
-    //   orderBy: 'organizationInstance.createdAt',
-    // }),
+    getTravels({
+      page: 1,
+      size: 12,
+      order: 'desc',
+      orderBy: 'organizationInstance.createdAt',
+    }),
     getPackageList({
       page: 1,
       size: 12,
@@ -101,13 +103,9 @@ export default async function Home() {
           <ProgramCards />
           <SubmenuCards />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
-            <Suspense>
-              <CarouselBanner dataBanner={dataBannerCarousel} />
-            </Suspense>
+            <CarouselBanner dataBanner={dataBannerCarousel} />
 
-            {/* <Suspense>
-              <CarouselTravel dataTravel={dataTravels} />
-            </Suspense> */}
+            <CarouselTravel dataTravel={dataTravels} />
           </div>
 
           <PackageListEvent
