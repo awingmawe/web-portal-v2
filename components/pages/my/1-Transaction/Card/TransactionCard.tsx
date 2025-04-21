@@ -9,8 +9,14 @@ import { UsersIcon } from '@/components/icons/user'
 import TransactionCardFooter from '@/components/pages/my/1-Transaction/Card/TransactionCardFooter'
 import TransactionCardHeader from '@/components/pages/my/1-Transaction/Card/TransactionCardHeader'
 import TransactionCardPayment from '@/components/pages/my/1-Transaction/Card/TransactionCardPayment'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
+import { MoreVertical } from 'lucide-react'
 import Image from 'next/image'
 
 export interface TransactionCardProps {
@@ -120,31 +126,69 @@ export default function TransactionCard({
         className={`${!noHeader ? '-mt-5' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
       >
         <div className="flex items-center justify-between border-b border-neutral-200 p-4">
-          <div className="flex items-center gap-2">
-            <p className="font-medium">Umroh /</p>
-            <p className="text-neutral-500">ID : {id}</p>
+          <div className="flex items-center gap-2 max-lg:block">
+            <p className="font-medium max-lg:text-xs">Umroh</p>
+            <p className="font-medium max-lg:hidden">/ </p>
+            <p className="text-neutral-500 max-lg:hidden">ID : {id}</p>
+            <p className="hidden text-neutral-500 max-lg:block max-lg:text-xs">
+              Dibuat Pada: {dayjs(createdDate).locale(id).format('DD MMM YYYY')}
+            </p>
           </div>
-          <p
-            className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2`}
-          >
-            {renderStatusTahapanText(statusTahapan)}
-          </p>
+          <div className="flex items-center">
+            <p
+              className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2 max-lg:px-2 max-lg:py-1 max-lg:text-xs`}
+            >
+              {renderStatusTahapanText(statusTahapan)}
+            </p>
+            {(status === 'approved' || status === 'waiting-approval') && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:block" />
+                </PopoverTrigger>
+                <PopoverContent className="rounded-2xl p-0 px-1">
+                  <div className="flex flex-col divide-y">
+                    <a
+                      href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                      className="cursor-pointer p-3 hover:bg-gray-50"
+                      target="_blank"
+                    >
+                      <p className="text-m-regular text-error-500">
+                        Batalkan Pesanan
+                      </p>
+                    </a>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 p-4 md:grid-cols-3 lg:gap-4">
+          <p className="text-s-regular hidden text-neutral-500 max-lg:block">
+            ID : {id}
+          </p>
           <div className="flex gap-4 md:col-span-2">
-            <div className="h-32 w-32 flex-shrink-0">
+            <div className="h-32 w-32 flex-shrink-0 max-lg:h-20 max-lg:w-20">
               <Image
                 src={thumbnail}
                 alt="Umroh Package"
                 width={128}
                 height={128}
-                className="h-full w-full rounded-md object-cover"
+                className="block h-full w-full rounded-md object-cover max-lg:hidden"
+              />
+              <Image
+                src={thumbnail}
+                alt="Umroh Package"
+                width={60}
+                height={60}
+                className="hidden h-full w-full rounded-md object-cover max-lg:block"
               />
             </div>
             <div className="flex flex-col justify-between">
               <div>
-                <h2 className="text-l-semibold uppercase">{packageName}</h2>
-                <div className="mt-4 flex items-center gap-2">
+                <h2 className="text-l-semibold leading-[16px] uppercase max-lg:text-xs">
+                  {packageName}
+                </h2>
+                <div className="mt-4 flex items-center gap-2 max-lg:hidden">
                   <Calendar2 className="h-5 w-5 text-neutral-500" />
                   <p className="text-m-regular flex items-center text-neutral-500">
                     {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
@@ -152,7 +196,7 @@ export default function TransactionCard({
                     {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
                   </p>
                 </div>
-                <div className="mt-4 flex items-center gap-2">
+                <div className="mt-4 flex items-center gap-2 max-lg:hidden">
                   <UsersIcon className="h-5 w-5 text-neutral-500" />
                   <p className="text-m-regular text-neutral-500">
                     {jemaah} Jemaah
@@ -168,9 +212,21 @@ export default function TransactionCard({
             noAmountLeft={noAmountLeft}
             bookingId={bookingId}
           />
+          <div className="hidden items-center gap-2 max-lg:flex">
+            <Calendar2 className="h-4 w-4 text-neutral-500" />
+            <p className="flex items-center text-xs text-neutral-500">
+              {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
+              <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
+              {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+            </p>
+          </div>
+          <div className="mt-1 hidden items-center gap-2 max-lg:flex">
+            <UsersIcon className="h-4 w-4 text-neutral-500" />
+            <p className="text-xs text-neutral-500">{jemaah} Jemaah</p>
+          </div>
         </div>
-        <div className="flex items-center justify-between border-t border-neutral-200 p-4">
-          <div className="flex items-center gap-2 text-gray-500">
+        <div className="flex items-center justify-between border-t border-neutral-200 p-4 max-lg:block max-lg:py-2">
+          <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
             <p className="text-s-regular text-neutral-500">Dibuat pada</p>
             <Calendar className="h-4 w-4 text-neutral-500" />
             <p className="text-m-regular text-neutral-500">

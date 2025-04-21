@@ -128,7 +128,7 @@ export default function TransactionNeedPayment() {
         <div className="space-y-6">
           {transactions.map((transaction) => {
             return (
-              <Fragment key={transaction.id}>
+              <div key={transaction.id} className="max-lg:px-5">
                 {/* Transaction Cards */}
                 <TransactionCard
                   status={transaction.status.slug}
@@ -151,7 +151,7 @@ export default function TransactionNeedPayment() {
                   noLabelNotif
                   showDpButton
                 />
-              </Fragment>
+              </div>
             )
           })}
         </div>

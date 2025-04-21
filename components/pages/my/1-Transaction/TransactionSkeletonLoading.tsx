@@ -60,7 +60,7 @@ export default function TransactionSkeletonLoading({
             <Skeleton className="h-5 w-20" />
             <Skeleton className="h-5 w-32" />
           </div>
-          <Skeleton className="h-10 w-32 rounded-full" />
+          <Skeleton className="h-10 w-32 rounded-full max-lg:hidden" />
         </div>
 
         {/* Package Details */}
@@ -71,7 +71,7 @@ export default function TransactionSkeletonLoading({
               <Skeleton className="h-7 w-40" />
               <div className="flex items-center gap-2">
                 <Skeleton className="h-5 w-5 rounded-full" />
-                <Skeleton className="h-5 w-64" />
+                <Skeleton className="h-5 w-64 max-lg:w-5" />
               </div>
               <div className="flex items-center gap-2">
                 <Skeleton className="h-5 w-5 rounded-full" />
@@ -91,7 +91,7 @@ export default function TransactionSkeletonLoading({
             <Skeleton className="h-5 w-24" />
             <Skeleton className="h-5 w-32" />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 max-lg:hidden">
             <Skeleton className="h-10 w-32 rounded-full" />
             <Skeleton className="h-10 w-40 rounded-full" />
             <Skeleton className="h-10 w-10 rounded-full" />
