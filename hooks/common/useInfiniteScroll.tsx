@@ -115,10 +115,10 @@ export function useInfiniteScroll({ pageSize = 9 }: UseSearchParams = {}) {
     const loadInitialData = async () => {
       setInitialLoading(true)
 
-      // const data = await fetchPackage(1)
-      // setPackages(mapProductsToCardData(data))
-      // setHasMore(data.results.length < data.total)
-      // setPage(1)
+      const data = await fetchPackage(1)
+      setPackages(mapProductsToCardData(data))
+      setHasMore(data.results.length < data.total)
+      setPage(1)
 
       setTimeout(() => setInitialLoading(false), 500)
     }
@@ -129,7 +129,6 @@ export function useInfiniteScroll({ pageSize = 9 }: UseSearchParams = {}) {
   // Function to load more packages
   const loadMore = useCallback(async () => {
     if (loading) return
-    console.log('masuk')
 
     setLoading(true)
     const nextPage = page + 1
