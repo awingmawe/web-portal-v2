@@ -1,6 +1,7 @@
 import { Sidebar } from '@/components/pages/my/Sidebar'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
@@ -19,6 +20,11 @@ export default async function LayoutMy({
   return (
     <Fragment>
       <Topbar token={token} shadow scrolled type="normal" />
+      <MobileTopbar
+        showBackButton
+        variant="title"
+        title="Menunggu Pembayaran"
+      />
       <main className="max-lg:bg-primary-500 relative mt-7.5 mb-0 max-lg:mt-auto  max-lg:min-h-screen lg:my-0">
         {/* Circle Background for mobile */}
         <Image

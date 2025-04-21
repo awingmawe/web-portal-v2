@@ -34,11 +34,15 @@ export default function TransactionUpcoming() {
   const [error, setError] = useState<string | null>(null)
 
   // State for filters
-  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>(
+    searchParams.get('query') ? String(searchParams.get('query')) : ''
+  )
   const [statusFilter, setStatusFilter] = useState<string>(
     searchParams.get('status') || 'all'
   )
-  const [statusFilterMobile, setStatusFilterMobile] = useState<string>('all')
+  const [statusFilterMobile, setStatusFilterMobile] = useState<string>(
+    searchParams.get('status') || 'all'
+  )
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const dateString = searchParams.get('date')
     if (!dateString) return undefined
@@ -64,7 +68,7 @@ export default function TransactionUpcoming() {
     const statusFilterParams = lg ? statusFilterMobile : statusFilter
 
     router.push(
-      `/my/transaction?type=upcoming&page=${currentPage}&status=${statusFilterParams}&date=${rangeFilter}`
+      `/my/transaction?type=upcoming&page=${currentPage}&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
     )
 
     try {

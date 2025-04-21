@@ -14,10 +14,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { MoreVertical } from 'lucide-react'
 import Image from 'next/image'
+import { Fragment } from 'react'
 
 export interface TransactionCardProps {
   status: string
@@ -37,6 +39,7 @@ export interface TransactionCardProps {
   detailOnly?: boolean
   noLabelNotif?: boolean
   showDpButton?: boolean
+  noFooter?: boolean
 }
 
 function renderManifestComplete(isCompletedManifest: boolean) {
@@ -77,7 +80,10 @@ export default function TransactionCard({
   detailOnly,
   noLabelNotif,
   showDpButton,
+  noFooter,
 }: TransactionCardProps) {
+  const { lg } = useTailwindBreakpoint()
+
   const renderStatusTahapanColor = (status: string) => {
     if (status == 'Akan Datang') {
       return 'bg-info-100 text-info-700'
@@ -90,7 +96,7 @@ export default function TransactionCard({
     ) {
       return 'bg-error-100 text-error-700'
     } else if (status == 'Waiting') {
-      return 'bg-warning-100 text-warning-700'
+      return lg ? '' : 'bg-warning-100 text-warning-700'
     } else {
       return 'bg-neutral-100 text-neutral-700'
     }
@@ -98,16 +104,28 @@ export default function TransactionCard({
 
   const renderStatusTahapanText = (status: string) => {
     if (status === 'Waiting') {
-      return (
-        <span className="text-warning-700 flex">
-          <TimerIcon className="mr-2" />
-          Harap bayar uang muka sebelum{' '}
-          {dayjs(createdDate)
-            .add(1, 'day')
-            .locale('id')
-            .format('DD MMMM YYYY HH:mm')}
-        </span>
-      )
+      if (lg) {
+        return (
+          <span className="text-warning-600 flex">
+            <TimerIcon className="mr-2" />
+            {dayjs(createdDate)
+              .add(1, 'day')
+              .locale('id')
+              .format('DD MMMM YYYY HH:mm')}
+          </span>
+        )
+      } else {
+        return (
+          <span className="text-warning-700 flex">
+            <TimerIcon className="mr-2" />
+            Harap bayar uang muka sebelum{' '}
+            {dayjs(createdDate)
+              .add(1, 'day')
+              .locale('id')
+              .format('DD MMMM YYYY HH:mm')}
+          </span>
+        )
+      }
     } else {
       return status
     }
@@ -140,25 +158,29 @@ export default function TransactionCard({
             >
               {renderStatusTahapanText(statusTahapan)}
             </p>
-            {(status === 'approved' || status === 'waiting-approval') && (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:block" />
-                </PopoverTrigger>
-                <PopoverContent className="rounded-2xl p-0 px-1">
-                  <div className="flex flex-col divide-y">
-                    <a
-                      href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                      className="cursor-pointer p-3 hover:bg-gray-50"
-                      target="_blank"
-                    >
-                      <p className="text-m-regular text-error-500">
-                        Batalkan Pesanan
-                      </p>
-                    </a>
-                  </div>
-                </PopoverContent>
-              </Popover>
+            {!isPaidOff && (
+              <Fragment>
+                {(status === 'approved' || status === 'waiting-approval') && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:block" />
+                    </PopoverTrigger>
+                    <PopoverContent className="rounded-2xl p-0 px-1">
+                      <div className="flex flex-col divide-y">
+                        <a
+                          href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                          className="cursor-pointer p-3 hover:bg-gray-50"
+                          target="_blank"
+                        >
+                          <p className="text-m-regular text-error-500">
+                            Batalkan Pesanan
+                          </p>
+                        </a>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                )}
+              </Fragment>
             )}
           </div>
         </div>
@@ -225,7 +247,9 @@ export default function TransactionCard({
             <p className="text-xs text-neutral-500">{jemaah} Jemaah</p>
           </div>
         </div>
-        <div className="flex items-center justify-between border-t border-neutral-200 p-4 max-lg:block max-lg:py-2">
+        <div
+          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
+        >
           <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
             <p className="text-s-regular text-neutral-500">Dibuat pada</p>
             <Calendar className="h-4 w-4 text-neutral-500" />
@@ -233,15 +257,17 @@ export default function TransactionCard({
               {dayjs(createdDate).locale('id').format('DD MMMM YYYY')}
             </p>
           </div>
-          <TransactionCardFooter
-            detailOnly={detailOnly}
-            isPaidOff={isPaidOff}
-            isCompletedManifest={isCompletedManifest}
-            showDpButton={showDpButton}
-            bookingId={bookingId}
-            id={id}
-            status={status}
-          />
+          {!noFooter && (
+            <TransactionCardFooter
+              detailOnly={detailOnly}
+              isPaidOff={isPaidOff}
+              isCompletedManifest={isCompletedManifest}
+              showDpButton={showDpButton}
+              bookingId={bookingId}
+              id={id}
+              status={status}
+            />
+          )}
         </div>
       </div>
     </div>

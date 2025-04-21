@@ -1,5 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
-import TransactionNeedPayment from '@/components/pages/my/1-Transaction/TransactionNeedPayment'
+import TransactionNeedPayment from '@/components/pages/my/1-Transaction/NeedPayment/Index'
 
 export async function generateMetadata() {
   return {
