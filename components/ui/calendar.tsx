@@ -8,52 +8,109 @@ import { buttonVariants } from '@/components/ui/button'
 import { dissolve } from '@/lib/animation-setup'
 import { cn } from '@/lib/utils'
 
+interface CalendarProps {
+  months?: string
+  month?: string
+  caption?: string
+  caption_label?: string
+  nav?: string
+  nav_button?: string
+  nav_button_previous?: string
+  nav_button_next?: string
+  table?: string
+  head_row?: string
+  head_cell?: string
+  row?: string
+  cell?: string
+  day?: string
+  day_range_start?: string
+  day_range_end?: string
+  day_selected?: string
+  day_today?: string
+  day_outside?: string
+  day_disabled?: string
+  day_range_middle?: string
+  day_hidden?: string
+  IconLeft?: string
+  IconRight?: string
+}
+
 function Calendar({
   className,
   classNames,
+  cellClassName,
   showOutsideDays = true,
   ...props
-}: React.ComponentProps<typeof DayPicker>) {
+}: React.ComponentProps<typeof DayPicker> & { cellClassName?: CalendarProps }) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn('p-4', className)}
       classNames={{
-        months: 'flex flex-col sm:flex-row gap-3',
-        month: 'flex flex-col gap-4 p-4',
-        caption: 'flex justify-center pt-1 relative items-center w-full',
-        caption_label: 'text-m-medium',
-        nav: 'flex items-center gap-1',
-        nav_button: cn('bg-transparent p-0'),
-        nav_button_previous: 'absolute left-1',
-        nav_button_next: 'absolute right-1',
-        table: 'w-full border-collapse space-x-1',
-        head_row: 'flex',
-        head_cell:
+        months: cn('flex flex-col sm:flex-row gap-3', cellClassName?.months),
+        month: cn('flex flex-col gap-4 p-4', cellClassName?.month),
+        caption: cn(
+          'flex justify-center pt-1 relative items-center w-full',
+          cellClassName?.caption
+        ),
+        caption_label: cn('text-m-medium', cellClassName?.caption_label),
+        nav: cn('flex items-center gap-1', cellClassName?.nav),
+        nav_button: cn('bg-transparent p-0', cellClassName?.nav_button),
+        nav_button_previous: cn(
+          'absolute left-1',
+          cellClassName?.nav_button_previous
+        ),
+        nav_button_next: cn('absolute right-1', cellClassName?.nav_button_next),
+        table: cn('w-full border-collapse space-x-1', cellClassName?.table),
+        head_row: cn('flex', cellClassName?.head_row),
+        head_cell: cn(
           'text-neutral-700 w-8 h-8 text-xs-medium flex justify-center flex-col',
-        row: 'flex w-full mt-0.5',
+          cellClassName?.head_cell
+        ),
+        row: cn('flex w-full mt-0.5', cellClassName?.row),
         cell: cn(
           'relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-primary [&:has([aria-selected].day-range-end)]:rounded-r-lg',
           props.mode === 'range'
             ? '[&:has(>.day-range-end)]:rounded-r-lg [&:has(>.day-range-start)]:rounded-l-lg'
             : '[&:has([aria-selected])]:rounded-lg',
-          dissolve
+          dissolve,
+          cellClassName?.cell
         ),
         day: cn(
           buttonVariants({ variant: 'ghost' }),
           'size-8 p-0 text-s-regular aria-selected:opacity-100 hover:bg-primary-300 rounded-lg aria-selected:hover:bg-primary focus:bg-primary active:bg-primary',
-          dissolve
+          dissolve,
+          cellClassName?.day
         ),
-        day_range_start: `day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground ${dissolve}`,
-        day_range_end: `day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground ${dissolve}`,
-        day_selected: `bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground ${dissolve}`,
-        day_today: 'bg-primary text-accent-foreground',
-        day_outside:
+        day_range_start: cn(
+          `day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground ${dissolve}`,
+          cellClassName?.day_range_start
+        ),
+        day_range_end: cn(
+          `day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground ${dissolve}`,
+          cellClassName?.day_range_end
+        ),
+        day_selected: cn(
+          `bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground ${dissolve}`,
+          cellClassName?.day_selected
+        ),
+        day_today: cn(
+          'bg-primary text-accent-foreground',
+          cellClassName?.day_today
+        ),
+        day_outside: cn(
           'day-outside text-neutral-400 aria-selected:text-neutral-400',
-        day_disabled: 'text-neutral-400 opacity-50',
-        day_range_middle:
+          cellClassName?.day_outside
+        ),
+        day_disabled: cn(
+          'text-neutral-400 opacity-50',
+          cellClassName?.day_disabled
+        ),
+        day_range_middle: cn(
           'aria-selected:bg-primaryy aria-selected:text-accent-foreground',
-        day_hidden: 'invisible',
+          cellClassName?.day_range_middle
+        ),
+        day_hidden: cn('invisible', cellClassName?.day_hidden),
         ...classNames,
       }}
       components={{

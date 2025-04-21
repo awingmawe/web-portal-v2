@@ -97,6 +97,19 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     }
   }, [variants, selectedVariant, selectedVariantId, selectedRoomType])
 
+  // Set into first variant when first load
+  useEffect(() => {
+    if (variants.length > 0) {
+      setSelectedVariant(variants[0])
+      setSelectedVariantId(variants[0].id)
+
+      // Turn off loading after a short delay to allow for smoother transitions
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500)
+    }
+  }, [variants])
+
   // Effect to update selected variant when selected variant ID changes
   useEffect(() => {
     if (selectedVariantId && variants.length > 0) {

@@ -4,6 +4,7 @@ import { toast } from '@/components/ui/sonner'
 import { Airline } from '@/constant/types/AirlineProps'
 import { Airport } from '@/constant/types/AirportProps'
 import { FilterState } from '@/constant/types/FilterProps'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { formatDateToYYYYMMDD } from '@/lib/utils'
 import { getAirline, getAirports } from '@/services/general-service'
@@ -72,7 +73,7 @@ export const FilterProductProvider: React.FC<{
   initialDisabled?: boolean
 }> = ({ children, initialDisabled = false }) => {
   const updateQueryParams = useUpdateQueryParams()
-
+  const { lg: isMobile } = useTailwindBreakpoint()
   // Combined filter state
   const [filters, setFilters] = useState<FilterState>(initialFilterState)
 
@@ -135,34 +136,35 @@ export const FilterProductProvider: React.FC<{
         [filterKey]: initialFilterState[filterKey],
       }))
 
-      // Also update the URL if needed
-      const urlParamMap: Record<FilterKey, string | null> = {
-        hotelStars: 'hR',
-        dateRange: null, // Special case - has two params
-        departureAirport: 'dptArpt',
-        arrivalAirport: 'arrArpt',
-        airline: 'trvl',
-        hargaMin: 'prMin',
-        hargaMax: 'prMax',
-        facilityCode: 'fC',
-        section: 'sC',
-        tagSlug: 'tS',
-      }
+      if (!isMobile) {
+        // Also update the URL if needed
+        const urlParamMap: Record<FilterKey, string | null> = {
+          hotelStars: 'hR',
+          dateRange: null, // Special case - has two params
+          departureAirport: 'dptArpt',
+          arrivalAirport: 'arrArpt',
+          airline: 'trvl',
+          hargaMin: 'prMin',
+          hargaMax: 'prMax',
+          facilityCode: 'fC',
+          section: 'sC',
+          tagSlug: 'tS',
+        }
+        // Special handling for dateRange which maps to two URL params
+        if (filterKey === 'dateRange') {
+          // Remove both start and end date params
+          updateQueryParams(['sD', 'eD'], ['', ''])
+          return
+        }
 
-      // Special handling for dateRange which maps to two URL params
-      if (filterKey === 'dateRange') {
-        // Remove both start and end date params
-        updateQueryParams(['sD', 'eD'], ['', ''])
-        return
-      }
-
-      const urlParam = urlParamMap[filterKey]
-      if (urlParam) {
-        // Remove the param from URL
-        updateQueryParams([urlParam], [''])
+        const urlParam = urlParamMap[filterKey]
+        if (urlParam) {
+          // Remove the param from URL
+          updateQueryParams([urlParam], [''])
+        }
       }
     },
-    [updateQueryParams]
+    [updateQueryParams, isMobile]
   )
 
   // Set default value states filter from search params

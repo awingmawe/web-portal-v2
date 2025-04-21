@@ -19,12 +19,12 @@ export default function RootLayout({
     <html lang="en" translate="no" suppressHydrationWarning>
       <Suspense>
         <GoogleTagManager gtmId={GTM_ID as string} />
-        <ContextProviders>
-          <body>
+        <body>
+          <ContextProviders>
             {children}
             <Toaster />
-          </body>
-        </ContextProviders>
+          </ContextProviders>
+        </body>
       </Suspense>
     </html>
   )

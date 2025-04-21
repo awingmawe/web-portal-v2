@@ -20,7 +20,7 @@ import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
-import { Fragment, Suspense } from 'react'
+import { Fragment } from 'react'
 
 export async function generateMetadata() {
   return {
@@ -103,13 +103,9 @@ export default async function Home() {
           <ProgramCards />
           <SubmenuCards />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
-            <Suspense>
-              <CarouselBanner dataBanner={dataBannerCarousel} />
-            </Suspense>
+            <CarouselBanner dataBanner={dataBannerCarousel} />
 
-            <Suspense>
-              <CarouselTravel dataTravel={dataTravels} />
-            </Suspense>
+            <CarouselTravel dataTravel={dataTravels} />
           </div>
 
           <PackageListEvent

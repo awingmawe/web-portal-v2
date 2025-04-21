@@ -183,7 +183,7 @@ export function useAirlineSearch({
     }
 
     loadInitialData()
-  }, [])
+  }, [searchQuery])
 
   // Load more airlines
   const loadMoreAirlines = useCallback(async () => {
