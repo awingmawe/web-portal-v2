@@ -128,7 +128,7 @@ export default function TransactionCancelled() {
         <div className="space-y-6">
           {transactions.map((transaction) => {
             return (
-              <Fragment key={transaction.id}>
+              <div key={transaction.id} className="max-lg:px-5">
                 {/* Transaction Cards */}
                 <TransactionCard
                   status={transaction.status.slug}
@@ -158,7 +158,7 @@ export default function TransactionCancelled() {
                   detailOnly
                   noLabelNotif
                 />
-              </Fragment>
+              </div>
             )
           })}
         </div>

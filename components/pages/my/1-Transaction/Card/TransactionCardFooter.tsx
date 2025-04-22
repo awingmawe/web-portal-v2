@@ -57,78 +57,102 @@ export default function TransactionCardFooter({
   }, [fetcPaymentTransaction, showDpButton])
 
   return (
-    <div className="flex items-center gap-2">
-      <p className="text-s-regular mr-4 font-medium text-nowrap text-gray-900">
-        Lihat Detail Pesanan
-      </p>
-      {!detailOnly && (
-        <Fragment>
-          {isPaidOff ? (
-            <Button
-              variant="outline"
-              className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
-              disabled
-            >
-              <ChecklistCircle />
-              Pelunasan
-            </Button>
-          ) : (
-            status !== 'waiting-approval' && (
+    <Fragment>
+      <div className="flex items-center gap-2 max-lg:hidden">
+        <p className="text-s-regular mr-4 font-medium text-nowrap text-gray-900">
+          Lihat Detail Pesanan
+        </p>
+        {!detailOnly && (
+          <Fragment>
+            {isPaidOff ? (
               <Button
                 variant="outline"
-                className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                disabled
               >
-                Bayar Pelunasan
+                <ChecklistCircle />
+                Pelunasan
               </Button>
-            )
-          )}
-          {!isCompletedManifest && (
-            <Button className="w-full px-4 py-3 text-nowrap">
-              Lengkapi Data Jemaah
-            </Button>
-          )}
-          {(status === 'approved' || status === 'waiting-approval') && (
-            <Popover>
-              <PopoverTrigger asChild>
+            ) : (
+              status !== 'waiting-approval' && (
                 <Button
-                  className="cursor-pointer !rounded-md border border-neutral-900 p-1"
-                  variant={'outline'}
+                  variant="outline"
+                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
                 >
-                  <MoreHorizontal className="h-4 w-4" />
+                  Bayar Pelunasan
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="rounded-2xl p-0 px-1">
-                <div className="flex flex-col divide-y">
-                  <a
-                    href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                    className="cursor-pointer p-3 hover:bg-gray-50"
-                    target="_blank"
+              )
+            )}
+            {!isCompletedManifest && (
+              <Button className="w-full px-4 py-3 text-nowrap">
+                Lengkapi Data Jemaah
+              </Button>
+            )}
+            {(status === 'approved' || status === 'waiting-approval') && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    className="cursor-pointer !rounded-md border border-neutral-900 p-1"
+                    variant={'outline'}
                   >
-                    <p className="text-m-regular text-error-500">
-                      Batalkan Pesanan
-                    </p>
-                  </a>
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
-        </Fragment>
-      )}
-      {showDpButton && (
-        <a
-          href={paymentTransaction ? paymentTransaction.paymentLink : ''}
-          target="_blank"
-        >
-          <Button
-            className="w-full px-8 py-3 text-nowrap"
-            disabled={loadingPaymentTransaction}
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="rounded-2xl p-0 px-1">
+                  <div className="flex flex-col divide-y">
+                    <a
+                      href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                      className="cursor-pointer p-3 hover:bg-gray-50"
+                      target="_blank"
+                    >
+                      <p className="text-m-regular text-error-500">
+                        Batalkan Pesanan
+                      </p>
+                    </a>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
+          </Fragment>
+        )}
+        {showDpButton && (
+          <a
+            href={paymentTransaction ? paymentTransaction.paymentLink : ''}
+            target="_blank"
           >
-            Bayar Uang Muka
-          </Button>
-        </a>
-      )}
+            <Button
+              className="w-full px-8 py-3 text-nowrap"
+              disabled={loadingPaymentTransaction}
+            >
+              Bayar Uang Muka
+            </Button>
+          </a>
+        )}
 
-      {/* {renderCancelAction()} */}
-    </div>
+        {/* {renderCancelAction()} */}
+      </div>
+      <div className="hidden max-lg:block">
+        <Button
+          variant={'ghost'}
+          className="w-full px-8 py-3 text-nowrap "
+          disabled={loadingPaymentTransaction}
+        >
+          Lihat Detail
+        </Button>
+        <Button
+          className="w-full px-8 py-3 text-nowrap "
+          disabled={loadingPaymentTransaction}
+        >
+          Lengkapi Data Jemaah
+        </Button>
+        <Button
+          className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+          variant={'outline'}
+          disabled={loadingPaymentTransaction}
+        >
+          Bayar Pelunasan
+        </Button>
+      </div>
+    </Fragment>
   )
 }

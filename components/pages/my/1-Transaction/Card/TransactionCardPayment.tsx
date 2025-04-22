@@ -101,7 +101,7 @@ export default function TransactionCardPayment({
 
   return (
     !noAmountLeft && (
-      <div className="flex flex-col border-t border-neutral-100 pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4">
+      <div className="flex flex-col border-t border-neutral-100 pt-4 max-lg:hidden md:border-t-0 md:border-l md:pt-0 md:pl-4">
         <p className="text-m-medium text-neutral-500">Sisa Pembayaran</p>
         <p className="text-l-semibold">
           {isPaidOff

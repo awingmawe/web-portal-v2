@@ -51,9 +51,9 @@ export default function TransactionCardHeader({
 
   return (
     <div
-      className={`rounded-t-3xl px-4 pt-4 pb-8  ${renderStatusColor(status, isPaidOff, isCompletedManifest)}`}
+      className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor(status, isPaidOff, isCompletedManifest)}`}
     >
-      <h3 className="text-l-medium text-inherit">
+      <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
         {renderStatusText(status, isPaidOff, isCompletedManifest)}
       </h3>
     </div>
