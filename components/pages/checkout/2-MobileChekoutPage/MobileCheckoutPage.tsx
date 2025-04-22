@@ -9,7 +9,6 @@ const MobileCheckoutPage = () => {
   const totalPrice = 113000000
   const [paymentAmount, setPaymentAmount] = useState(minPayment)
   const [referralCode, setReferralCode] = useState('')
-  //   const [useMyData, setUseMyData] = useState(false)
   const [jamaahList, setJamaahList] = useState([{ id: 1, name: '', phone: '' }])
   const [usePoints, setUsePoints] = useState(false)
 
@@ -36,7 +35,7 @@ const MobileCheckoutPage = () => {
       </header>
 
       {/* Main content */}
-      <main className="pb-20">
+      <main className="pb-36">
         {/* Package Info */}
         <div className="bg-white p-4">
           <h2 className="mb-2 text-sm font-medium">Detail Pembelian</h2>
@@ -103,9 +102,106 @@ const MobileCheckoutPage = () => {
           </div>
         </div>
 
-        {/* Jamaah section */}
+        {/* Jamaah Section */}
         <div className="mt-4 bg-white p-4">
-          <div className="flex items-center justify-between">
+          <div className="mt-4 space-y-3">
+            {jamaahList.map((jamaah, index) => (
+              <div
+                key={jamaah.id}
+                className="rounded-xl border border-gray-200 bg-white"
+              >
+                <div className="flex items-center justify-between p-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="rounded-full bg-green-100 p-1">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-green-500"
+                      >
+                        <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                    <p className="text-sm font-medium text-gray-800">
+                      Jamaah {index + 1}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() =>
+                      setJamaahList(jamaahList.filter((_, i) => i !== index))
+                    }
+                    className="rounded-full bg-red-500 p-1"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      <line x1="10" y1="11" x2="10" y2="17" />
+                      <line x1="14" y1="11" x2="14" y2="17" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="space-y-2 border-t px-4 py-3 text-sm">
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor={`name-${jamaah.id}`}
+                      className="mb-1 text-xs text-gray-500"
+                    >
+                      Nama Jamaah
+                    </label>
+                    <input
+                      type="text"
+                      id={`name-${jamaah.id}`}
+                      className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+                      placeholder="Nama Jamaah"
+                      value={jamaah.name}
+                      onChange={(e) => {
+                        const newList = [...jamaahList]
+                        newList[index].name = e.target.value
+                        setJamaahList(newList)
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor={`phone-${jamaah.id}`}
+                      className="mb-1 text-xs text-gray-500"
+                    >
+                      No Telepon
+                    </label>
+                    <input
+                      type="text"
+                      id={`phone-${jamaah.id}`}
+                      className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+                      placeholder="08xxxxxxxxxx"
+                      value={jamaah.phone}
+                      onChange={(e) => {
+                        const newList = [...jamaahList]
+                        newList[index].phone = e.target.value
+                        setJamaahList(newList)
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex items-center justify-between">
             <h2 className="text-sm font-medium">Tambah Jamaah</h2>
             <button
               onClick={handleAddJamaah}
@@ -123,7 +219,6 @@ const MobileCheckoutPage = () => {
               Minimal pembayaran untuk saat ini: Rp5.000.000
             </p>
           </div>
-
           {/* Payment method */}
           <div className="mb-4 rounded-lg border border-yellow-400 bg-white p-3">
             <div className="flex items-center">
@@ -137,7 +232,6 @@ const MobileCheckoutPage = () => {
                 </p>
               </div>
             </div>
-
             <div className="mt-3">
               <p className="mb-1 text-sm font-medium">Jumlah Bayar</p>
               <div className="mb-3 flex h-10 items-center rounded-lg border border-gray-300 px-3">
@@ -149,7 +243,6 @@ const MobileCheckoutPage = () => {
                   onChange={handlePaymentInputChange}
                 />
               </div>
-
               <input
                 type="range"
                 min={minPayment}
@@ -158,12 +251,10 @@ const MobileCheckoutPage = () => {
                 onChange={(e) => setPaymentAmount(parseInt(e.target.value))}
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
               />
-
               <div className="mt-2 flex justify-between text-xs">
                 <span>Rp5.000.000</span>
                 <span>Rp113.000.000</span>
               </div>
-
               <div className="mt-3">
                 <div className="flex justify-between text-sm">
                   <span>Jumlah Bayar</span>
@@ -181,17 +272,15 @@ const MobileCheckoutPage = () => {
             </div>
           </div>
 
-          {/* Points section */}
+          {/* Points & Referral */}
           <div className="mb-4 rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
-              <div className="mr-3 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 accent-yellow-400"
-                  checked={usePoints}
-                  onChange={(e) => setUsePoints(e.target.checked)}
-                />
-              </div>
+              <input
+                type="checkbox"
+                className="mr-2 h-4 w-4 accent-yellow-400"
+                checked={usePoints}
+                onChange={(e) => setUsePoints(e.target.checked)}
+              />
               <p className="font-medium">Poin Muslim</p>
             </div>
             <p className="mt-1 text-xs text-gray-500">
@@ -199,12 +288,12 @@ const MobileCheckoutPage = () => {
             </p>
           </div>
 
-          {/* Referral code */}
           <div className="mb-4 rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
-              <div className="mr-3 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200">
-                <input type="checkbox" className="h-4 w-4 accent-yellow-400" />
-              </div>
+              <input
+                type="checkbox"
+                className="mr-2 h-4 w-4 accent-yellow-400"
+              />
               <p className="font-medium">Kode Referral</p>
             </div>
             <p className="mt-1 text-xs text-gray-500">
@@ -224,7 +313,6 @@ const MobileCheckoutPage = () => {
             </div>
           </div>
 
-          {/* Coupons */}
           <div className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
               <div className="mr-3 text-yellow-500">
@@ -244,7 +332,7 @@ const MobileCheckoutPage = () => {
           </div>
         </div>
 
-        {/* Price summary */}
+        {/* Payment Summary */}
         <div className="mt-4 bg-white p-4">
           <h2 className="mb-3 text-sm font-medium">Ringkasan Pembayaran</h2>
           <div className="space-y-2 text-sm">
@@ -266,13 +354,12 @@ const MobileCheckoutPage = () => {
               <span className="text-gray-500">Uang muka</span>
               <span className="text-red-500">-Rp5.000.000</span>
             </div>
-            <div className="my-2 h-px bg-gray-200"></div>
+            <div className="my-2 h-px bg-gray-200" />
             <div className="flex justify-between font-medium">
               <span>Total Pelunasan</span>
               <span>Rp113.000.000</span>
             </div>
           </div>
-
           <div className="mt-4 text-xs text-gray-500">
             <p>
               Dengan meneruskan, saya menyetujui{' '}
@@ -288,16 +375,16 @@ const MobileCheckoutPage = () => {
         </div>
       </main>
 
-      {/* Fixed bottom bar */}
-      <div className="fixed right-0 bottom-0 left-0 flex items-center justify-between border-t bg-white p-4">
+      {/* Bottom Bar */}
+      <div className="fixed right-0 bottom-0 left-0 z-10 flex items-center justify-between border-t bg-white p-4">
         <div>
           <p className="text-xs text-gray-500">Total</p>
           <p className="text-lg font-bold">
             Rp{paymentAmount.toLocaleString('id-ID')}
           </p>
         </div>
-        <button className="rounded-md bg-yellow-400 px-6 py-3 font-medium">
-          Bayar Sekarang
+        <button className="rounded-md bg-yellow-400 px-6 py-3 text-sm font-semibold text-white shadow">
+          Lanjutkan Pembayaran
         </button>
       </div>
     </div>
