@@ -1,5 +1,6 @@
 import { metadata } from '@/app/shared-metadata'
 import Checkout from '@/components/pages/checkout/1-CheckoutPage/CheckoutPage'
+import MobileCheckoutPage from '@/components/pages/checkout/2-MobileChekoutPage/MobileCheckoutPage'
 import Footer from '@/components/shared/Footer'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
@@ -18,9 +19,15 @@ export default async function CheckoutGeneral() {
 
   return (
     <Fragment>
-      <Topbar token={token} shadow scrolled />
-      <Checkout token={token} />
-      <Footer type="compact" />
+      <div className="hidden sm:block">
+        <Topbar token={token} shadow scrolled />
+        <Checkout token={token} />
+
+        <Footer type="compact" />
+      </div>
+      <div className="block sm:hidden">
+        <MobileCheckoutPage />
+      </div>
     </Fragment>
   )
 }
