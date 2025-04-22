@@ -26,6 +26,7 @@ import {
 import { PopoverClose } from '@radix-ui/react-popover'
 import { ChevronDownIcon } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo } from 'react'
 
 interface PackageVariantComponentProps {
@@ -52,6 +53,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     getOriginalPrice,
     hasDiscount,
   } = usePackageVariant()
+  const router = useRouter()
 
   // Initialize variants in context when component mounts
   useEffect(() => {
@@ -144,6 +146,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
   // When all version 2 muslim101 released, remove this
   const handleLocalStorage = () => {
+    router.push('/checkout')
     localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
     localStorage.setItem(
       'selectedVariant',
