@@ -30,7 +30,7 @@ function OverscrollTracker({
   const { lg: isMobile } = useTailwindBreakpoint()
 
   useEffect(() => {
-    setEndExperience(window.scrollY > 2239)
+    setEndExperience(window.scrollY > 3428)
   }, [])
 
   return (
