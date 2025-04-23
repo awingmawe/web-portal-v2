@@ -5,6 +5,7 @@ import { BedIcon } from '@/components/icons/bed'
 import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
 import BadgePromo from '@/components/shared/Badge'
+import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -24,6 +25,7 @@ import {
   isEmpty,
 } from '@/lib/utils'
 import { PopoverClose } from '@radix-ui/react-popover'
+import { differenceInDays } from 'date-fns'
 import { ChevronDownIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -169,7 +171,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="h-5 w-24 animate-pulse rounded bg-neutral-200 lg:hidden"></div>
         </div>
         <div className="max-lg:h-[60px]">
-          <div className="mb-8 h-4 w-16 animate-pulse rounded bg-neutral-200 max-lg:hidden"></div>
+          <div className="mb-2 h-4 w-16 animate-pulse rounded bg-neutral-200 max-lg:hidden"></div>
           <div className="no-scrollbar flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
             {[1, 2, 3].map((_, index) => (
               <div
@@ -219,7 +221,17 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {/* Variants selection */}
       {variants.length > 0 && (
         <div className="max-lg:h-[60px]">
-          <div className="text-s-regular mb-8 text-neutral-800 max-lg:hidden">
+          {selectedVariant &&
+            differenceInDays(
+              selectedVariant?.releasedAt as string,
+              new Date()
+            ) <= 10 && (
+              <BookingReleasedInfo
+                variant={selectedVariant}
+                className="mb-3 "
+              />
+            )}
+          <div className="text-s-regular mb-2 text-neutral-800 max-lg:hidden">
             Varian
           </div>
           <div className="no-scrollbar flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">

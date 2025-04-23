@@ -43,22 +43,6 @@ export default function Footer({
                       Bantuan
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      href="/legal/syarat-ketentuan"
-                      className="text-m-regular text-neutral-900"
-                    >
-                      Syarat & Ketentuan
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/legal/kebijakan-privasi"
-                      className="text-m-regular text-neutral-900"
-                    >
-                      Kebijakan Privasi
-                    </Link>
-                  </li>
                 </ul>
               </div>
 
@@ -111,16 +95,6 @@ export default function Footer({
                   <li>
                     <Link href="#" className="text-m-regular text-neutral-900">
                       Wukala ~ <span className="italic">Affiliate</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
-                      Syarat & Ketentuan
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
-                      Kebijakan Privasi
                     </Link>
                   </li>
                 </ul>
