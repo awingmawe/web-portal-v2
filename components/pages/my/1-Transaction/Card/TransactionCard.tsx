@@ -252,20 +252,28 @@ export default function TransactionCard({
           </p>
           <div className="flex gap-4 md:col-span-2">
             <div className="h-32 w-32 flex-shrink-0 max-lg:h-20 max-lg:w-20">
-              <Image
-                src={thumbnail}
-                alt="Umroh Package"
-                width={128}
-                height={128}
-                className="block h-full w-full rounded-md object-cover max-lg:hidden"
-              />
-              <Image
-                src={thumbnail}
-                alt="Umroh Package"
-                width={60}
-                height={60}
-                className="hidden h-full w-full rounded-md object-cover max-lg:block"
-              />
+              {thumbnail ? (
+                <Image
+                  src={thumbnail}
+                  alt="Umroh Package"
+                  width={128}
+                  height={128}
+                  className="block h-full w-full rounded-md object-cover max-lg:hidden"
+                />
+              ) : (
+                <div className="block h-full w-full rounded-md bg-neutral-100 max-lg:hidden" />
+              )}
+              {thumbnail ? (
+                <Image
+                  src={thumbnail}
+                  alt="Umroh Package"
+                  width={60}
+                  height={60}
+                  className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                />
+              ) : (
+                <div className="hidden h-full w-full rounded-md bg-neutral-100 max-lg:block" />
+              )}
             </div>
             <div className="flex flex-col justify-between">
               <div>
