@@ -1,6 +1,5 @@
 import { Sidebar } from '@/components/pages/my/Sidebar'
 import Footer from '@/components/shared/Footer'
-import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
@@ -47,7 +46,6 @@ export default async function LayoutMy({
         </section>
       </main>
 
-      <BottomNavigation />
       <Footer type="compact" />
     </Fragment>
   )

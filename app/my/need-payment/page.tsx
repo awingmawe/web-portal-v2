@@ -1,5 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
-import TransactionNeedPayment from '@/components/pages/my/1-Transaction/TransactionNeedPayment'
+import TransactionNeedPayment from '@/components/pages/my/1-Transaction/NeedPayment/Index'
 
 export async function generateMetadata() {
   return {
@@ -9,7 +9,7 @@ export async function generateMetadata() {
 
 export default async function TransactionPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4">
+    <div className="mx-auto max-w-7xl lg:px-4">
       <TransactionNeedPayment />
     </div>
   )

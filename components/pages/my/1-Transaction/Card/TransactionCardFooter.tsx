@@ -1,14 +1,16 @@
 'use client'
 
-import { ChecklistCircle } from '@/components/icons/checkbox'
+import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { formatCurrency } from '@/lib/utils'
 import { getPaymentTransaction } from '@/services/umrah-service'
 import { MoreHorizontal } from 'lucide-react'
+import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
 export interface TransactionCardFooter {
@@ -19,6 +21,7 @@ export interface TransactionCardFooter {
   bookingId: string
   id: string
   status: string
+  paymentAmount?: number
 }
 
 export default function TransactionCardFooter({
@@ -29,6 +32,7 @@ export default function TransactionCardFooter({
   showDpButton,
   bookingId,
   id,
+  paymentAmount,
 }: TransactionCardFooter) {
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
@@ -132,26 +136,93 @@ export default function TransactionCardFooter({
         {/* {renderCancelAction()} */}
       </div>
       <div className="hidden max-lg:block">
-        <Button
-          variant={'ghost'}
-          className="w-full px-8 py-3 text-nowrap "
-          disabled={loadingPaymentTransaction}
-        >
-          Lihat Detail
-        </Button>
-        <Button
-          className="w-full px-8 py-3 text-nowrap "
-          disabled={loadingPaymentTransaction}
-        >
-          Lengkapi Data Jemaah
-        </Button>
-        <Button
-          className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
-          variant={'outline'}
-          disabled={loadingPaymentTransaction}
-        >
-          Bayar Pelunasan
-        </Button>
+        {status === 'waiting-down-payment' ? (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs-medium text-neutral-500">Perlu Dibayar</p>
+              <p className="text-s-semibold text-neutral-900">
+                {formatCurrency(paymentAmount)}
+              </p>
+            </div>
+            <div>
+              <Button
+                variant="ghost"
+                className="mr-3 font-medium text-neutral-900"
+              >
+                Lihat Detail
+              </Button>
+              <Link
+                href={paymentTransaction ? paymentTransaction.paymentLink : ''}
+              >
+                <Button className="px-5 py-2 font-medium text-neutral-900">
+                  Bayar
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <Fragment>
+            {isCompletedManifest ? (
+              <Fragment>
+                {!isPaidOff && (
+                  <Fragment>
+                    <Button
+                      className="border-primary-500  w-full border-2 px-8 py-3 text-nowrap"
+                      disabled={loadingPaymentTransaction}
+                    >
+                      Bayar Pelunasan
+                    </Button>
+                    <Button
+                      className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200 "
+                      variant="outline"
+                      disabled={true}
+                    >
+                      <ChecklistCircle2 />
+                      Data Jemaah Lengkap
+                    </Button>
+                  </Fragment>
+                )}
+              </Fragment>
+            ) : (
+              <Fragment>
+                {isPaidOff ? (
+                  <Fragment>
+                    <Button
+                      className="w-full px-8 py-3 text-nowrap "
+                      disabled={loadingPaymentTransaction}
+                    >
+                      Lengkapi Data Jemaah
+                    </Button>
+                    <Button
+                      className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200 "
+                      variant={'outline'}
+                      disabled={true}
+                    >
+                      <ChecklistCircle2 />
+                      Pelunasan
+                    </Button>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <Button
+                      className="w-full px-8 py-3 text-nowrap "
+                      disabled={loadingPaymentTransaction}
+                    >
+                      Lengkapi Data Jemaah
+                    </Button>
+                    <Button
+                      className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                      variant={'outline'}
+                      disabled={loadingPaymentTransaction}
+                    >
+                      Bayar Pelunasan
+                    </Button>
+                  </Fragment>
+                )}
+              </Fragment>
+            )}
+          </Fragment>
+        )}
       </div>
     </Fragment>
   )
