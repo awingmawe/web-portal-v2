@@ -49,15 +49,18 @@ export default function List({
                       <TransactionCard
                         status={transaction.status.slug}
                         id={transaction.bookingCode}
-                        packageName={transaction.packageSnapshot.snapshot.name}
+                        packageName={
+                          transaction?.packageSnapshot?.snapshot?.name
+                        }
                         thumbnail={
-                          transaction.packageSnapshot.snapshot.package.thumbnail
+                          transaction?.packageSnapshot?.snapshot?.package
+                            .thumbnail
                         }
                         startDate={
-                          transaction.packageSnapshot.snapshot.departureDate
+                          transaction?.packageSnapshot?.snapshot?.departureDate
                         }
                         endDate={
-                          transaction.packageSnapshot.snapshot.arrivalDate
+                          transaction?.packageSnapshot?.snapshot?.arrivalDate
                         }
                         createdDate={transaction.createdAt}
                         jemaah={Number.parseInt(transaction.quantity, 10)}
@@ -101,14 +104,16 @@ export default function List({
                   <TransactionCard
                     status={transaction.status.slug}
                     id={transaction.bookingCode}
-                    packageName={transaction.packageSnapshot.snapshot.name}
+                    packageName={transaction?.packageSnapshot?.snapshot?.name}
                     thumbnail={
-                      transaction.packageSnapshot.snapshot.package.thumbnail
+                      transaction?.packageSnapshot?.snapshot.package?.thumbnail
                     }
                     startDate={
-                      transaction.packageSnapshot.snapshot.departureDate
+                      transaction?.packageSnapshot?.snapshot?.departureDate
                     }
-                    endDate={transaction.packageSnapshot.snapshot.arrivalDate}
+                    endDate={
+                      transaction?.packageSnapshot?.snapshot?.arrivalDate
+                    }
                     createdDate={transaction.createdAt}
                     jemaah={Number.parseInt(transaction.quantity, 10)}
                     bookingId={String(transaction.id)}
