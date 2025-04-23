@@ -141,3 +141,17 @@ export async function getPaymentTransaction(
     throw error
   }
 }
+
+export async function getOrderPayment(
+  bookingId: string
+): Promise<PaymentTransaction> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/booking/${bookingId}/order-payment`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+    throw error
+  }
+}

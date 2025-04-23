@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react'
 export interface TransactionCardPayment {
   noLabelNotif?: boolean
   noAmountLeft?: boolean
+  startDate: string
   isPaidOff: boolean
   bookingId: string
 }
@@ -19,7 +20,8 @@ export interface TransactionCardPayment {
 function renderLunas(
   isPaidOff: boolean,
   loading: boolean,
-  transaction: PaymentTransaction
+  transaction: PaymentTransaction,
+  startDate: string
 ) {
   if (loading) {
     return <p className="text-s-regular text-warning-700 ">...</p>
@@ -37,11 +39,25 @@ function renderLunas(
       </div>
     </div>
   ) : (
-    <div className="bg-warning-100 mt-1 w-fit rounded-full px-3 py-1">
-      <div className="text-warning-700 flex items-center gap-1">
+    <div
+      className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} mt-1 w-fit rounded-full px-3 py-1`}
+    >
+      <div
+        className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'text-warning-700 ' : 'text-error-700'} flex items-center gap-1`}
+      >
         <InfoCircleIcon />
-        <p className="text-s-regular text-warning-700 ">
-          Segera lunasi pembayaran kamu
+        <p className="text-s-regular text-current">
+          {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
+            <span className="text-current">
+              Harap lunasi sebelum{' '}
+              {dayjs(startDate).subtract(21, 'day').format('DD MMM YYYY')}
+            </span>
+          ) : (
+            <span className="text-current">
+              {' '}
+              Segera lunasi pembayaran paket!
+            </span>
+          )}
         </p>
       </div>
     </div>
@@ -53,6 +69,7 @@ export default function TransactionCardPayment({
   isPaidOff,
   bookingId,
   noAmountLeft,
+  startDate,
 }: TransactionCardPayment) {
   const [loadingStatement, setLoadingStatement] = useState(false)
   const [paymentStatement, setPaymentStatement] = useState<any>(null)
@@ -113,7 +130,12 @@ export default function TransactionCardPayment({
                 : '-'}
         </p>
         {!noLabelNotif &&
-          renderLunas(isPaidOff, loadingPaymentTransaction, paymentTransaction)}
+          renderLunas(
+            isPaidOff,
+            loadingPaymentTransaction,
+            paymentTransaction,
+            startDate
+          )}
       </div>
     )
   )

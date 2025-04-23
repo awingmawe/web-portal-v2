@@ -9,15 +9,23 @@ import { UsersIcon } from '@/components/icons/user'
 import TransactionCardFooter from '@/components/pages/my/1-Transaction/Card/TransactionCardFooter'
 import TransactionCardHeader from '@/components/pages/my/1-Transaction/Card/TransactionCardHeader'
 import TransactionCardPayment from '@/components/pages/my/1-Transaction/Card/TransactionCardPayment'
+import { Button } from '@/components/ui/button'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { getOrderPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { MoreVertical } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 
 export interface TransactionCardProps {
   status: string
@@ -37,9 +45,13 @@ export interface TransactionCardProps {
   detailOnly?: boolean
   noLabelNotif?: boolean
   showDpButton?: boolean
+  noFooter?: boolean
 }
 
-function renderManifestComplete(isCompletedManifest: boolean) {
+function renderManifestComplete(
+  isCompletedManifest: boolean,
+  createdDate: string
+) {
   return isCompletedManifest ? (
     <div className="bg-success-100 rounded-full px-3 py-1">
       <div className="flex items-center gap-1">
@@ -48,11 +60,22 @@ function renderManifestComplete(isCompletedManifest: boolean) {
       </div>
     </div>
   ) : (
-    <div className="bg-warning-100  rounded-full px-3 py-1">
-      <div className="text-warning-700 flex items-center gap-1">
+    <div
+      className={`${dayjs(createdDate).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  rounded-full px-3 py-1`}
+    >
+      <div
+        className={`${dayjs(createdDate).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+      >
         <InfoCircleIcon />
-        <p className="text-s-regular text-warning-700 ">
-          Segera lengkapi data jemaah
+        <p className="text-s-regular text-current">
+          {dayjs(createdDate).add(3, 'day') > dayjs() ? (
+            <span className="text-current">
+              Lengkapi sebelum{' '}
+              {dayjs(createdDate).add(3, 'day').format('DD MMM YYYY')}
+            </span>
+          ) : (
+            <span className="text-current">Segera lengkapi manifest</span>
+          )}
         </p>
       </div>
     </div>
@@ -77,7 +100,34 @@ export default function TransactionCard({
   detailOnly,
   noLabelNotif,
   showDpButton,
+  noFooter,
 }: TransactionCardProps) {
+  const { lg } = useTailwindBreakpoint()
+  const [orderPayment, setOrderPayment] = useState<any>(null)
+  const [orderPaymentLoading, setOrderPaymentLoading] = useState<any>(
+    lg ? true : false
+  )
+
+  const fetcPaymentTransaction = useCallback(async () => {
+    setOrderPaymentLoading(true)
+    try {
+      // Build query parameters
+      const response = await getOrderPayment(bookingId)
+
+      // Update state with response data
+      setOrderPayment(response)
+      setOrderPaymentLoading(false)
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    }
+  }, [bookingId])
+
+  useEffect(() => {
+    if (!noFooter && lg) {
+      fetcPaymentTransaction()
+    }
+  }, [fetcPaymentTransaction, noFooter, lg])
+
   const renderStatusTahapanColor = (status: string) => {
     if (status == 'Akan Datang') {
       return 'bg-info-100 text-info-700'
@@ -90,7 +140,7 @@ export default function TransactionCard({
     ) {
       return 'bg-error-100 text-error-700'
     } else if (status == 'Waiting') {
-      return 'bg-warning-100 text-warning-700'
+      return lg ? '' : 'bg-warning-100 text-warning-700'
     } else {
       return 'bg-neutral-100 text-neutral-700'
     }
@@ -98,16 +148,33 @@ export default function TransactionCard({
 
   const renderStatusTahapanText = (status: string) => {
     if (status === 'Waiting') {
-      return (
-        <span className="text-warning-700 flex">
-          <TimerIcon className="mr-2" />
-          Harap bayar uang muka sebelum{' '}
-          {dayjs(createdDate)
-            .add(1, 'day')
-            .locale('id')
-            .format('DD MMMM YYYY HH:mm')}
-        </span>
-      )
+      if (lg) {
+        return (
+          <span>
+            <span className="text-xs-medium block text-right text-neutral-500">
+              Bayar Sebelum
+            </span>
+            <span className="text-warning-600 flex items-center">
+              <TimerIcon className="mr-1" size={17} />
+              {dayjs(createdDate)
+                .add(1, 'day')
+                .locale('id')
+                .format('DD MMM YYYY HH:mm')}
+            </span>
+          </span>
+        )
+      } else {
+        return (
+          <span className="text-warning-700 flex">
+            <TimerIcon className="mr-2" />
+            Harap bayar uang muka sebelum{' '}
+            {dayjs(createdDate)
+              .add(1, 'day')
+              .locale('id')
+              .format('DD MMMM YYYY HH:mm')}
+          </span>
+        )
+      }
     } else {
       return status
     }
@@ -136,29 +203,46 @@ export default function TransactionCard({
           </div>
           <div className="flex items-center">
             <p
-              className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2 max-lg:px-2 max-lg:py-1 max-lg:text-xs`}
+              className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2 max-lg:py-1 max-lg:text-xs ${statusTahapan === 'Waiting' ? 'max-lg:px-0' : 'max-lg:px-2'}`}
             >
               {renderStatusTahapanText(statusTahapan)}
             </p>
-            {(status === 'approved' || status === 'waiting-approval') && (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:block" />
-                </PopoverTrigger>
-                <PopoverContent className="rounded-2xl p-0 px-1">
-                  <div className="flex flex-col divide-y">
-                    <a
-                      href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                      className="cursor-pointer p-3 hover:bg-gray-50"
-                      target="_blank"
-                    >
-                      <p className="text-m-regular text-error-500">
-                        Batalkan Pesanan
-                      </p>
-                    </a>
-                  </div>
-                </PopoverContent>
-              </Popover>
+            {!isPaidOff && (
+              <Fragment>
+                {(status === 'approved' ||
+                  status === 'waiting-approval' ||
+                  status === 'waiting-down-payment') && (
+                  <Drawer>
+                    <DrawerTrigger asChild>
+                      <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
+                    </DrawerTrigger>
+                    <DrawerContent className="z-100 border-0 outline-0">
+                      <DrawerHeader className="p-3">
+                        <DrawerTitle className="flex items-center">
+                          <p className="text-m-semibold ml-2 font-semibold">
+                            Lainnya
+                          </p>
+                        </DrawerTitle>
+                      </DrawerHeader>
+                      <div className="flex w-full px-3 pt-3 pb-5">
+                        <Link
+                          href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                          target="_blank"
+                          className="w-full"
+                        >
+                          <Button
+                            variant="outline"
+                            type="button"
+                            className="border-error-500 w-full border-2 py-3"
+                          >
+                            Batalkan Pesanan
+                          </Button>
+                        </Link>
+                      </div>
+                    </DrawerContent>
+                  </Drawer>
+                )}
+              </Fragment>
             )}
           </div>
         </div>
@@ -201,7 +285,8 @@ export default function TransactionCard({
                   <p className="text-m-regular text-neutral-500">
                     {jemaah} Jemaah
                   </p>
-                  {!noLabelNotif && renderManifestComplete(isCompletedManifest)}
+                  {!noLabelNotif &&
+                    renderManifestComplete(isCompletedManifest, createdDate)}
                 </div>
               </div>
             </div>
@@ -211,6 +296,7 @@ export default function TransactionCard({
             isPaidOff={isPaidOff}
             noAmountLeft={noAmountLeft}
             bookingId={bookingId}
+            startDate={startDate}
           />
           <div className="hidden items-center gap-2 max-lg:flex">
             <Calendar2 className="h-4 w-4 text-neutral-500" />
@@ -225,7 +311,9 @@ export default function TransactionCard({
             <p className="text-xs text-neutral-500">{jemaah} Jemaah</p>
           </div>
         </div>
-        <div className="flex items-center justify-between border-t border-neutral-200 p-4 max-lg:block max-lg:py-2">
+        <div
+          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
+        >
           <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
             <p className="text-s-regular text-neutral-500">Dibuat pada</p>
             <Calendar className="h-4 w-4 text-neutral-500" />
@@ -233,15 +321,34 @@ export default function TransactionCard({
               {dayjs(createdDate).locale('id').format('DD MMMM YYYY')}
             </p>
           </div>
-          <TransactionCardFooter
-            detailOnly={detailOnly}
-            isPaidOff={isPaidOff}
-            isCompletedManifest={isCompletedManifest}
-            showDpButton={showDpButton}
-            bookingId={bookingId}
-            id={id}
-            status={status}
-          />
+          {!noFooter && (
+            <Fragment>
+              {orderPaymentLoading ? (
+                <div className="flex hidden items-center justify-between p-4 max-lg:block">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-24" />
+                    <Skeleton className="h-5 w-32" />
+                  </div>
+                  <div className="flex gap-2 max-lg:hidden">
+                    <Skeleton className="h-10 w-32 rounded-full" />
+                    <Skeleton className="h-10 w-40 rounded-full" />
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                  </div>
+                </div>
+              ) : (
+                <TransactionCardFooter
+                  detailOnly={detailOnly}
+                  isPaidOff={isPaidOff}
+                  isCompletedManifest={isCompletedManifest}
+                  showDpButton={showDpButton}
+                  bookingId={bookingId}
+                  id={id}
+                  status={status}
+                  paymentAmount={orderPayment?.orderPayment?.paymentAmount}
+                />
+              )}
+            </Fragment>
+          )}
         </div>
       </div>
     </div>
