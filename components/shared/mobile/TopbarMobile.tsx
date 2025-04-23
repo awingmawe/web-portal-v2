@@ -28,7 +28,13 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 // Define the props interface with all possible options
 interface MobileTopbarProps {
-  variant: 'search' | 'title' | 'filter' | 'plain' | 'transparent'
+  variant:
+    | 'search'
+    | 'title'
+    | 'filter'
+    | 'plain'
+    | 'transparent'
+    | 'transactionTopbar'
   titleLink?: string
   title?: string
   searchPlaceholder?: string
@@ -218,6 +224,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             </div>
           )
 
+        case 'transactionTopbar':
         case 'title':
           return <div className="flex-1 text-center font-medium">{title}</div>
 
@@ -262,6 +269,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     const buttonClasses = useMemo(() => {
       // Using switch case to handle different variants
       switch (variant) {
+        case 'transactionTopbar':
         case 'filter':
           return ''
         case 'transparent':
@@ -309,7 +317,10 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             'max-lg:bg-primary-500 absolute h-[100px] -top-[22px]'
           backgroundClasses = ''
           break
-
+        case 'transactionTopbar':
+          positionClasses = 'absolute -top-13.5'
+          backgroundClasses = ''
+          break
         case 'title':
         case 'plain':
         default:

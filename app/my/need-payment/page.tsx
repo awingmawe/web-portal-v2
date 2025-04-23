@@ -9,7 +9,7 @@ export async function generateMetadata() {
 
 export default async function TransactionPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4">
+    <div className="mx-auto max-w-7xl lg:px-4">
       <TransactionNeedPayment />
     </div>
   )

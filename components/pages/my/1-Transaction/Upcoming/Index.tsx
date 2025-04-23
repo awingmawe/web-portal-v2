@@ -67,10 +67,6 @@ export default function TransactionUpcoming() {
 
     const statusFilterParams = lg ? statusFilterMobile : statusFilter
 
-    router.push(
-      `/my/transaction?type=upcoming&page=${currentPage}&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
-    )
-
     try {
       // Build query parameters
       const queryParams: GetListQuery = {
@@ -110,8 +106,14 @@ export default function TransactionUpcoming() {
 
       if (lg && currentPage > 1) {
         setTransactions((prev) => [...prev, ...response.results])
+        router.push(
+          `/my/transaction?type=upcoming&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
+        )
       } else {
         setTransactions(response.results)
+        router.push(
+          `/my/transaction?type=upcoming&page=${currentPage}&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
+        )
       }
 
       setTotalPages(Math.ceil(response.total / 10))

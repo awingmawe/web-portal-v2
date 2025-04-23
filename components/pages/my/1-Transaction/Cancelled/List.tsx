@@ -33,55 +33,64 @@ export default function List({
               <TransactionSkeletonLoading noTabs noFilter noPagination />
             </div>
           ) : (
-            <InfiniteScroll
-              isLoading={isLoading}
-              hasMore={currentPage < totalPages}
-              next={() => setCurrentPage(currentPage + 1)}
-              threshold={0.8}
-            >
-              {transactions.length > 0 ? (
-                transactions.map((transaction) => (
-                  <div
-                    key={`${transaction.id}-${new Date().getTime()}-${Math.random()}`}
-                    className="max-lg:px-5"
-                  >
-                    <TransactionCard
-                      status={transaction.status.slug}
-                      id={transaction.bookingCode}
-                      packageName={transaction.packageSnapshot.snapshot.name}
-                      thumbnail={
-                        transaction.packageSnapshot.snapshot.package.thumbnail
-                      }
-                      startDate={
-                        transaction.packageSnapshot.snapshot.departureDate
-                      }
-                      endDate={transaction.packageSnapshot.snapshot.arrivalDate}
-                      createdDate={transaction.createdAt}
-                      jemaah={Number.parseInt(transaction.quantity)}
-                      bookingId={String(transaction.id)}
-                      isCompletedManifest={transaction.isCompletedManifest}
-                      isPaidOff={transaction.isPaidOff}
-                      statusTahapan={
-                        transaction.status.slug == 'waiting-cancellation'
-                          ? 'Dalam Proses Pembatalan'
-                          : transaction.status.slug == 'canceled-by-travel'
-                            ? 'Dibatalkan Travel'
-                            : transaction.status.slug == 'canceled-by-user'
-                              ? 'Dibatalkan Jemaah'
-                              : ''
-                      }
-                      noHeader
-                      noAmountLeft
-                      detailOnly
-                      noLabelNotif
-                      noFooter
-                    />
-                  </div>
-                ))
-              ) : (
-                <EmptyState />
+            <div>
+              <InfiniteScroll
+                isLoading={isLoading}
+                hasMore={currentPage < totalPages}
+                next={() => setCurrentPage(currentPage + 1)}
+                threshold={0.8}
+              >
+                {transactions.length > 0 ? (
+                  transactions.map((transaction) => (
+                    <div
+                      key={`${transaction.id}-${new Date().getTime()}-${Math.random()}`}
+                      className="max-lg:px-5"
+                    >
+                      <TransactionCard
+                        status={transaction.status.slug}
+                        id={transaction.bookingCode}
+                        packageName={transaction.packageSnapshot.snapshot.name}
+                        thumbnail={
+                          transaction.packageSnapshot.snapshot.package.thumbnail
+                        }
+                        startDate={
+                          transaction.packageSnapshot.snapshot.departureDate
+                        }
+                        endDate={
+                          transaction.packageSnapshot.snapshot.arrivalDate
+                        }
+                        createdDate={transaction.createdAt}
+                        jemaah={Number.parseInt(transaction.quantity)}
+                        bookingId={String(transaction.id)}
+                        isCompletedManifest={transaction.isCompletedManifest}
+                        isPaidOff={transaction.isPaidOff}
+                        statusTahapan={
+                          transaction.status.slug == 'waiting-cancellation'
+                            ? 'Dalam Proses Pembatalan'
+                            : transaction.status.slug == 'canceled-by-travel'
+                              ? 'Dibatalkan Travel'
+                              : transaction.status.slug == 'canceled-by-user'
+                                ? 'Dibatalkan Jemaah'
+                                : ''
+                        }
+                        noHeader
+                        noAmountLeft
+                        detailOnly
+                        noLabelNotif
+                        noFooter
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <EmptyState />
+                )}
+              </InfiniteScroll>
+              {isLoading && (
+                <div className="mt-5">
+                  <TransactionSkeletonLoading noTabs noFilter noPagination />
+                </div>
               )}
-            </InfiniteScroll>
+            </div>
           )}
         </div>
       ) : (

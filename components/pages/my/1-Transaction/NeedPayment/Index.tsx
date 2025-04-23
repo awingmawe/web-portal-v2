@@ -6,6 +6,7 @@ import { SearchAndFilter } from '@/components/pages/my/1-Transaction/NeedPayment
 import List from '@/components/pages/my/1-Transaction/NeedPayment/List'
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
 import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -126,11 +127,22 @@ export default function TransactionNeedPayment() {
   }, [])
 
   if (!isMounted) {
-    return <TransactionSkeletonLoading noTabs noFilter noPagination />
+    return (
+      <div className="mt-5">
+        <TransactionSkeletonLoading noTabs noFilter noPagination />
+      </div>
+    )
   }
 
   return (
     <Fragment>
+      <MobileTopbar
+        showBackButton
+        variant="transactionTopbar"
+        title="Menunggu Pembayaran"
+        onBackClick={() => router.push('/my/transaction')}
+      />
+
       {/* Search and Filters */}
       <SearchAndFilter
         searchQuery={searchQuery}

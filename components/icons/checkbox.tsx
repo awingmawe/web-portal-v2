@@ -83,6 +83,31 @@ export const ChecklistCircle: React.FC<IconProps> = ({
     </svg>
   )
 }
+
+export const ChecklistCircle2: React.FC<IconProps> = ({
+  className = '',
+  size = 14,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn('stroke-current', className)}
+      {...props}
+    >
+      <path
+        d="M8.74355 5.20355L8.7436 5.2036L8.74949 5.19751C9.07859 4.85706 9.08706 4.30995 8.74355 3.96645C8.40329 3.62618 7.84671 3.62618 7.50645 3.96645L5.29 6.18289L4.49355 5.38645C4.15329 5.04618 3.59671 5.04618 3.25645 5.38645C2.91618 5.72671 2.91618 6.28329 3.25645 6.62355L4.67145 8.03855C4.83414 8.20125 5.05589 8.295 5.29 8.295C5.52411 8.295 5.74586 8.20125 5.90855 8.03855L8.74355 5.20355ZM1.5 6C1.5 3.52114 3.52114 1.5 6 1.5C8.47886 1.5 10.5 3.52114 10.5 6C10.5 8.47886 8.47886 10.5 6 10.5C3.52114 10.5 1.5 8.47886 1.5 6Z"
+        fill="#D2D2D1"
+        stroke="#D2D2D1"
+      />
+    </svg>
+  )
+}
+
 export const ChecklistCircleActive: React.FC<IconProps> = ({
   size = 17,
   ...props
