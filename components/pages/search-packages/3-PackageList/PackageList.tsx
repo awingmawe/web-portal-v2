@@ -8,7 +8,7 @@ import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { Loader2 } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
 import { NoResults } from './NoResultPackageList'
 import { CustomPagination } from './PaginationPackageList'
@@ -26,27 +26,64 @@ interface PackageResultsProps {
 }
 
 export const PackageResults: React.FC<PackageResultsProps> = ({
-  dataPackages,
-  currentPage,
+  dataPackages: initialDataPackages,
+  currentPage: initialPage,
   pageSize,
-  total,
+  total: initialTotal,
 }) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { isLoadingSkeleton, resetFilters } = useFilterProduct()
-  const { loadMore, hasMore, loading, packages } = useInfiniteScroll()
-  const { lg } = useTailwindBreakpoint()
+  const {
+    isLoadingSkeleton,
+    isLoading,
+    resetFilters,
+    packages: packageDataCSR,
+    totalPackages: totalCSR,
+    isUsingCSRData,
+    setIsUsingCSRData,
+  } = useFilterProduct()
+  const {
+    loadMore,
+    hasMore,
+    loading,
+    packages: infinitePackages,
+  } = useInfiniteScroll()
+  const { lg: isMobile } = useTailwindBreakpoint()
+
+  // Derived values based on data source
+  const displayPackages = useMemo(() => {
+    return isUsingCSRData ? packageDataCSR : initialDataPackages
+  }, [isUsingCSRData, packageDataCSR, initialDataPackages])
+
+  const displayTotal = useMemo(() => {
+    return isUsingCSRData ? totalCSR : initialTotal
+  }, [isUsingCSRData, totalCSR, initialTotal])
+
+  // For mobile, use the appropriate infinite scroll data
+  const mobilePackages = useMemo(() => {
+    return isMobile ? infinitePackages : displayPackages
+  }, [isMobile, infinitePackages, displayPackages])
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
+
+  // Switch to CSR data when filters change
+  useEffect(() => {
+    if (packageDataCSR && packageDataCSR.length > 0) {
+      setIsUsingCSRData(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [packageDataCSR])
 
   // Function to reset all filters
   const resetAllFilters = useCallback(() => {
     // 1. Reset the internal state to default values
     resetFilters()
 
-    // 2. Navigate to the base URL without any query parameters
-    window.location.href = pathname
-  }, [pathname, resetFilters])
+    // 3. Delete all search params
+    window.history.pushState({}, '', '/search')
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Function to create URL with new sort parameter
   const createSortUrl = useCallback(
@@ -61,8 +98,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
   // Calculate total pages
   const totalPages = useMemo(() => {
-    return Math.ceil(total / pageSize)
-  }, [total, pageSize])
+    return Math.ceil(displayTotal / pageSize)
+  }, [displayTotal, pageSize])
 
   // Create page navigation function
   const goToPage = useCallback(
@@ -75,7 +112,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   )
 
   // Render no results component if there are no packages and not loading
-  if (dataPackages.length === 0 && !isLoadingSkeleton) {
+  if (displayPackages.length === 0 && !isLoadingSkeleton) {
     return <NoResults resetAllFilters={resetAllFilters} />
   }
 
@@ -86,21 +123,21 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
-          resultsCount={dataPackages.length}
-          totalCount={total}
+          resultsCount={displayPackages.length}
+          totalCount={displayTotal}
           currentSort={currentSort}
           createSortUrl={createSortUrl}
         />
       )}
 
       {/* Package grid */}
-      {isLoadingSkeleton ? (
+      {isLoadingSkeleton || isLoading ? (
         <PackageGridSkeleton />
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {lg ? (
+          {isMobile ? (
             <>
-              {packages?.map((packageData, index) => (
+              {mobilePackages?.map((packageData, index) => (
                 <CardPackage
                   key={`packages-${packageData.slugPackage}-${index}`}
                   data={packageData}
@@ -118,7 +155,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
               </InfiniteScroll>
             </>
           ) : (
-            dataPackages?.map((packageData, index) => (
+            displayPackages?.map((packageData, index) => (
               <CardPackage
                 key={`packages-${packageData.slugPackage}-${index}`}
                 data={packageData}
@@ -134,7 +171,11 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <PaginationSkeleton />
       ) : (
         <CustomPagination
-          currentPage={currentPage}
+          currentPage={
+            isUsingCSRData
+              ? parseInt(searchParams.get('page') || '1', 10)
+              : initialPage
+          }
           totalPages={totalPages}
           goToPage={goToPage}
         />

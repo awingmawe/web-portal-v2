@@ -1,6 +1,7 @@
 'use client'
 
 import { DateIcon } from '@/components/icons/date'
+import { DateSkeleton } from '@/components/pages/homepage/1-Banner/SearchFilter/DateFilter/DateSkeleton'
 import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
@@ -13,14 +14,15 @@ import { formatDateRangeShort } from '@/lib/utils'
 import { id } from 'date-fns/locale'
 import React from 'react'
 
-const DateFilter: React.FC<OtherProps> = ({ colorIcon }) => {
-  const { filters, setDateRange, isDisabled } = useFilterProduct()
+const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
+  const { filters, setDateRange, isDisabled, isLoadingSkeleton } =
+    useFilterProduct()
 
   const dateRange = filters.dateRange
 
-  // if (whatPage === 'filter_search' && isLoadingSkeleton) {
-  //   return <DateSkeleton />
-  // }
+  if (whatPage === 'filter_search' && isLoadingSkeleton) {
+    return <DateSkeleton />
+  }
 
   return (
     <Popover>

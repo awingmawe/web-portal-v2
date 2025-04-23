@@ -4,16 +4,19 @@ import { toast } from '@/components/ui/sonner'
 import { Airline } from '@/constant/types/AirlineProps'
 import { Airport } from '@/constant/types/AirportProps'
 import { FilterState } from '@/constant/types/FilterProps'
+import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import { formatDateToYYYYMMDD } from '@/lib/utils'
+import { useFetchPackage } from '@/hooks/filter-product-hooks/useFetchPackage'
+import { formatDateToYYYYMMDD, mapProductsToCardData } from '@/lib/utils'
 import { getAirline, getAirports } from '@/services/general-service'
 import React, {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react'
 import { DateRange } from 'react-day-picker'
@@ -40,6 +43,8 @@ export type FilterKey = keyof FilterState
 interface FilterProductContextType {
   // Combined filter state
   filters: FilterState
+  packages: CardData[]
+  totalPackages: number
   setFilters: (filter: FilterState) => void
 
   // Filter state setters
@@ -57,11 +62,14 @@ interface FilterProductContextType {
 
   // Reset filter state - full and individual
   resetFilters: (filters?: typeof initialFilterState) => void
-  resetFilter: (filterKey: FilterKey) => void // New function to reset individual filter
+  resetFilter: (filterKey: FilterKey, value?: any) => void // New function to reset individual filter
 
   // Form submission
   isDisabled: boolean
+  isUsingCSRData: boolean
+  setIsUsingCSRData: (value: boolean) => void
   setIsDisabled: (disabled: boolean) => void
+  setIsLoading: (loading: boolean) => void
   isLoading: boolean
   isLoadingSkeleton: boolean
   handleSubmit: () => void
@@ -75,16 +83,23 @@ export const FilterProductProvider: React.FC<{
   children: React.ReactNode
   initialDisabled?: boolean
 }> = ({ children, initialDisabled = false }) => {
+  // Hooks
   const updateQueryParams = useUpdateQueryParams()
   const { pushEvent } = useEventTracker()
+  const { fetchPackage } = useFetchPackage()
   const { lg: isMobile } = useTailwindBreakpoint()
+
   // Combined filter state
   const [filters, setFilters] = useState<FilterState>(initialFilterState)
+  const isInitialRender = useRef(true)
 
   // Form states
   const [isDisabled, setIsDisabled] = useState<boolean>(initialDisabled)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLoadingSkeleton, setIsLoadingSkeleton] = useState<boolean>(true)
+  const [packages, setPackages] = useState<CardData[]>([])
+  const [totalPackages, setTotalPackages] = useState<number>(0)
+  const [isUsingCSRData, setIsUsingCSRData] = useState(false)
 
   // Filter state setters
   const setHotelStars = useCallback((stars: number) => {
@@ -138,11 +153,17 @@ export const FilterProductProvider: React.FC<{
 
   // Reset individual filter
   const resetFilter = useCallback(
-    (filterKey: FilterKey) => {
-      setFilters((prev) => ({
-        ...prev,
-        [filterKey]: initialFilterState[filterKey],
-      }))
+    (filterKey: FilterKey, value?: any) => {
+      if (filterKey === 'priceRange' && value) {
+        // Handle price range reset as a special case
+        setHargaMin(value.min)
+        setHargaMax(value.max)
+      } else {
+        setFilters((prev) => ({
+          ...prev,
+          [filterKey]: initialFilterState[filterKey],
+        }))
+      }
 
       if (!isMobile) {
         // Also update the URL if needed
@@ -158,6 +179,7 @@ export const FilterProductProvider: React.FC<{
           section: 'sC',
           tagSlug: 'tS',
           filterName: null,
+          priceRange: null,
         }
         // Special handling for dateRange which maps to two URL params
         if (filterKey === 'dateRange') {
@@ -173,10 +195,12 @@ export const FilterProductProvider: React.FC<{
         }
       }
     },
-    [updateQueryParams, isMobile]
+    [isMobile, setHargaMax, setHargaMin, updateQueryParams]
   )
 
   // Set default value states filter from search params
+  // This one is for SSR fetching when first load
+  // The package list is already fetched in the server side /search/page.tsx
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
@@ -297,6 +321,67 @@ export const FilterProductProvider: React.FC<{
     }
   }, [])
 
+  // Update value filter to fetch packageList
+  // This is for client side
+  const buildQueryParams = useCallback(() => {
+    return {
+      query: undefined, // Add if you have a search query
+      startDate: filters.dateRange?.from
+        ? formatDateToYYYYMMDD(filters.dateRange.from)
+        : undefined,
+      endDate: filters.dateRange?.to
+        ? formatDateToYYYYMMDD(filters.dateRange.to)
+        : undefined,
+      departureFromAirportCode: filters.departureAirport?.code || undefined,
+      arrivalFromAirportCode: filters.arrivalAirport?.code || undefined,
+      departureAirlineName: filters.airline?.name || undefined,
+      minPrice: filters.hargaMin.replace(/\D/g, '') || undefined,
+      maxPrice: filters.hargaMax.replace(/\D/g, '') || undefined,
+      hotelRating: filters.hotelStars ? String(filters.hotelStars) : undefined,
+      facilityCode: filters.facilityCode || undefined,
+      section: filters.section || undefined,
+      tagSlug: filters.tagSlug || undefined,
+    }
+  }, [filters])
+
+  const fetchPackageData = useCallback(
+    async (page = 1) => {
+      setIsLoading(true)
+      try {
+        // Get query params based on current filters
+        const params = buildQueryParams()
+
+        // Fetch data using the hook
+        const data = await fetchPackage(params, page)
+        const mappedData = mapProductsToCardData(data)
+
+        console.log(data)
+
+        // Update state
+        setPackages(mappedData)
+        setTotalPackages(data.total)
+      } catch (err) {
+        console.error('Error fetching packages:', err)
+        toast.error('Failed to load packages. Please try again.')
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [buildQueryParams, fetchPackage]
+  )
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false
+      return
+    }
+
+    // Fetch data whenever filters change, reset to page 1
+    if (!isMobile) {
+      fetchPackageData(1)
+    }
+  }, [fetchPackageData, filters, isMobile])
+
   const fetchAirportByCode = async (code: string): Promise<Airport | null> => {
     try {
       const data = await getAirports({
@@ -394,12 +479,8 @@ export const FilterProductProvider: React.FC<{
 
         // Navigate to search results page
         // Only update the query parameters if we have keys/values to update
-        if (keys.length > 0) {
-          updateQueryParams(keys, values, '/search')
-        } else {
-          // Fallback if no parameters to add
-          window.location.href = '/search'
-        }
+        updateQueryParams(keys, values, '/search')
+        fetchPackageData(1) // Fetch packages with updated filters
       }, 1000)
     } catch (err) {
       // Handle errors
@@ -413,17 +494,11 @@ export const FilterProductProvider: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
-  useEffect(() => {
-    setIsLoadingSkeleton(true)
-
-    setTimeout(() => {
-      setIsLoadingSkeleton(false)
-    }, 1000)
-  }, [filters])
-
   const value = {
     // Combined filter state
     filters,
+    packages,
+    totalPackages,
     setFilters,
 
     // Filter state setters
@@ -445,7 +520,10 @@ export const FilterProductProvider: React.FC<{
 
     // Form states
     isDisabled,
+    isUsingCSRData,
+    setIsUsingCSRData,
     setIsDisabled,
+    setIsLoading,
     isLoading,
     isLoadingSkeleton,
     handleSubmit,

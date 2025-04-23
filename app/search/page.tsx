@@ -39,6 +39,12 @@ export default async function SearchGeneral({
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
+  const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
+    getMinMaxPrice(),
+    getTagPackagesEnum(),
+    getFacilityEnum('umrah-facility'),
+  ])
+
   const page = parseInt(awaitedParams.page || '1', 10)
   const size = parseInt(awaitedParams.size || '9', 10)
   const query = awaitedParams.query || undefined
@@ -51,7 +57,7 @@ export default async function SearchGeneral({
   const maxPrice = awaitedParams.prMax || undefined
   const hotelRating = awaitedParams.hR || undefined
   const facilityCode = awaitedParams.fC || undefined
-  const section = awaitedParams.sC || undefined
+  const section = awaitedParams.section || undefined
   const tagSlug = awaitedParams.tS || undefined
 
   // Order Filter
@@ -95,11 +101,6 @@ export default async function SearchGeneral({
     tagSlug,
   })
 
-  const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
-    getMinMaxPrice(),
-    getTagPackagesEnum(),
-    getFacilityEnum('umrah-facility'),
-  ])
   return (
     <Fragment>
       <Topbar type="normal" token={token} />

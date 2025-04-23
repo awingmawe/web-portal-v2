@@ -15,4 +15,5 @@ export interface FilterState {
   section: string
   tagSlug: string
   filterName: string
+  priceRange?: string
 }

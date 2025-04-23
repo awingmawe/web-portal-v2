@@ -1,20 +1,23 @@
 'use client'
 
+import { TagPackageSkeleton } from '@/components/pages/search-packages/2-FilterLeftbar/TagPackageFilter/TagPackageSkeleton'
 import { Checkbox } from '@/components/ui/checkbox'
 import { TagPackages } from '@/constant/types/TagPackageProps'
-import { useCheckboxSelection } from '@/hooks/filter-product-hooks'
+import { useCheckboxSelection } from '@/hooks/filter-product-hooks/useCheckboxSelection'
 import React from 'react'
 
 interface TagPackageOptionsProps {
   dataTagPackage: TagPackages[]
   selectedTagPackage?: string
   onTagPackageChange: (tagSlug: string) => void
+  isLoadingSkeleton?: boolean
 }
 
 export const TagPackageOptions: React.FC<TagPackageOptionsProps> = ({
   dataTagPackage,
   selectedTagPackage,
   onTagPackageChange,
+  isLoadingSkeleton,
 }) => {
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: selectedTagPackage,
@@ -22,9 +25,9 @@ export const TagPackageOptions: React.FC<TagPackageOptionsProps> = ({
     paramName: 'tS',
   })
 
-  // if (isLoadingSkeleton) {
-  //   return <TagPackageSkeleton count={dataTagPackage.length || 5} />
-  // }
+  if (isLoadingSkeleton) {
+    return <TagPackageSkeleton count={dataTagPackage.length || 5} />
+  }
 
   return (
     <div className="max-h-[200px] space-y-2 overflow-y-auto">
