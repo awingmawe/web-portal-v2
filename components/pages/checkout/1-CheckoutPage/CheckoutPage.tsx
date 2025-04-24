@@ -32,6 +32,7 @@ const CheckoutPage = () => {
     isReferralCodeChecked,
     wukalaSetting,
     handleRemoveReferralCode,
+    loading,
   } = useCheckout()
 
   // Add state for terms and conditions checkbox
@@ -450,7 +451,7 @@ const CheckoutPage = () => {
                     ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
                     : 'cursor-not-allowed bg-gray-300 text-gray-500'
                 }`}
-                disabled={!isJamaahDataValid() || !termsAccepted}
+                disabled={!isJamaahDataValid() || !termsAccepted || loading}
                 onClick={
                   isJamaahDataValid() && termsAccepted
                     ? handleCheckout

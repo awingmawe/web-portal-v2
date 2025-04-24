@@ -6,6 +6,7 @@ import { cookieNames } from '@/services/common/cookie'
 import { bookingCheckout, preBookingCheckout } from '@/services/umrah-service'
 import { checkReferralCode } from '@/services/wukala-service'
 import cookie from 'cookie-cutter'
+import { useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 export const CheckoutContext = createContext<any>(null)
@@ -33,7 +34,10 @@ export const CheckoutProvider = ({
   const [isReferralValid, setIsReferralValid] = useState(false)
   const [isReferralCodeChecked, setIsReferralCodeChecked] = useState(false)
   const [paymentToken, setPaymentToken] = useState<string>()
+  const [loading, setLoading] = useState(false)
   const [booking, setBooking] = useState<any>()
+  const [shouldCheckPreAfterClear, setShouldCheckPreAfterClear] =
+    useState(false)
 
   useEffect(() => {
     const storedToken = cookie.get(cookieNames.USER_ACCESS_TOKEN)
@@ -85,7 +89,7 @@ export const CheckoutProvider = ({
   const handleRemoveJamaah = (id: number) => {
     setJamaahList((prev: any) => prev.filter((j: any) => j.id !== id))
   }
-
+  const router = useRouter()
   const checkPre = async () => {
     if (!selectedVariant || !token) return
     try {
@@ -136,11 +140,29 @@ export const CheckoutProvider = ({
       })),
     }
     try {
+      setLoading(true)
       const res = await bookingCheckout(payload)
       setBooking(res.data)
       setPaymentToken(res.data.order.paymentToken)
+      setLoading(false)
+      window.snap.pay(res.data.order.paymentToken, {
+        onSuccess: async (result: any) => {
+          // console.log(result)
+          router.push(`/my/transaction`)
+        },
+        onPending: async (result: any) => {
+          // console.log('Payment pending', result)
+          router.push(`/my/need-payment`)
+          // Add expiration check logic
+        },
+        onError: (error: any) => {},
+        onClose: () => {
+          // Additional logic on close
+        },
+      })
     } catch (error) {
       console.error(error)
+      setLoading(false)
     }
   }
   const handleCheckReferral = async () => {
@@ -189,9 +211,15 @@ export const CheckoutProvider = ({
     setIsReferralValid(false)
     setIsReferralCodeChecked(false)
     setWukalaSetting(undefined)
+    setShouldCheckPreAfterClear(true)
     // dispatch(setWukalaSetting(undefined))
   }
-
+  useEffect(() => {
+    if (shouldCheckPreAfterClear && referralCode === '') {
+      checkPre()
+      setShouldCheckPreAfterClear(false)
+    }
+  }, [referralCode, shouldCheckPreAfterClear])
   const totalMinimumDownPayment = paymentAmount * jamaahList.length
 
   const value = {
@@ -231,6 +259,7 @@ export const CheckoutProvider = ({
     handleRemoveReferralCode,
     paymentToken,
     booking,
+    loading,
   }
 
   return (

@@ -1,21 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import Checkout from '@/components/pages/checkout/1-CheckoutPage/CheckoutPage'
 import MobileCheckoutPage from '@/components/pages/checkout/2-MobileChekoutPage/MobileCheckoutPage'
 import Footer from '@/components/shared/Footer'
-import MidtransPayment from '@/components/shared/Payment/MidtransPayment'
 import Topbar from '@/components/shared/Topbar'
+import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import { CheckoutProvider, useCheckout } from '@/contexts/checkout-context'
-import { Fragment } from 'react'
+import { useRouter } from 'next/navigation'
+import Script from 'next/script'
+import { Fragment, useState } from 'react'
 
 function CheckoutContent() {
-  const { token, detailVariant, selectedVariant, paymentToken, booking } =
-    useCheckout()
+  const { token, detailVariant, selectedVariant, paymentToken } = useCheckout()
+  const [snapReady, setSnapReady] = useState(false)
+  const router = useRouter()
 
   if (!token || !selectedVariant || !detailVariant) {
     return <div className="p-8 text-center text-gray-500">Loading...</div>
   }
-
   return (
     <Fragment>
       <div className="hidden sm:block">
@@ -26,17 +29,13 @@ function CheckoutContent() {
       <div className="block sm:hidden">
         <MobileCheckoutPage />
       </div>
-      <MidtransPayment
-        paymentToken={paymentToken}
-        onSuccess={() => {
-          router.push(
-            `/transaction/success?id=${booking?.bookingCode}&status_code=200&transaction_status=settlement&id=${booking?.id}`
-          )
-        }}
-        onPending={() => {
-          router.push(`/transaction/${booking?.bookingCode}`)
-        }}
-        onClose={() => {}}
+
+      <Script
+        src={SNAP_URL}
+        data-client-key={MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+        onLoad={() => setSnapReady(true)}
+        onError={() => {}}
       />
     </Fragment>
   )
