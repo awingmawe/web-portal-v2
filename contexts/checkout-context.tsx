@@ -157,6 +157,7 @@ export const CheckoutProvider = ({
         },
         onError: (error: any) => {},
         onClose: () => {
+          router.push(`/my/need-payment`)
           // Additional logic on close
         },
       })
