@@ -37,6 +37,12 @@ const MobileCheckoutPage = ({}) => {
     termsAccepted,
     setTermsAccepted,
     isJamaahDataValid,
+    isReferralValid,
+    isReferralCodeChecked,
+    wukalaSetting,
+    handleRemoveReferralCode,
+    loading,
+    handleCheckReferral,
   } = useCheckout()
 
   return (
@@ -186,7 +192,11 @@ const MobileCheckoutPage = ({}) => {
                     <input
                       type="text"
                       id={`name-${jamaah.id}`}
-                      className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+                      className={`rounded-md border ${
+                        !jamaah.name || jamaah.name.trim() === ''
+                          ? 'border-red-300'
+                          : 'border-gray-300'
+                      } px-3 py-2 text-sm `}
                       placeholder="Nama Jamaah"
                       value={jamaah.name}
                       onChange={(e) => {
@@ -206,7 +216,11 @@ const MobileCheckoutPage = ({}) => {
                     <input
                       type="text"
                       id={`phone-${jamaah.id}`}
-                      className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+                      className={`rounded-md border ${
+                        !jamaah.phone || jamaah.phone.trim() === ''
+                          ? 'border-red-300'
+                          : 'border-gray-300'
+                      } px-3 py-2 text-sm`}
                       placeholder="08xxxxxxxxxx"
                       value={jamaah.phone}
                       onChange={(e) => {
@@ -315,12 +329,13 @@ const MobileCheckoutPage = ({}) => {
                 <div className="flex justify-between text-sm">
                   <span>Jumlah Bayar</span>
                   <span className="font-medium">
-                    Rp {sliderValue.toLocaleString('id-ID')}
+                    Rp{sliderValue.toLocaleString('id-ID')}
                   </span>
                 </div>
                 <div className="mt-1 flex justify-between text-sm">
                   <span>Sisa Pelunasan</span>
                   <span className="font-medium">
+                    Rp
                     {Number(preBooking?.remainingPayment || 0).toLocaleString(
                       'id-ID'
                     )}
@@ -348,10 +363,10 @@ const MobileCheckoutPage = ({}) => {
 
           <div className="mb-4 rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
-              <input
+              {/* <input
                 type="checkbox"
                 className="mr-2 h-4 w-4 accent-yellow-400"
-              />
+              /> */}
               <p className="font-medium">Kode Referral</p>
             </div>
             <p className="mt-1 text-xs text-gray-500">
@@ -363,12 +378,29 @@ const MobileCheckoutPage = ({}) => {
                 placeholder="Masukkan kode referral"
                 className="flex-1 rounded-l-lg border border-gray-300 px-3 py-2 text-sm"
                 value={referralCode}
+                disabled={wukalaSetting}
                 onChange={(e) => setReferralCode(e.target.value)}
               />
-              <button className="rounded-r-lg bg-yellow-400 px-4 py-2 text-sm font-medium">
-                Cek
+              <button
+                className="rounded-r-lg bg-yellow-400 px-4 py-2 text-sm font-medium"
+                onClick={
+                  wukalaSetting ? handleRemoveReferralCode : handleCheckReferral
+                }
+              >
+                {wukalaSetting ? 'Hapus' : 'Cek'}
               </button>
             </div>
+            {referralCode && isReferralCodeChecked && (
+              <p
+                className={`mt-5 font-medium ${
+                  isReferralValid ? 'text-[#00B97D]' : 'text-red-500'
+                }`}
+              >
+                {isReferralValid
+                  ? `Kode referral berhasil digunakan`
+                  : `Kode referral tidak valid!`}
+              </p>
+            )}
           </div>
           {/* 
           <div className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 p-3">
@@ -422,7 +454,13 @@ const MobileCheckoutPage = ({}) => {
               </span>
             </div>
           </div>
-          <div className="mt-4 text-xs text-gray-500">
+          <div className="mt-4 flex items-start text-xs text-gray-500">
+            <input
+              type="checkbox"
+              className="mt-0.5 mr-2 h-4 w-4 accent-yellow-500"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+            />
             <p>
               Dengan meneruskan, saya menyetujui{' '}
               <span className="text-blue-500">
@@ -436,16 +474,36 @@ const MobileCheckoutPage = ({}) => {
           </div>
         </div>
       </main>
+      {!isJamaahDataValid() && (
+        <p className="mb-2 text-sm text-red-500">
+          *Harap lengkapi data Jamaah terlebih dahulu
+        </p>
+      )}
 
+      {isJamaahDataValid() && !termsAccepted && (
+        <p className="mb-2 text-sm text-red-500">
+          *Harap setujui syarat & ketentuan
+        </p>
+      )}
       {/* Bottom Bar */}
       <div className="fixed right-0 bottom-0 left-0 z-10 flex items-center justify-between border-t bg-white p-4">
         <div>
           <p className="text-xs text-gray-500">Total</p>
           <p className="text-lg font-bold">
-            Rp{paymentAmount.toLocaleString('id-ID')}
+            Rp{sliderValue.toLocaleString('id-ID')}
           </p>
         </div>
-        <button className="rounded-md bg-yellow-400 px-6 py-3 text-sm font-semibold text-white shadow">
+        <button
+          className={`${
+            isJamaahDataValid() && termsAccepted
+              ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
+              : 'cursor-not-allowed bg-gray-300 text-gray-500'
+          }rounded-md  px-6 py-3 text-sm font-semibold text-white shadow`}
+          disabled={!isJamaahDataValid() || !termsAccepted || loading}
+          onClick={
+            isJamaahDataValid() && termsAccepted ? handleCheckout : undefined
+          }
+        >
           Lanjutkan Pembayaran
         </button>
       </div>
