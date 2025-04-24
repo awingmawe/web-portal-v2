@@ -79,7 +79,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     // 1. Reset the internal state to default values
     resetFilters()
 
-    // 3. Delete all search params
+    // 2. Delete all search params
     window.history.pushState({}, '', '/search')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

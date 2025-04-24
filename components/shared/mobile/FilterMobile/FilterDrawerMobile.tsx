@@ -13,7 +13,6 @@ import AirlineSelector from '@/components/shared/mobile/FilterMobile/AirlineFilt
 import DepartureAirportSelector from '@/components/shared/mobile/FilterMobile/AirportFilter'
 import DateSelector from '@/components/shared/mobile/FilterMobile/DateFilter'
 import HotelStarSelector from '@/components/shared/mobile/FilterMobile/RatingHotelFilter'
-import { Button } from '@/components/ui/button'
 import {
   Drawer,
   DrawerClose,
@@ -49,6 +48,7 @@ const FilterDrawer: React.FC = () => {
     setDepartureAirport,
     setArrivalAirport,
     setAirline,
+    handleSubmit,
   } = useFilterProduct()
   const { dateRange, arrivalAirport, departureAirport, hotelStars, airline } =
     filters
@@ -204,7 +204,7 @@ const FilterDrawer: React.FC = () => {
   }
 
   return (
-    <Drawer direction="top" onClose={() => resetFilters()}>
+    <Drawer direction="top">
       <DrawerTrigger asChild>
         <span className="bg-neutral-0 text-s-medium rounded-[100px] px-3 py-2 text-neutral-900">
           {hasFilters ? 'Ubah' : 'Filter'}
@@ -217,7 +217,7 @@ const FilterDrawer: React.FC = () => {
             {hasFilters ? 'Ubah Pencarian' : 'Filter'}
           </DrawerTitle>
           <DrawerClose>
-            <X className="text-neutral-900" onClick={() => resetFilters()} />
+            <X className="text-neutral-900" />
           </DrawerClose>
         </DrawerHeader>
 
@@ -455,12 +455,12 @@ const FilterDrawer: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <Button
-                  className="bg-primary-500 hover:bg-primary-600 mt-4 w-full text-neutral-900"
-                  //   onClick={onSearch}
+                <DrawerClose
+                  className="bg-primary-500 hover:bg-primary-600 mt-4 w-full rounded-full py-3 text-xs text-neutral-900"
+                  onClick={() => handleSubmit()}
                 >
                   Cari
-                </Button>
+                </DrawerClose>
               </motion.div>
             )}
           </AnimatePresence>

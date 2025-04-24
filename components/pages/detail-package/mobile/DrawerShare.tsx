@@ -19,13 +19,9 @@ const ShareDrawer = React.memo(
   ({
     titleLink,
     buttonClasses,
-    shareViaWhatsApp,
-    shareViaCopyLink,
   }: {
     titleLink: string
     buttonClasses: string
-    shareViaWhatsApp: (link: string) => void
-    shareViaCopyLink: () => void
   }) => {
     return (
       <Drawer>
