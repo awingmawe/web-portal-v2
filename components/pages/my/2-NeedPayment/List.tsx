@@ -68,6 +68,7 @@ export default function List({
                         isCompletedManifest={transaction.isCompletedManifest}
                         isPaidOff={transaction.isPaidOff}
                         statusTahapan="Waiting"
+                        statusTahapanDetail="Waiting"
                         noHeader
                         noAmountLeft
                         detailOnly
@@ -120,6 +121,7 @@ export default function List({
                     isCompletedManifest={transaction.isCompletedManifest}
                     isPaidOff={transaction.isPaidOff}
                     statusTahapan="Waiting"
+                    statusTahapanDetail="Waiting"
                     noHeader
                     noAmountLeft
                     detailOnly
