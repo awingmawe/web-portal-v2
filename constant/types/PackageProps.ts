@@ -37,7 +37,10 @@ export interface CardData {
   discountType: string
   title: string
   location: string
+  locationId: string
   district: string
+  province: string
+  provinceId: string
   organizationName: string
   originalPrice: string
   price: string
@@ -123,4 +126,5 @@ export interface Package {
   itinerary?: PackageItinerary
   detail: PackageDetail
   tag?: null | any
+  price: number
 }

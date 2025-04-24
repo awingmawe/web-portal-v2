@@ -12,8 +12,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { PackageVariant } from '@/constant/types/PackageProps'
+import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
@@ -22,6 +23,8 @@ import {
   formatCurrencyIndonesia,
   formatDateToRangeString,
   formatPhoneNumber,
+  getHotelRating,
+  getTripDuration,
   isEmpty,
 } from '@/lib/utils'
 import { PopoverClose } from '@radix-ui/react-popover'
@@ -34,14 +37,17 @@ interface PackageVariantComponentProps {
   variants: PackageVariant[]
   titlePackage: string
   organization?: OrganizationInstance
+  package: Package
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   variants = [],
   organization,
   titlePackage,
+  package: pkg,
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
+  const { pushEvent } = useEventTracker()
   const {
     selectedVariant,
     selectedVariantId,
@@ -157,6 +163,39 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         variantId: selectedVariant?.id,
       })
     )
+
+    handlePushEvent('click_checkout')
+  }
+
+  function handlePushEvent(name: string, withVariant = true) {
+    pushEvent({
+      name,
+      category: 'detail_package',
+      topic: 'umrah',
+      data: {
+        packageId: pkg.id,
+        packageType: pkg.packageType,
+        title: pkg.title,
+        slug: pkg.slug,
+        hotelRating: getHotelRating(pkg),
+        tripDuration: getTripDuration(pkg),
+        travelName: pkg.organizationInstance.name,
+        travelCity: pkg.organizationInstance.city.name,
+        travelCityId: pkg.organizationInstance.cityId,
+        travelProvinceName: pkg.organizationInstance.province.name,
+        travelProvinceId: pkg.organizationInstance.provinceId,
+        lastCall: selectedVariant?.isLastCall,
+        price: getPrice(),
+        organizationId: pkg.organizationId,
+        organizationInstanceId: pkg.organizationInstanceId,
+        ...(withVariant && {
+          roomType: selectedRoomType,
+          variantId: selectedVariant?.id,
+          variantName: selectedVariant?.name,
+          departureDate: selectedVariant?.departureDate,
+        }),
+      },
+    })
   }
 
   // Show skeleton loader when loading
@@ -488,7 +527,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
             atau
           </div>
-          <Link href={`/banking/credit`}>
+          <Link
+            href={`/banking/credit`}
+            onClick={() => handlePushEvent('click_paylater')}
+          >
             <Button
               className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
               variant="outline"
@@ -526,7 +568,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         <div className="flex items-center justify-between max-lg:hidden">
           <div className="text-s-regular text-neutral-200"></div>
           <div
-            onClick={() => shareViaWhatsApp(titlePackage, phoneNumberUsed)}
+            onClick={() => {
+              handlePushEvent('click_consultation', false)
+              shareViaWhatsApp(titlePackage, phoneNumberUsed)
+            }}
             className="hover:text-primary-500 flex cursor-pointer items-center gap-1 transition-colors"
           >
             <span className="text-s-medium">Konsultasi</span>

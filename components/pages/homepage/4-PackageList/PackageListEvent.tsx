@@ -46,9 +46,10 @@ const PackageSection = ({
           key={`package-items-${item.title}-${index}`}
           className="basis-4/5 items-center pl-4.5 md:basis-1/2 lg:basis-1/4"
         >
-          <CardPackage data={item} />
+          <CardPackage data={item} section={type} />
         </CarouselItem>
       )),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   )
 

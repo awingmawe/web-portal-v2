@@ -4,6 +4,7 @@ import { LockIcon } from '@/components/icons/lock'
 import { MaximizeIcon } from '@/components/icons/maximize'
 import { SearchIcon } from '@/components/icons/search'
 import SearchFilters from '@/components/pages/homepage/1-Banner/SearchFilter'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn } from '@/lib/utils'
@@ -41,7 +42,8 @@ const NotchedContainer: React.FC<{
 }
 
 const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
-  const { setIsDisabled } = useFilterProduct()
+  const { setIsDisabled, setFilterName } = useFilterProduct()
+  const { pushEvent } = useEventTracker()
   // State for active tab
   const [activeTab, setActiveTab] = useState<TripType>('umrah')
   // Ref for the tab container to calculate positions
@@ -61,6 +63,14 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
     if (activeTab !== tab) {
       setPrevActiveTab(activeTab)
       setActiveTab(tab)
+      setFilterName(tab)
+      pushEvent({
+        name: 'click_filter_menu',
+        category: 'home',
+        data: {
+          filterName: tab,
+        },
+      })
     }
   }
 
