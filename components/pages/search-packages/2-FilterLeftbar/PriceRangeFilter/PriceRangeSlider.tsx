@@ -10,19 +10,19 @@ import React, { useEffect, useMemo, useState } from 'react'
 interface PriceRangeSliderProps {
   minMax: PriceParams
   filters: {
-    hargaMin: string
-    hargaMax: string
+    priceRange: {
+      hargaMin: string
+      hargaMax: string
+    }
   }
-  setHargaMin: (value: string) => void
-  setHargaMax: (value: string) => void
+  setPriceRange: (range: { hargaMin: string; hargaMax: string }) => void
   isLoadingSkeleton: boolean
 }
 
 export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   minMax,
   filters,
-  setHargaMin,
-  setHargaMax,
+  setPriceRange,
   isLoadingSkeleton,
 }) => {
   const { min, max } = minMax
@@ -30,14 +30,31 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   const formattedMax = Number(max)
 
   // Local state for input values
-  const [localHargaMin, setLocalHargaMin] = useState(filters.hargaMin)
-  const [localHargaMax, setLocalHargaMax] = useState(filters.hargaMax)
+  const [localHargaMin, setLocalHargaMin] = useState(
+    filters?.priceRange?.hargaMin
+  )
+  const [localHargaMax, setLocalHargaMax] = useState(
+    filters?.priceRange?.hargaMax
+  )
 
   // Sync local state with props
   useEffect(() => {
-    setLocalHargaMin(filters.hargaMin)
-    setLocalHargaMax(filters.hargaMax)
-  }, [filters.hargaMin, filters.hargaMax])
+    if (filters?.priceRange?.hargaMin !== undefined) {
+      setLocalHargaMin(filters?.priceRange?.hargaMin)
+    } else {
+      // Reset to default or empty when the filter is reset
+      setLocalHargaMin('')
+    }
+  }, [filters?.priceRange?.hargaMin])
+
+  useEffect(() => {
+    if (filters?.priceRange?.hargaMax !== undefined) {
+      setLocalHargaMax(filters?.priceRange?.hargaMax)
+    } else {
+      // Reset to default or empty when the filter is reset
+      setLocalHargaMax('')
+    }
+  }, [filters?.priceRange?.hargaMax])
 
   // Custom debounce hook
   const useDebounce = (value: any, delay: number) => {
@@ -62,18 +79,34 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
 
   // Effect for updating parent state when debounced values change
   useEffect(() => {
-    if (debouncedHargaMin !== filters.hargaMin) {
-      setHargaMin(debouncedHargaMin)
+    if (debouncedHargaMin !== filters?.priceRange?.hargaMin) {
+      setPriceRange({
+        hargaMin: debouncedHargaMin,
+        hargaMax: filters?.priceRange?.hargaMax || '',
+      })
     }
-  }, [debouncedHargaMin, filters.hargaMin, setHargaMin])
+  }, [
+    debouncedHargaMin,
+    filters?.priceRange?.hargaMin,
+    filters?.priceRange?.hargaMax,
+    setPriceRange,
+  ])
 
   useEffect(() => {
-    if (debouncedHargaMax !== filters.hargaMax) {
-      setHargaMax(debouncedHargaMax)
+    if (debouncedHargaMax !== filters?.priceRange?.hargaMax) {
+      setPriceRange({
+        hargaMin: filters?.priceRange?.hargaMin || '',
+        hargaMax: debouncedHargaMax,
+      })
     }
-  }, [debouncedHargaMax, filters.hargaMax, setHargaMax])
+  }, [
+    debouncedHargaMax,
+    filters?.priceRange?.hargaMin,
+    filters?.priceRange?.hargaMax,
+    setPriceRange,
+  ])
 
-  // Hooks for slider range
+  // Hooks for slider range - adapting to use the new priceRange structure
   const {
     range,
     handleSliderChange,

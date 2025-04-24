@@ -29,8 +29,10 @@ const initialFilterState: FilterState = {
   arrivalAirport: null,
   airline: null,
   // Add new attributes if there's a new state for filter
-  hargaMin: '',
-  hargaMax: '',
+  priceRange: {
+    hargaMax: '',
+    hargaMin: '',
+  },
   facilityCode: '',
   section: '',
   tagSlug: '',
@@ -53,8 +55,7 @@ interface FilterProductContextType {
   setDepartureAirport: (airport: Airport) => void
   setArrivalAirport: (airport: Airport) => void
   setAirline: (airline: Airline) => void
-  setHargaMin: (price: string) => void
-  setHargaMax: (price: string) => void
+  setPriceRange: (range: any) => void
   setFacilityCode: (code: string) => void
   setSection: (section: string) => void
   setTagSlug: (slug: string) => void
@@ -62,7 +63,7 @@ interface FilterProductContextType {
 
   // Reset filter state - full and individual
   resetFilters: (filters?: typeof initialFilterState) => void
-  resetFilter: (filterKey: FilterKey, value?: any) => void // New function to reset individual filter
+  resetFilter: (filterKey: FilterKey) => void // New function to reset individual filter
 
   // Form submission
   isDisabled: boolean
@@ -122,12 +123,8 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, airline: airline }))
   }, [])
 
-  const setHargaMin = useCallback((price: string) => {
-    setFilters((prev) => ({ ...prev, hargaMin: price }))
-  }, [])
-
-  const setHargaMax = useCallback((price: string) => {
-    setFilters((prev) => ({ ...prev, hargaMax: price }))
+  const setPriceRange = useCallback((range: any) => {
+    setFilters((prev) => ({ ...prev, priceRange: range }))
   }, [])
 
   const setFacilityCode = useCallback((code: string) => {
@@ -153,17 +150,11 @@ export const FilterProductProvider: React.FC<{
 
   // Reset individual filter
   const resetFilter = useCallback(
-    (filterKey: FilterKey, value?: any) => {
-      if (filterKey === 'priceRange' && value) {
-        // Handle price range reset as a special case
-        setHargaMin(value.min)
-        setHargaMax(value.max)
-      } else {
-        setFilters((prev) => ({
-          ...prev,
-          [filterKey]: initialFilterState[filterKey],
-        }))
-      }
+    (filterKey: FilterKey) => {
+      setFilters((prev) => ({
+        ...prev,
+        [filterKey]: initialFilterState[filterKey],
+      }))
 
       if (!isMobile) {
         // Also update the URL if needed
@@ -173,8 +164,6 @@ export const FilterProductProvider: React.FC<{
           departureAirport: 'dptArpt',
           arrivalAirport: 'arrArpt',
           airline: 'trvl',
-          hargaMin: 'prMin',
-          hargaMax: 'prMax',
           facilityCode: 'fC',
           section: 'sC',
           tagSlug: 'tS',
@@ -182,6 +171,10 @@ export const FilterProductProvider: React.FC<{
           priceRange: null,
         }
         // Special handling for dateRange which maps to two URL params
+        if (filterKey === 'priceRange') {
+          updateQueryParams(['prMin', 'prMax'], ['', ''])
+          return
+        }
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
           updateQueryParams(['sD', 'eD'], ['', ''])
@@ -195,7 +188,7 @@ export const FilterProductProvider: React.FC<{
         }
       }
     },
-    [isMobile, setHargaMax, setHargaMin, updateQueryParams]
+    [isMobile, updateQueryParams]
   )
 
   // Set default value states filter from search params
@@ -233,17 +226,20 @@ export const FilterProductProvider: React.FC<{
         hasUpdates = true
       }
 
+      // Initialize price range object if not already present
+      newFilters.priceRange = { hargaMin: '', hargaMax: '' }
+
       // Set price min if exists
       const minPriceParam = params.get('prMin')
       if (minPriceParam) {
-        newFilters.hargaMin = minPriceParam
+        newFilters.priceRange.hargaMin = minPriceParam
         hasUpdates = true
       }
 
       // Set price max if exists
       const maxPriceParam = params.get('prMax')
       if (maxPriceParam) {
-        newFilters.hargaMax = maxPriceParam
+        newFilters.priceRange.hargaMax = maxPriceParam
         hasUpdates = true
       }
 
@@ -335,8 +331,12 @@ export const FilterProductProvider: React.FC<{
       departureFromAirportCode: filters.departureAirport?.code || undefined,
       arrivalFromAirportCode: filters.arrivalAirport?.code || undefined,
       departureAirlineName: filters.airline?.name || undefined,
-      minPrice: filters.hargaMin.replace(/\D/g, '') || undefined,
-      maxPrice: filters.hargaMax.replace(/\D/g, '') || undefined,
+      minPrice: filters.priceRange?.hargaMin
+        ? filters.priceRange.hargaMin.replace(/\D/g, '')
+        : undefined,
+      maxPrice: filters.priceRange?.hargaMax
+        ? filters.priceRange.hargaMax.replace(/\D/g, '')
+        : undefined,
       hotelRating: filters.hotelStars ? String(filters.hotelStars) : undefined,
       facilityCode: filters.facilityCode || undefined,
       section: filters.section || undefined,
@@ -354,8 +354,6 @@ export const FilterProductProvider: React.FC<{
         // Fetch data using the hook
         const data = await fetchPackage(params, page)
         const mappedData = mapProductsToCardData(data)
-
-        console.log(data)
 
         // Update state
         setPackages(mappedData)
@@ -476,7 +474,7 @@ export const FilterProductProvider: React.FC<{
       setTimeout(() => {
         // Reset loading
         setIsLoading(false)
-
+        setIsUsingCSRData(true)
         // Navigate to search results page
         // Only update the query parameters if we have keys/values to update
         updateQueryParams(keys, values, '/search')
@@ -507,8 +505,7 @@ export const FilterProductProvider: React.FC<{
     setDepartureAirport,
     setArrivalAirport,
     setAirline,
-    setHargaMin,
-    setHargaMax,
+    setPriceRange,
     setFacilityCode,
     setSection,
     setTagSlug,

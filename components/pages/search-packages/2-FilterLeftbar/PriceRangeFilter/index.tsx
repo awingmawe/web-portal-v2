@@ -15,7 +15,7 @@ interface PriceRangeFilterProps {
 }
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ dataMinMax }) => {
-  const { filters, setHargaMax, setHargaMin, resetFilter, isLoadingSkeleton } =
+  const { filters, setPriceRange, resetFilter, isLoadingSkeleton } =
     useFilterProduct()
 
   // Handle reset click with event stopping
@@ -24,7 +24,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ dataMinMax }) => {
     e.stopPropagation()
 
     // Reset both price filters at once
-    resetFilter('priceRange', { min: dataMinMax.min, max: dataMinMax.max })
+    resetFilter('priceRange')
   }
 
   return (
@@ -44,8 +44,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ dataMinMax }) => {
         <PriceRangeSlider
           minMax={dataMinMax}
           filters={filters}
-          setHargaMin={setHargaMin}
-          setHargaMax={setHargaMax}
+          setPriceRange={setPriceRange}
           isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>

@@ -50,13 +50,13 @@ export async function generateMetadata({
 
 export default async function DetailPackage({ params }: { params: any }) {
   const { slugPackage } = await params
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
   const detailData = await getPackageDetail(slugPackage)
   const idDetailPackage = detailData.id
   const medinaIdHotel = detailData.medinaHotel.id
   const meccaIdHotel = detailData.meccaHotel.id
-  const cookieStore = await cookies()
-  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   const [galleryData, packageVariants, galleryMedina, galleryMecca] =
     await Promise.all([
       getGalleryPackage(idDetailPackage),
