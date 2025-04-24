@@ -46,7 +46,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     loadMore,
     hasMore,
     loading,
-    packages: infinitePackages,
+    packages: infinitePackages, // this packages is same like packageDataCSR but in different state
   } = useInfiniteScroll()
   const { lg: isMobile } = useTailwindBreakpoint()
 
@@ -58,11 +58,6 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   const displayTotal = useMemo(() => {
     return isUsingCSRData ? totalCSR : initialTotal
   }, [isUsingCSRData, totalCSR, initialTotal])
-
-  // For mobile, use the appropriate infinite scroll data
-  const mobilePackages = useMemo(() => {
-    return isMobile ? infinitePackages : displayPackages
-  }, [isMobile, infinitePackages, displayPackages])
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
 
@@ -137,7 +132,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {isMobile ? (
             <>
-              {mobilePackages?.map((packageData, index) => (
+              {infinitePackages?.map((packageData, index) => (
                 <CardPackage
                   key={`packages-${packageData.slugPackage}-${index}`}
                   data={packageData}

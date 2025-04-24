@@ -13,7 +13,7 @@ export const NoResults: React.FC<NoResultsProps> = ({ resetAllFilters }) => {
     <div className="flex items-center justify-center">
       <div className="flex w-3/4 flex-row items-center gap-3.5 max-lg:flex-col">
         <Image src={NoPackageAvailable} alt="no-packages-available" />
-        <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="flex flex-col items-center justify-center py-16 text-center max-lg:py-8">
           <p className="text-l-semibold mb-2 text-neutral-900">
             Pencarian Tidak Ditemukan
           </p>
