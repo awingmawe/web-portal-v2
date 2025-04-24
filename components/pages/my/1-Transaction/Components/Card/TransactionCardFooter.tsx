@@ -1,6 +1,7 @@
 'use client'
 
 import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
+import { TransactionDetail } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetail'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -60,12 +61,18 @@ export default function TransactionCardFooter({
     }
   }, [fetcPaymentTransaction, showDpButton])
 
+  const [open, setOpen] = useState(false)
+
   return (
     <Fragment>
       <div className="flex items-center gap-2 max-lg:hidden">
-        <p className="text-s-regular mr-4 font-medium text-nowrap text-gray-900">
+        <Button
+          className="text-s-regular mr-4 font-medium text-nowrap text-gray-900"
+          variant="ghost"
+          onClick={() => setOpen(true)}
+        >
           Lihat Detail Pesanan
-        </p>
+        </Button>
         {!detailOnly && (
           <Fragment>
             {isPaidOff ? (
@@ -148,6 +155,7 @@ export default function TransactionCardFooter({
               <Button
                 variant="ghost"
                 className="mr-3 font-medium text-neutral-900"
+                onClick={() => setOpen(true)}
               >
                 Lihat Detail
               </Button>
@@ -224,6 +232,14 @@ export default function TransactionCardFooter({
           </Fragment>
         )}
       </div>
+
+      {open && (
+        <TransactionDetail
+          open={open}
+          onOpenChange={setOpen}
+          bookingId={bookingId}
+        />
+      )}
     </Fragment>
   )
 }

@@ -2,13 +2,12 @@
 
 import type React from 'react'
 
-import List from '@/components/pages/my/1-Transaction/Completed/List'
-import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
-
 import {
   SearchAndFilter,
   SearchAndFilterMobile,
-} from '@/components/pages/my/1-Transaction/Completed/Filter'
+} from '@/components/pages/my/1-Transaction/3-Cancelled/Filter'
+import List from '@/components/pages/my/1-Transaction/3-Cancelled/List'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
@@ -18,7 +17,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
-export default function TransactionCompleted() {
+export default function TransactionCancelled() {
   const searchParams = useSearchParams()
   const { lg } = useTailwindBreakpoint()
   const [isMounted, setIsMounted] = useState(false)
@@ -60,7 +59,7 @@ export default function TransactionCompleted() {
         : ''
 
     router.push(
-      `/my/transaction?type=completed&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
+      `/my/transaction?type=canceled&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
     )
 
     try {
@@ -71,7 +70,7 @@ export default function TransactionCompleted() {
         order: 'desc',
         orderBy: 'createdAt',
         'bookingCode:likeLower': `%${searchQuery}%`,
-        'status.slug': 'completed',
+        'status.slug:in': 'canceled-by-user,canceled-by-travel',
       }
 
       if (dateRange?.from) {

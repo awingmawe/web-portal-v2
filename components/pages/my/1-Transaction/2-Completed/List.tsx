@@ -1,6 +1,6 @@
-import TransactionCard from '@/components/pages/my/1-Transaction/Card/TransactionCard'
-import EmptyState from '@/components/pages/my/1-Transaction/EmptyState'
-import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
+import TransactionCard from '@/components/pages/my/1-Transaction/Components/Card/TransactionCard'
+import EmptyState from '@/components/pages/my/1-Transaction/Components/EmptyState'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { Transaction } from '@/constant/types/Transaction'
 import { Fragment } from 'react'
@@ -44,7 +44,7 @@ export default function List({
                   transactions.map((transaction) => (
                     <div
                       key={`${transaction.id}-${new Date().getTime()}-${Math.random()}`}
-                      className="max-lg:px-3"
+                      className="max-lg:px-5"
                     >
                       <TransactionCard
                         status={transaction.status.slug}
@@ -67,12 +67,12 @@ export default function List({
                         bookingId={String(transaction.id)}
                         isCompletedManifest={transaction.isCompletedManifest}
                         isPaidOff={transaction.isPaidOff}
-                        statusTahapan="Waiting"
+                        statusTahapan="Selesai"
                         noHeader
                         noAmountLeft
                         detailOnly
                         noLabelNotif
-                        showDpButton
+                        noFooter
                       />
                     </div>
                   ))
@@ -119,12 +119,11 @@ export default function List({
                     bookingId={String(transaction.id)}
                     isCompletedManifest={transaction.isCompletedManifest}
                     isPaidOff={transaction.isPaidOff}
-                    statusTahapan="Waiting"
+                    statusTahapan="Selesai"
                     noHeader
                     noAmountLeft
                     detailOnly
                     noLabelNotif
-                    showDpButton
                   />
                 </div>
               ))}
