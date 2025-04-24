@@ -1,55 +1,41 @@
 'use client'
 
-import {
-  ArrowLeft,
-  ChevronRight,
-  CreditCard,
-  PlaneLanding,
-  PlaneTakeoff,
-} from 'lucide-react'
+import { useCheckout } from '@/contexts/checkout-context'
+import { ArrowLeft, CreditCard, PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
-import React, { useState } from 'react'
 
-interface CheckoutProps {
-  token?: string
-}
+const CheckoutPage = () => {
+  const {
+    detailVariant,
+    selectedVariant,
+    preBooking,
+    paymentDetails,
+    referralCode,
+    setReferralCode,
+    useMyData,
+    handleCheckReferral,
+    jamaahList,
+    setPaymentAmount,
+    totalPrice,
+    handleAddJamaah,
+    handleJamaahNameChange,
+    handleJamaahPhoneChange,
+    handleRemoveJamaah,
+    sliderValue,
+    setSliderValue,
+    handleUseMyDataChange,
+    handleCheckout,
+    termsAccepted,
+    setTermsAccepted,
+    isJamaahDataValid,
+    isReferralValid,
+    isReferralCodeChecked,
+    wukalaSetting,
+    handleRemoveReferralCode,
+  } = useCheckout()
 
-const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
-  const minPayment = 5000000
-  const totalPrice = 118000000
-  const [paymentAmount, setPaymentAmount] = useState(minPayment)
-  const [referralCode, setReferralCode] = useState('')
-  const [useMyData, setUseMyData] = useState(false)
-  const [jamaahList, setJamaahList] = useState([{ id: 1, name: '', phone: '' }])
+  // Add state for terms and conditions checkbox
 
-  const handleAddJamaah = () => {
-    const newId = jamaahList.length + 1
-    setJamaahList([...jamaahList, { id: newId, name: '', phone: '' }])
-  }
-
-  const handleJamaahNameChange = (id: any, value: any) => {
-    const updatedList = jamaahList.map((jamaah) =>
-      jamaah.id === id ? { ...jamaah, name: value } : jamaah
-    )
-    setJamaahList(updatedList)
-  }
-
-  const handleJamaahPhoneChange = (id: any, value: any) => {
-    const updatedList = jamaahList.map((jamaah) =>
-      jamaah.id === id ? { ...jamaah, phone: value } : jamaah
-    )
-    setJamaahList(updatedList)
-  }
-
-  const handlePaymentInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value.replace(/\D/g, '')) || 0
-    if (value >= minPayment && value <= totalPrice) {
-      setPaymentAmount(value)
-    }
-  }
-  const handleRemoveJamaah = (id: number) => {
-    setJamaahList((prev) => prev.filter((j) => j.id !== id))
-  }
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Main content */}
@@ -73,9 +59,23 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                 </div>
                 <div>
                   <p className="font-medium text-gray-800">
-                    Jakarta (CGK) → Jeddah (JED)
+                    {detailVariant?.package?.departure?.from?.airport?.cityName}{' '}
+                    ({detailVariant?.package?.departure?.from?.airport?.code}) →
+                    {detailVariant?.package?.departure?.to?.airport?.cityName} (
+                    {detailVariant?.package?.departure?.to?.airport?.code})
                   </p>
-                  <p className="text-sm text-gray-400">Rabu, 03 Januari 2025</p>
+                  <p className="text-sm text-gray-400">
+                    {detailVariant?.departureDate &&
+                      new Date(detailVariant.departureDate).toLocaleDateString(
+                        'id-ID',
+                        {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }
+                      )}
+                  </p>
                 </div>
               </div>
 
@@ -88,15 +88,28 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                 </div>
                 <div>
                   <p className="font-medium text-gray-800">
-                    Jeddah (JED) → Jakarta (CGK)
+                    {detailVariant?.package?.arrival?.from?.airport?.cityName} (
+                    {detailVariant?.package?.arrival?.from?.airport?.code}) →
+                    {detailVariant?.package?.arrival?.to?.airport?.cityName} (
+                    {detailVariant?.package?.arrival?.to?.airport?.code})
                   </p>
-                  <p className="text-sm text-gray-400">Rabu, 10 Januari 2025</p>
+                  <p className="text-sm text-gray-400">
+                    {detailVariant?.arrivalDate &&
+                      new Date(detailVariant.arrivalDate).toLocaleDateString(
+                        'id-ID',
+                        {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }
+                      )}
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Jamaah data */}
-
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center">
@@ -126,7 +139,7 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                     type="checkbox"
                     className="mr-2 h-4 w-4 accent-yellow-500"
                     checked={useMyData}
-                    onChange={(e) => setUseMyData(e.target.checked)}
+                    onChange={(e) => handleUseMyDataChange(e.target.checked)}
                   />
                   <span className="text-sm text-gray-700">
                     Tambahkan data saya sebagai data Jemaah
@@ -134,7 +147,7 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                 </div>
               </div>
 
-              {jamaahList.map((jamaah) => (
+              {jamaahList.map((jamaah: any) => (
                 <div
                   key={jamaah.id}
                   className="mb-4 border-t border-gray-100 pt-4"
@@ -149,8 +162,12 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                     <input
                       type="text"
                       placeholder="Masukkan nama Jemaah"
-                      className="w-full flex-1 rounded-full border border-gray-300 px-4 py-2 placeholder-gray-400"
-                      value={jamaah.name}
+                      className={`w-full flex-1 rounded-full border ${
+                        !jamaah.name || jamaah.name.trim() === ''
+                          ? 'border-red-300'
+                          : 'border-gray-300'
+                      } px-4 py-2 placeholder-gray-400`}
+                      value={jamaah.name || ''}
                       onChange={(e) =>
                         handleJamaahNameChange(jamaah.id, e.target.value)
                       }
@@ -159,8 +176,12 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                       <input
                         type="text"
                         placeholder="+62"
-                        className="w-full rounded-full border border-gray-300 px-4 py-2 placeholder-gray-400"
-                        value={jamaah.phone}
+                        className={`w-full rounded-full border ${
+                          !jamaah.phone || jamaah.phone.trim() === ''
+                            ? 'border-red-300'
+                            : 'border-gray-300'
+                        } px-4 py-2 placeholder-gray-400`}
+                        value={jamaah.phone || ''}
                         onChange={(e) =>
                           handleJamaahPhoneChange(jamaah.id, e.target.value)
                         }
@@ -168,6 +189,7 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                       <button
                         className="text-gray-400 hover:text-red-500"
                         onClick={() => handleRemoveJamaah(jamaah.id)}
+                        disabled={jamaahList.length <= 1} // Prevent removing if there's only one jamaah
                       >
                         <svg
                           width="20"
@@ -187,6 +209,14 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                       </button>
                     </div>
                   </div>
+                  {(!jamaah.name ||
+                    jamaah.name.trim() === '' ||
+                    !jamaah.phone ||
+                    jamaah.phone.trim() === '') && (
+                    <p className="mt-1 text-xs text-red-500">
+                      *Data Jemaah wajib diisi
+                    </p>
+                  )}
                 </div>
               ))}
 
@@ -243,7 +273,10 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                   atur!
                 </p>
                 <span className="text-xs whitespace-nowrap text-gray-400">
-                  *uang muka minimal Rp{minPayment.toLocaleString('id-ID')}
+                  *uang muka minimal Rp{' '}
+                  {(
+                    selectedVariant.netAmount * jamaahList.length
+                  ).toLocaleString('id-ID')}
                 </span>
               </div>
 
@@ -261,18 +294,44 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                       type="text"
                       inputMode="numeric"
                       className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-right font-medium text-gray-800 shadow-sm"
-                      value={paymentAmount.toLocaleString('id-ID')}
-                      onChange={handlePaymentInputChange}
+                      value={sliderValue.toLocaleString('id-ID')} // Display the total amount from slider
+                      onChange={(e) => {
+                        const value =
+                          parseInt(e.target.value.replace(/\D/g, '')) || 0
+                        const minAmount =
+                          selectedVariant.netAmount * jamaahList.length
+                        const maxAmount =
+                          preBooking?.totalPrice ||
+                          totalPrice * jamaahList.length
+
+                        if (value >= minAmount && value <= maxAmount) {
+                          setSliderValue(value) // Update slider position
+
+                          // Calculate per-jamaah amount
+                          const perJamaahAmount = Math.ceil(
+                            value / jamaahList.length
+                          )
+                          setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
+                        }
+                      }}
                     />
                   </div>
                 </div>
 
                 <input
                   type="range"
-                  min={minPayment}
-                  max={totalPrice}
-                  value={paymentAmount}
-                  onChange={(e) => setPaymentAmount(parseInt(e.target.value))}
+                  min={selectedVariant.netAmount * jamaahList.length} // Min is net amount × number of jamaah
+                  max={preBooking?.totalPrice || totalPrice * jamaahList.length}
+                  // step={2000000}
+                  value={sliderValue} // Use the dedicated slider state
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value)
+                    setSliderValue(value) // Update slider position
+
+                    // Calculate per-jamaah amount
+                    const perJamaahAmount = Math.ceil(value / jamaahList.length)
+                    setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
+                  }}
                   className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
                 />
 
@@ -280,28 +339,15 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                   <span className="text-sm text-gray-600">
                     Sisa Pelunasan{' '}
                     <strong className="text-black">
-                      Rp{(totalPrice - paymentAmount).toLocaleString('id-ID')}
+                      Rp{' '}
+                      {Number(preBooking?.remainingPayment || 0).toLocaleString(
+                        'id-ID'
+                      )}
                     </strong>
                   </span>
                 </div>
               </div>
             </div>
-
-            {/* Point section */}
-            {/* <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-6">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="mr-2 h-4 w-4 accent-yellow-500"
-                  />
-                  <span className="font-medium">Poin Muslim</span>
-                </div>
-                <p className="mt-2 text-gray-600">
-                  Gunakan 1.200.000 poin Muslim
-                </p>
-              </div>
-            </div> */}
 
             {/* Referral code */}
             <div className="rounded-xl bg-white p-6 shadow-sm">
@@ -341,14 +387,30 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                     className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 shadow-sm placeholder:text-gray-400"
                     value={referralCode}
                     onChange={(e) => setReferralCode(e.target.value)}
+                    disabled={wukalaSetting}
                   />
                   <button
                     className="rounded-full bg-[#FFC100] px-6 py-2 text-sm font-semibold text-[#30302F] shadow-sm transition hover:opacity-90"
-                    // onClick={handleCheckReferral}
+                    onClick={
+                      wukalaSetting
+                        ? handleRemoveReferralCode
+                        : handleCheckReferral
+                    }
                   >
-                    Cek
+                    {wukalaSetting ? 'Hapus' : 'Cek'}
                   </button>
                 </div>
+                {referralCode && isReferralCodeChecked && (
+                  <p
+                    className={`mt-5 font-medium ${
+                      isReferralValid ? 'text-[#00B97D]' : 'text-red-500'
+                    }`}
+                  >
+                    {isReferralValid
+                      ? `Kode referral berhasil digunakan`
+                      : `Kode referral tidak valid!`}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -358,6 +420,8 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                 <input
                   type="checkbox"
                   className="mr-2 h-4 w-4 accent-yellow-500"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
                 />
                 <span className="text-sm text-gray-600">
                   Dengan memesan, anda menyetujui{' '}
@@ -368,7 +432,31 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                 </span>
               </div>
 
-              <button className="w-full rounded-md bg-yellow-500 py-3 font-medium text-[#30302F]">
+              {!isJamaahDataValid() && (
+                <p className="mb-2 text-sm text-red-500">
+                  *Harap lengkapi data Jamaah terlebih dahulu
+                </p>
+              )}
+
+              {isJamaahDataValid() && !termsAccepted && (
+                <p className="mb-2 text-sm text-red-500">
+                  *Harap setujui syarat & ketentuan
+                </p>
+              )}
+
+              <button
+                className={`w-full rounded-md py-3 font-medium ${
+                  isJamaahDataValid() && termsAccepted
+                    ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
+                    : 'cursor-not-allowed bg-gray-300 text-gray-500'
+                }`}
+                disabled={!isJamaahDataValid() || !termsAccepted}
+                onClick={
+                  isJamaahDataValid() && termsAccepted
+                    ? handleCheckout
+                    : undefined
+                }
+              >
                 Lanjut Bayar Sekarang!
               </button>
             </div>
@@ -378,62 +466,52 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
           <div className="w-full lg:w-1/3">
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <div className="mb-4 flex">
-                <div className="mr-4 h-24 w-24 rounded-lg bg-gray-200">
+                <div className="mr-4">
                   <Image
-                    src="/api/placeholder/100/100"
+                    src={detailVariant?.package?.thumbnail || ''}
                     alt="Umrah Package"
                     width={100}
                     height={100}
                     className="rounded-lg"
+                    style={{
+                      borderRadius: '20px',
+                      objectFit: 'cover',
+                    }}
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold">Umrah SYAWAL PLUS DUBAI</h3>
-                  <p className="text-gray-600">
-                    PAKET 12 HARI BINTANG 5 SPESIAL
-                  </p>
-                  <div className="mt-2 flex items-center">
-                    <div className="mr-1 h-3 w-3 rounded-full bg-purple-500"></div>
-                    <span className="text-xs">The Haramain Project</span>
-                  </div>
-                  <p className="text-xs text-gray-500">Jakarta Pusat</p>
-                </div>
-              </div>
+                  <h3 className="font-bold">{detailVariant?.package?.title}</h3>
+                  <div className="flex items-start gap-2">
+                    <Image
+                      src={
+                        detailVariant?.package?.organizationInstance
+                          ?.thumbnail || ''
+                      }
+                      alt="Umrah Package"
+                      width={30}
+                      height={30}
+                      className="rounded-lg"
+                      style={{
+                        borderRadius: '20px',
+                        objectFit: 'cover',
+                        marginTop: '5px',
+                      }}
+                    />
 
-              {/* Promo coupon */}
-              <div className="mb-6">
-                <h4 className="mb-2 font-medium">Kupon Promo</h4>
-                <div className="flex items-center justify-between rounded-lg bg-gray-50 p-3">
-                  <div className="flex items-center">
-                    <div className="mr-2 rounded bg-yellow-100 p-1">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M15.5 9C15.5 9.82843 14.8284 10.5 14 10.5C13.1716 10.5 12.5 9.82843 12.5 9C12.5 8.17157 13.1716 7.5 14 7.5C14.8284 7.5 15.5 8.17157 15.5 9Z"
-                          fill="#F59E0B"
-                        />
-                        <path
-                          d="M9.5 15C9.5 15.8284 8.82843 16.5 8 16.5C7.17157 16.5 6.5 15.8284 6.5 15C6.5 14.1716 7.17157 13.5 8 13.5C8.82843 13.5 9.5 14.1716 9.5 15Z"
-                          fill="#F59E0B"
-                        />
-                        <path
-                          d="M22 8.2C22 9.286 21.187 10.182 20.137 10.302L20.1293 10.3038C19.9051 10.3395 19.6701 10.3581 19.429 10.3686L19.4268 10.3687C19.3175 10.3741 19.2066 10.3768 19.096 10.3768L6.6517 10.3768C6.55301 10.3768 6.45397 10.3744 6.35465 10.3701C6.16231 10.3612 5.97155 10.3448 5.7866 10.3204C4.8324 10.1984 4 9.2921 4 8.2C4 7.0777 4.9004 6.1535 6.0027 6.0194C6.0027 6.0194 6.00645 6.0188 6.01265 6.01766L19.429 6.03142C19.6389 6.04116 19.8444 6.05772 20.05 6.0818C21.1348 6.1993 22 7.0997 22 8.2Z"
-                          fill="#F59E0B"
-                        />
-                        <path
-                          d="M22 15.8C22 16.9003 21.1348 17.8007 20.05 17.9182C19.8444 17.9423 19.6389 17.9588 19.429 17.9686L6.0127 17.9823L6.0027 17.9806C4.9004 17.8465 4 16.9223 4 15.8C4 14.7079 4.8324 13.8016 5.7866 13.6796C5.97155 13.6552 6.16231 13.6388 6.35465 13.6299C6.45397 13.6256 6.55301 13.6232 6.6517 13.6232L19.096 13.6232C19.2066 13.6232 19.3175 13.6259 19.4268 13.6313L19.429 13.6314C19.6701 13.6419 19.9051 13.6605 20.1293 13.6962L20.137 13.698C21.187 13.818 22 14.714 22 15.8Z"
-                          fill="#F59E0B"
-                        />
-                      </svg>
+                    <div>
+                      <div className="mt-1 flex items-center">
+                        <span className="text-xs">
+                          {detailVariant?.package?.organizationInstanceName}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        {
+                          detailVariant?.package?.organizationInstance?.city
+                            ?.name
+                        }
+                      </p>
                     </div>
-                    <span className="text-sm">Kamu memiliki 2 kupon promo</span>
                   </div>
-                  <ChevronRight size={20} className="text-gray-400" />
                 </div>
               </div>
 
@@ -442,27 +520,32 @@ const CheckoutPage: React.FC<CheckoutProps> = ({}) => {
                 <h4 className="mb-3 font-medium">Rincian Harga</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">
-                      Total Harga Paket (4 Jemaah)
+                    <span className="text-gray-600">Total Harga Paket</span>
+                    <span className="font-medium">
+                      Rp
+                      {Number(preBooking?.subtotalPrice).toLocaleString(
+                        'id-ID'
+                      )}
                     </span>
-                    <span className="font-medium">Rp120.000.000</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Diskon</span>
-                    <span className="text-red-500">- Rp1.000.000</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Diskon Agen (10%)</span>
-                    <span className="text-red-500">- Rp1.000.000</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Uang muka</span>
-                    <span className="text-red-500">- Rp5.000.000</span>
-                  </div>
+                  {paymentDetails?.map((detail: any, index: any) => (
+                    <div key={index} className="flex justify-between">
+                      <span className="text-gray-600">{detail.label}</span>
+                      <span className="text-red-500">
+                        Rp {Number(detail?.amount).toLocaleString('id-ID')}
+                      </span>
+                    </div>
+                  ))}
+
                   <div className="my-3 h-px bg-gray-200"></div>
                   <div className="flex justify-between font-medium">
                     <span>Sisa Pelunasan</span>
-                    <span>Rp113.000.000</span>
+                    <span>
+                      Rp{' '}
+                      {Number(preBooking?.remainingPayment || 0).toLocaleString(
+                        'id-ID'
+                      )}
+                    </span>
                   </div>
                 </div>
               </div>

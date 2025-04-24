@@ -22,12 +22,14 @@ import {
   PackageGalleryImage,
 } from '@/constant/types/GalleryProps'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
+import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHotel } from '@/services/general-service'
 import {
   getGalleryPackage,
   getPackageDetail,
   getPackageVariantList,
 } from '@/services/umrah-service'
+import { cookies } from 'next/headers'
 
 export async function generateMetadata({
   searchParams,
@@ -47,7 +49,8 @@ export default async function DetailPackage({ params }: { params: any }) {
   const { slugPackage } = await params
 
   const detailData = await getPackageDetail(slugPackage)
-
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   const idDetailPackage = detailData.id
   const medinaIdHotel = detailData.medinaHotel.id
   const meccaIdHotel = detailData.meccaHotel.id
@@ -175,6 +178,7 @@ export default async function DetailPackage({ params }: { params: any }) {
               titlePackage={detailData?.title}
               variants={packageVariants.results}
               organization={detailData?.organizationInstance}
+              token={token}
             />
           </div>
         </div>

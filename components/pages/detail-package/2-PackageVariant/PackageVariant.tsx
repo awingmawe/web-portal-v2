@@ -35,12 +35,14 @@ interface PackageVariantComponentProps {
   variants: PackageVariant[]
   titlePackage: string
   organization?: OrganizationInstance
+  token: any
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   variants = [],
   organization,
   titlePackage,
+  token,
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
   const {
@@ -148,7 +150,8 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
   // When all version 2 muslim101 released, remove this
   const handleLocalStorage = () => {
-    router.push('/checkout')
+    if (!token) {
+    }
     localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
     localStorage.setItem(
       'selectedVariant',
@@ -160,6 +163,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         variantId: selectedVariant?.id,
       })
     )
+    router.push('/checkout')
   }
 
   // Show skeleton loader when loading

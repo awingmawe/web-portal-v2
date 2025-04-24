@@ -1,28 +1,43 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
-import { ArrowLeft, Check, ChevronRight, Plus } from 'lucide-react'
+import { useCheckout } from '@/contexts/checkout-context'
+import { ArrowLeft, Check, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
-const MobileCheckoutPage = () => {
-  const minPayment = 5000000
-  const totalPrice = 113000000
-  const [paymentAmount, setPaymentAmount] = useState(minPayment)
-  const [referralCode, setReferralCode] = useState('')
-  const [jamaahList, setJamaahList] = useState([{ id: 1, name: '', phone: '' }])
+const MobileCheckoutPage = ({}) => {
   const [usePoints, setUsePoints] = useState(false)
 
-  const handleAddJamaah = () => {
-    const newId = jamaahList.length + 1
-    setJamaahList([...jamaahList, { id: newId, name: '', phone: '' }])
-  }
-
-  const handlePaymentInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value.replace(/\D/g, '')) || 0
-    if (value >= minPayment && value <= totalPrice) {
-      setPaymentAmount(value)
-    }
-  }
+  const {
+    token,
+    detailVariant,
+    selectedVariant,
+    preBooking,
+    setPreBooking,
+    paymentDetails,
+    setPaymentDetails,
+    referralCode,
+    setReferralCode,
+    useMyData,
+    setUseMyData,
+    jamaahList,
+    setJamaahList,
+    paymentAmount,
+    setPaymentAmount,
+    totalPrice,
+    handleAddJamaah,
+    handleJamaahNameChange,
+    handleJamaahPhoneChange,
+    handleRemoveJamaah,
+    sliderValue,
+    setSliderValue,
+    handleUseMyDataChange,
+    handleCheckout,
+    termsAccepted,
+    setTermsAccepted,
+    isJamaahDataValid,
+  } = useCheckout()
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -42,7 +57,9 @@ const MobileCheckoutPage = () => {
           <div className="flex items-start">
             <div className="mr-3 h-16 w-16 overflow-hidden rounded-md bg-gray-200">
               <Image
-                src="/api/placeholder/64/64"
+                src={
+                  detailVariant?.package?.organizationInstance?.thumbnail || ''
+                }
                 alt="Package"
                 width={64}
                 height={64}
@@ -50,20 +67,20 @@ const MobileCheckoutPage = () => {
             </div>
             <div className="flex-1">
               <h3 className="text-xs font-medium">
-                UMROH SYAWAL PLUS DUBAI (9 HARI BINTANG 5 | 07 APRIL 2025)
+                {detailVariant?.package?.title}
               </h3>
               <div className="mb-1 flex items-center">
                 <p className="mr-1 text-sm font-bold text-black">
-                  Rp33.000.000
+                  Rp{Number(selectedVariant?.price).toLocaleString('id-ID')}
                 </p>
-                <span className="rounded bg-red-500 px-1 py-0.5 text-[10px] text-white">
-                  -10%
-                </span>
               </div>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[10px] text-gray-500">Travel</p>
-                  <p className="text-xs font-medium">Shusha</p>
+                  <p className="text-xs font-medium">
+                    {' '}
+                    {detailVariant?.package?.organizationInstanceName}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] text-gray-500">
@@ -105,7 +122,7 @@ const MobileCheckoutPage = () => {
         {/* Jamaah Section */}
         <div className="mt-4 bg-white p-4">
           <div className="mt-4 space-y-3">
-            {jamaahList.map((jamaah, index) => (
+            {jamaahList.map((jamaah: any, index: any) => (
               <div
                 key={jamaah.id}
                 className="rounded-xl border border-gray-200 bg-white"
@@ -135,7 +152,9 @@ const MobileCheckoutPage = () => {
                   </div>
                   <button
                     onClick={() =>
-                      setJamaahList(jamaahList.filter((_, i) => i !== index))
+                      setJamaahList(
+                        jamaahList.filter((_: any, i: any) => i !== index)
+                      )
                     }
                     className="rounded-full bg-red-500 p-1"
                   >
@@ -216,7 +235,10 @@ const MobileCheckoutPage = () => {
         <div className="mt-4 bg-white p-4">
           <div className="mb-3 rounded-lg bg-yellow-50 p-3">
             <p className="text-xs font-medium text-yellow-800">
-              Minimal pembayaran untuk saat ini: Rp5.000.000
+              Minimal pembayaran untuk saat ini: Rp{' '}
+              {(selectedVariant.netAmount * jamaahList.length).toLocaleString(
+                'id-ID'
+              )}
             </p>
           </div>
           {/* Payment method */}
@@ -239,33 +261,69 @@ const MobileCheckoutPage = () => {
                 <input
                   type="text"
                   className="flex-1 bg-transparent text-right outline-none"
-                  value={paymentAmount.toLocaleString('id-ID')}
-                  onChange={handlePaymentInputChange}
+                  value={sliderValue.toLocaleString('id-ID')} // Display the total amount from slider
+                  onChange={(e) => {
+                    const value =
+                      parseInt(e.target.value.replace(/\D/g, '')) || 0
+                    const minAmount =
+                      selectedVariant.netAmount * jamaahList.length
+                    const maxAmount =
+                      preBooking?.totalPrice || totalPrice * jamaahList.length
+
+                    if (value >= minAmount && value <= maxAmount) {
+                      setSliderValue(value) // Update slider position
+
+                      // Calculate per-jamaah amount
+                      const perJamaahAmount = Math.ceil(
+                        value / jamaahList.length
+                      )
+                      setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
+                    }
+                  }}
                 />
               </div>
               <input
                 type="range"
-                min={minPayment}
-                max={totalPrice}
-                value={paymentAmount}
-                onChange={(e) => setPaymentAmount(parseInt(e.target.value))}
+                min={selectedVariant.netAmount * jamaahList.length} // Min is net amount × number of jamaah
+                max={preBooking?.totalPrice || totalPrice * jamaahList.length}
+                value={sliderValue} // Use the dedicated slider state
+                onChange={(e) => {
+                  const value = parseInt(e.target.value)
+                  setSliderValue(value) // Update slider position
+
+                  // Calculate per-jamaah amount
+                  const perJamaahAmount = Math.ceil(value / jamaahList.length)
+                  setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
+                }}
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
               />
               <div className="mt-2 flex justify-between text-xs">
-                <span>Rp5.000.000</span>
-                <span>Rp113.000.000</span>
+                <span>
+                  Rp
+                  {(
+                    selectedVariant.netAmount * jamaahList.length
+                  ).toLocaleString('id-ID')}
+                </span>
+                <span>
+                  Rp
+                  {(
+                    preBooking?.totalPrice || totalPrice * jamaahList.length
+                  ).toLocaleString('id-ID')}
+                </span>
               </div>
               <div className="mt-3">
                 <div className="flex justify-between text-sm">
                   <span>Jumlah Bayar</span>
                   <span className="font-medium">
-                    Rp {paymentAmount.toLocaleString('id-ID')}
+                    Rp {sliderValue.toLocaleString('id-ID')}
                   </span>
                 </div>
                 <div className="mt-1 flex justify-between text-sm">
                   <span>Sisa Pelunasan</span>
                   <span className="font-medium">
-                    Rp {(totalPrice - paymentAmount).toLocaleString('id-ID')}
+                    {Number(preBooking?.remainingPayment || 0).toLocaleString(
+                      'id-ID'
+                    )}
                   </span>
                 </div>
               </div>
@@ -273,7 +331,7 @@ const MobileCheckoutPage = () => {
           </div>
 
           {/* Points & Referral */}
-          <div className="mb-4 rounded-lg border border-gray-200 p-3">
+          {/* <div className="mb-4 rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -286,7 +344,7 @@ const MobileCheckoutPage = () => {
             <p className="mt-1 text-xs text-gray-500">
               Gunakan 1.200.000 poin Muslim
             </p>
-          </div>
+          </div> */}
 
           <div className="mb-4 rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
@@ -312,7 +370,7 @@ const MobileCheckoutPage = () => {
               </button>
             </div>
           </div>
-
+          {/* 
           <div className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
               <div className="mr-3 text-yellow-500">
@@ -329,7 +387,7 @@ const MobileCheckoutPage = () => {
               <p className="text-sm">Kamu memiliki 2 kupon promo</p>
             </div>
             <ChevronRight size={20} className="text-gray-400" />
-          </div>
+          </div> */}
         </div>
 
         {/* Payment Summary */}
@@ -338,26 +396,30 @@ const MobileCheckoutPage = () => {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-500">
-                Total Harga Paket (4 Jamaah)
+                Total Harga Paket ({jamaahList.length} Jamaah)
               </span>
-              <span>Rp120.000.000</span>
+              <span>
+                Rp {Number(preBooking?.subtotalPrice).toLocaleString('id-ID')}
+              </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Diskon</span>
-              <span className="text-red-500">-Rp1.000.000</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Diskon Agen (10%)</span>
-              <span className="text-red-500">-Rp6.000.000</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Uang muka</span>
-              <span className="text-red-500">-Rp5.000.000</span>
-            </div>
+            {paymentDetails?.map((detail: any, index: any) => (
+              <div key={index} className="flex justify-between">
+                <span className="text-gray-500">{detail.label}</span>
+                <span className="text-red-500">
+                  Rp{Number(detail?.amount).toLocaleString('id-ID')}
+                </span>
+              </div>
+            ))}
+
             <div className="my-2 h-px bg-gray-200" />
             <div className="flex justify-between font-medium">
               <span>Total Pelunasan</span>
-              <span>Rp113.000.000</span>
+              <span>
+                Rp{' '}
+                {Number(preBooking?.remainingPayment || 0).toLocaleString(
+                  'id-ID'
+                )}
+              </span>
             </div>
           </div>
           <div className="mt-4 text-xs text-gray-500">
