@@ -20,7 +20,7 @@ export default function BreadCrumb() {
         <div className="grid items-center gap-4 lg:mt-10 lg:grid-cols-2 lg:gap-20">
           {/* Left Column - Image (Full width on mobile) */}
           <Image
-            src="https://storage.googleapis.com/m101-prods/about-us/Frame%201000007197%20(1)%20(1).png"
+            src="https://storage.googleapis.com/m101-prods/about-us/image%20115.jpg"
             alt="Muslim101 Platform"
             width={300}
             height={200}

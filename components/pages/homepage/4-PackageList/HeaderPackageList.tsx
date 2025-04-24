@@ -1,5 +1,6 @@
 import { ArrowIcon } from '@/components/icons/arrow'
 import { Button } from '@/components/ui/button'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import Link from 'next/link'
 import { memo } from 'react'
 
@@ -14,6 +15,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
   desc,
   type,
 }: HeaderPackageProps) {
+  const { pushEvent } = useEventTracker()
   return (
     <div className="mt-[36px] mb-6 flex justify-between max-lg:mt-8">
       <div className="flex flex-col gap-0.5">
@@ -26,6 +28,16 @@ export const HeaderPackageList = memo(function HeaderPackageList({
         href={`/search?section=${type}`}
         id={`link-see-all-${type}`}
         className="max-sm:hidden"
+        onClick={() => {
+          pushEvent({
+            name: 'click_more',
+            category: 'home',
+            topic: 'umrah',
+            data: {
+              section: type,
+            },
+          })
+        }}
       >
         <Button className="items-center gap-1 px-3 py-2" size="xs">
           <p className="text-m-regular text-neutral-900">Lihat Paket Lainnya</p>

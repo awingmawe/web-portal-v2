@@ -122,6 +122,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
               <CardPackage
                 key={`packages-${packageData.slugPackage}-${index}`}
                 data={packageData}
+                eventCategory="search"
               />
             ))
           )}

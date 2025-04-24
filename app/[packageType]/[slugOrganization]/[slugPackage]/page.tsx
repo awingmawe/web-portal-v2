@@ -21,15 +21,16 @@ import {
   HotelGalleryImage,
   PackageGalleryImage,
 } from '@/constant/types/GalleryProps'
+import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
-import { cookieNames } from '@/services/common/cookie'
+import { getHotelRating, getTripDuration } from '@/lib/utils'
 import { getGalleryHotel } from '@/services/general-service'
 import {
   getGalleryPackage,
   getPackageDetail,
   getPackageVariantList,
 } from '@/services/umrah-service'
-import { cookies } from 'next/headers'
+import { Fragment } from 'react'
 
 export async function generateMetadata({
   searchParams,
@@ -49,8 +50,6 @@ export default async function DetailPackage({ params }: { params: any }) {
   const { slugPackage } = await params
 
   const detailData = await getPackageDetail(slugPackage)
-  const cookieStore = await cookies()
-  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   const idDetailPackage = detailData.id
   const medinaIdHotel = detailData.medinaHotel.id
   const meccaIdHotel = detailData.meccaHotel.id
@@ -113,82 +112,106 @@ export default async function DetailPackage({ params }: { params: any }) {
   )
 
   return (
-    <GalleryProvider
-      packageImages={packageImages || []}
-      medinaHotelImages={medinaHotelImages || []}
-      meccaHotelImages={meccaHotelImages || []}
-      title={detailData?.title}
-    >
-      <Topbar shadow scrolled />
-      <MobileTopbar
-        showBackButton
-        variant="transparent"
-        titleLink={detailData.title}
-      />
-      <main className="container mx-auto mt-[40px] mb-16 max-lg:-mt-18 max-lg:mb-[78px] max-lg:max-w-full max-lg:px-0">
-        <GalleryList title={detailData.title} />
-        <div className="relative z-9 mt-[35px] grid grid-cols-12 flex-col gap-5 rounded-tl-[20px] rounded-tr-[20px] bg-white max-lg:-mt-4 max-lg:flex max-lg:p-4 ">
-          <div className="col-span-8 flex flex-col gap-6 max-lg:order-2">
-            <TravelDetail
-              organizationInstance={detailData?.organizationInstance}
-              title={detailData?.title}
-            />
-            <DepartureDetail
-              departure={detailData?.departure}
-              arrival={detailData?.arrival}
-              meccaHotel={detailData?.meccaHotel?.name}
-              madinahHotel={detailData?.medinaHotel?.name}
-            />
-
-            <HotelMecca
-              mecca={detailData?.meccaHotel}
-              meccaHotelImages={meccaHotelImages}
-            />
-
-            <HotelMedina
-              medina={detailData?.medinaHotel}
-              medinaHotelImages={medinaHotelImages}
-            />
-
-            <TermsCondition
-              termsCondition={detailData?.detail?.termsCondition}
-            />
-
-            <Facilities
-              facilities={detailData?.detail?.additionalInfo?.facilities}
-            />
-
-            <OtherFacilities
-              otherFacilities={
-                detailData?.detail?.additionalInfo?.otherFacilities
-              }
-            />
-
-            <Itinerary itinerary={detailData?.itinerary?.agenda ?? []} />
-          </div>
-          <div className="col-span-4 flex-col gap-4 max-lg:order-1 max-lg:flex">
-            {/* Adjust grid for mobile responsive */}
-            <TitlePackageMobile title={detailData?.title} />
-            <TravelDetail
-              organizationInstance={detailData?.organizationInstance}
-              title={detailData.title}
-              mobile={true}
-            />
-            <PackageVariant
-              titlePackage={detailData?.title}
-              variants={packageVariants.results}
-              organization={detailData?.organizationInstance}
-              token={token}
-            />
-          </div>
-        </div>
-      </main>
-      <Footer type="compact" className="max-lg:hidden" />
-      <ActionCheckoutMobile
+    <Fragment>
+      <GalleryProvider
+        packageImages={packageImages || []}
+        medinaHotelImages={medinaHotelImages || []}
+        meccaHotelImages={meccaHotelImages || []}
         title={detailData?.title}
-        variants={packageVariants.results}
-        organization={detailData?.organizationInstance}
+      >
+        <Topbar shadow scrolled />
+        <MobileTopbar
+          showBackButton
+          variant="transparent"
+          titleLink={detailData.title}
+        />
+        <main className="container mx-auto mt-[40px] mb-16 max-lg:-mt-18 max-lg:mb-[78px] max-lg:max-w-full max-lg:px-0">
+          <GalleryList title={detailData.title} />
+          <div className="relative z-9 mt-[35px] grid grid-cols-12 flex-col gap-5 rounded-tl-[20px] rounded-tr-[20px] bg-white max-lg:-mt-4 max-lg:flex max-lg:p-4 ">
+            <div className="col-span-8 flex flex-col gap-6 max-lg:order-2">
+              <TravelDetail
+                organizationInstance={detailData?.organizationInstance}
+                title={detailData?.title}
+              />
+              <DepartureDetail
+                departure={detailData?.departure}
+                arrival={detailData?.arrival}
+                meccaHotel={detailData?.meccaHotel?.name}
+                madinahHotel={detailData?.medinaHotel?.name}
+              />
+              <HotelMecca
+                mecca={detailData?.meccaHotel}
+                meccaHotelImages={meccaHotelImages}
+              />
+
+              <HotelMedina
+                medina={detailData?.medinaHotel}
+                medinaHotelImages={medinaHotelImages}
+              />
+
+              <TermsCondition
+                termsCondition={detailData?.detail?.termsCondition}
+              />
+
+              <Facilities
+                facilities={detailData?.detail?.additionalInfo?.facilities}
+              />
+
+              <OtherFacilities
+                otherFacilities={
+                  detailData?.detail?.additionalInfo?.otherFacilities
+                }
+              />
+
+              <Itinerary itinerary={detailData?.itinerary?.agenda ?? []} />
+            </div>
+            <div className="col-span-4 flex-col gap-4 max-lg:order-1 max-lg:flex">
+              {/* Adjust grid for mobile responsive */}
+              <TitlePackageMobile title={detailData?.title} />
+              <TravelDetail
+                organizationInstance={detailData?.organizationInstance}
+                title={detailData.title}
+                mobile={true}
+              />
+              <PackageVariant
+                titlePackage={detailData?.title}
+                variants={packageVariants.results}
+                organization={detailData?.organizationInstance}
+                package={detailData}
+              />
+            </div>
+          </div>
+        </main>
+        <Footer type="compact" className="max-lg:hidden" />
+        <ActionCheckoutMobile
+          title={detailData?.title}
+          variants={packageVariants.results}
+          organization={detailData?.organizationInstance}
+        />
+      </GalleryProvider>
+      <EventTrackerImpression
+        nameDidMount="impression_detail_package"
+        nameDidUnmount="exit_detail_package"
+        topic="umrah"
+        category="detail_package"
+        data={{
+          packageId: detailData.id,
+          packageType: detailData.packageType,
+          title: detailData.title,
+          slug: detailData.slug,
+          hotelRating: getHotelRating(detailData),
+          tripDuration: getTripDuration(detailData),
+          travelName: detailData.organizationInstance.name,
+          travelCity: detailData.organizationInstance.city.name,
+          travelCityId: detailData.organizationInstance.cityId,
+          travelProvinceName: detailData.organizationInstance.province.name,
+          travelProvinceId: detailData.organizationInstance.provinceId,
+          lastCall: detailData.packageVariant.isLastCall,
+          price: detailData.price,
+          organizationId: detailData.organizationId,
+          organizationInstanceId: detailData.organizationInstanceId,
+        }}
       />
-    </GalleryProvider>
+    </Fragment>
   )
 }

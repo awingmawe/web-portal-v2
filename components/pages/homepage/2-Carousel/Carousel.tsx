@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/carousel'
 import { Banner } from '@/constant/types/BannerProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { dissolve } from '@/lib/animation-setup'
 import { isEmpty } from '@/lib/utils'
 import Image from 'next/image'
@@ -21,6 +22,7 @@ export function CarouselBanner({
 }: {
   dataBanner: GenericResponse<Banner>
 }) {
+  const { pushEvent } = useEventTracker()
   // State to track image loading
   const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({})
 
@@ -54,6 +56,17 @@ export function CarouselBanner({
               <Link
                 href={banner.url ?? ''}
                 onClick={(e) => {
+                  pushEvent({
+                    name: 'click_program',
+                    category: 'home',
+                    data: {
+                      title: banner.title,
+                      bannerId: banner.id,
+                      destination: banner.url,
+                      order: index + 1,
+                    },
+                  })
+
                   if (!isEmpty(banner.url)) {
                     window.location.href = banner.url ?? ''
                   } else {

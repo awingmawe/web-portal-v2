@@ -5,6 +5,7 @@ import { StarIconPrimary } from '@/components/icons/star'
 import { StoreIcon } from '@/components/icons/store'
 import BadgePromo from '@/components/shared/Badge'
 import { CardData } from '@/constant/types/PackageProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import {
   capitalizeText,
   cn,
@@ -17,14 +18,20 @@ import { differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import Image from 'next/image'
 import Link from 'next/link'
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 interface CardPackageProps {
   data: CardData
+  section?: string
+  eventCategory?: string
 }
 
 export const CardPackage = memo(function CardPackage({
   data,
+  section = '',
+  eventCategory = 'home',
 }: CardPackageProps) {
+  const elem = useRef<HTMLDivElement>(null)
+  const { observe, pushEvent } = useEventTracker()
   const {
     src,
     discount,
@@ -33,6 +40,9 @@ export const CardPackage = memo(function CardPackage({
     organizationName,
     title,
     location,
+    locationId,
+    province,
+    provinceId,
     price,
     departureDate,
     arrivalDate,
@@ -43,6 +53,8 @@ export const CardPackage = memo(function CardPackage({
     codeCountry,
     releasedAt,
     packageType,
+    id: packageId,
+    isLastCall,
   } = data
 
   // Memoize complex calculations
@@ -100,9 +112,61 @@ export const CardPackage = memo(function CardPackage({
     ))
   }, [codeCountry, isPlus])
 
+  useEffect(() => {
+    if (elem.current) {
+      observe(elem.current, () => {
+        pushEvent({
+          name: 'impression_package_card',
+          topic: 'umrah',
+          category: eventCategory,
+          data: {
+            packageId,
+            packageType,
+            title,
+            slug: slugPackage,
+            hotelRating: rating,
+            tripDuration,
+            travelName: organizationName,
+            travelCity: location,
+            travelCityId: locationId,
+            travelProvinceName: province,
+            travelProvinceId: provinceId,
+            section,
+            lastCall: isLastCall,
+            price,
+          },
+        })
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elem])
+
   return (
     <Link
       href={`/${packageType}/${slugOrganization}/${slugPackage}`}
+      onClick={() => {
+        pushEvent({
+          name: 'click_package_card',
+          topic: 'umrah',
+          category: eventCategory,
+          data: {
+            packageId,
+            packageType,
+            title,
+            slug: slugPackage,
+            hotelRating: rating,
+            tripDuration,
+            travelName: organizationName,
+            travelCity: location,
+            travelCityId: locationId,
+            travelProvinceName: province,
+            travelProvinceId: provinceId,
+            section,
+            lastCall: isLastCall,
+            price,
+          },
+        })
+      }}
       className="relative"
       id="card-package"
     >
@@ -136,7 +200,7 @@ export const CardPackage = memo(function CardPackage({
       </div>
 
       {/* Content */}
-      <div className="mt-3 flex flex-col gap-1">
+      <div className="mt-3 flex flex-col gap-1" ref={elem}>
         {differenceInDays(releasedAt, new Date()) <= 10 && (
           <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1">
             <InfoIcon size={20} className="text-primary-700 stroke-0" />

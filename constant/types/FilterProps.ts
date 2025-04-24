@@ -14,4 +14,5 @@ export interface FilterState {
   facilityCode: string
   section: string
   tagSlug: string
+  filterName: string
 }

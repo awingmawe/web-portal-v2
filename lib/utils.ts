@@ -1,7 +1,7 @@
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { CardData, Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
-import { format } from 'date-fns'
+import { differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { DateRange } from 'react-day-picker'
 import { twMerge } from 'tailwind-merge'
@@ -147,7 +147,10 @@ export function mapProductsToCardData(
       discountType: product.packageVariant?.discountType,
       title: product.title || 'No Title',
       location: product.organizationInstance?.city?.name || 'Unknown',
+      locationId: product.organizationInstance.cityId,
       district: product.organizationInstance?.city?.name || 'Unknown',
+      province: product.organizationInstance?.province.name || 'Unknown',
+      provinceId: product.organizationInstance?.provinceId,
       organizationName: product.organizationInstance?.name || 'Unknown',
       originalPrice: product.packageVariant
         ? formatCurrency(
@@ -167,13 +170,7 @@ export function mapProductsToCardData(
             )
           )
         : 'Rp0',
-      rating:
-        product.meccaHotel || product.medinaHotel
-          ? getMaximumNonZeroPrice(
-              Number(product.meccaHotel?.rating),
-              Number(product.medinaHotel?.rating)
-            )
-          : 'Belum ada rating',
+      rating: getHotelRating(product),
       slugOrganization: product.organizationInstance?.slug || '',
       slugPackage: product.slug || '',
       isLastCall: product.packageVariant?.isLastCall,
@@ -354,4 +351,22 @@ export const formatDateRangeShort = (dateRange: DateRange): string => {
   }
 
   return format(dateRange.from, 'd LLL y', { locale: id })
+}
+
+export const getHotelRating = (product: Package) => {
+  return product.meccaHotel || product.medinaHotel
+    ? getMaximumNonZeroPrice(
+        Number(product.meccaHotel?.rating),
+        Number(product.medinaHotel?.rating)
+      )
+    : 'Belum ada rating'
+}
+
+export const getTripDuration = (product: Package) => {
+  return (
+    differenceInDays(
+      product.packageVariant.arrivalDate,
+      product.packageVariant.departureDate
+    ) + 1
+  )
 }

@@ -4,6 +4,7 @@ import { toast } from '@/components/ui/sonner'
 import { Airline } from '@/constant/types/AirlineProps'
 import { Airport } from '@/constant/types/AirportProps'
 import { FilterState } from '@/constant/types/FilterProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { formatDateToYYYYMMDD } from '@/lib/utils'
@@ -30,6 +31,7 @@ const initialFilterState: FilterState = {
   facilityCode: '',
   section: '',
   tagSlug: '',
+  filterName: '',
 }
 
 // Define filter property names for individual resets
@@ -51,6 +53,7 @@ interface FilterProductContextType {
   setFacilityCode: (code: string) => void
   setSection: (section: string) => void
   setTagSlug: (slug: string) => void
+  setFilterName: (filterName: string) => void
 
   // Reset filter state - full and individual
   resetFilters: (filters?: typeof initialFilterState) => void
@@ -73,6 +76,7 @@ export const FilterProductProvider: React.FC<{
   initialDisabled?: boolean
 }> = ({ children, initialDisabled = false }) => {
   const updateQueryParams = useUpdateQueryParams()
+  const { pushEvent } = useEventTracker()
   const { lg: isMobile } = useTailwindBreakpoint()
   // Combined filter state
   const [filters, setFilters] = useState<FilterState>(initialFilterState)
@@ -121,6 +125,10 @@ export const FilterProductProvider: React.FC<{
 
   const setTagSlug = useCallback((slug: string) => {
     setFilters((prev) => ({ ...prev, tagSlug: slug }))
+  }, [])
+
+  const setFilterName = useCallback((filterName: string) => {
+    setFilters((prev) => ({ ...prev, filterName }))
   }, [])
 
   // Reset all filters
@@ -365,6 +373,19 @@ export const FilterProductProvider: React.FC<{
         values.push(airline.name)
       }
 
+      pushEvent({
+        name: 'submit_filter',
+        category: 'umrah',
+        data: {
+          filterName: filters.filterName,
+          hotelRating: filters.hotelStars,
+          dateRangeFrom: filters.dateRange?.from,
+          dateRangeTo: filters.dateRange?.to,
+          airport: filters.departureAirport?.name,
+          airline: filters.airline?.name,
+        },
+      })
+
       // Simulate API call with setTimeout
       setTimeout(() => {
         // Reset loading
@@ -415,6 +436,7 @@ export const FilterProductProvider: React.FC<{
     setFacilityCode,
     setSection,
     setTagSlug,
+    setFilterName,
 
     // Reset filter state - full and individual
     resetFilters,

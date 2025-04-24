@@ -14,6 +14,7 @@ import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
+import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
@@ -127,6 +128,13 @@ export default async function Home() {
       )}
       <BottomNavigation />
       <Footer className="relative z-2" />
+      <EventTrackerImpression
+        id="home"
+        nameDidMount="impression_home"
+        nameDidUnmount="exit_home"
+        topic="umrah"
+        category="home"
+      />
     </Fragment>
   )
 }
