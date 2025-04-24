@@ -1,6 +1,18 @@
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 
-export function TransactionDetailHeader() {
+interface TransactionDetaiHeaderProps {
+  statusTahapan: string
+  status: string
+  isPaidOff: boolean
+  isCompletedManifest: boolean
+}
+
+export function TransactionDetailHeader({
+  statusTahapan,
+  status,
+  isPaidOff,
+  isCompletedManifest,
+}: TransactionDetaiHeaderProps) {
   const { lg } = useTailwindBreakpoint()
 
   const renderStatusTahapanColor = (status: string) => {
@@ -11,6 +23,8 @@ export function TransactionDetailHeader() {
     } else if (
       status == 'Dibatalkan Jemaah' ||
       status == 'Dibatalkan Travel' ||
+      status == 'Dibatalkan Sistem' ||
+      status == 'Dibatalkan' ||
       status == 'Dalam Proses Pembatalan'
     ) {
       return 'bg-error-100 text-error-700'
@@ -21,17 +35,80 @@ export function TransactionDetailHeader() {
     }
   }
 
+  const renderStatusText = (
+    status: string,
+    isPaidOff?: boolean,
+    isCompletedManifest?: boolean
+  ) => {
+    switch (statusTahapan) {
+      case 'Akan Datang':
+        if (isPaidOff && isCompletedManifest) {
+          return 'Siap Berangkat!'
+        } else if (status === 'waiting-approval') {
+          return 'Menunggu konfirmasi'
+        } else if (
+          status == 'waiting-cancellation' ||
+          status == 'canceled-by-travel' ||
+          status == 'canceled-by-user'
+        ) {
+          return 'Dalam Proses Pembatalan'
+        } else {
+          return 'Menunggu kelengkapan data jemaah dan pelunasan pembayaran'
+        }
+      case 'Dibatalkan':
+        if (status == 'canceled-by-user') {
+          return 'Dibatalkan Jemaah'
+        } else if (status == 'canceled-by-travel') {
+          return 'Dibatalkan Travel'
+        } else {
+          return 'Dibatalkan Sitem'
+        }
+
+      default:
+        break
+    }
+  }
+
+  const renderStatusColor = (
+    status: string,
+    statusTahapan: string,
+    isPaidOff?: boolean,
+    isCompletedManifest?: boolean
+  ) => {
+    switch (statusTahapan) {
+      case 'Akan Datang':
+        if (isPaidOff && isCompletedManifest) {
+          return 'bg-success-100 text-success-700'
+        } else if (status === 'waiting-approval') {
+          return 'bg-warning-100 text-warning-700'
+        } else if (
+          status == 'waiting-cancellation' ||
+          status == 'canceled-by-travel' ||
+          status == 'canceled-by-user'
+        ) {
+          return 'bg-error-100 text-error-700'
+        } else {
+          return 'bg-info-100/50 text-info-700/90'
+        }
+      case 'Dibatalkan':
+        return 'bg-error-100 text-error-700'
+
+      default:
+        break
+    }
+  }
+
   return (
     <div className="mb-4 flex items-center space-x-2 px-4">
       <p
-        className={`text-m-medium ${renderStatusTahapanColor('Akan Datang')} relative z-20 rounded-full px-6 py-2 shadow-[2px_0px_4.8px_0px_#202B3324] max-lg:py-1 max-lg:text-xs`}
+        className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} relative z-20 rounded-full px-6 py-2 ${statusTahapan !== 'Selesai' && 'shadow-[2px_0px_4.8px_0px_#202B3324]'} max-lg:py-1 max-lg:text-xs`}
       >
-        Akan Datang
+        {statusTahapan}
       </p>
       <p
-        className={`text-s-medium bg-warning-100 text-warning-700 relative z-10 -ml-10 rounded-full px-6 py-2 py-2.5 pl-10 max-lg:text-xs`}
+        className={`text-s-medium ${renderStatusColor(status, statusTahapan, isPaidOff, isCompletedManifest)} relative z-10 -ml-10 rounded-full px-6 py-2 py-2.5 pl-10 max-lg:text-xs`}
       >
-        Menunggu konfirmasi
+        {renderStatusText(status, isPaidOff, isCompletedManifest)}
       </p>
     </div>
   )

@@ -22,12 +22,14 @@ export interface TransactionCardFooter {
   bookingId: string
   id: string
   status: string
+  statusTahapanDetail: string
   paymentAmount?: number
 }
 
 export default function TransactionCardFooter({
   detailOnly,
   status,
+  statusTahapanDetail,
   isCompletedManifest,
   isPaidOff,
   showDpButton,
@@ -67,7 +69,7 @@ export default function TransactionCardFooter({
     <Fragment>
       <div className="flex items-center gap-2 max-lg:hidden">
         <Button
-          className="text-s-regular mr-4 font-medium text-nowrap text-gray-900"
+          className="text-s-regular mr-1 px-3 font-medium text-nowrap text-gray-900"
           variant="ghost"
           onClick={() => setOpen(true)}
         >
@@ -154,7 +156,7 @@ export default function TransactionCardFooter({
             <div>
               <Button
                 variant="ghost"
-                className="mr-3 font-medium text-neutral-900"
+                className="px-3 font-medium text-neutral-900"
                 onClick={() => setOpen(true)}
               >
                 Lihat Detail
@@ -238,6 +240,7 @@ export default function TransactionCardFooter({
           open={open}
           onOpenChange={setOpen}
           bookingId={bookingId}
+          statusTahapan={statusTahapanDetail}
         />
       )}
     </Fragment>

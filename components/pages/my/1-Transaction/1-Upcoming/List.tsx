@@ -68,6 +68,7 @@ export default function List({
                         isCompletedManifest={transaction.isCompletedManifest}
                         isPaidOff={transaction.isPaidOff}
                         statusTahapan="Akan Datang"
+                        statusTahapanDetail={'Akan Datang'}
                         noFooter={
                           transaction.status.slug == 'waiting-approval' ||
                           (transaction.isPaidOff &&
@@ -120,6 +121,7 @@ export default function List({
                     isCompletedManifest={transaction.isCompletedManifest}
                     isPaidOff={transaction.isPaidOff}
                     statusTahapan="Akan Datang"
+                    statusTahapanDetail={'Akan Datang'}
                   />
                 </div>
               ))}
