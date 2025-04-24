@@ -3,6 +3,7 @@ import { TransactionDetailHeader } from '@/components/pages/my/1-Transaction/Com
 import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailManifest'
 import TransactionDetailPayment from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailPayment'
 import TransactionDetailProduct from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailProduct'
+import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailSkeleton'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
@@ -14,16 +15,19 @@ import {
 import dayjs from 'dayjs'
 import { X } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 
 interface TransactionDetailProps {
   open: boolean
   bookingId: string
+  statusTahapan: string
   onOpenChange: (open: boolean) => void
 }
 
 export function TransactionDetail({
   open,
+  statusTahapan,
   bookingId,
   onOpenChange,
 }: TransactionDetailProps) {
@@ -66,20 +70,31 @@ export function TransactionDetail({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="min-w-5xl gap-0 overflow-hidden rounded-3xl border-0 p-0">
         <DialogTitle className="hidden px-5">Detail Transaksi</DialogTitle>
-        <div className="flex items-center justify-between border-b border-neutral-100 px-8 py-4">
-          <h2 className="text-xl font-medium">Detail Transaksi {loading}</h2>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+        {loading ? (
+          <TransactionDetailSkeleton />
+        ) : (
+          <div className="flex items-center justify-between border-b border-neutral-100 px-8 py-4">
+            <h2 className="text-xl font-medium">Detail Transaksi {loading}</h2>
+            <button
+              onClick={() => onOpenChange(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        )}
 
-        <div className="grid md:grid-cols-[1fr_300px]">
+        <div
+          className={`${statusTahapan !== 'Selesai' ? 'grid md:grid-cols-[1fr_300px]' : 'grid md:grid-cols-1'}`}
+        >
           <div className="scrollbar-hide max-h-[80vh] overflow-y-auto border-r border-neutral-100 py-4">
             {/* Header */}
-            <TransactionDetailHeader />
+            <TransactionDetailHeader
+              statusTahapan={statusTahapan}
+              status={transaction?.status.slug}
+              isPaidOff={transaction?.isPaidOff}
+              isCompletedManifest={transaction?.isCompletedManifest}
+            />
 
             {/* Transaction Info */}
             <div className="mb-6 px-6">
@@ -154,77 +169,143 @@ export function TransactionDetail({
           </div>
 
           {/* Right Sidebar */}
-          <div className="flex flex-col gap-3 p-4">
-            <div className="flex flex-col gap-2">
-              <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
-                <ChecklistCircleActive />
-                <span className="text-success-700 text-s-regular ml-1">
-                  Pembayaran Lunas
-                </span>
-              </div>
-              <Button
-                className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
-                disabled
+          {statusTahapan !== 'Selesai' && (
+            <div className="flex flex-col gap-3 p-4">
+              {transaction?.status.slug !== 'canceled-by-user' &&
+                transaction?.status.slug !== 'canceled-by-travel' &&
+                transaction?.status.slug !== 'expired' && (
+                  <div className="flex flex-col gap-3">
+                    {transaction?.isPaidOff ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
+                          <ChecklistCircleActive />
+                          <span className="text-success-700 text-s-regular ml-1">
+                            Pembayaran Lunas
+                          </span>
+                        </div>
+                        <Button
+                          className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
+                          disabled
+                        >
+                          <span className="text-primary-900 font-medium opacity-50">
+                            Bayar Pelunasan
+                          </span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        <div
+                          className={`${dayjs(transaction?.createdAt).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} flex items-center justify-center rounded-3xl px-3 py-2 pb-13`}
+                        >
+                          {dayjs(transaction?.createdAt).subtract(21, 'day') >
+                          dayjs() ? (
+                            <span className="text-warning-700 text-s-regular">
+                              Lunasi sebelum{' '}
+                              {dayjs(transaction?.createdAt)
+                                .subtract(21, 'day')
+                                .format('DD MMM YYYY')}
+                            </span>
+                          ) : (
+                            <span className="text-error-700 text-s-regular">
+                              {' '}
+                              Segera lunasi pembayaran paket!
+                            </span>
+                          )}
+                        </div>
+                        <Button className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]">
+                          <span className="font-medium">Bayar Pelunasan</span>
+                        </Button>
+                      </div>
+                    )}
+
+                    {transaction?.isCompletedManifest ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
+                          <ChecklistCircleActive />
+                          <span className="text-success-700 text-s-regular ml-1">
+                            Data Lengkap
+                          </span>
+                        </div>
+                        <Button
+                          className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
+                          disabled
+                        >
+                          <span className="text-primary-900 font-medium opacity-50">
+                            Lengkapi Data Jemaah
+                          </span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        <div
+                          className={`flex items-center justify-center rounded-3xl px-3 py-2 pb-13 ${dayjs(transaction?.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}`}
+                        >
+                          {dayjs(transaction?.createdAt).add(3, 'day') >
+                          dayjs() ? (
+                            <span className="text-s-regular text-warning-700">
+                              Lengkapi sebelum{' '}
+                              {dayjs(transaction?.createdAt)
+                                .add(3, 'day')
+                                .format('DD MMM YYYY')}
+                            </span>
+                          ) : (
+                            <span className="text-s-regular text-error-700">
+                              Segera lengkapi manifest
+                            </span>
+                          )}
+                        </div>
+                        <Button className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]">
+                          <span className="font-medium">
+                            Lengkapi Data Jemaah
+                          </span>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+              <Link
+                href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                target="_blank"
+                className="w-full"
               >
-                <span className="text-primary-900 font-medium opacity-50">
-                  Bayar Pelunasan
-                </span>
-              </Button>
-            </div>
-            {/* <div className="flex flex-col gap-2">
-              <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
-                <ChecklistCircleActive />
-                <span className="text-success-700 text-s-regular ml-1">
-                  Data Lengkap
-                </span>
+                <Button
+                  variant="outline"
+                  className="border-primary-500 w-full border-2"
+                >
+                  <span className="font-medium">Bantuan</span>
+                </Button>
+              </Link>
+
+              {transaction?.status.slug !== 'canceled-by-user' &&
+                transaction?.status.slug !== 'canceled-by-travel' &&
+                transaction?.status.slug !== 'expired' && (
+                  <Link
+                    href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                    target="_blank"
+                    className="w-full"
+                  >
+                    <Button
+                      variant="outline"
+                      className="border-error-500  block w-full border-2"
+                    >
+                      <span className="text-error-500 font-medium">
+                        Batalkan Pesanan
+                      </span>
+                    </Button>
+                  </Link>
+                )}
+              <div className="relative mt-auto">
+                <Image
+                  src="/images/kabbah.svg"
+                  alt="Kaaba illustration"
+                  width={200}
+                  height={200}
+                  className="absolute -right-5 bottom-0"
+                />
               </div>
-              <Button
-                className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
-                disabled
-              >
-                <span className="text-primary-900 font-medium opacity-50">
-                  Lengkapi Data Jemaah
-                </span>
-              </Button>
             </div>
-            <div className="flex flex-col gap-2">
-              <div className="bg-warning-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
-                <span className="text-warning-700 text-s-regular">
-                  Lunasi sebelum 15 Jan 2025, 15:00
-                </span>
-              </div>
-              <Button className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]">
-                <span className="font-medium">Bayar Pelunasan</span>
-              </Button>
-            </div> */}
-            <div className="flex flex-col gap-2">
-              <div className="bg-warning-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
-                <span className="text-warning-700 text-s-regular">
-                  Lengkapi sebelum 10 Jan 2025
-                </span>
-              </div>
-              <Button className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]">
-                <span className="font-medium">Lengkapi Data Jemaah</span>
-              </Button>
-            </div>
-            <Button variant="outline" className="border-primary-500 border-2">
-              <span className="font-medium">Bantuan</span>
-            </Button>
-            <Button variant="outline" className="border-error-500  border-2">
-              <span className="text-error-500 font-medium">
-                Batalkan Pesanan
-              </span>
-            </Button>
-            <div className="relative mt-auto">
-              <Image
-                src="/images/kabbah.svg"
-                alt="Kaaba illustration"
-                width={200}
-                height={200}
-                className="absolute -right-5 bottom-0"
-              />
-            </div>
-          </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

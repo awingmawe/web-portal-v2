@@ -21,7 +21,8 @@ export default function TransactionCardHeader({
     } else if (
       status == 'waiting-cancellation' ||
       status == 'canceled-by-travel' ||
-      status == 'canceled-by-user'
+      status == 'canceled-by-user' ||
+      status == 'expired'
     ) {
       return 'bg-error-100 text-error-700'
     } else {
@@ -41,7 +42,8 @@ export default function TransactionCardHeader({
     } else if (
       status == 'waiting-cancellation' ||
       status == 'canceled-by-travel' ||
-      status == 'canceled-by-user'
+      status == 'canceled-by-user' ||
+      status == 'expired'
     ) {
       return 'Dalam Proses Pembatalan'
     } else {

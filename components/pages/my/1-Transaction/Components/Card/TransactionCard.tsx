@@ -40,6 +40,7 @@ export interface TransactionCardProps {
   isCompletedManifest: boolean
   isPaidOff: boolean
   statusTahapan: string
+  statusTahapanDetail: string
   noHeader?: boolean
   noAmountLeft?: boolean
   detailOnly?: boolean
@@ -95,6 +96,7 @@ export default function TransactionCard({
   isCompletedManifest,
   isPaidOff,
   statusTahapan,
+  statusTahapanDetail,
   noHeader,
   noAmountLeft,
   detailOnly,
@@ -136,6 +138,7 @@ export default function TransactionCard({
     } else if (
       status == 'Dibatalkan Jemaah' ||
       status == 'Dibatalkan Travel' ||
+      status == 'Dibatalkan Sistem' ||
       status == 'Dalam Proses Pembatalan'
     ) {
       return 'bg-error-100 text-error-700'
@@ -352,6 +355,7 @@ export default function TransactionCard({
                   bookingId={bookingId}
                   id={id}
                   status={status}
+                  statusTahapanDetail={statusTahapanDetail}
                   paymentAmount={orderPayment?.orderPayment?.paymentAmount}
                 />
               )}

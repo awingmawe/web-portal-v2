@@ -59,7 +59,7 @@ export default function TransactionCancelled() {
         : ''
 
     router.push(
-      `/my/transaction?type=canceled&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
+      `/my/transaction?type=cancelled&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
     )
 
     try {
@@ -70,7 +70,7 @@ export default function TransactionCancelled() {
         order: 'desc',
         orderBy: 'createdAt',
         'bookingCode:likeLower': `%${searchQuery}%`,
-        'status.slug:in': 'canceled-by-user,canceled-by-travel',
+        'status.slug:in': 'canceled-by-user,canceled-by-travel,expired',
       }
 
       if (dateRange?.from) {

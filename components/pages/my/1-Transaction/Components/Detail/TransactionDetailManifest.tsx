@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { ChevronRightCircle, User } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Fragment } from 'react'
 
 interface JemaahDocument {
@@ -60,7 +61,7 @@ export default function TransactionDetailManifest({
   members,
 }: TransactionDetailManifestProps) {
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className="mx-auto  space-y-4">
       {members?.map((member) => (
         <Accordion type="single" collapsible key={member.id}>
           <AccordionItem value={member.id} className="bg-white" noBorder>
@@ -187,7 +188,10 @@ export default function TransactionDetailManifest({
                             .find((doc) => doc.type === 'passport')
                             ?.src.endsWith('.pdf') ? (
                             <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                              <DocumentTextIcon className="text-neutral-500" />
+                              <DocumentTextIcon
+                                size={32}
+                                className="text-error-500"
+                              />
                             </div>
                           ) : (
                             <Image
@@ -205,10 +209,23 @@ export default function TransactionDetailManifest({
                         <div className="ml-4 flex-1">
                           <p className="text-l-regular">Paspor {member.name}</p>
                         </div>
-                        <Button variant="ghost" size="sm" className="gap-1">
-                          <span>Lihat File</span>
-                          <ChevronRightCircle size={16} />
-                        </Button>
+                        <Link
+                          href={
+                            member.attachment.find(
+                              (doc) => doc.type === 'passport'
+                            )?.src || ''
+                          }
+                          target="_blank"
+                        >
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="gap-1 px-2"
+                          >
+                            <span>Lihat File</span>
+                            <ChevronRightCircle size={16} />
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                     <hr className="border-gray-200" />
@@ -237,7 +254,10 @@ export default function TransactionDetailManifest({
                           .find((doc) => doc.type === 'user-photo')
                           ?.src.endsWith('.pdf') ? (
                           <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                            <DocumentTextIcon className="text-neutral-500" />
+                            <DocumentTextIcon
+                              size={32}
+                              className="text-error-500"
+                            />
                           </div>
                         ) : (
                           <Image
@@ -255,10 +275,23 @@ export default function TransactionDetailManifest({
                       <div className="ml-4 flex-1">
                         <p className="font-medium">Pas Foto {member.name}</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="gap-1">
-                        <span>Lihat File</span>
-                        <ChevronRightCircle size={16} />
-                      </Button>
+                      <Link
+                        href={
+                          member.attachment.find(
+                            (doc) => doc.type === 'user-photo'
+                          )?.src || ''
+                        }
+                        target="_blank"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="gap-1 px-2"
+                        >
+                          <span>Lihat File</span>
+                          <ChevronRightCircle size={16} />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 ) : (
@@ -283,7 +316,10 @@ export default function TransactionDetailManifest({
                           .find((doc) => doc.type === 'ktp')
                           ?.src.endsWith('.pdf') ? (
                           <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                            <DocumentTextIcon className="text-neutral-500" />
+                            <DocumentTextIcon
+                              size={32}
+                              className="text-error-500"
+                            />
                           </div>
                         ) : (
                           <Image
@@ -301,10 +337,22 @@ export default function TransactionDetailManifest({
                       <div className="ml-4 flex-1">
                         <p className="font-medium">Foto KTP {member.name}</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="gap-1">
-                        <span>Lihat File</span>
-                        <ChevronRightCircle size={16} />
-                      </Button>
+                      <Link
+                        href={
+                          member.attachment.find((doc) => doc.type === 'ktp')
+                            ?.src || ''
+                        }
+                        target="_blank"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="gap-1 px-2"
+                        >
+                          <span>Lihat File</span>
+                          <ChevronRightCircle size={16} />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 ) : (
@@ -329,7 +377,10 @@ export default function TransactionDetailManifest({
                           .find((doc) => doc.type === 'kk')
                           ?.src.endsWith('.pdf') ? (
                           <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                            <DocumentTextIcon className="text-neutral-500" />
+                            <DocumentTextIcon
+                              size={32}
+                              className="text-error-500"
+                            />
                           </div>
                         ) : (
                           <Image
@@ -346,10 +397,22 @@ export default function TransactionDetailManifest({
                       <div className="ml-4 flex-1">
                         <p className="font-medium">Foto KK {member.name}</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="gap-1">
-                        <span>Lihat File</span>
-                        <ChevronRightCircle size={16} />
-                      </Button>
+                      <Link
+                        href={
+                          member.attachment.find((doc) => doc.type === 'kk')
+                            ?.src || ''
+                        }
+                        target="_blank"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="gap-1 px-2"
+                        >
+                          <span>Lihat File</span>
+                          <ChevronRightCircle size={16} />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 ) : (
