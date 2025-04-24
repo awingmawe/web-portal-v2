@@ -142,10 +142,10 @@ export const CheckoutProvider = ({
     try {
       setLoading(true)
       const res = await bookingCheckout(payload)
-      setBooking(res.data)
-      setPaymentToken(res.data.order.paymentToken)
+      setBooking(res?.data)
+      setPaymentToken(res?.data.order.paymentToken)
       setLoading(false)
-      window.snap.pay(res.data.order.paymentToken, {
+      window.snap.pay(res?.data.order.paymentToken, {
         onSuccess: async (result: any) => {
           // console.log(result)
           router.push(`/my/transaction`)
