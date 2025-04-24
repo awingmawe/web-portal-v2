@@ -50,7 +50,6 @@ export default async function DetailPackage({ params }: { params: any }) {
   const { slugPackage } = await params
 
   const detailData = await getPackageDetail(slugPackage)
-
   const idDetailPackage = detailData.id
   const medinaIdHotel = detailData.medinaHotel.id
   const meccaIdHotel = detailData.meccaHotel.id

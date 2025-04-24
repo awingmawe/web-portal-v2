@@ -168,6 +168,28 @@ export async function getOrderPayment(
   }
 }
 
+export async function preBookingCheckout(payload: any) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/pre`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+    throw error
+  }
+}
+
+export async function bookingCheckout(payload: any) {
+  try {
+    const response = await apiWithAuth.post<any>(`/umrah/v2/booking`, payload)
+    return response
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+  }
+}
+
 export async function getManifestDetail(
   query: GetListQuery
 ): Promise<GenericResponse<Transaction>> {
