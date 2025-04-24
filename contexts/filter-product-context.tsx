@@ -157,6 +157,7 @@ export const FilterProductProvider: React.FC<{
           facilityCode: 'fC',
           section: 'sC',
           tagSlug: 'tS',
+          filterName: null,
         }
         // Special handling for dateRange which maps to two URL params
         if (filterKey === 'dateRange') {
