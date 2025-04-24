@@ -2,14 +2,11 @@
 
 import type React from 'react'
 
-import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
-import {
-  SearchAndFilter,
-  SearchAndFilterMobile,
-} from '@/components/pages/my/1-Transaction/Upcoming/Filter'
-import List from '@/components/pages/my/1-Transaction/Upcoming/List'
-import NeedPaymentLink from '@/components/pages/my/1-Transaction/Upcoming/NeedPaymentLink'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
+import { SearchAndFilter } from '@/components/pages/my/2-NeedPayment/Filter'
+import List from '@/components/pages/my/2-NeedPayment/List'
 import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -18,7 +15,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
-export default function TransactionUpcoming() {
+export default function TransactionNeedPayment() {
   const searchParams = useSearchParams()
   const { lg } = useTailwindBreakpoint()
   const [isMounted, setIsMounted] = useState(false)
@@ -36,12 +33,6 @@ export default function TransactionUpcoming() {
   // State for filters
   const [searchQuery, setSearchQuery] = useState<string>(
     searchParams.get('query') ? String(searchParams.get('query')) : ''
-  )
-  const [statusFilter, setStatusFilter] = useState<string>(
-    searchParams.get('status') || 'all'
-  )
-  const [statusFilterMobile, setStatusFilterMobile] = useState<string>(
-    searchParams.get('status') || 'all'
   )
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const dateString = searchParams.get('date')
@@ -65,7 +56,9 @@ export default function TransactionUpcoming() {
         ? `${dateRange?.from.toISOString()} - ${dateRange?.to.toISOString()}`
         : ''
 
-    const statusFilterParams = lg ? statusFilterMobile : statusFilter
+    router.push(
+      `/my/need-payment?type=completed&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
+    )
 
     try {
       // Build query parameters
@@ -75,20 +68,7 @@ export default function TransactionUpcoming() {
         order: 'desc',
         orderBy: 'createdAt',
         'bookingCode:likeLower': `%${searchQuery}%`,
-      }
-
-      // Add optional filters if they exist
-      if (statusFilter === 'all') {
-        queryParams['status.slug:in'] =
-          'waiting-cancellation,waiting-approval,approved'
-      } else if (statusFilter === 'waiting-approval') {
-        queryParams['status.slug:in'] = 'waiting-approval'
-      } else if (statusFilter === 'coming-soon') {
-        queryParams['status.slug:in'] = 'coming-soon'
-      } else if (statusFilter === 'siap-berangkat') {
-        queryParams['status.slug:in'] = 'approved'
-        queryParams['isCompletedManifest'] = true
-        queryParams['isPaidOff'] = true
+        'status.slug': 'waiting-down-payment',
       }
 
       if (dateRange?.from) {
@@ -106,14 +86,8 @@ export default function TransactionUpcoming() {
 
       if (lg && currentPage > 1) {
         setTransactions((prev) => [...prev, ...response.results])
-        router.push(
-          `/my/transaction?type=upcoming&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
-        )
       } else {
         setTransactions(response.results)
-        router.push(
-          `/my/transaction?type=upcoming&page=${currentPage}&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
-        )
       }
 
       setTotalPages(Math.ceil(response.total / 10))
@@ -123,8 +97,7 @@ export default function TransactionUpcoming() {
       console.error('Error fetching transactions:', err)
       setError('Failed to load transactions. Please try again.')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, searchQuery, statusFilter, dateRange, lg, router])
+  }, [currentPage, searchQuery, dateRange, lg, router])
 
   // Handle page change
   const goToPage = useCallback((page: number) => {
@@ -134,12 +107,6 @@ export default function TransactionUpcoming() {
   // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
-  }
-
-  // Handle status filter change
-  const handleStatusFilterChange = (value: string) => {
-    setStatusFilter(value)
-    setCurrentPage(1) // Reset to first page when filter changes
   }
 
   // Handle date range change
@@ -160,35 +127,28 @@ export default function TransactionUpcoming() {
   }, [])
 
   if (!isMounted) {
-    return <TransactionSkeletonLoading noTabs noFilter noPagination />
+    return (
+      <div className="mt-5">
+        <TransactionSkeletonLoading noTabs noFilter noPagination />
+      </div>
+    )
   }
 
   return (
     <Fragment>
+      <MobileTopbar
+        showBackButton
+        variant="transactionTopbar"
+        title="Menunggu Pembayaran"
+        onBackClick={() => router.push('/my/transaction')}
+      />
+
       {/* Search and Filters */}
       <SearchAndFilter
         searchQuery={searchQuery}
         handleSearchChange={handleSearchChange}
-        statusFilter={statusFilter}
-        handleStatusFilterChange={handleStatusFilterChange}
         handleDateRangeChange={handleDateRangeChange}
       />
-
-      {/* Search and Filter Mobile */}
-      {lg && (
-        <SearchAndFilterMobile
-          statusFilterMobile={statusFilterMobile}
-          dateFilterMobile={dateRange}
-          handleSearchChange={handleSearchChange}
-          searchQuery={searchQuery}
-          handleStatusFilterChange={handleStatusFilterChange}
-          handleDateRangeChange={handleDateRangeChange}
-          setStatusFilterMobile={setStatusFilterMobile}
-          setIsLoadingMobile={setIsLoadingMobileFilter}
-        />
-      )}
-
-      <NeedPaymentLink />
 
       {/* Error state */}
       {error && (

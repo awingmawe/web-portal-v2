@@ -2,11 +2,13 @@
 
 import type React from 'react'
 
-import { SearchAndFilter } from '@/components/pages/my/1-Transaction/NeedPayment/Filter'
-import List from '@/components/pages/my/1-Transaction/NeedPayment/List'
-import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
+import {
+  SearchAndFilter,
+  SearchAndFilterMobile,
+} from '@/components/pages/my/1-Transaction/2-Completed/Filter'
+import List from '@/components/pages/my/1-Transaction/2-Completed/List'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
-import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -15,7 +17,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
-export default function TransactionNeedPayment() {
+export default function TransactionCompleted() {
   const searchParams = useSearchParams()
   const { lg } = useTailwindBreakpoint()
   const [isMounted, setIsMounted] = useState(false)
@@ -57,7 +59,7 @@ export default function TransactionNeedPayment() {
         : ''
 
     router.push(
-      `/my/need-payment?type=completed&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
+      `/my/transaction?type=completed&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
     )
 
     try {
@@ -68,7 +70,7 @@ export default function TransactionNeedPayment() {
         order: 'desc',
         orderBy: 'createdAt',
         'bookingCode:likeLower': `%${searchQuery}%`,
-        'status.slug': 'waiting-down-payment',
+        'status.slug': 'completed',
       }
 
       if (dateRange?.from) {
@@ -127,28 +129,28 @@ export default function TransactionNeedPayment() {
   }, [])
 
   if (!isMounted) {
-    return (
-      <div className="mt-5">
-        <TransactionSkeletonLoading noTabs noFilter noPagination />
-      </div>
-    )
+    return <TransactionSkeletonLoading noTabs noFilter noPagination />
   }
 
   return (
     <Fragment>
-      <MobileTopbar
-        showBackButton
-        variant="transactionTopbar"
-        title="Menunggu Pembayaran"
-        onBackClick={() => router.push('/my/transaction')}
-      />
-
       {/* Search and Filters */}
       <SearchAndFilter
         searchQuery={searchQuery}
         handleSearchChange={handleSearchChange}
         handleDateRangeChange={handleDateRangeChange}
       />
+
+      {/* Search and Filter Mobile */}
+      {lg && (
+        <SearchAndFilterMobile
+          dateFilterMobile={dateRange}
+          handleSearchChange={handleSearchChange}
+          searchQuery={searchQuery}
+          handleDateRangeChange={handleDateRangeChange}
+          setIsLoadingMobile={setIsLoadingMobileFilter}
+        />
+      )}
 
       {/* Error state */}
       {error && (
