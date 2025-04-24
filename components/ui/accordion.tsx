@@ -15,12 +15,15 @@ function Accordion({
 
 function AccordionItem({
   className,
+  noBorder = false,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+}: React.ComponentProps<typeof AccordionPrimitive.Item> & {
+  noBorder?: boolean
+}) {
   return (
     <AccordionPrimitive.Item
       data-slot="accordion-item"
-      className={cn('last:border-b-0', className)}
+      className={cn(`${noBorder ? '' : 'last:border-b-0'}`, className)}
       {...props}
     />
   )
@@ -29,8 +32,11 @@ function AccordionItem({
 function AccordionTrigger({
   className,
   children,
+  noSeparator = false,
   ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+}: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
+  noSeparator?: boolean
+}) {
   return (
     <AccordionPrimitive.Header className="flex flex-col">
       <AccordionPrimitive.Trigger
@@ -44,7 +50,7 @@ function AccordionTrigger({
         {children}
         <ChevronIcon size={24} />
       </AccordionPrimitive.Trigger>
-      <Separator color="#B5B5B5" className="h-[0.5px]" />
+      {!noSeparator && <Separator color="#B5B5B5" className="h-[0.5px]" />}
     </AccordionPrimitive.Header>
   )
 }

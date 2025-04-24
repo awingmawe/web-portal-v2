@@ -114,6 +114,18 @@ export async function getTransactionListUmrah(
   }
 }
 
+export async function getTransactionDetail(
+  bookingId: string
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(`/umrah/v2/booking/${bookingId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction umrah:', error)
+    throw error
+  }
+}
+
 export async function getPaymentStatement(
   bookingId: string
 ): Promise<PaymentStatement> {
@@ -175,6 +187,19 @@ export async function bookingCheckout(payload: any) {
     return response
   } catch (error) {
     console.error('Error fetching payment transaction:', error)
+  }
+}
+
+export async function getManifestDetail(
+  query: GetListQuery
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/booking-manifest?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction umrah:', error)
     throw error
   }
 }

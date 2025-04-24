@@ -6,9 +6,9 @@ import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { TimerIcon } from '@/components/icons/timer'
 import { UsersIcon } from '@/components/icons/user'
-import TransactionCardFooter from '@/components/pages/my/1-Transaction/Card/TransactionCardFooter'
-import TransactionCardHeader from '@/components/pages/my/1-Transaction/Card/TransactionCardHeader'
-import TransactionCardPayment from '@/components/pages/my/1-Transaction/Card/TransactionCardPayment'
+import TransactionCardFooter from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardFooter'
+import TransactionCardHeader from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardHeader'
+import TransactionCardPayment from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardPayment'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,

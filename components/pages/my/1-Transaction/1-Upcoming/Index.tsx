@@ -5,9 +5,10 @@ import type React from 'react'
 import {
   SearchAndFilter,
   SearchAndFilterMobile,
-} from '@/components/pages/my/1-Transaction/Cancelled/Filter'
-import List from '@/components/pages/my/1-Transaction/Cancelled/List'
-import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
+} from '@/components/pages/my/1-Transaction/1-Upcoming/Filter'
+import List from '@/components/pages/my/1-Transaction/1-Upcoming/List'
+import NeedPaymentLink from '@/components/pages/my/1-Transaction/1-Upcoming/NeedPaymentLink'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
@@ -17,7 +18,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
-export default function TransactionCancelled() {
+export default function TransactionUpcoming() {
   const searchParams = useSearchParams()
   const { lg } = useTailwindBreakpoint()
   const [isMounted, setIsMounted] = useState(false)
@@ -35,6 +36,12 @@ export default function TransactionCancelled() {
   // State for filters
   const [searchQuery, setSearchQuery] = useState<string>(
     searchParams.get('query') ? String(searchParams.get('query')) : ''
+  )
+  const [statusFilter, setStatusFilter] = useState<string>(
+    searchParams.get('status') || 'all'
+  )
+  const [statusFilterMobile, setStatusFilterMobile] = useState<string>(
+    searchParams.get('status') || 'all'
   )
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const dateString = searchParams.get('date')
@@ -58,9 +65,7 @@ export default function TransactionCancelled() {
         ? `${dateRange?.from.toISOString()} - ${dateRange?.to.toISOString()}`
         : ''
 
-    router.push(
-      `/my/transaction?type=canceled&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
-    )
+    const statusFilterParams = lg ? statusFilterMobile : statusFilter
 
     try {
       // Build query parameters
@@ -70,7 +75,20 @@ export default function TransactionCancelled() {
         order: 'desc',
         orderBy: 'createdAt',
         'bookingCode:likeLower': `%${searchQuery}%`,
-        'status.slug:in': 'canceled-by-user,canceled-by-travel',
+      }
+
+      // Add optional filters if they exist
+      if (statusFilter === 'all') {
+        queryParams['status.slug:in'] =
+          'waiting-cancellation,waiting-approval,approved'
+      } else if (statusFilter === 'waiting-approval') {
+        queryParams['status.slug:in'] = 'waiting-approval'
+      } else if (statusFilter === 'coming-soon') {
+        queryParams['status.slug:in'] = 'coming-soon'
+      } else if (statusFilter === 'siap-berangkat') {
+        queryParams['status.slug:in'] = 'approved'
+        queryParams['isCompletedManifest'] = true
+        queryParams['isPaidOff'] = true
       }
 
       if (dateRange?.from) {
@@ -88,8 +106,14 @@ export default function TransactionCancelled() {
 
       if (lg && currentPage > 1) {
         setTransactions((prev) => [...prev, ...response.results])
+        router.push(
+          `/my/transaction?type=upcoming&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
+        )
       } else {
         setTransactions(response.results)
+        router.push(
+          `/my/transaction?type=upcoming&page=${currentPage}&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
+        )
       }
 
       setTotalPages(Math.ceil(response.total / 10))
@@ -99,7 +123,8 @@ export default function TransactionCancelled() {
       console.error('Error fetching transactions:', err)
       setError('Failed to load transactions. Please try again.')
     }
-  }, [currentPage, searchQuery, dateRange, lg, router])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, searchQuery, statusFilter, dateRange, lg, router])
 
   // Handle page change
   const goToPage = useCallback((page: number) => {
@@ -109,6 +134,12 @@ export default function TransactionCancelled() {
   // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
+  }
+
+  // Handle status filter change
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value)
+    setCurrentPage(1) // Reset to first page when filter changes
   }
 
   // Handle date range change
@@ -138,19 +169,26 @@ export default function TransactionCancelled() {
       <SearchAndFilter
         searchQuery={searchQuery}
         handleSearchChange={handleSearchChange}
+        statusFilter={statusFilter}
+        handleStatusFilterChange={handleStatusFilterChange}
         handleDateRangeChange={handleDateRangeChange}
       />
 
       {/* Search and Filter Mobile */}
       {lg && (
         <SearchAndFilterMobile
+          statusFilterMobile={statusFilterMobile}
           dateFilterMobile={dateRange}
           handleSearchChange={handleSearchChange}
           searchQuery={searchQuery}
+          handleStatusFilterChange={handleStatusFilterChange}
           handleDateRangeChange={handleDateRangeChange}
+          setStatusFilterMobile={setStatusFilterMobile}
           setIsLoadingMobile={setIsLoadingMobileFilter}
         />
       )}
+
+      <NeedPaymentLink />
 
       {/* Error state */}
       {error && (

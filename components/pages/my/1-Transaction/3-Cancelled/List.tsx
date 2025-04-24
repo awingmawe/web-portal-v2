@@ -1,6 +1,6 @@
-import TransactionCard from '@/components/pages/my/1-Transaction/Card/TransactionCard'
-import EmptyState from '@/components/pages/my/1-Transaction/EmptyState'
-import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/TransactionSkeletonLoading'
+import TransactionCard from '@/components/pages/my/1-Transaction/Components/Card/TransactionCard'
+import EmptyState from '@/components/pages/my/1-Transaction/Components/EmptyState'
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { Transaction } from '@/constant/types/Transaction'
 import { Fragment } from 'react'
@@ -67,7 +67,15 @@ export default function List({
                         bookingId={String(transaction.id)}
                         isCompletedManifest={transaction.isCompletedManifest}
                         isPaidOff={transaction.isPaidOff}
-                        statusTahapan="Selesai"
+                        statusTahapan={
+                          transaction.status.slug == 'waiting-cancellation'
+                            ? 'Dalam Proses Pembatalan'
+                            : transaction.status.slug == 'canceled-by-travel'
+                              ? 'Dibatalkan Travel'
+                              : transaction.status.slug == 'canceled-by-user'
+                                ? 'Dibatalkan Jemaah'
+                                : ''
+                        }
                         noHeader
                         noAmountLeft
                         detailOnly
@@ -119,7 +127,15 @@ export default function List({
                     bookingId={String(transaction.id)}
                     isCompletedManifest={transaction.isCompletedManifest}
                     isPaidOff={transaction.isPaidOff}
-                    statusTahapan="Selesai"
+                    statusTahapan={
+                      transaction.status.slug == 'waiting-cancellation'
+                        ? 'Dalam Proses Pembatalan'
+                        : transaction.status.slug == 'canceled-by-travel'
+                          ? 'Dibatalkan Travel'
+                          : transaction.status.slug == 'canceled-by-user'
+                            ? 'Dibatalkan Jemaah'
+                            : ''
+                    }
                     noHeader
                     noAmountLeft
                     detailOnly
