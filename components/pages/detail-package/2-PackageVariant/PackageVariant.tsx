@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLongIcon } from '@/components/icons/arrow'
+import { ArrowIcon, ArrowLongIcon } from '@/components/icons/arrow'
 import { BedIcon } from '@/components/icons/bed'
 import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
@@ -12,6 +12,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { toast } from '@/components/ui/sonner'
+import { ACCOUNT_URL } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -27,18 +29,21 @@ import {
   getTripDuration,
   isEmpty,
 } from '@/lib/utils'
+import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { differenceInDays } from 'date-fns'
-import { ChevronDownIcon } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronDownIcon, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface PackageVariantComponentProps {
   variants: PackageVariant[]
   titlePackage: string
   organization?: OrganizationInstance
   package: Package
+  token?: string
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
@@ -46,6 +51,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   organization,
   titlePackage,
   package: pkg,
+  token,
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
@@ -62,6 +68,52 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     hasDiscount,
   } = usePackageVariant()
   const router = useRouter()
+  const [isLiked, setIsLiked] = useState(false)
+  // const [likeCount, setLikeCount] = useState<number>(0)
+  // const totalLike = async () => {
+  //   const totalLike = await getTotalLikedPackage(pkg?.id as number)
+  //   setLikeCount(totalLike.count)
+  // }
+
+  const statusLike = async () => {
+    const statusLike = await getStatusLiked(pkg?.id as number)
+    setIsLiked(statusLike.data)
+  }
+
+  // useEffect(() => {
+  //   totalLike()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isLiked])
+
+  useEffect(() => {
+    if (token) {
+      statusLike()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLiked, token])
+
+  const handleToggleLike = async () => {
+    if (!token) {
+      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      return
+    }
+
+    if (isLoading) return
+
+    try {
+      await toggleLike(pkg.id)
+
+      setIsLiked(!isLiked)
+    } catch (error: any) {
+      setIsLiked(isLiked)
+
+      toast.error(
+        error?.message ??
+          'Terjadi kesalahan saat like paket. Silakan coba lagi.'
+      )
+    } finally {
+    }
+  }
 
   // Initialize variants in context when component mounts
   useEffect(() => {
@@ -571,7 +623,36 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {/* Bottom actions */}
       {variants.length > 0 && (
         <div className="flex items-center justify-between max-lg:hidden">
-          <div className="text-s-regular text-neutral-200"></div>
+          <div
+            className="flex cursor-pointer items-center gap-1 transition-colors"
+            onClick={() => handleToggleLike()}
+          >
+            <span
+              className={`text-s-medium ${isLiked ? 'text-error-500' : 'text-neutral-500'}`}
+            >
+              {'Wishlist'}
+            </span>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isLiked ? 'liked' : 'unliked'}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+              >
+                <Heart
+                  size={16}
+                  className={
+                    isLiked
+                      ? 'fill-error-500 text-error-500'
+                      : 'text-neutral-500'
+                  }
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="h-[15px] w-px bg-neutral-200" />
           <div
             onClick={() => {
               handlePushEvent('click_consultation', false)
@@ -582,7 +663,11 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             <span className="text-s-medium">Konsultasi</span>
             <WhatsappIcon size={16} />
           </div>
-          <div className="text-s-regular text-neutral-200"></div>
+          <div className="h-[15px] w-px bg-neutral-200" />
+          <div className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors">
+            <span className="text-s-medium">Cek Kuota</span>
+            <ArrowIcon size={16} className="-rotate-45" />
+          </div>
         </div>
       )}
     </div>

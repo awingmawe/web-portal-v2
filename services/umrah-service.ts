@@ -5,6 +5,8 @@ import {
   Package,
   PackageVariant,
   PriceParams,
+  ToggleLike,
+  TotalLike,
 } from '@/constant/types/PackageProps'
 import qs from 'query-string'
 import { TagPackages } from '@/constant/types/TagPackageProps'
@@ -202,4 +204,39 @@ export async function getManifestDetail(
     console.error('Error fetching transaction umrah:', error)
     throw error
   }
+}
+
+export async function getWishlistList(
+  query: GetListQuery
+): Promise<GenericResponse<Package>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/package-wishlist?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching wishlist data:', error)
+    throw error
+  }
+}
+
+export async function getTotalLikedPackage(
+  packageId: number
+): Promise<TotalLike> {
+  const response = await api.get(
+    `/public/umrah/v1/package-wishlist/${packageId}/total`
+  )
+  return response.data
+}
+
+export function getStatusLiked(packageId: number) {
+  return apiWithAuth.get<boolean>(
+    `/umrah/v1/package-wishlist/${packageId}/status`
+  )
+}
+
+export function toggleLike(packageId: number) {
+  return apiWithAuth.post<ToggleLike>('/umrah/v1/package-wishlist/toggle', {
+    packageId: packageId,
+  })
 }
