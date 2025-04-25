@@ -265,3 +265,19 @@ export async function getStatusStock(
   )
   return response.data
 }
+
+export async function postNextPayment(
+  bookingId: string,
+  payload: any
+): Promise<PaymentTransaction> {
+  try {
+    const response = await apiWithAuth.post(
+      `/umrah/v1/booking/${bookingId}/next-payment`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+    throw error
+  }
+}
