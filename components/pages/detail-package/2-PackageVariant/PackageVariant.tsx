@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
-import { ArrowLongIcon } from '@/components/icons/arrow'
+import { ArrowIcon, ArrowLongIcon } from '@/components/icons/arrow'
 import { BedIcon } from '@/components/icons/bed'
 import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
+import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
+import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
 import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
@@ -12,6 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { ACCOUNT_URL, URL } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -29,16 +33,17 @@ import {
 } from '@/lib/utils'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { differenceInDays } from 'date-fns'
-import { ChevronDownIcon } from 'lucide-react'
+import { ArrowUpRight, ChevronDownIcon, HeartIcon } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect, useMemo } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
 interface PackageVariantComponentProps {
   variants: PackageVariant[]
   titlePackage: string
   organization?: OrganizationInstance
   package: Package
+  token?: string
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
@@ -46,6 +51,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   organization,
   titlePackage,
   package: pkg,
+  token,
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
@@ -62,7 +68,9 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     hasDiscount,
   } = usePackageVariant()
   const router = useRouter()
-
+  const path = usePathname()
+  const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
+  const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
   // Initialize variants in context when component mounts
   useEffect(() => {
     if (variants?.length > 0) {
@@ -154,8 +162,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
   // When all version 2 muslim101 released, remove this
   const handleLocalStorage = () => {
-    // if (!token) {
-    // }
+    if (!token) {
+      window.location.href =
+        `${ACCOUNT_URL}/auth/login??redirectUri=${`${URL}/${path}`} ` ||
+        `https://dev.account.moslem101.com/auth/login??redirectUri=${`${URL}/${path}`}`
+      return
+    }
     localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
     localStorage.setItem(
       'selectedVariant',
@@ -201,6 +213,26 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         }),
       },
     })
+  }
+
+  const handleQuotaCheck = async (quotaAmount: string) => {
+    // Handle the quota check logic here
+    try {
+      const payload = {
+        idVariant: selectedVariant?.id,
+        value: quotaAmount,
+      }
+      console.log(payload)
+
+      // const res = await checkAvailibility(payload)
+      // console.log(res)
+
+      setIsQuotaModalOpen(false)
+      setIsQuotaModalSuccess(true)
+    } catch (error) {
+      console.log(error)
+    }
+    // You might want to call an API or update state here
   }
 
   // Show skeleton loader when loading
@@ -514,20 +546,20 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {/* Action buttons */}
       {variants.length > 0 ? (
         <div>
-          <Link
+          {/* <Link
             href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
+          > */}
+          <Button
+            className="w-full rounded-full py-3 max-lg:hidden"
+            variant="default"
+            size="lg"
+            id="btn-checkout-desktop"
+            // When all version 2 muslim101 released, remove this
+            onClick={handleLocalStorage}
           >
-            <Button
-              className="w-full rounded-full py-3 max-lg:hidden"
-              variant="default"
-              size="lg"
-              id="btn-checkout-desktop"
-              // When all version 2 muslim101 released, remove this
-              onClick={handleLocalStorage}
-            >
-              Checkout Sekarang
-            </Button>
-          </Link>
+            Checkout Sekarang
+          </Button>
+          {/* </Link> */}
 
           <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
             atau
@@ -547,7 +579,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           </Link>
 
           {/* Next Sprint */}
-          {/* <Button
+          <Button
             className="w-full rounded-full py-2 lg:hidden"
             variant="outline"
             size="lg"
@@ -555,7 +587,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           >
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
-          </Button> */}
+          </Button>
         </div>
       ) : (
         <Button
@@ -570,21 +602,51 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
       {/* Bottom actions */}
       {variants.length > 0 && (
-        <div className="flex items-center justify-between max-lg:hidden">
-          <div className="text-s-regular text-neutral-200"></div>
-          <div
+        <div className="flex items-center justify-between gap-4 rounded-b-xl  bg-white px-6 py-4 max-lg:hidden">
+          {/* Wishlist */}
+          <button className="flex items-center gap-1 text-sm font-medium text-neutral-900">
+            Wishlist <HeartIcon className="h-4 w-4" />
+          </button>
+
+          {/* Divider */}
+          <div className="h-4 w-px bg-neutral-300" />
+
+          {/* Konsultasi */}
+          <button
             onClick={() => {
               handlePushEvent('click_consultation', false)
               shareViaWhatsApp(titlePackage, phoneNumberUsed)
             }}
-            className="hover:text-primary-500 flex cursor-pointer items-center gap-1 transition-colors"
+            className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
           >
-            <span className="text-s-medium">Konsultasi</span>
-            <WhatsappIcon size={16} />
-          </div>
-          <div className="text-s-regular text-neutral-200"></div>
+            Konsultasi <WhatsappIcon className="h-4 w-4" />
+          </button>
+
+          {/* Divider */}
+          <div className="h-4 w-px bg-neutral-300" />
+
+          {/* Cek Kuota */}
+          <button
+            onClick={() => {
+              setIsQuotaModalOpen(true)
+              handlePushEvent('click_check_quota')
+            }}
+            className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
+          >
+            Cek Kuota <ArrowUpRight className="h-4 w-4" />
+          </button>
         </div>
       )}
+      <CheckQuotaModal
+        open={isQuotaModalOpen}
+        onOpenChange={setIsQuotaModalOpen}
+        onSubmit={handleQuotaCheck}
+      />
+      <ModalSuccess
+        open={isQuotaModalSuccess}
+        onOpenChange={setIsQuotaModalSuccess}
+        // onSubmit={handleQuotaCheck}
+      />
     </div>
   )
 }
