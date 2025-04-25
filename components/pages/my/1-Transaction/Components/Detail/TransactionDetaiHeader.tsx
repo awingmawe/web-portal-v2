@@ -1,9 +1,13 @@
+import { TimerIcon } from '@/components/icons/timer'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import dayjs from 'dayjs'
+import 'dayjs/locale/id'
 
 interface TransactionDetaiHeaderProps {
   statusTahapan: string
   status: string
   isPaidOff: boolean
+  createdDate: string
   isCompletedManifest: boolean
 }
 
@@ -11,6 +15,7 @@ export function TransactionDetailHeader({
   statusTahapan,
   status,
   isPaidOff,
+  createdDate,
   isCompletedManifest,
 }: TransactionDetaiHeaderProps) {
   const { lg } = useTailwindBreakpoint()
@@ -103,7 +108,20 @@ export function TransactionDetailHeader({
       <p
         className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} relative z-20 rounded-full px-6 py-2 ${statusTahapan !== 'Selesai' && 'shadow-[2px_0px_4.8px_0px_#202B3324]'} max-lg:py-1 max-lg:text-xs`}
       >
-        {statusTahapan}
+        {statusTahapan === 'Waiting' ? (
+          <span className="text-warning-700 flex">
+            <TimerIcon className="mr-2" />
+            Bayar uang muka sebelum{' '}
+            {dayjs(createdDate)
+              .add(1, 'day')
+              .locale('id')
+              .format('DD MMMM YYYY HH:mm')}
+          </span>
+        ) : statusTahapan === 'waiting-approval' ? (
+          'Menunggu Konfirmasi'
+        ) : (
+          statusTahapan
+        )}
       </p>
       <p
         className={`text-s-medium ${renderStatusColor(status, statusTahapan, isPaidOff, isCompletedManifest)} relative z-10 -ml-10 rounded-full px-6 py-2 py-2.5 pl-10 max-lg:text-xs`}
