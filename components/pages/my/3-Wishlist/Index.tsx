@@ -78,7 +78,7 @@ export default function Wishlist() {
         const response = await getWishlistList({
           page: pageNum,
           size: pageSize,
-          'bookingCode:likeLower': query ? `%${query}%` : undefined,
+          [`search`]: query ? `%${query}%` : undefined,
           //   [`search`]: query ? `%${query}%` : undefined,
           // Add any other parameters you might need
         })

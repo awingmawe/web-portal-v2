@@ -420,6 +420,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   title={pkg.title}
                   variants={variants}
                   image={pkg.thumbnail}
+                  token={token || ''}
                 >
                   <div
                     key={variant.id}
