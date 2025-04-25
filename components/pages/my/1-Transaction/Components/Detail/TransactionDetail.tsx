@@ -158,6 +158,7 @@ export function TransactionDetail({
               totalJemaah={transaction?.quantity || ''}
               totalPayment={paymentStatement?.totalPrice}
               remainigPayment={paymentStatement?.remainingPayment}
+              statusTahapan={statusTahapan}
             />
             <Separator className="mb-4 !h-2 !bg-neutral-100" />
 

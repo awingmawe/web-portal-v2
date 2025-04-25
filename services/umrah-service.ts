@@ -181,3 +181,17 @@ export async function getManifestDetail(
     throw error
   }
 }
+
+export async function getInvoiceTranasction(
+  bookingCode: string
+): Promise<string> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/invoice-transaction/${bookingCode}/print`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
