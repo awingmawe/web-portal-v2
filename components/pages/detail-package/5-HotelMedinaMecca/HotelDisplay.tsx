@@ -117,6 +117,12 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
     [hotelDestination]
   )
 
+  // Filter non priority destinations
+  const nonPriorityDestinations = useMemo(
+    () => hotelDestination?.filter((x: any) => x.priority === false) || [],
+    [hotelDestination]
+  )
+
   // State to track image loading
   const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({})
 
@@ -192,7 +198,7 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
           <p className="text-s-regular text-neutral-500">
             {hotel && !isEmpty(hotelDestination)
               ? `${formatDistance(priorityDestinations[0]?.distance)}
-              ke Masjid
+              ke
               ${priorityDestinations[0]?.destinationName}`
               : ''}
           </p>
@@ -263,15 +269,14 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
           </Dialog>
         </div>
       )}
-
       {/* Destination information */}
-      {hotelDestination && hotelDestination.length > 0 && (
+      {nonPriorityDestinations && nonPriorityDestinations.length > 0 && (
         <Fragment>
           <p className="text-l-semibold mb-2 text-neutral-900">
             Area Wisata Terdekat:
           </p>
           <div className="grid grid-cols-12 gap-x-6 gap-y-2">
-            {hotelDestination.map((dest: HotelDestination) => (
+            {nonPriorityDestinations.map((dest: HotelDestination) => (
               <DestinationItem
                 key={`${dest.destinationName}`}
                 destination={dest}

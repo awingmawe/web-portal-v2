@@ -1,12 +1,12 @@
 'use client'
 
 import { PackageVariant } from '@/constant/types/PackageProps'
+import { formatCurrencyIndonesia, formatDateToRangeString } from '@/lib/utils'
 import React, {
   createContext,
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from 'react'
 
@@ -28,6 +28,13 @@ interface PackageVariantContextState {
   getPrice: () => number
   getOriginalPrice: () => number
   hasDiscount: () => boolean
+  formattedDeparture: string
+  formattedArrival: string
+  numberOfDays: number
+  handleBadgePromo: (
+    discountType: string,
+    amount: number | string
+  ) => string | null
 }
 
 // Initial state
@@ -45,6 +52,10 @@ const initialState: PackageVariantContextState = {
   getPrice: () => 0,
   getOriginalPrice: () => 0,
   hasDiscount: () => false,
+  formattedDeparture: '',
+  formattedArrival: '',
+  numberOfDays: 0,
+  handleBadgePromo: () => null,
 }
 
 // Create context
@@ -78,47 +89,6 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   const [selectedRoomType, setSelectedRoomType] =
     useState<RoomType>(initialRoomType)
   const [isLoading, setIsLoading] = useState<boolean>(initialLoading)
-
-  // Effect to automatically select the first variant when variants are loaded
-  useEffect(() => {
-    if (variants.length > 0 && !selectedVariant && !selectedVariantId) {
-      setSelectedVariant(variants[0])
-      setSelectedVariantId(variants[0].id)
-
-      // Default to quad room type if none selected
-      if (!selectedRoomType) {
-        setSelectedRoomType('quad')
-      }
-
-      // Turn off loading after a short delay to allow for smoother transitions
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-    }
-  }, [variants, selectedVariant, selectedVariantId, selectedRoomType])
-
-  // Set into first variant when first load
-  useEffect(() => {
-    if (variants.length > 0) {
-      setSelectedVariant(variants[0])
-      setSelectedVariantId(variants[0].id)
-
-      // Turn off loading after a short delay to allow for smoother transitions
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-    }
-  }, [variants])
-
-  // Effect to update selected variant when selected variant ID changes
-  useEffect(() => {
-    if (selectedVariantId && variants.length > 0) {
-      const variant = variants.find((v) => v.id === selectedVariantId)
-      if (variant) {
-        setSelectedVariant(variant)
-      }
-    }
-  }, [selectedVariantId, variants])
 
   // Helper function to get current price based on selected variant and room type
   const getPrice = useCallback((): number => {
@@ -159,6 +129,30 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     )
   }, [selectedVariant])
 
+  // Format departure and arrival dates for display
+  const formattedDeparture = selectedVariant?.departureDate
+    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
+    : '-'
+  const formattedArrival = selectedVariant?.arrivalDate
+    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
+    : '-'
+  const numberOfDays =
+    selectedVariant?.departureDate && selectedVariant?.arrivalDate
+      ? Math.ceil(
+          (new Date(selectedVariant.arrivalDate).getTime() -
+            new Date(selectedVariant.departureDate).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1
+      : 0
+  const handleBadgePromo = (discountType: string, amount: number | string) => {
+    if (discountType === 'percentage') {
+      return `${amount}%`
+    } else if (discountType === 'nominal') {
+      return `${formatCurrencyIndonesia(amount as number)}`
+    }
+    return null
+  }
+
   // Context value
   const value = {
     selectedVariant,
@@ -174,6 +168,10 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     getPrice,
     getOriginalPrice,
     hasDiscount,
+    formattedDeparture,
+    formattedArrival,
+    numberOfDays,
+    handleBadgePromo,
   }
 
   return (
