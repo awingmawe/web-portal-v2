@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
@@ -8,10 +9,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import { formatCurrency } from '@/lib/utils'
-import { getPaymentTransaction } from '@/services/umrah-service'
+import {
+  getPaymentStatement,
+  getPaymentTransaction,
+  postNextPayment,
+} from '@/services/umrah-service'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import Script from 'next/script'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
 export interface TransactionCardFooter {
@@ -40,7 +48,8 @@ export default function TransactionCardFooter({
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
   const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
-
+  const [snapReady, setSnapReady] = useState(false)
+  const router = useRouter()
   const fetcPaymentTransaction = useCallback(async () => {
     setLoadingPaymentTransaction(true)
 
@@ -56,6 +65,40 @@ export default function TransactionCardFooter({
       setLoadingPaymentTransaction(false)
     }
   }, [bookingId])
+
+  const fetchPaymentStatement = useCallback(async (id: any) => {
+    try {
+      // Build query parameters
+      const response = await getPaymentStatement(id)
+      const payload = {
+        amount: response.remainingPayment,
+      }
+      const responseNext = await postNextPayment(id, payload)
+      window.snap.pay(responseNext?.paymentToken, {
+        onSuccess: async (result: any) => {
+          console.log(result)
+          // router.replace('/my/transaction') // replace & refresh
+          window.location.reload()
+        },
+        onPending: async (result: any) => {
+          console.log('Payment pending', result)
+          router.push(`/my/need-payment`)
+          // Add expiration check logic
+        },
+        onError: (error: any) => {
+          console.log(error)
+        },
+        onClose: () => {
+          // router.push(`/my/need-payment`)
+          // Additional logic on close
+        },
+      })
+      console.log(responseNext)
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    } finally {
+    }
+  }, [])
 
   useEffect(() => {
     if (showDpButton) {
@@ -91,6 +134,9 @@ export default function TransactionCardFooter({
                 <Button
                   variant="outline"
                   className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                  onClick={() => {
+                    fetchPaymentStatement(bookingId)
+                  }}
                 >
                   Bayar Pelunasan
                 </Button>
@@ -233,6 +279,13 @@ export default function TransactionCardFooter({
             )}
           </Fragment>
         )}
+        <Script
+          src={SNAP_URL}
+          data-client-key={MIDTRANS_CLIENT_KEY}
+          strategy="lazyOnload"
+          onLoad={() => setSnapReady(true)}
+          onError={() => {}}
+        />
       </div>
 
       {open && (
