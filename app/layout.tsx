@@ -17,15 +17,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
-      <Suspense>
-        <GoogleTagManager gtmId={GTM_ID as string} />
-        <body>
+      <body>
+        <Suspense>
+          <GoogleTagManager gtmId={GTM_ID as string} />
+
           <ContextProviders>
             {children}
             <Toaster />
           </ContextProviders>
-        </body>
-      </Suspense>
+        </Suspense>
+      </body>
     </html>
   )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { TransactionDetailHeader } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetaiHeader'
 import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailManifest'
@@ -7,15 +8,19 @@ import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Compo
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
+import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import {
   getManifestDetail,
   getPaymentStatement,
   getTransactionDetail,
+  postNextPayment,
 } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import { X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import Script from 'next/script'
 import { useCallback, useEffect, useState } from 'react'
 
 interface TransactionDetailProps {
@@ -35,6 +40,8 @@ export function TransactionDetail({
   const [transaction, setTransaction] = useState<any>(null)
   const [paymentStatement, setPaymentStatement] = useState<any>(null)
   const [manifest, setManifest] = useState<any>(null)
+  const [snapReady, setSnapReady] = useState(false)
+  const router = useRouter()
 
   const fetchTransactions = useCallback(async () => {
     setLoading(true)
@@ -64,6 +71,41 @@ export function TransactionDetail({
   useEffect(() => {
     fetchTransactions()
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const fetchPaymentStatement = useCallback(async (id: any) => {
+    try {
+      // Build query parameters
+      const response = await getPaymentStatement(id)
+      const payload = {
+        amount: response.remainingPayment,
+      }
+      onOpenChange(false)
+      const responseNext = await postNextPayment(id, payload)
+      window.snap.pay(responseNext?.paymentToken, {
+        onSuccess: async (result: any) => {
+          console.log(result)
+          // router.replace('/my/transaction') // replace & refresh
+          window.location.reload()
+        },
+        onPending: async (result: any) => {
+          console.log('Payment pending', result)
+          router.push(`/my/need-payment`)
+          // Add expiration check logic
+        },
+        onError: (error: any) => {
+          console.log(error)
+        },
+        onClose: () => {
+          // router.push(`/my/need-payment`)
+          // Additional logic on close
+        },
+      })
+      console.log(responseNext)
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    } finally {
+    }
   }, [])
 
   return (
@@ -181,7 +223,7 @@ export function TransactionDetail({
                         <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
                           <ChecklistCircleActive />
                           <span className="text-success-700 text-s-regular ml-1">
-                            Pembayaran Lunas
+                            Pembayaran Lunass
                           </span>
                         </div>
                         <Button
@@ -213,7 +255,12 @@ export function TransactionDetail({
                             </span>
                           )}
                         </div>
-                        <Button className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]">
+                        <Button
+                          className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]"
+                          onClick={() => {
+                            fetchPaymentStatement(bookingId)
+                          }}
+                        >
                           <span className="font-medium">Bayar Pelunasan</span>
                         </Button>
                       </div>
@@ -309,6 +356,13 @@ export function TransactionDetail({
           )}
         </div>
       </DialogContent>
+      <Script
+        src={SNAP_URL}
+        data-client-key={MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+        onLoad={() => setSnapReady(true)}
+        onError={() => {}}
+      />
     </Dialog>
   )
 }

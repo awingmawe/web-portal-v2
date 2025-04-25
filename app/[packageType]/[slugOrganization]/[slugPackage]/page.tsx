@@ -24,12 +24,14 @@ import {
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
 import { getHotelRating, getTripDuration } from '@/lib/utils'
+import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHotel } from '@/services/general-service'
 import {
   getGalleryPackage,
   getPackageDetail,
   getPackageVariantList,
 } from '@/services/umrah-service'
+import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -50,11 +52,11 @@ export default async function DetailPackage({ params }: { params: any }) {
   const { slugPackage } = await params
 
   const detailData = await getPackageDetail(slugPackage)
-
   const idDetailPackage = detailData.id
   const medinaIdHotel = detailData.medinaHotel.id
   const meccaIdHotel = detailData.meccaHotel.id
-
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   const [galleryData, packageVariants, galleryMedina, galleryMecca] =
     await Promise.all([
       getGalleryPackage(idDetailPackage),
@@ -179,6 +181,7 @@ export default async function DetailPackage({ params }: { params: any }) {
                 variants={packageVariants.results}
                 organization={detailData?.organizationInstance}
                 package={detailData}
+                token={token}
               />
             </div>
           </div>

@@ -5,6 +5,8 @@ import {
   Package,
   PackageVariant,
   PriceParams,
+  ToggleLike,
+  TotalLike,
 } from '@/constant/types/PackageProps'
 import qs from 'query-string'
 import { TagPackages } from '@/constant/types/TagPackageProps'
@@ -168,6 +170,40 @@ export async function getOrderPayment(
   }
 }
 
+export async function preBookingCheckout(payload: any) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/pre`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+    throw error
+  }
+}
+
+export async function bookingCheckout(payload: any) {
+  try {
+    const response = await apiWithAuth.post<any>(`/umrah/v2/booking`, payload)
+    return response
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+  }
+}
+
+export async function checkAvailibility(payload: any) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v1/check-availability`,
+      payload
+    )
+    return response
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+  }
+}
+
 export async function getManifestDetail(
   query: GetListQuery
 ): Promise<GenericResponse<Transaction>> {
@@ -184,7 +220,7 @@ export async function getManifestDetail(
 
 export async function getInvoiceTranasction(
   bookingCode: string
-): Promise<string> {
+): Promise<GenericResponse<string>> {
   try {
     const response = await apiWithAuth.get(
       `/umrah/v1/invoice-transaction/${bookingCode}/print`
@@ -192,6 +228,70 @@ export async function getInvoiceTranasction(
     return response.data
   } catch (error) {
     console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
+
+export async function getWishlistList(
+  query: GetListQuery
+): Promise<GenericResponse<Package>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/package-wishlist?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching wishlist data:', error)
+    throw error
+  }
+}
+
+export async function getTotalLikedPackage(
+  packageId: number
+): Promise<TotalLike> {
+  const response = await api.get(
+    `/public/umrah/v1/package-wishlist/${packageId}/total`
+  )
+  return response.data
+}
+
+export function getStatusLiked(packageId: number) {
+  return apiWithAuth.get<boolean>(
+    `/umrah/v1/package-wishlist/${packageId}/status`
+  )
+}
+
+export function toggleLike(packageId: number) {
+  return apiWithAuth.post<ToggleLike>('/umrah/v1/package-wishlist/toggle', {
+    packageId: packageId,
+  })
+}
+
+export async function getStatusStock(
+  idVariant: any,
+  token: string
+): Promise<any> {
+  const response = await api.get(
+    `/umrah/v1/check-availability/checkstatus?idVariant=${idVariant}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+  return response.data
+}
+
+export async function postNextPayment(
+  bookingId: string,
+  payload: any
+): Promise<PaymentTransaction> {
+  try {
+    const response = await apiWithAuth.post(
+      `/umrah/v1/booking/${bookingId}/next-payment`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
     throw error
   }
 }
