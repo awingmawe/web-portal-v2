@@ -159,6 +159,7 @@ export const Sidebar = () => {
           <MenuItem
             icon={<HeartIcon />}
             label="Wishlist"
+            href="/my/wishlist"
             isActive={pathname === '/my/wishlist'}
             loading={profile ? false : true}
           />

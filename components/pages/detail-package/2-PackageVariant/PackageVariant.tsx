@@ -15,6 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { toast } from '@/components/ui/sonner'
 import { ACCOUNT_URL, URL } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
@@ -31,9 +32,11 @@ import {
   getTripDuration,
   isEmpty,
 } from '@/lib/utils'
+import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { differenceInDays } from 'date-fns'
-import { ArrowUpRight, ChevronDownIcon, HeartIcon } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronDownIcon, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -71,6 +74,53 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const path = usePathname()
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
   const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  // const [likeCount, setLikeCount] = useState<number>(0)
+  // const totalLike = async () => {
+  //   const totalLike = await getTotalLikedPackage(pkg?.id as number)
+  //   setLikeCount(totalLike.count)
+  // }
+
+  const statusLike = async () => {
+    const statusLike = await getStatusLiked(pkg?.id as number)
+    setIsLiked(statusLike.data)
+  }
+
+  // useEffect(() => {
+  //   totalLike()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isLiked])
+
+  useEffect(() => {
+    if (token) {
+      statusLike()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLiked, token])
+
+  const handleToggleLike = async () => {
+    if (!token) {
+      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      return
+    }
+
+    if (isLoading) return
+
+    try {
+      await toggleLike(pkg.id)
+
+      setIsLiked(!isLiked)
+    } catch (error: any) {
+      setIsLiked(isLiked)
+
+      toast.error(
+        error?.message ??
+          'Terjadi kesalahan saat like paket. Silakan coba lagi.'
+      )
+    } finally {
+    }
+  }
+
   // Initialize variants in context when component mounts
   useEffect(() => {
     if (variants?.length > 0) {
@@ -602,39 +652,52 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
       {/* Bottom actions */}
       {variants.length > 0 && (
-        <div className="flex items-center justify-between gap-4 rounded-b-xl  bg-white px-6 py-4 max-lg:hidden">
-          {/* Wishlist */}
-          <button className="flex items-center gap-1 text-sm font-medium text-neutral-900">
-            Wishlist <HeartIcon className="h-4 w-4" />
-          </button>
-
-          {/* Divider */}
-          <div className="h-4 w-px bg-neutral-300" />
-
-          {/* Konsultasi */}
-          <button
+        <div className="flex items-center justify-between max-lg:hidden">
+          <div
+            className="flex cursor-pointer items-center gap-1 transition-colors"
+            onClick={() => handleToggleLike()}
+          >
+            <span
+              className={`text-s-medium ${isLiked ? 'text-error-500' : 'text-neutral-500'}`}
+            >
+              {'Wishlist'}
+            </span>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isLiked ? 'liked' : 'unliked'}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
+              >
+                <Heart
+                  size={16}
+                  className={
+                    isLiked
+                      ? 'fill-error-500 text-error-500'
+                      : 'text-neutral-500'
+                  }
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="h-[15px] w-px bg-neutral-200" />
+          <div
             onClick={() => {
               handlePushEvent('click_consultation', false)
               shareViaWhatsApp(titlePackage, phoneNumberUsed)
             }}
             className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
           >
-            Konsultasi <WhatsappIcon className="h-4 w-4" />
-          </button>
-
-          {/* Divider */}
-          <div className="h-4 w-px bg-neutral-300" />
-
-          {/* Cek Kuota */}
-          <button
-            onClick={() => {
-              setIsQuotaModalOpen(true)
-              handlePushEvent('click_check_quota')
-            }}
-            className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
-          >
-            Cek Kuota <ArrowUpRight className="h-4 w-4" />
-          </button>
+            <span className="text-s-medium">Konsultasi</span>
+            <WhatsappIcon size={16} />
+          </div>
+          <div className="h-[15px] w-px bg-neutral-200" />
+          <div className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors">
+            <span className="text-s-medium">Cek Kuota</span>
+            <ArrowIcon size={16} className="-rotate-45" />
+          </div>
         </div>
       )}
       <CheckQuotaModal
