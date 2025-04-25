@@ -43,6 +43,8 @@ export default function TransactionDetailPayment({
     try {
       const response = await getInvoiceTranasction(bookingCode)
       setPrintData(response)
+      console.log('response', response)
+      console.log(printData)
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -56,7 +58,7 @@ export default function TransactionDetailPayment({
   return (
     <div className="mb-6 px-6">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-m-semibold">Rincian Pembayaran {statusTahapan}</h3>
+        <h3 className="text-m-semibold">Rincian Pembayaran</h3>
         {statusTahapan !== 'Dibatalkan' && (
           <Dialog>
             <DialogTrigger asChild>
