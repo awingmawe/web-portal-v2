@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { ArrowIcon, ArrowLongIcon } from '@/components/icons/arrow'
 import { BedIcon } from '@/components/icons/bed'
 import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
+import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
+import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
+import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
 import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
@@ -13,7 +17,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { toast } from '@/components/ui/sonner'
-import { ACCOUNT_URL } from '@/constant/env'
+import { ACCOUNT_URL, URL } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -29,13 +33,18 @@ import {
   getTripDuration,
   isEmpty,
 } from '@/lib/utils'
-import { getStatusLiked, toggleLike } from '@/services/umrah-service'
+import {
+  checkAvailibility,
+  getStatusLiked,
+  getStatusStock,
+  toggleLike,
+} from '@/services/umrah-service'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { differenceInDays } from 'date-fns'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDownIcon, Heart } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 
 interface PackageVariantComponentProps {
@@ -68,7 +77,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     hasDiscount,
   } = usePackageVariant()
   const router = useRouter()
+  const path = usePathname()
+  const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
+  const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
+  const [isQuotaModalWating, setIsQuotaModalWaiting] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
+  const [statusStock, setStatusStock] = useState<boolean>(false)
   // const [likeCount, setLikeCount] = useState<number>(0)
   // const totalLike = async () => {
   //   const totalLike = await getTotalLikedPackage(pkg?.id as number)
@@ -206,8 +220,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
   // When all version 2 muslim101 released, remove this
   const handleLocalStorage = () => {
-    // if (!token) {
-    // }
+    if (!token) {
+      window.location.href =
+        `${ACCOUNT_URL}/auth/login??redirectUri=${`${URL}/${path}`} ` ||
+        `https://dev.account.moslem101.com/auth/login??redirectUri=${`${URL}/${path}`}`
+      return
+    }
     localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
     localStorage.setItem(
       'selectedVariant',
@@ -255,7 +273,52 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     })
   }
 
-  // Show skeleton loader when loading
+  const handleQuotaCheck = async (quotaAmount: string) => {
+    // Handle the quota check logic here
+    try {
+      const payload = {
+        idVariant: selectedVariant?.id,
+        value: quotaAmount,
+      }
+      const res = await checkAvailibility(payload)
+
+      setIsQuotaModalOpen(false)
+      setIsQuotaModalSuccess(true)
+    } catch (error) {
+      console.log(error)
+    }
+    // You might want to call an API or update state here
+  }
+  const isNullOrEmpty = (value: any): boolean => {
+    if (value == null) {
+      // Checks for null or undefined
+      return true
+    }
+
+    if (typeof value === 'string' || Array.isArray(value)) {
+      return value.length === 0 // Checks for empty string or array
+    }
+
+    if (typeof value === 'object') {
+      return Object.keys(value).length === 0 // Checks for empty object
+    }
+
+    return false // For other types like numbers, booleans, etc.
+  }
+  const statusStockVariable = async () => {
+    if (!isNullOrEmpty(selectedVariant) && token) {
+      const status = await getStatusStock(selectedVariant?.id, token)
+      setStatusStock(status.status)
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      statusStockVariable()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVariant?.id])
+  // Show s loader when loading
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3 rounded-[20px] border border-neutral-100 bg-white p-4 max-lg:gap-2 max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:border-b max-lg:border-b-neutral-200 max-lg:px-0 max-lg:pt-0 max-lg:pb-4">
@@ -566,20 +629,20 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {/* Action buttons */}
       {variants.length > 0 ? (
         <div>
-          <Link
+          {/* <Link
             href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
+          > */}
+          <Button
+            className="w-full rounded-full py-3 max-lg:hidden"
+            variant="default"
+            size="lg"
+            id="btn-checkout-desktop"
+            // When all version 2 muslim101 released, remove this
+            onClick={handleLocalStorage}
           >
-            <Button
-              className="w-full rounded-full py-3 max-lg:hidden"
-              variant="default"
-              size="lg"
-              id="btn-checkout-desktop"
-              // When all version 2 muslim101 released, remove this
-              onClick={handleLocalStorage}
-            >
-              Checkout Sekarang
-            </Button>
-          </Link>
+            Checkout Sekarang
+          </Button>
+          {/* </Link> */}
 
           <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
             atau
@@ -599,15 +662,22 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           </Link>
 
           {/* Next Sprint */}
-          {/* <Button
+          <Button
             className="w-full rounded-full py-2 lg:hidden"
             variant="outline"
             size="lg"
             id="btn-check-quota"
+            onClick={() => {
+              if (statusStock === false) {
+                setIsQuotaModalOpen(true)
+              } else {
+                setIsQuotaModalWaiting(true)
+              }
+            }}
           >
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
-          </Button> */}
+          </Button>
         </div>
       ) : (
         <Button
@@ -658,18 +728,42 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               handlePushEvent('click_consultation', false)
               shareViaWhatsApp(titlePackage, phoneNumberUsed)
             }}
-            className="hover:text-primary-500 flex cursor-pointer items-center gap-1 transition-colors"
+            className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
           >
             <span className="text-s-medium">Konsultasi</span>
             <WhatsappIcon size={16} />
           </div>
           <div className="h-[15px] w-px bg-neutral-200" />
-          <div className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors">
+          <div
+            className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors"
+            onClick={() => {
+              if (statusStock === false) {
+                setIsQuotaModalOpen(true)
+              } else {
+                setIsQuotaModalWaiting(true)
+              }
+            }}
+          >
             <span className="text-s-medium">Cek Kuota</span>
             <ArrowIcon size={16} className="-rotate-45" />
           </div>
         </div>
       )}
+      <CheckQuotaModal
+        open={isQuotaModalOpen}
+        onOpenChange={setIsQuotaModalOpen}
+        onSubmit={handleQuotaCheck}
+      />
+      <ModalSuccess
+        open={isQuotaModalSuccess}
+        onOpenChange={setIsQuotaModalSuccess}
+        // onSubmit={handleQuotaCheck}
+      />
+      <ModalWaitingHasil
+        open={isQuotaModalWating}
+        onOpenChange={setIsQuotaModalWaiting}
+        // onSubmit={handleQuotaCheck}
+      />
     </div>
   )
 }

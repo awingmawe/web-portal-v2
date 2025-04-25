@@ -192,6 +192,18 @@ export async function bookingCheckout(payload: any) {
   }
 }
 
+export async function checkAvailibility(payload: any) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v1/check-availability`,
+      payload
+    )
+    return response
+  } catch (error) {
+    console.error('Error fetching payment transaction:', error)
+  }
+}
+
 export async function getManifestDetail(
   query: GetListQuery
 ): Promise<GenericResponse<Transaction>> {
@@ -239,4 +251,17 @@ export function toggleLike(packageId: number) {
   return apiWithAuth.post<ToggleLike>('/umrah/v1/package-wishlist/toggle', {
     packageId: packageId,
   })
+}
+
+export async function getStatusStock(
+  idVariant: any,
+  token: string
+): Promise<any> {
+  const response = await api.get(
+    `/umrah/v1/check-availability/checkstatus?idVariant=${idVariant}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+  return response.data
 }
