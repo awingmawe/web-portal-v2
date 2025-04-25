@@ -252,3 +252,16 @@ export function toggleLike(packageId: number) {
     packageId: packageId,
   })
 }
+
+export async function getStatusStock(
+  idVariant: any,
+  token: string
+): Promise<any> {
+  const response = await api.get(
+    `/umrah/v1/check-availability/checkstatus?idVariant=${idVariant}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+  return response.data
+}

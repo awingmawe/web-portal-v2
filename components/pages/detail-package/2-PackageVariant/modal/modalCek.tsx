@@ -34,7 +34,7 @@ const CheckQuotaModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="rounded-lg p-0 sm:max-w-md">
+      <DialogContent className="rounded-lg p-0 ">
         <DialogHeader className="p-6 pb-0">
           <div className="flex items-center gap-4">
             <div className="rounded-lg bg-amber-50 p-3">

@@ -7,6 +7,7 @@ import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
 import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
+import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
 import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
@@ -32,7 +33,12 @@ import {
   getTripDuration,
   isEmpty,
 } from '@/lib/utils'
-import { getStatusLiked, toggleLike } from '@/services/umrah-service'
+import {
+  checkAvailibility,
+  getStatusLiked,
+  getStatusStock,
+  toggleLike,
+} from '@/services/umrah-service'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { differenceInDays } from 'date-fns'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -74,7 +80,9 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const path = usePathname()
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
   const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
+  const [isQuotaModalWating, setIsQuotaModalWaiting] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
+  const [statusStock, setStatusStock] = useState<boolean>(false)
   // const [likeCount, setLikeCount] = useState<number>(0)
   // const totalLike = async () => {
   //   const totalLike = await getTotalLikedPackage(pkg?.id as number)
@@ -272,10 +280,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         idVariant: selectedVariant?.id,
         value: quotaAmount,
       }
-      console.log(payload)
-
-      // const res = await checkAvailibility(payload)
-      // console.log(res)
+      const res = await checkAvailibility(payload)
 
       setIsQuotaModalOpen(false)
       setIsQuotaModalSuccess(true)
@@ -284,8 +289,36 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     }
     // You might want to call an API or update state here
   }
+  const isNullOrEmpty = (value: any): boolean => {
+    if (value == null) {
+      // Checks for null or undefined
+      return true
+    }
 
-  // Show skeleton loader when loading
+    if (typeof value === 'string' || Array.isArray(value)) {
+      return value.length === 0 // Checks for empty string or array
+    }
+
+    if (typeof value === 'object') {
+      return Object.keys(value).length === 0 // Checks for empty object
+    }
+
+    return false // For other types like numbers, booleans, etc.
+  }
+  const statusStockVariable = async () => {
+    if (!isNullOrEmpty(selectedVariant) && token) {
+      const status = await getStatusStock(selectedVariant?.id, token)
+      setStatusStock(status.status)
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      statusStockVariable()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVariant?.id])
+  // Show s loader when loading
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3 rounded-[20px] border border-neutral-100 bg-white p-4 max-lg:gap-2 max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:border-b max-lg:border-b-neutral-200 max-lg:px-0 max-lg:pt-0 max-lg:pb-4">
@@ -634,6 +667,13 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             variant="outline"
             size="lg"
             id="btn-check-quota"
+            onClick={() => {
+              if (statusStock === false) {
+                setIsQuotaModalOpen(true)
+              } else {
+                setIsQuotaModalWaiting(true)
+              }
+            }}
           >
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
@@ -694,7 +734,16 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             <WhatsappIcon size={16} />
           </div>
           <div className="h-[15px] w-px bg-neutral-200" />
-          <div className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors">
+          <div
+            className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors"
+            onClick={() => {
+              if (statusStock === false) {
+                setIsQuotaModalOpen(true)
+              } else {
+                setIsQuotaModalWaiting(true)
+              }
+            }}
+          >
             <span className="text-s-medium">Cek Kuota</span>
             <ArrowIcon size={16} className="-rotate-45" />
           </div>
@@ -708,6 +757,11 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <ModalSuccess
         open={isQuotaModalSuccess}
         onOpenChange={setIsQuotaModalSuccess}
+        // onSubmit={handleQuotaCheck}
+      />
+      <ModalWaitingHasil
+        open={isQuotaModalWating}
+        onOpenChange={setIsQuotaModalWaiting}
         // onSubmit={handleQuotaCheck}
       />
     </div>
