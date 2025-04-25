@@ -1,6 +1,7 @@
 'use client'
 
 import { PackageVariant } from '@/constant/types/PackageProps'
+import { formatCurrencyIndonesia, formatDateToRangeString } from '@/lib/utils'
 import React, {
   createContext,
   ReactNode,
@@ -27,6 +28,13 @@ interface PackageVariantContextState {
   getPrice: () => number
   getOriginalPrice: () => number
   hasDiscount: () => boolean
+  formattedDeparture: string
+  formattedArrival: string
+  numberOfDays: number
+  handleBadgePromo: (
+    discountType: string,
+    amount: number | string
+  ) => string | null
 }
 
 // Initial state
@@ -44,6 +52,10 @@ const initialState: PackageVariantContextState = {
   getPrice: () => 0,
   getOriginalPrice: () => 0,
   hasDiscount: () => false,
+  formattedDeparture: '',
+  formattedArrival: '',
+  numberOfDays: 0,
+  handleBadgePromo: () => null,
 }
 
 // Create context
@@ -117,6 +129,30 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     )
   }, [selectedVariant])
 
+  // Format departure and arrival dates for display
+  const formattedDeparture = selectedVariant?.departureDate
+    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
+    : '-'
+  const formattedArrival = selectedVariant?.arrivalDate
+    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
+    : '-'
+  const numberOfDays =
+    selectedVariant?.departureDate && selectedVariant?.arrivalDate
+      ? Math.ceil(
+          (new Date(selectedVariant.arrivalDate).getTime() -
+            new Date(selectedVariant.departureDate).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1
+      : 0
+  const handleBadgePromo = (discountType: string, amount: number | string) => {
+    if (discountType === 'percentage') {
+      return `${amount}%`
+    } else if (discountType === 'nominal') {
+      return `${formatCurrencyIndonesia(amount as number)}`
+    }
+    return null
+  }
+
   // Context value
   const value = {
     selectedVariant,
@@ -132,6 +168,10 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     getPrice,
     getOriginalPrice,
     hasDiscount,
+    formattedDeparture,
+    formattedArrival,
+    numberOfDays,
+    handleBadgePromo,
   }
 
   return (

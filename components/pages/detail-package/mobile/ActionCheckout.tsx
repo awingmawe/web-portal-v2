@@ -1,6 +1,7 @@
 'use client'
 
 import WhatsappIcon from '@/components/icons/whatsapp'
+import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import { Button } from '@/components/ui/button'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
@@ -15,12 +16,14 @@ interface ActionCheckoutProps {
   variants: PackageVariant[]
   title: string
   organization?: OrganizationInstance
+  thumbnail?: string
 }
 
 export default function ActionCheckoutMobile({
   variants,
   title,
   organization,
+  thumbnail,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
   const { isLoading, selectedVariant, setVariants, selectedRoomType } =
@@ -82,9 +85,14 @@ export default function ActionCheckoutMobile({
               <p className="text-xs-semibold">Bayar Nanti</p>
             </Button>
           </Link>
-          <Link
+          {/* <Link
             href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
             className="w-full"
+          > */}
+          <CheckoutDrawerMobile
+            title={title}
+            variants={variants}
+            image={thumbnail}
           >
             <Button
               variant="default"
@@ -95,7 +103,8 @@ export default function ActionCheckoutMobile({
             >
               <p className="text-xs-semibold">Checkout Sekarang</p>
             </Button>
-          </Link>
+          </CheckoutDrawerMobile>
+          {/* </Link> */}
         </>
       ) : (
         <Button

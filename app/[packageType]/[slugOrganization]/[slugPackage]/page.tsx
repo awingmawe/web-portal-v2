@@ -128,7 +128,7 @@ export default async function DetailPackage({ params }: { params: any }) {
           variant="transparent"
           titleLink={detailData.title}
         />
-        <main className="container mx-auto mt-[40px] mb-16 max-lg:-mt-18 max-lg:mb-[78px] max-lg:max-w-full max-lg:px-0">
+        <main className="container mx-auto mt-[40px] mb-16 max-lg:mt-0 max-lg:mb-[78px] max-lg:max-w-full max-lg:px-0">
           <GalleryList title={detailData.title} />
           <div className="relative z-9 mt-[35px] grid grid-cols-12 flex-col gap-5 rounded-tl-[20px] rounded-tr-[20px] bg-white max-lg:-mt-4 max-lg:flex max-lg:p-4 ">
             <div className="col-span-8 flex flex-col gap-6 max-lg:order-2">
@@ -192,6 +192,7 @@ export default async function DetailPackage({ params }: { params: any }) {
           title={detailData?.title}
           variants={packageVariants.results}
           organization={detailData?.organizationInstance}
+          thumbnail={detailData?.thumbnail}
         />
       </GalleryProvider>
       <EventTrackerImpression

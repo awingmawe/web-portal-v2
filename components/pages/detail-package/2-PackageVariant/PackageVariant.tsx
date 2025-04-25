@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
@@ -9,6 +8,7 @@ import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
 import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
 import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
+import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
@@ -23,12 +23,11 @@ import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { usePackageVariant } from '@/contexts/package-variant-context'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import {
   formatCurrency,
-  formatCurrencyIndonesia,
-  formatDateToRangeString,
   formatPhoneNumber,
   getHotelRating,
   getTripDuration,
@@ -80,9 +79,14 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     getPrice,
     getOriginalPrice,
     hasDiscount,
+    handleBadgePromo,
+    formattedArrival,
+    formattedDeparture,
+    numberOfDays,
   } = usePackageVariant()
   const router = useRouter()
   const path = usePathname()
+  const { lg } = useTailwindBreakpoint()
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
   const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
   const [isQuotaModalWating, setIsQuotaModalWaiting] = useState(false)
@@ -181,33 +185,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       }, 500)
     }
   }, [variants])
-
-  // Format departure and arrival dates for display
-  const formattedDeparture = selectedVariant?.departureDate
-    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
-    : '-'
-
-  const formattedArrival = selectedVariant?.arrivalDate
-    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
-    : '-'
-
-  const numberOfDays =
-    selectedVariant?.departureDate && selectedVariant?.arrivalDate
-      ? Math.ceil(
-          (new Date(selectedVariant.arrivalDate).getTime() -
-            new Date(selectedVariant.departureDate).getTime()) /
-            (1000 * 60 * 60 * 24)
-        ) + 1
-      : '-'
-
-  const handleBadgePromo = (discountType: string, amount: number | string) => {
-    if (discountType === 'percentage') {
-      return `${amount}%`
-    } else if (discountType === 'nominal') {
-      return `${formatCurrencyIndonesia(amount as number)}`
-    }
-    return null
-  }
 
   const phoneNumberUsed = organization?.directContact
     ? formatPhoneNumber(organization?.phoneNumber)
@@ -326,7 +303,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         idVariant: selectedVariant?.id,
         value: quotaAmount,
       }
-      const res = await checkAvailibility(payload)
+      await checkAvailibility(payload)
 
       setIsQuotaModalOpen(false)
       setIsQuotaModalSuccess(true)
@@ -362,7 +339,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     if (token) {
       statusStockVariable()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariant?.id])
   // Show s loader when loading
   if (isLoading) {
@@ -436,30 +412,61 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="text-s-regular mb-2 text-neutral-800 max-lg:hidden">
             Varian
           </div>
-          <div className="no-scrollbar flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
-            {variants.map((variant) => (
-              <div
-                key={variant.id}
-                id={`variant-btn-${variant.id}`}
-                onClick={() => setSelectedVariantId(variant.id)}
-                className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 max-lg:flex-shrink-0 ${
-                  selectedVariantId === variant.id
-                    ? 'border-primary-500 bg-primary-100 border-2'
-                    : 'border-2 border-neutral-200 bg-transparent'
-                }`}
-              >
-                <p className="text-m-regular text-center text-neutral-900">
-                  {variant.name || `Varian ${variant.id}`}
-                </p>
-                {variant.discountAmount &&
-                  Number(variant.discountAmount) > 0 && (
-                    <BadgePromo
-                      className="!text-s-semibold -top-[60%]"
-                      title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
-                    />
-                  )}
-              </div>
-            ))}
+          <div className="no-scrollbar mt-7.5 flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-2.5 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
+            {variants.map((variant) =>
+              lg ? (
+                <CheckoutDrawerMobile
+                  key={variant.id}
+                  title={pkg.title}
+                  variants={variants}
+                  image={pkg.thumbnail}
+                >
+                  <div
+                    key={variant.id}
+                    id={`variant-btn-${variant.id}`}
+                    onClick={() => setSelectedVariantId(variant.id)}
+                    className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 text-nowrap max-lg:flex-shrink-0 ${
+                      selectedVariantId === variant.id
+                        ? 'border-primary-500 bg-primary-100 border-2'
+                        : 'border-2 border-neutral-200 bg-transparent'
+                    }`}
+                  >
+                    <p className="text-m-regular text-center text-neutral-900">
+                      {variant.name || `Varian ${variant.id}`}
+                    </p>
+                    {variant.discountAmount &&
+                      Number(variant.discountAmount) > 0 && (
+                        <BadgePromo
+                          className="!text-s-semibold -top-[20px]"
+                          title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
+                        />
+                      )}
+                  </div>
+                </CheckoutDrawerMobile>
+              ) : (
+                <div
+                  key={variant.id}
+                  id={`variant-btn-${variant.id}`}
+                  onClick={() => setSelectedVariantId(variant.id)}
+                  className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 text-nowrap max-lg:flex-shrink-0 ${
+                    selectedVariantId === variant.id
+                      ? 'border-primary-500 bg-primary-100 border-2'
+                      : 'border-2 border-neutral-200 bg-transparent'
+                  }`}
+                >
+                  <p className="text-m-regular text-center text-neutral-900">
+                    {variant.name || `Varian ${variant.id}`}
+                  </p>
+                  {variant.discountAmount &&
+                    Number(variant.discountAmount) > 0 && (
+                      <BadgePromo
+                        className="!text-s-semibold -top-[20px]"
+                        title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
+                      />
+                    )}
+                </div>
+              )
+            )}
           </div>
         </div>
       )}
