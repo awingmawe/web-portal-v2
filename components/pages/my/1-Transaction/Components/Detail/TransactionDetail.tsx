@@ -106,6 +106,7 @@ export function TransactionDetail({
       console.error('Error fetching transactions:', err)
     } finally {
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
