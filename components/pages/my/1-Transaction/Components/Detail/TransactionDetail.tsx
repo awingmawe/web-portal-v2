@@ -316,15 +316,17 @@ export function TransactionDetail({
                   </div>
                 )}
 
-              <Link
-                href={paymentTransaction?.paymentLink || '#'}
-                target="_blank"
-                className="w-full"
-              >
-                <Button className="border-primary-500 w-full border-2">
-                  <span className="font-medium">Bayar</span>
-                </Button>
-              </Link>
+              {statusTahapan === 'Waiting' && (
+                <Link
+                  href={paymentTransaction?.paymentLink || '#'}
+                  target="_blank"
+                  className="w-full"
+                >
+                  <Button className="border-primary-500 w-full border-2">
+                    <span className="font-medium">Bayar</span>
+                  </Button>
+                </Link>
+              )}
               <Link
                 href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                 target="_blank"
