@@ -12,6 +12,7 @@ import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import {
   getManifestDetail,
   getPaymentStatement,
+  getPaymentTransaction,
   getTransactionDetail,
   postNextPayment,
 } from '@/services/umrah-service'
@@ -39,6 +40,7 @@ export function TransactionDetail({
   const [loading, setLoading] = useState(true)
   const [transaction, setTransaction] = useState<any>(null)
   const [paymentStatement, setPaymentStatement] = useState<any>(null)
+  const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
   const [manifest, setManifest] = useState<any>(null)
   const [snapReady, setSnapReady] = useState(false)
   const router = useRouter()
@@ -51,6 +53,7 @@ export function TransactionDetail({
       // Fetch data
       const transactionDetail = await getTransactionDetail(bookingId)
       const paymentStatement = await getPaymentStatement(bookingId)
+      const paymentTransaction = await getPaymentTransaction(bookingId)
       const manifest = await getManifestDetail({
         bookingId,
         page: 1,
@@ -60,6 +63,7 @@ export function TransactionDetail({
       // Update state with response data
       setTransaction(transactionDetail)
       setPaymentStatement(paymentStatement)
+      setPaymentTransaction(paymentTransaction)
       setManifest(manifest)
 
       setLoading(false)
@@ -133,6 +137,7 @@ export function TransactionDetail({
           <div className="scrollbar-hide max-h-[80vh] overflow-y-auto border-r border-neutral-100 py-4">
             {/* Header */}
             <TransactionDetailHeader
+              createdDate={transaction?.createdAt}
               statusTahapan={statusTahapan}
               status={transaction?.status.slug}
               isPaidOff={transaction?.isPaidOff}
@@ -198,9 +203,7 @@ export function TransactionDetail({
             {/* Payment Details */}
             <TransactionDetailPayment
               bookingCode={transaction?.bookingCode || ''}
-              totalJemaah={transaction?.quantity || ''}
-              totalPayment={paymentStatement?.totalPrice}
-              remainigPayment={paymentStatement?.remainingPayment}
+              paymentDetails={transaction?.paymentDetails || ''}
               statusTahapan={statusTahapan}
             />
             <Separator className="mb-4 !h-2 !bg-neutral-100" />
@@ -211,11 +214,11 @@ export function TransactionDetail({
               <TransactionDetailManifest members={manifest?.results} />
             </div>
           </div>
-
           {/* Right Sidebar */}
           {statusTahapan !== 'Selesai' && (
             <div className="flex flex-col gap-3 p-4">
-              {transaction?.status.slug !== 'canceled-by-user' &&
+              {transaction?.status.slug !== 'waiting-down-payment' &&
+                transaction?.status.slug !== 'canceled-by-user' &&
                 transaction?.status.slug !== 'canceled-by-travel' &&
                 transaction?.status.slug !== 'expired' && (
                   <div className="flex flex-col gap-3">
@@ -313,6 +316,15 @@ export function TransactionDetail({
                   </div>
                 )}
 
+              <Link
+                href={paymentTransaction?.paymentLink || '#'}
+                target="_blank"
+                className="w-full"
+              >
+                <Button className="border-primary-500 w-full border-2">
+                  <span className="font-medium">Bayar</span>
+                </Button>
+              </Link>
               <Link
                 href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                 target="_blank"
