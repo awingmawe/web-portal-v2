@@ -288,7 +288,7 @@ export async function getInvoiceTranasction(
     const response = await apiWithAuth.get(
       `/umrah/v1/invoice-transaction/${bookingCode}/print`
     )
-    return response.data.data
+    return response.data
   } catch (error) {
     console.error('Error fetching invoice:', error)
     throw error
