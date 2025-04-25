@@ -17,6 +17,7 @@ interface ActionCheckoutProps {
   title: string
   organization?: OrganizationInstance
   thumbnail?: string
+  token: string
 }
 
 export default function ActionCheckoutMobile({
@@ -24,6 +25,7 @@ export default function ActionCheckoutMobile({
   title,
   organization,
   thumbnail,
+  token,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
   const { isLoading, selectedVariant, setVariants, selectedRoomType } =
@@ -93,6 +95,7 @@ export default function ActionCheckoutMobile({
             title={title}
             variants={variants}
             image={thumbnail}
+            token={token}
           >
             <Button
               variant="default"

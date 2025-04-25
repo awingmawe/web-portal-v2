@@ -9,13 +9,15 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { ACCOUNT_URL } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { X } from 'lucide-react'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import React, { Fragment, useEffect, useMemo } from 'react'
 
 const CheckoutDrawerMobile = React.memo(
@@ -24,11 +26,13 @@ const CheckoutDrawerMobile = React.memo(
     title,
     image,
     variants,
+    token,
   }: {
     children: React.ReactNode
     title: string
     variants: PackageVariant[]
     image?: string
+    token: string
   }) => {
     const {
       selectedVariant,
@@ -44,6 +48,8 @@ const CheckoutDrawerMobile = React.memo(
       formattedArrival,
       formattedDeparture,
     } = usePackageVariant()
+
+    const path = usePathname()
 
     const variantName =
       selectedVariant?.name ||
@@ -86,6 +92,12 @@ const CheckoutDrawerMobile = React.memo(
     ])
 
     const handleLocalStorage = () => {
+      if (!token && isEmpty(token)) {
+        window.location.href =
+          `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
+          `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
+        return
+      }
       localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
       localStorage.setItem(
         'selectedVariant',
@@ -102,7 +114,9 @@ const CheckoutDrawerMobile = React.memo(
 
     return (
       <Drawer>
-        <DrawerTrigger className="w-full">{children}</DrawerTrigger>
+        <DrawerTrigger className="w-full" asChild>
+          {children}
+        </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader className="scrollbar-hide gap-3 overflow-y-scroll">
             <DrawerTitle className="flex justify-between gap-2">

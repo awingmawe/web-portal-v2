@@ -193,6 +193,7 @@ export default async function DetailPackage({ params }: { params: any }) {
           variants={packageVariants.results}
           organization={detailData?.organizationInstance}
           thumbnail={detailData?.thumbnail}
+          token={token}
         />
       </GalleryProvider>
       <EventTrackerImpression
