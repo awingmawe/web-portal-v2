@@ -222,8 +222,8 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const handleLocalStorage = () => {
     if (!token) {
       window.location.href =
-        `${ACCOUNT_URL}/auth/login??redirectUri=${`${URL}/${path}`} ` ||
-        `https://dev.account.moslem101.com/auth/login??redirectUri=${`${URL}/${path}`}`
+        `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
+        `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
       return
     }
     localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
