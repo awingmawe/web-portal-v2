@@ -24,12 +24,14 @@ import {
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
 import { getHotelRating, getTripDuration } from '@/lib/utils'
+import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHotel } from '@/services/general-service'
 import {
   getGalleryPackage,
   getPackageDetail,
   getPackageVariantList,
 } from '@/services/umrah-service'
+import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -48,6 +50,8 @@ export async function generateMetadata({
 
 export default async function DetailPackage({ params }: { params: any }) {
   const { slugPackage } = await params
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
   const detailData = await getPackageDetail(slugPackage)
   const idDetailPackage = detailData.id
@@ -119,7 +123,7 @@ export default async function DetailPackage({ params }: { params: any }) {
         meccaHotelImages={meccaHotelImages || []}
         title={detailData?.title}
       >
-        <Topbar shadow scrolled />
+        <Topbar shadow scrolled token={token} />
         <MobileTopbar
           showBackButton
           variant="transparent"
@@ -178,6 +182,7 @@ export default async function DetailPackage({ params }: { params: any }) {
                 variants={packageVariants.results}
                 organization={detailData?.organizationInstance}
                 package={detailData}
+                token={token}
               />
             </div>
           </div>

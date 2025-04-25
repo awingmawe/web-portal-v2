@@ -128,3 +128,12 @@ export interface Package {
   tag?: null | any
   price: number
 }
+
+export type TotalLike = {
+  count: number
+}
+
+export type ToggleLike = {
+  status: boolean
+  message: string
+}
