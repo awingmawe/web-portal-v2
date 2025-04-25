@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { ArrowIcon, ArrowLongIcon } from '@/components/icons/arrow'
@@ -53,6 +54,7 @@ interface PackageVariantComponentProps {
   organization?: OrganizationInstance
   package: Package
   token?: string
+  packageVariantId: number
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
@@ -61,6 +63,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   titlePackage,
   package: pkg,
   token,
+  packageVariantId,
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
@@ -70,6 +73,8 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     selectedRoomType,
     isLoading,
     setVariants,
+    setIsLoading,
+    setSelectedVariant,
     setSelectedVariantId,
     setSelectedRoomType,
     getPrice,
@@ -103,7 +108,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     if (token) {
       statusLike()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLiked, token])
 
   const handleToggleLike = async () => {
@@ -135,6 +139,48 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       setVariants(variants)
     }
   }, [variants, setVariants])
+  // Effect to update selected variant when selected variant ID changes
+  useEffect(() => {
+    if (selectedVariantId && variants.length > 0) {
+      const variant = variants.find((v) => v.id === selectedVariantId)
+      if (variant) {
+        setSelectedVariant(variant)
+      }
+    }
+  }, [selectedVariantId, variants])
+
+  // Effect to automatically select the first variant when variants are loaded
+  useEffect(() => {
+    if (variants.length > 0 && !selectedVariant && !selectedVariantId) {
+      setSelectedVariant(variants[0])
+      setSelectedVariantId(variants[0].id)
+
+      // Default to quad room type if none selected
+      if (!selectedRoomType) {
+        setSelectedRoomType('quad')
+      }
+
+      // Turn off loading after a short delay to allow for smoother transitions
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500)
+    }
+  }, [variants, selectedVariant, selectedVariantId, selectedRoomType])
+
+  // Set into first variant when first load
+  useEffect(() => {
+    if (variants.length > 0) {
+      const variant = variants.find((v) => v.id === packageVariantId)
+
+      setSelectedVariant(variant || null)
+      setSelectedVariantId(packageVariantId)
+
+      // Turn off loading after a short delay to allow for smoother transitions
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500)
+    }
+  }, [variants])
 
   // Format departure and arrival dates for display
   const formattedDeparture = selectedVariant?.departureDate

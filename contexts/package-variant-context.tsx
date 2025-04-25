@@ -6,7 +6,6 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from 'react'
 
@@ -78,47 +77,6 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   const [selectedRoomType, setSelectedRoomType] =
     useState<RoomType>(initialRoomType)
   const [isLoading, setIsLoading] = useState<boolean>(initialLoading)
-
-  // Effect to automatically select the first variant when variants are loaded
-  useEffect(() => {
-    if (variants.length > 0 && !selectedVariant && !selectedVariantId) {
-      setSelectedVariant(variants[0])
-      setSelectedVariantId(variants[0].id)
-
-      // Default to quad room type if none selected
-      if (!selectedRoomType) {
-        setSelectedRoomType('quad')
-      }
-
-      // Turn off loading after a short delay to allow for smoother transitions
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-    }
-  }, [variants, selectedVariant, selectedVariantId, selectedRoomType])
-
-  // Set into first variant when first load
-  useEffect(() => {
-    if (variants.length > 0) {
-      setSelectedVariant(variants[0])
-      setSelectedVariantId(variants[0].id)
-
-      // Turn off loading after a short delay to allow for smoother transitions
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-    }
-  }, [variants])
-
-  // Effect to update selected variant when selected variant ID changes
-  useEffect(() => {
-    if (selectedVariantId && variants.length > 0) {
-      const variant = variants.find((v) => v.id === selectedVariantId)
-      if (variant) {
-        setSelectedVariant(variant)
-      }
-    }
-  }, [selectedVariantId, variants])
 
   // Helper function to get current price based on selected variant and room type
   const getPrice = useCallback((): number => {

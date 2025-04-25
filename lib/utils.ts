@@ -287,50 +287,47 @@ export const formatDistance = (meters: any) => {
 
 export function formatCurrencyIndonesia(
   value: number | string,
-  decimalPlaces = 0
+  decimalPlaces = 1
 ): string {
-  // Handle empty, null, or undefined values
   if (value === null || value === undefined || value === '') {
     return '0'
   }
 
-  // Convert to number if string
   const numValue =
     typeof value === 'string'
       ? parseFloat(value.replace(/[^\d.-]/g, ''))
       : value
 
-  // Handle NaN
   if (isNaN(numValue)) {
     return '0'
   }
 
-  // Get the absolute value for calculation
   const absValue = Math.abs(numValue)
 
   let formattedValue: string
   let suffix: string
 
-  // Format based on magnitude
-  if (absValue >= 1000000000) {
-    // Billion (Milyar)
-    formattedValue = (numValue / 1000000000).toFixed(decimalPlaces)
+  if (absValue >= 1_000_000_000) {
+    formattedValue = (Math.floor((numValue / 1_000_000_000) * 10) / 10).toFixed(
+      decimalPlaces
+    )
     suffix = 'M'
-  } else if (absValue >= 1000000) {
-    // Million (Juta)
-    formattedValue = (numValue / 1000000).toFixed(decimalPlaces)
+  } else if (absValue >= 1_000_000) {
+    formattedValue = (Math.floor((numValue / 1_000_000) * 10) / 10).toFixed(
+      decimalPlaces
+    )
     suffix = 'jt'
-  } else if (absValue >= 1000) {
-    // Thousand (Ribu)
-    formattedValue = (numValue / 1000).toFixed(decimalPlaces)
+  } else if (absValue >= 1_000) {
+    formattedValue = (Math.floor((numValue / 1_000) * 10) / 10).toFixed(
+      decimalPlaces
+    )
     suffix = 'rb'
   } else {
-    // Less than 1000
     formattedValue = numValue.toFixed(decimalPlaces)
     suffix = ''
   }
 
-  // Remove trailing zeros and decimal point if no decimal places
+  // Clean up `.0`
   formattedValue = formattedValue.replace(/\.0+$/, '')
 
   return `${formattedValue}${suffix}`

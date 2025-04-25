@@ -181,6 +181,7 @@ export default async function DetailPackage({ params }: { params: any }) {
                 variants={packageVariants.results}
                 organization={detailData?.organizationInstance}
                 package={detailData}
+                packageVariantId={detailData?.packageVariant?.id}
                 token={token}
               />
             </div>
