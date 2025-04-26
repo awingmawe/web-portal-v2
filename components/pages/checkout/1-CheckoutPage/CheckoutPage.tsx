@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { useCheckout } from '@/contexts/checkout-context'
@@ -33,6 +34,10 @@ const CheckoutPage = () => {
     wukalaSetting,
     handleRemoveReferralCode,
     loading,
+    handleInputChange,
+    formatNumber,
+    rawInputValue,
+    setRawInputValue,
   } = useCheckout()
 
   // Add state for terms and conditions checkbox
@@ -295,10 +300,10 @@ const CheckoutPage = () => {
                       type="text"
                       inputMode="numeric"
                       className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-right font-medium text-gray-800 shadow-sm"
-                      value={sliderValue.toLocaleString('id-ID')} // Display the total amount from slider
-                      onChange={(e) => {
-                        const value =
-                          parseInt(e.target.value.replace(/\D/g, '')) || 0
+                      value={formatNumber(rawInputValue)}
+                      onChange={handleInputChange}
+                      onBlur={(e) => {
+                        const value = parseInt(rawInputValue) || 0
                         const minAmount =
                           selectedVariant.netAmount * jamaahList.length
                         const maxAmount =
@@ -306,13 +311,36 @@ const CheckoutPage = () => {
                           totalPrice * jamaahList.length
 
                         if (value >= minAmount && value <= maxAmount) {
-                          setSliderValue(value) // Update slider position
-
-                          // Calculate per-jamaah amount
+                          setSliderValue(value)
                           const perJamaahAmount = Math.ceil(
                             value / jamaahList.length
                           )
-                          setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
+                          setPaymentAmount(perJamaahAmount)
+                          setRawInputValue(value.toString())
+                        } else {
+                          setRawInputValue(sliderValue.toString())
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          const value = parseInt(rawInputValue) || 0
+                          const minAmount =
+                            selectedVariant.netAmount * jamaahList.length
+                          const maxAmount =
+                            preBooking?.totalPrice ||
+                            totalPrice * jamaahList.length
+
+                          if (value >= minAmount && value <= maxAmount) {
+                            setSliderValue(value)
+                            const perJamaahAmount = Math.ceil(
+                              value / jamaahList.length
+                            )
+                            setPaymentAmount(perJamaahAmount)
+                            setRawInputValue(value.toString())
+                          } else {
+                            setRawInputValue(sliderValue.toString())
+                          }
                         }
                       }}
                     />
@@ -323,7 +351,7 @@ const CheckoutPage = () => {
                   type="range"
                   min={selectedVariant.netAmount * jamaahList.length} // Min is net amount × number of jamaah
                   max={preBooking?.totalPrice || totalPrice * jamaahList.length}
-                  // step={2000000}
+                  step={1000}
                   value={sliderValue} // Use the dedicated slider state
                   onChange={(e) => {
                     const value = parseInt(e.target.value)
@@ -465,7 +493,7 @@ const CheckoutPage = () => {
 
           {/* Right section - Package details */}
           <div className="w-full lg:w-1/3">
-            <div className="rounded-lg bg-white p-6 shadow-sm">
+            <div className="rounded-lg bg-white p-6 shadow-sm lg:sticky lg:top-20">
               <div className="mb-4 flex">
                 <div className="mr-4">
                   <Image

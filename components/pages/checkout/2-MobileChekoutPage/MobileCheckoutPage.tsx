@@ -43,6 +43,10 @@ const MobileCheckoutPage = ({}) => {
     handleRemoveReferralCode,
     loading,
     handleCheckReferral,
+    handleInputChange,
+    formatNumber,
+    rawInputValue,
+    setRawInputValue,
   } = useCheckout()
 
   return (
@@ -274,24 +278,47 @@ const MobileCheckoutPage = ({}) => {
                 <span className="mr-2 text-gray-500">Rp</span>
                 <input
                   type="text"
+                  inputMode="numeric"
                   className="flex-1 bg-transparent text-right outline-none"
-                  value={sliderValue.toLocaleString('id-ID')} // Display the total amount from slider
-                  onChange={(e) => {
-                    const value =
-                      parseInt(e.target.value.replace(/\D/g, '')) || 0
+                  value={formatNumber(rawInputValue)}
+                  onChange={handleInputChange}
+                  onBlur={(e) => {
+                    const value = parseInt(rawInputValue) || 0
                     const minAmount =
                       selectedVariant.netAmount * jamaahList.length
                     const maxAmount =
                       preBooking?.totalPrice || totalPrice * jamaahList.length
 
                     if (value >= minAmount && value <= maxAmount) {
-                      setSliderValue(value) // Update slider position
-
-                      // Calculate per-jamaah amount
+                      setSliderValue(value)
                       const perJamaahAmount = Math.ceil(
                         value / jamaahList.length
                       )
-                      setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
+                      setPaymentAmount(perJamaahAmount)
+                      setRawInputValue(value.toString())
+                    } else {
+                      setRawInputValue(sliderValue.toString())
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      const value = parseInt(rawInputValue) || 0
+                      const minAmount =
+                        selectedVariant.netAmount * jamaahList.length
+                      const maxAmount =
+                        preBooking?.totalPrice || totalPrice * jamaahList.length
+
+                      if (value >= minAmount && value <= maxAmount) {
+                        setSliderValue(value)
+                        const perJamaahAmount = Math.ceil(
+                          value / jamaahList.length
+                        )
+                        setPaymentAmount(perJamaahAmount)
+                        setRawInputValue(value.toString())
+                      } else {
+                        setRawInputValue(sliderValue.toString())
+                      }
                     }
                   }}
                 />
@@ -300,6 +327,7 @@ const MobileCheckoutPage = ({}) => {
                 type="range"
                 min={selectedVariant.netAmount * jamaahList.length} // Min is net amount × number of jamaah
                 max={preBooking?.totalPrice || totalPrice * jamaahList.length}
+                step={1000}
                 value={sliderValue} // Use the dedicated slider state
                 onChange={(e) => {
                   const value = parseInt(e.target.value)
