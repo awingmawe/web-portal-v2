@@ -114,7 +114,7 @@ const CheckoutDrawerMobile = React.memo(
 
     return (
       <Drawer>
-        <DrawerTrigger className="w-full" asChild>
+        <DrawerTrigger className="w-auto" asChild>
           {children}
         </DrawerTrigger>
         <DrawerContent>

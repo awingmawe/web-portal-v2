@@ -391,14 +391,14 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         <p className="heading-4-medium text-neutral-900 max-lg:hidden">
           Cek Harga!
         </p>
-        <p className="text-m-semibold text-neutral-900 lg:hidden">
+        <p className="text-m-semibold mb-2 text-neutral-900 lg:hidden">
           Varian Paket
         </p>
       </div>
 
       {/* Variants selection */}
       {variants.length > 0 && (
-        <div className="max-lg:h-[60px]">
+        <div className="mb-2 max-lg:h-[60px]">
           {selectedVariant &&
             differenceInDays(
               selectedVariant?.releasedAt as string,
@@ -412,7 +412,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="text-s-regular mb-2 text-neutral-800 max-lg:hidden">
             Varian
           </div>
-          <div className="no-scrollbar mt-7.5 flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-2.5 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
+          <div className="no-scrollbar mt-7.5 flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-1 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
             {variants.map((variant) =>
               lg ? (
                 <CheckoutDrawerMobile
@@ -426,7 +426,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                     key={variant.id}
                     id={`variant-btn-${variant.id}`}
                     onClick={() => setSelectedVariantId(variant.id)}
-                    className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 text-nowrap max-lg:flex-shrink-0 ${
+                    className={`${dissolve} hover:bg-primary-100 relative w-auto min-w-[90px] flex-none cursor-pointer rounded-lg p-2.5 ${
                       selectedVariantId === variant.id
                         ? 'border-primary-500 bg-primary-100 border-2'
                         : 'border-2 border-neutral-200 bg-transparent'
@@ -438,7 +438,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                     {variant.discountAmount &&
                       Number(variant.discountAmount) > 0 && (
                         <BadgePromo
-                          className="!text-s-semibold -top-[20px]"
+                          className="!text-s-semibold -top-[24px]"
                           title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
                         />
                       )}
