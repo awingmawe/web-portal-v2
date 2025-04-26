@@ -122,7 +122,7 @@ export default async function DetailPackage({ params }: { params: any }) {
         meccaHotelImages={meccaHotelImages || []}
         title={detailData?.title}
       >
-        <Topbar shadow scrolled />
+        <Topbar shadow scrolled token={token} />
         <MobileTopbar
           showBackButton
           variant="transparent"

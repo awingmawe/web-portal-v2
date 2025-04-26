@@ -10,7 +10,7 @@ export async function generateMetadata() {
 
 export default async function WishlistPage() {
   return (
-    <div className="mx-auto max-w-7xl lg:px-4">
+    <div className="mx-auto max-w-7xl max-lg:px-4 lg:px-4">
       <Wishlist />
       <BottomNavigation />
     </div>
