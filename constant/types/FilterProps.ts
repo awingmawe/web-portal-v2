@@ -4,6 +4,7 @@ import { DateRange } from 'react-day-picker'
 
 // Define the filter state interface
 export interface FilterState {
+  filterName: any
   hotelStars: number | 0
   dateRange: DateRange | undefined
   departureAirport: Airport | null
@@ -32,4 +33,5 @@ export const initialFilterState: FilterState = {
   facilityCode: '',
   section: '',
   tagSlug: '',
+  filterName: undefined,
 }

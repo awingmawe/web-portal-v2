@@ -11,6 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { X } from 'lucide-react'
 import React from 'react'
 
@@ -23,6 +24,8 @@ const ShareDrawer = React.memo(
     titleLink: string
     buttonClasses: string
   }) => {
+    const { shareViaCopyLink, shareViaWhatsApp } = useGallerySharing()
+
     return (
       <Drawer>
         <DrawerTrigger>

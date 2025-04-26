@@ -125,7 +125,7 @@ export default async function SearchGeneral({
           </div>
         </section>
       </main>
-      <BottomNavigation />
+      <BottomNavigation dataMinMax={dataMinMax} dataFacility={dataFacility} />
     </Fragment>
   )
 }
