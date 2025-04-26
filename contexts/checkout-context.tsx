@@ -222,6 +222,25 @@ export const CheckoutProvider = ({
     }
   }, [referralCode, shouldCheckPreAfterClear])
   const totalMinimumDownPayment = paymentAmount * jamaahList.length
+  const [rawInputValue, setRawInputValue] = useState(
+    sliderValue.toLocaleString('id-ID')
+  )
+  useEffect(() => {
+    // Sync input display when sliderValue changes externally
+    setRawInputValue(sliderValue.toLocaleString('id-ID'))
+  }, [sliderValue])
+
+  const formatNumber = (value: string) => {
+    const numericValue = value.replace(/\D/g, '') // hapus semua selain angka
+    if (!numericValue) return ''
+    return parseInt(numericValue, 10).toLocaleString('id-ID')
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value
+    const numeric = input.replace(/\D/g, '')
+    setRawInputValue(numeric) // simpan angka mentah (tanpa titik)
+  }
 
   const value = {
     token,
@@ -261,6 +280,10 @@ export const CheckoutProvider = ({
     paymentToken,
     booking,
     loading,
+    handleInputChange,
+    formatNumber,
+    rawInputValue,
+    setRawInputValue,
   }
 
   return (
