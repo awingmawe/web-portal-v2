@@ -223,7 +223,7 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
               align: 'start',
               loop: true,
             }}
-            className="w-full"
+            className="h-[476] w-full max-lg:h-[193]"
           >
             <CarouselContent>
               {hotelImages.map((image, index) => (
