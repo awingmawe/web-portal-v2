@@ -6,7 +6,7 @@ import {
   PackageListEvent,
   PackageListEvent as PackageListPlus,
 } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
-import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScroll'
+import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScrollV2'
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'

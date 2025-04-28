@@ -1,20 +1,26 @@
 import { GalleryHomepage } from '@/constant/types/GalleryProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Image from 'next/image'
+import { ComponentProps } from 'react'
 
-interface TravelImageSectionProps {
+type TravelImageSectionProps = ComponentProps<'div'> & {
   dataGallery: GalleryHomepage[]
 }
 
 const TravelImageSection: React.FC<TravelImageSectionProps> = ({
   dataGallery,
+  className = '',
+  ...props
 }) => {
   const { lg: isMobile } = useTailwindBreakpoint()
 
   return (
-    <div className="relative z-2 mb-[560px] flex flex-row justify-center max-lg:mb-[500px] max-md:mb-[200px]">
+    <div
+      className={`relative z-2 mb-[560px] flex flex-row justify-center max-lg:mb-[500px] max-md:mb-[200px] ${className}`}
+      {...props}
+    >
       <div
-        className="relative flex w-full items-center justify-center max-lg:max-w-[320px] max-lg:px-4 lg:container"
+        className="relative flex w-full items-center justify-center max-lg:max-w-[400px] max-lg:px-4 lg:container"
         style={{
           paddingTop: isMobile ? 120 : 240,
         }}
