@@ -104,7 +104,7 @@ export function TransactionDetailHeader({
   }
 
   return (
-    <div className="mb-4 flex items-center space-x-2 px-4">
+    <div className="mb-4 flex items-center space-x-2 px-4 max-lg:px-3">
       <p
         className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} relative z-20 rounded-full px-6 py-2 ${statusTahapan !== 'Selesai' && 'shadow-[2px_0px_4.8px_0px_#202B3324]'} max-lg:py-1 max-lg:text-xs`}
       >
@@ -124,7 +124,7 @@ export function TransactionDetailHeader({
         )}
       </p>
       <p
-        className={`text-s-medium ${renderStatusColor(status, statusTahapan, isPaidOff, isCompletedManifest)} relative z-10 -ml-10 rounded-full px-6 py-2 py-2.5 pl-10 max-lg:text-xs`}
+        className={`text-s-medium ${renderStatusColor(status, statusTahapan, isPaidOff, isCompletedManifest)} relative z-10 -ml-10 rounded-full px-6 py-2.5 pl-10 max-lg:py-1.5 max-lg:text-xs`}
       >
         {renderStatusText(status, isPaidOff, isCompletedManifest)}
       </p>

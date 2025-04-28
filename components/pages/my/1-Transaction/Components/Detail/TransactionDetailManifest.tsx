@@ -71,7 +71,7 @@ export default function TransactionDetailManifest({
             >
               <div className="flex items-center gap-3 text-left">
                 <User className="h-6 w-6 text-emerald-500" />
-                <span className="text-m-semibold">
+                <span className="text-semibold text-sm max-lg:text-xs">
                   Data Jemaah {member.name}
                 </span>
               </div>

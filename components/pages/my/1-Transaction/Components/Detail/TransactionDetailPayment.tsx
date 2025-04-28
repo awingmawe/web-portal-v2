@@ -22,9 +22,11 @@ export default function TransactionDetailPayment({
   statusTahapan,
 }: TransactionDetailPaymentProps) {
   return (
-    <div className="mb-6 px-6">
+    <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-m-semibold">Rincian Pembayaran</h3>
+        <h3 className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
+          Rincian Pembayaran
+        </h3>
 
         {statusTahapan !== 'Dibatalkan' && statusTahapan !== 'Waiting' && (
           <Link href={`/invoice/${bookingCode}`}>
@@ -38,7 +40,9 @@ export default function TransactionDetailPayment({
               >
                 <DocumentTextIcon className="text-white" />
               </div>
-              <span className="text-m-semibold">Invoice Pembayaran</span>
+              <span className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
+                Invoice Pembayaran
+              </span>
               <ChevronRight className="ml-1 h-5 w-5" />
             </div>
           </Link>
@@ -54,10 +58,10 @@ export default function TransactionDetailPayment({
                 <Fragment>
                   {item.isBank ? (
                     <div className="flex justify-between">
-                      <span className="text-s-regular text-neutral-500">
+                      <span className="text-sm text-neutral-500 max-lg:text-xs">
                         {item.label}
                       </span>
-                      <span className="text-m-semibold">
+                      <span className="text-sm font-semibold max-lg:text-xs max-lg:font-normal">
                         {item.amount === 'bank_transfer'
                           ? 'Bank Transfer'
                           : item.amount}
@@ -65,11 +69,11 @@ export default function TransactionDetailPayment({
                     </div>
                   ) : (
                     <div className="flex justify-between">
-                      <span className="text-s-regular text-neutral-500">
+                      <span className="text-sm text-neutral-500 max-lg:text-xs">
                         {item.label}
                       </span>
                       <span
-                        className={`text-m-semibold ${Number(item.amount) < 0 ? 'text-error-500' : ''}`}
+                        className={`font-seminold text-sm max-lg:text-xs max-lg:font-medium ${Number(item.amount) < 0 ? 'text-error-500' : ''}`}
                       >
                         {formatCurrency(item.amount)}
                       </span>

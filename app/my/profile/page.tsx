@@ -1,9 +1,12 @@
+import LayoutMy from '@/components/pages/my/Layout'
 import { Fragment } from 'react'
 
 export default function MyPage() {
   return (
-    <Fragment>
-      <div>Profile</div>
-    </Fragment>
+    <LayoutMy>
+      <Fragment>
+        <div>Profile</div>
+      </Fragment>
+    </LayoutMy>
   )
 }
