@@ -184,185 +184,188 @@ export default function TransactionCard({
   }
 
   return (
-    <div className="mt-6 rounded-3xl border border-neutral-200 ">
-      {!noHeader && (
-        <TransactionCardHeader
-          status={status}
-          isCompletedManifest={isCompletedManifest}
-          isPaidOff={isPaidOff}
-        />
-      )}
-      <div
-        className={`${!noHeader ? '-mt-5' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
-      >
-        <div className="flex items-center justify-between border-b border-neutral-200 p-4">
-          <div className="flex items-center gap-2 max-lg:block">
-            <p className="font-medium max-lg:text-xs">Umroh</p>
-            <p className="font-medium max-lg:hidden">/ </p>
-            <p className="text-neutral-500 max-lg:hidden">ID : {id}</p>
-            <p className="hidden text-neutral-500 max-lg:block max-lg:text-xs">
-              Dibuat Pada: {dayjs(createdDate).locale(id).format('DD MMM YYYY')}
-            </p>
-          </div>
-          <div className="flex items-center">
-            <p
-              className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2 max-lg:py-1 max-lg:text-xs ${statusTahapan === 'Waiting' ? 'max-lg:px-0' : 'max-lg:px-2'}`}
-            >
-              {renderStatusTahapanText(statusTahapan)}
-            </p>
-            {!isPaidOff && (
-              <Fragment>
-                {(status === 'approved' ||
-                  status === 'waiting-approval' ||
-                  status === 'waiting-down-payment') && (
-                  <Drawer>
-                    <DrawerTrigger asChild>
-                      <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
-                    </DrawerTrigger>
-                    <DrawerContent className="z-100 border-0 outline-0">
-                      <DrawerHeader className="p-3">
-                        <DrawerTitle className="flex items-center">
-                          <p className="text-m-semibold ml-2 font-semibold">
-                            Lainnya
-                          </p>
-                        </DrawerTitle>
-                      </DrawerHeader>
-                      <div className="flex w-full px-3 pt-3 pb-5">
-                        <Link
-                          href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                          target="_blank"
-                          className="w-full"
-                        >
-                          <Button
-                            variant="outline"
-                            type="button"
-                            className="border-error-500 w-full border-2 py-3"
+    <Link href={`/my/transaction/${bookingId}`}>
+      <div className="mt-6 rounded-3xl border border-neutral-200 ">
+        {!noHeader && (
+          <TransactionCardHeader
+            status={status}
+            isCompletedManifest={isCompletedManifest}
+            isPaidOff={isPaidOff}
+          />
+        )}
+        <div
+          className={`${!noHeader ? '-mt-5' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
+        >
+          <div className="flex items-center justify-between border-b border-neutral-200 p-4">
+            <div className="flex items-center gap-2 max-lg:block">
+              <p className="font-medium max-lg:text-xs">Umroh</p>
+              <p className="font-medium max-lg:hidden">/ </p>
+              <p className="text-neutral-500 max-lg:hidden">ID : {id}</p>
+              <p className="hidden text-neutral-500 max-lg:block max-lg:text-xs">
+                Dibuat Pada:{' '}
+                {dayjs(createdDate).locale(id).format('DD MMM YYYY')}
+              </p>
+            </div>
+            <div className="flex items-center">
+              <p
+                className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2 max-lg:py-1 max-lg:text-xs ${statusTahapan === 'Waiting' ? 'max-lg:px-0' : 'max-lg:px-2'}`}
+              >
+                {renderStatusTahapanText(statusTahapan)}
+              </p>
+              {!isPaidOff && (
+                <Fragment>
+                  {(status === 'approved' ||
+                    status === 'waiting-approval' ||
+                    status === 'waiting-down-payment') && (
+                    <Drawer>
+                      <DrawerTrigger asChild>
+                        <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
+                      </DrawerTrigger>
+                      <DrawerContent className="z-100 border-0 outline-0">
+                        <DrawerHeader className="p-3">
+                          <DrawerTitle className="flex items-center">
+                            <p className="text-m-semibold ml-2 font-semibold">
+                              Lainnya
+                            </p>
+                          </DrawerTitle>
+                        </DrawerHeader>
+                        <div className="flex w-full px-3 pt-3 pb-5">
+                          <Link
+                            href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                            target="_blank"
+                            className="w-full"
                           >
-                            Batalkan Pesanan
-                          </Button>
-                        </Link>
-                      </div>
-                    </DrawerContent>
-                  </Drawer>
+                            <Button
+                              variant="outline"
+                              type="button"
+                              className="border-error-500 w-full border-2 py-3"
+                            >
+                              Batalkan Pesanan
+                            </Button>
+                          </Link>
+                        </div>
+                      </DrawerContent>
+                    </Drawer>
+                  )}
+                </Fragment>
+              )}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-2 p-4 md:grid-cols-3 lg:gap-4">
+            <p className="text-s-regular hidden text-neutral-500 max-lg:block">
+              ID : {id}
+            </p>
+            <div className="flex gap-4 md:col-span-2">
+              <div className="h-32 w-32 flex-shrink-0 max-lg:h-20 max-lg:w-20">
+                {thumbnail ? (
+                  <Image
+                    src={thumbnail}
+                    alt="Umroh Package"
+                    width={128}
+                    height={128}
+                    className="block h-full w-full rounded-md object-cover max-lg:hidden"
+                  />
+                ) : (
+                  <div className="block h-full w-full rounded-md bg-neutral-100 max-lg:hidden" />
+                )}
+                {thumbnail ? (
+                  <Image
+                    src={thumbnail}
+                    alt="Umroh Package"
+                    width={60}
+                    height={60}
+                    className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                  />
+                ) : (
+                  <div className="hidden h-full w-full rounded-md bg-neutral-100 max-lg:block" />
+                )}
+              </div>
+              <div className="flex flex-col justify-between">
+                <div>
+                  <h2 className="text-l-semibold leading-[16px] uppercase max-lg:text-xs">
+                    {packageName}
+                  </h2>
+                  <div className="mt-4 flex items-center gap-2 max-lg:hidden">
+                    <Calendar2 className="h-5 w-5 text-neutral-500" />
+                    <p className="text-m-regular flex items-center text-neutral-500">
+                      {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
+                      <ArrowIcon size={20} className="mx-2 text-neutral-500" />{' '}
+                      {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex items-center gap-2 max-lg:hidden">
+                    <UsersIcon className="h-5 w-5 text-neutral-500" />
+                    <p className="text-m-regular text-neutral-500">
+                      {jemaah} Jemaah
+                    </p>
+                    {!noLabelNotif &&
+                      renderManifestComplete(isCompletedManifest, createdDate)}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <TransactionCardPayment
+              noLabelNotif={noLabelNotif}
+              isPaidOff={isPaidOff}
+              noAmountLeft={noAmountLeft}
+              bookingId={bookingId}
+              startDate={startDate}
+            />
+            <div className="hidden items-center gap-2 max-lg:flex">
+              <Calendar2 className="h-4 w-4 text-neutral-500" />
+              <p className="flex items-center text-xs text-neutral-500">
+                {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
+                <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
+                {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+              </p>
+            </div>
+            <div className="mt-1 hidden items-center gap-2 max-lg:flex">
+              <UsersIcon className="h-4 w-4 text-neutral-500" />
+              <p className="text-xs text-neutral-500">{jemaah} Jemaah</p>
+            </div>
+          </div>
+          <div
+            className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
+          >
+            <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
+              <p className="text-s-regular text-neutral-500">Dibuat pada</p>
+              <Calendar className="h-4 w-4 text-neutral-500" />
+              <p className="text-m-regular text-neutral-500">
+                {dayjs(createdDate).locale('id').format('DD MMMM YYYY')}
+              </p>
+            </div>
+            {!noFooter && (
+              <Fragment>
+                {orderPaymentLoading ? (
+                  <div className="flex hidden items-center justify-between p-4 max-lg:block">
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-5 w-24" />
+                      <Skeleton className="h-5 w-32" />
+                    </div>
+                    <div className="flex gap-2 max-lg:hidden">
+                      <Skeleton className="h-10 w-32 rounded-full" />
+                      <Skeleton className="h-10 w-40 rounded-full" />
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                    </div>
+                  </div>
+                ) : (
+                  <TransactionCardFooter
+                    detailOnly={detailOnly}
+                    isPaidOff={isPaidOff}
+                    isCompletedManifest={isCompletedManifest}
+                    showDpButton={showDpButton}
+                    bookingId={bookingId}
+                    id={id}
+                    status={status}
+                    statusTahapanDetail={statusTahapanDetail}
+                    paymentAmount={orderPayment?.orderPayment?.paymentAmount}
+                  />
                 )}
               </Fragment>
             )}
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-2 p-4 md:grid-cols-3 lg:gap-4">
-          <p className="text-s-regular hidden text-neutral-500 max-lg:block">
-            ID : {id}
-          </p>
-          <div className="flex gap-4 md:col-span-2">
-            <div className="h-32 w-32 flex-shrink-0 max-lg:h-20 max-lg:w-20">
-              {thumbnail ? (
-                <Image
-                  src={thumbnail}
-                  alt="Umroh Package"
-                  width={128}
-                  height={128}
-                  className="block h-full w-full rounded-md object-cover max-lg:hidden"
-                />
-              ) : (
-                <div className="block h-full w-full rounded-md bg-neutral-100 max-lg:hidden" />
-              )}
-              {thumbnail ? (
-                <Image
-                  src={thumbnail}
-                  alt="Umroh Package"
-                  width={60}
-                  height={60}
-                  className="hidden h-full w-full rounded-md object-cover max-lg:block"
-                />
-              ) : (
-                <div className="hidden h-full w-full rounded-md bg-neutral-100 max-lg:block" />
-              )}
-            </div>
-            <div className="flex flex-col justify-between">
-              <div>
-                <h2 className="text-l-semibold leading-[16px] uppercase max-lg:text-xs">
-                  {packageName}
-                </h2>
-                <div className="mt-4 flex items-center gap-2 max-lg:hidden">
-                  <Calendar2 className="h-5 w-5 text-neutral-500" />
-                  <p className="text-m-regular flex items-center text-neutral-500">
-                    {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
-                    <ArrowIcon size={20} className="mx-2 text-neutral-500" />{' '}
-                    {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
-                  </p>
-                </div>
-                <div className="mt-4 flex items-center gap-2 max-lg:hidden">
-                  <UsersIcon className="h-5 w-5 text-neutral-500" />
-                  <p className="text-m-regular text-neutral-500">
-                    {jemaah} Jemaah
-                  </p>
-                  {!noLabelNotif &&
-                    renderManifestComplete(isCompletedManifest, createdDate)}
-                </div>
-              </div>
-            </div>
-          </div>
-          <TransactionCardPayment
-            noLabelNotif={noLabelNotif}
-            isPaidOff={isPaidOff}
-            noAmountLeft={noAmountLeft}
-            bookingId={bookingId}
-            startDate={startDate}
-          />
-          <div className="hidden items-center gap-2 max-lg:flex">
-            <Calendar2 className="h-4 w-4 text-neutral-500" />
-            <p className="flex items-center text-xs text-neutral-500">
-              {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
-              <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
-              {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
-            </p>
-          </div>
-          <div className="mt-1 hidden items-center gap-2 max-lg:flex">
-            <UsersIcon className="h-4 w-4 text-neutral-500" />
-            <p className="text-xs text-neutral-500">{jemaah} Jemaah</p>
-          </div>
-        </div>
-        <div
-          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
-        >
-          <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
-            <p className="text-s-regular text-neutral-500">Dibuat pada</p>
-            <Calendar className="h-4 w-4 text-neutral-500" />
-            <p className="text-m-regular text-neutral-500">
-              {dayjs(createdDate).locale('id').format('DD MMMM YYYY')}
-            </p>
-          </div>
-          {!noFooter && (
-            <Fragment>
-              {orderPaymentLoading ? (
-                <div className="flex hidden items-center justify-between p-4 max-lg:block">
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="h-5 w-24" />
-                    <Skeleton className="h-5 w-32" />
-                  </div>
-                  <div className="flex gap-2 max-lg:hidden">
-                    <Skeleton className="h-10 w-32 rounded-full" />
-                    <Skeleton className="h-10 w-40 rounded-full" />
-                    <Skeleton className="h-10 w-10 rounded-full" />
-                  </div>
-                </div>
-              ) : (
-                <TransactionCardFooter
-                  detailOnly={detailOnly}
-                  isPaidOff={isPaidOff}
-                  isCompletedManifest={isCompletedManifest}
-                  showDpButton={showDpButton}
-                  bookingId={bookingId}
-                  id={id}
-                  status={status}
-                  statusTahapanDetail={statusTahapanDetail}
-                  paymentAmount={orderPayment?.orderPayment?.paymentAmount}
-                />
-              )}
-            </Fragment>
-          )}
-        </div>
       </div>
-    </div>
+    </Link>
   )
 }

@@ -1,9 +1,17 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function TransactionDetailSkeleton() {
+interface TransactionDetailSkeletonProps {
+  isFixed?: boolean
+}
+
+export default function TransactionDetailSkeleton({
+  isFixed = false,
+}: TransactionDetailSkeletonProps) {
   return (
-    <div className="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/50">
-      <div className="w-full rounded-lg bg-white p-6 shadow-lg">
+    <div
+      className={`${isFixed && 'fixed'} inset-0 z-50 flex w-full items-center justify-center bg-black/50`}
+    >
+      <div className="w-full rounded-lg bg-white p-6 shadow-lg max-lg:px-3">
         {/* Transaction Details */}
         <div className="grid grid-cols-2 gap-4 py-4">
           <div className="space-y-2">
