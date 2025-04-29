@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowIcon } from '@/components/icons/arrow'
+import { CallCenterIcon } from '@/components/icons/call-center'
 import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
 import FilterDrawer from '@/components/shared/mobile/FilterMobile/FilterDrawerMobile'
 import { Input } from '@/components/ui/input'
@@ -10,6 +11,7 @@ import { dissolve } from '@/lib/animation-setup'
 import { capitalizeText, formatDateRangeShort, isEmpty } from '@/lib/utils'
 import { Bell, Search } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -31,6 +33,7 @@ interface MobileTopbarProps {
   backgroundColor?: string
   textColor?: string
   showBackButton?: boolean
+  showCallCenter?: boolean
   onBackClick?: () => void
   searchValue?: string
   onCancelSearch?: () => void
@@ -45,6 +48,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     showNotification = false,
     notificationCount = 0,
     showBackButton = true,
+    showCallCenter = false,
     onBackClick,
     titleLink = '',
   }) => {
@@ -312,6 +316,17 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               </div>
             )}
           </div>
+        )}
+
+        {showCallCenter && (
+          <Link
+            href={`https://wa.me/628888755101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+?`}
+            target="_blank"
+          >
+            <div className={`relative ml-auto`}>
+              <CallCenterIcon className="h-5 w-5" />
+            </div>
+          </Link>
         )}
       </div>
     )

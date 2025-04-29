@@ -1,7 +1,11 @@
 'use client'
+import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { DocumentTextIcon } from '@/components/icons/document'
+import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { Separator } from '@/components/ui/separator'
 import { formatCurrency } from '@/lib/utils'
+import dayjs from 'dayjs'
+import 'dayjs/locale/id'
 import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { Fragment } from 'react'
@@ -9,6 +13,9 @@ import { Fragment } from 'react'
 interface TransactionDetailPaymentProps {
   bookingCode: string
   statusTahapan: string
+  createdAt: string
+  startDate: string
+  isPaidOff: boolean
   paymentDetails: {
     label: string
     amount: number | string
@@ -20,6 +27,9 @@ export default function TransactionDetailPayment({
   bookingCode,
   paymentDetails,
   statusTahapan,
+  createdAt,
+  startDate,
+  isPaidOff,
 }: TransactionDetailPaymentProps) {
   return (
     <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
@@ -48,6 +58,42 @@ export default function TransactionDetailPayment({
           </Link>
         )}
       </div>
+
+      {isPaidOff ? (
+        <div className="bg-success-100 mb-3 hidden w-fit w-full rounded-full px-3 py-2 max-lg:block">
+          <div className="flex items-center gap-1">
+            <ChecklistCircleActive />
+            <p className="text-s-regular text-success-700 ">
+              Lunas pada{' '}
+              {dayjs(createdAt).locale('id').format('DD MMM YYYY,HH:mm')}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} mt-1 mb-3 hidden w-fit w-full rounded-full px-3 py-2 max-lg:block`}
+        >
+          <div
+            className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'text-warning-700 ' : 'text-error-700'} flex items-center gap-1`}
+          >
+            <InfoCircleIcon />
+            <p className="text-s-regular text-current">
+              {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
+                <span className="text-current">
+                  Harap lunasi sebelum{' '}
+                  {dayjs(startDate).subtract(21, 'day').format('DD MMM YYYY')}
+                </span>
+              ) : (
+                <span className="text-current">
+                  {' '}
+                  Segera lunasi pembayaran paket!
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+      )}
+
       {paymentDetails && paymentDetails.length > 0 && (
         <div className="space-y-2">
           {paymentDetails?.map((item, index) => (

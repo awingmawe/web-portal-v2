@@ -62,17 +62,20 @@ function renderManifestComplete(
     </div>
   ) : (
     <div
-      className={`${dayjs(createdDate).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  rounded-full px-3 py-1`}
+      className={`${dayjs(createdDate).add(3, 'day').locale('id') > dayjs().locale('id') ? 'bg-warning-100' : 'bg-error-100'}  rounded-full px-3 py-1`}
     >
       <div
-        className={`${dayjs(createdDate).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+        className={`${dayjs(createdDate).add(3, 'day').locale('id') > dayjs().locale('id') ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
       >
         <InfoCircleIcon />
         <p className="text-s-regular text-current">
           {dayjs(createdDate).add(3, 'day') > dayjs() ? (
             <span className="text-current">
               Lengkapi sebelum{' '}
-              {dayjs(createdDate).add(3, 'day').format('DD MMM YYYY')}
+              {dayjs(createdDate)
+                .add(3, 'day')
+                .locale('id')
+                .format('DD MMM YYYY')}
             </span>
           ) : (
             <span className="text-current">Segera lengkapi manifest</span>
@@ -81,6 +84,28 @@ function renderManifestComplete(
       </div>
     </div>
   )
+}
+
+const RenderLinkToDetail = ({
+  lg,
+  bookingId,
+  statusTahapan,
+  children,
+}: {
+  lg: boolean
+  bookingId: string
+  statusTahapan: string
+  children: React.ReactNode
+}) => {
+  if (lg) {
+    return (
+      <Link href={`/my/transaction/${bookingId}?status=${statusTahapan}`}>
+        {children}
+      </Link>
+    )
+  }
+
+  return <div>{children}</div>
 }
 
 export default function TransactionCard({
@@ -184,7 +209,11 @@ export default function TransactionCard({
   }
 
   return (
-    <Link href={`/my/transaction/${bookingId}`}>
+    <RenderLinkToDetail
+      lg={lg}
+      bookingId={bookingId}
+      statusTahapan={statusTahapan}
+    >
       <div className="mt-6 rounded-3xl border border-neutral-200 ">
         {!noHeader && (
           <TransactionCardHeader
@@ -366,6 +395,6 @@ export default function TransactionCard({
           </div>
         </div>
       </div>
-    </Link>
+    </RenderLinkToDetail>
   )
 }

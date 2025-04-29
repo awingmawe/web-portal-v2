@@ -1,6 +1,6 @@
 'use client'
 
-import { DocumentTextIcon } from '@/components/icons/document'
+import { DocumentIcon } from '@/components/icons/document'
 import {
   Accordion,
   AccordionContent,
@@ -42,16 +42,17 @@ interface TransactionDetailManifestProps {
 function NotUploaded() {
   return (
     <div className="mt-1 flex items-center rounded-lg border border-neutral-100 p-2">
-      <div className="relative h-16 w-16 overflow-hidden rounded">
+      <div className="relative h-16 w-16 overflow-hidden rounded max-lg:h-8 max-lg:w-8">
         <Image
           src={'/images/no-image.png'}
           alt="no-image"
-          fill
-          className="object-cover"
+          width={100}
+          height={100}
+          className="h-16-w-16 object-cover max-lg:h-8 max-lg:w-8"
         />
       </div>
       <div className="ml-4 flex-1">
-        <p className="text-l-regular">Data belum diunggah</p>
+        <p className="text-sm max-lg:text-xs">Data belum diunggah</p>
       </div>
     </div>
   )
@@ -66,7 +67,7 @@ export default function TransactionDetailManifest({
         <Accordion type="single" collapsible key={member.id}>
           <AccordionItem value={member.id} className="bg-white" noBorder>
             <AccordionTrigger
-              className="relative z-50 rounded-3xl border border-neutral-100 bg-white px-6 py-4 hover:no-underline"
+              className="relative z-50 rounded-3xl border border-neutral-100 bg-white px-6 py-4 hover:no-underline max-lg:px-3"
               noSeparator
             >
               <div className="flex items-center gap-3 text-left">
@@ -85,32 +86,32 @@ export default function TransactionDetailManifest({
                 border: '1px solid #E8E8E8',
               }}
             >
-              <div className="relative z-20 -mt-20 space-y-2 bg-neutral-50 p-6">
+              <div className="relative z-20 -mt-20 space-y-2 bg-neutral-50 p-6 max-lg:px-3">
                 {/* Basic Information */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
+                <div className="grid grid-cols-2 gap-2 max-lg:grid-cols-1">
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Nama Jemaah
                     </p>
-                    <p className="text-l-regular">{member.name}</p>
+                    <p className="text-sm max-lg:text-xs">{member.name}</p>
                   </div>
-                  <div>
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Nomor Telepon
                     </p>
-                    <p className="text-l-regular">
+                    <p className="text-sm max-lg:text-xs">
                       {member.phoneNumber || '-'}
                     </p>
                   </div>
                 </div>
 
                 {/* Personal Details */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
+                <div className="grid grid-cols-2 gap-2 max-lg:grid-cols-1">
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">NIK</p>
                     <p className="text-l-regular">{member.nik || '-'}</p>
                   </div>
-                  <div>
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Jenis Kelamin
                     </p>
@@ -124,14 +125,14 @@ export default function TransactionDetailManifest({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
+                <div className="grid grid-cols-2 gap-2 max-lg:grid-cols-1">
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Tempat Lahir
                     </p>
                     <p className="text-l-regular">{member.placeBorn || '-'}</p>
                   </div>
-                  <div>
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Tanggal Lahir
                     </p>
@@ -139,14 +140,14 @@ export default function TransactionDetailManifest({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
+                <div className="grid grid-cols-2 gap-2 max-lg:grid-cols-1">
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Kota Asal
                     </p>
                     <p className="text-l-regular">{member.hometown || '-'}</p>
                   </div>
-                  <div>
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Alamat
                     </p>
@@ -157,8 +158,8 @@ export default function TransactionDetailManifest({
                 <hr className="border-gray-200" />
 
                 {/* Passport Information */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
+                <div className="grid grid-cols-2 gap-2 max-lg:grid-cols-1">
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Nomor Paspor
                     </p>
@@ -166,7 +167,7 @@ export default function TransactionDetailManifest({
                       {member.passportNumber || '-'}
                     </p>
                   </div>
-                  <div>
+                  <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Masa Berlaku Paspor
                     </p>
@@ -183,14 +184,14 @@ export default function TransactionDetailManifest({
                         Foto Paspor
                       </p>
                       <div className="mt-1 flex items-center rounded-lg border border-neutral-100 p-2">
-                        <div className="relative h-16 w-16 overflow-hidden rounded">
+                        <div className="relative h-16 w-16 overflow-hidden rounded max-lg:h-8 max-lg:w-8">
                           {member.attachment
                             .find((doc) => doc.type === 'passport')
                             ?.src.endsWith('.pdf') ? (
-                            <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                              <DocumentTextIcon
+                            <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100 max-lg:h-8 max-lg:w-8">
+                              <DocumentIcon
                                 size={32}
-                                className="text-error-500"
+                                className="text-primary-500 "
                               />
                             </div>
                           ) : (
@@ -207,7 +208,9 @@ export default function TransactionDetailManifest({
                           )}
                         </div>
                         <div className="ml-4 flex-1">
-                          <p className="text-l-regular">Paspor {member.name}</p>
+                          <p className="max-lg:font-regular text-sm font-medium max-lg:text-xs">
+                            Paspor {member.name}
+                          </p>
                         </div>
                         <Link
                           href={
@@ -249,14 +252,14 @@ export default function TransactionDetailManifest({
                       Pas Foto (Latar Belakang Putih)
                     </p>
                     <div className="mt-1 flex items-center rounded-lg border border-neutral-100 p-2">
-                      <div className="relative h-16 w-16 overflow-hidden rounded border border-gray-200">
+                      <div className="relative h-16 w-16 overflow-hidden rounded max-lg:h-8 max-lg:w-8">
                         {member.attachment
                           .find((doc) => doc.type === 'user-photo')
                           ?.src.endsWith('.pdf') ? (
-                          <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                            <DocumentTextIcon
+                          <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100 max-lg:h-8 max-lg:w-8">
+                            <DocumentIcon
                               size={32}
-                              className="text-error-500"
+                              className="text-primary-500 "
                             />
                           </div>
                         ) : (
@@ -273,7 +276,9 @@ export default function TransactionDetailManifest({
                         )}
                       </div>
                       <div className="ml-4 flex-1">
-                        <p className="font-medium">Pas Foto {member.name}</p>
+                        <p className="max-lg:font-regular text-sm font-medium max-lg:text-xs">
+                          Pas Foto {member.name}
+                        </p>
                       </div>
                       <Link
                         href={
@@ -305,20 +310,20 @@ export default function TransactionDetailManifest({
                   </Fragment>
                 )}
 
-                {member.attachment.find((doc) => doc.type === 'user-photo') ? (
+                {member.attachment.find((doc) => doc.type === 'ktp') ? (
                   <div>
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Foto KTP
                     </p>
                     <div className="mt-1 flex items-center rounded-lg border border-neutral-100 p-2">
-                      <div className="relative h-16 w-16 overflow-hidden rounded border border-gray-200">
+                      <div className="relative h-16 w-16 overflow-hidden rounded max-lg:h-8 max-lg:w-8">
                         {member.attachment
                           .find((doc) => doc.type === 'ktp')
                           ?.src.endsWith('.pdf') ? (
-                          <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                            <DocumentTextIcon
+                          <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100 max-lg:h-8 max-lg:w-8">
+                            <DocumentIcon
                               size={32}
-                              className="text-error-500"
+                              className="text-primary-500 "
                             />
                           </div>
                         ) : (
@@ -335,7 +340,9 @@ export default function TransactionDetailManifest({
                         )}
                       </div>
                       <div className="ml-4 flex-1">
-                        <p className="font-medium">Foto KTP {member.name}</p>
+                        <p className="max-lg:font-regular text-sm font-medium max-lg:text-xs">
+                          Foto KTP {member.name}
+                        </p>
                       </div>
                       <Link
                         href={
@@ -372,14 +379,14 @@ export default function TransactionDetailManifest({
                       Foto KK
                     </p>
                     <div className="mt-1 flex items-center rounded-lg border border-neutral-100 p-2">
-                      <div className="relative h-16 w-16 overflow-hidden rounded border border-gray-200">
+                      <div className="relative h-16 w-16 overflow-hidden rounded max-lg:h-8 max-lg:w-8">
                         {member.attachment
                           .find((doc) => doc.type === 'kk')
                           ?.src.endsWith('.pdf') ? (
-                          <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100">
-                            <DocumentTextIcon
+                          <div className="flex h-16 w-16 items-center justify-center rounded bg-gray-100 max-lg:h-8 max-lg:w-8">
+                            <DocumentIcon
                               size={32}
-                              className="text-error-500"
+                              className="text-primary-500 "
                             />
                           </div>
                         ) : (
@@ -395,7 +402,9 @@ export default function TransactionDetailManifest({
                         )}
                       </div>
                       <div className="ml-4 flex-1">
-                        <p className="font-medium">Foto KK {member.name}</p>
+                        <p className="max-lg:font-regular text-sm font-medium max-lg:text-xs">
+                          Foto KK {member.name}
+                        </p>
                       </div>
                       <Link
                         href={
@@ -417,7 +426,7 @@ export default function TransactionDetailManifest({
                   </div>
                 ) : (
                   <Fragment>
-                    <div className="mt-5">
+                    <div className="mb-5">
                       <p className="text-s-regular mb-1 text-neutral-500">
                         Foto KK
                       </p>

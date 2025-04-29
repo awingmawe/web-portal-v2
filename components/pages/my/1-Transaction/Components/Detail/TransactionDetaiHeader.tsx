@@ -1,5 +1,6 @@
 import { TimerIcon } from '@/components/icons/timer'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { ellipsis } from '@/lib/utils'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 
@@ -34,7 +35,7 @@ export function TransactionDetailHeader({
     ) {
       return 'bg-error-100 text-error-700'
     } else if (status == 'Waiting') {
-      return lg ? '' : 'bg-warning-100 text-warning-700'
+      return 'bg-warning-100 text-warning-700'
     } else {
       return 'bg-neutral-100 text-neutral-700'
     }
@@ -58,7 +59,12 @@ export function TransactionDetailHeader({
         ) {
           return 'Dalam Proses Pembatalan'
         } else {
-          return 'Menunggu kelengkapan data jemaah dan pelunasan pembayaran'
+          return lg
+            ? ellipsis(
+                'Menunggu kelengkapan data jemaah dan pelunasan pembayaran',
+                window.innerWidth <= 450 ? 30 : 100
+              )
+            : 'Menunggu kelengkapan data jemaah dan pelunasan pembayaran'
         }
       case 'Dibatalkan':
         if (status == 'canceled-by-user') {
@@ -104,9 +110,11 @@ export function TransactionDetailHeader({
   }
 
   return (
-    <div className="mb-4 flex items-center space-x-2 px-4 max-lg:px-3">
+    <div
+      className={`mb-4 flex items-center space-x-2 px-4  ${lg && statusTahapan == 'Waiting' && 'w-full  max-lg:mb-0 max-lg:flex-col'} max-lg:px-3`}
+    >
       <p
-        className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} relative z-20 rounded-full px-6 py-2 ${statusTahapan !== 'Selesai' && 'shadow-[2px_0px_4.8px_0px_#202B3324]'} max-lg:py-1 max-lg:text-xs`}
+        className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} relative z-20 rounded-full px-6 py-2 ${statusTahapan !== 'Selesai' && 'shadow-[2px_0px_4.8px_0px_#202B3324]'} ${lg && statusTahapan == 'Waiting' && 'w-full'} max-lg:py-1 max-lg:text-xs`}
       >
         {statusTahapan === 'Waiting' ? (
           <span className="text-warning-700 flex">
