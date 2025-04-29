@@ -20,7 +20,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
       {...props}
     >
       <div
-        className="relative flex w-full items-center justify-center max-lg:max-w-[400px] max-lg:px-4 lg:container"
+        className="relative flex w-full items-center justify-center max-lg:max-w-[360px] max-lg:px-4 lg:container"
         style={{
           paddingTop: isMobile ? 120 : 240,
         }}
