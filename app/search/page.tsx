@@ -5,14 +5,9 @@ import { PackageResults } from '@/components/pages/search-packages/3-PackageList
 import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilter'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
-import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
-import {
-  getMinMaxPrice,
-  getPackageList,
-  getTagPackagesEnum,
-} from '@/services/umrah-service'
+import { getMinMaxPrice, getTagPackagesEnum } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
@@ -30,12 +25,7 @@ export async function generateMetadata({
   }
 }
 
-export default async function SearchGeneral({
-  searchParams,
-}: {
-  searchParams: any
-}) {
-  const awaitedParams = await searchParams
+export default async function SearchGeneral() {
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
@@ -44,62 +34,6 @@ export default async function SearchGeneral({
     getTagPackagesEnum(),
     getFacilityEnum('umrah-facility'),
   ])
-
-  const page = parseInt(awaitedParams.page || '1', 10)
-  const size = parseInt(awaitedParams.size || '9', 10)
-  const query = awaitedParams.query || undefined
-  const endDate = awaitedParams.eD || undefined
-  const startDate = awaitedParams.sD || undefined
-  const departureFromAirportCode = awaitedParams.dptArpt || undefined
-  const arrivalFromAirportCode = awaitedParams.arrArpt || undefined
-  const departureAirlineName = awaitedParams.trvl || undefined
-  const minPrice = awaitedParams.prMin || undefined
-  const maxPrice = awaitedParams.prMax || undefined
-  const hotelRating = awaitedParams.hR || undefined
-  const facilityCode = awaitedParams.fC || undefined
-  const section = awaitedParams.section || undefined
-  const tagSlug = awaitedParams.tS || undefined
-
-  // Order Filter
-  // Handle sorting options
-  let orderBy = 'packageVariant.priceQuad' // Default sort field
-  let order = 'asc' // Default sort order
-
-  // Price sorting
-  if (awaitedParams.sort === 'price-low') {
-    orderBy = 'packageVariant.priceQuad'
-    order = 'asc'
-  } else if (awaitedParams.sort === 'price-high') {
-    orderBy = 'packageVariant.priceDouble'
-    order = 'desc'
-  }
-  // Departure date sorting
-  else if (awaitedParams.sort === 'depart-early') {
-    orderBy = 'packageVariant.departureDate'
-    order = 'asc'
-  } else if (awaitedParams.sort === 'depart-late') {
-    orderBy = 'packageVariant.departureDate'
-    order = 'desc'
-  }
-
-  const dataPackage = await getPackageList({
-    page,
-    size,
-    orderBy,
-    order,
-    [`search`]: query ? `%${query}%` : undefined,
-    startDate,
-    endDate,
-    departureFromAirportCode,
-    arrivalFromAirportCode,
-    departureAirlineName,
-    minPrice,
-    maxPrice,
-    hotelRating,
-    facilityCode,
-    section,
-    tagSlug,
-  })
 
   return (
     <Fragment>
@@ -116,12 +50,7 @@ export default async function SearchGeneral({
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12">
-            <PackageResults
-              total={dataPackage?.total}
-              dataPackages={mapProductsToCardData(dataPackage)}
-              currentPage={page}
-              pageSize={size}
-            />
+            <PackageResults />
           </div>
         </section>
       </main>

@@ -176,7 +176,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     if (variants.length > 0) {
       const variant = variants.find((v) => v.id === packageVariantId)
 
-      setSelectedVariant(variant || null)
+      setSelectedVariant(variant || variants[0])
       setSelectedVariantId(packageVariantId)
 
       // Turn off loading after a short delay to allow for smoother transitions
@@ -397,18 +397,11 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       </div>
 
       {/* Variants selection */}
+      {selectedVariant &&
+        differenceInDays(selectedVariant?.releasedAt as string, new Date()) <=
+          10 && <BookingReleasedInfo variant={selectedVariant} />}
       {variants.length > 0 && (
         <div className="mb-2 max-lg:h-[60px]">
-          {selectedVariant &&
-            differenceInDays(
-              selectedVariant?.releasedAt as string,
-              new Date()
-            ) <= 10 && (
-              <BookingReleasedInfo
-                variant={selectedVariant}
-                className="mb-3 "
-              />
-            )}
           <div className="text-s-regular mb-2 text-neutral-800 max-lg:hidden">
             Varian
           </div>
@@ -692,6 +685,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             variant="default"
             size="lg"
             id="btn-checkout-desktop"
+            disabled={!selectedVariant}
             // When all version 2 muslim101 released, remove this
             onClick={handleLocalStorage}
           >
@@ -716,7 +710,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             </Button>
           </Link>
 
-          {/* Next Sprint */}
           <Button
             className="w-full rounded-full py-2 lg:hidden"
             variant="outline"

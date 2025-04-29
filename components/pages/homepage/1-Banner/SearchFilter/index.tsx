@@ -52,9 +52,6 @@ const SearchFilters: React.FC = () => {
       params.set('trvl', filters.airline.name)
     }
 
-    // Set default sort
-    params.set('sort', 'price-low')
-
     // Generate the URL string
     const queryString = params.toString()
     return queryString ? `/search?${queryString}` : '/search'

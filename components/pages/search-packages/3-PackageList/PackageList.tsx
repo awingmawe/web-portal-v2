@@ -1,8 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { CardPackage } from '@/components/shared/CardPackage'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
-import { CardData } from '@/constant/types/PackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -18,19 +18,7 @@ import {
   ResultsHeaderSkeleton,
 } from './SkeletonPackageList'
 
-interface PackageResultsProps {
-  dataPackages: CardData[]
-  currentPage: number
-  pageSize: number
-  total: number
-}
-
-export const PackageResults: React.FC<PackageResultsProps> = ({
-  dataPackages: initialDataPackages,
-  currentPage: initialPage,
-  pageSize,
-  total: initialTotal,
-}) => {
+export const PackageResults: React.FC = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const {
@@ -39,35 +27,61 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     resetFilters,
     packages: packageDataCSR,
     totalPackages: totalCSR,
-    isUsingCSRData,
-    setIsUsingCSRData,
+    initializeFiltersFromURL,
+    fetchPackageData,
+    buildQueryParams,
   } = useFilterProduct()
   const {
     loadMore,
     hasMore,
     loading,
-    packages: infinitePackages, // this packages is same like packageDataCSR but in different state
+    fetchInitialPackages,
+    packages: infinitePackages, // this packages is same like packageDataCSR but in different state for mobile
   } = useInfiniteScroll()
   const { lg: isMobile } = useTailwindBreakpoint()
 
-  // Derived values based on data source
-  const displayPackages = useMemo(() => {
-    return isUsingCSRData ? packageDataCSR : initialDataPackages
-  }, [isUsingCSRData, packageDataCSR, initialDataPackages])
-
-  const displayTotal = useMemo(() => {
-    return isUsingCSRData ? totalCSR : initialTotal
-  }, [isUsingCSRData, totalCSR, initialTotal])
-
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
 
-  // Switch to CSR data when filters change
+  // First, initialize filters from URL
   useEffect(() => {
-    if (packageDataCSR && packageDataCSR.length > 0) {
-      setIsUsingCSRData(true)
+    initializeFiltersFromURL()
+  }, [])
+
+  useEffect(() => {
+    if (!isLoadingSkeleton) {
+      const currentSort = searchParams.get('sort') || 'price-low'
+      const page = parseInt(searchParams.get('page') || '1', 10)
+
+      // Build the params object from search params string
+      const paramsFilter = buildQueryParams(
+        searchParams.toString(),
+        currentSort,
+        page
+      )
+
+      initializeFiltersFromURL(false)
+
+      if (isMobile) {
+        fetchInitialPackages(paramsFilter)
+      } else {
+        fetchPackageData(paramsFilter)
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [packageDataCSR])
+  }, [isLoadingSkeleton, currentSort, searchParams])
+
+  const loadMoreData = useCallback(() => {
+    const currentSort = searchParams.get('sort') || 'price-low'
+    const page = parseInt(searchParams.get('page') || '1', 10) + 1
+
+    // Build the params object from search params string
+    const paramsFilter = buildQueryParams(
+      searchParams.toString(),
+      currentSort,
+      page
+    )
+
+    loadMore(paramsFilter)
+  }, [])
 
   // Function to reset all filters
   const resetAllFilters = useCallback(() => {
@@ -76,8 +90,6 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
     // 2. Delete all search params
     window.history.pushState({}, '', '/search')
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Function to create URL with new sort parameter
@@ -93,8 +105,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
   // Calculate total pages
   const totalPages = useMemo(() => {
-    return Math.ceil(displayTotal / pageSize)
-  }, [displayTotal, pageSize])
+    return Math.ceil(totalCSR / 9)
+  }, [totalCSR])
 
   // Create page navigation function
   const goToPage = useCallback(
@@ -107,7 +119,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   )
 
   // Render no results component if there are no packages and not loading
-  if (displayPackages.length === 0 && !isLoadingSkeleton) {
+  if (packageDataCSR.length === 0 && !isLoadingSkeleton) {
     return <NoResults resetAllFilters={resetAllFilters} />
   }
 
@@ -118,8 +130,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
-          resultsCount={displayPackages.length}
-          totalCount={displayTotal}
+          resultsCount={packageDataCSR.length}
+          totalCount={totalCSR}
           currentSort={currentSort}
           createSortUrl={createSortUrl}
         />
@@ -141,7 +153,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
               <InfiniteScroll
                 isLoading={loading}
                 hasMore={hasMore}
-                next={loadMore}
+                next={loadMoreData}
                 threshold={0.8}
               >
                 {hasMore && (
@@ -150,7 +162,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
               </InfiniteScroll>
             </>
           ) : (
-            displayPackages?.map((packageData, index) => (
+            packageDataCSR?.map((packageData, index) => (
               <CardPackage
                 key={`packages-${packageData.slugPackage}-${index}`}
                 data={packageData}
@@ -166,11 +178,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <PaginationSkeleton />
       ) : (
         <CustomPagination
-          currentPage={
-            isUsingCSRData
-              ? parseInt(searchParams.get('page') || '1', 10)
-              : initialPage
-          }
+          currentPage={parseInt(searchParams.get('page') || '1', 10)}
           totalPages={totalPages}
           goToPage={goToPage}
         />

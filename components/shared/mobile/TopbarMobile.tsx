@@ -54,10 +54,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
     const router = useRouter()
     // Use the same search hook as desktop version
-    const { searchQuery, handleSearchChange, handleSearch } = useSearchQuery({
-      redirectPath: '/search',
-      delay: 1000,
-    })
+    const { searchQuery, handleSearchChange, handleSearch } = useSearchQuery()
     const { dateRange, departureAirport, arrivalAirport } = filters
 
     // Memoize formatted date range to prevent unnecessary recalculations

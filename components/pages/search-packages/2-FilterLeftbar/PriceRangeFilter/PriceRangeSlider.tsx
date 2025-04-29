@@ -39,7 +39,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
 
   // Sync local state with props
   useEffect(() => {
-    if (filters?.priceRange?.hargaMin !== undefined) {
+    if (!isEmpty(filters?.priceRange?.hargaMin)) {
       setLocalHargaMin(filters?.priceRange?.hargaMin)
     } else {
       // Reset to default or empty when the filter is reset
@@ -48,7 +48,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   }, [filters?.priceRange?.hargaMin])
 
   useEffect(() => {
-    if (filters?.priceRange?.hargaMax !== undefined) {
+    if (!isEmpty(filters?.priceRange?.hargaMax)) {
       setLocalHargaMax(filters?.priceRange?.hargaMax)
     } else {
       // Reset to default or empty when the filter is reset
@@ -238,7 +238,6 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         <div className="h-px w-5 flex-none bg-[#D2D2D1] sm:mx-5 xl:mx-10" />
         {isLoadingSkeleton ? maxPriceSkeleton : maxPriceInput}
       </div>
-
       {/* Price Range Slider */}
       {isLoadingSkeleton ? sliderSkeleton : priceSlider}
 
