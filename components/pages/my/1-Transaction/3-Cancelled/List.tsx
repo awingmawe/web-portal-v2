@@ -50,7 +50,7 @@ export default function List({
                         status={transaction.status.slug}
                         id={transaction.bookingCode}
                         packageName={
-                          transaction?.packageSnapshot?.snapshot?.name
+                          transaction?.packageSnapshot?.snapshot?.package?.title
                         }
                         thumbnail={
                           transaction?.packageSnapshot?.snapshot?.package

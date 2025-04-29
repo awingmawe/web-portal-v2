@@ -105,7 +105,9 @@ export default function List({
                   <TransactionCard
                     status={transaction.status.slug}
                     id={transaction.bookingCode}
-                    packageName={transaction?.packageSnapshot?.snapshot?.name}
+                    packageName={
+                      transaction?.packageSnapshot?.snapshot?.package?.title
+                    }
                     thumbnail={
                       transaction?.packageSnapshot?.snapshot?.package.thumbnail
                     }

@@ -1,10 +1,12 @@
 'use client'
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
+import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { TransactionDetailHeader } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetaiHeader'
 import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailManifest'
 import TransactionDetailPayment from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailPayment'
 import TransactionDetailProduct from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailProduct'
 import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailSkeleton'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
@@ -16,6 +18,7 @@ import {
   postNextPayment,
 } from '@/services/umrah-service'
 import dayjs from 'dayjs'
+import 'dayjs/locale/id'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -106,6 +109,20 @@ export default function TransactionDetailContent({
 
   return (
     <div>
+      <MobileTopbar
+        showBackButton
+        variant="transactionTopbar"
+        title="Detail Transaction"
+        onBackClick={() => {
+          if (window.history.length > 1) {
+            window.history.back()
+          } else {
+            router.push('/my/transaction')
+          }
+        }}
+        showCallCenter
+      />
+
       {loading ? (
         <TransactionDetailSkeleton isFixed={isFixedLoading} />
       ) : (
@@ -190,6 +207,9 @@ export default function TransactionDetailContent({
                 bookingCode={transaction?.bookingCode || ''}
                 paymentDetails={transaction?.paymentDetails || ''}
                 statusTahapan={statusTahapan}
+                createdAt={transaction?.createdAt || ''}
+                startDate={transaction?.startDate || ''}
+                isPaidOff={transaction?.isPaidOff}
               />
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
 
@@ -198,6 +218,44 @@ export default function TransactionDetailContent({
                 <h3 className="mb-4 text-lg font-medium max-lg:text-xs">
                   Data Jemaah
                 </h3>
+
+                {transaction.isCompletedManifest ? (
+                  <div className="bg-success-100 mb-3 hidden rounded-full px-3 py-2 max-lg:block">
+                    <div className="flex items-center gap-1">
+                      <ChecklistCircleActive />
+                      <p className="text-s-regular text-success-700 ">
+                        Data Lengkap
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={`${dayjs(transaction.createdAt).locale('id').add(3, 'day') > dayjs().locale('id') ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
+                  >
+                    <div
+                      className={`${dayjs(transaction.createdAt).locale('id').add(3, 'day') > dayjs().locale('id') ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                    >
+                      <InfoCircleIcon />
+                      <p className="text-s-regular text-current">
+                        {dayjs(transaction.createdAt).add(3, 'day') >
+                        dayjs() ? (
+                          <span className="text-current">
+                            Lengkapi sebelum{' '}
+                            {dayjs(transaction.createdAt)
+                              .add(3, 'day')
+                              .locale('id')
+                              .format('DD MMM YYYY')}
+                          </span>
+                        ) : (
+                          <span className="text-current">
+                            Segera lengkapi manifest
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 <TransactionDetailManifest members={manifest?.results} />
               </div>
             </div>
