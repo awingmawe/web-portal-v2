@@ -8,7 +8,7 @@ import { bookingCheckout, preBookingCheckout } from '@/services/umrah-service'
 import { checkReferralCode } from '@/services/wukala-service'
 import cookie from 'cookie-cutter'
 import { useRouter } from 'next/navigation'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 export const CheckoutContext = createContext<any>(null)
 
@@ -241,7 +241,36 @@ export const CheckoutProvider = ({
     const numeric = input.replace(/\D/g, '')
     setRawInputValue(numeric) // simpan angka mentah (tanpa titik)
   }
+  // Tambahkan useRef untuk debounce timer
+  const debounceTimerRef = useRef<any>(null)
 
+  // Fungsi untuk melakukan debounce pada perubahan slider
+  const handleSliderChange = (e: any) => {
+    const value = parseInt(e.target.value)
+    setSliderValue(value) // Update slider position immediately for visual feedback
+
+    // Clear any existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    // Set new timer for actual value update
+    debounceTimerRef.current = setTimeout(() => {
+      // Calculate per-jamaah amount after debounce
+      const perJamaahAmount = Math.ceil(value / jamaahList.length)
+      setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
+      setRawInputValue(value.toString()) // Update raw input value
+    }, 300) // 300ms debounce time
+  }
+
+  // Cleanup timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [])
   const value = {
     token,
     preBooking,
@@ -284,6 +313,7 @@ export const CheckoutProvider = ({
     formatNumber,
     rawInputValue,
     setRawInputValue,
+    handleSliderChange,
   }
 
   return (
