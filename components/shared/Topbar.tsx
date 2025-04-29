@@ -202,12 +202,8 @@ const Topbar: React.FC<TopbarProps> = ({
 
   // Extract topbar content to its own component to prevent unnecessary rerenders
   const TopbarContent = React.memo(() => {
-    const { searchQuery, loading, handleSearchChange, handleSearch } =
-      useSearchQuery({
-        redirectPath: '/search',
-        delay: 1000,
-        searchParamName: 'query',
-      })
+    const { searchQuery, handleSearchChange, handleSearchDesktop } =
+      useSearchQuery()
     return (
       <Fragment>
         {/* Logo */}
@@ -238,8 +234,7 @@ const Topbar: React.FC<TopbarProps> = ({
               sticky="always"
               className="rounded-xl p-2.5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
             >
-              <form
-                onSubmit={handleSearch}
+              <div
                 id="search-from-topbar"
                 className="text-m-regular flex items-center gap-2.5 p-0 hover:bg-transparent"
               >
@@ -250,16 +245,17 @@ const Topbar: React.FC<TopbarProps> = ({
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
-                <Button
-                  type="submit"
-                  size="sm"
-                  className="max-h-[40px] px-[40px]"
-                  isLoading={loading}
-                  id="button-search-topbar"
-                >
-                  Cari
-                </Button>
-              </form>
+                <Link href={handleSearchDesktop} passHref>
+                  <Button
+                    type="submit"
+                    size="sm"
+                    className="max-h-[40px] px-[40px]"
+                    id="button-search-topbar"
+                  >
+                    Cari
+                  </Button>
+                </Link>
+              </div>
             </PopoverContent>
           </Popover>
 

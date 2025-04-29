@@ -1,3 +1,4 @@
+import { StarIconPrimaryGradient } from '@/components/icons/star'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import { memo } from 'react'
@@ -27,15 +28,15 @@ export const CardTestimoni = memo(function CardTestimoni({
       </div>
       <CardContent className="h-[240px] lg:h-[220px]">
         <p className="text-l-semibold mb-2">{name}</p>
-        {/* <div className="mb-3 flex text-white">
-          {Array.from({ length: rating }).map((_, i) => (
+        <div className="mb-3 flex text-white">
+          {[1, 2, 3, 4, 5].map((_, i) => (
             <StarIconPrimaryGradient
               key={`start-${i}`}
               className="mr-1"
               size={20}
             />
           ))}
-        </div> */}
+        </div>
         {quote}
       </CardContent>
     </Card>

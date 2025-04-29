@@ -71,6 +71,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 1.0,
     },
+    {
+      pathname: 'all-packages',
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 1.0,
+    },
   ]
 
   return route.map((r: any) => {

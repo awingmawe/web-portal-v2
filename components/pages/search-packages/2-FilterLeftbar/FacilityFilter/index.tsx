@@ -17,7 +17,8 @@ interface FacilityFilterProps {
 }
 
 const FacilityFilter: React.FC<FacilityFilterProps> = ({ dataFacility }) => {
-  const { filters, setFacilityCode, resetFilter } = useFilterProduct()
+  const { filters, setFacilityCode, resetFilter, isLoadingSkeleton } =
+    useFilterProduct()
 
   // Handle reset click with event stopping
   const handleResetClick = (e: React.MouseEvent) => {
@@ -46,6 +47,7 @@ const FacilityFilter: React.FC<FacilityFilterProps> = ({ dataFacility }) => {
           dataFacility={dataFacility}
           selectedFacility={filters.facilityCode}
           onFacilityChange={setFacilityCode}
+          isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>
     </AccordionItem>

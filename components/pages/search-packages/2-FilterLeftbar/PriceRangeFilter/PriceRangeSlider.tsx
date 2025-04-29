@@ -3,39 +3,58 @@
 import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 import { PriceParams } from '@/constant/types/PackageProps'
-import { usePriceRangeFilter } from '@/hooks/filter-product-hooks'
-import { formatNumberCurrency } from '@/lib/utils'
+import { usePriceRangeFilter } from '@/hooks/filter-product-hooks/useRangeFilter'
+import { formatNumberCurrency, isEmpty } from '@/lib/utils'
 import React, { useEffect, useMemo, useState } from 'react'
 
 interface PriceRangeSliderProps {
   minMax: PriceParams
   filters: {
-    hargaMin: string
-    hargaMax: string
+    priceRange: {
+      hargaMin: string
+      hargaMax: string
+    }
   }
-  setHargaMin: (value: string) => void
-  setHargaMax: (value: string) => void
+  setPriceRange: (range: { hargaMin: string; hargaMax: string }) => void
+  isLoadingSkeleton: boolean
 }
 
 export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   minMax,
   filters,
-  setHargaMin,
-  setHargaMax,
+  setPriceRange,
+  isLoadingSkeleton,
 }) => {
   const { min, max } = minMax
   const formattedMin = Number(min)
   const formattedMax = Number(max)
 
   // Local state for input values
-  const [localHargaMin, setLocalHargaMin] = useState(filters.hargaMin)
-  const [localHargaMax, setLocalHargaMax] = useState(filters.hargaMax)
+  const [localHargaMin, setLocalHargaMin] = useState(
+    filters?.priceRange?.hargaMin
+  )
+  const [localHargaMax, setLocalHargaMax] = useState(
+    filters?.priceRange?.hargaMax
+  )
 
   // Sync local state with props
   useEffect(() => {
-    setLocalHargaMin(filters.hargaMin)
-    setLocalHargaMax(filters.hargaMax)
-  }, [filters.hargaMin, filters.hargaMax])
+    if (!isEmpty(filters?.priceRange?.hargaMin)) {
+      setLocalHargaMin(filters?.priceRange?.hargaMin)
+    } else {
+      // Reset to default or empty when the filter is reset
+      setLocalHargaMin('')
+    }
+  }, [filters?.priceRange?.hargaMin])
+
+  useEffect(() => {
+    if (!isEmpty(filters?.priceRange?.hargaMax)) {
+      setLocalHargaMax(filters?.priceRange?.hargaMax)
+    } else {
+      // Reset to default or empty when the filter is reset
+      setLocalHargaMax('')
+    }
+  }, [filters?.priceRange?.hargaMax])
 
   // Custom debounce hook
   const useDebounce = (value: any, delay: number) => {
@@ -60,18 +79,34 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
 
   // Effect for updating parent state when debounced values change
   useEffect(() => {
-    if (debouncedHargaMin !== filters.hargaMin) {
-      setHargaMin(debouncedHargaMin)
+    if (debouncedHargaMin !== filters?.priceRange?.hargaMin) {
+      setPriceRange({
+        hargaMin: debouncedHargaMin,
+        hargaMax: filters?.priceRange?.hargaMax || '',
+      })
     }
-  }, [debouncedHargaMin, filters.hargaMin, setHargaMin])
+  }, [
+    debouncedHargaMin,
+    filters?.priceRange?.hargaMin,
+    filters?.priceRange?.hargaMax,
+    setPriceRange,
+  ])
 
   useEffect(() => {
-    if (debouncedHargaMax !== filters.hargaMax) {
-      setHargaMax(debouncedHargaMax)
+    if (debouncedHargaMax !== filters?.priceRange?.hargaMax) {
+      setPriceRange({
+        hargaMin: filters?.priceRange?.hargaMin || '',
+        hargaMax: debouncedHargaMax,
+      })
     }
-  }, [debouncedHargaMax, filters.hargaMax, setHargaMax])
+  }, [
+    debouncedHargaMax,
+    filters?.priceRange?.hargaMin,
+    filters?.priceRange?.hargaMax,
+    setPriceRange,
+  ])
 
-  // Hooks for slider range
+  // Hooks for slider range - adapting to use the new priceRange structure
   const {
     range,
     handleSliderChange,
@@ -92,26 +127,26 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   })
 
   // Memoized skeleton components
-  // const sliderSkeleton = useMemo(
-  //   () => (
-  //     <div className="mt-4 h-2 w-full animate-pulse rounded-lg bg-neutral-200" />
-  //   ),
-  //   []
-  // )
+  const sliderSkeleton = useMemo(
+    () => (
+      <div className="mt-4 h-2 w-full animate-pulse rounded-lg bg-neutral-200" />
+    ),
+    []
+  )
 
-  // const minPriceSkeleton = useMemo(
-  //   () => (
-  //     <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
-  //   ),
-  //   []
-  // )
+  const minPriceSkeleton = useMemo(
+    () => (
+      <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
+    ),
+    []
+  )
 
-  // const maxPriceSkeleton = useMemo(
-  //   () => (
-  //     <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
-  //   ),
-  //   []
-  // )
+  const maxPriceSkeleton = useMemo(
+    () => (
+      <div className="h-8 w-full animate-pulse rounded-lg bg-neutral-200" />
+    ),
+    []
+  )
 
   // Modified slider for using local state
   const priceSlider = useMemo(() => {
@@ -160,14 +195,16 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
 
     return (
       <Input
-        value={localHargaMin}
+        value={
+          isEmpty(localHargaMin) ? formatNumberCurrency(min) : localHargaMin
+        }
         className="rounded-lg border-[0.5px] border-neutral-200 p-2"
         onChange={handleLocalHargaMinChange}
         onBlur={handleHargaMinBlur}
         placeholder="Rp 0"
       />
     )
-  }, [localHargaMin, handleHargaMinChange, handleHargaMinBlur])
+  }, [localHargaMin, min, handleHargaMinBlur, handleHargaMinChange])
 
   const maxPriceInput = useMemo(() => {
     const handleLocalHargaMaxChange = (
@@ -178,7 +215,9 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
 
     return (
       <Input
-        value={localHargaMax}
+        value={
+          isEmpty(localHargaMax) ? formatNumberCurrency(max) : localHargaMax
+        }
         className="rounded-lg border-[0.5px] border-neutral-200 p-2 text-right"
         align="text-right"
         onChange={handleLocalHargaMaxChange}
@@ -186,7 +225,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         placeholder="Rp 0"
       />
     )
-  }, [localHargaMax, handleHargaMaxChange, handleHargaMaxBlur])
+  }, [localHargaMax, max, handleHargaMaxBlur, handleHargaMaxChange])
 
   return (
     <div className="flex flex-col">
@@ -195,13 +234,12 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         <p className="text-m-regular text-right text-neutral-500">Hingga</p>
       </div>
       <div className="flex items-center justify-between self-stretch">
-        {minPriceInput}
+        {isLoadingSkeleton ? minPriceSkeleton : minPriceInput}
         <div className="h-px w-5 flex-none bg-[#D2D2D1] sm:mx-5 xl:mx-10" />
-        {maxPriceInput}
+        {isLoadingSkeleton ? maxPriceSkeleton : maxPriceInput}
       </div>
-
       {/* Price Range Slider */}
-      {priceSlider}
+      {isLoadingSkeleton ? sliderSkeleton : priceSlider}
 
       {/* Min/Max Labels */}
       <div className="mt-2 flex items-center justify-between">

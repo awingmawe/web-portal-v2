@@ -2,6 +2,7 @@
 
 import { AirportIcon } from '@/components/icons/airport'
 import { ArrowIcon } from '@/components/icons/arrow'
+import { AirportFilterSkeleton } from '@/components/pages/homepage/1-Banner/SearchFilter/AirportFilter/AirportSkeleton'
 import {
   Popover,
   PopoverContent,
@@ -13,9 +14,14 @@ import { capitalizeText } from '@/lib/utils'
 import React, { Fragment, useMemo } from 'react'
 import AirportList from './AirportList'
 
-const AirportFilter: React.FC<OtherProps> = ({ colorIcon }) => {
-  const { setDepartureAirport, setArrivalAirport, isDisabled, filters } =
-    useFilterProduct()
+const AirportFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
+  const {
+    setDepartureAirport,
+    setArrivalAirport,
+    isDisabled,
+    filters,
+    isLoadingSkeleton,
+  } = useFilterProduct()
 
   const departureAirport = filters.departureAirport
   const arrivalAirport = filters.arrivalAirport
@@ -46,6 +52,9 @@ const AirportFilter: React.FC<OtherProps> = ({ colorIcon }) => {
     }
   }, [arrivalAirport, departureAirport])
 
+  if (whatPage === 'filter_search' && isLoadingSkeleton) {
+    return <AirportFilterSkeleton />
+  }
   return (
     <Popover>
       <PopoverTrigger className="focus:outline-none" asChild>

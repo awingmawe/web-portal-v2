@@ -45,7 +45,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDownIcon, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 
 interface PackageVariantComponentProps {
   variants: PackageVariant[]
@@ -176,7 +176,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     if (variants.length > 0) {
       const variant = variants.find((v) => v.id === packageVariantId)
 
-      setSelectedVariant(variant || null)
+      setSelectedVariant(variant || variants[0])
       setSelectedVariantId(packageVariantId)
 
       // Turn off loading after a short delay to allow for smoother transitions
@@ -397,18 +397,11 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       </div>
 
       {/* Variants selection */}
+      {selectedVariant &&
+        differenceInDays(selectedVariant?.releasedAt as string, new Date()) <=
+          10 && <BookingReleasedInfo variant={selectedVariant} />}
       {variants.length > 0 && (
         <div className="mb-2 max-lg:h-[60px]">
-          {selectedVariant &&
-            differenceInDays(
-              selectedVariant?.releasedAt as string,
-              new Date()
-            ) <= 10 && (
-              <BookingReleasedInfo
-                variant={selectedVariant}
-                className="mb-3 "
-              />
-            )}
           <div className="text-s-regular mb-2 text-neutral-800 max-lg:hidden">
             Varian
           </div>
@@ -426,13 +419,13 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                     key={variant.id}
                     id={`variant-btn-${variant.id}`}
                     onClick={() => setSelectedVariantId(variant.id)}
-                    className={`${dissolve} hover:bg-primary-100 relative w-auto min-w-[90px] flex-none cursor-pointer rounded-lg p-2.5 ${
+                    className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 max-lg:flex-shrink-0 ${
                       selectedVariantId === variant.id
                         ? 'border-primary-500 bg-primary-100 border-2'
                         : 'border-2 border-neutral-200 bg-transparent'
                     }`}
                   >
-                    <p className="text-m-regular text-center text-neutral-900">
+                    <p className="text-m-regular text-neutral-900">
                       {variant.name || `Varian ${variant.id}`}
                     </p>
                     {variant.discountAmount &&
@@ -449,13 +442,13 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   key={variant.id}
                   id={`variant-btn-${variant.id}`}
                   onClick={() => setSelectedVariantId(variant.id)}
-                  className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 text-nowrap max-lg:flex-shrink-0 ${
+                  className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5  max-lg:flex-shrink-0 ${
                     selectedVariantId === variant.id
                       ? 'border-primary-500 bg-primary-100 border-2'
                       : 'border-2 border-neutral-200 bg-transparent'
                   }`}
                 >
-                  <p className="text-m-regular text-center text-neutral-900">
+                  <p className="text-m-regular text-neutral-900">
                     {variant.name || `Varian ${variant.id}`}
                   </p>
                   {variant.discountAmount &&
@@ -472,17 +465,18 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         </div>
       )}
 
-      {/* Divider */}
-      <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
-
       {/* Variants not available */}
       {variants.length === 0 && (
-        <div className="bg-primary-100 border-primary-500 flex items-center gap-1 rounded-xl border p-2">
-          <WarningIconInfo size={20} />
-          <p className="text-xs-regular">
-            Mohon maaf, kursi untuk paket ini sudah tidak tersedia.
-          </p>
-        </div>
+        <Fragment>
+          {/* Divider */}
+          <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
+          <div className="bg-primary-100 border-primary-500 flex items-center gap-1 rounded-xl border p-2">
+            <WarningIconInfo size={20} />
+            <p className="text-xs-regular">
+              Mohon maaf, kursi untuk paket ini sudah tidak tersedia.
+            </p>
+          </div>
+        </Fragment>
       )}
 
       {/* Travel dates */}
@@ -691,6 +685,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             variant="default"
             size="lg"
             id="btn-checkout-desktop"
+            disabled={!selectedVariant}
             // When all version 2 muslim101 released, remove this
             onClick={handleLocalStorage}
           >
@@ -715,7 +710,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             </Button>
           </Link>
 
-          {/* Next Sprint */}
           <Button
             className="w-full rounded-full py-2 lg:hidden"
             variant="outline"

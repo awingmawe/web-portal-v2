@@ -1,21 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { toast } from '@/components/ui/sonner'
 import { Airline } from '@/constant/types/AirlineProps'
 import { Airport } from '@/constant/types/AirportProps'
 import { FilterState } from '@/constant/types/FilterProps'
+import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import { formatDateToYYYYMMDD } from '@/lib/utils'
+import { useFetchPackage } from '@/hooks/filter-product-hooks/useFetchPackage'
+import { formatDateToYYYYMMDD, mapProductsToCardData } from '@/lib/utils'
 import { getAirline, getAirports } from '@/services/general-service'
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import React, { createContext, useCallback, useContext, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
 // Initial filter state
@@ -26,8 +23,10 @@ const initialFilterState: FilterState = {
   arrivalAirport: null,
   airline: null,
   // Add new attributes if there's a new state for filter
-  hargaMin: '',
-  hargaMax: '',
+  priceRange: {
+    hargaMax: '',
+    hargaMin: '',
+  },
   facilityCode: '',
   section: '',
   tagSlug: '',
@@ -40,7 +39,12 @@ export type FilterKey = keyof FilterState
 interface FilterProductContextType {
   // Combined filter state
   filters: FilterState
+  searchQuery: string
+  packages: CardData[]
+  totalPackages: number
   setFilters: (filter: FilterState) => void
+  setSearchQuery: (query: string) => void
+  setPackages: (packages: CardData[]) => void
 
   // Filter state setters
   setHotelStars: (stars: number) => void
@@ -48,8 +52,7 @@ interface FilterProductContextType {
   setDepartureAirport: (airport: Airport) => void
   setArrivalAirport: (airport: Airport) => void
   setAirline: (airline: Airline) => void
-  setHargaMin: (price: string) => void
-  setHargaMax: (price: string) => void
+  setPriceRange: (range: any) => void
   setFacilityCode: (code: string) => void
   setSection: (section: string) => void
   setTagSlug: (slug: string) => void
@@ -62,9 +65,17 @@ interface FilterProductContextType {
   // Form submission
   isDisabled: boolean
   setIsDisabled: (disabled: boolean) => void
+  setIsLoading: (loading: boolean) => void
   isLoading: boolean
   isLoadingSkeleton: boolean
   handleSubmit: () => void
+  buildQueryParams: (
+    searchParamsString: any,
+    sortValue: any,
+    page: number
+  ) => any
+  initializeFiltersFromURL: (needLoading?: boolean) => void
+  fetchPackageData: (params?: any) => void
 }
 
 const FilterProductContext = createContext<
@@ -75,9 +86,12 @@ export const FilterProductProvider: React.FC<{
   children: React.ReactNode
   initialDisabled?: boolean
 }> = ({ children, initialDisabled = false }) => {
+  // Hooks
   const updateQueryParams = useUpdateQueryParams()
   const { pushEvent } = useEventTracker()
+  const { fetchPackage } = useFetchPackage()
   const { lg: isMobile } = useTailwindBreakpoint()
+
   // Combined filter state
   const [filters, setFilters] = useState<FilterState>(initialFilterState)
 
@@ -85,6 +99,9 @@ export const FilterProductProvider: React.FC<{
   const [isDisabled, setIsDisabled] = useState<boolean>(initialDisabled)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLoadingSkeleton, setIsLoadingSkeleton] = useState<boolean>(true)
+  const [packages, setPackages] = useState<CardData[]>([])
+  const [totalPackages, setTotalPackages] = useState<number>(0)
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
   // Filter state setters
   const setHotelStars = useCallback((stars: number) => {
@@ -107,12 +124,8 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, airline: airline }))
   }, [])
 
-  const setHargaMin = useCallback((price: string) => {
-    setFilters((prev) => ({ ...prev, hargaMin: price }))
-  }, [])
-
-  const setHargaMax = useCallback((price: string) => {
-    setFilters((prev) => ({ ...prev, hargaMax: price }))
+  const setPriceRange = useCallback((range: any) => {
+    setFilters((prev) => ({ ...prev, priceRange: range }))
   }, [])
 
   const setFacilityCode = useCallback((code: string) => {
@@ -134,11 +147,23 @@ export const FilterProductProvider: React.FC<{
   // Reset all filters
   const resetFilters = useCallback((filters = initialFilterState) => {
     setFilters(filters)
+    setSearchQuery('')
   }, [])
 
   // Reset individual filter
   const resetFilter = useCallback(
     (filterKey: FilterKey) => {
+      if (filterKey === 'priceRange') {
+        // Explicitly set empty price range values
+        setFilters((prev) => ({
+          ...prev,
+          priceRange: { hargaMin: '', hargaMax: '' },
+        }))
+
+        // Update URL params if needed
+        updateQueryParams(['prMin', 'prMax'], ['', ''])
+        return
+      }
       setFilters((prev) => ({
         ...prev,
         [filterKey]: initialFilterState[filterKey],
@@ -152,14 +177,12 @@ export const FilterProductProvider: React.FC<{
           departureAirport: 'dptArpt',
           arrivalAirport: 'arrArpt',
           airline: 'trvl',
-          hargaMin: 'prMin',
-          hargaMax: 'prMax',
           facilityCode: 'fC',
           section: 'sC',
           tagSlug: 'tS',
           filterName: null,
+          priceRange: null,
         }
-        // Special handling for dateRange which maps to two URL params
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
           updateQueryParams(['sD', 'eD'], ['', ''])
@@ -173,129 +196,210 @@ export const FilterProductProvider: React.FC<{
         }
       }
     },
-    [updateQueryParams, isMobile]
+    [isMobile, updateQueryParams]
   )
 
   // Set default value states filter from search params
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      const newFilters = { ...initialFilterState }
-      let hasUpdates = false
+  // Function to initialize filters from URL parameters
+  const initializeFiltersFromURL = useCallback(
+    async (needLoading: boolean = true) => {
+      if (typeof window === 'undefined') return
 
-      // Set hotel stars if exists
-      const starsParam = params.get('hR')
-      if (starsParam) {
-        newFilters.hotelStars = parseInt(starsParam, 10)
-        hasUpdates = true
-      }
-
-      // Set date range if exists
-      const departureDateParam = params.get('sD')
-      const returnDateParam = params.get('eD')
-      if (departureDateParam || returnDateParam) {
-        const range: DateRange = {
-          from: undefined,
+      try {
+        if (needLoading) {
+          setIsLoadingSkeleton(true)
         }
-        if (departureDateParam) {
-          // Parse the YYYY-MM-DD format
-          range.from = new Date(departureDateParam)
+        const params = new URLSearchParams(window.location.search)
+
+        // Create a copy of initial filters to build complete state
+        const updatedFilters = { ...initialFilterState }
+
+        // Process URL parameters for simple values
+        // Hotel stars
+        const starsParam = params.get('hR')
+        if (starsParam) {
+          updatedFilters.hotelStars = parseInt(starsParam, 10)
         }
-        if (returnDateParam) {
-          // Parse the YYYY-MM-DD format
-          range.to = new Date(returnDateParam)
+
+        // Date range
+        const departureDateParam = params.get('sD')
+        const returnDateParam = params.get('eD')
+        if (departureDateParam || returnDateParam) {
+          const range: DateRange = { from: undefined }
+          if (departureDateParam) {
+            range.from = new Date(departureDateParam)
+          }
+          if (returnDateParam) {
+            range.to = new Date(returnDateParam)
+          }
+          updatedFilters.dateRange = range
         }
-        newFilters.dateRange = range
-        hasUpdates = true
-      }
 
-      // Set price min if exists
-      const minPriceParam = params.get('prMin')
-      if (minPriceParam) {
-        newFilters.hargaMin = minPriceParam
-        hasUpdates = true
-      }
+        // Initialize price range
+        updatedFilters.priceRange = {
+          hargaMin: params.get('prMin') || '',
+          hargaMax: params.get('prMax') || '',
+        }
 
-      // Set price max if exists
-      const maxPriceParam = params.get('prMax')
-      if (maxPriceParam) {
-        newFilters.hargaMax = maxPriceParam
-        hasUpdates = true
-      }
+        // Other params
+        updatedFilters.facilityCode = params.get('fC') || ''
+        updatedFilters.section = params.get('sC') || ''
+        updatedFilters.tagSlug = params.get('tS') || ''
 
-      // Set facility code if exists
-      const facilityCodeParam = params.get('fC')
-      if (facilityCodeParam) {
-        newFilters.facilityCode = facilityCodeParam
-        hasUpdates = true
-      }
+        // Handle complex objects that need async fetching
+        const promises = []
 
-      // Set section if exists
-      const sectionParam = params.get('sC')
-      if (sectionParam) {
-        newFilters.section = sectionParam
-        hasUpdates = true
-      }
-
-      // Set tag slug if exists
-      const tagSlugParam = params.get('tS')
-      if (tagSlugParam) {
-        newFilters.tagSlug = tagSlugParam
-        hasUpdates = true
-      }
-
-      // Apply non-async updates right away
-      if (hasUpdates) {
-        setFilters((prev) => ({ ...prev, ...newFilters }))
-      }
-
-      // Async updates for airports and airline
-      const promises = []
-
-      // Set departure airport
-      const departureAirportParam = params.get('dptArpt')
-      if (departureAirportParam) {
-        promises.push(
-          fetchAirportByCode(departureAirportParam).then((airport) => {
-            if (airport) {
-              setFilters((prev) => ({ ...prev, departureAirport: airport }))
-            }
+        // Departure airport
+        const departureAirportParam = params.get('dptArpt')
+        if (departureAirportParam) {
+          const departurePromise = fetchAirportByCode(
+            departureAirportParam
+          ).then((airport) => {
+            if (airport) updatedFilters.departureAirport = airport
           })
-        )
-      }
+          promises.push(departurePromise)
+        }
 
-      // Set arrival airport
-      const arrivalAirportParam = params.get('arrArpt')
-      if (arrivalAirportParam) {
-        promises.push(
-          fetchAirportByCode(arrivalAirportParam).then((airport) => {
-            if (airport) {
-              setFilters((prev) => ({ ...prev, arrivalAirport: airport }))
+        // Arrival airport
+        const arrivalAirportParam = params.get('arrArpt')
+        if (arrivalAirportParam) {
+          const arrivalPromise = fetchAirportByCode(arrivalAirportParam).then(
+            (airport) => {
+              if (airport) updatedFilters.arrivalAirport = airport
             }
-          })
-        )
-      }
+          )
+          promises.push(arrivalPromise)
+        }
 
-      // Set airline
-      const airlineParam = params.get('trvl')
-      if (airlineParam) {
-        promises.push(
-          fetchAirlineByName(airlineParam).then((airline) => {
-            if (airline) {
-              setFilters((prev) => ({ ...prev, airline: airline }))
+        // Airline
+        const airlineParam = params.get('trvl')
+        if (airlineParam) {
+          const airlinePromise = fetchAirlineByName(airlineParam).then(
+            (airline) => {
+              if (airline) updatedFilters.airline = airline
             }
-          })
-        )
-      }
+          )
+          promises.push(airlinePromise)
+        }
 
-      // Wait for all promises to resolve or turn off loading after timeout
-      Promise.all(promises).finally(() => {
+        // Wait for all async operations to complete
+        await Promise.all(promises)
+
+        // Set all filter values at once to prevent multiple rerenders
+        setFilters(updatedFilters)
+
+        // Get search query if it exists
+        const queryParam = params.get('query')
+        if (queryParam) {
+          setSearchQuery(queryParam)
+        }
+      } catch (error) {
+        console.error('Error initializing filters from URL:', error)
+      } finally {
+        // Turn off loading skeleton after all processing is done
         setTimeout(() => {
           setIsLoadingSkeleton(false)
-        }, 1000)
-      })
-    }
-  }, [])
+        }, 500)
+      }
+    },
+    []
+  )
+
+  // Update value filter to fetch packageList
+  // This is for client side
+  // Add this to your FilterProductContext provider
+  const buildQueryParams = useCallback(
+    (
+      searchParamsString: string,
+      sortValue: string = 'price-low',
+      page: number = 1
+    ) => {
+      const params = new URLSearchParams(searchParamsString)
+      const queryObject: Record<string, any> = {
+        sortParam: sortValue,
+        page,
+      }
+
+      // Extract query/search term
+      if (params.has('query')) {
+        queryObject.query = params.get('query')
+      }
+
+      // Extract date range
+      if (params.has('sD')) {
+        queryObject.startDate = params.get('sD')
+      }
+      if (params.has('eD')) {
+        queryObject.endDate = params.get('eD')
+      }
+
+      // Extract airports
+      if (params.has('dptArpt')) {
+        queryObject.departureFromAirportCode = params.get('dptArpt')
+      }
+      if (params.has('arrArpt')) {
+        queryObject.arrivalFromAirportCode = params.get('arrArpt')
+      }
+
+      // Extract airline
+      if (params.has('trvl')) {
+        queryObject.departureAirlineName = params.get('trvl')
+      }
+
+      // Extract price range
+      if (params.has('prMin')) {
+        queryObject.minPrice = params.get('prMin')
+      }
+      if (params.has('prMax')) {
+        queryObject.maxPrice = params.get('prMax')
+      }
+
+      // Extract hotel rating
+      if (params.has('hR')) {
+        queryObject.hotelRating = params.get('hR')
+      }
+
+      // Extract facility codes
+      if (params.has('fC')) {
+        queryObject.facilityCode = params.get('fC')
+      }
+
+      // Extract section
+      if (params.has('sC')) {
+        queryObject.section = params.get('sC')
+      }
+
+      // Extract tag slug
+      if (params.has('tS')) {
+        queryObject.tagSlug = params.get('tS')
+      }
+
+      return queryObject
+    },
+    []
+  )
+
+  const fetchPackageData = useCallback(
+    async (params?: any) => {
+      setIsLoading(true)
+      try {
+        // Fetch data using the hook
+        const data = await fetchPackage(params)
+
+        const mappedData = mapProductsToCardData(data)
+
+        // Update state
+        setPackages(mappedData)
+        setTotalPackages(data.total)
+      } catch (err) {
+        console.error('Error fetching packages:', err)
+        toast.error('Failed to load packages. Please try again.')
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [buildQueryParams, fetchPackage]
+  )
 
   const fetchAirportByCode = async (code: string): Promise<Airport | null> => {
     try {
@@ -387,20 +491,8 @@ export const FilterProductProvider: React.FC<{
         },
       })
 
-      // Simulate API call with setTimeout
-      setTimeout(() => {
-        // Reset loading
-        setIsLoading(false)
-
-        // Navigate to search results page
-        // Only update the query parameters if we have keys/values to update
-        if (keys.length > 0) {
-          updateQueryParams(keys, values, '/search')
-        } else {
-          // Fallback if no parameters to add
-          window.location.href = '/search'
-        }
-      }, 1000)
+      // Only update the query parameters if we have keys/values to update
+      updateQueryParams(keys, values, '/search')
     } catch (err) {
       // Handle errors
       toast.error(
@@ -408,23 +500,20 @@ export const FilterProductProvider: React.FC<{
           ? (err as string)
           : 'Terjadi kesalahan pada server. Mohon ulangi beberapa saat lagi.'
       )
+    } finally {
       setIsLoading(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters])
-
-  useEffect(() => {
-    setIsLoadingSkeleton(true)
-
-    setTimeout(() => {
-      setIsLoadingSkeleton(false)
-    }, 1000)
   }, [filters])
 
   const value = {
     // Combined filter state
     filters,
+    searchQuery,
+    packages,
+    totalPackages,
     setFilters,
+    setSearchQuery,
+    setPackages,
 
     // Filter state setters
     setHotelStars,
@@ -432,8 +521,7 @@ export const FilterProductProvider: React.FC<{
     setDepartureAirport,
     setArrivalAirport,
     setAirline,
-    setHargaMin,
-    setHargaMax,
+    setPriceRange,
     setFacilityCode,
     setSection,
     setTagSlug,
@@ -446,9 +534,13 @@ export const FilterProductProvider: React.FC<{
     // Form states
     isDisabled,
     setIsDisabled,
+    setIsLoading,
     isLoading,
     isLoadingSkeleton,
     handleSubmit,
+    buildQueryParams,
+    initializeFiltersFromURL,
+    fetchPackageData,
   }
 
   return (

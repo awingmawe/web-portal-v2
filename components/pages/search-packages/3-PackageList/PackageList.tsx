@@ -1,14 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { CardPackage } from '@/components/shared/CardPackage'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
-import { CardData } from '@/constant/types/PackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { Loader2 } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
 import { NoResults } from './NoResultPackageList'
 import { CustomPagination } from './PaginationPackageList'
@@ -18,35 +18,79 @@ import {
   ResultsHeaderSkeleton,
 } from './SkeletonPackageList'
 
-interface PackageResultsProps {
-  dataPackages: CardData[]
-  currentPage: number
-  pageSize: number
-  total: number
-}
-
-export const PackageResults: React.FC<PackageResultsProps> = ({
-  dataPackages,
-  currentPage,
-  pageSize,
-  total,
-}) => {
+export const PackageResults: React.FC = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { isLoadingSkeleton, resetFilters } = useFilterProduct()
-  const { loadMore, hasMore, loading, packages } = useInfiniteScroll()
-  const { lg } = useTailwindBreakpoint()
+  const {
+    isLoadingSkeleton,
+    isLoading,
+    resetFilters,
+    packages: packageDataCSR,
+    totalPackages: totalCSR,
+    initializeFiltersFromURL,
+    fetchPackageData,
+    buildQueryParams,
+  } = useFilterProduct()
+  const {
+    loadMore,
+    hasMore,
+    loading,
+    fetchInitialPackages,
+    packages: infinitePackages, // this packages is same like packageDataCSR but in different state for mobile
+  } = useInfiniteScroll()
+  const { lg: isMobile } = useTailwindBreakpoint()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
+
+  // First, initialize filters from URL
+  useEffect(() => {
+    initializeFiltersFromURL()
+  }, [])
+
+  useEffect(() => {
+    if (!isLoadingSkeleton) {
+      const currentSort = searchParams.get('sort') || 'price-low'
+      const page = parseInt(searchParams.get('page') || '1', 10)
+
+      // Build the params object from search params string
+      const paramsFilter = buildQueryParams(
+        searchParams.toString(),
+        currentSort,
+        page
+      )
+
+      initializeFiltersFromURL(false)
+
+      if (isMobile) {
+        fetchInitialPackages(paramsFilter)
+      } else {
+        fetchPackageData(paramsFilter)
+      }
+    }
+  }, [isLoadingSkeleton, currentSort, searchParams])
+
+  const loadMoreData = useCallback(() => {
+    const currentSort = searchParams.get('sort') || 'price-low'
+    const page = parseInt(searchParams.get('page') || '1', 10) + 1
+
+    // Build the params object from search params string
+    const paramsFilter = buildQueryParams(
+      searchParams.toString(),
+      currentSort,
+      page
+    )
+
+    loadMore(paramsFilter)
+  }, [])
 
   // Function to reset all filters
   const resetAllFilters = useCallback(() => {
     // 1. Reset the internal state to default values
     resetFilters()
 
-    // 2. Navigate to the base URL without any query parameters
-    window.location.href = pathname
-  }, [pathname, resetFilters])
+    // 2. Delete all search params
+    window.history.pushState({}, '', '/search')
+  }, [])
 
   // Function to create URL with new sort parameter
   const createSortUrl = useCallback(
@@ -61,8 +105,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
   // Calculate total pages
   const totalPages = useMemo(() => {
-    return Math.ceil(total / pageSize)
-  }, [total, pageSize])
+    return Math.ceil(totalCSR / 9)
+  }, [totalCSR])
 
   // Create page navigation function
   const goToPage = useCallback(
@@ -75,7 +119,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   )
 
   // Render no results component if there are no packages and not loading
-  if (dataPackages.length === 0 && !isLoadingSkeleton) {
+  if (packageDataCSR.length === 0 && !isLoadingSkeleton) {
     return <NoResults resetAllFilters={resetAllFilters} />
   }
 
@@ -86,21 +130,21 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
-          resultsCount={dataPackages.length}
-          totalCount={total}
+          resultsCount={packageDataCSR.length}
+          totalCount={totalCSR}
           currentSort={currentSort}
           createSortUrl={createSortUrl}
         />
       )}
 
       {/* Package grid */}
-      {isLoadingSkeleton ? (
+      {isLoadingSkeleton || isLoading ? (
         <PackageGridSkeleton />
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {lg ? (
+          {isMobile ? (
             <>
-              {packages?.map((packageData, index) => (
+              {infinitePackages?.map((packageData, index) => (
                 <CardPackage
                   key={`packages-${packageData.slugPackage}-${index}`}
                   data={packageData}
@@ -109,7 +153,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
               <InfiniteScroll
                 isLoading={loading}
                 hasMore={hasMore}
-                next={loadMore}
+                next={loadMoreData}
                 threshold={0.8}
               >
                 {hasMore && (
@@ -118,7 +162,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
               </InfiniteScroll>
             </>
           ) : (
-            dataPackages?.map((packageData, index) => (
+            packageDataCSR?.map((packageData, index) => (
               <CardPackage
                 key={`packages-${packageData.slugPackage}-${index}`}
                 data={packageData}
@@ -134,7 +178,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <PaginationSkeleton />
       ) : (
         <CustomPagination
-          currentPage={currentPage}
+          currentPage={parseInt(searchParams.get('page') || '1', 10)}
           totalPages={totalPages}
           goToPage={goToPage}
         />

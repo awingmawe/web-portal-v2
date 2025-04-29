@@ -10,7 +10,8 @@ import React from 'react'
 import { HotelRatingOptions } from './RatingHotelRadio'
 
 const RatingHotelFilter: React.FC = () => {
-  const { filters, setHotelStars, resetFilter } = useFilterProduct()
+  const { filters, setHotelStars, resetFilter, isLoadingSkeleton } =
+    useFilterProduct()
 
   // Handle reset click with event stopping
   const handleResetClick = (e: React.MouseEvent) => {
@@ -38,6 +39,7 @@ const RatingHotelFilter: React.FC = () => {
         <HotelRatingOptions
           selectedRating={filters.hotelStars}
           onRatingChange={setHotelStars}
+          isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>
     </AccordionItem>

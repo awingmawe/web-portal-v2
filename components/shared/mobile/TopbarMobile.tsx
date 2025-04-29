@@ -2,11 +2,10 @@
 
 import { ArrowIcon } from '@/components/icons/arrow'
 import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
-import FilterDrawer from '@/components/shared/mobile/FilterDrawerMobile'
+import FilterDrawer from '@/components/shared/mobile/FilterMobile/FilterDrawerMobile'
 import { Input } from '@/components/ui/input'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
-import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import { capitalizeText, formatDateRangeShort, isEmpty } from '@/lib/utils'
 import { Bell, Search } from 'lucide-react'
@@ -49,17 +48,13 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     onBackClick,
     titleLink = '',
   }) => {
-    const { shareViaCopyLink, shareViaWhatsApp } = useGallerySharing()
     const { filters } = useFilterProduct()
 
     const [showFixedHeader, setShowFixedHeader] = useState(false)
 
     const router = useRouter()
     // Use the same search hook as desktop version
-    const { searchQuery, handleSearchChange, handleSearch } = useSearchQuery({
-      redirectPath: '/search',
-      delay: 1000,
-    })
+    const { searchQuery, handleSearchChange, handleSearch } = useSearchQuery()
     const { dateRange, departureAirport, arrivalAirport } = filters
 
     // Memoize formatted date range to prevent unnecessary recalculations
@@ -263,12 +258,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     const renderActionButton = () => {
       if (variant === 'transparent') {
         return (
-          <ShareDrawer
-            titleLink={titleLink}
-            buttonClasses={buttonClasses}
-            shareViaWhatsApp={shareViaWhatsApp}
-            shareViaCopyLink={shareViaCopyLink}
-          />
+          <ShareDrawer titleLink={titleLink} buttonClasses={buttonClasses} />
         )
       } else if (variant === 'filter') {
         return <FilterDrawer />

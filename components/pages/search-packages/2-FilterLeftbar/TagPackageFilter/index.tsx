@@ -17,7 +17,8 @@ interface TagPackageFilterProps {
 const TagPackagesFilter: React.FC<TagPackageFilterProps> = ({
   dataTagPackage,
 }) => {
-  const { filters, setTagSlug, resetFilter } = useFilterProduct()
+  const { filters, setTagSlug, resetFilter, isLoadingSkeleton } =
+    useFilterProduct()
 
   // Handle reset click with event stopping
   const handleResetClick = (e: React.MouseEvent) => {
@@ -46,7 +47,7 @@ const TagPackagesFilter: React.FC<TagPackageFilterProps> = ({
           dataTagPackage={dataTagPackage}
           selectedTagPackage={filters.tagSlug}
           onTagPackageChange={setTagSlug}
-          // isLoadingSkeleton={isLoadingSkeleton}
+          isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>
     </AccordionItem>

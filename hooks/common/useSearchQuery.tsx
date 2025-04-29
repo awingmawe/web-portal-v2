@@ -1,22 +1,13 @@
-import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import { FormEvent, useCallback, useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useFilterProduct } from '@/contexts/filter-product-context'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { FormEvent, useCallback, useMemo, useState } from 'react'
 
-interface UseSearchQueryProps {
-  initialQuery?: string
-  redirectPath?: string
-  delay?: number
-  searchParamName?: string
-}
-
-export function useSearchQuery({
-  initialQuery = '',
-  redirectPath = '/search',
-  delay = 500,
-  searchParamName = 'query',
-}: UseSearchQueryProps = {}) {
-  const [searchQuery, setSearchQuery] = useState(initialQuery)
+export function useSearchQuery() {
+  const { searchQuery, setSearchQuery } = useFilterProduct()
   const [loading, setLoading] = useState(false)
-  const updateQueryParams = useUpdateQueryParams()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,29 +23,27 @@ export function useSearchQuery({
       if (loading) return
 
       setLoading(true)
+      const params = new URLSearchParams(searchParams.toString())
 
+      params.set('query', searchQuery)
       // Set a timer to simulate API call or processing
       setTimeout(() => {
-        if (searchQuery) {
-          // Use updateQueryParams to navigate with the search query
-          updateQueryParams([searchParamName], [searchQuery], redirectPath)
-        } else {
-          // If search query is empty, remove the parameter
-          updateQueryParams([searchParamName], [''], redirectPath)
-        }
+        window.location.href = `/search?${pathname}?${params.toString()}`
 
         setLoading(false)
-      }, delay)
+      }, 500)
     },
-    [
-      searchQuery,
-      loading,
-      updateQueryParams,
-      searchParamName,
-      redirectPath,
-      delay,
-    ]
+    [loading, searchParams, searchQuery, pathname]
   )
+
+  const handleSearchDesktop = useMemo(() => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    params.set('query', searchQuery)
+    const queryString = params.toString()
+
+    return queryString ? `/search?${queryString}` : '/search'
+  }, [searchParams, searchQuery])
 
   const clearSearch = useCallback(() => {
     setSearchQuery('')
@@ -65,6 +54,7 @@ export function useSearchQuery({
     loading,
     setSearchQuery,
     handleSearchChange,
+    handleSearchDesktop,
     handleSearch,
     clearSearch,
   }
