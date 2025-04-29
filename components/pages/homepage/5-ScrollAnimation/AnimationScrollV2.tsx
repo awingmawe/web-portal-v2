@@ -94,14 +94,14 @@ function AnimationScrollV2({
       />
       <div ref={tracker} style={{ background: 'white' }} />
       <div className="relative">
-        <div className="absolute z-40 !px-[126px] !pt-[240px] max-lg:!px-[42px] max-lg:!pt-[42vh]">
+        <div className="absolute z-40 !px-[126px] !pt-[240px] max-lg:!px-[56px] max-lg:!pt-[42vh]">
           <p className="text-xl-regular z-10 text-center  max-lg:text-[16px]">
             Not just a service, It&apos;s an...
           </p>
         </div>
         <div
           ref={experienceContainer}
-          className="relative z-30 flex h-screen w-full items-center justify-center bg-white px-2.5 pb-1.5 text-center text-[220px] font-bold text-black mix-blend-screen max-lg:text-[72px]"
+          className="relative z-30 flex h-screen w-full items-center justify-center bg-white px-2.5 pb-1.5 text-center text-[220px] font-bold text-black mix-blend-screen max-lg:text-[48px]"
         >
           <div
             className="relative origin-[54.75%_27%] text-black max-lg:origin-[54.75%_27.88%]"
