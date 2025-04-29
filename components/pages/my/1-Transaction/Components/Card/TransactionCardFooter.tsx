@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { formatCurrency } from '@/lib/utils'
 import {
   getPaymentStatement,
@@ -45,6 +46,8 @@ export default function TransactionCardFooter({
   id,
   paymentAmount,
 }: TransactionCardFooter) {
+  const { lg } = useTailwindBreakpoint()
+
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
   const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
@@ -222,13 +225,24 @@ export default function TransactionCardFooter({
               </p>
             </div>
             <div>
-              <Button
-                variant="ghost"
-                className="px-3 font-medium text-neutral-900"
-                onClick={() => setOpen(true)}
-              >
-                Lihat Detail
-              </Button>
+              {lg ? (
+                <Link href={`/my/transaction/${bookingId}?status=Waiting`}>
+                  <Button
+                    variant="ghost"
+                    className="px-3 font-medium text-neutral-900"
+                  >
+                    Lihat Detail
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="ghost"
+                  className="px-3 font-medium text-neutral-900"
+                  onClick={() => setOpen(true)}
+                >
+                  Lihat Detail
+                </Button>
+              )}
               <Link
                 href={paymentTransaction ? paymentTransaction.paymentLink : ''}
               >
