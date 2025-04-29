@@ -78,12 +78,18 @@ export default function InvoicePage() {
   }
 
   return (
-    <div className="h-full overflow-auto">
+    <div className="flex h-full flex-col overflow-auto p-4">
       {printData ? (
-        <div className="!px-5 !pt-5">
-          <div className="!mb-5 flex justify-center gap-3">
+        <div className="flex flex-col items-center">
+          <div className="!my-5 flex justify-center gap-3">
             <Button
-              onClick={() => router.push('/my/transaction')}
+              onClick={() => {
+                if (window.history.length > 1) {
+                  window.history.back()
+                } else {
+                  router.push('/my/transaction')
+                }
+              }}
               className="!px-5 !py-3"
               variant={'ghost'}
             >
@@ -99,15 +105,14 @@ export default function InvoicePage() {
             </Button>
           </div>
 
-          <div className="!mb-5 flex justify-center">
-            <div id="print-section" ref={contentRef} className="!max-w-2xl">
+          <div className="w-full max-w-2xl">
+            <div id="print-section" ref={contentRef} className="p-4">
               <div dangerouslySetInnerHTML={{ __html: printData }} />
             </div>
           </div>
-          <div className="mb-10" />
         </div>
       ) : (
-        <div className="grid h-full place-content-center">
+        <div className="flex h-full items-center justify-center">
           <svg
             className="h-8 w-8 animate-spin text-gray-500"
             xmlns="http://www.w3.org/2000/svg"

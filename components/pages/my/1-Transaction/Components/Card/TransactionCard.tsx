@@ -209,12 +209,12 @@ export default function TransactionCard({
   }
 
   return (
-    <RenderLinkToDetail
-      lg={lg}
-      bookingId={bookingId}
-      statusTahapan={statusTahapan}
-    >
-      <div className="mt-6 rounded-3xl border border-neutral-200 ">
+    <div className="mt-6 rounded-3xl border border-neutral-200 ">
+      <RenderLinkToDetail
+        lg={lg}
+        bookingId={bookingId}
+        statusTahapan={statusTahapan}
+      >
         {!noHeader && (
           <TransactionCardHeader
             status={status}
@@ -222,8 +222,15 @@ export default function TransactionCard({
             isPaidOff={isPaidOff}
           />
         )}
-        <div
-          className={`${!noHeader ? '-mt-5' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
+      </RenderLinkToDetail>
+
+      <div
+        className={`${!noHeader ? '-mt-5' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
+      >
+        <RenderLinkToDetail
+          lg={lg}
+          bookingId={bookingId}
+          statusTahapan={statusTahapan}
         >
           <div className="flex items-center justify-between border-b border-neutral-200 p-4">
             <div className="flex items-center gap-2 max-lg:block">
@@ -353,48 +360,48 @@ export default function TransactionCard({
               <p className="text-xs text-neutral-500">{jemaah} Jemaah</p>
             </div>
           </div>
-          <div
-            className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
-          >
-            <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
-              <p className="text-s-regular text-neutral-500">Dibuat pada</p>
-              <Calendar className="h-4 w-4 text-neutral-500" />
-              <p className="text-m-regular text-neutral-500">
-                {dayjs(createdDate).locale('id').format('DD MMMM YYYY')}
-              </p>
-            </div>
-            {!noFooter && (
-              <Fragment>
-                {orderPaymentLoading ? (
-                  <div className="flex hidden items-center justify-between p-4 max-lg:block">
-                    <div className="flex items-center gap-2">
-                      <Skeleton className="h-5 w-24" />
-                      <Skeleton className="h-5 w-32" />
-                    </div>
-                    <div className="flex gap-2 max-lg:hidden">
-                      <Skeleton className="h-10 w-32 rounded-full" />
-                      <Skeleton className="h-10 w-40 rounded-full" />
-                      <Skeleton className="h-10 w-10 rounded-full" />
-                    </div>
-                  </div>
-                ) : (
-                  <TransactionCardFooter
-                    detailOnly={detailOnly}
-                    isPaidOff={isPaidOff}
-                    isCompletedManifest={isCompletedManifest}
-                    showDpButton={showDpButton}
-                    bookingId={bookingId}
-                    id={id}
-                    status={status}
-                    statusTahapanDetail={statusTahapanDetail}
-                    paymentAmount={orderPayment?.orderPayment?.paymentAmount}
-                  />
-                )}
-              </Fragment>
-            )}
+        </RenderLinkToDetail>
+        <div
+          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
+        >
+          <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
+            <p className="text-s-regular text-neutral-500">Dibuat pada</p>
+            <Calendar className="h-4 w-4 text-neutral-500" />
+            <p className="text-m-regular text-neutral-500">
+              {dayjs(createdDate).locale('id').format('DD MMMM YYYY')}
+            </p>
           </div>
+          {!noFooter && (
+            <Fragment>
+              {orderPaymentLoading ? (
+                <div className="flex hidden items-center justify-between p-4 max-lg:block">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-24" />
+                    <Skeleton className="h-5 w-32" />
+                  </div>
+                  <div className="flex gap-2 max-lg:hidden">
+                    <Skeleton className="h-10 w-32 rounded-full" />
+                    <Skeleton className="h-10 w-40 rounded-full" />
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                  </div>
+                </div>
+              ) : (
+                <TransactionCardFooter
+                  detailOnly={detailOnly}
+                  isPaidOff={isPaidOff}
+                  isCompletedManifest={isCompletedManifest}
+                  showDpButton={showDpButton}
+                  bookingId={bookingId}
+                  id={id}
+                  status={status}
+                  statusTahapanDetail={statusTahapanDetail}
+                  paymentAmount={orderPayment?.orderPayment?.paymentAmount}
+                />
+              )}
+            </Fragment>
+          )}
         </div>
       </div>
-    </RenderLinkToDetail>
+    </div>
   )
 }
