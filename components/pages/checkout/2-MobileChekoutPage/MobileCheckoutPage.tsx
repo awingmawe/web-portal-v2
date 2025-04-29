@@ -47,6 +47,7 @@ const MobileCheckoutPage = ({}) => {
     formatNumber,
     rawInputValue,
     setRawInputValue,
+    handleSliderChange,
   } = useCheckout()
 
   return (
@@ -329,14 +330,7 @@ const MobileCheckoutPage = ({}) => {
                 max={preBooking?.totalPrice || totalPrice * jamaahList.length}
                 step={1000}
                 value={sliderValue} // Use the dedicated slider state
-                onChange={(e) => {
-                  const value = parseInt(e.target.value)
-                  setSliderValue(value) // Update slider position
-
-                  // Calculate per-jamaah amount
-                  const perJamaahAmount = Math.ceil(value / jamaahList.length)
-                  setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
-                }}
+                onChange={handleSliderChange}
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
               />
               <div className="mt-2 flex justify-between text-xs">

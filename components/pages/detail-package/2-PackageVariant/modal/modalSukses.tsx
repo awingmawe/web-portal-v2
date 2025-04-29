@@ -12,9 +12,14 @@ import { CheckCircle, X } from 'lucide-react'
 interface CheckQuotaModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  statusStockVariable: any
 }
 
-const ModalSuccess = ({ open, onOpenChange }: CheckQuotaModalProps) => {
+const ModalSuccess = ({
+  open,
+  onOpenChange,
+  statusStockVariable,
+}: CheckQuotaModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-xl px-6 py-4 shadow-lg ">
@@ -47,9 +52,12 @@ const ModalSuccess = ({ open, onOpenChange }: CheckQuotaModalProps) => {
         <div className="mt-6 flex justify-end">
           <Button
             className="w-[50%] rounded-full bg-yellow-400 text-sm font-semibold text-black hover:bg-yellow-500"
-            onClick={() => onOpenChange(false)}
+            onClick={() => {
+              onOpenChange(false)
+              statusStockVariable()
+            }}
           >
-            Lihat Detail Pengajuan
+            Tutup
           </Button>
         </div>
       </DialogContent>

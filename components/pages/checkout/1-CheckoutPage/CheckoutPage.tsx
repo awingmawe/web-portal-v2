@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { useCheckout } from '@/contexts/checkout-context'
@@ -38,9 +37,8 @@ const CheckoutPage = () => {
     formatNumber,
     rawInputValue,
     setRawInputValue,
+    handleSliderChange,
   } = useCheckout()
-
-  // Add state for terms and conditions checkbox
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -302,7 +300,7 @@ const CheckoutPage = () => {
                       className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-right font-medium text-gray-800 shadow-sm"
                       value={formatNumber(rawInputValue)}
                       onChange={handleInputChange}
-                      onBlur={(e) => {
+                      onBlur={() => {
                         const value = parseInt(rawInputValue) || 0
                         const minAmount =
                           selectedVariant.netAmount * jamaahList.length
@@ -353,14 +351,7 @@ const CheckoutPage = () => {
                   max={preBooking?.totalPrice || totalPrice * jamaahList.length}
                   step={1000}
                   value={sliderValue} // Use the dedicated slider state
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value)
-                    setSliderValue(value) // Update slider position
-
-                    // Calculate per-jamaah amount
-                    const perJamaahAmount = Math.ceil(value / jamaahList.length)
-                    setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
-                  }}
+                  onChange={handleSliderChange} // Gunakan fungsi debounce di sini
                   className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
                 />
 

@@ -805,6 +805,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <ModalSuccess
         open={isQuotaModalSuccess}
         onOpenChange={setIsQuotaModalSuccess}
+        statusStockVariable={statusStockVariable}
         // onSubmit={handleQuotaCheck}
       />
       <ModalWaitingHasil

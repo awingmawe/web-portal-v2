@@ -93,7 +93,7 @@ export default function TransactionCardFooter({
           // Additional logic on close
         },
       })
-      console.log(responseNext)
+      // console.log(responseNext)
     } catch (err) {
       console.error('Error fetching transactions:', err)
     } finally {
@@ -175,17 +175,39 @@ export default function TransactionCardFooter({
           </Fragment>
         )}
         {showDpButton && (
-          <a
-            href={paymentTransaction ? paymentTransaction.paymentLink : ''}
-            target="_blank"
+          // <a
+          //   href={paymentTransaction ? paymentTransaction.paymentLink : ''}
+          //   target="_blank"
+          // >
+          <Button
+            className="w-full px-8 py-3 text-nowrap"
+            // disabled={loadingPaymentTransaction}
+            onClick={() => {
+              window.snap.pay(paymentTransaction?.paymentToken, {
+                onSuccess: async (result: any) => {
+                  console.log(result)
+                  // router.replace('/my/transaction') // replace & refresh
+                  window.location.reload()
+                },
+                onPending: async (result: any) => {
+                  console.log('Payment pending', result)
+                  router.push(`/my/need-payment`)
+                  // Add expiration check logic
+                },
+                onError: (error: any) => {
+                  console.log(error)
+                },
+                onClose: () => {
+                  // router.push(`/my/need-payment`)
+                  // Additional logic on close
+                },
+              })
+              // console.log(paymentTransaction)
+            }}
           >
-            <Button
-              className="w-full px-8 py-3 text-nowrap"
-              disabled={loadingPaymentTransaction}
-            >
-              Bayar Uang Muka
-            </Button>
-          </a>
+            Bayar Uang Muka
+          </Button>
+          // </a>
         )}
 
         {/* {renderCancelAction()} */}
