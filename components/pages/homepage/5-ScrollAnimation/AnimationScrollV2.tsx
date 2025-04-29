@@ -57,7 +57,7 @@ function AnimationScrollV2({
       if (window.scrollY > targetJeShow) {
         const targetJeY =
           ((targetJeShow + trRectY) / window.innerHeight) *
-          (window.innerHeight / 7)
+          (window.innerHeight / (isMobile ? 5 : 7))
         je.style.display = 'inline'
         je.style.transform = `translate(0, ${targetJeY > 0 ? targetJeY : 0}px)`
 
@@ -112,11 +112,14 @@ function AnimationScrollV2({
         </div>
         {showKabah && (
           <div
-            className="relative z-1 h-dvh items-center bg-cover bg-fixed bg-center bg-no-repeat"
+            className="z-1 h-dvh items-center bg-center"
             style={{
               position: 'fixed',
-              width: '100%',
+              width: '100vw',
+              height: '100vh',
               top: 0,
+              left: 0,
+              backgroundColor: 'black',
               backgroundImage:
                 'url(https://storage.googleapis.com/m101-prods/about-us/674c820fbd0e8e39b03a4958c7e13970-2.jpg)',
             }}
