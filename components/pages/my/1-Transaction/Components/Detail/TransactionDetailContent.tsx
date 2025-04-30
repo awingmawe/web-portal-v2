@@ -1,6 +1,7 @@
 'use client'
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
+import { TransactionDetailMobileAction } from '@/components/pages/my/1-Transaction/Components/Detail/TranasctionDetailMobileAction'
 import { TransactionDetailHeader } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetaiHeader'
 import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailManifest'
 import TransactionDetailPayment from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailPayment'
@@ -28,11 +29,9 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 interface TransactionDetailContentProps {
   bookingId: string
   isFixedLoading: boolean
-  statusTahapan: string
 }
 
 export default function TransactionDetailContent({
-  statusTahapan,
   isFixedLoading,
   bookingId,
 }: TransactionDetailContentProps) {
@@ -41,6 +40,7 @@ export default function TransactionDetailContent({
   const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
   const [manifest, setManifest] = useState<any>(null)
   const router = useRouter()
+  const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
 
   const fetchTransactions = useCallback(async () => {
     setLoading(true)
@@ -71,6 +71,23 @@ export default function TransactionDetailContent({
     fetchTransactions()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  useEffect(() => {
+    if (transaction != null) {
+      if (
+        transaction.status.slug == 'waiting-cancellation' ||
+        transaction.status.slug == 'waiting-approval' ||
+        transaction.status.slug == 'approved'
+      ) {
+        setStatusTahapan('Akan Datang')
+      } else if (transaction.status.slug == 'waiting-down-payment') {
+        setStatusTahapan('Waiting')
+      } else if (transaction.status.slug == 'completed') {
+        setStatusTahapan('Selesai')
+      } else {
+        setStatusTahapan('Dibatalkan')
+      }
+    }
+  }, [transaction])
 
   const fetchPaymentStatement = useCallback(async (id: any) => {
     try {
@@ -109,6 +126,7 @@ export default function TransactionDetailContent({
 
   return (
     <div>
+      <div className={`${loading ? 'block' : 'hidden'} h-[700px]`}></div>
       <MobileTopbar
         showBackButton
         variant="transactionTopbar"
@@ -208,7 +226,9 @@ export default function TransactionDetailContent({
                 paymentDetails={transaction?.paymentDetails || ''}
                 statusTahapan={statusTahapan}
                 createdAt={transaction?.createdAt || ''}
-                startDate={transaction?.startDate || ''}
+                startDate={
+                  transaction?.packageSnapshot?.snapshot?.departureDate
+                }
                 isPaidOff={transaction?.isPaidOff}
               />
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
@@ -230,10 +250,10 @@ export default function TransactionDetailContent({
                   </div>
                 ) : (
                   <div
-                    className={`${dayjs(transaction.createdAt).locale('id').add(3, 'day') > dayjs().locale('id') ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
+                    className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
                   >
                     <div
-                      className={`${dayjs(transaction.createdAt).locale('id').add(3, 'day') > dayjs().locale('id') ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                      className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
                     >
                       <InfoCircleIcon />
                       <p className="text-s-regular text-current">
@@ -287,14 +307,20 @@ export default function TransactionDetailContent({
                       ) : (
                         <div className="flex flex-col gap-2">
                           <div
-                            className={`${dayjs(transaction?.createdAt).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} flex items-center justify-center rounded-3xl px-3 py-2 pb-13`}
+                            className={`${dayjs(transaction?.packageSnapshot?.snapshot?.departureDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} flex items-center justify-center rounded-3xl px-3 py-2 pb-13`}
                           >
-                            {dayjs(transaction?.createdAt).subtract(21, 'day') >
-                            dayjs() ? (
+                            {dayjs(
+                              transaction?.packageSnapshot?.snapshot
+                                ?.departureDate
+                            ).subtract(21, 'day') > dayjs() ? (
                               <span className="text-warning-700 text-s-regular">
                                 Lunasi sebelum{' '}
-                                {dayjs(transaction?.createdAt)
+                                {dayjs(
+                                  transaction?.packageSnapshot?.snapshot
+                                    ?.departureDate
+                                )
                                   .subtract(21, 'day')
+                                  .locale('id')
                                   .format('DD MMM YYYY')}
                               </span>
                             ) : (
@@ -343,6 +369,7 @@ export default function TransactionDetailContent({
                                 Lengkapi sebelum{' '}
                                 {dayjs(transaction?.createdAt)
                                   .add(3, 'day')
+                                  .locale('id')
                                   .format('DD MMM YYYY')}
                               </span>
                             ) : (
@@ -417,6 +444,11 @@ export default function TransactionDetailContent({
           </div>
         </Fragment>
       )}
+
+      <TransactionDetailMobileAction
+        bookingCode={transaction?.bookingCode}
+        statusTahapan={statusTahapan}
+      />
 
       <Script
         src={SNAP_URL}

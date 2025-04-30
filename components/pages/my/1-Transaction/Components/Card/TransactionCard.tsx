@@ -89,7 +89,6 @@ function renderManifestComplete(
 const RenderLinkToDetail = ({
   lg,
   bookingId,
-  statusTahapan,
   children,
 }: {
   lg: boolean
@@ -98,11 +97,7 @@ const RenderLinkToDetail = ({
   children: React.ReactNode
 }) => {
   if (lg) {
-    return (
-      <Link href={`/my/transaction/${bookingId}?status=${statusTahapan}`}>
-        {children}
-      </Link>
-    )
+    return <Link href={`/my/transaction/${bookingId}`}>{children}</Link>
   }
 
   return <div>{children}</div>
