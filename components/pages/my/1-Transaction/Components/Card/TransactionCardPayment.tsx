@@ -7,6 +7,7 @@ import {
   getPaymentTransaction,
 } from '@/services/umrah-service'
 import dayjs from 'dayjs'
+import 'dayjs/locale/id'
 import { useCallback, useEffect, useState } from 'react'
 
 export interface TransactionCardPayment {
@@ -50,7 +51,10 @@ function renderLunas(
           {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
             <span className="text-current">
               Harap lunasi sebelum{' '}
-              {dayjs(startDate).subtract(21, 'day').format('DD MMM YYYY')}
+              {dayjs(startDate)
+                .subtract(21, 'day')
+                .locale('id')
+                .format('DD MMM YYYY')}
             </span>
           ) : (
             <span className="text-current">

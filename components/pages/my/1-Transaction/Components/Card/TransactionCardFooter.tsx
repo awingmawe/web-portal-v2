@@ -225,7 +225,7 @@ export default function TransactionCardFooter({
             </div>
             <div>
               {lg ? (
-                <Link href={`/my/transaction/${bookingId}?status=Waiting`}>
+                <Link href={`/my/transaction/${bookingId}`}>
                   <Button
                     variant="ghost"
                     className="px-3 font-medium text-neutral-900"

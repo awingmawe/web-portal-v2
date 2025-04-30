@@ -81,7 +81,10 @@ export default function TransactionDetailPayment({
               {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
                 <span className="text-current">
                   Harap lunasi sebelum{' '}
-                  {dayjs(startDate).subtract(21, 'day').format('DD MMM YYYY')}
+                  {dayjs(startDate)
+                    .subtract(21, 'day')
+                    .locale('id')
+                    .format('DD MMM YYYY')}
                 </span>
               ) : (
                 <span className="text-current">
