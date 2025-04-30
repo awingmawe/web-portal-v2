@@ -517,11 +517,11 @@ const MobileCheckoutPage = ({}) => {
         </div>
         <button
           className={`${
-            isJamaahDataValid() && termsAccepted
+            isJamaahDataValid() && termsAccepted && loading === false
               ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
               : 'cursor-not-allowed bg-gray-300 text-gray-500'
           }rounded-md  px-6 py-3 text-sm font-semibold text-white shadow`}
-          disabled={!isJamaahDataValid() || !termsAccepted || loading}
+          disabled={loading || !isJamaahDataValid() || !termsAccepted}
           onClick={
             isJamaahDataValid() && termsAccepted ? handleCheckout : undefined
           }
