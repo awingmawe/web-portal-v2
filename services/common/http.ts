@@ -152,6 +152,38 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
   return instance
 }
 
+export function createServerApiClient(token: string): AxiosInstance {
+  const instance = axios.create({
+    baseURL: API_URL as string,
+    withCredentials: true,
+    timeout: 30000,
+  })
+
+  // Request interceptor
+  instance.interceptors.request.use((config: any) => {
+    // Apply custom headers
+    config.headers = {
+      ...config.headers,
+      ...headersManager.getHeaders(),
+    }
+
+    // Add the provided token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+
+    return config
+  })
+
+  // Response interceptor
+  instance.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError<ApiErrorResponse>) => handleApiError(error)
+  )
+
+  return instance
+}
+
 // Export API instances
 export const api = createApiClient(API_URL as string) // public
 export const apiWithAuth = createApiClient(API_URL as string, true)

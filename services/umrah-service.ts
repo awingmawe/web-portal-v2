@@ -1,4 +1,9 @@
-import { api, apiWithAuth, createFormData } from '@/services/common/http'
+import {
+  api,
+  apiWithAuth,
+  createFormData,
+  createServerApiClient,
+} from '@/services/common/http'
 import { Banner } from '@/constant/types/BannerProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import {
@@ -208,10 +213,14 @@ export async function checkAvailibility(payload: any) {
 
 // Manifest Fetch
 export async function getManifestDetail(
-  query: GetListQuery
-): Promise<GenericResponse<Transaction>> {
+  query: GetListQuery,
+  token?: string
+): Promise<GenericResponse<ManifestUser>> {
   try {
-    const response = await apiWithAuth.get(
+    // Use token if provided (server-side), otherwise use existing client (client-side)
+    const client = token ? createServerApiClient(token) : apiWithAuth
+
+    const response = await client.get(
       `/umrah/v1/booking-manifest?${qs.stringify(query)}`
     )
     return response.data

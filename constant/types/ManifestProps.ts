@@ -60,7 +60,7 @@ interface ManifestUser {
   modifiedAt: string
   createdBy: string | null
   modifiedBy: string | null
-  booking: Booking
+  booking: Booking | undefined
   attachment: Attachment[]
 }
 
