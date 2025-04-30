@@ -126,6 +126,9 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       await toggleLike(pkg.id)
 
       setIsLiked(!isLiked)
+      if (isLiked) {
+        handlePushEvent('add_to_wishlist', false)
+      }
     } catch (error: any) {
       setIsLiked(isLiked)
 
@@ -418,7 +421,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   <div
                     key={variant.id}
                     id={`variant-btn-${variant.id}`}
-                    onClick={() => setSelectedVariantId(variant.id)}
+                    onClick={() => {
+                      setSelectedVariantId(variant.id)
+                      handlePushEvent('click_package_variant', true)
+                    }}
                     className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 max-lg:flex-shrink-0 ${
                       selectedVariantId === variant.id
                         ? 'border-primary-500 bg-primary-100 border-2'
@@ -779,7 +785,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="h-[15px] w-px bg-neutral-200" />
           <div
             onClick={() => {
-              handlePushEvent('click_consultation', false)
+              handlePushEvent('click_consultation', true)
               shareViaWhatsApp(titlePackage, phoneNumberUsed)
             }}
             className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
@@ -802,6 +808,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
                   `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
               }
+              handlePushEvent('check_availability', true)
             }}
           >
             <span className="text-s-medium">Cek Kuota</span>

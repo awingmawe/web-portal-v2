@@ -145,11 +145,13 @@ export default async function DetailPackage({ params }: { params: any }) {
               <HotelMecca
                 mecca={detailData?.meccaHotel}
                 meccaHotelImages={meccaHotelImages}
+                detailData={detailData}
               />
 
               <HotelMedina
                 medina={detailData?.medinaHotel}
                 medinaHotelImages={medinaHotelImages}
+                detailData={detailData}
               />
 
               <TermsCondition

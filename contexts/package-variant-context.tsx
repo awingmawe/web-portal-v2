@@ -1,6 +1,6 @@
 'use client'
 
-import { PackageVariant } from '@/constant/types/PackageProps'
+import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { formatCurrencyIndonesia, formatDateToRangeString } from '@/lib/utils'
 import React, {
   createContext,
@@ -79,6 +79,7 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   initialRoomType = null,
   initialLoading = true,
 }) => {
+  const [currentPackage, setCurrentPackage] = useState<Package | null>()
   const [selectedVariant, setSelectedVariant] = useState<PackageVariant | null>(
     initialSelectedVariant
   )
@@ -155,6 +156,8 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
 
   // Context value
   const value = {
+    currentPackage,
+    setCurrentPackage,
     selectedVariant,
     selectedVariantId,
     variants,

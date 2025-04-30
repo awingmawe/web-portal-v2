@@ -7,6 +7,7 @@ import Footer from '@/components/shared/Footer'
 import Topbar from '@/components/shared/Topbar'
 import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import { CheckoutProvider, useCheckout } from '@/contexts/checkout-context'
+import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
 import { Fragment, useState } from 'react'
@@ -45,6 +46,12 @@ export default function CheckoutGeneral() {
   return (
     <CheckoutProvider>
       <CheckoutContent />
+      <EventTrackerImpression
+        nameDidMount="impression_checkout"
+        nameDidUnmount="exit_checkout"
+        topic={'umrah'}
+        category="checkout"
+      />
     </CheckoutProvider>
   )
 }

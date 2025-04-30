@@ -179,7 +179,7 @@ export function EventTrackerProvider({
     return typeof window !== 'undefined' && !!getAccessToken()
   }
 
-  function beforeUnload(e: any) {
+  function beforeUnload() {
     if (window.pushEventUnmount) window.pushEventUnmount()
   }
 

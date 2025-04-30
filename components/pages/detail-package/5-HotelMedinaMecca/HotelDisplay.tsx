@@ -16,10 +16,19 @@ import {
 import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog'
 import { GalleryImage } from '@/constant/types/GalleryProps'
 import { Hotel, HotelDestination } from '@/constant/types/HotelProps'
+import { Package } from '@/constant/types/PackageProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useGallery } from '@/contexts/gallery-package-context'
+import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGalleryDialog } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
-import { cn, formatDistance, isEmpty } from '@/lib/utils'
+import {
+  cn,
+  formatDistance,
+  getHotelRating,
+  getTripDuration,
+  isEmpty,
+} from '@/lib/utils'
 import { X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -101,6 +110,7 @@ interface HotelDisplayProps {
   hotelImages: GalleryImage[]
   hotelType: 'mecca' | 'medina'
   title: string
+  detailData: Package
 }
 
 const HotelDisplay: React.FC<HotelDisplayProps> = ({
@@ -108,7 +118,10 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
   hotelImages,
   hotelType,
   title,
+  detailData,
 }) => {
+  const { pushEvent } = useEventTracker()
+  const { selectedVariant, getPrice } = usePackageVariant()
   const { name, rating, hotelDestination, longitude, latitude } = hotel || {}
 
   // Filter priority destinations
@@ -166,6 +179,35 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
     [closeGallery]
   )
 
+  function handlePushEvent(name: string) {
+    pushEvent({
+      name,
+      category: 'detail_package',
+      topic: 'umrah',
+      data: {
+        packageId: detailData.id,
+        packageType: detailData.packageType,
+        title: detailData.title,
+        slug: detailData.slug,
+        hotelRating: getHotelRating(detailData),
+        tripDuration: getTripDuration(detailData),
+        travelName: detailData.organizationInstance.name,
+        travelCity: detailData.organizationInstance.city.name,
+        travelCityId: detailData.organizationInstance.cityId,
+        travelProvinceName: detailData.organizationInstance.province.name,
+        travelProvinceId: detailData.organizationInstance.provinceId,
+        lastCall: selectedVariant?.isLastCall,
+        price: getPrice(),
+        organizationId: detailData.organizationId,
+        organizationInstanceId: detailData.organizationInstanceId,
+        hotelId: hotel.id,
+        hotelName: hotel.name,
+        hotelCityId: hotel.cityId,
+        hotelCityName: hotel.cityName,
+      },
+    })
+  }
+
   // If no hotel data, don't render anything
   if (!hotel) return null
   return (
@@ -184,6 +226,7 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             className="text-l-regular text-info-500 flex items-center gap-1.5 underline max-lg:text-sm max-lg:leading-5"
+            onClick={() => handlePushEvent('show_map')}
           >
             Lihat Lokasi
             <MaximizeIcon size={20} color="text-info-500" />
@@ -293,13 +336,15 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
 const HotelMecca: React.FC<{
   mecca: Hotel
   meccaHotelImages: GalleryImage[]
-}> = ({ mecca, meccaHotelImages }) => {
+  detailData: Package
+}> = ({ mecca, meccaHotelImages, detailData }) => {
   return (
     <HotelDisplay
       hotel={mecca}
       hotelImages={meccaHotelImages}
       hotelType="mecca"
       title="Hotel Makkah"
+      detailData={detailData}
     />
   )
 }
@@ -308,13 +353,15 @@ const HotelMecca: React.FC<{
 const HotelMedina: React.FC<{
   medina: Hotel
   medinaHotelImages: GalleryImage[]
-}> = ({ medina, medinaHotelImages }) => {
+  detailData: Package
+}> = ({ medina, medinaHotelImages, detailData }) => {
   return (
     <HotelDisplay
       hotel={medina}
       hotelImages={medinaHotelImages}
       hotelType="medina"
       title="Hotel Madinah"
+      detailData={detailData}
     />
   )
 }

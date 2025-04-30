@@ -2,7 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import { Package } from '@/constant/types/PackageProps'
 import { useAuth } from '@/contexts/auth/context'
+import { useEventTracker } from '@/contexts/event-tracker/context'
+import { getHotelRating, getTripDuration } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { bookingCheckout, preBookingCheckout } from '@/services/umrah-service'
 import { checkReferralCode } from '@/services/wukala-service'
@@ -18,6 +21,7 @@ export const CheckoutProvider = ({
   children: React.ReactNode
 }) => {
   const { profile } = useAuth() // Get user profile
+  const { pushEvent } = useEventTracker()
   const [token, setToken] = useState<string | null>(null)
   const [preBooking, setPreBooking] = useState<any>()
   const [paymentDetails, setPaymentDetails] = useState<any>([])
@@ -144,6 +148,9 @@ export const CheckoutProvider = ({
       const res = await bookingCheckout(payload)
       setBooking(res?.data)
       setPaymentToken(res?.data.order.paymentToken)
+      setLoading(false)
+
+      handlePushEvent('submit_booking')
 
       window.snap.pay(res?.data.order.paymentToken, {
         onSuccess: async (result: any) => {
@@ -217,6 +224,43 @@ export const CheckoutProvider = ({
     setShouldCheckPreAfterClear(true)
     // dispatch(setWukalaSetting(undefined))
   }
+
+  const handlePushEvent = (eventName: string) => {
+    pushEvent({
+      name: eventName,
+      topic: 'umrah',
+      category: 'checkout',
+      data: {
+        packageId: detailVariant?.package.id,
+        packageType: detailVariant?.package.packageType,
+        title: detailVariant?.package.title,
+        slug: detailVariant?.package.slug,
+        hotelRating: getHotelRating(detailVariant?.package),
+        tripDuration: getTripDuration({
+          packageVariant: detailVariant,
+        } as Package),
+        travelName: detailVariant?.package.organizationInstance.name,
+        travelCity: detailVariant?.package.organizationInstance.city.name,
+        travelCityId: detailVariant?.package.organizationInstance.cityId,
+        travelProvinceName:
+          detailVariant?.package.organizationInstance.province.name,
+        travelProvinceId:
+          detailVariant?.package.organizationInstance.provinceId,
+        lastCall: selectedVariant?.isLastCall,
+        price: preBooking?.subtotalPrice,
+        organizationId: detailVariant?.package.organizationId,
+        organizationInstanceId: detailVariant?.package.organizationInstanceId,
+        roomType: selectedVariant?.roomType,
+        variantId: selectedVariant?.id,
+        variantName: selectedVariant?.name,
+        departureDate: selectedVariant?.departureDate,
+        quantity: jamaahList.length,
+        referralCode,
+        netAmount: sliderValue,
+      },
+    })
+  }
+
   useEffect(() => {
     if (shouldCheckPreAfterClear && referralCode === '') {
       checkPre()
