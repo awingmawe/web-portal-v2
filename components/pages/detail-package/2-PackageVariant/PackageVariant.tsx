@@ -716,10 +716,16 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             size="lg"
             id="btn-check-quota"
             onClick={() => {
-              if (statusStock === false) {
-                setIsQuotaModalOpen(true)
+              if (token) {
+                if (statusStock === false) {
+                  setIsQuotaModalOpen(true)
+                } else {
+                  setIsQuotaModalWaiting(true)
+                }
               } else {
-                setIsQuotaModalWaiting(true)
+                window.location.href =
+                  `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
+                  `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
               }
             }}
           >
@@ -785,10 +791,16 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div
             className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors"
             onClick={() => {
-              if (statusStock === false) {
-                setIsQuotaModalOpen(true)
+              if (token) {
+                if (statusStock === false) {
+                  setIsQuotaModalOpen(true)
+                } else {
+                  setIsQuotaModalWaiting(true)
+                }
               } else {
-                setIsQuotaModalWaiting(true)
+                window.location.href =
+                  `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
+                  `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
               }
             }}
           >

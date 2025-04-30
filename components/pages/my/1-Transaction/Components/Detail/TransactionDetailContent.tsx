@@ -31,6 +31,15 @@ interface TransactionDetailContentProps {
   isFixedLoading: boolean
 }
 
+// Declare window with Snap interface
+declare global {
+  interface Window {
+    snap: {
+      pay: (token: string, options: any) => void
+    }
+  }
+}
+
 export default function TransactionDetailContent({
   isFixedLoading,
   bookingId,
@@ -39,14 +48,41 @@ export default function TransactionDetailContent({
   const [transaction, setTransaction] = useState<any>(null)
   const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
   const [manifest, setManifest] = useState<any>(null)
+  const [isSnapInitialized, setIsSnapInitialized] = useState(false)
   const router = useRouter()
   const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
+
+  // Initialize Snap
+  useEffect(() => {
+    // Check if Snap is already available
+    if (window.snap) {
+      setIsSnapInitialized(true)
+      return
+    }
+
+    // Load Snap.js
+    const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js'
+    const myMidtransClientKey = 'your-client-key' // Replace with your actual client key
+
+    const scriptTag = document.createElement('script')
+    scriptTag.src = midtransScriptUrl
+    scriptTag.setAttribute('data-client-key', myMidtransClientKey)
+    scriptTag.onload = () => {
+      setIsSnapInitialized(true)
+    }
+
+    document.body.appendChild(scriptTag)
+
+    return () => {
+      // Clean up script tag on unmount if needed
+      document.body.removeChild(scriptTag)
+    }
+  }, [])
 
   const fetchTransactions = useCallback(async () => {
     setLoading(true)
 
     try {
-      // Build query parameters
       // Fetch data
       const transactionDetail = await getTransactionDetail(bookingId)
       const paymentTransaction = await getPaymentTransaction(bookingId)
@@ -64,6 +100,7 @@ export default function TransactionDetailContent({
       setLoading(false)
     } catch (err) {
       console.error('Error fetching transactions:', err)
+      setLoading(false)
     }
   }, [bookingId])
 
@@ -89,40 +126,78 @@ export default function TransactionDetailContent({
     }
   }, [transaction])
 
-  const fetchPaymentStatement = useCallback(async (id: any) => {
-    try {
-      // Build query parameters
-      const response = await getPaymentStatement(id)
-      const payload = {
-        amount: response.remainingPayment,
+  const handleSnapPayment = useCallback(
+    (token: string) => {
+      if (!isSnapInitialized || !window.snap) {
+        console.error('Snap is not initialized yet')
+        return
       }
-      const responseNext = await postNextPayment(id, payload)
-      window.snap.pay(responseNext?.paymentToken, {
+
+      window.snap.pay(token, {
         onSuccess: async (result: any) => {
           console.log(result)
-          // router.replace('/my/transaction') // replace & refresh
           window.location.reload()
         },
         onPending: async (result: any) => {
           console.log('Payment pending', result)
           router.push(`/my/need-payment`)
-          // Add expiration check logic
         },
         onError: (error: any) => {
           console.log(error)
+          setLoading(false)
         },
         onClose: () => {
-          // router.push(`/my/need-payment`)
-          // Additional logic on close
+          setLoading(false)
         },
       })
-      console.log(responseNext)
-    } catch (err) {
-      console.error('Error fetching transactions:', err)
-    } finally {
+    },
+    [router, isSnapInitialized]
+  )
+
+  const fetchPaymentStatement = useCallback(
+    async (id: any) => {
+      if (!isSnapInitialized) {
+        console.error('Snap is not initialized yet')
+        return
+      }
+
+      setLoading(true)
+      try {
+        // Build query parameters
+        const response = await getPaymentStatement(id)
+        const payload = {
+          amount: response.remainingPayment,
+        }
+        const responseNext = await postNextPayment(id, payload)
+
+        if (responseNext?.paymentToken) {
+          handleSnapPayment(responseNext.paymentToken)
+        } else {
+          console.error('No payment token received')
+          setLoading(false)
+        }
+      } catch (err) {
+        console.error('Error processing payment:', err)
+        setLoading(false)
+      }
+    },
+    [handleSnapPayment, isSnapInitialized]
+  )
+
+  const handleDirectPayment = useCallback(() => {
+    if (!isSnapInitialized) {
+      console.error('Snap is not initialized yet')
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+    setLoading(true)
+    if (paymentTransaction?.paymentToken) {
+      handleSnapPayment(paymentTransaction.paymentToken)
+    } else {
+      console.error('No payment token available')
+      setLoading(false)
+    }
+  }, [paymentTransaction, handleSnapPayment, isSnapInitialized])
 
   return (
     <div>
@@ -292,7 +367,7 @@ export default function TransactionDetailContent({
                           <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
                             <ChecklistCircleActive />
                             <span className="text-success-700 text-s-regular ml-1">
-                              Pembayaran Lunass
+                              Pembayaran Lunas
                             </span>
                           </div>
                           <Button
@@ -332,9 +407,8 @@ export default function TransactionDetailContent({
                           </div>
                           <Button
                             className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]"
-                            onClick={() => {
-                              fetchPaymentStatement(bookingId)
-                            }}
+                            onClick={() => fetchPaymentStatement(bookingId)}
+                            disabled={!isSnapInitialized || loading}
                           >
                             <span className="font-medium">Bayar Pelunasan</span>
                           </Button>
@@ -389,15 +463,13 @@ export default function TransactionDetailContent({
                   )}
 
                 {statusTahapan === 'Waiting' && (
-                  <Link
-                    href={paymentTransaction?.paymentLink || '#'}
-                    target="_blank"
-                    className="w-full"
+                  <Button
+                    className="border-primary-500 w-full border-2"
+                    disabled={!isSnapInitialized || loading}
+                    onClick={handleDirectPayment}
                   >
-                    <Button className="border-primary-500 w-full border-2">
-                      <span className="font-medium">Bayar</span>
-                    </Button>
-                  </Link>
+                    <span className="font-medium">Bayar</span>
+                  </Button>
                 )}
                 <Link
                   href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
@@ -454,7 +526,7 @@ export default function TransactionDetailContent({
         src={SNAP_URL}
         data-client-key={MIDTRANS_CLIENT_KEY}
         strategy="lazyOnload"
-        onLoad={() => true}
+        onLoad={() => {}}
         onError={() => {}}
       />
     </div>

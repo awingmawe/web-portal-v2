@@ -65,7 +65,7 @@ export const CheckoutProvider = ({
 
   useEffect(() => {
     checkPre()
-  }, [paymentAmount, jamaahList])
+  }, [paymentAmount, jamaahList.length])
 
   const handleAddJamaah = () => {
     const newId = jamaahList.length + 1
@@ -139,12 +139,12 @@ export const CheckoutProvider = ({
         phoneNumber: item.phone,
       })),
     }
+    setLoading(true)
     try {
-      setLoading(true)
       const res = await bookingCheckout(payload)
       setBooking(res?.data)
       setPaymentToken(res?.data.order.paymentToken)
-      setLoading(false)
+
       window.snap.pay(res?.data.order.paymentToken, {
         onSuccess: async (result: any) => {
           // console.log(result)
@@ -161,8 +161,10 @@ export const CheckoutProvider = ({
           // Additional logic on close
         },
       })
+      // setLoading(false)
     } catch (error) {
       console.error(error)
+    } finally {
       setLoading(false)
     }
   }
