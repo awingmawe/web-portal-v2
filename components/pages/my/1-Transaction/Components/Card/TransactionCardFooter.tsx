@@ -79,7 +79,7 @@ export default function TransactionCardFooter({
       const responseNext = await postNextPayment(id, payload)
       window.snap.pay(responseNext?.paymentToken, {
         onSuccess: async (result: any) => {
-          console.log(result)
+          // console.log(result)
           // router.replace('/my/transaction') // replace & refresh
           window.location.reload()
         },
@@ -184,7 +184,7 @@ export default function TransactionCardFooter({
           // >
           <Button
             className="w-full px-8 py-3 text-nowrap"
-            // disabled={loadingPaymentTransaction}
+            disabled={loadingPaymentTransaction}
             onClick={() => {
               window.snap.pay(paymentTransaction?.paymentToken, {
                 onSuccess: async (result: any) => {
@@ -205,7 +205,6 @@ export default function TransactionCardFooter({
                   // Additional logic on close
                 },
               })
-              // console.log(paymentTransaction)
             }}
           >
             Bayar Uang Muka
@@ -315,15 +314,14 @@ export default function TransactionCardFooter({
             )}
           </Fragment>
         )}
-        <Script
-          src={SNAP_URL}
-          data-client-key={MIDTRANS_CLIENT_KEY}
-          strategy="lazyOnload"
-          onLoad={() => setSnapReady(true)}
-          onError={() => {}}
-        />
       </div>
-
+      <Script
+        src={SNAP_URL}
+        data-client-key={MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+        onLoad={() => setSnapReady(true)}
+        onError={() => {}}
+      />
       {open && (
         <TransactionDetail
           open={open}

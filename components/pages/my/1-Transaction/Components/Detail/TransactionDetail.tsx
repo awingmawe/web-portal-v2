@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import TransactionDetailContent from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailContent'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import {
   getManifestDetail,
   getPaymentStatement,
   getPaymentTransaction,
   getTransactionDetail,
-  postNextPayment,
 } from '@/services/umrah-service'
 import { useRouter } from 'next/navigation'
-import Script from 'next/script'
 import { useCallback, useEffect, useState } from 'react'
 
 interface TransactionDetailProps {
@@ -66,42 +63,6 @@ export function TransactionDetail({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const fetchPaymentStatement = useCallback(async (id: any) => {
-    try {
-      // Build query parameters
-      const response = await getPaymentStatement(id)
-      const payload = {
-        amount: response.remainingPayment,
-      }
-      onOpenChange(false)
-      const responseNext = await postNextPayment(id, payload)
-      window.snap.pay(responseNext?.paymentToken, {
-        onSuccess: async (result: any) => {
-          console.log(result)
-          // router.replace('/my/transaction') // replace & refresh
-          window.location.reload()
-        },
-        onPending: async (result: any) => {
-          console.log('Payment pending', result)
-          router.push(`/my/need-payment`)
-          // Add expiration check logic
-        },
-        onError: (error: any) => {
-          console.log(error)
-        },
-        onClose: () => {
-          // router.push(`/my/need-payment`)
-          // Additional logic on close
-        },
-      })
-      console.log(responseNext)
-    } catch (err) {
-      console.error('Error fetching transactions:', err)
-    } finally {
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="min-w-5xl gap-0 overflow-hidden rounded-3xl border-0 p-0">
@@ -111,16 +72,15 @@ export function TransactionDetail({
           statusTahapan={statusTahapan}
           isFixedLoading={true}
         />
-
+        {/* <Script
+          src={SNAP_URL}
+          data-client-key={MIDTRANS_CLIENT_KEY}
+          strategy="lazyOnload"
+          onLoad={() => setSnapReady(true)}
+          onError={() => {}}
+        /> */}
         <div className={`${loading ? 'block' : 'hidden'} h-[700px]`}></div>
       </DialogContent>
-      <Script
-        src={SNAP_URL}
-        data-client-key={MIDTRANS_CLIENT_KEY}
-        strategy="lazyOnload"
-        onLoad={() => setSnapReady(true)}
-        onError={() => {}}
-      />
     </Dialog>
   )
 }
