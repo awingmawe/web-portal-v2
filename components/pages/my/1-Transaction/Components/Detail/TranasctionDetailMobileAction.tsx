@@ -92,8 +92,6 @@ export const TransactionDetailMobileAction = ({
           <Button
             className="w-full py-2"
             onClick={() => {
-              console.log(bookingId)
-
               fetchPaymentStatement(bookingId)
             }}
           >

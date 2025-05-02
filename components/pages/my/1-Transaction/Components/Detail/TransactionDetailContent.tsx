@@ -29,7 +29,7 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 interface TransactionDetailContentProps {
   bookingId: string
   isFixedLoading: boolean
-  onOpenChange: any
+  onOpenChange?: any
 }
 
 // Declare window with Snap interface

@@ -8,6 +8,7 @@ export default async function TransactionDetailPage({ params }: any) {
       <TransactionDetailContent
         bookingId={awaitedParams.bookingCode}
         isFixedLoading={false}
+        // onOpenChange={() => {}}
       ></TransactionDetailContent>
     </LayoutMy>
   )
