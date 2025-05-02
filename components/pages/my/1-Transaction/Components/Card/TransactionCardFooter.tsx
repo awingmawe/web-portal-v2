@@ -52,6 +52,7 @@ export default function TransactionCardFooter({
     useState(false)
   const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
   const [snapReady, setSnapReady] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const fetcPaymentTransaction = useCallback(async () => {
     setLoadingPaymentTransaction(true)
@@ -182,29 +183,41 @@ export default function TransactionCardFooter({
           //   href={paymentTransaction ? paymentTransaction.paymentLink : ''}
           //   target="_blank"
           // >
+
           <Button
             className="w-full px-8 py-3 text-nowrap"
-            disabled={loadingPaymentTransaction}
-            onClick={() => {
-              window.snap.pay(paymentTransaction?.paymentToken, {
-                onSuccess: async (result: any) => {
-                  console.log(result)
-                  // router.replace('/my/transaction') // replace & refresh
-                  window.location.reload()
-                },
-                onPending: async (result: any) => {
-                  console.log('Payment pending', result)
-                  router.push(`/my/need-payment`)
-                  // Add expiration check logic
-                },
-                onError: (error: any) => {
-                  console.log(error)
-                },
-                onClose: () => {
-                  // router.push(`/my/need-payment`)
-                  // Additional logic on close
-                },
-              })
+            disabled={loadingPaymentTransaction || loading}
+            onClick={async () => {
+              setLoading(true)
+
+              try {
+                if (window.snap) {
+                  window.snap.pay(paymentTransaction?.paymentToken, {
+                    onSuccess: async (result: any) => {
+                      console.log(result)
+                      // router.replace('/my/transaction') // replace & refresh
+                      window.location.reload()
+                    },
+                    onPending: async (result: any) => {
+                      console.log('Payment pending', result)
+                      router.push(`/my/need-payment`)
+                      // Add expiration check logic
+                    },
+                    onError: (error: any) => {
+                      console.log(error)
+                    },
+                    onClose: () => {
+                      // router.push(`/my/need-payment`)
+                      // Additional logic on close
+                    },
+                  })
+                  setLoading(false)
+                }
+              } catch (error) {
+                console.log(error)
+              } finally {
+                setLoading(false)
+              }
             }}
           >
             Bayar Uang Muka
@@ -260,6 +273,9 @@ export default function TransactionCardFooter({
                     <Button
                       className="border-primary-500  w-full border-2 px-8 py-3 text-nowrap"
                       disabled={loadingPaymentTransaction}
+                      onClick={() => {
+                        fetchPaymentStatement(bookingId)
+                      }}
                     >
                       Bayar Pelunasan
                     </Button>
@@ -305,6 +321,9 @@ export default function TransactionCardFooter({
                       className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
                       variant={'outline'}
                       disabled={loadingPaymentTransaction}
+                      onClick={() => {
+                        fetchPaymentStatement(bookingId)
+                      }}
                     >
                       Bayar Pelunasan
                     </Button>

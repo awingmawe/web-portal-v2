@@ -29,6 +29,7 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 interface TransactionDetailContentProps {
   bookingId: string
   isFixedLoading: boolean
+  onOpenChange: any
 }
 
 // Declare window with Snap interface
@@ -43,6 +44,7 @@ declare global {
 export default function TransactionDetailContent({
   isFixedLoading,
   bookingId,
+  onOpenChange,
 }: TransactionDetailContentProps) {
   const [loading, setLoading] = useState(true)
   const [transaction, setTransaction] = useState<any>(null)
@@ -140,7 +142,7 @@ export default function TransactionDetailContent({
         },
         onPending: async (result: any) => {
           console.log('Payment pending', result)
-          router.push(`/my/need-payment`)
+          window.location.reload()
         },
         onError: (error: any) => {
           console.log(error)
@@ -171,6 +173,7 @@ export default function TransactionDetailContent({
         const responseNext = await postNextPayment(id, payload)
 
         if (responseNext?.paymentToken) {
+          onOpenChange()
           handleSnapPayment(responseNext.paymentToken)
         } else {
           console.error('No payment token received')
@@ -191,6 +194,7 @@ export default function TransactionDetailContent({
     }
 
     setLoading(true)
+    onOpenChange()
     if (paymentTransaction?.paymentToken) {
       handleSnapPayment(paymentTransaction.paymentToken)
     } else {
@@ -519,6 +523,7 @@ export default function TransactionDetailContent({
 
       <TransactionDetailMobileAction
         bookingCode={transaction?.bookingCode}
+        bookingId={bookingId}
         statusTahapan={statusTahapan}
       />
 

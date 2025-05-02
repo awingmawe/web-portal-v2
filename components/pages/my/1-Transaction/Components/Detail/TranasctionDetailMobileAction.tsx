@@ -6,15 +6,52 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
+import { useCallback } from 'react'
 export const TransactionDetailMobileAction = ({
   bookingCode,
   statusTahapan,
+  bookingId,
 }: {
   bookingCode: string
   statusTahapan: string
+  bookingId: any
 }) => {
+  const fetchPaymentStatement = useCallback(async (id: any) => {
+    try {
+      // Build query parameters
+      const response = await getPaymentStatement(id)
+      const payload = {
+        amount: response.remainingPayment,
+      }
+      const responseNext = await postNextPayment(id, payload)
+      window.snap.pay(responseNext?.paymentToken, {
+        onSuccess: async (result: any) => {
+          console.log(result)
+          // router.replace('/my/transaction') // replace & refresh
+          window.location.reload()
+        },
+        onPending: async (result: any) => {
+          console.log('Payment pending', result)
+          // router.push(`/my/need-payment`)
+          // Add expiration check logic
+        },
+        onError: (error: any) => {
+          console.log(error)
+        },
+        onClose: () => {
+          // router.push(`/my/need-payment`)
+          // Additional logic on close
+        },
+      })
+      // console.log(responseNext)
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    } finally {
+    }
+  }, [])
   return (
     <div className="hidden max-lg:block">
       {statusTahapan == 'Akan Datang' && (
@@ -52,7 +89,16 @@ export const TransactionDetailMobileAction = ({
             </DrawerContent>
           </Drawer>
 
-          <Button className="w-full py-2">Bayar Pelunasan</Button>
+          <Button
+            className="w-full py-2"
+            onClick={() => {
+              console.log(bookingId)
+
+              fetchPaymentStatement(bookingId)
+            }}
+          >
+            Bayar Pelunasan
+          </Button>
           <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
         </div>
       )}
