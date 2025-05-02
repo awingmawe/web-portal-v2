@@ -1,12 +1,10 @@
+import MyProfilePage from '@/components/pages/my/4-Profile/page'
 import LayoutMy from '@/components/pages/my/Layout'
-import { Fragment } from 'react'
 
 export default function MyPage() {
   return (
     <LayoutMy>
-      <Fragment>
-        <div>Profile</div>
-      </Fragment>
+      <MyProfilePage />
     </LayoutMy>
   )
 }
