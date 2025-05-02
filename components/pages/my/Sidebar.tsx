@@ -168,6 +168,7 @@ export const Sidebar = () => {
           <MenuItem
             icon={<SettingIcon />}
             label="Pengaturan Akun"
+            href="/my/profile"
             isActive={pathname === '/my/profile'}
             loading={profile ? false : true}
           />
