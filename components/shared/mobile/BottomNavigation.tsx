@@ -3,7 +3,7 @@
 import { HeartIcon, HeartIconFilled } from '@/components/icons/heart'
 import { HomeIcon, HomeIconFilled } from '@/components/icons/home'
 import { ReceiptIcon, ReceiptIconFilled } from '@/components/icons/receipt'
-import { UserIconCircle, UserIconCircleFill } from '@/components/icons/user'
+import { IconUserFilled, UserIconCircle } from '@/components/icons/user'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -28,7 +28,7 @@ export default function BottomNavigation() {
     {
       name: 'Akun',
       icon: UserIconCircle,
-      activeIcon: UserIconCircleFill,
+      activeIcon: IconUserFilled,
       path: `/my/profile`,
     },
   ]

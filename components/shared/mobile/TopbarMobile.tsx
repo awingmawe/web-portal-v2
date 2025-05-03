@@ -152,7 +152,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
         case 'transactionTopbar':
         case 'title':
-          return <div className="flex-1 text-center font-medium">{title}</div>
+          return <div className="text-l-medium flex-1 text-center">{title}</div>
 
         case 'plain':
         case 'transparent':
@@ -196,6 +196,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       // Using switch case to handle different variants
       switch (variant) {
         case 'transactionTopbar':
+        case 'title':
         case 'filter':
           return ''
         case 'transparent':
@@ -204,7 +205,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           }`
         case 'search':
           return 'bg-neutral-0 rounded-[20px] p-1'
-        case 'title':
         case 'plain':
         default:
           return `bg-neutral-0 rounded-[20px] p-1 ${
@@ -238,6 +238,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             : 'border-b-transparent bg-transparent'
           break
 
+        case 'title':
         case 'filter':
           positionClasses =
             'max-lg:bg-primary-500 absolute h-[100px] -top-[22px]'
@@ -247,7 +248,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           positionClasses = 'absolute -top-13.5'
           backgroundClasses = ''
           break
-        case 'title':
         case 'plain':
         default:
           positionClasses = 'fixed top-3.5'
@@ -273,11 +273,11 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
     return (
       <div className={containerClasses}>
-        {variant === 'filter' && (
+        {(variant === 'filter' || variant === 'title') && (
           <>
             {/* Circle Background for mobile */}
             <Image
-              src="images/circle-1.svg"
+              src="/images/circle-1.svg"
               alt="bg-search"
               width={0}
               height={0}
@@ -285,7 +285,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               className="absolute right-0 bottom-0 -z-1 h-auto w-1/4 lg:hidden"
             />
             <Image
-              src="images/circle-2.svg"
+              src="/images/circle-2.svg"
               alt="bg-search"
               width={0}
               height={0}

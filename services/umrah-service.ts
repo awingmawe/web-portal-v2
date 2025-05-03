@@ -1,4 +1,9 @@
-import { api, apiWithAuth } from '@/services/common/http'
+import {
+  api,
+  apiWithAuth,
+  createFormData,
+  createServerApiClient,
+} from '@/services/common/http'
 import { Banner } from '@/constant/types/BannerProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import {
@@ -14,6 +19,13 @@ import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { PaymentStatement } from '@/constant/types/PaymentStatement'
 import { PaymentTransaction } from '@/constant/types/PaymentTransaction'
+import {
+  Attachment,
+  ManifestPayload,
+  ManifestResult,
+  ManifestUser,
+} from '@/constant/types/ManifestProps'
+import { AxiosProgressEvent } from 'axios'
 
 export async function getBanner(
   query: GetListQuery
@@ -204,16 +216,75 @@ export async function checkAvailibility(payload: any) {
   }
 }
 
+// Manifest Fetch
 export async function getManifestDetail(
-  query: GetListQuery
-): Promise<GenericResponse<Transaction>> {
+  query: GetListQuery,
+  token?: string
+): Promise<GenericResponse<ManifestUser>> {
   try {
-    const response = await apiWithAuth.get(
+    // Use token if provided (server-side), otherwise use existing client (client-side)
+    const client = token ? createServerApiClient(token) : apiWithAuth
+
+    const response = await client.get(
       `/umrah/v1/booking-manifest?${qs.stringify(query)}`
     )
     return response.data
   } catch (error) {
-    console.error('Error fetching transaction umrah:', error)
+    console.error('Error fetching manifest detail:', error)
+    throw error
+  }
+}
+
+export async function getManifestDetailById(id: number): Promise<ManifestUser> {
+  try {
+    const response = await apiWithAuth.get(`/umrah/v1/booking-manifest/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction detail:', error)
+    throw error
+  }
+}
+
+export async function updateDataManifest(
+  id: number,
+  payload: ManifestPayload
+): Promise<ManifestResult> {
+  try {
+    const response = await apiWithAuth.put(
+      `/umrah/v1/booking-manifest/${id}`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction detail:', error)
+    throw error
+  }
+}
+
+export async function uploadDokumen(
+  file: File,
+  type: string,
+  bookingManifestId: number,
+  onUploadProgress?: (progressEvent: ProgressEvent) => void
+): Promise<Attachment> {
+  const formData = createFormData([{ key: 'file', file }], {
+    type,
+    bookingManifestId: bookingManifestId.toString(),
+  })
+
+  try {
+    const response = await apiWithAuth.post<Attachment>(
+      '/umrah/v1/booking-manifest-attachment',
+      formData,
+      {
+        onUploadProgress: onUploadProgress as unknown as (
+          progressEvent: AxiosProgressEvent
+        ) => void,
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error uploading document:', error)
     throw error
   }
 }
