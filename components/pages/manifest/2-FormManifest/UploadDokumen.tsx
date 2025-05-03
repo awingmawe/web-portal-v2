@@ -6,7 +6,7 @@ import { UploadDokumenIcon, UploadIconPrimary } from '@/components/icons/upload'
 import { Button } from '@/components/ui/button'
 import { FormLabel } from '@/components/ui/form'
 import { cn } from '@/lib/utils'
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 interface FileUploadProps {
   label: string
@@ -15,6 +15,7 @@ interface FileUploadProps {
   required?: boolean
   onChange?: (file: File | null) => void
   className?: string
+  value?: File | string | null
 }
 
 export function FileUpload({
@@ -24,9 +25,14 @@ export function FileUpload({
   required = false,
   onChange,
   className,
+  value,
 }: FileUploadProps) {
-  const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | string | null>(value ?? null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  React.useEffect(() => {
+    setFile(value || null)
+  }, [value])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -114,7 +120,7 @@ export function FileUpload({
           <div className="flex w-full items-center justify-start gap-1">
             <UploadIconPrimary />
             <p className="text-m-medium text-center text-neutral-900">
-              {file.name}
+              {file instanceof File ? file.name : label}
             </p>
           </div>
         ) : (
