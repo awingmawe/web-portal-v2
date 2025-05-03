@@ -146,12 +146,12 @@ export default function TransactionCardFooter({
                 </Button>
               )
             )}
-            {!isCompletedManifest ||
-              (statusTahapanDetail !== 'Menunggu Konfirmasi' && (
+            {!isCompletedManifest &&
+              statusTahapanDetail !== 'Menunggu Konfirmasi' && (
                 <Button className="w-full px-4 py-3 text-nowrap">
                   Lengkapi Data Jemaah
                 </Button>
-              ))}
+              )}
             {(status === 'approved' || status === 'waiting-approval') && (
               <Popover>
                 <PopoverTrigger asChild>
