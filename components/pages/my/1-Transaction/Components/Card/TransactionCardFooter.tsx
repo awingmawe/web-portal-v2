@@ -146,12 +146,13 @@ export default function TransactionCardFooter({
                 </Button>
               )
             )}
-            {!isCompletedManifest &&
-              statusTahapanDetail !== 'Menunggu Konfirmasi' && (
+            {!isCompletedManifest && (
+              <Link href={`/manifest/${bookingId}`}>
                 <Button className="w-full px-4 py-3 text-nowrap">
                   Lengkapi Data Jemaah
                 </Button>
-              )}
+              </Link>
+            )}
             {(status === 'approved' || status === 'waiting-approval') && (
               <Popover>
                 <PopoverTrigger asChild>
@@ -295,12 +296,11 @@ export default function TransactionCardFooter({
               <Fragment>
                 {isPaidOff ? (
                   <Fragment>
-                    <Button
-                      className="w-full px-8 py-3 text-nowrap "
-                      disabled={loadingPaymentTransaction}
-                    >
-                      Lengkapi Data Jemaah
-                    </Button>
+                    <Link href={`/manifest/${bookingId}`}>
+                      <Button className="w-full px-8 py-3 text-nowrap">
+                        Lengkapi Data Jemaah
+                      </Button>
+                    </Link>
                     <Button
                       className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200 "
                       variant={'outline'}
@@ -312,12 +312,11 @@ export default function TransactionCardFooter({
                   </Fragment>
                 ) : (
                   <Fragment>
-                    <Button
-                      className="w-full px-8 py-3 text-nowrap "
-                      disabled={loadingPaymentTransaction}
-                    >
-                      Lengkapi Data Jemaah
-                    </Button>
+                    <Link href={`/manifest/${bookingId}`}>
+                      <Button className="w-full px-8 py-3 text-nowrap">
+                        Lengkapi Data Jemaah
+                      </Button>
+                    </Link>
                     <Button
                       className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
                       variant={'outline'}

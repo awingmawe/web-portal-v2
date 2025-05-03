@@ -43,10 +43,10 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
 
   // State for file uploads (separate from form)
   const [uploadedFiles, setUploadedFiles] = useState({
-    kk: null as File | null,
-    ktp: null as File | null,
-    passport: null as File | null,
-    userPhoto: null as File | null,
+    kk: null as File | any | null,
+    ktp: null as File | any | null,
+    passport: null as File | any | null,
+    userPhoto: null as File | any | null,
   })
 
   const beforeUnloadHandler = (event: {
@@ -93,23 +93,51 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
 
       // Reset form with manifest values
       form.reset(manifestValues)
+
+      if (
+        manifestActive.attachment &&
+        Array.isArray(manifestActive.attachment) &&
+        manifestActive.attachment.length > 0
+      ) {
+        // Get all attachments
+        const kkAttachment = manifestActive.attachment.find(
+          (attachment) => attachment.type === 'kk'
+        )
+        const ktpAttachment = manifestActive.attachment.find(
+          (attachment) => attachment.type === 'ktp'
+        )
+        const passportAttachment = manifestActive.attachment.find(
+          (attachment) => attachment.type === 'passport'
+        )
+        const userPhotoAttachment = manifestActive.attachment.find(
+          (attachment) => attachment.type === 'user-photo'
+        )
+
+        // Update state with found attachments
+        setUploadedFiles({
+          kk: kkAttachment ? kkAttachment.src : null,
+          ktp: ktpAttachment ? ktpAttachment.src : null,
+          passport: passportAttachment ? passportAttachment.src : null,
+          userPhoto: userPhotoAttachment ? userPhotoAttachment.src : null,
+        })
+      }
     }
   }, [manifestActive, form])
 
   // File change handlers
-  const handleKKChange = (file: File | null) => {
+  const handleKKChange = (file: File | string | null) => {
     setUploadedFiles((prev) => ({ ...prev, kk: file }))
   }
 
-  const handleKTPChange = (file: File | null) => {
+  const handleKTPChange = (file: File | string | null) => {
     setUploadedFiles((prev) => ({ ...prev, ktp: file }))
   }
 
-  const handlePassportChange = (file: File | null) => {
+  const handlePassportChange = (file: File | string | null) => {
     setUploadedFiles((prev) => ({ ...prev, passport: file }))
   }
 
-  const handleUserPhotoChange = (file: File | null) => {
+  const handleUserPhotoChange = (file: File | string | null) => {
     setUploadedFiles((prev) => ({ ...prev, userPhoto: file }))
   }
 
@@ -462,6 +490,7 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
             label="Foto Paspor"
             required
             onChange={handlePassportChange}
+            value={uploadedFiles.passport}
           />
 
           <div>
@@ -486,12 +515,23 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
           <FileUpload
             label="Pas Foto Latar Belakang Putih"
             required
+            value={uploadedFiles.userPhoto}
             onChange={handleUserPhotoChange}
           />
           {/* Pas Foto Upload */}
-          <FileUpload label="Foto KTP" required onChange={handleKTPChange} />
+          <FileUpload
+            label="Foto KTP"
+            required
+            onChange={handleKTPChange}
+            value={uploadedFiles.ktp}
+          />
           {/* Pas Foto Upload */}
-          <FileUpload label="Foto KK" required onChange={handleKKChange} />
+          <FileUpload
+            label="Foto KK"
+            required
+            onChange={handleKKChange}
+            value={uploadedFiles.kk}
+          />
 
           <div>
             <p className="text-s-regular">Catatan pengambilan foto:</p>
