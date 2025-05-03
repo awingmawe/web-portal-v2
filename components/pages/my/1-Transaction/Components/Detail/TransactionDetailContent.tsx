@@ -361,7 +361,8 @@ export default function TransactionDetailContent({
             {/* Right Sidebar */}
             {statusTahapan !== 'Selesai' && (
               <div className="flex flex-col gap-3 p-4 max-lg:hidden">
-                {transaction?.status.slug !== 'waiting-down-payment' &&
+                {transaction?.status.slug !== 'waiting-approval' &&
+                  transaction?.status.slug !== 'waiting-down-payment' &&
                   transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' && (
