@@ -197,7 +197,6 @@ export function EventTrackerProvider({
   }, [])
 
   useEffect(() => {
-    console.log(pathname, !firstLoad.current, window.pushEventUnmount)
     if (!firstLoad.current && window.pushEventUnmount) {
       window.pushEventUnmount()
     }

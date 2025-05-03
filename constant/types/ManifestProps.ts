@@ -64,6 +64,33 @@ interface ManifestUser {
   attachment: Attachment[]
 }
 
+interface ManifestPayload {
+  bookingId: number
+  name: string
+  phoneNumber: string
+  email: string | null
+  nik: string | null
+  born: string | null
+  placeBorn: string | null
+  address: string | null
+  gender: string | null
+  hometown: string | null
+  passportNumber: string | null
+  passportExpiredAt: string | null
+  medicalHistory: string | null
+}
+
+interface ManifestResult {
+  updated: ManifestUser
+}
+
 type ManifestUsers = ManifestUser[]
 
-export type { ManifestUser, Booking, Attachment, ManifestUsers }
+export type {
+  ManifestUser,
+  Booking,
+  Attachment,
+  ManifestUsers,
+  ManifestPayload,
+  ManifestResult,
+}

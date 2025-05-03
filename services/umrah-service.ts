@@ -19,7 +19,12 @@ import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { PaymentStatement } from '@/constant/types/PaymentStatement'
 import { PaymentTransaction } from '@/constant/types/PaymentTransaction'
-import { Attachment, ManifestUser } from '@/constant/types/ManifestProps'
+import {
+  Attachment,
+  ManifestPayload,
+  ManifestResult,
+  ManifestUser,
+} from '@/constant/types/ManifestProps'
 import { AxiosProgressEvent } from 'axios'
 
 export async function getBanner(
@@ -225,7 +230,7 @@ export async function getManifestDetail(
     )
     return response.data
   } catch (error) {
-    console.error('Error fetching transaction umrah:', error)
+    console.error('Error fetching manifest detail:', error)
     throw error
   }
 }
@@ -240,9 +245,15 @@ export async function getManifestDetailById(id: number): Promise<ManifestUser> {
   }
 }
 
-export async function updateDateManifest(id: number): Promise<ManifestUser> {
+export async function updateDataManifest(
+  id: number,
+  payload: ManifestPayload
+): Promise<ManifestResult> {
   try {
-    const response = await apiWithAuth.put(`/umrah/v1/booking-manifest/${id}`)
+    const response = await apiWithAuth.put(
+      `/umrah/v1/booking-manifest/${id}`,
+      payload
+    )
     return response.data
   } catch (error) {
     console.error('Error fetching transaction detail:', error)

@@ -1,23 +1,21 @@
 import { z } from 'zod'
 
 export const defaultValueManifest = {
-  bookingId: 0,
   name: '',
   phoneNumber: '',
-  email: null,
-  nik: null,
-  born: null,
-  placeBorn: null,
-  address: null,
-  gender: null,
-  hometown: null,
-  passportNumber: null,
-  passportExpiredAt: null,
-  medicalHistory: null,
+  email: '',
+  nik: '',
+  born: '',
+  placeBorn: '',
+  address: '',
+  gender: 'male',
+  hometown: '',
+  passportNumber: '',
+  passportExpiredAt: '',
+  medicalHistory: '',
 }
 
 export const formSchemaManifest = z.object({
-  bookingId: z.number(),
   name: z
     .string()
     .trim()
@@ -31,33 +29,35 @@ export const formSchemaManifest = z.object({
     .string()
     .trim()
     .regex(/^\d+$/, {
-      message: 'Phone number must contain only digits!',
+      message: 'Nomor telepon hanya boleh berisi angka!',
+    })
+    .min(1, {
+      message: 'Nomor telepon harus diisi!',
     })
     .min(10, {
-      message: 'Phone number must be at least 10 characters.',
+      message: 'Nomor telepon minimal 10 digit!',
     }),
-  email: z
-    .string()
-    .email({
-      message: 'Invalid email address.',
-    })
-    .nullable(),
+  email: z.string().min(1, { message: 'Email harus diisi!' }).email({
+    message: 'Format email tidak valid!',
+  }),
   nik: z
     .string()
-    .min(16, {
-      message: 'NIK must be 16 characters.',
+    .min(1, {
+      message: 'NIK harus diisi!',
     })
     .max(16, {
-      message: 'NIK must be 16 characters.',
+      message: 'NIK harus 16 digit!',
     })
-    .nullable()
-    .optional(),
-  born: z.string().nullable().optional(),
+    .regex(/^\d+$/, {
+      message: 'NIK hanya boleh berisi angka!',
+    }),
+  born: z.string().min(1, { message: 'Tanggal lahir harus diisi!' }),
   placeBorn: z.string().nullable().optional(),
   address: z.string().nullable().optional(),
-  gender: z.string().nullable().optional(),
-  hometown: z.string().nullable().optional(),
-  passportNumber: z.string().nullable().optional(),
-  passportExpiredAt: z.string().nullable().optional(),
-  medicalHistory: z.string().nullable().optional(),
+  gender: z.string().min(1, { message: 'Jenis kelamin harus diisi!' }),
+  hometown: z.string().min(1, { message: 'Kota asal harus diisi!' }),
+  passportNumber: z.string().min(1, { message: 'Nomor paspor harus diisi!' }),
+  passportExpiredAt: z
+    .string()
+    .min(1, { message: 'Masa berlaku paspor harus diisi!' }),
 })
