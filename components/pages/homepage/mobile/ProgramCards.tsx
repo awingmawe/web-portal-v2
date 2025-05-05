@@ -86,7 +86,7 @@ const ProgramCards: React.FC = () => {
     },
     {
       id: 'halal-trip',
-      title: 'Halal Trip',
+      title: 'Muslim Trip',
       link: '/halal-trip',
       comingSoon: true,
       background:

@@ -94,3 +94,15 @@ export async function getGalleryHomepage(
     throw error
   }
 }
+
+export async function getLegalSyarat(): Promise<GenericResponse<Airline>> {
+  try {
+    const response = await api.get(
+      `/public/general/v1/legal?slug:likeLower=syarat-ketentuan`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching airline:', error)
+    throw error
+  }
+}

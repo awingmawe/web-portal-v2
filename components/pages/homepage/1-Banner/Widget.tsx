@@ -99,7 +99,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
                 { id: 'haji', label: 'Haji', icon: <MapPin size={20} /> },
                 {
                   id: 'halal-trip',
-                  label: 'Halal Trip',
+                  label: 'Muslim Trip',
                   icon: <MapPin size={20} />,
                 },
               ]}

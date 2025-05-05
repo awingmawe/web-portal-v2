@@ -1,10 +1,16 @@
 'use client'
 
+import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
+import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import { useCheckout } from '@/contexts/checkout-context'
 import { ArrowLeft, CreditCard, PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const CheckoutPage = () => {
+  const [isOpenModal, setOpenModal] = useState(false)
+  const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
   const {
     detailVariant,
     selectedVariant,
@@ -38,7 +44,11 @@ const CheckoutPage = () => {
     rawInputValue,
     setRawInputValue,
     handleSliderChange,
+    dataSK,
+    parsedContent,
+    dataRefundPolicy,
   } = useCheckout()
+  const router = useRouter()
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -47,7 +57,16 @@ const CheckoutPage = () => {
         {/* Back button */}
         <div className="mb-4">
           <button className="flex items-center text-gray-800">
-            <ArrowLeft size={20} className="mr-2" />
+            <a
+              onClick={(e) => {
+                e.preventDefault()
+                router.back()
+              }}
+              className="flex cursor-pointer items-center text-blue-600 hover:underline"
+            >
+              <ArrowLeft size={20} className="mr-2" />
+            </a>
+
             <span className="font-medium">Konfirmasi Pembelian Paket</span>
           </button>
         </div>
@@ -410,7 +429,7 @@ const CheckoutPage = () => {
                     disabled={wukalaSetting}
                   />
                   <button
-                    className="rounded-full bg-[#FFC100] px-6 py-2 text-sm font-semibold text-[#30302F] shadow-sm transition hover:opacity-90"
+                    className="cursor-pointer rounded-full bg-[#FFC100] px-6 py-2 text-sm font-semibold text-[#30302F] shadow-sm transition hover:opacity-90"
                     onClick={
                       wukalaSetting
                         ? handleRemoveReferralCode
@@ -445,9 +464,31 @@ const CheckoutPage = () => {
                 />
                 <span className="text-sm text-gray-600">
                   Dengan memesan, anda menyetujui{' '}
-                  <span className="text-blue-500">Syarat & Ketentuan</span>,{' '}
-                  <span className="text-blue-500">Pengembalian Dana</span>, dan{' '}
-                  <span className="text-blue-500">Persetujuan Pengguna</span>{' '}
+                  {/* <Link
+                    href="/legal/syarat-ketentuan"
+                    className="text-m-regular text-neutral-900"
+                  > */}{' '}
+                  <span
+                    className="cursor-pointer text-blue-500"
+                    onClick={() => {
+                      setOpenModal(true)
+                    }}
+                  >
+                    Syarat & Ketentuan
+                  </span>
+                  , {/* </Link> */}
+                  <span
+                    className="cursor-pointer text-blue-500"
+                    onClick={() => {
+                      setOpenModalPengembalian(true)
+                    }}
+                  >
+                    Pengembalian Dana
+                  </span>
+                  , dan{' '}
+                  <span className="cursor-pointer text-blue-500">
+                    Persetujuan Pengguna
+                  </span>{' '}
                   yang berlaku.
                 </span>
               </div>
@@ -573,6 +614,17 @@ const CheckoutPage = () => {
           </div>
         </div>
       </main>
+      <ModalCheckout
+        open={isOpenModal}
+        onOpenChange={setOpenModal}
+        dataSK={dataSK}
+      />
+      <ModalPengembalianDana
+        open={isOpenModalPengembalian}
+        onOpenChange={setOpenModalPengembalian}
+        parsedContent={parsedContent}
+        dataRefundPolicy={dataRefundPolicy}
+      />
     </div>
   )
 }
