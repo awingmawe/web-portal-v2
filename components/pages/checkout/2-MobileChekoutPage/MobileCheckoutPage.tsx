@@ -6,6 +6,7 @@ import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengem
 import { useCheckout } from '@/contexts/checkout-context'
 import { ArrowLeft, Check, Plus } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 const MobileCheckoutPage = ({}) => {
@@ -55,14 +56,20 @@ const MobileCheckoutPage = ({}) => {
     parsedContent,
     dataRefundPolicy,
   } = useCheckout()
-
+  const router = useRouter()
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
       <header className="sticky top-0 z-10 flex h-14 items-center border-b bg-white px-4">
-        <button className="mr-3">
+        <a
+          className="mr-3"
+          onClick={(e) => {
+            e.preventDefault()
+            router.back()
+          }}
+        >
           <ArrowLeft size={20} />
-        </button>
+        </a>
         <h1 className="text-base font-medium">Checkout</h1>
       </header>
 
