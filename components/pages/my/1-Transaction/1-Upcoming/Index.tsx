@@ -106,9 +106,6 @@ export default function TransactionUpcoming() {
 
       if (lg && currentPage > 1) {
         setTransactions((prev) => [...prev, ...response.results])
-        router.push(
-          `/my/transaction?type=upcoming&query=${searchQuery}&status=${statusFilterParams}&date=${rangeFilter}`
-        )
       } else {
         setTransactions(response.results)
         router.push(
