@@ -58,10 +58,6 @@ export default function TransactionCancelled() {
         ? `${dateRange?.from.toISOString()} - ${dateRange?.to.toISOString()}`
         : ''
 
-    router.push(
-      `/my/transaction?type=cancelled&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
-    )
-
     try {
       // Build query parameters
       const queryParams: GetListQuery = {
@@ -90,6 +86,9 @@ export default function TransactionCancelled() {
         setTransactions((prev) => [...prev, ...response.results])
       } else {
         setTransactions(response.results)
+        router.push(
+          `/my/transaction?type=cancelled&page=${currentPage}&query=${searchQuery}&date=${rangeFilter}`
+        )
       }
 
       setTotalPages(Math.ceil(response.total / 10))
