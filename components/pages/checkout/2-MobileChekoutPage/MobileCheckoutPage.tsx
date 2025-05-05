@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
+import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import { useCheckout } from '@/contexts/checkout-context'
 import { ArrowLeft, Check, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
 const MobileCheckoutPage = ({}) => {
-  const [usePoints, setUsePoints] = useState(false)
+  const [isOpenModal, setOpenModal] = useState(false)
+  const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
 
   const {
     token,
@@ -48,6 +51,9 @@ const MobileCheckoutPage = ({}) => {
     rawInputValue,
     setRawInputValue,
     handleSliderChange,
+    dataSK,
+    parsedContent,
+    dataRefundPolicy,
   } = useCheckout()
 
   return (
@@ -404,7 +410,7 @@ const MobileCheckoutPage = ({}) => {
                 onChange={(e) => setReferralCode(e.target.value)}
               />
               <button
-                className="rounded-r-lg bg-yellow-400 px-4 py-2 text-sm font-medium"
+                className="cursor-pointer rounded-r-lg bg-yellow-400 px-4 py-2 text-sm font-medium"
                 onClick={
                   wukalaSetting ? handleRemoveReferralCode : handleCheckReferral
                 }
@@ -485,10 +491,29 @@ const MobileCheckoutPage = ({}) => {
             />
             <p>
               Dengan meneruskan, saya menyetujui{' '}
-              <span className="text-blue-500">
-                Syarat & Ketentuan Pengembangan Dana
+              {/* <Link
+                href="/legal/syarat-ketentuan"
+                className="text-m-regular text-neutral-900"
+              > */}
+              <span
+                className="cursor-pointer text-blue-500"
+                onClick={() => {
+                  setOpenModal(true)
+                }}
+              >
+                Syarat & Ketentuan
               </span>
-              , dan{' '}
+              {/* </Link> */},{' '}
+              <span
+                className="cursor-pointer text-blue-500"
+                onClick={() => {
+                  setOpenModalPengembalian(true)
+                }}
+              >
+                {' '}
+                Pengembangan Dana
+              </span>
+              , dan
               <span className="text-blue-500">
                 Persetujuan Pengguna yang berlaku.
               </span>
@@ -529,6 +554,17 @@ const MobileCheckoutPage = ({}) => {
           Lanjutkan Pembayaran
         </button>
       </div>
+      <ModalCheckout
+        open={isOpenModal}
+        onOpenChange={setOpenModal}
+        dataSK={dataSK}
+      />
+      <ModalPengembalianDana
+        open={isOpenModalPengembalian}
+        onOpenChange={setOpenModalPengembalian}
+        parsedContent={parsedContent}
+        dataRefundPolicy={dataRefundPolicy}
+      />
     </div>
   )
 }

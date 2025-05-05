@@ -31,3 +31,12 @@ export async function getKota(
     throw error
   }
 }
+export async function checkRefundPolicy(id: any) {
+  try {
+    const response = await api.get(`/public/identity/refund-policy/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching kota:', error)
+    throw error
+  }
+}

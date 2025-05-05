@@ -7,6 +7,8 @@ import { useAuth } from '@/contexts/auth/context'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { getHotelRating, getTripDuration } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
+import { getLegalSyarat } from '@/services/general-service'
+import { checkRefundPolicy } from '@/services/identity-service'
 import { bookingCheckout, preBookingCheckout } from '@/services/umrah-service'
 import { checkReferralCode } from '@/services/wukala-service'
 import cookie from 'cookie-cutter'
@@ -41,6 +43,10 @@ export const CheckoutProvider = ({
   const [paymentToken, setPaymentToken] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [booking, setBooking] = useState<any>()
+  const [dataSK, setDataSk] = useState<any>()
+  const [dataRefundPolicy, setDataRefundPolicy] = useState<any>()
+
+  const [parsedContent, setParsedContent] = useState<any>(null)
   const [shouldCheckPreAfterClear, setShouldCheckPreAfterClear] =
     useState(false)
 
@@ -317,6 +323,41 @@ export const CheckoutProvider = ({
       }
     }
   }, [])
+  const getLegal = async () => {
+    try {
+      const res = await getLegalSyarat()
+      // console.log(res.results[0])/
+      setDataSk(res.results[0])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getLegal()
+    if (detailVariant) {
+      getRefundPolicy()
+    }
+  }, [detailVariant])
+
+  const getRefundPolicy = async () => {
+    try {
+      // console.log(detailVariant)
+
+      const response = await checkRefundPolicy(
+        detailVariant.package?.organizationInstance?.id
+      )
+      // console.log(response)
+      setDataRefundPolicy(response)
+      const parsedContent = JSON.parse(response.kondisi)
+      setParsedContent(parsedContent)
+      // if (response.data) {
+
+      // }
+    } catch (error) {
+      console.error(error)
+    }
+  }
   const value = {
     token,
     preBooking,
@@ -360,6 +401,9 @@ export const CheckoutProvider = ({
     rawInputValue,
     setRawInputValue,
     handleSliderChange,
+    dataSK,
+    parsedContent,
+    dataRefundPolicy,
   }
 
   return (
