@@ -74,7 +74,9 @@ export default function List({
                               ? 'Dibatalkan Travel'
                               : transaction.status.slug == 'canceled-by-user'
                                 ? 'Dibatalkan Jemaah'
-                                : ''
+                                : transaction.status.slug == 'expired'
+                                  ? 'Dibatalkan Sistem'
+                                  : ''
                         }
                         statusTahapanDetail={'Dibatalkan'}
                         noHeader
