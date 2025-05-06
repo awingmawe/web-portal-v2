@@ -16,9 +16,8 @@ export function useInfiniteScroll() {
 
   const fetchInitialPackages = useCallback(
     async (params: any) => {
+      setLoading(true)
       try {
-        setLoading(true)
-
         // Fetch data using the hook
         const data = await fetchPackage(params)
         const mappedData = mapProductsToCardData(data)

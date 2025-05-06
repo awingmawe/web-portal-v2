@@ -266,11 +266,14 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
               align: 'start',
               loop: true,
             }}
-            className="h-[476] w-full max-lg:h-[193]"
+            className="h-auto w-full"
           >
-            <CarouselContent>
+            <CarouselContent className="h-full">
               {hotelImages.map((image, index) => (
-                <CarouselItem key={`hotel-${hotelType}-image-${index}`}>
+                <CarouselItem
+                  key={`hotel-${hotelType}-image-${index}`}
+                  className="h-full"
+                >
                   <HotelImage
                     image={image}
                     index={index}

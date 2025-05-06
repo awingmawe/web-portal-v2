@@ -43,6 +43,7 @@ export default async function FormManifest({ params }: { params: any }) {
           <div className="relative z-2 col-span-4 max-lg:col-span-12">
             <DaftarJemaah dataJemaah={dataDetailManifest.results} />
 
+            {/* For Mobile View */}
             <DrawerDaftarJemaah dataJemaah={dataDetailManifest.results} />
           </div>
           <div className="relative z-2 col-span-8 max-lg:col-span-12">

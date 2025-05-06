@@ -16,16 +16,19 @@ export interface CheckboxProps
     Omit<VariantProps<typeof checkboxVariants>, 'variant'> {
   label?: string
   description?: string
+  border?: boolean
 }
 
 const Checkbox = React.forwardRef<
   React.ComponentRef<typeof CheckboxPrimitive.Root>,
   CheckboxProps
->(({ className, label, description, ...props }, ref) => {
+>(({ className, label, description, border, ...props }, ref) => {
   const id = React.useId()
 
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className={`flex items-center gap-2 ${border && 'border-b-1 border-b-neutral-100'} pb-2`}
+    >
       <CheckboxPrimitive.Root
         id={props.id || id}
         data-slot="checkbox"
@@ -45,7 +48,7 @@ const Checkbox = React.forwardRef<
       </CheckboxPrimitive.Root>
 
       {(label || description) && (
-        <div className="flex items-center gap-1">
+        <div className={`flex items-center gap-1`}>
           {label && (
             <label
               htmlFor={props.id || id}
