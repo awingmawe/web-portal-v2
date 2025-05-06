@@ -76,37 +76,67 @@ export const PriceDrawer = ({
 
   // Handler for min price input change
   const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    const numericValue = parseInt(value.replace(/\D/g, ''), 10)
+    const inputValue = e.target.value
 
-    // Validate and update
-    if (!isNaN(numericValue)) {
-      const boundedValue = Math.min(Math.max(numericValue, minValue), range[1])
+    // Remove any non-numeric characters first (keep only digits)
+    const numericString = inputValue.replace(/\D/g, '')
 
-      // Update both input and slider
-      setLocalHargaMin(formatNumberCurrency(boundedValue.toString()))
-      setRange([boundedValue, range[1]])
-    } else {
-      // Allow clearing the input
+    if (numericString === '') {
+      // Handle empty input
       setLocalHargaMin('')
+      return
+    }
+
+    // Convert to number for comparison and validation
+    const numericValue = parseInt(numericString, 10)
+
+    // Apply bounds - ensure the value doesn't exceed max
+    const boundedValue = Math.min(numericValue, maxValue)
+
+    // Format with thousand separators and update state with formatted value
+    const formattedValue = formatNumberCurrency(boundedValue.toString())
+    setLocalHargaMin(formattedValue)
+
+    // If min exceeds current max, update max as well
+    if (boundedValue > range[1]) {
+      setLocalHargaMax(formattedValue)
+      setRange([boundedValue, boundedValue])
+    } else {
+      // Otherwise just update the min value in the range
+      setRange([boundedValue, range[1]])
     }
   }
 
   // Handler for max price input change
   const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    const numericValue = parseInt(value.replace(/\D/g, ''), 10)
+    const inputValue = e.target.value
 
-    // Validate and update
-    if (!isNaN(numericValue)) {
-      const boundedValue = Math.max(Math.min(numericValue, maxValue), range[0])
+    // Remove any non-numeric characters first (keep only digits)
+    const numericString = inputValue.replace(/\D/g, '')
 
-      // Update both input and slider
-      setLocalHargaMax(formatNumberCurrency(boundedValue.toString()))
-      setRange([range[0], boundedValue])
-    } else {
-      // Allow clearing the input
+    if (numericString === '') {
+      // Handle empty input
       setLocalHargaMax('')
+      return
+    }
+
+    // Convert to number for comparison and validation
+    const numericValue = parseInt(numericString, 10)
+
+    // Apply bounds - ensure the value doesn't exceed max
+    const boundedValue = Math.min(numericValue, maxValue)
+
+    // Format with thousand separators and update state with formatted value
+    const formattedValue = formatNumberCurrency(boundedValue.toString())
+    setLocalHargaMax(formattedValue)
+
+    // If max is less than current min, update min as well
+    if (boundedValue < range[0]) {
+      setLocalHargaMin(formattedValue)
+      setRange([boundedValue, boundedValue])
+    } else {
+      // Otherwise just update the max value in the range
+      setRange([range[0], boundedValue])
     }
   }
 

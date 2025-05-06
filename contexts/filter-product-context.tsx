@@ -70,6 +70,7 @@ interface FilterProductContextType {
   isDisabled: boolean
   setIsDisabled: (disabled: boolean) => void
   setIsLoading: (loading: boolean) => void
+  setIsLoadingSkeleton: (loading: boolean) => void
   isLoading: boolean
   isLoadingSkeleton: boolean
   handleSubmit: () => void
@@ -529,6 +530,7 @@ export const FilterProductProvider: React.FC<{
     isDisabled,
     setIsDisabled,
     setIsLoading,
+    setIsLoadingSkeleton,
     isLoading,
     isLoadingSkeleton,
     handleSubmit,
