@@ -10,7 +10,11 @@ import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { useFetchPackage } from '@/hooks/filter-product-hooks/useFetchPackage'
-import { formatDateToYYYYMMDD, mapProductsToCardData } from '@/lib/utils'
+import {
+  formatDateToYYYYMMDD,
+  isEmpty,
+  mapProductsToCardData,
+} from '@/lib/utils'
 import { getAirline, getAirports } from '@/services/general-service'
 import React, { createContext, useCallback, useContext, useState } from 'react'
 import { DateRange } from 'react-day-picker'
@@ -153,17 +157,6 @@ export const FilterProductProvider: React.FC<{
   // Reset individual filter
   const resetFilter = useCallback(
     (filterKey: FilterKey) => {
-      if (filterKey === 'priceRange') {
-        // Explicitly set empty price range values
-        setFilters((prev) => ({
-          ...prev,
-          priceRange: { hargaMin: '', hargaMax: '' },
-        }))
-
-        // Update URL params if needed
-        updateQueryParams(['prMin', 'prMax'], ['', ''])
-        return
-      }
       setFilters((prev) => ({
         ...prev,
         [filterKey]: initialFilterState[filterKey],
@@ -297,9 +290,7 @@ export const FilterProductProvider: React.FC<{
         console.error('Error initializing filters from URL:', error)
       } finally {
         // Turn off loading skeleton after all processing is done
-        setTimeout(() => {
-          setIsLoadingSkeleton(false)
-        }, 500)
+        setIsLoadingSkeleton(false)
       }
     },
     []
@@ -490,9 +481,12 @@ export const FilterProductProvider: React.FC<{
           airline: filters.airline?.name,
         },
       })
-
       // Only update the query parameters if we have keys/values to update
-      updateQueryParams(keys, values, '/search')
+      if (isEmpty(keys) || isEmpty(values)) {
+        window.history.pushState({ path: '/search' }, '', '/search')
+      } else {
+        updateQueryParams(keys, values, '/search')
+      }
     } catch (err) {
       // Handle errors
       toast.error(

@@ -758,7 +758,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             onClick={() => handleToggleLike()}
           >
             <span
-              className={`text-s-medium ${isLiked ? 'text-error-500' : 'text-neutral-500'}`}
+              className={`text-s-medium ${isLiked ? 'text-error-500' : 'text-neutral-900'}`}
             >
               {'Wishlist'}
             </span>
@@ -776,7 +776,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   className={
                     isLiked
                       ? 'fill-error-500 text-error-500'
-                      : 'text-neutral-500'
+                      : 'text-neutral-900'
                   }
                 />
               </motion.div>
@@ -812,7 +812,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             }}
           >
             <span className="text-s-medium">Cek Kuota</span>
-            <ArrowIcon size={16} className="-rotate-45" />
+            <ArrowIcon size={16} className="-rotate-45 text-neutral-900" />
           </div>
         </div>
       )}

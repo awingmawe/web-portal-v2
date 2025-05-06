@@ -2,7 +2,7 @@ import { metadata } from '@/app/shared-metadata'
 import SearchTopbar from '@/components/pages/search-packages/1-SearchTopbar/SearchTopbar'
 import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
-import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilter'
+import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilterMobile/BottomFilter'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
@@ -54,7 +54,11 @@ export default async function SearchGeneral() {
           </div>
         </section>
       </main>
-      <BottomNavigation dataMinMax={dataMinMax} dataFacility={dataFacility} />
+      <BottomNavigation
+        dataMinMax={dataMinMax}
+        dataFacility={dataFacility}
+        dataTagPackages={dataTagPackages}
+      />
     </Fragment>
   )
 }

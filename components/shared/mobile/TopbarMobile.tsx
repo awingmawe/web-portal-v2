@@ -3,7 +3,7 @@
 import { ArrowIcon } from '@/components/icons/arrow'
 import { CallCenterIcon } from '@/components/icons/call-center'
 import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
-import FilterDrawer from '@/components/shared/mobile/FilterMobile/FilterDrawerMobile'
+import FilterDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/FilterDrawerMobile'
 import { Input } from '@/components/ui/input'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'

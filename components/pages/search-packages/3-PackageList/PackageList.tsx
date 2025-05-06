@@ -119,7 +119,11 @@ export const PackageResults: React.FC = () => {
   )
 
   // Render no results component if there are no packages and not loading
-  if (packageDataCSR.length === 0 && !isLoadingSkeleton) {
+  if (
+    (packageDataCSR.length === 0 || infinitePackages.length === 0) &&
+    !isLoadingSkeleton &&
+    !isLoading
+  ) {
     return <NoResults resetAllFilters={resetAllFilters} />
   }
 

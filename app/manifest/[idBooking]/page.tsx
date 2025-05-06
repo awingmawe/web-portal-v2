@@ -1,6 +1,7 @@
-import DaftarJemaah from '@/components/pages/manifest/1-DaftarJemaah/DaftarJemaah'
-import DrawerDaftarJemaah from '@/components/pages/manifest/1-DaftarJemaah/mobile/DrawerDaftarJemaah'
-import BiodataForm from '@/components/pages/manifest/2-FormManifest/Biodata'
+import { BackButton } from '@/components/pages/manifest/1-BackButton/BackButton'
+import DaftarJemaah from '@/components/pages/manifest/2-DaftarJemaah/DaftarJemaah'
+import DrawerDaftarJemaah from '@/components/pages/manifest/2-DaftarJemaah/mobile/DrawerDaftarJemaah'
+import BiodataForm from '@/components/pages/manifest/3-FormManifest/Biodata'
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
@@ -40,9 +41,11 @@ export default async function FormManifest({ params }: { params: any }) {
         />
         <MobileTopbar variant="title" showBackButton title="Manifest Jemaah" />
         <section className="scrollbar-hide container mx-auto grid grid-cols-12 gap-5 max-lg:absolute max-lg:top-[55px] max-lg:bottom-0 max-lg:z-11 max-lg:h-full max-lg:w-full max-lg:max-w-full max-lg:gap-3 max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:py-7.5 max-lg:pb-[130px] max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
+          <BackButton className="col-span-12 text-left text-neutral-900 max-lg:hidden" />
           <div className="relative z-2 col-span-4 max-lg:col-span-12">
             <DaftarJemaah dataJemaah={dataDetailManifest.results} />
 
+            {/* For Mobile View */}
             <DrawerDaftarJemaah dataJemaah={dataDetailManifest.results} />
           </div>
           <div className="relative z-2 col-span-8 max-lg:col-span-12">
