@@ -298,6 +298,7 @@ export const CheckoutProvider = ({
 
   // Fungsi untuk melakukan debounce pada perubahan slider
   const handleSliderChange = (e: any) => {
+    setLoading(true)
     const value = parseInt(e.target.value)
     setSliderValue(value) // Update slider position immediately for visual feedback
 
@@ -312,9 +313,10 @@ export const CheckoutProvider = ({
       const perJamaahAmount = Math.ceil(value / jamaahList.length)
       setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
       setRawInputValue(value.toString()) // Update raw input value
+
+      setLoading(false)
     }, 300) // 300ms debounce time
   }
-
   // Cleanup timer on component unmount
   useEffect(() => {
     return () => {

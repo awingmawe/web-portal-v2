@@ -62,9 +62,9 @@ const CheckoutPage = () => {
                 e.preventDefault()
                 router.back()
               }}
-              className="flex cursor-pointer items-center text-blue-600 hover:underline"
+              className="text-black-600 flex cursor-pointer items-center hover:underline"
             >
-              <ArrowLeft size={20} className="mr-2" />
+              <ArrowLeft size={20} className=" mr-2" />
             </a>
 
             <span className="font-medium">Konfirmasi Pembelian Paket</span>
@@ -170,7 +170,7 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              {jamaahList.map((jamaah: any) => (
+              {jamaahList.map((jamaah: any, index: number) => (
                 <div
                   key={jamaah.id}
                   className="mb-4 border-t border-gray-100 pt-4"
@@ -209,27 +209,29 @@ const CheckoutPage = () => {
                           handleJamaahPhoneChange(jamaah.id, e.target.value)
                         }
                       />
-                      <button
-                        className="text-gray-400 hover:text-red-500"
-                        onClick={() => handleRemoveJamaah(jamaah.id)}
-                        disabled={jamaahList.length <= 1} // Prevent removing if there's only one jamaah
-                      >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                      {index > 0 && (
+                        <button
+                          className="text-gray-400 hover:text-red-500"
+                          onClick={() => handleRemoveJamaah(jamaah.id)}
                         >
-                          <path
-                            d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6M10 11v6M14 11v6"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
+                          {/* Icon trash */}
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6M10 11v6M14 11v6"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   </div>
                   {(!jamaah.name ||

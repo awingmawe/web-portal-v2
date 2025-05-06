@@ -28,43 +28,47 @@ export default function Moment() {
           <CardMoment
             title="International Islamic Expo (IIE)"
             images={[
-              'https://storage.googleapis.com/m101-prods/about-us/1d71989927a049dfb0345f87a1ff8c70.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%201%20-%20IIE/IIE%201.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%201%20-%20IIE/IIE%202.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%201%20-%20IIE/IIE%203.png',
             ]}
-            date="01 Juni 2025"
-            content="Muslim101, sebelumnya Umroh101, berpartisipasi dalam
-                International Islamic Expo (IIE) bertempatan Umrah-Hajj &
-                Islamic Tourism ke-14 yang diselenggarakan pada 26-28 Juli 2024
-                di Jakarta Convention Center (JCC) untuk mempromosikan brand dan
-                menjajin kemitraan selama pameran."
+            date="26-28 Juli 2024"
+            content="Muslim101, sebelumnya Umroh101, berpartisipasi dalam International Islamic Expo (IIE) bertemakan Umrah-Hajj & Islamic Tourism ke-14 yang diselengarakan pada 26–28 Juli 2024 di Jakarta Convention Center (JCC) untuk mempromosikan brand dan menjalin kemitraan selama pameran."
           />
 
           {/* Card 2 - with multiple images */}
           <CardMoment
             title="Mini Travel Fair: Jelajahi Negeri Impian at PermataBank Syariah"
             images={[
-              'https://storage.googleapis.com/m101-prods/about-us/ffd540a12ee15164d8d9981892fdd747.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%202%20-%20Mini%20Travel%20Fair/IIE%201.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%202%20-%20Mini%20Travel%20Fair/IIE%202.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%202%20-%20Mini%20Travel%20Fair/IIE%203.png',
             ]}
-            date="01 Juni 2025"
-            content={`Bersama PermataBank Syariah, Muslim101 berhasil menyelenggarakan acara Mini Travel Fair yang bertema "Jelajahi Negeri Impian" selama dua pekan, mulai dari tanggal 3-7 hingga 10-14 Februari 2025. Diikuti para mitra travel Muslim101, yaitu Aqabah, Sahid Tour, Goldy, Antara, Tazkia, Syawal, Al-Azhar, dan Mulia Tour.`}
+            date="3-14 Februari 2025"
+            content={`BBersama PermataBank Syariah, Muslim101 berhasil menyelenggarakan acara Mini Travel Fair yang bertemakan "Jelajahi Negeri Impian" selama dua pekan, mulai dari tanggal 3–7 hingga 10–14 Februari 2025. Diikuti para mitra travel Muslim101, yaitu Aqobah, Sahid Tour, Goldy, Annisa, Tazkia, Syawal, Al-Azhar, dan Mulia Tour.`}
           />
 
           {/* The following cards use single images for backward compatibility */}
           <CardMoment
             title="Curhatin 1.0"
             images={[
-              'https://storage.googleapis.com/m101-prods/about-us/b7a59a8cd226c95b36caa250c29dc995.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%203%20-%20Curhatin%201.0/IIE%201.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%203%20-%20Curhatin%201.0/IIE%202.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%203%20-%20Curhatin%201.0/IIE%203.png',
             ]}
-            date="01 Juni 2025"
-            content={`Untuk pertama kalinya, Muslim101 mulai ikut mendukung acara eksternal, yaitu Curhatin pada tanggal 19 November 2023. Bersama Teh Litsari N Husna, S.Psi, kami mengikuti kajian rohani yang bertema "Wahai Muslimah, dirimu Berharga... Jangan biarkan luka menghambatmu berdaya"`}
+            date="10 November 2024"
+            content={`Untuk pertama kalinya, Muslim101 mulai ikut mendukung acara eksternal, yaitu Curhatin pada tanggal 10 November 2024. Bersama Litasari N. Husna, S.Psi, kami mengikuti kajian rohani yang bertemakan "Wahai Muslimah, dirimu Berharga... 'Jangan biarkan luka menghambatmu berdaya'"`}
           />
 
           <CardMoment
             title="Curhatin 2.0"
             images={[
-              'https://storage.googleapis.com/m101-prods/about-us/4661c2f950e4bf4efab9d37db6061b66.jpeg',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%204%20-%20Curhatin%202.0/IIE%201.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%204%20-%20Curhatin%202.0/IIE%202.png',
+              'https://storage.googleapis.com/m101-prods/about-us/Folder%204%20-%20Curhatin%202.0/IIE%203.png',
             ]}
-            date="01 Juni 2025"
-            content={`Muslim101 kembali mendukung acara eksternal yang sama, yaitu Curhatin Day pada tanggal 2 Februari 202 di Masjid Al-Lathiif, Bandung. Bersama Teh Litsari N Husna, S.Psi, kami mengikuti kajian rohani serta emotional therapy dan muhasabah yang dibawakan olehnya.`}
+            date="12 Desember 2024"
+            content={`Dalam memaksimalkan misi brand awareness, Muslim101 hadir dalam acara Bestie Till Jannah: The Beauty of Faith para tanggal 12 Desember 2024 di Graha Pos Indonesia, Bandung. Acara ini terbagi menjadi lima sesi yang dimulai dari Workshop Digital Marketing & Onboarding bersama Shopee, Workshop Beauty Class bersama Sariayu Martha Tilaar, kajian bersama Ustadz Ridho Febri dengan tema “Berdamai Dengan Takdir”, sesi kedua kajian Desi Ncim “Bertumbuh Bersama Ujian”, hingga Flash Sale.`}
           />
 
           {showMore && (
@@ -72,18 +76,20 @@ export default function Moment() {
               <CardMoment
                 title="Bestie Till Jannah: The Beauty of Faith"
                 images={[
-                  'https://storage.googleapis.com/m101-prods/about-us/b7a59a8cd226c95b36caa250c29dc995.png',
-                  'https://storage.googleapis.com/m101-prods/about-us/bestie-event-2.jpg',
-                  'https://storage.googleapis.com/m101-prods/about-us/bestie-event-3.jpg',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%205%20-%20Bestie%20till%20jannah/Frame%201000007445.png',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%205%20-%20Bestie%20till%20jannah/Frame%201000007446.png',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%205%20-%20Bestie%20till%20jannah/Frame%201000007447.png',
                 ]}
-                date="01 Juni 2025"
-                content={`Dalam memaksimalkan misi brand awareness, Muslim101 hadir dalam acara Bestie Till Jannah: The Beauty of Faith para tanggal 12 Desember 2024 di Graha Pos Indonesia, Bandung. Acara ini terbagi menjadi lima sesi yang dimulai dari Workshop Digital Marketing & Onboarding bersama Shopee, Workshop Beauty Class bersama Sariayu Martha Tilaar, kajian bersama Ustadz Ridho Febri dengan tema "Berdamai Dengan Takdir", sesi kedua kajian Teh Desi Ncim "Bertumbuh Bersama Ujian", hingga Flash Sale.`}
+                date="12 Desember 2024"
+                content={`Dalam memaksimalkan misi brand awareness, Muslim101 hadir dalam acara Bestie Till Jannah: The Beauty of Faith para tanggal 12 Desember 2024 di Graha Pos Indonesia, Bandung. Acara ini terbagi menjadi lima sesi yang dimulai dari Workshop Digital Marketing & Onboarding bersama Shopee, Workshop Beauty Class bersama Sariayu Martha Tilaar, kajian bersama Ustadz Ridho Febri dengan tema “Berdamai Dengan Takdir”, sesi kedua kajian Desi Ncim “Bertumbuh Bersama Ujian”, hingga Flash Sale.`}
               />
 
               <CardMoment
                 title="Tazakka"
                 images={[
-                  'https://storage.googleapis.com/m101-prods/about-us/918578648e003d5b2f812002743396e3.jpg',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%206%20-%20Tazzaka/Frame%201000007445.png',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%206%20-%20Tazzaka/Frame%201000007446.png',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%206%20-%20Tazzaka/Frame%201000007447.png',
                 ]}
                 date="27 Januari 2025"
                 content={`Pada tanggal 27 Januari 2025, Muslim101 mensponsori acara kajian Tazakka yang bertemakan Mindful Living "Sadar Penuh, Bahagia Utuh" yang dibawakan oleh Teh Desi Ncim. Pada acara ini, Tazakka membahas tuntas bagaimana meraih ketenangan batin khususnya untuk para Akhwat.`}
@@ -92,12 +98,12 @@ export default function Moment() {
               <CardMoment
                 title="Kumpul Keluarga 2025"
                 images={[
-                  'https://storage.googleapis.com/m101-prods/about-us/6ecbe7a76c3bf7ed9c241015dfb587b0.png',
-                  'https://storage.googleapis.com/m101-prods/about-us/kumpul-event-2.jpg',
-                  'https://storage.googleapis.com/m101-prods/about-us/kumpul-event-3.jpg',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%207%20-%20Kumpul%20Keluarga/Frame%201000007445.png',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%207%20-%20Kumpul%20Keluarga/Frame%201000007446.png',
+                  'https://storage.googleapis.com/m101-prods/about-us/Folder%207%20-%20Kumpul%20Keluarga/Frame%201000007447.png',
                 ]}
-                date="01 Juni 2025"
-                content={`Salah satu acara Tabligh Akbar terbesar di Bandung diselenggarakan oleh Kumpul Keluarga. Pada tanggal 22 Februari 2025, Muslim101 mengikuti kemeriahan acara yang bertemakan "Munggahan Sasarengan" diikuti oleh talkshow yang bermanfaat, festival kuliner Nusantara, hingga kegiatan seru lainnya bersama para public figure inspiratif`}
+                date="22 Februari 2025"
+                content={`Salah satu acara Tabligh Akbar terbesar di Bandung diselenggarakan oleh Kumpul Keluarga. Pada tanggal 22 Februari 2025, Muslim101 turut memeriahkan acara yang bertemakan "Munggahan Sasarengan" dengan kegiatan yang dimulai dari talkshow yang bermanfaat, festival kuliner Nusantara, hingga kegiatan seru lainnya bersama para public figure inspiratif.`}
               />
             </Fragment>
           )}
