@@ -150,10 +150,10 @@ export function FileUpload({
         {file && (
           <div className="flex items-center gap-1">
             <div onClick={handleUploadClick}>
-              <EditIcon />
+              <EditIcon className="text-neutral-200" />
             </div>
             <div onClick={handleRemoveFile}>
-              <TrashIcon />
+              <TrashIcon className="text-neutral-200" />
             </div>
           </div>
         )}

@@ -428,16 +428,14 @@ export default function TransactionDetailContent({
                               Data Lengkap
                             </span>
                           </div>
-                          <Link href={`/manifest/${bookingId}`}>
-                            <Button
-                              className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
-                              disabled
-                            >
-                              <span className="text-primary-900 font-medium opacity-50">
-                                Lengkapi Data Jemaah
-                              </span>
-                            </Button>
-                          </Link>
+                          <Button
+                            className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
+                            disabled
+                          >
+                            <span className="text-primary-900 font-medium opacity-50">
+                              Lengkapi Data Jemaah
+                            </span>
+                          </Button>
                         </div>
                       ) : (
                         <div className="flex flex-col gap-2">
@@ -459,8 +457,11 @@ export default function TransactionDetailContent({
                               </span>
                             )}
                           </div>
-                          <Link href={`/manifest/${bookingId}`}>
-                            <Button className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]">
+                          <Link
+                            href={`/manifest/${bookingId}`}
+                            className="inline-flex h-full w-full"
+                          >
+                            <Button className="-mt-13 w-full shadow-[0px_-2px_4.8px_0px_#A4883033]">
                               <span className="font-medium">
                                 Lengkapi Data Jemaah
                               </span>

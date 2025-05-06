@@ -119,7 +119,7 @@ export default function TransactionDetailManifest({
                       {member.gender === null
                         ? '-'
                         : member.gender === 'male'
-                          ? 'Laki-laki'
+                          ? 'Pria'
                           : 'Perempuan'}
                     </p>
                   </div>
