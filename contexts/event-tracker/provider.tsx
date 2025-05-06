@@ -7,6 +7,7 @@ import { EventTrackerContext } from '@/contexts/event-tracker/context'
 import { getAccessToken } from '@/services/common/auth'
 import axios from 'axios'
 import { usePathname } from 'next/navigation'
+import queryString from 'query-string'
 import { useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
@@ -110,6 +111,10 @@ export function EventTrackerProvider({
   async function pushEvent(opt: EventAttribute) {
     console.log('Add queue push event', opt.name)
     const { name, category, topic, data = {}, backgroundProcess } = opt
+    const parsedUrl = queryString.parseUrl(window.location.href)
+
+    const { utm_source, utm_media, utm_campaign, utm_term, utm_content } =
+      parsedUrl?.query
 
     try {
       const payload = {
@@ -126,6 +131,13 @@ export function EventTrackerProvider({
           platform: 'web',
           latitude: '',
           longitude: '',
+        },
+        utm: {
+          utm_source,
+          utm_media,
+          utm_campaign,
+          utm_term,
+          utm_content,
         },
         __v: 0,
       }
