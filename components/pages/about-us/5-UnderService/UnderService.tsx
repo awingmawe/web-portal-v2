@@ -8,6 +8,9 @@ export default function UnderService() {
           <h1 className="lg:text-xl-regular text-2xl font-normal sm:text-3xl md:text-4xl">
             Di Balik Layanan Muslim101
           </h1>
+          <h5 className="mt-2 text-base font-normal text-[#CC9900]">
+            #GrowAt101
+          </h5>
           <p className="text-primary-900 lg:text-l-regular mx-auto mt-3 text-sm sm:text-base md:mt-4 lg:mt-5">
             Program pengembangan internal Muslim101 yang dirancang untuk
             memperkuat pemahaman tentang Islam, meningkatkan kualitas diri,
@@ -23,7 +26,7 @@ export default function UnderService() {
           {/* Image 1 */}
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:h-[350px] lg:h-[400px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/c875618f1543fc2ea37162c9110c6525.png"
+              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-2.png"
               alt="BnB101: Masak Bersama"
               fill
               className="object-cover transition-transform duration-500"
@@ -39,7 +42,7 @@ export default function UnderService() {
           {/* Image 2 */}
           <div className="group relative h-[250px] overflow-hidden rounded-lg md:h-[275px] lg:h-[300px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/f92d9bd4634b27a12294aa288facb2db.png"
+              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square.png"
               alt="Majelis101: Kajian Mingguan"
               fill
               className="object-cover transition-transform duration-500"
@@ -55,7 +58,7 @@ export default function UnderService() {
           {/* Image 3 */}
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:h-[350px] lg:h-[400px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/b7a59a8cd226c95b36caa250c29dc995.png"
+              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait.png"
               alt="Event101: Bestie till Jannah"
               fill
               className="object-cover transition-transform duration-500"
@@ -71,7 +74,7 @@ export default function UnderService() {
           {/* Image 4 */}
           <div className="group relative h-[250px] overflow-hidden rounded-lg md:h-[275px] lg:h-[300px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/7937dc50155b9e48c1dc139d07d83227.png"
+              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square-2.png"
               alt="Majelis101: Kajian Mingguan"
               fill
               className="object-cover transition-transform duration-500"
@@ -87,15 +90,15 @@ export default function UnderService() {
           {/* Image 5 */}
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:-mt-[75px] md:h-[350px] lg:-mt-[100px] lg:h-[400px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/f9b6cbd5368fa3c37ac44331ac384d13_2.png"
-              alt="BnB101: Makan Bersama"
+              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-1.png"
+              alt="BnB101: Silaturahmi Tim"
               fill
               className="object-cover transition-transform duration-500"
             />
             <div className="absolute bottom-0 left-0 h-[100px] w-full bg-gradient-to-t from-black to-transparent duration-300 lg:h-0 lg:group-hover:h-[150px]" />
             <div className="absolute bottom-0 left-0 p-4 text-white lg:max-h-0 lg:overflow-hidden lg:opacity-0 lg:duration-1000 lg:group-hover:max-h-[150px] lg:group-hover:opacity-100">
               <h3 className="lg:heading-4-bold text-lg font-bold text-white sm:text-xl md:text-2xl">
-                BnB101: Makan Bersama
+                BnB101: Silaturahmi Tim
               </h3>
             </div>
           </div>
@@ -103,7 +106,7 @@ export default function UnderService() {
           {/* Image 6 */}
           <div className="group relative h-[250px] overflow-hidden rounded-lg md:h-[275px] lg:h-[300px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/f9b6cbd5368fa3c37ac44331ac384d13_2.png"
+              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square-1.png"
               alt="Majelis101: Kajian Mingguan"
               fill
               className="object-cover transition-transform duration-500"
@@ -123,7 +126,7 @@ export default function UnderService() {
             {/* Image 1 */}
             <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/c875618f1543fc2ea37162c9110c6525.png"
+                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-2.png"
                 alt="BnB101: Masak Bersama"
                 fill
                 sizes="100vw"
@@ -136,7 +139,7 @@ export default function UnderService() {
             {/* Image 2 */}
             <div className="group relative aspect-square overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/f92d9bd4634b27a12294aa288facb2db.png"
+                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square.png"
                 alt="Majelis101: Kajian Mingguan"
                 width={0}
                 height={0}
@@ -148,7 +151,7 @@ export default function UnderService() {
             {/* Image 3 */}
             <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/b7a59a8cd226c95b36caa250c29dc995.png"
+                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait.png"
                 alt="Event101: Bestie till Jannah"
                 width={0}
                 height={0}
@@ -161,7 +164,7 @@ export default function UnderService() {
             {/* Image 4 */}
             <div className="group relative aspect-square overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/7937dc50155b9e48c1dc139d07d83227.png"
+                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square-2.png"
                 alt="Majelis101: Kajian Mingguan"
                 fill
                 className="object-cover transition-transform duration-500"
@@ -171,8 +174,8 @@ export default function UnderService() {
             {/* Image 5 */}
             <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/f9b6cbd5368fa3c37ac44331ac384d13_2.png"
-                alt="BnB101: Makan Bersama"
+                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-1.png"
+                alt="BnB101: Silaturahmi Tim"
                 width={0}
                 height={0}
                 sizes="100vw"
@@ -183,7 +186,7 @@ export default function UnderService() {
             {/* Image 6 */}
             <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/f9b6cbd5368fa3c37ac44331ac384d13_2.png"
+                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square-1.png"
                 alt="Majelis101: Kajian Mingguan"
                 width={0}
                 height={0}
