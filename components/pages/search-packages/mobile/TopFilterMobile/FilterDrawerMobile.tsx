@@ -210,7 +210,7 @@ const FilterDrawer: React.FC = () => {
           {hasFilters ? 'Ubah' : 'Filter'}
         </span>
       </DrawerTrigger>
-      <DrawerContent className="bg-primary-500 !max-h-[90vh] overflow-hidden !border-0 outline-0">
+      <DrawerContent className="bg-primary-500 !max-h-[100vh] overflow-hidden !border-0 outline-0">
         <DrawerHeader className="flex flex-row items-center justify-between">
           <div className="h-6 w-6" />
           <DrawerTitle className="text-l-semibold">

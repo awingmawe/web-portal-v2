@@ -9,7 +9,7 @@ import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { Loader2 } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
 import { NoResults } from './NoResultPackageList'
 import { CustomPagination } from './PaginationPackageList'
@@ -34,9 +34,18 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 }) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const { isLoadingSkeleton, resetFilters, buildQueryParams } =
-    useFilterProduct()
-  const { loadMore, hasMore, loading, packages } = useInfiniteScroll()
+  const {
+    isLoadingSkeleton,
+    resetFilters,
+    buildQueryParams,
+    setIsLoadingSkeleton,
+  } = useFilterProduct()
+  const {
+    loadMore,
+    hasMore,
+    isLoading: loading,
+    packages,
+  } = useInfiniteScroll()
   const { lg } = useTailwindBreakpoint()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
@@ -88,6 +97,10 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     )
 
     loadMore(paramsFilter)
+  }, [])
+
+  useEffect(() => {
+    setIsLoadingSkeleton(false)
   }, [])
 
   // Render no results component if there are no packages and not loading
