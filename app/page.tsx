@@ -100,7 +100,7 @@ export default async function Home() {
       />
       <Banner />
       <main className="relative">
-        <div className="container mx-auto max-lg:px-4">
+        <div className="container mx-auto max-xl:px-4">
           <ProgramCards />
           <SubmenuCards />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
@@ -116,7 +116,7 @@ export default async function Home() {
         </div>
       </main>
       <main
-        className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-lg:mt-0 max-lg:px-4`}
+        className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-xl:px-4 max-lg:mt-0`}
       >
         <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
       </main>

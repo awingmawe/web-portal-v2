@@ -16,7 +16,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
 
   return (
     <div
-      className={`relative z-2 mb-[560px] flex flex-row justify-center max-lg:mb-[500px] max-md:mb-[200px] ${className}`}
+      className={`relative z-2 mb-[560px] flex flex-row justify-center px-4 max-lg:mb-[500px] max-md:mb-[200px] ${className}`}
       {...props}
     >
       <div
