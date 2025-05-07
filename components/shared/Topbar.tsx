@@ -444,7 +444,7 @@ const Topbar: React.FC<TopbarProps> = ({
                 animate="visible"
                 exit="hidden"
                 className={cn(
-                  'fixed top-0 left-1/2 z-50 h-[72px] w-screen -translate-x-1/2 bg-white py-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden',
+                  'fixed top-0 left-1/2 z-50 h-[72px] w-screen -translate-x-1/2 bg-white px-4 py-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden',
                   className
                 )}
               >
@@ -459,7 +459,7 @@ const Topbar: React.FC<TopbarProps> = ({
       {(type === 'normal' || type === 'plain') && (
         <header
           className={cn(
-            `h-[72px] w-full bg-white py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
+            `h-[72px] w-full bg-white px-4 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
             className
           )}
         >
@@ -469,7 +469,7 @@ const Topbar: React.FC<TopbarProps> = ({
         </header>
       )}
       {/* add space divider for top if scrolled is active */}
-      {scrolled && <div className="h-[72px] w-full max-lg:hidden"></div>}
+      {scrolled && <div className="h-[72px] w-full px-4 max-lg:hidden"></div>}
     </Fragment>
   )
 }

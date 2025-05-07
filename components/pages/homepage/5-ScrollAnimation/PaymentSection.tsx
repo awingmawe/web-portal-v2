@@ -10,7 +10,7 @@ const PaymentSection = () => {
   const { lg: isMobile } = useTailwindBreakpoint()
 
   return (
-    <div className="relative z-3 bg-[#0000001A] py-2 backdrop-blur-[50px] max-lg:py-0">
+    <div className="relative z-3 bg-[#0000001A] px-4 py-2 backdrop-blur-[50px] max-lg:py-0">
       <div className="relative container m-auto flex max-lg:flex-col max-lg:px-4">
         {/* Content Section */}
         <div className="flex-auto pt-10 text-white sm:pt-16 lg:pt-32">

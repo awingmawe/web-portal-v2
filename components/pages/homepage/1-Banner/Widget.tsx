@@ -8,8 +8,10 @@ import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn } from '@/lib/utils'
+import Subtract from '@/public/images/Subtract.png'
 import { AnimatePresence, motion } from 'framer-motion'
 import { MapPin } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -25,18 +27,26 @@ const NotchedContainer: React.FC<{
   children: React.ReactNode
   className?: string
   height?: number
-}> = ({ children, className, height = 116 }) => {
-  const vControlPoint = Math.round((96 / 116) * height)
+}> = ({ children, className }) => {
   return (
     <div className={cn('relative w-full', className)}>
-      <div
+      <Image
+        src={Subtract}
+        alt="notched"
+        width={0}
+        height={0}
+        sizes="100vw"
+        className="pointer-events-none absolute top-[-20px] w-full max-xl:h-[185px]"
+      />
+      {children}
+
+      {/* <div
         className="w-full rounded-[20px] bg-white shadow-[0px_0px_24px_0px_rgba(0,0,0,0.05)]"
         style={{
           clipPath: `path('M430 15C430 6.7157 423.284 0 415 0H20C8.9543 0 0 8.9543 0 20V${vControlPoint}C0 ${vControlPoint + 11.046} 8.9543 ${height} 20 ${height}H1180C1191.05 ${height} 1200 ${vControlPoint + 11.046} 1200 ${vControlPoint}V20C1200 8.9543 1191.05 0 1180 0H785C776.716 0 770 6.7157 770 15C770 23.2843 763.284 30 755 30H445C436.716 30 430 23.2843 430 15Z')`,
         }}
       >
-        {children}
-      </div>
+      </div> */}
     </div>
   )
 }
@@ -88,7 +98,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
     >
       <div className="relative">
         {/* Trip Type Selector Tabs */}
-        <div className="absolute top-[-2.5%] left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-transparent p-3">
+        <div className="absolute top-[-2.5%] left-1/2 z-99 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-transparent p-3 max-xl:top-3">
           <div
             ref={tabContainerRef}
             className="relative inline-flex items-center justify-start gap-1 overflow-hidden rounded-[100px] border-[1.20px] border-white/50 bg-white/60 p-0.5 shadow-[0px_4px_100px_0px_rgba(255,255,255,0.15)] backdrop-blur-[15px]"
@@ -114,7 +124,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
         <NotchedContainer height={200}>
           <div
             className={cn(
-              'flex w-full flex-col gap-[15px] px-6 py-5',
+              'relative z-99 mx-auto flex w-[90%] flex-col gap-[15px] px-0 py-5',
               disableTab && styleDisable,
               dissolve
             )}
@@ -247,7 +257,7 @@ const TabsWithAnimation: React.FC<TabsWithAnimationProps> = ({
     <div className="relative flex items-center">
       {/* Background animation - only this moves */}
       <motion.div
-        className="bg-primary-500 absolute z-0 h-[calc(100%-4px)] rounded-full"
+        className="bg-primary-500 absolute z-0 h-[calc(100%-4px)] rounded-full  max-xl:h-[calc(100%-2px)]"
         animate={{
           width: backgroundPosition.width,
           left: backgroundPosition.left,
@@ -280,7 +290,7 @@ const TabsWithAnimation: React.FC<TabsWithAnimationProps> = ({
           ref={setTabRef(tab.id)}
           onClick={() => onChange(tab.id)}
           className={cn(
-            'relative z-10 flex cursor-pointer items-center gap-2 rounded-full px-4 py-3 focus-within:outline-0'
+            'relative z-10 flex cursor-pointer items-center gap-2 rounded-full px-4 py-3 focus-within:outline-0 max-xl:gap-1 max-xl:px-2 max-xl:py-2'
           )}
         >
           {tab.icon}

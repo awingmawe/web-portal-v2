@@ -38,7 +38,7 @@ const AirlineFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
                 <p className="text-s-regular text-neutral-900">
                   {capitalizeText(airline.name)}
                 </p>
-                {IS_NOT_TRANSIT.includes(airline.code) && (
+                {!IS_NOT_TRANSIT.includes(airline.code) && (
                   <p className="text-s-regular text-neutral-500">
                     Memerlukan 1x transit
                   </p>
