@@ -1,7 +1,7 @@
 'use client'
 
 import { EditIcon } from '@/components/icons/edit'
-import TrashIcon from '@/components/icons/trash'
+import { TrashIcon } from '@/components/icons/trash'
 import { UploadDokumenIcon, UploadIconPrimary } from '@/components/icons/upload'
 import { Button } from '@/components/ui/button'
 import { FormLabel } from '@/components/ui/form'
@@ -152,10 +152,10 @@ export function FileUpload({
         {file && (
           <div className="flex items-center gap-1">
             <div onClick={handleUploadClick}>
-              <EditIcon />
+              <EditIcon className="text-neutral-200" />
             </div>
             <div onClick={handleRemoveFile}>
-              <TrashIcon />
+              <TrashIcon className="text-neutral-200" />
             </div>
           </div>
         )}

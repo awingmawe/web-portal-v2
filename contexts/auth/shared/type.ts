@@ -35,6 +35,7 @@ export type Persona = {
   provinceId?: string
   approvedBy?: string
   approvedAt?: string
+  bankLogo?: string
 }
 
 export type Profile = {
@@ -52,6 +53,7 @@ export type Profile = {
   modifiedBy?: string
   avatarProvider?: string
   emailVerified?: boolean
+  havePassword?: boolean
   persona?: Persona
 }
 
