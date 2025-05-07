@@ -144,6 +144,12 @@ export const Sidebar = () => {
             loading={profile ? false : true}
             href="/banking?page=pembiayaan"
           />
+          <MenuItem
+            icon={<MoneysIcon />}
+            label="Tabungan"
+            loading={profile ? false : true}
+            href="/banking?page=credit"
+          />
           <Separator className="mx-auto !w-[90%] bg-neutral-100" />
           {/* 
           <MenuItem
