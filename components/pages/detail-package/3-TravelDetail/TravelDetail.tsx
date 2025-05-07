@@ -36,7 +36,7 @@ const TravelDetail = ({
 
   const phoneNumberUsed = directContact
     ? formatPhoneNumber(phoneNumber)
-    : formatPhoneNumber(bdm?.persona?.phoneNumber ?? '628888755101')
+    : formatPhoneNumber(bdm?.persona?.phoneNumber ?? '628888551101')
 
   return (
     <div

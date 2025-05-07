@@ -320,7 +320,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
         {showCallCenter && (
           <Link
-            href={`https://wa.me/628888755101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+?`}
+            href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+?`}
             target="_blank"
           >
             <div className={`relative ml-auto`}>

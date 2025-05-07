@@ -166,7 +166,7 @@ export default function TransactionCardFooter({
                 <PopoverContent className="rounded-2xl p-0 px-1">
                   <div className="flex flex-col divide-y">
                     <a
-                      href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                      href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
                       className="cursor-pointer p-3 hover:bg-gray-50"
                       target="_blank"
                     >

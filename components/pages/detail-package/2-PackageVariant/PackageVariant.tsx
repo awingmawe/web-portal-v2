@@ -192,7 +192,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const phoneNumberUsed = organization?.directContact
     ? formatPhoneNumber(organization?.phoneNumber)
     : formatPhoneNumber(
-        organization?.bdm?.persona?.phoneNumber ?? '628888755101'
+        organization?.bdm?.persona?.phoneNumber ?? '628888551101'
       )
 
   // Check room type availability based on price
