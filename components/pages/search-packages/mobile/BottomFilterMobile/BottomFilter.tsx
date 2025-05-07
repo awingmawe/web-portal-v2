@@ -4,22 +4,21 @@ import { DiscountIcon } from '@/components/icons/discount'
 import { GiftIcon } from '@/components/icons/gift'
 import { MoneysIconBlack } from '@/components/icons/moneys'
 import { SortIcon } from '@/components/icons/sort'
-import { FacilityDrawer } from '@/components/pages/search-packages/mobile/FacilityFilter'
-import { PriceDrawer } from '@/components/pages/search-packages/mobile/PriceRangeFilter'
-import { PromoDrawer } from '@/components/pages/search-packages/mobile/PromoFilter'
-import { SortDrawer } from '@/components/pages/search-packages/mobile/SortFilter'
-// import { TypeDrawer } from '@/components/pages/search-packages/mobile/TypePackageFilter'
-import { Button } from '@/components/ui/button'
+import { FacilityDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/FacilityFilter'
+import { PriceDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PriceRangeFilter'
+import { PromoDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PromoFilter'
+import { SortDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SortFilter'
 import {
   Drawer,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useFilterProduct } from '@/contexts/filter-product-context'
-import { cloneElement, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { useSearchParams } from 'next/navigation'
+import { cloneElement, useMemo, useState } from 'react'
 
 export interface NavItem {
   id: number
@@ -51,26 +50,40 @@ const navItems: NavItem[] = [
   // },
 ]
 
-// Separate promo item
-const promoItem = {
-  id: 5,
-  name: 'Promo',
-  icon: <DiscountIcon className="fill-neutral-500 stroke-neutral-500" />,
-  badge: 5,
-}
-
 export default function BottomNavigation({
   dataMinMax,
   dataFacility,
+  dataTagPackages,
 }: {
   dataMinMax: any
   dataFacility: any
+  dataTagPackages: any
 }) {
-  const { filters, resetFilter } = useFilterProduct()
+  const { filters, resetFilter, setFilters } = useFilterProduct()
   const [open, setOpen] = useState<Record<number, boolean>>({})
+  const searchParams = useSearchParams()
 
-  // References to drawer components that have apply methods
-  const drawerRefs = useRef<Record<number, any>>({})
+  // Calculate total active packages for badge
+  const totalActivePackages = useMemo(() => {
+    if (!dataTagPackages || !dataTagPackages.length) return 0
+
+    return dataTagPackages.reduce(
+      (total: number, tag: any) =>
+        total + parseInt(tag.activePackageCount || '0', 10),
+      0
+    )
+  }, [dataTagPackages])
+
+  // Create the promo item with the calculated badge count
+  const promoItem = useMemo(
+    () => ({
+      id: 5,
+      name: 'Promo',
+      icon: <DiscountIcon className="fill-neutral-500 stroke-neutral-500" />,
+      badge: totalActivePackages || 0,
+    }),
+    [totalActivePackages]
+  )
 
   const toggleDrawer = (id: number) => {
     setOpen((prev) => ({
@@ -80,12 +93,6 @@ export default function BottomNavigation({
   }
 
   const applyFilters = (id: number) => {
-    // Call the appropriate apply method based on drawer type
-    if (id === 1 && drawerRefs.current[1]?.applyFilter) {
-      // Call the PriceDrawer's apply method
-      drawerRefs.current[1].applyFilter()
-    }
-
     // Close the drawer
     setOpen((prev) => ({
       ...prev,
@@ -98,10 +105,23 @@ export default function BottomNavigation({
     const filterKeyMap: Record<number, string> = {
       1: 'priceRange',
       2: 'facilityCode',
+      3: 'sort',
       5: 'tagSlug',
     }
 
     // Reset the appropriate filter in context
+    if (filterKeyMap[id] === 'priceRange') {
+      setFilters({
+        ...filters,
+        priceRange: {
+          hargaMin: dataMinMax.min,
+          hargaMax: dataMinMax.max,
+        },
+      })
+
+      return
+    }
+
     if (filterKeyMap[id]) {
       resetFilter(filterKeyMap[id] as any)
     }
@@ -115,8 +135,8 @@ export default function BottomNavigation({
       case 2: // Facility
         return !!filters.facilityCode
       case 3: // Sort
-        // Add logic for sort if needed
-        return false
+        // Check if sort parameter exists in URL
+        return !!searchParams.get('sort')
       // case 4: // Type
       //   return !!filters.hotelStars
       case 5: // Promo
@@ -132,21 +152,55 @@ export default function BottomNavigation({
       case 1:
         return (
           <PriceDrawer
-            ref={(ref: any) => (drawerRefs.current[1] = ref)}
+            applyFilters={applyFilters}
+            toggleDrawer={toggleDrawer}
             dataMinMax={dataMinMax}
+            itemId={itemId}
           />
         )
       case 2:
-        return <FacilityDrawer dataFacility={dataFacility} />
+        return (
+          <FacilityDrawer
+            applyFilters={applyFilters}
+            itemId={itemId}
+            toggleDrawer={toggleDrawer}
+            dataFacility={dataFacility}
+          />
+        )
       case 3:
-        return <SortDrawer />
+        return (
+          <SortDrawer
+            applyFilters={applyFilters}
+            itemId={itemId}
+            toggleDrawer={toggleDrawer}
+          />
+        )
       // case 4:
       //   return <TypeDrawer />
       case 5:
-        return <PromoDrawer />
+        return (
+          <PromoDrawer
+            dataTagPackages={dataTagPackages}
+            applyFilters={applyFilters}
+            toggleDrawer={toggleDrawer}
+            itemId={itemId}
+          />
+        )
       default:
         return <div className="py-4">Content not available</div>
     }
+  }
+
+  // Framer Motion animation variants for the badge
+  const badgeAnimationVariants = {
+    animate: {
+      y: [0, -4, 0],
+      transition: {
+        duration: 1,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      },
+    },
   }
 
   // Function to render a navigation item with its drawer
@@ -177,7 +231,20 @@ export default function BottomNavigation({
               ${isPromo ? 'relative min-w-[80px]' : 'min-w-[80px]'}
             `}
           >
-            <div className="relative">{iconWithClass}</div>
+            <div className="relative">
+              {iconWithClass}
+
+              {/* Badge with animation - only show if has badge count */}
+              {item.badge && item.badge > 0 && (
+                <motion.div
+                  className="bg-error-500 absolute -top-2 -right-3 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium text-white"
+                  variants={badgeAnimationVariants}
+                  animate="animate"
+                >
+                  {item.badge > 9 ? '9+' : item.badge}
+                </motion.div>
+              )}
+            </div>
             <span className="mt-1 text-xs">{item.name}</span>
           </button>
         </DrawerTrigger>
@@ -189,35 +256,17 @@ export default function BottomNavigation({
                 {item.name}
               </span>
               {filterApplied && (
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <p
                   className="h-8 text-red-500"
                   onClick={() => resetSingleFilter(item.id)}
                 >
                   Reset
-                </Button>
+                </p>
               )}
             </DrawerTitle>
           </DrawerHeader>
 
           {renderDrawerContent(item.id)}
-
-          <DrawerFooter className="mb-4 flex flex-row gap-2 p-0">
-            <Button
-              variant="outline"
-              className="border-primary-500 w-full py-3"
-              onClick={() => toggleDrawer(item.id)}
-            >
-              Batal
-            </Button>
-            <Button
-              onClick={() => applyFilters(item.id)}
-              className="w-full py-3"
-            >
-              Simpan
-            </Button>
-          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     )
@@ -231,7 +280,7 @@ export default function BottomNavigation({
       </div>
 
       {/* Fixed promo filter on the right with gradient overlay */}
-      <div className="relative z-[99] min-w-[80px] border-l border-gray-100 bg-white before:absolute before:top-0 before:left-[-144px] before:z-1 before:h-14 before:w-36 before:bg-gradient-to-r before:from-white/0 before:to-white">
+      <div className="relative z-[99] min-w-[80px] border-l border-neutral-200 bg-white before:pointer-events-none before:absolute before:top-0 before:left-[-144px] before:z-1 before:h-14 before:w-36 before:bg-gradient-to-r before:from-white/0 before:to-white">
         <div className="absolute top-0 left-0 h-14 w-36 bg-gradient-to-r from-white/0 to-neutral-200" />
         {renderNavItem(promoItem, true)}
       </div>

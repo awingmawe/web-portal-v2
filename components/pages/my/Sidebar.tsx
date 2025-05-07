@@ -140,7 +140,7 @@ export const Sidebar = () => {
           />
           <MenuItem
             icon={<MoneysIcon />}
-            label="Pembiayaan"
+            label="Pendanaan Syariah"
             loading={profile ? false : true}
             href="/banking?page=pembiayaan"
           />

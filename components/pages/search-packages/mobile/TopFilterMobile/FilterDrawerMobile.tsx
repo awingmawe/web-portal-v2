@@ -8,11 +8,11 @@ import {
 import { CalendarIconFilterMobile } from '@/components/icons/calendar'
 import { SearchIcon } from '@/components/icons/search'
 import { StarIconFilterMobile } from '@/components/icons/star'
-import FilterActionButtons from '@/components/shared/mobile/FilterMobile/ActionButton'
-import AirlineSelector from '@/components/shared/mobile/FilterMobile/AirlineFilter'
-import DepartureAirportSelector from '@/components/shared/mobile/FilterMobile/AirportFilter'
-import DateSelector from '@/components/shared/mobile/FilterMobile/DateFilter'
-import HotelStarSelector from '@/components/shared/mobile/FilterMobile/RatingHotelFilter'
+import FilterActionButtons from '@/components/pages/search-packages/mobile/TopFilterMobile/ActionButton'
+import AirlineSelector from '@/components/pages/search-packages/mobile/TopFilterMobile/AirlineFilter'
+import DepartureAirportSelector from '@/components/pages/search-packages/mobile/TopFilterMobile/AirportFilter'
+import DateSelector from '@/components/pages/search-packages/mobile/TopFilterMobile/DateFilter'
+import HotelStarSelector from '@/components/pages/search-packages/mobile/TopFilterMobile/RatingHotelFilter'
 import {
   Drawer,
   DrawerClose,
@@ -210,7 +210,7 @@ const FilterDrawer: React.FC = () => {
           {hasFilters ? 'Ubah' : 'Filter'}
         </span>
       </DrawerTrigger>
-      <DrawerContent className="bg-primary-500 !max-h-[90vh] overflow-hidden !border-0 outline-0">
+      <DrawerContent className="bg-primary-500 !max-h-[100vh] overflow-hidden !border-0 outline-0">
         <DrawerHeader className="flex flex-row items-center justify-between">
           <div className="h-6 w-6" />
           <DrawerTitle className="text-l-semibold">

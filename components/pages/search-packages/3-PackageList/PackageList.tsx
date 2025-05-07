@@ -34,7 +34,7 @@ export const PackageResults: React.FC = () => {
   const {
     loadMore,
     hasMore,
-    loading,
+    isLoading: loading,
     fetchInitialPackages,
     packages: infinitePackages, // this packages is same like packageDataCSR but in different state for mobile
   } = useInfiniteScroll()
@@ -118,8 +118,12 @@ export const PackageResults: React.FC = () => {
     [pathname, searchParams]
   )
 
-  // Render no results component if there are no packages and not loading
-  if (packageDataCSR.length === 0 && !isLoadingSkeleton) {
+  // Render no results component if there are no packages and not isLoading: loading
+  if (
+    (packageDataCSR.length === 0 || infinitePackages.length === 0) &&
+    !isLoadingSkeleton &&
+    !isLoading
+  ) {
     return <NoResults resetAllFilters={resetAllFilters} />
   }
 

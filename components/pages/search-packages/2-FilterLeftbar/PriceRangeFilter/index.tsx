@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/accordion'
 import { PriceParams } from '@/constant/types/PackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
+import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import React from 'react'
 import { PriceRangeSlider } from './PriceRangeSlider'
 
@@ -15,16 +16,25 @@ interface PriceRangeFilterProps {
 }
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ dataMinMax }) => {
-  const { filters, setPriceRange, resetFilter, isLoadingSkeleton } =
+  const { filters, setPriceRange, setFilters, isLoadingSkeleton } =
     useFilterProduct()
+  const updateQueryParams = useUpdateQueryParams()
 
   // Handle reset click with event stopping
   const handleResetClick = (e: React.MouseEvent) => {
     // Stop the event from bubbling up to the accordion trigger
     e.stopPropagation()
 
-    // Reset both price filters at once
-    resetFilter('priceRange')
+    setFilters({
+      ...filters,
+      priceRange: {
+        hargaMin: dataMinMax.min,
+        hargaMax: dataMinMax.max,
+      },
+    })
+
+    // Update URL params if needed
+    updateQueryParams(['prMin', 'prMax'], ['', ''])
   }
 
   return (
@@ -43,9 +53,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ dataMinMax }) => {
       <AccordionContent>
         <PriceRangeSlider
           minMax={dataMinMax}
-          filters={{
-            priceRange: filters.priceRange || { hargaMin: '', hargaMax: '' },
-          }}
+          filters={filters.priceRange}
           setPriceRange={setPriceRange}
           isLoadingSkeleton={isLoadingSkeleton}
         />

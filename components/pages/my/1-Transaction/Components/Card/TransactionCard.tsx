@@ -262,7 +262,7 @@ export default function TransactionCard({
                         </DrawerHeader>
                         <div className="flex w-full px-3 pt-3 pb-5">
                           <Link
-                            href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                            href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
                             target="_blank"
                             className="w-full"
                           >

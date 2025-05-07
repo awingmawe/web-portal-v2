@@ -1,10 +1,11 @@
 'use client'
 
 import { EditIcon } from '@/components/icons/edit'
-import TrashIcon from '@/components/icons/trash'
+import { TrashIcon } from '@/components/icons/trash'
 import { UploadDokumenIcon, UploadIconPrimary } from '@/components/icons/upload'
 import { Button } from '@/components/ui/button'
 import { FormLabel } from '@/components/ui/form'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { cn } from '@/lib/utils'
 import React, { useRef, useState } from 'react'
 
@@ -29,6 +30,7 @@ export function FileUpload({
 }: FileUploadProps) {
   const [file, setFile] = useState<File | string | null>(value ?? null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { lg: isMobile } = useTailwindBreakpoint()
 
   React.useEffect(() => {
     setFile(value || null)
@@ -125,13 +127,13 @@ export function FileUpload({
           </div>
         ) : (
           <div className="flex flex-col items-start justify-start gap-1">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 max-lg:gap-2">
               <UploadDokumenIcon size={24} />
-              <p className="text-m-regular text-center text-neutral-900">
-                {description}
+              <p className="text-m-regular text-center text-neutral-900 max-lg:text-left">
+                {isMobile ? 'Unggah dokumen disini' : description}
               </p>
             </div>
-            <p className="text-s-regular text-center text-neutral-900">
+            <p className="text-s-regular text-center text-neutral-900 max-lg:text-left">
               mendukung tipe file: Jpeg, Jpg, PDF
             </p>
           </div>

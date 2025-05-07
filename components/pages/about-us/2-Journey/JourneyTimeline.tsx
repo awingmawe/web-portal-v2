@@ -14,8 +14,9 @@ const journeySteps = [
     content: {
       title: 'Ide (Founded)',
       description:
-        'Muslim101 bergerak sejak tahun 2023. Bermula dari nama Umroh101, kami berfokus pada pengembangan jasa layanan ibadah Umroh di Indonesia berbasis teknologi. Kini, pada tahun 2024, Muslim101 memperluas visi dan misi sebagai pilihan utama platform marketplace dan e-commerce yang menyediakan kemudahan akses informasi digital, khususnya Umroh, Haji, dan Halal Trip.',
-      image: '/images/foto-ceo.png',
+        'Muslim101 bergerak sejak tahun 2023. Bermula dari nama Umroh101, kami berfokus pada pengembangan jasa layanan ibadah Umroh di Indonesia berbasis teknologi. Kini, pada tahun 2024, Muslim101 memperluas visi dan misi sebagai pilihan utama platform marketplace dan e-commerce yang menyediakan kemudahan akses informasi digital, khususnya Umroh, Haji, dan Muslim Trip.',
+      image:
+        'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196.png',
     },
   },
   {
@@ -24,8 +25,9 @@ const journeySteps = [
     content: {
       title: 'Akuisisi Kemitraan',
       description:
-        'Muslim101 memulai dengan produk berupa beragam paket Umroh, bermitra dengan travel-travel tepercaya di seluruh wilayah Indonesia yang memiliki lisensi PPIU dan PIHK. Hingga Februari 2025, kami telah menjalin kerja sama B2B dengan 143 mitra.',
-      image: '/images/no-image-placeholder.png',
+        'Muslim101 memulai dengan produk berupa beragam paket Umroh, bermitra dengan beragam travel tepercaya di seluruh wilayah Indonesia yang memiliki lisensi PPIU dan PIHK. Hingga Februari 2025, kami telah menjalin kerja sama B2B dengan 143 mitra.',
+      image:
+        'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-1.png',
     },
   },
   {
@@ -35,7 +37,8 @@ const journeySteps = [
       title: 'Akuisisi Keagenan',
       description:
         'Muslim101 memiliki jaringan keagenan yang disebut Wukala (wakil). Sebanyak lebih dari 700 Wukala yang berbasis affiliate marketing tersebar di 6 kota besar Indonesia.',
-      image: '/images/no-image-placeholder.png',
+      image:
+        'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-2.png',
     },
   },
   {
@@ -44,9 +47,9 @@ const journeySteps = [
     content: {
       title: 'Rebrand',
       description:
-        'Kami melakukan perubahan untuk memperkenalkan nama dan identitas baru yang lebih mencerminkan visi besar perusahaan, sehingga dapat menjangkau pasar yang lebih luas. Berawal dari Umroh101 sebagai platform yang hanya berfokus pada perjalanan ibadah Umroh dan Haji, kami berekspansi menjadi all-in-one Muslim digital platform bernama Muslim101 dengan layanan yang lebih beragam, segar, serta modern.',
+        'Muslim101 telah sukses terlibat dalam berbagai event di berbagai wilayah Indonesia. Salah satunya, pada pameran besar International Islamic Expo (IIE) yang bertemakan Umrah-Hajj & Islamic Tourism. Di sana, Muslim101 menjalankan promosi dan partnership B2B2C langsung dengan para calon mitra terbaru.',
       image:
-        'https://storage.googleapis.com/m101-prods/about-us/b221b62427bc68916fc4d1b4302a01c8.png',
+        'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-3.png',
     },
   },
   {
@@ -56,7 +59,8 @@ const journeySteps = [
       title: 'Event',
       description:
         'Muslim101 telah sukses terlibat dalam berbagai event di berbagai wilayah Indonesia. Salah satunya, pada pameran besar International Islamic Expo (lIE) yang bertemakan Umrah-Hajj & Islamic Tourism. Di sana, Muslim101 menjalinkan promosi dan partnership BBC langsung dengan para calon mitra terbaru.',
-      image: '/images/no-image-placeholder.png',
+      image:
+        'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-4.png',
     },
   },
 ]

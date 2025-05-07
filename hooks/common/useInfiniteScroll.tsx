@@ -6,19 +6,17 @@ import { useCallback, useState } from 'react'
 
 export function useInfiniteScroll() {
   const { fetchPackage } = useFetchPackage()
-  const { packages, setPackages } = useFilterProduct()
+  const { packages, setPackages, isLoading, setIsLoading } = useFilterProduct()
 
   // Keep track of current page
   const [page, setPage] = useState(1)
   // State for packages data
-  const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
   const fetchInitialPackages = useCallback(
     async (params: any) => {
+      setIsLoading(true)
       try {
-        setLoading(true)
-
         // Fetch data using the hook
         const data = await fetchPackage(params)
         const mappedData = mapProductsToCardData(data)
@@ -31,18 +29,18 @@ export function useInfiniteScroll() {
         console.error('Error fetching packages:', err)
         toast.error('Failed to load packages. Please try again.')
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     },
-    [fetchPackage, setPackages]
+    [fetchPackage, setIsLoading, setPackages]
   )
 
   // Function to load more packages
   const loadMore = useCallback(
     async (params: any) => {
-      if (loading || !hasMore) return
+      if (isLoading || !hasMore) return
 
-      setLoading(true)
+      setIsLoading(true)
       try {
         const nextPage = page + 1
 
@@ -57,18 +55,26 @@ export function useInfiniteScroll() {
         // Check if we have more data to load
         setHasMore(packages.length + data.results.length < data.total)
       } catch (err) {
-        console.error('Error loading more packages:', err)
+        console.error('Error isLoading more packages:', err)
         toast.error('Failed to load more packages. Please try again.')
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     },
-    [page, loading, hasMore, packages, fetchPackage, setPackages]
+    [
+      isLoading,
+      hasMore,
+      setIsLoading,
+      page,
+      fetchPackage,
+      packages,
+      setPackages,
+    ]
   )
 
   return {
     packages,
-    loading,
+    isLoading,
     hasMore,
     loadMore,
     fetchInitialPackages, // Export this in case you need to trigger a refresh

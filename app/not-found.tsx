@@ -22,7 +22,7 @@ export default function Custom404() {
       <p className="mt-1 text-center text-neutral-400">
         404 - Halaman tidak ditemukan.
       </p>
-      <Button className="mt-6">
+      <Button className="mt-6 px-10">
         <Link href="/">Kembali ke Beranda</Link>
       </Button>
     </div>

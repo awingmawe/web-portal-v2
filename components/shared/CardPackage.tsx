@@ -6,13 +6,7 @@ import { StoreIcon } from '@/components/icons/store'
 import BadgePromo from '@/components/shared/Badge'
 import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
-import {
-  capitalizeText,
-  cn,
-  handleDiscountType,
-  isEmpty,
-  isValidImage,
-} from '@/lib/utils'
+import { capitalizeText, cn, isEmpty, isValidImage } from '@/lib/utils'
 import NoImagePlaceholder from '@/public/images/no-image-placeholder.png'
 import { differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
@@ -35,7 +29,6 @@ export const CardPackage = memo(function CardPackage({
   const {
     src,
     discount,
-    discountType,
     originalPrice,
     organizationName,
     title,
@@ -189,7 +182,7 @@ export const CardPackage = memo(function CardPackage({
         <div className="absolute bottom-[-4%] left-1/2 inline-flex w-[95%] -translate-x-1/2 -translate-y-1/2 items-center justify-start gap-2 rounded-2xl bg-white/60 px-3 py-1.5 backdrop-blur-[5.20px]">
           <StoreIcon size={20} />
           <div className="flex flex-col gap-0.5">
-            <p className="text-m-medium text-neutral-900 max-sm:text-xs max-sm:leading-4">
+            <p className="text-m-medium break-after-all text-neutral-900 uppercase max-sm:text-xs max-sm:leading-4">
               {organizationName}
             </p>
             <p className="text-s-regular text-neutral-900 max-sm:text-[10px] max-sm:leading-3.5">
@@ -246,11 +239,6 @@ export const CardPackage = memo(function CardPackage({
           <span className="text-l-semibold -tracking-[0.32px] text-neutral-900">
             {price}
           </span>
-          {showDiscount && (
-            <p className="text-s-regular text-error-500 font-bold -tracking-[0.32px]">
-              {handleDiscountType(discountType, discount)}
-            </p>
-          )}
         </div>
       </div>
     </Link>

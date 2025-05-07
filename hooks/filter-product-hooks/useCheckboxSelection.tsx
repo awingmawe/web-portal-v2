@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { UseCheckboxSelectionProps } from '@/hooks/types-props'
 import { useCallback, useEffect, useState } from 'react'
@@ -10,6 +11,7 @@ export function useCheckboxSelection({
 }: UseCheckboxSelectionProps) {
   const updateQueryParams = useUpdateQueryParams()
   const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const { lg: isMobile } = useTailwindBreakpoint()
 
   // Initialize selected items from props
   useEffect(() => {
@@ -46,11 +48,13 @@ export function useCheckboxSelection({
       onSelectionChange(itemsString)
 
       // Update URL parameters
-      if (itemsString) {
-        updateQueryParams([paramName], [itemsString])
-      } else {
-        // If no items selected, remove the parameter from URL
-        updateQueryParams([paramName], [''])
+      if (!isMobile) {
+        if (itemsString) {
+          updateQueryParams([paramName], [itemsString])
+        } else {
+          // If no items selected, remove the parameter from URL
+          updateQueryParams([paramName], [''])
+        }
       }
 
       // Update local state
@@ -59,8 +63,18 @@ export function useCheckboxSelection({
     [selectedItems, paramName]
   )
 
+  const onSaveFacilityFilter = () => {
+    if (selectedItems.length > 0) {
+      updateQueryParams([paramName], [selectedItems.join(',')])
+    } else {
+      // If no items selected, remove the parameter from URL
+      updateQueryParams([paramName], [''])
+    }
+  }
+
   return {
     selectedItems,
+    onSaveFacilityFilter,
     isItemSelected,
     handleSelectionChange,
   }
