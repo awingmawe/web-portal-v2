@@ -1,8 +1,9 @@
-import { api } from '@/services/common/http'
+import { api, apiWithAuth } from '@/services/common/http'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import qs from 'query-string'
 import { Travel } from '@/constant/types/TravelProps'
 import { City } from '@/constant/types/LocationProps'
+import { Profile } from '@/contexts/auth/shared/type'
 
 export async function getTravels(
   query: GetListQuery
@@ -28,6 +29,90 @@ export async function getKota(
     return response.data
   } catch (error) {
     console.error('Error fetching kota:', error)
+    throw error
+  }
+}
+
+export async function updateProfile(payload: Profile): Promise<Profile> {
+  try {
+    const response = await apiWithAuth.put(`/identity/my-profile`, payload)
+    return response.data
+  } catch (error) {
+    console.error('Error update profile:', error)
+    throw error
+  }
+}
+
+export async function changeBankOtp(): Promise<string> {
+  try {
+    const response = await apiWithAuth.get(
+      `/identity/verification/otp/change-bank`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error update bank:', error)
+    throw error
+  }
+}
+export async function changeBank(payload: {
+  otp: string
+  bankLogo: string
+  accountBank: string
+  accountNumber: string
+  accountName: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/identity/verification/verify-change-bank`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error update bank:', error)
+    throw error
+  }
+}
+
+export async function addPasswordOtp(): Promise<string> {
+  try {
+    const response = await apiWithAuth.get(
+      `/identity/verification/otp/add-password`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get password otp:', error)
+    throw error
+  }
+}
+
+export async function changePassword(payload: {
+  newPassword: string
+  oldPassword: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.put(
+      `/identity/my-profile/change-password`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error update password:', error)
+    throw error
+  }
+}
+
+export async function firstSetPassword(payload: {
+  newPassword: string
+  otp: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.put(
+      `/identity/my-profile/first-set-password`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error update password:', error)
     throw error
   }
 }
