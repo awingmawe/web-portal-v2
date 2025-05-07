@@ -481,7 +481,7 @@ export default function TransactionDetailContent({
                   </Button>
                 )}
                 <Link
-                  href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                  href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                   target="_blank"
                   className="w-full"
                 >
@@ -497,7 +497,7 @@ export default function TransactionDetailContent({
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' && (
                     <Link
-                      href={`https://wa.me/628888755101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                      href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                       target="_blank"
                       className="w-full"
                     >
