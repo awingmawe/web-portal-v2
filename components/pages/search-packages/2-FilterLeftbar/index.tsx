@@ -33,8 +33,8 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
     >
       <PriceRangeFilter dataMinMax={dataMinMax} />
       <RatingHotelFilter />
-      <SectionFilter dataSectionPackage={dataSection} />
       <FacilityFilter dataFacility={dataFacility} />
+      <SectionFilter dataSectionPackage={dataSection} />
       <TagPackageFilter dataTagPackage={dataTagPackages} />
     </Accordion>
   )
