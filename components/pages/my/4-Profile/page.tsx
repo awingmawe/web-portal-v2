@@ -5,8 +5,8 @@ import { PlusIcon } from '@/components/icons/plus'
 import CardProfile from '@/components/pages/my/4-Profile/Card/1-Profile/CardProfile'
 import CardRekening from '@/components/pages/my/4-Profile/Card/2-Rekening/CardRekening'
 import CardPassword from '@/components/pages/my/4-Profile/Card/3-Password/CardPassword'
+import CardEmail from '@/components/pages/my/4-Profile/Card/4-Email/CardEmail'
 import CardProfileLoading from '@/components/pages/my/4-Profile/Card/Loading'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/contexts/auth/context'
@@ -40,32 +40,12 @@ export default function MyProfilePage() {
       />
 
       {/* Email Section */}
-      <Card className="mb-6 !gap-[0px] rounded-3xl border border-neutral-200 !pt-3 shadow-none">
-        <CardHeader className="pt border-b border-neutral-200 px-5 !pb-2">
-          <CardTitle className="text-m-semibold flex items-center justify-between">
-            <span>Email</span>
-            <Badge
-              variant="outline"
-              className="rounded-full border-red-200 bg-red-100 px-3 py-1 text-xs text-red-500"
-            >
-              Belum Diverifikasi
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="gap-0 space-y-4 px-4 pt-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <p>{profile?.email}</p>
-            </div>
-            <Button
-              variant="ghost"
-              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
-            >
-              <EditIcon className="h-4 w-4" /> Ganti Email
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <CardEmail
+        email={profile?.email || ''}
+        provider={profile?.provider || ''}
+        onUpdated={refetchProfile}
+        emailVerified={profile?.emailVerified || false}
+      />
 
       {/* Phone Number Section */}
       <Card className="mb-6 !gap-[0px] rounded-3xl border border-neutral-200 !pt-3 shadow-none">

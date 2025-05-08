@@ -26,6 +26,8 @@ interface VerificationDialogProps {
     | 'pre-edit-rekening'
     | 'post-edit-rekening'
     | 'post-add-password'
+    | 'post-verify-email'
+    | 'post-change-email'
 }
 
 export default function VerificationDialog({
@@ -93,15 +95,25 @@ export default function VerificationDialog({
     onVerify(otpString)
   }
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | undefined
+    if (isResend > 0) {
+      intervalId = setInterval(() => {
+        setIsResend((prev) => prev - 1)
+      }, 1000)
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
+    }
+  }, [isResend])
+
   const handleResend = () => {
+    console.log('sads')
     onResendOtp?.()
     setIsResend(60)
-    const interval = setInterval(() => {
-      setIsResend((prev) => prev - 1)
-      if (isResend === 0) {
-        clearInterval(interval)
-      }
-    }, 1000)
   }
 
   const getDialogTitle = () => {
@@ -114,6 +126,10 @@ export default function VerificationDialog({
         return 'Verifikasi Perubahan Nomor Rekening'
       case 'post-add-password':
         return 'Verifikasi Buat Password'
+      case 'post-verify-email':
+        return 'Verifikasi Email'
+      case 'post-change-email':
+        return 'Verifikasi Email Baru'
       default:
         return 'Verifikasi'
     }
@@ -175,7 +191,7 @@ export default function VerificationDialog({
                   : 'text-primary-600 hover:text-primary-700 cursor-pointer'
               } ml-2`}
               onClick={() => {
-                if (isResend === 0) handleResend()
+                handleResend()
               }}
               disabled={isResend > 0}
             >
