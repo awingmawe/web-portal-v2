@@ -69,7 +69,7 @@ const ProgramCards: React.FC = () => {
     {
       id: 'umroh',
       title: 'Umroh',
-      link: '/umroh',
+      link: '/search',
       comingSoon: false,
       background:
         'linear-gradient(0deg, rgba(254, 189, 0, 0.20) 0%, rgba(95, 71, 0, 0.20) 100%)',

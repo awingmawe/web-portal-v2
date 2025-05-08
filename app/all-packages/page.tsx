@@ -11,6 +11,7 @@ import { getFacilityEnum } from '@/services/general-service'
 import {
   getMinMaxPrice,
   getPackageList,
+  getSectionEnum,
   getTagPackagesEnum,
 } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
@@ -39,11 +40,13 @@ export default async function SearchGeneral({
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
-  const [dataMinMax, dataTagPackages, dataFacility] = await Promise.all([
-    getMinMaxPrice(),
-    getTagPackagesEnum(),
-    getFacilityEnum('umrah-facility'),
-  ])
+  const [dataMinMax, dataTagPackages, dataFacility, dataSection] =
+    await Promise.all([
+      getMinMaxPrice(),
+      getTagPackagesEnum(),
+      getFacilityEnum('umrah-facility'),
+      getSectionEnum(),
+    ])
 
   const page = parseInt(awaitedParams.page || '1', 10)
   const size = parseInt(awaitedParams.size || '9', 10)
@@ -126,6 +129,7 @@ export default async function SearchGeneral({
         </section>
       </main>
       <BottomNavigation
+        dataSection={dataSection}
         dataMinMax={dataMinMax}
         dataFacility={dataFacility}
         dataTagPackages={dataTagPackages}
