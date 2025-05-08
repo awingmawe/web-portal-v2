@@ -367,3 +367,9 @@ export const getTripDuration = (product: Package) => {
     ) + 1
   )
 }
+
+export function isMobileUserAgent(userAgent: string): boolean {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+    userAgent
+  )
+}
