@@ -113,6 +113,15 @@ export async function getTagPackagesEnum(): Promise<TagPackages[]> {
     throw error
   }
 }
+export async function getSectionEnum(): Promise<TagPackages[]> {
+  try {
+    const response = await api.get(`/public/umrah/v2/section/stats/count`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching get section packages enum:', error)
+    throw error
+  }
+}
 
 export async function getTransactionListUmrah(
   query: GetListQuery

@@ -105,8 +105,9 @@ export default async function Home() {
           <SubmenuCards />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
             <CarouselBanner dataBanner={dataBannerCarousel} />
-
-            <CarouselTravel dataTravel={dataTravels} />
+            {dataTravels.total > 0 && (
+              <CarouselTravel dataTravel={dataTravels} />
+            )}
           </div>
 
           <PackageListEvent

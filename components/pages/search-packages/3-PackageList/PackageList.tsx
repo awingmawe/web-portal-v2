@@ -6,6 +6,7 @@ import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { Loader2 } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -39,6 +40,7 @@ export const PackageResults: React.FC = () => {
     packages: infinitePackages, // this packages is same like packageDataCSR but in different state for mobile
   } = useInfiniteScroll()
   const { lg: isMobile } = useTailwindBreakpoint()
+  const updateQueryParams = useUpdateQueryParams()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
 
@@ -111,9 +113,7 @@ export const PackageResults: React.FC = () => {
   // Create page navigation function
   const goToPage = useCallback(
     (page: number) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set('page', page.toString())
-      window.location.href = `${pathname}?${params.toString()}`
+      updateQueryParams(['page'], [page.toString()])
     },
     [pathname, searchParams]
   )
