@@ -134,23 +134,23 @@ export default function CardPassword({
               className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
               onClick={handleEditClick}
             >
-              <EditIcon className="h-4 w-4" />
-              <span>
+              <EditIcon className="h-4 w-4 max-lg:h-5 max-lg:w-5" />
+              <span className="max-lg:hidden">
                 Ganti <i>Password</i>
               </span>
             </Button>
           </div>
         ) : (
-          <div className="flex items-center justify-between">
+          <div className="max-lg: flex flex-col items-center justify-between">
             <p className="text-neutral-500">
               Belum memiliki <i>password</i>
             </p>
             <Button
               variant="ghost"
-              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
+              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2 max-lg:text-lg"
               onClick={handleAddClick}
             >
-              <PlusIcon className="h-4 w-4" />
+              <PlusIcon className="h-4 w-4 max-lg:h-5 max-lg:w-5" />
               <span>
                 Tambah <i>Password</i>
               </span>

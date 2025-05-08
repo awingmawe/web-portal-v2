@@ -6,17 +6,28 @@ import CardPassword from '@/components/pages/my/4-Profile/Card/3-Password/CardPa
 import CardEmail from '@/components/pages/my/4-Profile/Card/4-Email/CardEmail'
 import CardPhone from '@/components/pages/my/4-Profile/Card/5-Phone/CardPhone'
 import CardProfileLoading from '@/components/pages/my/4-Profile/Card/Loading'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { useAuth } from '@/contexts/auth/context'
 import 'dayjs/locale/id'
+import { useRouter } from 'next/navigation'
 
 export default function MyProfilePage() {
   const { profile, refetchProfile } = useAuth()
+  const router = useRouter()
 
   return !profile ? (
     <CardProfileLoading />
   ) : (
-    <div className="container mx-auto pb-3">
-      <h1 className="text-l-medium mb-6">Pengaturan Akun</h1>
+    <div className="container mx-auto pb-3 max-lg:-mt-12 max-lg:px-3">
+      <MobileTopbar
+        variant="profileTopbar"
+        title="Akun"
+        showBackButton
+        onBackClick={() => {
+          router.push('/my')
+        }}
+      />
+      <h1 className="text-l-medium mb-6 max-lg:hidden">Pengaturan Akun</h1>
 
       {/* Personal Data Section */}
       <CardProfile profile={profile} />

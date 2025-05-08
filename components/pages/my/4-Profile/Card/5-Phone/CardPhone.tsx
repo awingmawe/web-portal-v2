@@ -104,14 +104,15 @@ export default function CardPhone({ phoneNumber, onUpdated }: CardPhoneProps) {
       </CardHeader>
       <CardContent className="gap-0 space-y-4 px-4 pt-5">
         {!phoneNumber ? (
-          <div className="flex items-center justify-between">
+          <div className="max-lg: flex flex-col items-center justify-between">
             <p className="text-neutral-500">Nomor telepon belum diatur</p>
             <Button
               variant="ghost"
-              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
+              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2 max-lg:text-lg"
               onClick={handleEditPasswordClick}
             >
-              <PlusIcon className="h-4 w-4" /> Tambah No. Telpon
+              <PlusIcon className="h-4 w-4 max-lg:h-5 max-lg:w-5" /> Tambah No.
+              Telpon
             </Button>
           </div>
         ) : (
@@ -126,7 +127,9 @@ export default function CardPhone({ phoneNumber, onUpdated }: CardPhoneProps) {
               variant="ghost"
               className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
             >
-              <EditIcon className="h-4 w-4" /> Ganti Nomor
+              <EditIcon className="h-4 w-4 max-lg:h-5 max-lg:w-5" />
+
+              <span className="max-lg:hidden">Ganti Nomor</span>
             </Button>
           </div>
         )}

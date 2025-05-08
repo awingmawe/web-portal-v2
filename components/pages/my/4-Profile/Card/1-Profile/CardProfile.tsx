@@ -237,7 +237,7 @@ export default function CardProfile(props: { profile: Profile | undefined }) {
 
             <div className="flex justify-end">
               <Button
-                className="rounded-full px-10 py-3 text-black"
+                className="rounded-full px-10 py-3 text-black max-lg:w-full"
                 isLoading={loading}
                 disabled={!isChanged || loading}
               >
