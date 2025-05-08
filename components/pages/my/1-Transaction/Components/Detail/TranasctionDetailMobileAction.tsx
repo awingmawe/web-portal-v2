@@ -97,7 +97,9 @@ export const TransactionDetailMobileAction = ({
           >
             Bayar Pelunasan
           </Button>
-          <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
+          <Link href={`/manifest/${bookingId}`} className="w-full">
+            <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
+          </Link>
         </div>
       )}
       {statusTahapan == 'Waiting' && (
