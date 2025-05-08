@@ -88,7 +88,6 @@ export default function CardRekening({
     setIsLoading(true)
     try {
       const response = await changeBankOtp()
-      console.log(data)
       setPendingAccount(data)
       setIsLoading(false)
       setIsEditDialogOpen(false)

@@ -109,13 +109,15 @@ export default function TransactionDetailManifest({
                 <div className="grid grid-cols-2 gap-2 max-lg:grid-cols-1">
                   <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">NIK</p>
-                    <p className="text-l-regular">{member.nik || '-'}</p>
+                    <p className="text-sm max-lg:text-xs">
+                      {member.nik || '-'}
+                    </p>
                   </div>
                   <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Jenis Kelamin
                     </p>
-                    <p className="text-l-regular">
+                    <p className="text-sm max-lg:text-xs">
                       {member.gender === null
                         ? '-'
                         : member.gender === 'male'
@@ -130,13 +132,17 @@ export default function TransactionDetailManifest({
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Tempat Lahir
                     </p>
-                    <p className="text-l-regular">{member.placeBorn || '-'}</p>
+                    <p className="text-sm max-lg:text-xs">
+                      {member.placeBorn || '-'}
+                    </p>
                   </div>
                   <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Tanggal Lahir
                     </p>
-                    <p className="text-l-regular">{member.born || '-'}</p>
+                    <p className="text-sm max-lg:text-xs">
+                      {member.born || '-'}
+                    </p>
                   </div>
                 </div>
 
@@ -145,13 +151,17 @@ export default function TransactionDetailManifest({
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Kota Asal
                     </p>
-                    <p className="text-l-regular">{member.hometown || '-'}</p>
+                    <p className="text-sm max-lg:text-xs">
+                      {member.hometown || '-'}
+                    </p>
                   </div>
                   <div className="max-lg:flex max-lg:items-center max-lg:justify-between">
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Alamat
                     </p>
-                    <p className="text-l-regular">{member.address || '-'}</p>
+                    <p className="text-sm max-lg:text-xs">
+                      {member.address || '-'}
+                    </p>
                   </div>
                 </div>
 
@@ -163,7 +173,7 @@ export default function TransactionDetailManifest({
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Nomor Paspor
                     </p>
-                    <p className="text-l-regular">
+                    <p className="text-sm max-lg:text-xs">
                       {member.passportNumber || '-'}
                     </p>
                   </div>
@@ -171,7 +181,7 @@ export default function TransactionDetailManifest({
                     <p className="text-s-regular mb-1 text-neutral-500">
                       Masa Berlaku Paspor
                     </p>
-                    <p className="text-l-regular">
+                    <p className="text-sm max-lg:text-xs">
                       {member.passportExpiredAt || '-'}
                     </p>
                   </div>

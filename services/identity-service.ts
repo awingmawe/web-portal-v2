@@ -126,3 +126,78 @@ export async function checkRefundPolicy(id: any) {
     throw error
   }
 }
+
+export async function verifyEmailOtp(): Promise<string> {
+  try {
+    const response = await apiWithAuth.get(
+      `/identity/verification/otp/email-verification`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp verify email:', error)
+    throw error
+  }
+}
+
+export async function verifyEmail(payload: {
+  otp: string
+  purpose: string | null
+  email: string | null
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/identity/verification/verify-email`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp verify email:', error)
+    throw error
+  }
+}
+
+export async function changeEmailOtp(payload: {
+  email: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/identity/verification/otp/change-email`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp verify email:', error)
+    throw error
+  }
+}
+
+export async function changePhoneOtp(payload: {
+  phoneNumber: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/identity/verification/otp/change-phonenumber`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp change phone number:', error)
+    throw error
+  }
+}
+
+export async function updatePhoneNumber(payload: {
+  otp: string
+  phoneNumber: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/identity/verification/verify-change-phonenumber`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp change phone number:', error)
+    throw error
+  }
+}
