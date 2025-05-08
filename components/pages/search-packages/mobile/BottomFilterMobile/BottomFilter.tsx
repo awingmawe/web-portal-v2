@@ -7,6 +7,7 @@ import { SortIcon } from '@/components/icons/sort'
 import { FacilityDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/FacilityFilter'
 import { PriceDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PriceRangeFilter'
 import { PromoDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PromoFilter'
+import { SectionDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SectionFilter'
 import { SortDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SortFilter'
 import {
   Drawer,
@@ -43,21 +44,23 @@ const navItems: NavItem[] = [
     name: 'Urutkan',
     icon: <SortIcon className="fill-neutral-500 stroke-neutral-500" />,
   },
-  // {
-  //   id: 4,
-  //   name: 'Tipe',
-  //   icon: <BoxIcon className="fill-neutral-500 stroke-neutral-500" />,
-  // },
+  {
+    id: 4,
+    name: 'Tipe Paket',
+    icon: <DiscountIcon className="fill-neutral-500 stroke-neutral-500" />,
+  },
 ]
 
 export default function BottomNavigation({
   dataMinMax,
   dataFacility,
   dataTagPackages,
+  dataSection,
 }: {
   dataMinMax: any
   dataFacility: any
   dataTagPackages: any
+  dataSection: any
 }) {
   const { filters, resetFilter, setFilters } = useFilterProduct()
   const [open, setOpen] = useState<Record<number, boolean>>({})
@@ -106,6 +109,7 @@ export default function BottomNavigation({
       1: 'priceRange',
       2: 'facilityCode',
       3: 'sort',
+      4: 'section',
       5: 'tagSlug',
     }
 
@@ -137,8 +141,8 @@ export default function BottomNavigation({
       case 3: // Sort
         // Check if sort parameter exists in URL
         return !!searchParams.get('sort')
-      // case 4: // Type
-      //   return !!filters.hotelStars
+      case 4: // Section
+        return !!filters.section
       case 5: // Promo
         return !!filters.tagSlug
       default:
@@ -175,8 +179,15 @@ export default function BottomNavigation({
             toggleDrawer={toggleDrawer}
           />
         )
-      // case 4:
-      //   return <TypeDrawer />
+      case 4:
+        return (
+          <SectionDrawer
+            dataSection={dataSection}
+            applyFilters={applyFilters}
+            toggleDrawer={toggleDrawer}
+            itemId={itemId}
+          />
+        )
       case 5:
         return (
           <PromoDrawer
@@ -260,7 +271,7 @@ export default function BottomNavigation({
                   className="h-8 text-red-500"
                   onClick={() => resetSingleFilter(item.id)}
                 >
-                  Reset
+                  Reset {item.name}
                 </p>
               )}
             </DrawerTitle>
