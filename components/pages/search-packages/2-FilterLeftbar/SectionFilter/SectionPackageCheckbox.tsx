@@ -24,8 +24,6 @@ export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
     selectedSectionPackage
   )
 
-  console.log(selectedSectionPackage)
-
   // Update local rating when prop changes
   useEffect(() => {
     setLocalSection(selectedSectionPackage)
