@@ -29,7 +29,7 @@ export default function BottomNavigation() {
       name: 'Akun',
       icon: UserIconCircle,
       activeIcon: IconUserFilled,
-      path: `/my/profile`,
+      path: `/my`,
     },
   ]
 
@@ -38,9 +38,7 @@ export default function BottomNavigation() {
       <nav className="flex items-center justify-between">
         {navItems.map((item) => {
           // Check if current pathname matches this nav item's path
-          const isActive =
-            pathname === item.path ||
-            (item.path !== '/' && pathname.startsWith(item.path))
+          const isActive = pathname === item.path
 
           return (
             <Link

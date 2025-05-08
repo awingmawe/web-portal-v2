@@ -24,6 +24,7 @@ interface MobileTopbarProps {
     | 'plain'
     | 'transparent'
     | 'transactionTopbar'
+    | 'profileTopbar'
   titleLink?: string
   title?: string
   searchPlaceholder?: string
@@ -150,6 +151,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             </div>
           )
 
+        case 'profileTopbar':
         case 'transactionTopbar':
         case 'title':
           return <div className="text-l-medium flex-1 text-center">{title}</div>
@@ -195,6 +197,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     const buttonClasses = useMemo(() => {
       // Using switch case to handle different variants
       switch (variant) {
+        case 'profileTopbar':
         case 'transactionTopbar':
         case 'title':
         case 'filter':
@@ -246,6 +249,11 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           break
         case 'transactionTopbar':
           positionClasses = 'absolute -top-13.5'
+          backgroundClasses = ''
+          break
+        case 'profileTopbar':
+          positionClasses =
+            'absolute -top-25 left-1/2 transform -translate-x-1/2'
           backgroundClasses = ''
           break
         case 'plain':
