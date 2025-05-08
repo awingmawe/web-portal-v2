@@ -107,7 +107,7 @@ const AirlineList: React.FC<AirlineSearchProps> = ({
                     </p>
                   )}
                 </div>
-                {!isNotTransit.includes(airline.code) && (
+                {isNotTransit.includes(airline.code) && (
                   <TransitIcon size={20} />
                 )}
               </div>

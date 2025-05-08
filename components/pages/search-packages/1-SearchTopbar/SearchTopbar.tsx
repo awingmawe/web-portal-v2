@@ -14,7 +14,7 @@ const SearchFilters: React.FC = () => {
     useFilterProduct()
 
   return (
-    <div className="items w-full py-3 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden">
+    <div className="items fixed top-18 z-99 w-full bg-white py-3 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden">
       <div className="container mx-auto flex items-center justify-between">
         {/* Departure Date Filter */}
         <DateFilter colorIcon="primary-500" whatPage="filter_search" />

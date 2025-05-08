@@ -25,7 +25,7 @@ export default function DaftarJemaah({ dataJemaah }: DaftarJemaahProps) {
   }, [])
 
   return (
-    <div className="bg-neutral-0 fixed flex max-w-1/4 min-w-[325px] flex-col rounded-[20px] border-1 border-neutral-100 py-2.5 max-lg:hidden xl:min-w-[400px]">
+    <div className="bg-neutral-0 sticky top-15 flex max-w-1/4 min-w-[325px] flex-col rounded-[20px] border-1 border-neutral-100 py-2.5 max-lg:hidden xl:min-w-[400px]">
       <h1 className="text-l-medium mb-5 px-2.5">Daftar Jemaah</h1>
       <ol className="space-y-1">
         {dataJemaah?.map((item, index) => {
