@@ -126,6 +126,7 @@ export default function CardPhone({ phoneNumber, onUpdated }: CardPhoneProps) {
             <Button
               variant="ghost"
               className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
+              onClick={handleEditPasswordClick}
             >
               <EditIcon className="h-4 w-4 max-lg:h-5 max-lg:w-5" />
 
