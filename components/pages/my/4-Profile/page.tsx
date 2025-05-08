@@ -1,14 +1,11 @@
 'use client'
 
-import { EditIcon } from '@/components/icons/edit'
-import { PlusIcon } from '@/components/icons/plus'
 import CardProfile from '@/components/pages/my/4-Profile/Card/1-Profile/CardProfile'
 import CardRekening from '@/components/pages/my/4-Profile/Card/2-Rekening/CardRekening'
 import CardPassword from '@/components/pages/my/4-Profile/Card/3-Password/CardPassword'
 import CardEmail from '@/components/pages/my/4-Profile/Card/4-Email/CardEmail'
+import CardPhone from '@/components/pages/my/4-Profile/Card/5-Phone/CardPhone'
 import CardProfileLoading from '@/components/pages/my/4-Profile/Card/Loading'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/contexts/auth/context'
 import 'dayjs/locale/id'
 
@@ -48,38 +45,10 @@ export default function MyProfilePage() {
       />
 
       {/* Phone Number Section */}
-      <Card className="mb-6 !gap-[0px] rounded-3xl border border-neutral-200 !pt-3 shadow-none">
-        <CardHeader className="pt border-b border-neutral-200 px-5 !pb-2">
-          <CardTitle className="text-m-semibold">Nomor Telepon</CardTitle>
-        </CardHeader>
-        <CardContent className="gap-0 space-y-4 px-4 pt-5">
-          <div className="flex items-center justify-between">
-            <p className="text-neutral-500">Nomor telepon belum diatur</p>
-            <Button
-              variant="ghost"
-              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
-            >
-              <PlusIcon className="h-4 w-4" /> Tambah No. Telpon
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      <Card className="mb-6 !gap-[0px] rounded-3xl border border-neutral-200 !pt-3 shadow-none">
-        <CardHeader className="pt border-b border-neutral-200 px-5 !pb-2">
-          <CardTitle className="text-m-semibold">Nomor Telepon</CardTitle>
-        </CardHeader>
-        <CardContent className="gap-0 space-y-4 px-4 pt-5">
-          <div className="flex items-center justify-between">
-            <p className="text-neutral-500">Nomor telepon belum diatur</p>
-            <Button
-              variant="ghost"
-              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
-            >
-              <EditIcon className="h-4 w-4" /> Ganti Nomor
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <CardPhone
+        phoneNumber={profile.persona?.phoneNumber || ''}
+        onUpdated={refetchProfile}
+      />
     </div>
   )
 }

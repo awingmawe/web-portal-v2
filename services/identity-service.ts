@@ -170,3 +170,34 @@ export async function changeEmailOtp(payload: {
     throw error
   }
 }
+
+export async function changePhoneOtp(payload: {
+  phoneNumber: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/identity/verification/otp/change-phonenumber`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp change phone number:', error)
+    throw error
+  }
+}
+
+export async function updatePhoneNumber(payload: {
+  otp: string
+  phoneNumber: string
+}): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/identity/verification/verify-change-phonenumber`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp change phone number:', error)
+    throw error
+  }
+}

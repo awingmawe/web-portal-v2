@@ -28,6 +28,8 @@ interface VerificationDialogProps {
     | 'post-add-password'
     | 'post-verify-email'
     | 'post-change-email'
+    | 'post-add-phone'
+    | 'post-edit-phone'
 }
 
 export default function VerificationDialog({
@@ -130,6 +132,10 @@ export default function VerificationDialog({
         return 'Verifikasi Email'
       case 'post-change-email':
         return 'Verifikasi Email Baru'
+      case 'post-add-phone':
+        return 'Verifikasi Nomor Telepon'
+      case 'post-edit-phone':
+        return 'Verifikasi Nomor Telepon'
       default:
         return 'Verifikasi'
     }
