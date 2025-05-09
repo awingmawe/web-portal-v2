@@ -22,6 +22,7 @@ function AnimationScrollV2({
   const tracker = useRef<HTMLDivElement>(null)
   const jemaah = useRef<HTMLDivElement>(null)
   const overlay = useRef<HTMLDivElement>(null)
+  const notJustAService = useRef<HTMLDivElement>(null)
 
   const { lg: isMobile } = useTailwindBreakpoint()
   const [showKabah, setShowKabah] = useState(false)
@@ -33,11 +34,15 @@ function AnimationScrollV2({
     const ex = exp.current
     const je = jemaah.current
     const ov = overlay.current
-    if (!gf || !ec || !tr || !ex || !je || !ov) return
+    const nj = notJustAService.current
+
+    if (!gf || !ec || !tr || !ex || !je || !ov || !nj) return
+    nj.style.left = `${Number(exp.current?.getBoundingClientRect().left)}px`
+    nj.style.display = 'inline'
 
     const handleScroll = () => {
       const gfRectY = gf.getBoundingClientRect().top + window.scrollY
-      setShowKabah(window.scrollY > gfRectY + gf.clientHeight / 2)
+      setShowKabah(window.scrollY > gfRectY + gf.clientHeight / 2.5)
 
       const trRectY = tr.getBoundingClientRect().top
       if (window.scrollY > trRectY + window.scrollY) {
@@ -53,7 +58,9 @@ function AnimationScrollV2({
       }
 
       const targetJeShow =
-        trRectY + window.innerHeight * (isMobile ? 1 : 2) + window.scrollY
+        trRectY * (isMobile ? 1.2 : 1) +
+        window.innerHeight * (isMobile ? 0.5 : 2) +
+        window.scrollY
       if (window.scrollY > targetJeShow) {
         const targetJeY =
           ((targetJeShow + trRectY) / window.innerHeight) *
@@ -64,7 +71,7 @@ function AnimationScrollV2({
         const targetOvOpacity =
           (10 - (targetJeShow + trRectY) / window.innerHeight) / 10
         ov.style.display = 'inline'
-        ov.style.opacity = String(targetOvOpacity / 1.8 - 0.3)
+        ov.style.opacity = String(targetOvOpacity - 0.6)
       } else {
         je.style.display = 'none'
         ov.style.display = 'none'
@@ -94,7 +101,10 @@ function AnimationScrollV2({
       />
       <div ref={tracker} style={{ background: 'white' }} />
       <div className="relative">
-        <div className="absolute z-40 !px-[126px] !pt-[240px] max-xl:top-[5%] max-lg:top-[0%] max-lg:left-[65px] max-lg:!px-[56px] max-lg:!pt-[42vh] max-md:left-[20px] max-md:!px-0">
+        <div
+          className="absolute z-40 hidden !pt-[240px] max-xl:top-[5%] max-lg:top-[0%] max-lg:left-[65px] max-lg:!px-[56px] max-lg:!pt-[42vh] max-md:left-[20px] max-md:!px-0"
+          ref={notJustAService}
+        >
           <p className="text-xl-regular z-10 text-center max-lg:text-[16px]">
             Not just a service, It&apos;s an...
           </p>
