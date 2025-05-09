@@ -127,6 +127,8 @@ export default async function DetailPackage({ params }: { params: any }) {
           showBackButton
           variant="transparent"
           titleLink={detailData.title}
+          token={token}
+          packageId={idDetailPackage}
         />
         <main className="container mx-auto mt-[40px] mb-16 max-lg:mt-0 max-lg:mb-[78px] max-lg:max-w-full max-lg:px-0">
           <GalleryList title={detailData.title} />

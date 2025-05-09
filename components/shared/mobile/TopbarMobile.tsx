@@ -27,6 +27,8 @@ interface MobileTopbarProps {
     | 'profileTopbar'
   titleLink?: string
   title?: string
+  token?: string
+  packageId?: number
   searchPlaceholder?: string
   onSearch?: (query: string) => void
   showNotification?: boolean
@@ -52,6 +54,8 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     showCallCenter = false,
     onBackClick,
     titleLink = '',
+    token,
+    packageId,
   }) => {
     const { filters } = useFilterProduct()
 
@@ -89,11 +93,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       }
     }, [arrivalAirport, departureAirport])
 
-    /**
-     * Handles the back button click event. If an `onBackClick` callback is provided,
-     * it invokes that callback. Otherwise, it navigates back to the previous page
-     * in the browser history using the router.
-     */
     const handleBackClick = useCallback(() => {
       if (onBackClick) {
         onBackClick()
@@ -102,16 +101,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       }
     }, [onBackClick, router])
 
-    /**
-     * Renders the content of the mobile top bar based on the given variant.
-     * Available variants are:
-     *   - `search`: Renders a search input form.
-     *   - `filter`: Renders date range and optional location information.
-     *   - `title`: Renders a title in the center.
-     *   - `plain`: Renders nothing.
-     *   - `transparent`: Renders nothing.
-     * @returns The rendered content of the mobile top bar.
-     */
     const renderContent = useCallback(() => {
       switch (variant) {
         case 'search':
@@ -234,6 +223,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           backgroundClasses = 'border-b-transparent bg-transparent'
           break
 
+        case 'plain':
         case 'transparent':
           positionClasses = 'fixed top-0'
           backgroundClasses = showFixedHeader
@@ -256,7 +246,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             'absolute -top-25 left-1/2 transform -translate-x-1/2'
           backgroundClasses = ''
           break
-        case 'plain':
         default:
           positionClasses = 'fixed top-3.5'
           backgroundClasses = 'border-b-transparent bg-transparent'
@@ -270,7 +259,12 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     const renderActionButton = () => {
       if (variant === 'transparent') {
         return (
-          <ShareDrawer titleLink={titleLink} buttonClasses={buttonClasses} />
+          <ShareDrawer
+            titleLink={titleLink}
+            buttonClasses={buttonClasses}
+            token={token}
+            id={packageId}
+          />
         )
       } else if (variant === 'filter') {
         return <FilterDrawer />

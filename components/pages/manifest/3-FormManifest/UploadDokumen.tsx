@@ -22,7 +22,7 @@ interface FileUploadProps {
 export function FileUpload({
   label,
   description = 'Tarik dokumen ke area ini untuk mengunggah dokumen',
-  accept = 'image/jpeg,image/jpg,application/pdf',
+  accept = 'image/jpeg,image/jpg,application/pdf,image/png',
   required = false,
   onChange,
   className,
@@ -134,7 +134,7 @@ export function FileUpload({
               </p>
             </div>
             <p className="text-s-regular text-center text-neutral-900 max-lg:text-left">
-              mendukung tipe file: Jpeg, Jpg, PDF
+              mendukung tipe file: Jpeg, Jpg, PNG, PDF
             </p>
           </div>
         )}
