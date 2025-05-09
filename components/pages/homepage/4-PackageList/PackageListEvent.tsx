@@ -18,6 +18,7 @@ interface PackageListEventProps {
   dataRegular?: CardData[]
   dataPlus?: CardData[]
   isLoading?: boolean
+  header?: boolean
 }
 
 interface PackageSectionProps {
@@ -26,6 +27,7 @@ interface PackageSectionProps {
   type: 'promo' | 'regular' | 'plus'
   data: CardData[]
   isLoading: boolean
+  header: boolean
   renderSkeletonItems: (count: number, isLoading: boolean) => React.ReactNode
 }
 
@@ -36,6 +38,7 @@ const PackageSection = ({
   type,
   data,
   isLoading,
+  header = true,
   renderSkeletonItems,
 }: PackageSectionProps) => {
   // Memoize the package items
@@ -57,7 +60,9 @@ const PackageSection = ({
     <Fragment>
       {data.length !== 0 && (
         <div>
-          <HeaderPackageList title={title} desc={description} type={type} />
+          {header && (
+            <HeaderPackageList title={title} desc={description} type={type} />
+          )}
           <Carousel
             opts={{
               align: 'start',
@@ -83,6 +88,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   dataRegular,
   dataPlus,
   isLoading: externalLoading,
+  header,
 }) => {
   // Internal loading states
   const [isPromoLoading, setIsPromoLoading] = useState(true)
@@ -137,6 +143,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'promo' as const,
       data: dataPromo,
       isLoading: isPromoLoading || loading,
+      header: header,
     },
     {
       title: 'Umroh Reguler',
@@ -145,6 +152,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'regular' as const,
       data: dataRegular,
       isLoading: isRegularLoading || loading,
+      header: header,
     },
     {
       title: 'Umroh Plus',
@@ -152,6 +160,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'plus' as const,
       data: dataPlus || [],
       isLoading: isPlusLoading || loading,
+      header: header,
     },
   ]
 
@@ -167,6 +176,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
           title={section.title}
           description={section.description}
           type={section.type}
+          header={section.header ?? true}
           data={section.data ?? []}
           isLoading={section.isLoading}
           renderSkeletonItems={renderSkeletonItems}
