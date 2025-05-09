@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 

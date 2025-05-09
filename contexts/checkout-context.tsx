@@ -49,6 +49,11 @@ export const CheckoutProvider = ({
   const [parsedContent, setParsedContent] = useState<any>(null)
   const [shouldCheckPreAfterClear, setShouldCheckPreAfterClear] =
     useState(false)
+  const [shouldRunCheckPre, setShouldRunCheckPre] = useState(false)
+
+  // Flag to prevent excessive API calls
+  const checkPreCalled = useRef(false)
+  const isInitialRender = useRef(true)
 
   useEffect(() => {
     const storedToken = cookie.get(cookieNames.USER_ACCESS_TOKEN)
@@ -69,13 +74,36 @@ export const CheckoutProvider = ({
     }
   }, [])
 
+  // Fix: Separate the side effect from the dependency change
   useEffect(() => {
-    setSliderValue(paymentAmount * jamaahList.length)
+    if (isInitialRender.current) {
+      isInitialRender.current = false
+      return
+    }
+
+    if (jamaahList.length !== 0) {
+      // Update slider value based on payment amount and jamaah count
+      // without triggering additional state updates
+      const newSliderValue = paymentAmount * jamaahList.length
+      if (newSliderValue !== sliderValue) {
+        setSliderValue(newSliderValue)
+      }
+
+      // Mark that we should run checkPre, but don't run it directly here
+      setShouldRunCheckPre(true)
+    }
   }, [jamaahList.length, paymentAmount])
 
+  // Separate effect to handle checkPre calls
   useEffect(() => {
-    checkPre()
-  }, [paymentAmount, jamaahList.length])
+    if (shouldRunCheckPre && !checkPreCalled.current) {
+      checkPreCalled.current = true
+      checkPre().finally(() => {
+        checkPreCalled.current = false
+      })
+      setShouldRunCheckPre(false)
+    }
+  }, [shouldRunCheckPre])
 
   const handleAddJamaah = () => {
     const newId = jamaahList.length + 1
@@ -181,22 +209,25 @@ export const CheckoutProvider = ({
           // Additional logic on close
         },
       })
-      // setLoading(false)
     } catch (error) {
       console.error(error)
     } finally {
       setLoading(false)
     }
   }
+
   const handleCheckReferral = async () => {
     setIsReferralCodeChecked(false)
     setIsReferralValid(false)
     try {
       const res = await checkReferralCode(referralCode)
-      checkPre()
+
       setIsReferralCodeChecked(true)
       setIsReferralValid(true)
       setWukalaSetting(res)
+
+      // Signal that we should run checkPre
+      setShouldRunCheckPre(true)
     } catch (error: any) {
       setIsReferralCodeChecked(true)
       setIsReferralValid(false)
@@ -267,7 +298,6 @@ export const CheckoutProvider = ({
     setIsReferralCodeChecked(false)
     setWukalaSetting(undefined)
     setShouldCheckPreAfterClear(true)
-    // dispatch(setWukalaSetting(undefined))
   }
 
   const handlePushEvent = (eventName: string) => {
@@ -306,19 +336,28 @@ export const CheckoutProvider = ({
     })
   }
 
+  // Fix: Clearly separate the condition for running checkPre after referral code is cleared
   useEffect(() => {
     if (shouldCheckPreAfterClear && referralCode === '') {
-      checkPre()
+      // Reset the flag first to prevent repeated calls
       setShouldCheckPreAfterClear(false)
+      setShouldRunCheckPre(true)
     }
   }, [referralCode, shouldCheckPreAfterClear])
-  const totalMinimumDownPayment = paymentAmount * jamaahList.length
-  const [rawInputValue, setRawInputValue] = useState(
-    sliderValue.toLocaleString('id-ID')
-  )
+
+  const totalMinimumDownPayment =
+    jamaahList.length === 0 ? 0 : paymentAmount * jamaahList.length
+  const [rawInputValue, setRawInputValue] = useState('')
+
+  // Fixed: Only update the raw input when the slider value changes significantly
   useEffect(() => {
-    // Sync input display when sliderValue changes externally
-    setRawInputValue(sliderValue.toLocaleString('id-ID'))
+    const formattedValue = sliderValue.toLocaleString('id-ID')
+    const currentNumericValue = rawInputValue.replace(/\D/g, '')
+
+    // Only update if values are actually different to prevent cycles
+    if (parseInt(currentNumericValue || '0', 10) !== sliderValue) {
+      setRawInputValue(formattedValue)
+    }
   }, [sliderValue])
 
   const formatNumber = (value: string) => {
@@ -332,30 +371,50 @@ export const CheckoutProvider = ({
     const numeric = input.replace(/\D/g, '')
     setRawInputValue(numeric) // simpan angka mentah (tanpa titik)
   }
-  // Tambahkan useRef untuk debounce timer
-  const debounceTimerRef = useRef<any>(null)
 
-  // Fungsi untuk melakukan debounce pada perubahan slider
+  // Fix: Completely rebuilt debounce implementation for slider changes
+  const debounceTimerRef = useRef<any>(null)
+  const pendingValueRef = useRef<number | null>(null)
+
   const handleSliderChange = (e: any) => {
-    setLoading(true)
+    // Store the value in a ref instead of state to avoid render loops
     const value = parseInt(e.target.value)
-    setSliderValue(value) // Update slider position immediately for visual feedback
+    pendingValueRef.current = value
+
+    // Use the loading state once at the beginning
+    setLoading(true)
 
     // Clear any existing timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current)
     }
 
-    // Set new timer for actual value update
+    // Set new timer for batched state updates
     debounceTimerRef.current = setTimeout(() => {
-      // Calculate per-jamaah amount after debounce
-      const perJamaahAmount = Math.ceil(value / jamaahList.length)
-      setPaymentAmount(perJamaahAmount) // Update payment amount per jamaah
-      setRawInputValue(value.toString()) // Update raw input value
+      // Get the latest pending value
+      const finalValue = pendingValueRef.current
 
+      if (finalValue !== null && finalValue !== sliderValue) {
+        // Batch state updates to prevent render loops
+        setSliderValue(finalValue)
+
+        // Update payment amount if we have jamaah
+        if (jamaahList.length > 0) {
+          const perJamaahAmount = Math.ceil(finalValue / jamaahList.length)
+          if (perJamaahAmount !== paymentAmount) {
+            setPaymentAmount(perJamaahAmount)
+          }
+        }
+
+        // Clear pending value
+        pendingValueRef.current = null
+      }
+
+      // Always turn off loading at the end
       setLoading(false)
     }, 300) // 300ms debounce time
   }
+
   // Cleanup timer on component unmount
   useEffect(() => {
     return () => {
@@ -364,10 +423,10 @@ export const CheckoutProvider = ({
       }
     }
   }, [])
+
   const getLegal = async () => {
     try {
       const res = await getLegalSyarat()
-      // console.log(res.results[0])/
       setDataSk(res.results[0])
     } catch (error) {
       console.log(error)
@@ -375,30 +434,28 @@ export const CheckoutProvider = ({
   }
 
   useEffect(() => {
-    getLegal()
     if (detailVariant) {
       getRefundPolicy()
     }
   }, [detailVariant])
 
+  useEffect(() => {
+    getLegal()
+  }, [])
+
   const getRefundPolicy = async () => {
     try {
-      // console.log(detailVariant)
-
       const response = await checkRefundPolicy(
         detailVariant.package?.organizationInstance?.id
       )
-      // console.log(response)
       setDataRefundPolicy(response)
       const parsedContent = JSON.parse(response.kondisi)
       setParsedContent(parsedContent)
-      // if (response.data) {
-
-      // }
     } catch (error) {
       console.error(error)
     }
   }
+
   const value = {
     token,
     preBooking,

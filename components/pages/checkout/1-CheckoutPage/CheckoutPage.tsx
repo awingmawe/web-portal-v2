@@ -49,7 +49,8 @@ const CheckoutPage = () => {
     dataRefundPolicy,
   } = useCheckout()
   const router = useRouter()
-
+  console.log(rawInputValue, 'raw')
+  console.log(sliderValue, 'sllider')
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Main content */}
@@ -373,8 +374,16 @@ const CheckoutPage = () => {
                 {/* Slider */}
                 <input
                   type="range"
-                  min={selectedVariant.netAmount * jamaahList.length}
-                  max={preBooking?.totalPrice || totalPrice * jamaahList.length}
+                  min={
+                    jamaahList.length > 0
+                      ? selectedVariant.netAmount * jamaahList.length
+                      : 0
+                  }
+                  max={
+                    jamaahList.length > 0
+                      ? preBooking?.totalPrice || totalPrice * jamaahList.length
+                      : 0
+                  }
                   step={1000}
                   value={sliderValue}
                   onChange={handleSliderChange}
