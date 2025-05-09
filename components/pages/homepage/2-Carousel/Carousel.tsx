@@ -33,10 +33,10 @@ export function CarouselBanner({
 
   return (
     <section>
-      <p className="heading-2-bold mt-16 mb-0.5 text-neutral-900 max-lg:mt-[30px] max-lg:text-xl max-lg:leading-6.5">
+      <p className="heading-2-bold mt-16 mb-0.5 text-neutral-900 max-lg:mx-4 max-lg:mt-[30px] max-lg:text-xl max-lg:leading-6.5">
         Program Muslim101
       </p>
-      <p className="text-l-regular mb-7 text-neutral-900 max-lg:mb-2 max-lg:text-xs max-lg:leading-4">
+      <p className="text-l-regular mb-7 text-neutral-900 max-lg:mx-4 max-lg:mb-2 max-lg:text-xs max-lg:leading-4">
         Jangan lewatkan program menarik dari Muslim 101
       </p>
       <Carousel
@@ -45,9 +45,9 @@ export function CarouselBanner({
           loop: true,
           inViewThreshold: 1,
         }}
-        className="w-full"
+        className="w-full "
       >
-        <CarouselContent className="-ml-5">
+        <CarouselContent className="-ml-5 max-lg:ml-0">
           {dataBanner?.results.map((banner, index) => (
             <CarouselItem
               key={index}

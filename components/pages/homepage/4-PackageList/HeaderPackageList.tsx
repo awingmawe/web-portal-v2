@@ -17,7 +17,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
 }: HeaderPackageProps) {
   const { pushEvent } = useEventTracker()
   return (
-    <div className="mt-[36px] mb-6 flex justify-between max-lg:mt-8">
+    <div className="mt-[36px] mb-6 flex justify-between max-lg:mt-8 max-lg:pl-4">
       <div className="flex flex-col gap-0.5">
         <p className="heading-2-bold max-sm:text-xl max-sm:leading-6.5">
           {title}
