@@ -8,6 +8,7 @@ import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
 import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
 import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
+import DrawerCheckAvailibility from '@/components/pages/detail-package/mobile/DrawerCheckavailibility'
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
@@ -311,6 +312,22 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
       setIsQuotaModalOpen(false)
       setIsQuotaModalSuccess(true)
+      statusStockVariable()
+    } catch (error) {
+      console.log(error)
+    }
+    // You might want to call an API or update state here
+  }
+  const handleQuotaCheckDrawer = async (quotaAmount: string) => {
+    // Handle the quota check logic here
+    try {
+      const payload = {
+        idVariant: selectedVariant?.id,
+        value: quotaAmount,
+      }
+      await checkAvailibility(payload)
+      toast.success('Pengecekan Kuota Berhasil Terkirim')
+      statusStockVariable()
     } catch (error) {
       console.log(error)
     }
@@ -716,29 +733,35 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               Pesan Sekarang, Bayar Nanti
             </Button>
           </Link>
-
-          <Button
-            className="w-full rounded-full py-2 lg:hidden"
-            variant="outline"
-            size="lg"
-            id="btn-check-quota"
-            onClick={() => {
-              if (token) {
-                if (statusStock === false) {
-                  setIsQuotaModalOpen(true)
-                } else {
-                  setIsQuotaModalWaiting(true)
-                }
-              } else {
-                window.location.href =
-                  `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
-                  `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
-              }
-            }}
-          >
-            Cek Kuota
-            <ArrowIcon size={12} className="-rotate-45" />
-          </Button>
+          {token ? (
+            <DrawerCheckAvailibility
+              statusStock={statusStock}
+              onSubmit={handleQuotaCheckDrawer}
+            >
+              <Button
+                className="w-full rounded-full py-2 lg:hidden"
+                variant="outline"
+                size="lg"
+                id="btn-check-quota"
+              >
+                Cek Kuota
+                <ArrowIcon size={12} className="-rotate-45" />
+              </Button>
+            </DrawerCheckAvailibility>
+          ) : (
+            <Button
+              className="w-full rounded-full py-2 lg:hidden"
+              variant="outline"
+              size="lg"
+              id="btn-check-quota"
+              onClick={() => {
+                window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${URL}/${path}`
+              }}
+            >
+              Cek Kuota
+              <ArrowIcon size={12} className="-rotate-45" />
+            </Button>
+          )}
         </div>
       ) : (
         <Button
