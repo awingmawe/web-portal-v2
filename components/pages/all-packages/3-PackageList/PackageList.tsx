@@ -5,7 +5,7 @@ import { CardPackage } from '@/components/shared/CardPackage'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { CardData } from '@/constant/types/PackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
-import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
+import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { Loader2 } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
@@ -45,7 +45,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     hasMore,
     isLoading: loading,
     packages,
-  } = useInfiniteScroll()
+  } = useCustomInfiniteScroll()
   const { lg } = useTailwindBreakpoint()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
