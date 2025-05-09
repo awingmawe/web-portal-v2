@@ -30,9 +30,7 @@ export const CheckoutProvider = ({
   const [referralCode, setReferralCode] = useState<any>('')
   const [wukalaSetting, setWukalaSetting] = useState<any>()
   const [useMyData, setUseMyData] = useState(false)
-  const [jamaahList, setJamaahList] = useState<any>([
-    { id: 1, name: '', phone: '' },
-  ])
+  const [jamaahList, setJamaahList] = useState<any>([])
   const [detailVariant, setDetailVariant] = useState<any>(null)
   const [selectedVariant, setSelectedVariant] = useState<any>(null)
   const [paymentAmount, setPaymentAmount] = useState(0)
@@ -45,6 +43,8 @@ export const CheckoutProvider = ({
   const [booking, setBooking] = useState<any>()
   const [dataSK, setDataSk] = useState<any>()
   const [dataRefundPolicy, setDataRefundPolicy] = useState<any>()
+  const [nama, setNama] = useState('')
+  const [noTlpn, setNoTlpn] = useState('')
 
   const [parsedContent, setParsedContent] = useState<any>(null)
   const [shouldCheckPreAfterClear, setShouldCheckPreAfterClear] =
@@ -97,7 +97,14 @@ export const CheckoutProvider = ({
   }
 
   const handleRemoveJamaah = (id: number) => {
-    setJamaahList((prev: any) => prev.filter((j: any) => j.id !== id))
+    setJamaahList((prev: any) =>
+      prev
+        .filter((j: any) => j.id !== id)
+        .map((j: any, index: number) => ({
+          ...j,
+          id: index + 1, // assign ulang id berdasarkan urutan
+        }))
+    )
   }
   const router = useRouter()
   const checkPre = async () => {
@@ -220,6 +227,38 @@ export const CheckoutProvider = ({
           )
         )
       }
+    }
+  }
+  const handleUseMyDataChangeMobile = () => {
+    if (profile) {
+      const name = profile.name || ''
+      const phone = profile.persona?.phoneNumber || ''
+
+      // Generate a unique ID for the new jamaah
+      const newId = Date.now().toString()
+
+      // Check if the list is empty first
+      if (jamaahList.length === 0) {
+        // If list is empty, add the profile data as the first jamaah
+        setJamaahList([{ id: newId, name, phone }])
+      } else {
+        // If the list already has entries, add a new one with the profile data
+        setJamaahList([...jamaahList, { id: newId, name, phone }])
+      }
+    }
+  }
+
+  const handleSimpanMobile = () => {
+    // Generate a unique ID for the new jamaah
+    const newId = Date.now().toString()
+
+    // Check if the list is empty first
+    if (jamaahList.length === 0) {
+      // If list is empty, add the profile data as the first jamaah
+      setJamaahList([{ id: newId, name: nama, phone: noTlpn }])
+    } else {
+      // If the list already has entries, add a new one with the profile data
+      setJamaahList([...jamaahList, { id: newId, name: nama, phone: noTlpn }])
     }
   }
   const handleRemoveReferralCode = () => {
@@ -406,6 +445,12 @@ export const CheckoutProvider = ({
     dataSK,
     parsedContent,
     dataRefundPolicy,
+    handleUseMyDataChangeMobile,
+    setNoTlpn,
+    setNama,
+    nama,
+    noTlpn,
+    handleSimpanMobile,
   }
 
   return (

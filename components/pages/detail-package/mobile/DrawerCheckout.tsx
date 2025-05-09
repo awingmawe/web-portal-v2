@@ -107,6 +107,7 @@ const CheckoutDrawerMobile = React.memo(
           price: getPrice(),
           roomType: selectedRoomType,
           variantId: selectedVariant?.id,
+          name: selectedVariant?.name,
         })
       )
       window.location.href = '/checkout'
