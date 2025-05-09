@@ -1,82 +1,104 @@
+// hooks/common/useCustomInfiniteScroll.ts
+'use client'
+
 import { toast } from '@/components/ui/sonner'
-import { useFilterProduct } from '@/contexts/filter-product-context'
+import { CardData } from '@/constant/types/PackageProps'
 import { useFetchPackage } from '@/hooks/filter-product-hooks/useFetchPackage'
 import { mapProductsToCardData } from '@/lib/utils'
 import { useCallback, useState } from 'react'
 
-export function useInfiniteScroll() {
+export const useCustomInfiniteScroll = (pageSize = 9) => {
+  const [items, setItems] = useState<CardData[]>([])
+  const [hasMore, setHasMore] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalItems, setTotalItems] = useState<number>(0)
   const { fetchPackage } = useFetchPackage()
-  const { packages, setPackages, isLoading, setIsLoading } = useFilterProduct()
 
-  // Keep track of current page
-  const [page, setPage] = useState(1)
-  // State for packages data
-  const [hasMore, setHasMore] = useState(true)
+  // Reset items and related state
+  const resetItems = useCallback(() => {
+    setItems([])
+    setHasMore(true)
+    setCurrentPage(1)
+    setTotalItems(0)
+  }, [])
 
-  const fetchInitialPackages = useCallback(
-    async (params: any) => {
+  // Load initial items
+  const fetchInitialItems = useCallback(
+    async (params?: any) => {
       setIsLoading(true)
       try {
-        // Fetch data using the hook
-        const data = await fetchPackage(params)
-        const mappedData = mapProductsToCardData(data)
+        // Reset state for fresh data
+        setItems([])
 
-        // Update state
-        setPackages(mappedData)
-        setHasMore(mappedData.length < data.total)
-        setPage(1)
-      } catch (err) {
-        console.error('Error fetching packages:', err)
+        // Always start with page 1 for initial load
+        const initialPageParams = {
+          ...params,
+          page: 1,
+        }
+
+        const result = await fetchPackage(initialPageParams, pageSize)
+        const mappedData = mapProductsToCardData(result)
+
+        setItems(mappedData)
+        setTotalItems(result.total)
+        setHasMore(mappedData.length < result.total)
+        setCurrentPage(2) // Set to page 2 for next load
+      } catch (error) {
+        console.error('Error loading initial items:', error)
         toast.error('Failed to load packages. Please try again.')
+        setHasMore(false)
       } finally {
         setIsLoading(false)
       }
     },
-    [fetchPackage, setIsLoading, setPackages]
+    [fetchPackage, pageSize]
   )
 
-  // Function to load more packages
+  // Load more items
   const loadMore = useCallback(
-    async (params: any) => {
+    async (params?: any) => {
       if (isLoading || !hasMore) return
 
       setIsLoading(true)
       try {
-        const nextPage = page + 1
-
-        const data = await fetchPackage(params, nextPage)
-
-        if (data.results.length > 0) {
-          // Properly merge previous data with new data
-          setPackages([...packages, ...mapProductsToCardData(data)])
-          setPage(nextPage)
+        // Apply the current page to params
+        const nextPageParams = {
+          ...params,
+          page: currentPage,
         }
 
-        // Check if we have more data to load
-        setHasMore(packages.length + data.results.length < data.total)
-      } catch (err) {
-        console.error('Error isLoading more packages:', err)
+        const result = await fetchPackage(nextPageParams, pageSize)
+        const mappedData = mapProductsToCardData(result)
+
+        // Append new items to existing items
+        setItems((prevItems) => [...prevItems, ...mappedData])
+
+        // Check if we've loaded all available items
+        const newTotalLoaded = items.length + mappedData.length
+        setHasMore(newTotalLoaded < result.total)
+
+        // Update total and increment page number
+        setTotalItems(result.total)
+        setCurrentPage((prev) => prev + 1)
+      } catch (error) {
+        console.error('Error loading more items:', error)
         toast.error('Failed to load more packages. Please try again.')
+        setHasMore(false)
       } finally {
         setIsLoading(false)
       }
     },
-    [
-      isLoading,
-      hasMore,
-      setIsLoading,
-      page,
-      fetchPackage,
-      packages,
-      setPackages,
-    ]
+    [fetchPackage, currentPage, hasMore, isLoading, items.length, pageSize]
   )
 
   return {
-    packages,
-    isLoading,
+    packages: items,
     hasMore,
+    isLoading,
     loadMore,
-    fetchInitialPackages, // Export this in case you need to trigger a refresh
+    resetItems,
+    fetchInitialPackages: fetchInitialItems,
+    totalPackages: totalItems,
   }
 }
