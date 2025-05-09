@@ -165,15 +165,17 @@ export default function CardEmail({
           !email.includes('privaterelay.appleid.com') ? (
             <AppleIcon />
           ) : (
-            <Button
-              variant="ghost"
-              type="button"
-              className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
-              onClick={handleEditEmailClick}
-            >
-              <EditIcon className="h-4 w-4 max-lg:h-5 max-lg:w-5" />
-              <span className="max-lg:hidden">Ganti Email</span>
-            </Button>
+            provider == 'apple' && (
+              <Button
+                variant="ghost"
+                type="button"
+                className="text-l-medium gap-1 rounded-full border-gray-300 px-3 py-2"
+                onClick={handleEditEmailClick}
+              >
+                <EditIcon className="h-4 w-4 max-lg:h-5 max-lg:w-5" />
+                <span className="max-lg:hidden">Ganti Email</span>
+              </Button>
+            )
           )}
           {provider == 'local' && (
             <Button

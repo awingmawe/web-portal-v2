@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { toast } from '@/components/ui/sonner'
+import { ellipsis } from '@/lib/utils'
 import { changeBank, changeBankOtp } from '@/services/identity-service'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -155,7 +156,9 @@ export default function CardRekening({
                   )}`}
                 </p>
                 <Separator orientation="vertical" className="mx-2 !h-5" />
-                <p className="text-l-medium">{accountName}</p>
+                <p className="text-l-medium">
+                  {ellipsis(String(accountName), 20)}
+                </p>
               </div>
             </div>
             <Button

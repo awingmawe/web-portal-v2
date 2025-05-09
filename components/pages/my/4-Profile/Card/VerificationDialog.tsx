@@ -10,7 +10,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -41,6 +49,7 @@ export default function VerificationDialog({
   onVerify,
   purpose,
 }: VerificationDialogProps) {
+  const { lg } = useTailwindBreakpoint()
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null))
   const [isResend, setIsResend] = useState(60)
@@ -141,90 +150,136 @@ export default function VerificationDialog({
     }
   }
 
+  const formContent = (
+    <div>
+      <div className="mb-6 flex justify-between gap-0 max-lg:gap-2">
+        {otp.map((digit, index) => (
+          <Input
+            key={index}
+            ref={(el) => {
+              if (el) inputRefs.current[index] = el
+            }}
+            type="text"
+            inputMode="numeric"
+            maxLength={1}
+            value={digit}
+            onChange={(e) => handleInputChange(index, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(index, e)}
+            onPaste={index === 0 ? handlePaste : undefined}
+            className="h-20 w-20 rounded-md text-center max-lg:h-12 max-lg:w-12"
+            style={{ fontSize: lg ? '1.5rem' : '2.5rem', textAlign: 'center' }}
+          />
+        ))}
+      </div>
+
+      <p className="mb-6 text-center text-sm max-lg:text-left">
+        Tidak menerima kode?{' '}
+        <button
+          className={`text-m-regular ${
+            isResend > 0
+              ? 'cursor-not-allowed text-neutral-400'
+              : 'text-primary-600 hover:text-primary-700 cursor-pointer'
+          } ml-2`}
+          onClick={() => {
+            handleResend()
+          }}
+          disabled={isResend > 0}
+        >
+          {isResend > 0 ? `Tunggu ${isResend} detik` : 'Kirim Ulang OTP'}
+        </button>
+      </p>
+
+      <div className="flex gap-3">
+        {!lg && (
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1 rounded-full"
+            onClick={() => onOpenChange(false)}
+          >
+            Batal
+          </Button>
+        )}
+        <Button
+          type="button"
+          className="flex-1 rounded-full bg-yellow-400 text-black hover:bg-yellow-500"
+          onClick={handleVerify}
+          disabled={otp.some((digit) => !digit)}
+          isLoading={isLoading}
+        >
+          Simpan
+        </Button>
+      </div>
+    </div>
+  )
+
+  const headerContent = (
+    <div>
+      {lg ? (
+        <DrawerTitle>
+          <div className="text-m-semibold mb-2">{getDialogTitle()}</div>
+          <p className="text-m-regular mt-1 text-neutral-500">
+            Masukkan OTP yang dikirimkan ke alamat email kamu
+          </p>
+        </DrawerTitle>
+      ) : (
+        <div className="mb-6 flex items-center">
+          <div className="flex">
+            <div className="bg-primary-100 flex h-12 w-12 items-center justify-center rounded-md">
+              {icon}
+            </div>
+          </div>
+          <div className="ml-5">
+            <DialogTitle className="heading-3-semibold">
+              {getDialogTitle()}
+            </DialogTitle>
+            <p className="text-m-regular mt-1 text-neutral-500">
+              Masukkan OTP yang dikirimkan ke alamat email kamu
+            </p>
+          </div>
+          <DialogClose asChild>
+            <Button className="absolute top-3 right-3 h-6 w-6 bg-[#E5E5E5] py-0 hover:bg-neutral-500">
+              <X className="h-4 w-4" />
+            </Button>
+          </DialogClose>
+        </div>
+      )}
+    </div>
+  )
+
+  if (lg) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent className="px-4 pb-6">
+          <DrawerHeader className="gap-3 px-0 pb-2">
+            {headerContent}
+            <DrawerClose asChild>
+              <Button
+                className="absolute top-3 right-3 h-6 w-6  py-0 hover:bg-neutral-500"
+                variant={'ghost'}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </DrawerClose>
+          </DrawerHeader>
+          {formContent}
+        </DrawerContent>
+      </Drawer>
+    )
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-3xl border-0 sm:max-w-xl">
-        <div>
-          <DialogHeader className="gap-3 pb-2">
-            <div className="mb-6 flex items-center">
-              <div className="flex">
-                <div className="bg-primary-100 flex h-12 w-12 items-center justify-center rounded-md">
-                  {icon}
-                </div>
-              </div>
-              <div className="ml-5">
-                <DialogTitle className="heading-3-semibold">
-                  {getDialogTitle()}
-                </DialogTitle>
-                <p className="text-m-regular mt-1 text-neutral-500">
-                  Masukkan OTP yang dikirimkan ke alamat email kamu
-                </p>
-              </div>
-              <DialogClose asChild>
-                <Button className="absolute top-3 right-3 h-6 w-6 bg-[#E5E5E5] py-0 hover:bg-neutral-500">
-                  <X className="h-4 w-4" />
-                </Button>
-              </DialogClose>
-            </div>
-          </DialogHeader>
-
-          <div className="mb-6 flex justify-between gap-0">
-            {otp.map((digit, index) => (
-              <Input
-                key={index}
-                ref={(el) => {
-                  if (el) inputRefs.current[index] = el
-                }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                onPaste={index === 0 ? handlePaste : undefined}
-                className="h-20 w-20 rounded-md text-center"
-                style={{ fontSize: '2.5rem', textAlign: 'center' }}
-              />
-            ))}
-          </div>
-
-          <p className="mb-6 text-center text-sm">
-            Tidak menerima kode?{' '}
-            <button
-              className={`text-m-regular ${
-                isResend > 0
-                  ? 'cursor-not-allowed text-neutral-400'
-                  : 'text-primary-600 hover:text-primary-700 cursor-pointer'
-              } ml-2`}
-              onClick={() => {
-                handleResend()
-              }}
-              disabled={isResend > 0}
-            >
-              {isResend > 0 ? `Tunggu ${isResend} detik` : 'Kirim Ulang OTP'}
-            </button>
-          </p>
-
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1 rounded-full"
-              onClick={() => onOpenChange(false)}
-            >
-              Batal
+        <DialogHeader className="gap-3 pb-2">
+          {headerContent}
+          <DialogClose asChild>
+            <Button className="absolute top-3 right-3 h-6 w-6 bg-[#E5E5E5] py-0 hover:bg-neutral-500">
+              <X className="h-4 w-4" />
             </Button>
-            <Button
-              type="button"
-              className="flex-1 rounded-full bg-yellow-400 text-black hover:bg-yellow-500"
-              onClick={handleVerify}
-              disabled={otp.some((digit) => !digit)}
-              isLoading={isLoading}
-            >
-              Simpan
-            </Button>
-          </div>
-        </div>
+          </DialogClose>
+        </DialogHeader>
+        {formContent}
       </DialogContent>
     </Dialog>
   )
