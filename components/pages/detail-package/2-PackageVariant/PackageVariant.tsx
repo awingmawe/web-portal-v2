@@ -261,6 +261,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         price: getPrice(),
         roomType: selectedRoomType,
         variantId: selectedVariant?.id,
+        name: selectedVariant?.name,
       })
     )
     router.push('/checkout')
