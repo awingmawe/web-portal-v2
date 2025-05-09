@@ -3,7 +3,7 @@
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import { useCheckout } from '@/contexts/checkout-context'
-import { ArrowLeft, CreditCard, PlaneLanding, PlaneTakeoff } from 'lucide-react'
+import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -64,7 +64,12 @@ const CheckoutPage = () => {
               }}
               className="text-black-600 flex cursor-pointer items-center hover:underline"
             >
-              <ArrowLeft size={20} className=" mr-2" />
+              <Image
+                src="/images/arrow-left.svg"
+                width={24}
+                height={24}
+                alt="arrow"
+              />
             </a>
 
             <span className="font-medium">Konfirmasi Pembelian Paket</span>
@@ -75,7 +80,7 @@ const CheckoutPage = () => {
           {/* Left section */}
           <div className="w-full space-y-6 lg:w-2/3">
             {/* Flight details */}
-            <div className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-4 md:flex-row md:items-center md:space-x-6">
+            <div className="flex flex-col justify-between rounded-[20px] border border-gray-200 bg-white p-4 md:flex-row md:items-center md:space-x-6">
               <div className="mb-4 flex items-center md:mb-0 md:w-1/2">
                 <div className="mr-4 flex flex-col items-center">
                   <PlaneTakeoff size={24} color="#FFC100" />
@@ -133,44 +138,34 @@ const CheckoutPage = () => {
             </div>
 
             {/* Jamaah data */}
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-[20px] border border-gray-200 bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="mr-2 rounded bg-gray-200 p-1">
-                    <svg
-                      className="h-4 w-4 text-black"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M20 21C20 18.8783 19.1571 16.8434 17.6569 15.3431C16.1566 13.8429 14.1217 13 12 13C9.87827 13 7.84344 13.8429 6.34315 15.3431C4.84285 16.8434 4 18.8783 4 21"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </div>
+                <div className="flex items-center  gap-[12px]">
+                  <Image
+                    src="/images/people.svg"
+                    width={24}
+                    height={24}
+                    alt="arrow"
+                  />
+
                   <span className="font-bold text-gray-800">Data Jemaah</span>
                 </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="mr-2 h-4 w-4 accent-yellow-500"
-                    checked={useMyData}
-                    onChange={(e) => handleUseMyDataChange(e.target.checked)}
-                  />
-                  <span className="text-sm text-gray-700">
-                    Tambahkan data saya sebagai data Jemaah
-                  </span>
-                </div>
+                {jamaahList.length !== 0 && (
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="mr-2 h-4 w-4 accent-yellow-500"
+                      checked={useMyData}
+                      onChange={(e) => handleUseMyDataChange(e.target.checked)}
+                    />
+                    <span className="text-sm text-gray-700">
+                      Tambahkan data saya sebagai data Jemaah
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {jamaahList.map((jamaah: any, index: number) => (
+              {jamaahList.map((jamaah: any) => (
                 <div
                   key={jamaah.id}
                   className="mb-4 border-t border-gray-100 pt-4"
@@ -209,29 +204,19 @@ const CheckoutPage = () => {
                           handleJamaahPhoneChange(jamaah.id, e.target.value)
                         }
                       />
-                      {index > 0 && (
-                        <button
-                          className="text-gray-400 hover:text-red-500"
-                          onClick={() => handleRemoveJamaah(jamaah.id)}
-                        >
-                          {/* Icon trash */}
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M3 6h18M8 6v12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6M10 11v6M14 11v6"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      )}
+
+                      <button
+                        className="text-gray-400 hover:text-red-500"
+                        onClick={() => handleRemoveJamaah(jamaah.id)}
+                      >
+                        {/* Icon trash */}
+                        <Image
+                          src="/images/trash-omponent.svg"
+                          width={24}
+                          height={24}
+                          alt="arrow"
+                        />
+                      </button>
                     </div>
                   </div>
                   {(!jamaah.name ||
@@ -280,11 +265,15 @@ const CheckoutPage = () => {
             </div>
 
             {/* Payment section */}
-            <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center">
-                <div className="mr-2 rounded bg-gray-200 p-1">
-                  <CreditCard size={16} />
-                </div>
+            <div className=" rounded-[20px] bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-[12px]">
+                <Image
+                  src="/images/money-3.svg"
+                  width={24}
+                  height={24}
+                  alt="arrow"
+                />
+
                 <span className="font-bold">Jumlah Bayar</span>
               </div>
 
@@ -307,42 +296,24 @@ const CheckoutPage = () => {
 
               {/* Input & slider */}
               <div className="mt-4">
-                <div className="mb-4 flex items-center space-x-4">
-                  <label className="text-sm font-medium whitespace-nowrap text-gray-700">
-                    Jumlah Bayar
-                  </label>
-                  <div className="relative">
-                    <span className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
-                      Rp
-                    </span>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-right font-medium text-gray-800 shadow-sm"
-                      value={formatNumber(rawInputValue)}
-                      onChange={handleInputChange}
-                      onBlur={() => {
-                        const value = parseInt(rawInputValue) || 0
-                        const minAmount =
-                          selectedVariant.netAmount * jamaahList.length
-                        const maxAmount =
-                          preBooking?.totalPrice ||
-                          totalPrice * jamaahList.length
-
-                        if (value >= minAmount && value <= maxAmount) {
-                          setSliderValue(value)
-                          const perJamaahAmount = Math.ceil(
-                            value / jamaahList.length
-                          )
-                          setPaymentAmount(perJamaahAmount)
-                          setRawInputValue(value.toString())
-                        } else {
-                          setRawInputValue(sliderValue.toString())
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
+                {/* Jumlah Bayar + Sisa Pelunasan */}
+                <div className="mb-4 flex items-center justify-between">
+                  {/* Label + Input */}
+                  <div className="flex items-center space-x-4">
+                    <label className="text-sm font-medium whitespace-nowrap text-gray-700">
+                      Jumlah Bayar
+                    </label>
+                    <div className="relative">
+                      <span className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
+                        Rp
+                      </span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-right font-medium text-gray-800 shadow-sm"
+                        value={formatNumber(rawInputValue)}
+                        onChange={handleInputChange}
+                        onBlur={() => {
                           const value = parseInt(rawInputValue) || 0
                           const minAmount =
                             selectedVariant.netAmount * jamaahList.length
@@ -360,24 +331,35 @@ const CheckoutPage = () => {
                           } else {
                             setRawInputValue(sliderValue.toString())
                           }
-                        }
-                      }}
-                    />
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                            const value = parseInt(rawInputValue) || 0
+                            const minAmount =
+                              selectedVariant.netAmount * jamaahList.length
+                            const maxAmount =
+                              preBooking?.totalPrice ||
+                              totalPrice * jamaahList.length
+
+                            if (value >= minAmount && value <= maxAmount) {
+                              setSliderValue(value)
+                              const perJamaahAmount = Math.ceil(
+                                value / jamaahList.length
+                              )
+                              setPaymentAmount(perJamaahAmount)
+                              setRawInputValue(value.toString())
+                            } else {
+                              setRawInputValue(sliderValue.toString())
+                            }
+                          }
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <input
-                  type="range"
-                  min={selectedVariant.netAmount * jamaahList.length} // Min is net amount × number of jamaah
-                  max={preBooking?.totalPrice || totalPrice * jamaahList.length}
-                  step={1000}
-                  value={sliderValue} // Use the dedicated slider state
-                  onChange={handleSliderChange} // Gunakan fungsi debounce di sini
-                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
-                />
-
-                <div className="mt-2 flex justify-end">
-                  <span className="text-sm text-gray-600">
+                  {/* Sisa Pelunasan */}
+                  <span className="mt-10 text-sm whitespace-nowrap text-gray-600">
                     Sisa Pelunasan{' '}
                     <strong className="text-black">
                       Rp{' '}
@@ -387,30 +369,31 @@ const CheckoutPage = () => {
                     </strong>
                   </span>
                 </div>
+
+                {/* Slider */}
+                <input
+                  type="range"
+                  min={selectedVariant.netAmount * jamaahList.length}
+                  max={preBooking?.totalPrice || totalPrice * jamaahList.length}
+                  step={1000}
+                  value={sliderValue}
+                  onChange={handleSliderChange}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
+                />
               </div>
             </div>
 
             {/* Referral code */}
-            <div className="rounded-xl bg-white p-6 shadow-sm">
+            <div className="rounded-[20px] bg-white p-6 shadow-sm">
               <div>
-                <div className="mb-4 flex items-center">
-                  <div className="mr-2 rounded bg-gray-200 p-1">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
+                <div className="mb-4 flex items-center  gap-[12px]">
+                  <Image
+                    src="/images/discount-shape.svg"
+                    width={24}
+                    height={24}
+                    alt="arrow"
+                  />
+
                   <span className="font-bold text-gray-800">Kode Referral</span>
                 </div>
 
@@ -456,7 +439,7 @@ const CheckoutPage = () => {
             </div>
 
             {/* Terms and conditions */}
-            <div className="rounded-lg bg-white p-6 shadow-sm">
+            <div className="rounded-[20px] bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center">
                 <input
                   type="checkbox"
@@ -471,7 +454,7 @@ const CheckoutPage = () => {
                     className="text-m-regular text-neutral-900"
                   > */}{' '}
                   <span
-                    className="cursor-pointer text-blue-500"
+                    className="cursor-pointer text-black underline"
                     onClick={() => {
                       setOpenModal(true)
                     }}
@@ -480,7 +463,7 @@ const CheckoutPage = () => {
                   </span>
                   , {/* </Link> */}
                   <span
-                    className="cursor-pointer text-blue-500"
+                    className="cursor-pointer text-black underline"
                     onClick={() => {
                       setOpenModalPengembalian(true)
                     }}
@@ -488,7 +471,7 @@ const CheckoutPage = () => {
                     Pengembalian Dana
                   </span>
                   , dan{' '}
-                  <span className="cursor-pointer text-blue-500">
+                  <span className="cursor-pointer text-black underline">
                     Persetujuan Pengguna
                   </span>{' '}
                   yang berlaku.
@@ -508,7 +491,7 @@ const CheckoutPage = () => {
               )}
 
               <button
-                className={`w-full rounded-md py-3 font-medium ${
+                className={`w-full rounded-[100px] py-3 font-medium ${
                   isJamaahDataValid() && termsAccepted && loading === false
                     ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
                     : 'cursor-not-allowed bg-gray-300 text-gray-500'
@@ -527,9 +510,10 @@ const CheckoutPage = () => {
 
           {/* Right section - Package details */}
           <div className="w-full lg:w-1/3">
-            <div className="rounded-lg bg-white p-6 shadow-sm lg:sticky lg:top-20">
+            <div className="rounded-[20px] bg-white p-6 shadow-sm lg:sticky lg:top-20">
               <div className="mb-4 flex">
-                <div className="mr-4">
+                {/* Kiri: Gambar dan info bawahnya */}
+                <div className="mr-4 flex flex-col items-center">
                   <Image
                     src={detailVariant?.package?.thumbnail || ''}
                     alt="Umrah Package"
@@ -542,32 +526,32 @@ const CheckoutPage = () => {
                     }}
                   />
                 </div>
+
+                {/* Kanan: Judul dan organisasi */}
                 <div>
-                  <h3 className="font-bold">{detailVariant?.package?.title}</h3>
-                  <div className="flex items-start gap-2">
+                  <h3 className="text-[16px] font-semibold text-[#30302F]">
+                    {detailVariant?.package?.title}
+                  </h3>
+                  <div className="mt-1 flex items-start gap-2">
                     <Image
                       src={
                         detailVariant?.package?.organizationInstance
                           ?.thumbnail || ''
                       }
-                      alt="Umrah Package"
+                      alt="Organization"
                       width={30}
                       height={30}
-                      className="rounded-lg"
+                      className="mt-[5px] rounded-lg"
                       style={{
                         borderRadius: '20px',
                         objectFit: 'cover',
-                        marginTop: '5px',
                       }}
                     />
-
                     <div>
-                      <div className="mt-1 flex items-center">
-                        <span className="text-xs">
-                          {detailVariant?.package?.organizationInstanceName}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500">
+                      <span className="text-[12px] font-medium text-[#30302F]">
+                        {detailVariant?.package?.organizationInstanceName}
+                      </span>
+                      <p className="text-[10px] font-normal text-gray-500">
                         {
                           detailVariant?.package?.organizationInstance?.city
                             ?.name
@@ -577,7 +561,23 @@ const CheckoutPage = () => {
                   </div>
                 </div>
               </div>
+              {/* Varian & Tipe Kamar di bawah gambar */}
 
+              <div className="mt-2 flex w-full justify-between px-10 text-center">
+                <div>
+                  <p className="text-[12px] text-gray-400">Varian</p>
+                  <p className="text-[14px] font-semibold">
+                    {selectedVariant?.name}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[12px] text-gray-400">Tipe Kamar</p>
+                  <p className="text-[14px] font-semibold capitalize">
+                    {selectedVariant?.roomType}
+                  </p>
+                </div>
+              </div>
+              <div className="my-3 h-px bg-gray-200"></div>
               {/* Price breakdown */}
               <div>
                 <h4 className="mb-3 font-medium">Rincian Harga</h4>

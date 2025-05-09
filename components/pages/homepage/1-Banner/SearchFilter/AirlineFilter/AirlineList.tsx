@@ -101,7 +101,7 @@ const AirlineList: React.FC<AirlineSearchProps> = ({
                   <p className="text-m-regular text-neutral-900">
                     {airline.name} ({airline.code})
                   </p>
-                  {isNotTransit.includes(airline.code) && (
+                  {!isNotTransit.includes(airline.code) && (
                     <p className="text-s-regular text-neutral-500">
                       1x transit
                     </p>

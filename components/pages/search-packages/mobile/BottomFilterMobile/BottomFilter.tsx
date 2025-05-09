@@ -1,12 +1,13 @@
 'use client'
 
-import { DiscountIcon } from '@/components/icons/discount'
-import { GiftIcon } from '@/components/icons/gift'
-import { MoneysIconBlack } from '@/components/icons/moneys'
-import { SortIcon } from '@/components/icons/sort'
+import { DiscountIcon, DiscountIconPrimary } from '@/components/icons/discount'
+import { GiftIcon, GiftIconPrimary } from '@/components/icons/gift'
+import { MoneysIconBlack, MoneysIconPrimary } from '@/components/icons/moneys'
+import { SortIcon, SortIconPrimary } from '@/components/icons/sort'
 import { FacilityDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/FacilityFilter'
 import { PriceDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PriceRangeFilter'
 import { PromoDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PromoFilter'
+import { SectionDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SectionFilter'
 import { SortDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SortFilter'
 import {
   Drawer,
@@ -18,46 +19,53 @@ import {
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
-import { cloneElement, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 export interface NavItem {
   id: number
   name: string
   icon: React.ReactElement
   badge?: number
+  activeIcon: React.ReactElement
 }
 
 const navItems: NavItem[] = [
   {
     id: 1,
     name: 'Harga',
-    icon: <MoneysIconBlack className="fill-neutral-500 stroke-neutral-500" />,
+    icon: <MoneysIconBlack />,
+    activeIcon: <MoneysIconPrimary />,
   },
   {
     id: 2,
     name: 'Fasilitas',
-    icon: <GiftIcon className="fill-neutral-500 stroke-neutral-500" />,
+    icon: <GiftIcon />,
+    activeIcon: <GiftIconPrimary />,
   },
   {
     id: 3,
     name: 'Urutkan',
-    icon: <SortIcon className="fill-neutral-500 stroke-neutral-500" />,
+    icon: <SortIcon />,
+    activeIcon: <SortIconPrimary />,
   },
-  // {
-  //   id: 4,
-  //   name: 'Tipe',
-  //   icon: <BoxIcon className="fill-neutral-500 stroke-neutral-500" />,
-  // },
+  {
+    id: 4,
+    name: 'Tipe Paket',
+    icon: <DiscountIcon />,
+    activeIcon: <DiscountIconPrimary />,
+  },
 ]
 
 export default function BottomNavigation({
   dataMinMax,
   dataFacility,
   dataTagPackages,
+  dataSection,
 }: {
   dataMinMax: any
   dataFacility: any
   dataTagPackages: any
+  dataSection: any
 }) {
   const { filters, resetFilter, setFilters } = useFilterProduct()
   const [open, setOpen] = useState<Record<number, boolean>>({})
@@ -79,7 +87,8 @@ export default function BottomNavigation({
     () => ({
       id: 5,
       name: 'Promo',
-      icon: <DiscountIcon className="fill-neutral-500 stroke-neutral-500" />,
+      icon: <DiscountIcon />,
+      activeIcon: <DiscountIconPrimary />,
       badge: totalActivePackages || 0,
     }),
     [totalActivePackages]
@@ -106,6 +115,7 @@ export default function BottomNavigation({
       1: 'priceRange',
       2: 'facilityCode',
       3: 'sort',
+      4: 'section',
       5: 'tagSlug',
     }
 
@@ -131,16 +141,16 @@ export default function BottomNavigation({
   const isFilterApplied = (id: number) => {
     switch (id) {
       case 1: // Price
-        return filters.priceRange?.hargaMin || filters.priceRange?.hargaMax
+        return !!searchParams.get('prMin') || !!searchParams.get('prMax')
       case 2: // Facility
-        return !!filters.facilityCode
+        return !!searchParams.get('fC')
       case 3: // Sort
         // Check if sort parameter exists in URL
         return !!searchParams.get('sort')
-      // case 4: // Type
-      //   return !!filters.hotelStars
+      case 4: // Section
+        return !!searchParams.get('section')
       case 5: // Promo
-        return !!filters.tagSlug
+        return !!searchParams.get('tS')
       default:
         return false
     }
@@ -175,8 +185,15 @@ export default function BottomNavigation({
             toggleDrawer={toggleDrawer}
           />
         )
-      // case 4:
-      //   return <TypeDrawer />
+      case 4:
+        return (
+          <SectionDrawer
+            dataSection={dataSection}
+            applyFilters={applyFilters}
+            toggleDrawer={toggleDrawer}
+            itemId={itemId}
+          />
+        )
       case 5:
         return (
           <PromoDrawer
@@ -211,13 +228,8 @@ export default function BottomNavigation({
     // Check if filter is applied
     const filterApplied = isFilterApplied(item.id)
 
-    // Clone the icon with updated classes based on filter application
-    const iconWithClass = cloneElement(item.icon, {
-      ...item.icon.props,
-      className: filterApplied
-        ? 'fill-primary-500 stroke-primary-500'
-        : 'fill-neutral-500 stroke-neutral-500',
-    })
+    // Use either the active or inactive icon based on filter state
+    const currentIcon = filterApplied ? item.activeIcon : item.icon
 
     return (
       <Drawer
@@ -232,7 +244,7 @@ export default function BottomNavigation({
             `}
           >
             <div className="relative">
-              {iconWithClass}
+              {currentIcon}
 
               {/* Badge with animation - only show if has badge count */}
               {item.badge && item.badge > 0 && (
@@ -252,7 +264,7 @@ export default function BottomNavigation({
           <DrawerHeader className="px-0 pb-0">
             <DrawerTitle className="flex items-center justify-between px-0">
               <span className="flex items-center gap-2">
-                {iconWithClass}
+                {currentIcon}
                 {item.name}
               </span>
               {filterApplied && (
@@ -260,7 +272,7 @@ export default function BottomNavigation({
                   className="h-8 text-red-500"
                   onClick={() => resetSingleFilter(item.id)}
                 >
-                  Reset
+                  Reset {item.name}
                 </p>
               )}
             </DrawerTitle>

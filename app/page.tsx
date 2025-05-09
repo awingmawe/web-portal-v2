@@ -100,13 +100,14 @@ export default async function Home() {
       />
       <Banner />
       <main className="relative">
-        <div className="container mx-auto max-lg:px-0">
+        <div className="container mx-auto max-xl:px-0">
           <ProgramCards />
           <SubmenuCards />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
             <CarouselBanner dataBanner={dataBannerCarousel} />
-
-            <CarouselTravel dataTravel={dataTravels} />
+            {dataTravels.total > 0 && (
+              <CarouselTravel dataTravel={dataTravels} />
+            )}
           </div>
 
           <PackageListEvent

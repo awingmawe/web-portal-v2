@@ -1,10 +1,12 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
+import CheckoutDrawerAddJamaah from '@/components/pages/detail-package/mobile/DrawerAddJamaah'
 import { useCheckout } from '@/contexts/checkout-context'
-import { ArrowLeft, Check, Plus } from 'lucide-react'
+import { ChevronRight, Plus, Trash2, User } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -55,6 +57,12 @@ const MobileCheckoutPage = ({}) => {
     dataSK,
     parsedContent,
     dataRefundPolicy,
+    handleUseMyDataChangeMobile,
+    setNoTlpn,
+    setNama,
+    nama,
+    noTlpn,
+    handleSimpanMobile,
   } = useCheckout()
   const router = useRouter()
   return (
@@ -68,7 +76,12 @@ const MobileCheckoutPage = ({}) => {
             router.back()
           }}
         >
-          <ArrowLeft size={20} />
+          <Image
+            src="/images/arrow-left.svg"
+            width={24}
+            height={24}
+            alt="arrow"
+          />
         </a>
         <h1 className="text-base font-medium">Checkout</h1>
       </header>
@@ -76,68 +89,165 @@ const MobileCheckoutPage = ({}) => {
       {/* Main content */}
       <main className="pb-36">
         {/* Package Info */}
-        <div className="bg-white p-4">
-          <h2 className="mb-2 text-sm font-medium">Detail Pembelian</h2>
-          <div className="flex items-start">
-            <div className="mr-3 h-16 w-16 overflow-hidden rounded-md bg-gray-200">
+        <div className="m-[20px] rounded-[20px] bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-medium text-gray-800">
+            Detail Pembelian
+          </h2>
+
+          <div className="mb-4 flex">
+            <div className="mr-2">
               <Image
-                src={
-                  detailVariant?.package?.organizationInstance?.thumbnail || ''
-                }
-                alt="Package"
-                width={64}
-                height={64}
+                src={detailVariant?.package?.thumbnail || ''}
+                alt="Umrah Package"
+                width={100}
+                height={100}
+                className="rounded-lg"
+                style={{
+                  borderRadius: '20px',
+                  objectFit: 'cover',
+                }}
               />
             </div>
-            <div className="flex-1">
-              <h3 className="text-xs font-medium">
+            <div className="w-2/3">
+              <h3 className="text-base font-medium text-gray-800">
                 {detailVariant?.package?.title}
               </h3>
-              <div className="mb-1 flex items-center">
-                <p className="mr-1 text-sm font-bold text-black">
-                  Rp{Number(selectedVariant?.price).toLocaleString('id-ID')}
+
+              <div className="mt-1 flex items-center">
+                <p className="text-xl font-bold">
+                  {' '}
+                  Rp
+                  {Number(preBooking?.subtotalPrice).toLocaleString('id-ID')}
+                </p>
+                <span className="ml-1 text-xs text-gray-500">/orang</span>
+              </div>
+
+              {/* <div className="mt-1 flex items-center">
+                <p className="text-sm text-gray-500 line-through">
+                  Rp56.000.000
+                </p>
+                <span className="ml-2 rounded bg-red-500 px-2 py-0.5 text-xs text-white">
+                  -5%
+                </span>
+              </div> */}
+            </div>
+          </div>
+
+          <div className="flex border-t border-b border-gray-200 py-3">
+            <div className="w-1/2 text-center">
+              <p className="mb-1 text-sm text-gray-500">Varian</p>
+              <p className="font-medium"> {selectedVariant?.name}</p>
+            </div>
+            <div className="w-1/2 text-center">
+              <p className="mb-1 text-sm text-gray-500">Tipe Kamar</p>
+              <p className="font-medium capitalize">
+                {' '}
+                {selectedVariant?.roomType}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between border-b border-gray-200 py-3">
+            <div>
+              <p className="mb-1 text-sm text-gray-500">Tanggal Berangkat</p>
+              <p className="font-medium">
+                {detailVariant?.departureDate &&
+                  new Date(detailVariant.departureDate).toLocaleDateString(
+                    'id-ID',
+                    {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }
+                  )}
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center px-4">
+              <div className="mb-1 text-xs text-gray-500">
+                {detailVariant?.departureDate &&
+                  detailVariant?.arrivalDate &&
+                  Math.ceil(
+                    (new Date(detailVariant.arrivalDate).getTime() -
+                      new Date(detailVariant.departureDate).getTime()) /
+                      (1000 * 60 * 60 * 24)
+                  ) + ' Hari'}
+                {(!detailVariant?.departureDate ||
+                  !detailVariant?.arrivalDate) &&
+                  '7 Hari'}
+              </div>
+              <div>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12H19M19 12L12 5M19 12L12 19"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-1 text-sm text-gray-500">Tanggal Pulang</p>
+              <p className="font-medium">
+                {detailVariant?.arrivalDate &&
+                  new Date(detailVariant.arrivalDate).toLocaleDateString(
+                    'id-ID',
+                    {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }
+                  )}
+              </p>
+            </div>
+          </div>
+
+          <div className="ml-[10%] flex py-3">
+            <div className="flex w-1/2 items-center">
+              <div className="mr-5">
+                <Image
+                  src="/images/pesawat-pergi.svg"
+                  width={24}
+                  height={24}
+                  alt="arrow"
+                />
+              </div>
+              <div>
+                <p className="mb-1 text-sm text-gray-500">Keberangkatan</p>
+                <p className="font-medium">
+                  {detailVariant?.package?.departure?.from?.airport?.code} →
+                  {detailVariant?.package?.departure?.to?.airport?.code}
                 </p>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] text-gray-500">Travel</p>
-                  <p className="text-xs font-medium">
-                    {' '}
-                    {detailVariant?.package?.organizationInstanceName}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] text-gray-500">
-                    Tanggal Perjalanan
-                  </p>
-                  <p className="text-xs font-medium">19 Januari 2025</p>
-                </div>
+            </div>
+
+            <div className="flex w-1/2 items-center">
+              <div className="mr-5">
+                <Image
+                  src="/images/pesawat-pulang.svg"
+                  width={24}
+                  height={24}
+                  alt="arrow"
+                />
               </div>
-              <div className="mt-2 flex justify-between text-[11px]">
-                <div className="flex items-center">
-                  <svg className="mr-1 h-4 w-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M19 9.5L12 16.5L5 9.5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  CGK → JED
-                </div>
-                <div className="flex items-center">
-                  <svg className="mr-1 h-4 w-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M5 14.5L12 7.5L19 14.5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  JED → CGK
-                </div>
+              <div>
+                <p className="mb-1 text-sm text-gray-500">Kedatangan</p>
+                <p className="font-medium">
+                  {' '}
+                  {detailVariant?.package?.arrival?.from?.airport?.code} →
+                  {detailVariant?.package?.arrival?.to?.airport?.code}
+                </p>
               </div>
             </div>
           </div>
@@ -145,178 +255,142 @@ const MobileCheckoutPage = ({}) => {
 
         {/* Jamaah Section */}
         <div className="mt-4 bg-white p-4">
-          <div className="mt-4 space-y-3">
-            {jamaahList.map((jamaah: any, index: any) => (
-              <div
-                key={jamaah.id}
-                className="rounded-xl border border-gray-200 bg-white"
-              >
-                <div className="flex items-center justify-between p-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="rounded-full bg-green-100 p-1">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-green-500"
-                      >
-                        <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
+          {jamaahList.map((jamaah: any, index: any) => (
+            <div
+              className="mt-4 h-[121px] space-y-3 rounded-[20px] border border-gray-200"
+              key={index}
+            >
+              <div key={jamaah.id} className="mb-4 overflow-hidden rounded-xl ">
+                <div className="flex h-[52px] w-full overflow-hidden rounded-xl border border-gray-200">
+                  {/* Bagian kiri */}
+                  <div className="flex flex-1 items-center justify-between rounded-l-xl bg-white px-3">
+                    <div className="flex items-center gap-2">
+                      <User className="h-5 w-5 text-green-500" />
+                      <span className="text-sm font-medium">
+                        Data Jemaah {index + 1}
+                      </span>
                     </div>
-                    <p className="text-sm font-medium text-gray-800">
-                      Jamaah {index + 1}
-                    </p>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
                   </div>
-                  <button
-                    onClick={() =>
-                      setJamaahList(
-                        jamaahList.filter((_: any, i: any) => i !== index)
-                      )
-                    }
-                    className="rounded-full bg-red-500 p-1"
+
+                  {/* Tombol hapus */}
+                  <div
+                    className="flex w-[52px] items-center justify-center rounded-tr-xl rounded-br-xl bg-red-500 text-white"
+                    onClick={() => handleRemoveJamaah(jamaah.id)}
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                      <line x1="10" y1="11" x2="10" y2="17" />
-                      <line x1="14" y1="11" x2="14" y2="17" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="space-y-2 border-t px-4 py-3 text-sm">
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor={`name-${jamaah.id}`}
-                      className="mb-1 text-xs text-gray-500"
-                    >
-                      Nama Jamaah
-                    </label>
-                    <input
-                      type="text"
-                      id={`name-${jamaah.id}`}
-                      className={`rounded-md border ${
-                        !jamaah.name || jamaah.name.trim() === ''
-                          ? 'border-red-300'
-                          : 'border-gray-300'
-                      } px-3 py-2 text-sm `}
-                      placeholder="Nama Jamaah"
-                      value={jamaah.name}
-                      onChange={(e) => {
-                        const newList = [...jamaahList]
-                        newList[index].name = e.target.value
-                        setJamaahList(newList)
-                      }}
-                    />
+                    <Trash2 size={24} />
                   </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor={`phone-${jamaah.id}`}
-                      className="mb-1 text-xs text-gray-500"
-                    >
-                      No Telepon
-                    </label>
-                    <input
-                      type="text"
-                      id={`phone-${jamaah.id}`}
-                      className={`rounded-md border ${
-                        !jamaah.phone || jamaah.phone.trim() === ''
-                          ? 'border-red-300'
-                          : 'border-gray-300'
-                      } px-3 py-2 text-sm`}
-                      placeholder="08xxxxxxxxxx"
-                      value={jamaah.phone}
-                      onChange={(e) => {
-                        const newList = [...jamaahList]
-                        newList[index].phone = e.target.value
-                        setJamaahList(newList)
-                      }}
-                    />
+                </div>
+
+                <div className="mt-2 bg-gray-50 p-2">
+                  <div className="grid grid-cols-2 gap-y-3">
+                    <div className="text-sm text-gray-500">Nama Jemaah</div>
+                    <div className="text-right text-sm font-medium">
+                      {jamaah.name}
+                    </div>
+                    <div className="text-sm text-gray-500">Nomor Telepon</div>
+                    <div className="text-right text-sm font-medium">
+                      {jamaah.phone}
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="mt-4 flex items-center justify-between">
-            <h2 className="text-sm font-medium">Tambah Jamaah</h2>
-            <button
-              onClick={handleAddJamaah}
-              className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white"
+            </div>
+          ))}
+
+          <div className="mt-4 rounded-[16px] border border-gray-200 bg-white p-3">
+            <CheckoutDrawerAddJamaah
+              handleUseMyDataChangeMobile={handleUseMyDataChangeMobile}
+              setNoTlpn={setNoTlpn}
+              setNama={setNama}
+              nama={nama}
+              noTlpn={noTlpn}
+              handleSimpanMobile={handleSimpanMobile}
             >
-              <Plus size={16} />
-            </button>
+              {/* <button
+              // onClick={handleAddJamaah}
+              > */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-medium">Tambah Jamaah</h2>
+                <Plus size={16} />
+              </div>
+              {/* </button> */}
+            </CheckoutDrawerAddJamaah>
           </div>
         </div>
 
         {/* Payment section */}
         <div className="mt-4 bg-white p-4">
-          <div className="mb-3 rounded-lg bg-yellow-50 p-3">
-            <p className="text-xs font-medium text-yellow-800">
-              Minimal pembayaran untuk saat ini: Rp{' '}
-              {(selectedVariant.netAmount * jamaahList.length).toLocaleString(
-                'id-ID'
-              )}
-            </p>
-          </div>
           {/* Payment method */}
-          <div className="mb-4 rounded-lg border border-yellow-400 bg-white p-3">
-            <div className="flex items-center">
-              <div className="mr-3 flex h-6 w-6 items-center justify-center rounded-full bg-yellow-400">
-                <Check size={14} className="text-white" />
-              </div>
-              <div>
-                <p className="font-medium">Jumlah Bayar</p>
-                <p className="text-xs text-gray-500">
-                  Pilih jumlah yang ingin dibayar, minimal uang muka dulu.
+          <div className="mb-4 rounded-[16px] border border-gray-200 bg-white p-3">
+            {/* <div className="mb-3 rounded-lg bg-yellow-50 p-3">
+              <p className="text-xs font-medium text-yellow-800">
+                Minimal pembayaran untuk saat ini: Rp{' '}
+                {(selectedVariant.netAmount * jamaahList.length).toLocaleString(
+                  'id-ID'
+                )}
+              </p>
+            </div> */}
+            <div className="mb-4 rounded-[12px] border border-yellow-100 bg-yellow-50 p-3">
+              <div className="flex items-center">
+                <div className="flex-shrink-0 text-yellow-500">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 6C11 6.55228 10.5523 7 10 7C9.44772 7 9 6.55228 9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6ZM10 9C9.44772 9 9 9.44772 9 10V14C9 14.5523 9.44772 15 10 15C10.5523 15 11 14.5523 11 14V10C11 9.44772 10.5523 9 10 9Z"
+                    />
+                  </svg>
+                </div>
+                <p className="ml-2 text-sm font-medium text-yellow-800">
+                  Minimal pembayaran uang muka adalah Rp
+                  {(
+                    selectedVariant.netAmount * jamaahList.length
+                  ).toLocaleString('id-ID')}
                 </p>
               </div>
             </div>
-            <div className="mt-3">
-              <p className="mb-1 text-sm font-medium">Jumlah Bayar</p>
-              <div className="mb-3 flex h-10 items-center rounded-lg border border-gray-300 px-3">
-                <span className="mr-2 text-gray-500">Rp</span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  className="flex-1 bg-transparent text-right outline-none"
-                  value={formatNumber(rawInputValue)}
-                  onChange={handleInputChange}
-                  onBlur={(e) => {
-                    const value = parseInt(rawInputValue) || 0
-                    const minAmount =
-                      selectedVariant.netAmount * jamaahList.length
-                    const maxAmount =
-                      preBooking?.totalPrice || totalPrice * jamaahList.length
+            <div className="flex items-center">
+              <div className="mr-3 flex items-center">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full">
+                  <Image
+                    src="/images/money-3.svg"
+                    width={24}
+                    height={24}
+                    alt="arrow"
+                  />
+                </div>
+                <p className="ml-2 font-medium">Jumlah Bayar</p>
+              </div>
+            </div>
 
-                    if (value >= minAmount && value <= maxAmount) {
-                      setSliderValue(value)
-                      const perJamaahAmount = Math.ceil(
-                        value / jamaahList.length
-                      )
-                      setPaymentAmount(perJamaahAmount)
-                      setRawInputValue(value.toString())
-                    } else {
-                      setRawInputValue(sliderValue.toString())
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
+            <p className="mt-2 text-[12px] text-[#30302F]">
+              Gak perlu bayar full dulu, cukup uang muka aja dulu kamu yang
+              atur!
+            </p>
+
+            <div className="mt-3">
+              <div className="flex items-center space-x-4">
+                <label className="text-sm font-medium whitespace-nowrap text-gray-700">
+                  Jumlah Bayar
+                </label>
+                <div className="relative">
+                  <span className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
+                    Rp
+                  </span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-left font-medium text-gray-800 shadow-sm"
+                    value={formatNumber(rawInputValue)}
+                    onChange={handleInputChange}
+                    onBlur={() => {
                       const value = parseInt(rawInputValue) || 0
                       const minAmount =
                         selectedVariant.netAmount * jamaahList.length
@@ -333,9 +407,31 @@ const MobileCheckoutPage = ({}) => {
                       } else {
                         setRawInputValue(sliderValue.toString())
                       }
-                    }
-                  }}
-                />
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        const value = parseInt(rawInputValue) || 0
+                        const minAmount =
+                          selectedVariant.netAmount * jamaahList.length
+                        const maxAmount =
+                          preBooking?.totalPrice ||
+                          totalPrice * jamaahList.length
+
+                        if (value >= minAmount && value <= maxAmount) {
+                          setSliderValue(value)
+                          const perJamaahAmount = Math.ceil(
+                            value / jamaahList.length
+                          )
+                          setPaymentAmount(perJamaahAmount)
+                          setRawInputValue(value.toString())
+                        } else {
+                          setRawInputValue(sliderValue.toString())
+                        }
+                      }
+                    }}
+                  />
+                </div>
               </div>
               <input
                 type="range"
@@ -346,27 +442,8 @@ const MobileCheckoutPage = ({}) => {
                 onChange={handleSliderChange}
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
               />
-              <div className="mt-2 flex justify-between text-xs">
-                <span>
-                  Rp
-                  {(
-                    selectedVariant.netAmount * jamaahList.length
-                  ).toLocaleString('id-ID')}
-                </span>
-                <span>
-                  Rp
-                  {(
-                    preBooking?.totalPrice || totalPrice * jamaahList.length
-                  ).toLocaleString('id-ID')}
-                </span>
-              </div>
+
               <div className="mt-3">
-                <div className="flex justify-between text-sm">
-                  <span>Jumlah Bayar</span>
-                  <span className="font-medium">
-                    Rp{sliderValue.toLocaleString('id-ID')}
-                  </span>
-                </div>
                 <div className="mt-1 flex justify-between text-sm">
                   <span>Sisa Pelunasan</span>
                   <span className="font-medium">
@@ -396,28 +473,30 @@ const MobileCheckoutPage = ({}) => {
             </p>
           </div> */}
 
-          <div className="mb-4 rounded-lg border border-gray-200 p-3">
+          <div className="mb-4 rounded-[16px] border border-gray-200 p-3">
             <div className="flex items-center">
-              {/* <input
-                type="checkbox"
-                className="mr-2 h-4 w-4 accent-yellow-400"
-              /> */}
-              <p className="font-medium">Kode Referral</p>
+              <Image
+                src="/images/discount-shape.svg"
+                width={24}
+                height={24}
+                alt="arrow"
+              />
+              <p className="ml-2 font-medium">Kode Referral</p>
             </div>
             <p className="mt-1 text-xs text-gray-500">
               Apakah kamu punya kode referral? pakai kode untuk dapatkan diskon!
             </p>
-            <div className="mt-2 flex">
+            <div className="mt-2 flex gap-2">
               <input
                 type="text"
                 placeholder="Masukkan kode referral"
-                className="flex-1 rounded-l-lg border border-gray-300 px-3 py-2 text-sm"
+                className="flex-1 rounded-[100px] border border-gray-300 px-3 py-2 text-sm"
                 value={referralCode}
                 disabled={wukalaSetting}
                 onChange={(e) => setReferralCode(e.target.value)}
               />
               <button
-                className="cursor-pointer rounded-r-lg bg-yellow-400 px-4 py-2 text-sm font-medium"
+                className="cursor-pointer rounded-[100px] bg-yellow-400 px-4 py-2 text-sm font-medium"
                 onClick={
                   wukalaSetting ? handleRemoveReferralCode : handleCheckReferral
                 }
@@ -489,42 +568,44 @@ const MobileCheckoutPage = ({}) => {
               </span>
             </div>
           </div>
-          <div className="mt-4 flex items-start text-xs text-gray-500">
+        </div>
+        <div className="mt-4 bg-white p-4">
+          <div className="mb-4 rounded-[16px] border border-gray-200 bg-white p-2">
             <input
               type="checkbox"
-              className="mt-0.5 mr-2 h-4 w-4 accent-yellow-500"
+              className="mr-2 h-4 w-4 accent-yellow-500"
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
-            <p>
-              Dengan meneruskan, saya menyetujui{' '}
+            <span className="text-sm text-gray-600">
+              Dengan memesan, anda menyetujui{' '}
               {/* <Link
-                href="/legal/syarat-ketentuan"
-                className="text-m-regular text-neutral-900"
-              > */}
+                    href="/legal/syarat-ketentuan"
+                    className="text-m-regular text-neutral-900"
+                  > */}{' '}
               <span
-                className="cursor-pointer text-blue-500"
+                className="cursor-pointer text-black underline"
                 onClick={() => {
                   setOpenModal(true)
                 }}
               >
                 Syarat & Ketentuan
               </span>
-              {/* </Link> */},{' '}
+              , {/* </Link> */}
               <span
-                className="cursor-pointer text-blue-500"
+                className="cursor-pointer text-black underline"
                 onClick={() => {
                   setOpenModalPengembalian(true)
                 }}
               >
-                {' '}
-                Pengembangan Dana
+                Pengembalian Dana
               </span>
-              , dan
-              <span className="text-blue-500">
-                Persetujuan Pengguna yang berlaku.
-              </span>
-            </p>
+              , dan{' '}
+              <span className="cursor-pointer text-black underline">
+                Persetujuan Pengguna
+              </span>{' '}
+              yang berlaku.
+            </span>
           </div>
         </div>
       </main>
@@ -552,13 +633,13 @@ const MobileCheckoutPage = ({}) => {
             isJamaahDataValid() && termsAccepted && loading === false
               ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
               : 'cursor-not-allowed bg-gray-300 text-gray-500'
-          }rounded-md  px-6 py-3 text-sm font-semibold text-white shadow`}
+          } rounded-[100px]  px-6 py-3 text-sm font-semibold text-white shadow`}
           disabled={loading || !isJamaahDataValid() || !termsAccepted}
           onClick={
             isJamaahDataValid() && termsAccepted ? handleCheckout : undefined
           }
         >
-          Lanjutkan Pembayaran
+          Pesan Sekarang
         </button>
       </div>
       <ModalCheckout

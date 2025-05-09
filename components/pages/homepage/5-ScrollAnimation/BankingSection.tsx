@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 export default function BankingSection() {
   return (
-    <div className="relative z-4 w-full bg-white">
+    <div className="relative z-4 w-full bg-white px-4">
       {/* Background accent pattern - show appropriate version based on screen size */}
       <OrnamentBanking className="absolute top-0 right-0 z-10 hidden lg:block" />
       <OrnamentBankingMobile className="absolute top-0 right-0 z-10 block lg:hidden" />

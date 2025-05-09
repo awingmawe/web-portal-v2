@@ -16,7 +16,7 @@ export const BackButton: React.FC<BackButtonProps> = ({ className }) => {
 
   return (
     <p
-      className={`heading-4-semibold w-fit text-neutral-900 ${className} z-99 flex cursor-pointer items-center`}
+      className={`heading-4-semibold sticky top-5 w-fit text-neutral-900 ${className} z-99 flex cursor-pointer items-center`}
       onClick={handleBack}
     >
       <ChevronLeft />

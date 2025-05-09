@@ -172,7 +172,7 @@ export const FilterProductProvider: React.FC<{
           arrivalAirport: 'arrArpt',
           airline: 'trvl',
           facilityCode: 'fC',
-          section: 'sC',
+          section: 'section',
           tagSlug: 'tS',
           filterName: null,
           priceRange: null,
@@ -237,7 +237,7 @@ export const FilterProductProvider: React.FC<{
 
         // Other params
         updatedFilters.facilityCode = params.get('fC') || ''
-        updatedFilters.section = params.get('sC') || ''
+        updatedFilters.section = params.get('section') || ''
         updatedFilters.tagSlug = params.get('tS') || ''
 
         // Handle complex objects that need async fetching
@@ -357,8 +357,8 @@ export const FilterProductProvider: React.FC<{
       }
 
       // Extract section
-      if (params.has('sC')) {
-        queryObject.section = params.get('sC')
+      if (params.has('section')) {
+        queryObject.section = params.get('section')
       }
 
       // Extract tag slug
