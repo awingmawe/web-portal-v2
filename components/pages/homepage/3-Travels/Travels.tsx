@@ -27,7 +27,7 @@ export function CarouselTravel({
   }
 
   return (
-    <section>
+    <section className="max-lg:px-4">
       <Separator className="mt-[60px] max-lg:mt-7.5" />
       <Carousel
         opts={{

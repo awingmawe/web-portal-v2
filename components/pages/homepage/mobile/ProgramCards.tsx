@@ -47,7 +47,7 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
         onClick={handleClick}
         className={`relative z-12 inline-flex h-[57px] w-full items-start justify-start gap-2.5 self-stretch overflow-hidden rounded-lg p-2 outline-[0.50px] outline-offset-[-0.50px] outline-white backdrop-blur-[6px] transition-all duration-200 ${
           comingSoon
-            ? 'pointer-events-none cursor-not-allowed opacity-60'
+            ? 'pointer-events-none cursor-not-allowed'
             : 'hover:opacity-90'
         }`}
         style={{

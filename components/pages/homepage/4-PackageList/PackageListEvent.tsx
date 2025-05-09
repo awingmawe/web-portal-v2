@@ -56,7 +56,7 @@ const PackageSection = ({
   return (
     <Fragment>
       {data.length !== 0 && (
-        <>
+        <div>
           <HeaderPackageList title={title} desc={description} type={type} />
           <Carousel
             opts={{
@@ -66,13 +66,13 @@ const PackageSection = ({
             }}
             className="w-full max-lg:mt-0"
           >
-            <CarouselContent className="-ml-4.5 px-2">
+            <CarouselContent className="-ml-4.5 px-2 max-lg:ml-0">
               {isLoading ? renderSkeletonItems(4, true) : packageItems}
             </CarouselContent>
             <CarouselPrevious className="top-[35%] max-sm:hidden" />
             <CarouselNext className="top-[35%] max-sm:hidden" />
           </Carousel>
-        </>
+        </div>
       )}
     </Fragment>
   )

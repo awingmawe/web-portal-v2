@@ -61,7 +61,7 @@ const PackageSection = ({
         }}
         className="my-7 w-full max-lg:mt-0"
       >
-        <CarouselContent className="-ml-4.5 px-2">
+        <CarouselContent className="-ml-4.5 px-2 max-lg:ml-0">
           {isLoading ? renderSkeletonItems(4, true) : packageItems}
         </CarouselContent>
         <CarouselPrevious className="top-[35%] max-sm:hidden" />
