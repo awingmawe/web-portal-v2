@@ -1,10 +1,12 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
+import CheckoutDrawerAddJamaah from '@/components/pages/detail-package/mobile/DrawerAddJamaah'
 import { useCheckout } from '@/contexts/checkout-context'
-import { Plus } from 'lucide-react'
+import { ChevronRight, Plus, Trash2, User } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -55,6 +57,12 @@ const MobileCheckoutPage = ({}) => {
     dataSK,
     parsedContent,
     dataRefundPolicy,
+    handleUseMyDataChangeMobile,
+    setNoTlpn,
+    setNama,
+    nama,
+    noTlpn,
+    handleSimpanMobile,
   } = useCheckout()
   const router = useRouter()
   return (
@@ -247,121 +255,67 @@ const MobileCheckoutPage = ({}) => {
 
         {/* Jamaah Section */}
         <div className="mt-4 bg-white p-4">
-          <div className="mt-4 space-y-3">
-            {jamaahList.map((jamaah: any, index: any) => (
-              <div
-                key={jamaah.id}
-                className="rounded-xl border border-gray-200 bg-white"
-              >
-                <div className="flex items-center justify-between p-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="rounded-full bg-green-100 p-1">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-green-500"
-                      >
-                        <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
+          {jamaahList.map((jamaah: any, index: any) => (
+            <div
+              className="mt-4 h-[121px] space-y-3 rounded-[20px] border border-gray-200"
+              key={index}
+            >
+              <div key={jamaah.id} className="mb-4 overflow-hidden rounded-xl ">
+                <div className="flex h-[52px] w-full overflow-hidden rounded-xl border border-gray-200">
+                  {/* Bagian kiri */}
+                  <div className="flex flex-1 items-center justify-between rounded-l-xl bg-white px-3">
+                    <div className="flex items-center gap-2">
+                      <User className="h-5 w-5 text-green-500" />
+                      <span className="text-sm font-medium">
+                        Data Jemaah {index + 1}
+                      </span>
                     </div>
-                    <p className="text-sm font-medium text-gray-800">
-                      Jamaah {index + 1}
-                    </p>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
                   </div>
-                  <button
-                    onClick={() =>
-                      setJamaahList(
-                        jamaahList.filter((_: any, i: any) => i !== index)
-                      )
-                    }
-                    className="rounded-full bg-red-500 p-1"
+
+                  {/* Tombol hapus */}
+                  <div
+                    className="flex w-[52px] items-center justify-center rounded-tr-xl rounded-br-xl bg-red-500 text-white"
+                    onClick={() => handleRemoveJamaah(jamaah.id)}
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                      <line x1="10" y1="11" x2="10" y2="17" />
-                      <line x1="14" y1="11" x2="14" y2="17" />
-                    </svg>
-                  </button>
-                </div>
-                <div className="space-y-2 border-t px-4 py-3 text-sm">
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor={`name-${jamaah.id}`}
-                      className="mb-1 text-xs text-gray-500"
-                    >
-                      Nama Jamaah
-                    </label>
-                    <input
-                      type="text"
-                      id={`name-${jamaah.id}`}
-                      className={`rounded-md border ${
-                        !jamaah.name || jamaah.name.trim() === ''
-                          ? 'border-red-300'
-                          : 'border-gray-300'
-                      } px-3 py-2 text-sm `}
-                      placeholder="Nama Jamaah"
-                      value={jamaah.name}
-                      onChange={(e) => {
-                        const newList = [...jamaahList]
-                        newList[index].name = e.target.value
-                        setJamaahList(newList)
-                      }}
-                    />
+                    <Trash2 size={24} />
                   </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor={`phone-${jamaah.id}`}
-                      className="mb-1 text-xs text-gray-500"
-                    >
-                      No Telepon
-                    </label>
-                    <input
-                      type="text"
-                      id={`phone-${jamaah.id}`}
-                      className={`rounded-md border ${
-                        !jamaah.phone || jamaah.phone.trim() === ''
-                          ? 'border-red-300'
-                          : 'border-gray-300'
-                      } px-3 py-2 text-sm`}
-                      placeholder="08xxxxxxxxxx"
-                      value={jamaah.phone}
-                      onChange={(e) => {
-                        const newList = [...jamaahList]
-                        newList[index].phone = e.target.value
-                        setJamaahList(newList)
-                      }}
-                    />
+                </div>
+
+                <div className="mt-2 bg-gray-50 p-2">
+                  <div className="grid grid-cols-2 gap-y-3">
+                    <div className="text-sm text-gray-500">Nama Jemaah</div>
+                    <div className="text-right text-sm font-medium">
+                      {jamaah.name}
+                    </div>
+                    <div className="text-sm text-gray-500">Nomor Telepon</div>
+                    <div className="text-right text-sm font-medium">
+                      {jamaah.phone}
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="mt-4 flex items-center justify-between">
-            <h2 className="text-sm font-medium">Tambah Jamaah</h2>
-            <button
-              onClick={handleAddJamaah}
-              className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white"
+            </div>
+          ))}
+
+          <div className="mt-4 rounded-[16px] border border-gray-200 bg-white p-3">
+            <CheckoutDrawerAddJamaah
+              handleUseMyDataChangeMobile={handleUseMyDataChangeMobile}
+              setNoTlpn={setNoTlpn}
+              setNama={setNama}
+              nama={nama}
+              noTlpn={noTlpn}
+              handleSimpanMobile={handleSimpanMobile}
             >
-              <Plus size={16} />
-            </button>
+              {/* <button
+              // onClick={handleAddJamaah}
+              > */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-medium">Tambah Jamaah</h2>
+                <Plus size={16} />
+              </div>
+              {/* </button> */}
+            </CheckoutDrawerAddJamaah>
           </div>
         </div>
 

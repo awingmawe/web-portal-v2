@@ -150,20 +150,22 @@ const CheckoutPage = () => {
 
                   <span className="font-bold text-gray-800">Data Jemaah</span>
                 </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="mr-2 h-4 w-4 accent-yellow-500"
-                    checked={useMyData}
-                    onChange={(e) => handleUseMyDataChange(e.target.checked)}
-                  />
-                  <span className="text-sm text-gray-700">
-                    Tambahkan data saya sebagai data Jemaah
-                  </span>
-                </div>
+                {jamaahList.length !== 0 && (
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="mr-2 h-4 w-4 accent-yellow-500"
+                      checked={useMyData}
+                      onChange={(e) => handleUseMyDataChange(e.target.checked)}
+                    />
+                    <span className="text-sm text-gray-700">
+                      Tambahkan data saya sebagai data Jemaah
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {jamaahList.map((jamaah: any, index: number) => (
+              {jamaahList.map((jamaah: any) => (
                 <div
                   key={jamaah.id}
                   className="mb-4 border-t border-gray-100 pt-4"
@@ -202,20 +204,19 @@ const CheckoutPage = () => {
                           handleJamaahPhoneChange(jamaah.id, e.target.value)
                         }
                       />
-                      {index > 0 && (
-                        <button
-                          className="text-gray-400 hover:text-red-500"
-                          onClick={() => handleRemoveJamaah(jamaah.id)}
-                        >
-                          {/* Icon trash */}
-                          <Image
-                            src="/images/trash-omponent.svg"
-                            width={24}
-                            height={24}
-                            alt="arrow"
-                          />
-                        </button>
-                      )}
+
+                      <button
+                        className="text-gray-400 hover:text-red-500"
+                        onClick={() => handleRemoveJamaah(jamaah.id)}
+                      >
+                        {/* Icon trash */}
+                        <Image
+                          src="/images/trash-omponent.svg"
+                          width={24}
+                          height={24}
+                          alt="arrow"
+                        />
+                      </button>
                     </div>
                   </div>
                   {(!jamaah.name ||
