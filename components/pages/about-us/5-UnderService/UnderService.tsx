@@ -149,14 +149,14 @@ export default function UnderService() {
             </div>
 
             {/* Image 3 */}
-            <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
+            <div className="group relative aspect-[160/212] overflow-hidden rounded-xl">
               <Image
                 src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait.png"
                 alt="Event101: Bestie till Jannah"
                 width={0}
                 height={0}
                 sizes="100vw"
-                className="h-auto w-full object-cover transition-transform duration-500"
+                className="h-full w-full object-cover transition-transform duration-500"
               />
             </div>
           </div>
@@ -179,19 +179,19 @@ export default function UnderService() {
                 width={0}
                 height={0}
                 sizes="100vw"
-                className="h-auto w-full object-cover transition-transform duration-500"
+                className="h-full w-full object-cover transition-transform duration-500"
               />
             </div>
 
             {/* Image 6 */}
-            <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
+            <div className="group relative aspect-[160/212] overflow-hidden rounded-xl">
               <Image
                 src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square-1.png"
                 alt="Majelis101: Kajian Mingguan"
                 width={0}
                 height={0}
                 sizes="100vw"
-                className="h-auto w-full object-cover transition-transform duration-500"
+                className="h-full w-full object-cover transition-transform duration-500"
               />
             </div>
           </div>

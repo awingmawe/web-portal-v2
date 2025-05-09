@@ -7,12 +7,12 @@ export default function BreadCrumb() {
         {/* Desktop view */}
         <div className="hidden lg:block">
           <div className="text-center">
-            <p className="text-m-medium text-neutral-900">Visi Muslim101</p>
-            <h1 className="heading-1-regular">
+            <p className="text-heading-4-medium text-neutral-500">
+              Visi Muslim101
+            </p>
+            <h1 className="heading-1-medium">
               Menjadi pilihan utama digital <i>platform marketplace</i> dan{' '}
-              <i>e-</i>
-              <br />
-              <i>commerce</i> dalam ekosistem muamalah Muslim Indonesia.
+              <i>e-commerce</i> dalam ekosistem muamalah Muslim Indonesia.
             </h1>
           </div>
         </div>

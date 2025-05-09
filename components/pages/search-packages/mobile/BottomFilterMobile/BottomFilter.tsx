@@ -68,8 +68,12 @@ export default function BottomNavigation({
   dataSection: any
 }) {
   const { filters, resetFilter, setFilters } = useFilterProduct()
-  const [open, setOpen] = useState<Record<number, boolean>>({})
   const searchParams = useSearchParams()
+  const [open, setOpen] = useState<Record<number, boolean>>({})
+  // Get current sort from URL or use default
+  const [selectedSort, setSelectedSort] = useState<string>(
+    searchParams.get('sort') || 'price-low'
+  )
 
   // Calculate total active packages for badge
   const totalActivePackages = useMemo(() => {
@@ -117,6 +121,11 @@ export default function BottomNavigation({
       3: 'sort',
       4: 'section',
       5: 'tagSlug',
+    }
+
+    if (filterKeyMap[id] === 'sort') {
+      setSelectedSort('')
+      return
     }
 
     // Reset the appropriate filter in context
@@ -183,6 +192,8 @@ export default function BottomNavigation({
             applyFilters={applyFilters}
             itemId={itemId}
             toggleDrawer={toggleDrawer}
+            selectedSort={selectedSort}
+            setSelectedSort={setSelectedSort}
           />
         )
       case 4:

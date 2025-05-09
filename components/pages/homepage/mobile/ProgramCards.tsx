@@ -3,6 +3,7 @@
 import HajjIcon from '@/components/icons/hajj-icon'
 import HalalTripIcon from '@/components/icons/halaltrip-icon'
 import UmraIcon from '@/components/icons/umra-icon'
+import { cn } from '@/lib/utils'
 import React from 'react'
 
 // Define the data structure for each card
@@ -64,12 +65,12 @@ const ProgramCard: React.FC<ProgramCardProps> = ({
 }
 
 // Main component that displays all the program cards
-const ProgramCards: React.FC = () => {
+const ProgramCards: React.FC<{ className?: string }> = ({ className }) => {
   const programsData = [
     {
       id: 'umroh',
       title: 'Umroh',
-      link: '/search',
+      link: '/search-mobile/umroh',
       comingSoon: false,
       background:
         'linear-gradient(0deg, rgba(254, 189, 0, 0.20) 0%, rgba(95, 71, 0, 0.20) 100%)',
@@ -96,7 +97,9 @@ const ProgramCards: React.FC = () => {
   ]
 
   return (
-    <div className="absolute -top-19 left-0 z-99 hidden w-full grid-cols-3 gap-3 px-4 py-3 max-lg:grid">
+    <div
+      className={cn('hidden w-full grid-cols-3 gap-3 max-lg:grid', className)}
+    >
       {programsData.map((program) => (
         <ProgramCard
           key={program.id}

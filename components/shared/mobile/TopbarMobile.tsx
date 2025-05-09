@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { ArrowIcon } from '@/components/icons/arrow'
@@ -27,6 +28,8 @@ interface MobileTopbarProps {
     | 'profileTopbar'
   titleLink?: string
   title?: string
+  token?: string
+  packageId?: number
   searchPlaceholder?: string
   onSearch?: (query: string) => void
   showNotification?: boolean
@@ -52,6 +55,8 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     showCallCenter = false,
     onBackClick,
     titleLink = '',
+    token,
+    packageId,
   }) => {
     const { filters } = useFilterProduct()
 
@@ -89,11 +94,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       }
     }, [arrivalAirport, departureAirport])
 
-    /**
-     * Handles the back button click event. If an `onBackClick` callback is provided,
-     * it invokes that callback. Otherwise, it navigates back to the previous page
-     * in the browser history using the router.
-     */
     const handleBackClick = useCallback(() => {
       if (onBackClick) {
         onBackClick()
@@ -102,21 +102,13 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       }
     }, [onBackClick, router])
 
-    /**
-     * Renders the content of the mobile top bar based on the given variant.
-     * Available variants are:
-     *   - `search`: Renders a search input form.
-     *   - `filter`: Renders date range and optional location information.
-     *   - `title`: Renders a title in the center.
-     *   - `plain`: Renders nothing.
-     *   - `transparent`: Renders nothing.
-     * @returns The rendered content of the mobile top bar.
-     */
     const renderContent = useCallback(() => {
       switch (variant) {
         case 'search':
           return (
-            <div className={`relative flex-1 ${dissolve}`}>
+            <div
+              className={`relative flex flex-1 items-center gap-2 ${dissolve}`}
+            >
               <form onSubmit={handleSearch} className="w-full">
                 <Input
                   value={searchQuery}
@@ -127,6 +119,9 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
                   className="w-full py-1.5"
                 />
               </form>
+              <p className="text-m-reguler" onClick={handleBackClick}>
+                Cancel
+              </p>
             </div>
           )
 
@@ -200,14 +195,13 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'profileTopbar':
         case 'transactionTopbar':
         case 'title':
+        case 'search':
         case 'filter':
           return ''
         case 'transparent':
           return `bg-neutral-0 rounded-[20px] p-1 ${
             !showFixedHeader ? 'shadow-[0px_0px_4px_0px_rgba(0,0,0,0.15)]' : ''
           }`
-        case 'search':
-          return 'bg-neutral-0 rounded-[20px] p-1'
         case 'plain':
         default:
           return `bg-neutral-0 rounded-[20px] p-1 ${
@@ -229,11 +223,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       let backgroundClasses = ''
 
       switch (variant) {
-        case 'search':
-          positionClasses = 'absolute top-3.5'
-          backgroundClasses = 'border-b-transparent bg-transparent'
-          break
-
+        case 'plain':
         case 'transparent':
           positionClasses = 'fixed top-0'
           backgroundClasses = showFixedHeader
@@ -242,6 +232,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           break
 
         case 'title':
+        case 'search':
         case 'filter':
           positionClasses =
             'max-lg:bg-primary-500 absolute h-[100px] -top-[22px]'
@@ -256,7 +247,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             'absolute -top-25 left-1/2 transform -translate-x-1/2'
           backgroundClasses = ''
           break
-        case 'plain':
         default:
           positionClasses = 'fixed top-3.5'
           backgroundClasses = 'border-b-transparent bg-transparent'
@@ -270,7 +260,12 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     const renderActionButton = () => {
       if (variant === 'transparent') {
         return (
-          <ShareDrawer titleLink={titleLink} buttonClasses={buttonClasses} />
+          <ShareDrawer
+            titleLink={titleLink}
+            buttonClasses={buttonClasses}
+            token={token}
+            id={packageId}
+          />
         )
       } else if (variant === 'filter') {
         return <FilterDrawer />
@@ -281,7 +276,9 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
     return (
       <div className={containerClasses}>
-        {(variant === 'filter' || variant === 'title') && (
+        {(variant === 'filter' ||
+          variant === 'title' ||
+          variant === 'search') && (
           <>
             {/* Circle Background for mobile */}
             <Image

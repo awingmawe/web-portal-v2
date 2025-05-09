@@ -2,7 +2,7 @@ import Image from 'next/image'
 export default function Breadcrumb() {
   return (
     <section className="relative overflow-hidden">
-      <div className="relative z-10 h-[300px] w-full  bg-[#00000080] max-lg:h-[148px] max-lg:scale-200"></div>
+      <div className="relative z-9 h-[300px] w-full  bg-[#00000080] max-lg:h-[148px] max-lg:scale-200"></div>
       <Image
         src="https://storage.googleapis.com/m101-prods/about-us/b933a87636c0d0bd4ae44d8864c30458.jpeg"
         alt="about-us"

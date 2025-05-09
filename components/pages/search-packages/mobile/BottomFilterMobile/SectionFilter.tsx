@@ -5,7 +5,6 @@ import { DrawerFooter } from '@/components/ui/drawer'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import { useState } from 'react'
 
 interface SectionDrawerProps {
   toggleDrawer: (id: number) => void
@@ -21,22 +20,17 @@ export function SectionDrawer({
   dataSection,
 }: SectionDrawerProps) {
   const updateQueryParams = useUpdateQueryParams()
-  const { filters } = useFilterProduct()
-
-  // Get current section from URL or use default
-  const [selectedSection, setSelectionSection] = useState<string>(
-    filters.section || ''
-  )
+  const { filters, setSection } = useFilterProduct()
 
   // Handle section selection
   const handleSectionChange = (value: string) => {
-    setSelectionSection(value)
+    setSection(value)
   }
 
   // Apply section filter and update URL
   const handleApplySection = () => {
     // Update URL with selected section option
-    updateQueryParams(['section'], [selectedSection])
+    updateQueryParams(['section'], [filters.section])
 
     // Close drawer and apply filters
     applyFilters(itemId)
@@ -46,7 +40,7 @@ export function SectionDrawer({
     <>
       <div className="my-4 space-y-2">
         <RadioGroup
-          value={selectedSection}
+          value={filters.section}
           onValueChange={handleSectionChange}
           className="space-y-2"
         >

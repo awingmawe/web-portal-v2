@@ -216,15 +216,15 @@ export function JourneyTimeline() {
           />
         </div>
 
-        <div className="flex flex-col space-y-4 md:space-y-6">
+        <div className="flex flex-col space-y-3 md:space-y-6">
           <div
             key={`title-${activeStep}`}
             className={cn(
-              'animate-dissolve-in transition-all duration-500',
+              'animate-dissolve-in mb-3 transition-all duration-500',
               animationDirection === 'right' ? 'translate-x-0' : 'translate-x-0'
             )}
           >
-            <h2 className="text-primary-900 lg:heading-2-semibold text-xl font-semibold md:text-2xl">
+            <h2 className="text-primary-900 font-semibold italic md:text-2xl lg:text-[40px]">
               {currentStep.content.title}
             </h2>
           </div>

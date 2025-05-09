@@ -2,12 +2,11 @@
 'use client'
 
 import { CardPackage } from '@/components/shared/CardPackage'
-import InfiniteScroll from '@/components/ui/infinite-scroll'
+import { CustomInfiniteScroll } from '@/components/shared/InfiniteScroll'
 import { useFilterProduct } from '@/contexts/filter-product-context'
-import { useInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
+import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import { Loader2 } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
@@ -32,13 +31,15 @@ export const PackageResults: React.FC = () => {
     fetchPackageData,
     buildQueryParams,
   } = useFilterProduct()
+
   const {
     loadMore,
     hasMore,
     isLoading: loading,
     fetchInitialPackages,
-    packages: infinitePackages, // this packages is same like packageDataCSR but in different state for mobile
-  } = useInfiniteScroll()
+    packages: infinitePackages,
+  } = useCustomInfiniteScroll()
+
   const { lg: isMobile } = useTailwindBreakpoint()
   const updateQueryParams = useUpdateQueryParams()
 
@@ -71,7 +72,10 @@ export const PackageResults: React.FC = () => {
     }
   }, [isLoadingSkeleton, currentSort, searchParams])
 
+  // Improved loadMoreData function that checks loading/hasMore status first
   const loadMoreData = useCallback(() => {
+    if (loading || !hasMore) return
+
     const currentSort = searchParams.get('sort') || 'price-low'
     const page = parseInt(searchParams.get('page') || '1', 10) + 1
 
@@ -83,7 +87,7 @@ export const PackageResults: React.FC = () => {
     )
 
     loadMore(paramsFilter)
-  }, [])
+  }, [searchParams, loadMore, loading, hasMore, buildQueryParams])
 
   // Function to reset all filters
   const resetAllFilters = useCallback(() => {
@@ -92,7 +96,7 @@ export const PackageResults: React.FC = () => {
 
     // 2. Delete all search params
     window.history.pushState({}, '', '/search')
-  }, [])
+  }, [resetFilters])
 
   // Function to create URL with new sort parameter
   const createSortUrl = useCallback(
@@ -115,15 +119,17 @@ export const PackageResults: React.FC = () => {
     (page: number) => {
       updateQueryParams(['page'], [page.toString()])
     },
-    [pathname, searchParams]
+    [updateQueryParams]
   )
 
-  // Render no results component if there are no packages and not isLoading: loading
-  if (
-    (packageDataCSR.length === 0 || infinitePackages.length === 0) &&
-    !isLoadingSkeleton &&
-    !isLoading
-  ) {
+  // Get the actual package data based on the current view mode
+  const displayPackages = isMobile ? infinitePackages : packageDataCSR
+  const totalDisplayCount = isMobile
+    ? infinitePackages.length
+    : packageDataCSR.length
+
+  // Render no results component if there are no packages and not loading
+  if (displayPackages.length === 0 && !isLoadingSkeleton && !isLoading) {
     return <NoResults resetAllFilters={resetAllFilters} />
   }
 
@@ -134,7 +140,7 @@ export const PackageResults: React.FC = () => {
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
-          resultsCount={packageDataCSR.length}
+          resultsCount={totalDisplayCount}
           totalCount={totalCSR}
           currentSort={currentSort}
           createSortUrl={createSortUrl}
@@ -147,25 +153,25 @@ export const PackageResults: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {isMobile ? (
+            // Mobile view with infinite scroll
             <>
               {infinitePackages?.map((packageData, index) => (
                 <CardPackage
                   key={`packages-${packageData.slugPackage}-${index}`}
                   data={packageData}
+                  eventCategory="search"
                 />
               ))}
-              <InfiniteScroll
+              {/* Only show infinite scroll on mobile */}
+              <CustomInfiniteScroll
                 isLoading={loading}
                 hasMore={hasMore}
                 next={loadMoreData}
                 threshold={0.8}
-              >
-                {hasMore && (
-                  <Loader2 className="mx-auto my-4 h-8 w-8 animate-spin" />
-                )}
-              </InfiniteScroll>
+              />
             </>
           ) : (
+            // Desktop view with pagination
             packageDataCSR?.map((packageData, index) => (
               <CardPackage
                 key={`packages-${packageData.slugPackage}-${index}`}
@@ -177,15 +183,17 @@ export const PackageResults: React.FC = () => {
         </div>
       )}
 
-      {/* Pagination - Show skeleton or actual pagination */}
+      {/* Pagination - Show skeleton or actual pagination (only on desktop) */}
       {isLoadingSkeleton ? (
         <PaginationSkeleton />
       ) : (
-        <CustomPagination
-          currentPage={parseInt(searchParams.get('page') || '1', 10)}
-          totalPages={totalPages}
-          goToPage={goToPage}
-        />
+        !isMobile && (
+          <CustomPagination
+            currentPage={parseInt(searchParams.get('page') || '1', 10)}
+            totalPages={totalPages}
+            goToPage={goToPage}
+          />
+        )
       )}
     </div>
   )

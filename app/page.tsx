@@ -12,15 +12,17 @@ import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
-import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
+import { Input } from '@/components/ui/input'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
+import { Search } from 'lucide-react'
 import { cookies } from 'next/headers'
+import Link from 'next/link'
 import { Fragment } from 'react'
 
 export async function generateMetadata() {
@@ -93,15 +95,19 @@ export default async function Home() {
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
-      <MobileTopbar
-        variant="search"
-        showBackButton={false}
-        searchPlaceholder="Cari paket, travel, hotel atau airline..."
-      />
+      <Link href={'/search-mobile-package'}>
+        <Input
+          placeholder={'Cari paket, travel, hotel atau airline...'}
+          model="compact"
+          disabled
+          startIcon={<Search size={16} className="text-neutral-300" />}
+          className="absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5"
+        />
+      </Link>
       <Banner />
       <main className="relative">
         <div className="container mx-auto max-xl:px-0">
-          <ProgramCards />
+          <ProgramCards className="absolute -top-19 left-0 z-99 px-4 py-3" />
           <SubmenuCards />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
             <CarouselBanner dataBanner={dataBannerCarousel} />

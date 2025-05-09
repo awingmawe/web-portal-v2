@@ -34,7 +34,7 @@ export default function BottomNavigation() {
   ]
 
   return (
-    <div className="border-opacity-50 fixed bottom-5 left-1/2 z-99 hidden h-16 w-[90%] -translate-x-1/2 rounded-[40px] border-[0.5px] border-white bg-gradient-to-b from-[rgba(49,37,0,0.4)] to-[rgba(174,174,174,0.4)] px-4 py-2 backdrop-blur-lg max-lg:block">
+    <div className="border-opacity-50 fixed bottom-5 left-1/2 z-15 hidden h-16 w-[90%] -translate-x-1/2 rounded-[40px] border-[0.5px] border-white bg-gradient-to-b from-[rgba(49,37,0,0.4)] to-[rgba(174,174,174,0.4)] px-4 py-2 backdrop-blur-lg max-lg:block">
       <nav className="flex items-center justify-between">
         {navItems.map((item) => {
           // Check if current pathname matches this nav item's path
