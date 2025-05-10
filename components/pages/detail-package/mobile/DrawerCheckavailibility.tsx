@@ -8,7 +8,6 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
-import { X } from 'lucide-react'
 import Image from 'next/image'
 import React, { useRef, useState } from 'react'
 
@@ -52,7 +51,13 @@ const DrawerCheckAvailibility = React.memo(
                 <DrawerTitle className="text-lg font-medium">
                   {statusStock ? (
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
-                      <X className="h-6 w-6 text-red-600" />
+                      <Image
+                        src="/images/Vector.svg"
+                        width={24}
+                        height={24}
+                        alt="check icon"
+                        className="bg-[#FFF2CC]"
+                      />
                     </div>
                   ) : (
                     <div className="flex items-center">
