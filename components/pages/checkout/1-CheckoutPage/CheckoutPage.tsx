@@ -3,6 +3,7 @@
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import { useCheckout } from '@/contexts/checkout-context'
+import Placeholder from '@/public/images/no-image-placeholder.png'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -529,7 +530,7 @@ const CheckoutPage = () => {
                 {/* Kiri: Gambar dan info bawahnya */}
                 <div className="mr-4 flex flex-col items-center">
                   <Image
-                    src={detailVariant?.package?.thumbnail || ''}
+                    src={detailVariant?.package?.thumbnail || Placeholder}
                     alt="Umrah Package"
                     width={100}
                     height={100}
@@ -550,7 +551,7 @@ const CheckoutPage = () => {
                     <Image
                       src={
                         detailVariant?.package?.organizationInstance
-                          ?.thumbnail || ''
+                          ?.thumbnail || Placeholder
                       }
                       alt="Organization"
                       width={30}
