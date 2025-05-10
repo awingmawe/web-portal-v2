@@ -20,6 +20,7 @@ const MobileCheckoutPage = ({}) => {
     detailVariant,
     selectedVariant,
     preBooking,
+    prebookingLoading,
     setPreBooking,
     paymentDetails,
     setPaymentDetails,
@@ -405,9 +406,10 @@ const MobileCheckoutPage = ({}) => {
                   <input
                     type="text"
                     inputMode="numeric"
-                    className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-left font-medium text-gray-800 shadow-sm"
+                    className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-left font-medium text-gray-800 shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
                     value={formatNumber(rawInputValue)}
                     onChange={handleInputChange}
+                    disabled={prebookingLoading}
                     onBlur={() => {
                       const value = parseInt(rawInputValue) || 0
                       const minAmount =
@@ -458,18 +460,23 @@ const MobileCheckoutPage = ({}) => {
                 step={1000}
                 value={sliderValue} // Use the dedicated slider state
                 onChange={handleSliderChange}
+                disabled={prebookingLoading}
                 className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
               />
 
               <div className="mt-3">
                 <div className="mt-1 flex justify-between text-sm">
                   <span>Sisa Pelunasan</span>
-                  <span className="font-medium">
-                    Rp
-                    {Number(preBooking?.remainingPayment || 0).toLocaleString(
-                      'id-ID'
-                    )}
-                  </span>
+                  {prebookingLoading ? (
+                    <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+                  ) : (
+                    <span className="font-medium">
+                      Rp
+                      {Number(preBooking?.remainingPayment || 0).toLocaleString(
+                        'id-ID'
+                      )}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -563,11 +570,15 @@ const MobileCheckoutPage = ({}) => {
                 <span className="text-gray-500">
                   Total Harga Paket ({jamaahList.length} Jamaah)
                 </span>
-                <span>
+                <span className="flex">
                   Rp{' '}
-                  {Number(preBooking?.subtotalPrice)
-                    ? Number(preBooking.subtotalPrice).toLocaleString('id-ID')
-                    : '0'}
+                  {prebookingLoading ? (
+                    <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+                  ) : Number(preBooking?.subtotalPrice) ? (
+                    Number(preBooking.subtotalPrice).toLocaleString('id-ID')
+                  ) : (
+                    '0'
+                  )}
                 </span>
               </div>
               {paymentDetails?.map((detail: any, index: any) => (
@@ -644,12 +655,16 @@ const MobileCheckoutPage = ({}) => {
         </p>
       )}
       {/* Bottom Bar */}
-      <div className="fixed right-0 bottom-0 left-0 z-10 flex items-center justify-between border-t bg-white p-4">
+      <div className="fixed right-0 bottom-0 left-0 z-10 flex items-center justify-between border border-t border-neutral-200 bg-white p-4">
         <div>
           <p className="text-xs text-gray-500">Total</p>
-          <p className="text-lg font-bold">
-            Rp{sliderValue.toLocaleString('id-ID')}
-          </p>
+          {prebookingLoading ? (
+            <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+          ) : (
+            <p className="text-lg font-bold">
+              Rp {sliderValue.toLocaleString('id-ID')}
+            </p>
+          )}
         </div>
         <button
           className={`${
