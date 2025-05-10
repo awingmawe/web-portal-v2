@@ -67,8 +67,10 @@ const CheckoutDrawerAddJamaah = React.memo(
                     <div>
                       <CheckoutDrawerFormJamaah
                         setNoTlpn={setNoTlpn}
+                        text={'Tambah'}
                         setNama={setNama}
                         nama={nama}
+                        data={{}}
                         noTlpn={noTlpn}
                         handleSimpanMobile={() => {
                           handleSimpanMobile()

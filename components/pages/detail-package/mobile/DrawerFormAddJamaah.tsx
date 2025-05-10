@@ -8,7 +8,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { User } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const CheckoutDrawerFormJamaah = React.memo(
   ({
@@ -18,6 +18,8 @@ const CheckoutDrawerFormJamaah = React.memo(
     nama,
     noTlpn,
     handleSimpanMobile,
+    text,
+    data,
   }: {
     children: React.ReactNode
     setNoTlpn: any
@@ -25,9 +27,24 @@ const CheckoutDrawerFormJamaah = React.memo(
     nama: any
     noTlpn: any
     handleSimpanMobile: any
+    text: string
+    data: any
   }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    useEffect(() => {
+      if (isOpen) {
+        if (data && Object.keys(data).length > 0) {
+          setNama(data.name || '')
+          setNoTlpn(data.phone || '')
+        } else {
+          setNama('')
+          setNoTlpn('')
+        }
+      }
+    }, [isOpen])
+
     return (
-      <Drawer>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerTrigger asChild>{children}</DrawerTrigger>
         <DrawerContent className="bg-white p-0">
           <div className="mx-auto w-full max-w-md">
@@ -35,7 +52,7 @@ const CheckoutDrawerFormJamaah = React.memo(
               <div className="flex items-center">
                 <User className="mr-2 h-5 w-5 text-gray-600" />
                 <DrawerTitle className="text-lg font-medium">
-                  Tambah Jemaah
+                  {text} Jemaah
                 </DrawerTitle>
               </div>
             </DrawerHeader>
@@ -79,7 +96,13 @@ const CheckoutDrawerFormJamaah = React.memo(
 
             <div className="flex gap-3 px-4 pb-6">
               <DrawerClose className="flex-1">
-                <Button className="w-full rounded-full border-2 border-yellow-400 bg-white py-3 font-medium text-gray-800 transition hover:bg-gray-50">
+                <Button
+                  className="w-full rounded-full border-2 border-yellow-400 bg-white py-3 font-medium text-gray-800 transition hover:bg-gray-50"
+                  onClick={() => {
+                    setNama('')
+                    setNoTlpn('')
+                  }}
+                >
                   Batal
                 </Button>
               </DrawerClose>

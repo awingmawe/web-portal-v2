@@ -292,6 +292,16 @@ export const CheckoutProvider = ({
       setJamaahList([...jamaahList, { id: newId, name: nama, phone: noTlpn }])
     }
   }
+
+  const handleEditMobile = (data: any) => {
+    if (!data || !data.id) return
+
+    const updatedList = jamaahList.map((item: any) =>
+      item.id === data.id ? { ...item, name: nama, phone: noTlpn } : item
+    )
+
+    setJamaahList(updatedList)
+  }
   const handleRemoveReferralCode = () => {
     setReferralCode('')
     setIsReferralValid(false)
@@ -508,6 +518,7 @@ export const CheckoutProvider = ({
     nama,
     noTlpn,
     handleSimpanMobile,
+    handleEditMobile,
   }
 
   return (

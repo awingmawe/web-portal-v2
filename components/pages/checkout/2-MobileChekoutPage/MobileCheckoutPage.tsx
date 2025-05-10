@@ -4,8 +4,9 @@
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import CheckoutDrawerAddJamaah from '@/components/pages/detail-package/mobile/DrawerAddJamaah'
+import CheckoutDrawerFormJamaah from '@/components/pages/detail-package/mobile/DrawerFormAddJamaah'
 import { useCheckout } from '@/contexts/checkout-context'
-import { ChevronRight, Plus, Trash2, User } from 'lucide-react'
+import { Plus, Trash2, User } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -62,12 +63,14 @@ const MobileCheckoutPage = ({}) => {
     nama,
     noTlpn,
     handleSimpanMobile,
+    handleEditMobile,
   } = useCheckout()
   const router = useRouter()
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
-      <header className="sticky top-0 z-10 flex h-14 items-center border-b bg-white px-4">
+      <header className="sticky top-0 z-10 flex h-14 items-center border-b border-[#E8E8E8] bg-white px-4">
         <a
           className="mr-3"
           onClick={(e) => {
@@ -76,13 +79,15 @@ const MobileCheckoutPage = ({}) => {
           }}
         >
           <Image
-            src="/images/arrow-left.svg"
+            src="/images/arrow-left-2.svg"
             width={24}
             height={24}
             alt="arrow"
           />
         </a>
-        <h1 className="text-base font-medium">Checkout</h1>
+        <h1 className="absolute left-1/2 -translate-x-1/2 text-base font-medium">
+          Checkout
+        </h1>
       </header>
 
       {/* Main content */}
@@ -108,17 +113,17 @@ const MobileCheckoutPage = ({}) => {
               />
             </div>
             <div className="w-2/3">
-              <h3 className="text-base font-medium text-gray-800">
+              <h3 className="text-[12px] font-medium text-gray-800">
                 {detailVariant?.package?.title}
               </h3>
 
               <div className="mt-1 flex items-center">
-                <p className="text-xl font-bold">
+                <p className="text-[14px] font-bold">
                   {' '}
                   Rp
-                  {Number(preBooking?.subtotalPrice).toLocaleString('id-ID')}
+                  {Number(selectedVariant?.price).toLocaleString('id-ID')}
                 </p>
-                <span className="ml-1 text-xs text-gray-500">/orang</span>
+                <span className="ml-1 text-[10px] text-gray-500">/orang</span>
               </div>
 
               {/* <div className="mt-1 flex items-center">
@@ -132,14 +137,17 @@ const MobileCheckoutPage = ({}) => {
             </div>
           </div>
 
-          <div className="flex border-t border-b border-gray-200 py-3">
+          <div className="flex border-b border-gray-200 py-2">
             <div className="w-1/2 text-center">
-              <p className="mb-1 text-sm text-gray-500">Varian</p>
-              <p className="font-medium"> {selectedVariant?.name}</p>
+              <p className="mb-1 text-[10px] text-gray-500">Varian</p>
+              <p className="text-[12px] font-medium">
+                {' '}
+                {selectedVariant?.name}
+              </p>
             </div>
             <div className="w-1/2 text-center">
-              <p className="mb-1 text-sm text-gray-500">Tipe Kamar</p>
-              <p className="font-medium capitalize">
+              <p className="mb-1 text-[10px] text-gray-500">Tipe Kamar</p>
+              <p className="text-[12px] font-medium capitalize">
                 {' '}
                 {selectedVariant?.roomType}
               </p>
@@ -148,13 +156,14 @@ const MobileCheckoutPage = ({}) => {
 
           <div className="flex items-center justify-between border-b border-gray-200 py-3">
             <div>
-              <p className="mb-1 text-sm text-gray-500">Tanggal Berangkat</p>
-              <p className="font-medium">
+              <p className="mb-1 text-sm text-[10px] text-gray-500">
+                Tanggal Berangkat
+              </p>
+              <p className="text-[12px] font-medium">
                 {detailVariant?.departureDate &&
                   new Date(detailVariant.departureDate).toLocaleDateString(
                     'id-ID',
                     {
-                      weekday: 'long',
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -164,7 +173,7 @@ const MobileCheckoutPage = ({}) => {
             </div>
 
             <div className="flex flex-col items-center px-4">
-              <div className="mb-1 text-xs text-gray-500">
+              <div className="mb-1 text-[12px] text-[#BBBBB9]">
                 {detailVariant?.departureDate &&
                   detailVariant?.arrivalDate &&
                   Math.ceil(
@@ -177,32 +186,24 @@ const MobileCheckoutPage = ({}) => {
                   '7 Hari'}
               </div>
               <div>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5 12H19M19 12L12 5M19 12L12 19"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Image
+                  src={'/images/arrow-right.svg'}
+                  width={60}
+                  height={24}
+                  alt="arrow"
+                />
               </div>
             </div>
 
             <div>
-              <p className="mb-1 text-sm text-gray-500">Tanggal Pulang</p>
-              <p className="font-medium">
+              <p className="mb-1 text-sm text-[10px] text-gray-500">
+                Tanggal Pulang
+              </p>
+              <p className="text-[12px] font-medium">
                 {detailVariant?.arrivalDate &&
                   new Date(detailVariant.arrivalDate).toLocaleDateString(
                     'id-ID',
                     {
-                      weekday: 'long',
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -212,8 +213,8 @@ const MobileCheckoutPage = ({}) => {
             </div>
           </div>
 
-          <div className="ml-[10%] flex py-3">
-            <div className="flex w-1/2 items-center">
+          <div className="ml-[4px] flex justify-between py-3">
+            <div className="flex items-center">
               <div className="mr-5">
                 <Image
                   src="/images/pesawat-pergi.svg"
@@ -223,15 +224,15 @@ const MobileCheckoutPage = ({}) => {
                 />
               </div>
               <div>
-                <p className="mb-1 text-sm text-gray-500">Keberangkatan</p>
-                <p className="font-medium">
+                <p className="mb-1 text-[12px] text-gray-500">Keberangkatan</p>
+                <p className="text-[14px] font-medium">
                   {detailVariant?.package?.departure?.from?.airport?.code} →
                   {detailVariant?.package?.departure?.to?.airport?.code}
                 </p>
               </div>
             </div>
 
-            <div className="flex w-1/2 items-center">
+            <div className="flex items-center">
               <div className="mr-5">
                 <Image
                   src="/images/pesawat-pulang.svg"
@@ -241,9 +242,8 @@ const MobileCheckoutPage = ({}) => {
                 />
               </div>
               <div>
-                <p className="mb-1 text-sm text-gray-500">Kedatangan</p>
-                <p className="font-medium">
-                  {' '}
+                <p className="mb-1 text-[12px] text-gray-500">Kedatangan</p>
+                <p className="text-[14px] font-medium">
                   {detailVariant?.package?.arrival?.from?.airport?.code} →
                   {detailVariant?.package?.arrival?.to?.airport?.code}
                 </p>
@@ -251,9 +251,9 @@ const MobileCheckoutPage = ({}) => {
             </div>
           </div>
         </div>
-
+        <div className="h-[4px] w-full bg-[#D2D2D1]" />
         {/* Jamaah Section */}
-        <div className="mt-4 bg-white p-4">
+        <div className="bg-white p-4">
           {jamaahList.map((jamaah: any, index: any) => (
             <div
               className="mt-4 h-[121px] space-y-3 rounded-[20px] border border-gray-200"
@@ -269,7 +269,26 @@ const MobileCheckoutPage = ({}) => {
                         Data Jemaah {index + 1}
                       </span>
                     </div>
-                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                    <CheckoutDrawerFormJamaah
+                      setNoTlpn={setNoTlpn}
+                      text={'Edit'}
+                      setNama={setNama}
+                      data={jamaah}
+                      nama={nama}
+                      noTlpn={noTlpn}
+                      handleSimpanMobile={() => {
+                        handleEditMobile(jamaah)
+                        setNama('')
+                        setNoTlpn('')
+                      }}
+                    >
+                      <Image
+                        src={'/images/edit.svg'}
+                        width={20}
+                        height={20}
+                        alt="arrow"
+                      />
+                    </CheckoutDrawerFormJamaah>
                   </div>
 
                   {/* Tombol hapus */}
@@ -317,9 +336,9 @@ const MobileCheckoutPage = ({}) => {
             </CheckoutDrawerAddJamaah>
           </div>
         </div>
-
+        <div className="h-[4px] w-full bg-[#D2D2D1]" />
         {/* Payment section */}
-        <div className="mt-4 bg-white p-4">
+        <div className=" bg-white p-4">
           {/* Payment method */}
           <div className="mb-4 rounded-[16px] border border-gray-200 bg-white p-3">
             {/* <div className="mb-3 rounded-lg bg-yellow-50 p-3">
@@ -534,41 +553,46 @@ const MobileCheckoutPage = ({}) => {
             <ChevronRight size={20} className="text-gray-400" />
           </div> */}
         </div>
-
+        <div className="h-[4px] w-full bg-[#D2D2D1]" />
         {/* Payment Summary */}
-        <div className="mt-4 bg-white p-4">
-          <h2 className="mb-3 text-sm font-medium">Ringkasan Pembayaran</h2>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-500">
-                Total Harga Paket ({jamaahList.length} Jamaah)
-              </span>
-              <span>
-                Rp {Number(preBooking?.subtotalPrice).toLocaleString('id-ID')}
-              </span>
-            </div>
-            {paymentDetails?.map((detail: any, index: any) => (
-              <div key={index} className="flex justify-between">
-                <span className="text-gray-500">{detail.label}</span>
-                <span className="text-red-500">
-                  Rp{Number(detail?.amount).toLocaleString('id-ID')}
+        <div className="bg-white p-4">
+          <div className="rounded-[16px] border border-gray-200 p-3">
+            <h2 className="mb-3 text-sm font-medium">Ringkasan Pembayaran</h2>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">
+                  Total Harga Paket ({jamaahList.length} Jamaah)
+                </span>
+                <span>
+                  Rp{' '}
+                  {Number(preBooking?.subtotalPrice)
+                    ? Number(preBooking.subtotalPrice).toLocaleString('id-ID')
+                    : '0'}
                 </span>
               </div>
-            ))}
+              {paymentDetails?.map((detail: any, index: any) => (
+                <div key={index} className="flex justify-between">
+                  <span className="text-gray-500">{detail.label}</span>
+                  <span className="text-red-500">
+                    Rp{Number(detail?.amount).toLocaleString('id-ID')}
+                  </span>
+                </div>
+              ))}
 
-            <div className="my-2 h-px bg-gray-200" />
-            <div className="flex justify-between font-medium">
-              <span>Total Pelunasan</span>
-              <span>
-                Rp{' '}
-                {Number(preBooking?.remainingPayment || 0).toLocaleString(
-                  'id-ID'
-                )}
-              </span>
+              <div className="my-2 h-px bg-gray-200" />
+              <div className="flex justify-between font-medium">
+                <span>Total Pelunasan</span>
+                <span>
+                  Rp{' '}
+                  {Number(preBooking?.remainingPayment || 0).toLocaleString(
+                    'id-ID'
+                  )}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="mt-4 bg-white p-4">
+        <div className="bg-white p-4">
           <div className="mb-4 rounded-[16px] border border-gray-200 bg-white p-2">
             <input
               type="checkbox"
