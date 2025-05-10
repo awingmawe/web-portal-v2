@@ -144,6 +144,7 @@
   }
   body {
     font-family: 'BeVietnamPro', sans-serif;
+    overflow-x: hidden;
   }
   ul,
   ol {
