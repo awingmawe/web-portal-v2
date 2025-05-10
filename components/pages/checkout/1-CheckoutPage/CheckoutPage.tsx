@@ -14,6 +14,7 @@ const CheckoutPage = () => {
   const {
     detailVariant,
     selectedVariant,
+    prebookingLoading,
     preBooking,
     paymentDetails,
     referralCode,
@@ -205,7 +206,7 @@ const CheckoutPage = () => {
                       />
 
                       <button
-                        className="text-gray-400 hover:text-red-500"
+                        className="cursor-pointer text-gray-400 hover:text-red-500"
                         onClick={() => handleRemoveJamaah(jamaah.id)}
                       >
                         {/* Icon trash */}
@@ -236,7 +237,7 @@ const CheckoutPage = () => {
                 {/* Tombol */}
                 <button
                   onClick={handleAddJamaah}
-                  className="flex items-center gap-2 rounded-full border border-[#FFC100] px-4 py-1 text-sm font-semibold text-black"
+                  className="flex cursor-pointer items-center gap-2 rounded-full border border-[#FFC100] px-4 py-1 text-sm font-semibold text-black hover:bg-[#e5e5e5]"
                 >
                   <span className="text-[#1A1A1A]">
                     <svg
@@ -309,9 +310,10 @@ const CheckoutPage = () => {
                       <input
                         type="text"
                         inputMode="numeric"
-                        className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-right font-medium text-gray-800 shadow-sm"
+                        className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-right font-medium text-gray-800 shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
                         value={formatNumber(rawInputValue)}
                         onChange={handleInputChange}
+                        disabled={prebookingLoading}
                         onBlur={() => {
                           const value = parseInt(rawInputValue) || 0
                           const minAmount =
@@ -358,14 +360,18 @@ const CheckoutPage = () => {
                   </div>
 
                   {/* Sisa Pelunasan */}
-                  <span className="mt-10 text-sm whitespace-nowrap text-gray-600">
+                  <span className="mt-10 flex text-sm whitespace-nowrap text-gray-600">
                     Sisa Pelunasan{' '}
-                    <strong className="text-black">
-                      Rp{' '}
-                      {Number(preBooking?.remainingPayment || 0).toLocaleString(
-                        'id-ID'
-                      )}
-                    </strong>
+                    {prebookingLoading ? (
+                      <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+                    ) : (
+                      <strong className="ml-2 text-black">
+                        Rp
+                        {Number(
+                          preBooking?.remainingPayment || 0
+                        ).toLocaleString('id-ID')}
+                      </strong>
+                    )}
                   </span>
                 </div>
 
@@ -382,6 +388,7 @@ const CheckoutPage = () => {
                       ? preBooking?.totalPrice || totalPrice * jamaahList.length
                       : 0
                   }
+                  disabled={prebookingLoading}
                   step={1000}
                   value={sliderValue}
                   onChange={handleSliderChange}
@@ -591,6 +598,7 @@ const CheckoutPage = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Harga Paket</span>
+
                     <span className="font-medium">
                       Rp
                       {Number(preBooking?.subtotalPrice).toLocaleString(
@@ -611,9 +619,12 @@ const CheckoutPage = () => {
                   <div className="flex justify-between font-medium">
                     <span>Sisa Pelunasan</span>
                     <span>
-                      Rp{' '}
-                      {Number(preBooking?.remainingPayment || 0).toLocaleString(
-                        'id-ID'
+                      {prebookingLoading ? (
+                        <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+                      ) : (
+                        `Rp ${Number(
+                          preBooking?.remainingPayment || 0
+                        ).toLocaleString('id-ID')}`
                       )}
                     </span>
                   </div>

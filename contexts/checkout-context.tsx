@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import { toast } from '@/components/ui/sonner'
 import { Package } from '@/constant/types/PackageProps'
 import { useAuth } from '@/contexts/auth/context'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -26,11 +26,14 @@ export const CheckoutProvider = ({
   const { pushEvent } = useEventTracker()
   const [token, setToken] = useState<string | null>(null)
   const [preBooking, setPreBooking] = useState<any>()
+  const [prebookingLoading, setPreBookingLoading] = useState<any>()
   const [paymentDetails, setPaymentDetails] = useState<any>([])
   const [referralCode, setReferralCode] = useState<any>('')
   const [wukalaSetting, setWukalaSetting] = useState<any>()
   const [useMyData, setUseMyData] = useState(false)
-  const [jamaahList, setJamaahList] = useState<any>([])
+  const [jamaahList, setJamaahList] = useState<any>([
+    { id: 1, name: '', phone: '' },
+  ])
   const [detailVariant, setDetailVariant] = useState<any>(null)
   const [selectedVariant, setSelectedVariant] = useState<any>(null)
   const [paymentAmount, setPaymentAmount] = useState(0)
@@ -125,6 +128,10 @@ export const CheckoutProvider = ({
   }
 
   const handleRemoveJamaah = (id: number) => {
+    if (jamaahList.length === 1) {
+      toast.error('Minimal 1 jamaah')
+      return
+    }
     setJamaahList((prev: any) =>
       prev
         .filter((j: any) => j.id !== id)
@@ -137,6 +144,7 @@ export const CheckoutProvider = ({
   const router = useRouter()
   const checkPre = async () => {
     if (!selectedVariant || !token) return
+    setPreBookingLoading(true)
     try {
       const perJamaahAmount = paymentAmount
       const response = await preBookingCheckout({
@@ -147,6 +155,7 @@ export const CheckoutProvider = ({
         quantity: jamaahList.length,
         manifest: jamaahList,
       })
+      setPreBookingLoading(false)
       setPaymentDetails(response.paymentDetails)
       setPreBooking(response)
     } catch (error) {
@@ -194,16 +203,18 @@ export const CheckoutProvider = ({
       handlePushEvent('submit_booking')
 
       window.snap.pay(res?.data.order.paymentToken, {
-        onSuccess: async (result: any) => {
+        onSuccess: async () => {
           // console.log(result)
           router.push(`/my/transaction`)
         },
-        onPending: async (result: any) => {
+        onPending: async () => {
           // console.log('Payment pending', result)
           router.push(`/my/need-payment`)
           // Add expiration check logic
         },
-        onError: (error: any) => {},
+        onError: (error: any) => {
+          console.log('Payment error', error)
+        },
         onClose: () => {
           router.push(`/my/need-payment`)
           // Additional logic on close
@@ -229,6 +240,7 @@ export const CheckoutProvider = ({
       // Signal that we should run checkPre
       setShouldRunCheckPre(true)
     } catch (error: any) {
+      console.log(error)
       setIsReferralCodeChecked(true)
       setIsReferralValid(false)
       setWukalaSetting(undefined)
@@ -463,6 +475,7 @@ export const CheckoutProvider = ({
 
   const value = {
     token,
+    prebookingLoading,
     preBooking,
     setPreBooking,
     paymentDetails,
