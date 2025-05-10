@@ -93,8 +93,8 @@ const MobileCheckoutPage = ({}) => {
       {/* Main content */}
       <main className="pb-36">
         {/* Package Info */}
-        <div className="m-[20px] rounded-[20px] bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-medium text-gray-800">
+        <div className="m-[20px] rounded-[20px] bg-white p-2 shadow-sm">
+          <h2 className="mb-4 text-[14px] font-medium text-gray-800">
             Detail Pembelian
           </h2>
 
@@ -103,8 +103,8 @@ const MobileCheckoutPage = ({}) => {
               <Image
                 src={detailVariant?.package?.thumbnail || ''}
                 alt="Umrah Package"
-                width={100}
-                height={100}
+                width={80}
+                height={80}
                 className="rounded-lg"
                 style={{
                   borderRadius: '20px',
@@ -261,8 +261,8 @@ const MobileCheckoutPage = ({}) => {
             >
               <div key={jamaah.id} className="mb-4 overflow-hidden rounded-xl ">
                 <div className="flex h-[52px] w-full overflow-hidden rounded-xl border border-gray-200">
-                  {/* Bagian kiri */}
-                  <div className="flex flex-1 items-center justify-between rounded-l-xl bg-white px-3">
+                  {/* Bagian kiri - ditimpa ke bagian kanan */}
+                  <div className="z-10 -mr-[15px] flex flex-1 items-center justify-between rounded-tr-[20px] rounded-br-[20px] bg-white px-3">
                     <div className="flex items-center gap-2">
                       <User className="h-5 w-5 text-green-500" />
                       <span className="text-sm font-medium">
@@ -293,10 +293,10 @@ const MobileCheckoutPage = ({}) => {
 
                   {/* Tombol hapus */}
                   <div
-                    className="flex w-[52px] items-center justify-center rounded-tr-xl rounded-br-xl bg-red-500 text-white"
+                    className="relative z-0 flex w-[60px] items-center justify-center rounded-tr-xl rounded-br-xl bg-red-500 text-white"
                     onClick={() => handleRemoveJamaah(jamaah.id)}
                   >
-                    <Trash2 size={24} />
+                    <Trash2 size={24} className="ml-4" />
                   </div>
                 </div>
 

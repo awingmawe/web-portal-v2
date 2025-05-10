@@ -42,7 +42,7 @@ function AnimationScrollV2({
 
     const handleScroll = () => {
       const gfRectY = gf.getBoundingClientRect().top + window.scrollY
-      setShowKabah(window.scrollY > gfRectY + gf.clientHeight / 2.5)
+      setShowKabah(window.scrollY > gfRectY + gf.clientHeight / 2.8)
 
       const trRectY = tr.getBoundingClientRect().top
       if (window.scrollY > trRectY + window.scrollY) {
@@ -102,8 +102,9 @@ function AnimationScrollV2({
       <div ref={tracker} style={{ background: 'white' }} />
       <div className="relative">
         <div
-          className="absolute z-40 hidden !pt-[240px] max-xl:top-[5%] max-lg:top-[0%] max-lg:left-[65px] max-lg:!px-[56px] max-lg:!pt-[42vh] max-md:left-[20px] max-md:!px-0"
+          className="absolute z-40 hidden !pt-[200px] max-xl:top-[5%] max-lg:top-[0%] max-lg:left-[65px] max-lg:!px-[56px] max-lg:!pt-[42vh] max-md:left-[20px] max-md:!px-0"
           ref={notJustAService}
+          style={{ paddingTop: 220 }}
         >
           <p className="text-xl-regular z-10 text-center max-lg:text-[16px]">
             Not just a service, It&apos;s an...

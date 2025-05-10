@@ -13,7 +13,6 @@ import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import Topbar from '@/components/shared/Topbar'
-import { Input } from '@/components/ui/input'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
@@ -95,14 +94,16 @@ export default async function Home() {
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
-      <Link href={'/search-mobile-package'} className="lg:hidden">
-        <Input
-          placeholder={'Cari paket, travel, hotel atau airline...'}
-          model="compact"
-          disabled
-          startIcon={<Search size={16} className="text-neutral-300" />}
-          className="absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5"
-        />
+      <Link
+        href={'/search-mobile-package'}
+        className="absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5 lg:hidden"
+      >
+        <div className="flex items-center gap-1 rounded-full border-1 border-neutral-200 bg-white px-4 py-1.5">
+          <Search size={16} className="text-neutral-300" />
+          <p className="text-m-regular text-neutral-300">
+            Cari paket, travel, hotel atau airlinesee...
+          </p>
+        </div>
       </Link>
       <Banner />
       <main className="relative">
@@ -134,7 +135,7 @@ export default async function Home() {
         </Fragment>
       )}
       <BottomNavigation />
-      <Footer className="relative z-2 max-lg:mb-0" />
+      <Footer className="footer relative z-10 max-lg:mb-0 max-lg:pb-[108px]" />
       <EventTrackerImpression
         id="home"
         nameDidMount="impression_home"
