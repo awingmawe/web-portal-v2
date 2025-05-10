@@ -82,7 +82,7 @@ const HotelImage = React.memo(
     <div className="relative cursor-pointer" onClick={onClick}>
       {/* Show skeleton until image is loaded */}
       {!isLoaded && (
-        <div className="aspect-video w-full animate-pulse rounded-lg bg-neutral-200"></div>
+        <div className="aspect-video h-auto w-full animate-pulse rounded-lg bg-neutral-200"></div>
       )}
 
       <Image
@@ -94,7 +94,7 @@ const HotelImage = React.memo(
         className={cn(
           'aspect-video w-full rounded-lg object-cover',
           dissolve,
-          isLoaded ? 'opacity-100' : 'opacity-0'
+          isLoaded ? 'block' : 'hidden'
         )}
         onLoad={onLoad}
       />
