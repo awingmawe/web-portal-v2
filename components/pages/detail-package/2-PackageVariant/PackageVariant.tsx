@@ -248,9 +248,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   // When all version 2 muslim101 released, remove this
   const handleLocalStorage = () => {
     if (!token) {
-      window.location.href =
-        `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
-        `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
+      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
       return
     }
     localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))

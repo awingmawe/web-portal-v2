@@ -17,7 +17,6 @@ import { formatCurrency, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { X } from 'lucide-react'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
 import React, { Fragment, useEffect, useMemo } from 'react'
 
 const CheckoutDrawerMobile = React.memo(
@@ -48,8 +47,6 @@ const CheckoutDrawerMobile = React.memo(
       formattedArrival,
       formattedDeparture,
     } = usePackageVariant()
-
-    const path = usePathname()
 
     const variantName =
       selectedVariant?.name ||
@@ -93,9 +90,7 @@ const CheckoutDrawerMobile = React.memo(
 
     const handleLocalStorage = () => {
       if (!token && isEmpty(token)) {
-        window.location.href =
-          `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
-          `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
+        window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
         return
       }
       localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
