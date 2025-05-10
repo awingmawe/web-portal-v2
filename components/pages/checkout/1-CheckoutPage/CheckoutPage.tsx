@@ -49,8 +49,6 @@ const CheckoutPage = () => {
     dataRefundPolicy,
   } = useCheckout()
   const router = useRouter()
-  console.log(rawInputValue, 'raw')
-  console.log(sliderValue, 'sllider')
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Main content */}

@@ -42,14 +42,14 @@ const DrawerCheckAvailibility = React.memo(
     return (
       <Drawer>
         <DrawerTrigger asChild>{children}</DrawerTrigger>
-        <DrawerContent className="bg-white p-0">
+        <DrawerContent className="bg-white p-1">
           <div className="mx-auto w-full max-w-md">
-            <DrawerHeader className="border-b border-gray-200 px-4 py-3">
+            <DrawerHeader className="border-gray-200 px-4 py-3">
               <div
                 className={`flex items-center ${statusStock ? 'justify-center' : ''}`}
               >
                 <DrawerClose ref={closeRef} className="hidden" />
-                <DrawerTitle className=" text-lg font-medium">
+                <DrawerTitle className="text-lg font-medium">
                   {statusStock ? (
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
                       <X className="h-6 w-6 text-red-600" />
@@ -61,7 +61,7 @@ const DrawerCheckAvailibility = React.memo(
                         width={24}
                         height={24}
                         alt="check icon"
-                        className="mr-2"
+                        className="mr-2 bg-[#FFF2CC]"
                       />
                       Cek Kuota
                     </div>
@@ -76,7 +76,7 @@ const DrawerCheckAvailibility = React.memo(
                   <p className="mt-1 text-center text-sm text-[#000000]">
                     Anda Sudah Meminta Pengecekan Ketersediaan Kuota Kursi
                   </p>
-                  <p className="mt-1 text-center text-sm text-neutral-600">
+                  <p className="mt-3 text-center text-sm text-neutral-600">
                     Mohon menunggu 1x24 jam sebelum melakukan pengecekan
                     ketersediaan kembali.
                   </p>
