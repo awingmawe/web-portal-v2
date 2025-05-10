@@ -232,9 +232,7 @@ const CheckoutDrawerMobile = React.memo(
                         <p className="text-sm font-medium text-neutral-900">
                           Double
                         </p>
-                        <p className="text-xs text-neutral-500">
-                          1 Kamar sendiri
-                        </p>
+                        <p className="text-xs text-neutral-500">Berdua</p>
                       </div>
 
                       {/* Triple Room Option */}
@@ -254,9 +252,7 @@ const CheckoutDrawerMobile = React.memo(
                         <p className="text-sm font-medium text-neutral-900">
                           Triple
                         </p>
-                        <p className="text-xs text-neutral-500">
-                          1 Kamar Bertiga
-                        </p>
+                        <p className="text-xs text-neutral-500">Bertiga</p>
                       </div>
 
                       {/* Quad Room Option */}
@@ -277,7 +273,7 @@ const CheckoutDrawerMobile = React.memo(
                         </p>
                         <p className="text-xs text-neutral-500">
                           {availableRoomTypes.quad
-                            ? '1 Kamar berempat'
+                            ? 'Berempat'
                             : 'Tidak tersedia'}
                         </p>
                       </div>
