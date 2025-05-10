@@ -580,7 +580,7 @@ const CheckoutPage = () => {
               <div className="mt-2 flex w-full justify-between px-10 text-center">
                 <div>
                   <p className="text-[12px] text-gray-400">Varian</p>
-                  <p className="text-[14px] font-semibold">
+                  <p className="text-center text-[14px] font-semibold">
                     {selectedVariant?.name}
                   </p>
                 </div>

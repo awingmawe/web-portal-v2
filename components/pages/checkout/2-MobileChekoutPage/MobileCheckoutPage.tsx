@@ -5,6 +5,8 @@ import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import CheckoutDrawerAddJamaah from '@/components/pages/detail-package/mobile/DrawerAddJamaah'
 import CheckoutDrawerFormJamaah from '@/components/pages/detail-package/mobile/DrawerFormAddJamaah'
+import DrawerPengembalianDana from '@/components/pages/detail-package/mobile/DrawerPengemalianDana'
+import DrawerSK from '@/components/pages/detail-package/mobile/DrawerSK'
 import { useCheckout } from '@/contexts/checkout-context'
 import { Plus, Trash2, User } from 'lucide-react'
 import Image from 'next/image'
@@ -617,23 +619,30 @@ const MobileCheckoutPage = ({}) => {
                     href="/legal/syarat-ketentuan"
                     className="text-m-regular text-neutral-900"
                   > */}{' '}
-              <span
-                className="cursor-pointer text-black underline"
-                onClick={() => {
-                  setOpenModal(true)
-                }}
-              >
-                Syarat & Ketentuan
-              </span>
+              <DrawerSK dataSk={dataSK}>
+                <span
+                  className="cursor-pointer text-black underline"
+                  // onClick={() => {
+                  //   setOpenModal(true)
+                  // }}
+                >
+                  Syarat & Ketentuan
+                </span>
+              </DrawerSK>
               , {/* </Link> */}
-              <span
-                className="cursor-pointer text-black underline"
-                onClick={() => {
-                  setOpenModalPengembalian(true)
-                }}
+              <DrawerPengembalianDana
+                parsedContent={parsedContent}
+                dataRefundPolicy={dataRefundPolicy}
               >
-                Pengembalian Dana
-              </span>
+                <span
+                  className="cursor-pointer text-black underline"
+                  // onClick={() => {
+                  //   setOpenModalPengembalian(true)
+                  // }}
+                >
+                  Pengembalian Dana
+                </span>
+              </DrawerPengembalianDana>
               , dan{' '}
               <span className="cursor-pointer text-black underline">
                 Persetujuan Pengguna
