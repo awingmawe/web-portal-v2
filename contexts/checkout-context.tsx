@@ -467,7 +467,9 @@ export const CheckoutProvider = ({
         detailVariant.package?.organizationInstance?.id
       )
       setDataRefundPolicy(response)
-      const parsedContent = JSON.parse(response.kondisi)
+      const parsedContent = response?.kondisi
+        ? JSON.parse(response?.kondisi)
+        : ''
       setParsedContent(parsedContent)
     } catch (error) {
       console.error(error)

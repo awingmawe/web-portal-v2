@@ -7,6 +7,7 @@ import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
 import FilterDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/FilterDrawerMobile'
 import { Input } from '@/components/ui/input'
 import { useFilterProduct } from '@/contexts/filter-product-context'
+import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { dissolve } from '@/lib/animation-setup'
 import { capitalizeText, formatDateRangeShort, isEmpty } from '@/lib/utils'
@@ -59,6 +60,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     packageId,
   }) => {
     const { filters } = useFilterProduct()
+    const { goBack } = useCustomNavigation()
 
     const [showFixedHeader, setShowFixedHeader] = useState(false)
 
@@ -98,7 +100,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       if (onBackClick) {
         onBackClick()
       } else {
-        router.back()
+        goBack()
       }
     }, [onBackClick, router])
 

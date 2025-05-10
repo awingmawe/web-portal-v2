@@ -6,6 +6,7 @@ import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengem
 import CheckoutDrawerAddJamaah from '@/components/pages/detail-package/mobile/DrawerAddJamaah'
 import CheckoutDrawerFormJamaah from '@/components/pages/detail-package/mobile/DrawerFormAddJamaah'
 import { useCheckout } from '@/contexts/checkout-context'
+import Placeholder from '@/public/images/no-image-placeholder.png'
 import { Plus, Trash2, User } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -102,7 +103,7 @@ const MobileCheckoutPage = ({}) => {
           <div className="mb-4 flex">
             <div className="mr-2">
               <Image
-                src={detailVariant?.package?.thumbnail || ''}
+                src={detailVariant?.package?.thumbnail || Placeholder}
                 alt="Umrah Package"
                 width={80}
                 height={80}

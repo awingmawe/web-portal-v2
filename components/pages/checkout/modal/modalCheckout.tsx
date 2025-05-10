@@ -23,7 +23,7 @@ const ModalCheckout = ({
 }: CheckQuotaModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full !max-w-[947px] max-w-[947px] rounded-xl px-6 py-4 shadow-lg max-lg:!max-w-[947px]">
+      <DialogContent className="max-h-[80%] w-full !max-w-[947px] overflow-y-auto rounded-xl px-6 py-4 shadow-lg max-lg:!max-w-[947px]">
         <DialogHeader className="p-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
