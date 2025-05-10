@@ -391,38 +391,33 @@ export const CheckoutProvider = ({
     const value = parseInt(e.target.value)
     pendingValueRef.current = value
 
-    // Use the loading state once at the beginning
-    setLoading(true)
+    // Update UI immediately for better responsiveness
+    setSliderValue(value)
 
-    // Clear any existing timer
+    // Clear any existing timer for API calls/expensive operations
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current)
     }
 
-    // Set new timer for batched state updates
+    // Set new timer only for expensive operations (API calls, etc)
     debounceTimerRef.current = setTimeout(() => {
-      // Get the latest pending value
-      const finalValue = pendingValueRef.current
-
-      if (finalValue !== null && finalValue !== sliderValue) {
-        // Batch state updates to prevent render loops
-        setSliderValue(finalValue)
-
-        // Update payment amount if we have jamaah
-        if (jamaahList.length > 0) {
-          const perJamaahAmount = Math.ceil(finalValue / jamaahList.length)
-          if (perJamaahAmount !== paymentAmount) {
-            setPaymentAmount(perJamaahAmount)
+      // Update payment amount if we have jamaah
+      if (jamaahList.length > 0) {
+        const perJamaahAmount = Math.ceil(value / jamaahList.length)
+        if (perJamaahAmount !== paymentAmount) {
+          setPaymentAmount(perJamaahAmount)
+          // Trigger checkPre only after settling on a value
+          if (!checkPreCalled.current) {
+            checkPreCalled.current = true
+            checkPre().finally(() => {
+              checkPreCalled.current = false
+            })
           }
         }
-
-        // Clear pending value
-        pendingValueRef.current = null
       }
 
-      // Always turn off loading at the end
-      setLoading(false)
-    }, 300) // 300ms debounce time
+      pendingValueRef.current = null
+    }, 100) // Reduced to 100ms for better responsiveness
   }
 
   // Cleanup timer on component unmount
