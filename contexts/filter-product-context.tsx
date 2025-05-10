@@ -107,6 +107,7 @@ export const FilterProductProvider: React.FC<{
   const [packages, setPackages] = useState<CardData[]>([])
   const [totalPackages, setTotalPackages] = useState<number>(0)
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [previousPage, setPreviousPage] = useState<string | null>(null)
 
   // Filter state setters
   const setHotelStars = useCallback((stars: number) => {
@@ -286,6 +287,20 @@ export const FilterProductProvider: React.FC<{
         const queryParam = params.get('query')
         if (queryParam) {
           setSearchQuery(queryParam)
+        }
+
+        const page = params.get('page')
+        const pageHasChanged = page !== previousPage
+
+        // Update the previous page value for next comparison
+        if (pageHasChanged && page !== null) {
+          setPreviousPage(page)
+
+          // Scroll to top only when page has actually changed
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          })
         }
       } catch (error) {
         console.error('Error initializing filters from URL:', error)
