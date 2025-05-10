@@ -418,13 +418,14 @@ export const CheckoutProvider = ({
         const perJamaahAmount = Math.ceil(value / jamaahList.length)
         if (perJamaahAmount !== paymentAmount) {
           setPaymentAmount(perJamaahAmount)
+          setShouldRunCheckPre(true)
           // Trigger checkPre only after settling on a value
-          if (!checkPreCalled.current) {
-            checkPreCalled.current = true
-            checkPre().finally(() => {
-              checkPreCalled.current = false
-            })
-          }
+          // if (!checkPreCalled.current) {
+          //   checkPreCalled.current = true
+          //   checkPre().finally(() => {
+          //     checkPreCalled.current = false
+          //   })
+          // }
         }
       }
 

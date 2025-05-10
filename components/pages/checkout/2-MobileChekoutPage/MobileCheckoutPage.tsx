@@ -459,7 +459,7 @@ const MobileCheckoutPage = ({}) => {
                 max={preBooking?.totalPrice || totalPrice * jamaahList.length}
                 step={1000}
                 value={sliderValue} // Use the dedicated slider state
-                onBlur={handleSliderChange}
+                onChange={handleSliderChange}
                 disabled={prebookingLoading}
                 className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
               />
