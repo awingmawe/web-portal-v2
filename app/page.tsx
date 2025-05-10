@@ -95,7 +95,7 @@ export default async function Home() {
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
-      <Link href={'/search-mobile-package'}>
+      <Link href={'/search-mobile-package'} className="lg:hidden">
         <Input
           placeholder={'Cari paket, travel, hotel atau airline...'}
           model="compact"
