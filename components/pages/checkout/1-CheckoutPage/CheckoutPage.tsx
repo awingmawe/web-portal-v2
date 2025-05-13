@@ -193,7 +193,7 @@ const CheckoutPage = () => {
                     />
                     <div className="flex w-full flex-1 gap-2">
                       <input
-                        type="text"
+                        type="number"
                         placeholder="+62"
                         className={`w-full rounded-full border ${
                           !jamaah.phone || jamaah.phone.trim() === ''
