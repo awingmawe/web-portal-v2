@@ -49,6 +49,7 @@ export const PackageResults: React.FC = () => {
   useEffect(() => {
     initializeFiltersFromURL()
   }, [])
+  console.log(searchParams.get('sort'))
 
   useEffect(() => {
     if (!isLoadingSkeleton) {
@@ -70,7 +71,7 @@ export const PackageResults: React.FC = () => {
         fetchPackageData(paramsFilter)
       }
     }
-  }, [isLoadingSkeleton, currentSort, searchParams])
+  }, [isLoadingSkeleton, currentSort, searchParams, isMobile])
 
   // Improved loadMoreData function that checks loading/hasMore status first
   const loadMoreData = useCallback(() => {
