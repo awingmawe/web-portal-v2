@@ -367,3 +367,8 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.legal-content p {
+  color: var(--color-neutral-700);
+  @apply text-[14px] leading-5 font-normal;
+}
