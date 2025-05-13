@@ -9,6 +9,7 @@ import {
   HotelGalleryImage,
 } from '@/constant/types/GalleryProps'
 import qs from 'query-string'
+import { GetLegalParams, Legal } from '@/constant/types/LegalProps'
 
 export async function getAirports({
   page = 1,
@@ -99,6 +100,20 @@ export async function getLegalSyarat(): Promise<GenericResponse<Airline>> {
   try {
     const response = await api.get(
       `/public/general/v1/legal?slug:likeLower=syarat-ketentuan`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching airline:', error)
+    throw error
+  }
+}
+
+export async function getLegalList(
+  query: GetLegalParams
+): Promise<GenericResponse<Legal>> {
+  try {
+    const response = await api.get(
+      `/public/general/v1/legal?${qs.stringify(query)}`
     )
     return response.data
   } catch (error) {
