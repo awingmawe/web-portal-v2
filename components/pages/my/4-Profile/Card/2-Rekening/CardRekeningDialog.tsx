@@ -143,6 +143,12 @@ export default function BankAccountResponsive({
                   {...field}
                   placeholder="Masukkan nomor rekening kamu"
                   className="rounded-full py-3"
+                  type="text"
+                  inputMode="numeric"
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '')
+                    field.onChange(value)
+                  }}
                 />
               </FormControl>
               <FormMessage className="text-xs" />
