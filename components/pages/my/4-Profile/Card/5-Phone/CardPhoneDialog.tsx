@@ -88,9 +88,14 @@ export default function CardPhoneNumberDialog({
                 <FormControl>
                   <Input
                     {...field}
-                    type="tel"
                     placeholder="Masukkan nomor telepon"
                     className="rounded-full py-3"
+                    type="text"
+                    inputMode="numeric"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '')
+                      field.onChange(value)
+                    }}
                   />
                 </FormControl>
                 <FormMessage className="text-xs" />
