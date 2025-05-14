@@ -135,7 +135,7 @@ export default async function Home() {
         </Fragment>
       )}
       <BottomNavigation />
-      <Footer className="footer relative z-10 max-lg:mb-0 max-lg:pb-[108px]" />
+      <Footer className="footer relative z-10  max-lg:mb-0 max-lg:pb-[108px]" />
       <EventTrackerImpression
         id="home"
         nameDidMount="impression_home"

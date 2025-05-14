@@ -34,36 +34,38 @@ export default function BottomNavigation() {
   ]
 
   return (
-    <div className="border-opacity-50 fixed bottom-5 left-1/2 z-1 hidden h-16 w-[90%] -translate-x-1/2 rounded-[40px] border-[0.5px] border-white bg-gradient-to-b from-[rgba(49,37,0,0.4)] to-[rgba(174,174,174,0.4)] px-4 py-2 backdrop-blur-lg max-lg:block">
-      <nav className="flex items-center justify-between">
-        {navItems.map((item) => {
-          // Check if current pathname matches this nav item's path
-          const isActive = pathname === item.path
+    <div className="fixed bottom-0 z-100 flex w-[100vw] items-center justify-center px-4 pb-4">
+      <div className="border-opacity-50 hidden h-16 !w-[100%] max-w-[375px] rounded-[40px] border-[0.5px] border-white bg-gradient-to-b from-[rgba(49,37,0,0.4)] to-[rgba(174,174,174,0.4)] px-4 py-2 backdrop-blur-lg max-lg:block">
+        <nav className="flex items-center justify-between">
+          {navItems.map((item) => {
+            // Check if current pathname matches this nav item's path
+            const isActive = pathname === item.path
 
-          return (
-            <Link
-              href={item.path}
-              key={`link-item-${item.name}`}
-              className="flex flex-col items-center"
-            >
-              <div
-                className={`flex ${isActive ? 'bg-primary-500 h-8 w-8 rounded-full' : ''} items-center justify-center text-white`}
+            return (
+              <Link
+                href={item.path}
+                key={`link-item-${item.name}`}
+                className="flex flex-col items-center"
               >
-                {isActive ? (
-                  <item.activeIcon size={16} />
-                ) : (
-                  <item.icon size={isActive ? 16 : 24} />
-                )}
-              </div>
-              <span
-                className={`text-s-regular mt-[2px] ${isActive ? 'text-neutral-900' : 'text-neutral-0'}`}
-              >
-                {item.name}
-              </span>
-            </Link>
-          )
-        })}
-      </nav>
+                <div
+                  className={`flex ${isActive ? 'bg-primary-500 h-8 w-8 rounded-full' : ''} items-center justify-center text-white`}
+                >
+                  {isActive ? (
+                    <item.activeIcon size={16} />
+                  ) : (
+                    <item.icon size={isActive ? 16 : 24} />
+                  )}
+                </div>
+                <span
+                  className={`text-s-regular mt-[2px] ${isActive ? 'text-neutral-900' : 'text-neutral-0'}`}
+                >
+                  {item.name}
+                </span>
+              </Link>
+            )
+          })}
+        </nav>
+      </div>
     </div>
   )
 }
