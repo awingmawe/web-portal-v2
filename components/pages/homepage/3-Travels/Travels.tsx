@@ -6,7 +6,6 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel'
-import { Separator } from '@/components/ui/separator'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { Travel } from '@/constant/types/TravelProps'
 import Autoplay from 'embla-carousel-autoplay'
@@ -27,8 +26,13 @@ export function CarouselTravel({
   }
 
   return (
-    <section className="max-lg:px-4">
-      <Separator className="mt-[60px] max-lg:mt-7.5" />
+    <section className="mt-8 rounded-xl bg-gradient-to-r from-[#FFEAAC] to-[#FFC101] py-2 max-lg:px-4">
+      <div className="text-center">
+        <h2 className="mt-4 text-3xl font-bold max-lg:text-base">Mitra Kami</h2>
+        <p className="mt-2 mb-4 text-base max-lg:text-xs">
+          Kami telah bermitra dengan bermacam-macam travel agent terpercaya
+        </p>
+      </div>
       <Carousel
         opts={{
           align: 'end',
@@ -43,34 +47,34 @@ export function CarouselTravel({
         ]}
         className="my-7 w-full max-lg:my-4"
       >
-        <CarouselContent className="-ml-10">
+        <CarouselContent className="-ml-1">
           {dataTravel?.results.map((item, index) => (
             <CarouselItem
               key={`logo-travel-${item.organizationInstance?.tagline}-${index}`}
-              className="basis-1/3 items-center overflow-hidden pl-10 md:basis-1/2 lg:basis-1/5"
+              className="basis-1/2 items-center overflow-hidden md:basis-1/4 lg:basis-1/9"
             >
               <div className="relative flex justify-center">
                 {/* Show skeleton until image is loaded */}
                 {!imagesLoaded[index] && <TravelLogoSkeleton />}
 
-                <Image
-                  src={item.organizationInstance?.thumbnail}
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  alt={`logo-travel-${item.organizationInstance?.tagline}`}
-                  className={`m-auto aspect-square h-[80px] w-auto object-contain transition-opacity duration-300 max-lg:h-[60px] ${
-                    imagesLoaded[index] ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  loading="lazy"
-                  onLoad={() => handleImageLoad(index)}
-                />
+                <div className="rounded-lg bg-[#FFFBF2] p-5">
+                  <Image
+                    src={item.organizationInstance?.thumbnail}
+                    width={0}
+                    height={0}
+                    alt={`logo-travel-${item.organizationInstance?.tagline}`}
+                    className={`m-auto aspect-square h-[80px] w-auto object-contain transition-opacity duration-300 max-lg:h-[60px] ${
+                      imagesLoaded[index] ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    loading="lazy"
+                    onLoad={() => handleImageLoad(index)}
+                  />
+                </div>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
-      <Separator />
     </section>
   )
 }
