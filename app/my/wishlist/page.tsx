@@ -14,8 +14,8 @@ export default async function WishlistPage() {
     <LayoutMy>
       <div className="mx-auto max-w-7xl max-lg:px-4 lg:px-4">
         <Wishlist />
-        <BottomNavigation />
       </div>
+      <BottomNavigation />
     </LayoutMy>
   )
 }
