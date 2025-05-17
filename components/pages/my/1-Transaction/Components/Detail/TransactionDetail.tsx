@@ -8,12 +8,14 @@ interface TransactionDetailProps {
   bookingId: string
   statusTahapan: string
   onOpenChange: (open: boolean) => void
+  setOpenBatalkan?: any
 }
 
 export function TransactionDetail({
   open,
   bookingId,
   onOpenChange,
+  setOpenBatalkan,
 }: TransactionDetailProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -33,6 +35,7 @@ export function TransactionDetail({
           bookingId={bookingId}
           isFixedLoading={true}
           onOpenChange={onOpenChange}
+          setOpenBatalkan={setOpenBatalkan}
         />
       </DialogContent>
     </Dialog>

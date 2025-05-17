@@ -30,6 +30,7 @@ interface TransactionDetailContentProps {
   bookingId: string
   isFixedLoading: boolean
   onOpenChange?: any
+  setOpenBatalkan?: (open: boolean) => void
 }
 
 // Declare window with Snap interface
@@ -45,6 +46,7 @@ export default function TransactionDetailContent({
   isFixedLoading,
   bookingId,
   onOpenChange,
+  setOpenBatalkan,
 }: TransactionDetailContentProps) {
   const [loading, setLoading] = useState(true)
   const [transaction, setTransaction] = useState<any>(null)
@@ -497,20 +499,25 @@ export default function TransactionDetailContent({
                 {transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' && (
-                    <Link
-                      href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                      target="_blank"
-                      className="w-full"
+                    // <Link
+                    //   href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                    //   target="_blank"
+                    //   className="w-full"
+                    // >
+                    <Button
+                      variant="outline"
+                      className="border-error-500  block w-full border-2"
+                      onClick={() => {
+                        if (typeof setOpenBatalkan === 'function') {
+                          setOpenBatalkan(true)
+                        }
+                      }}
                     >
-                      <Button
-                        variant="outline"
-                        className="border-error-500  block w-full border-2"
-                      >
-                        <span className="text-error-500 font-medium">
-                          Batalkan Pesanan
-                        </span>
-                      </Button>
-                    </Link>
+                      <span className="text-error-500 font-medium">
+                        Batalkan Pesanan
+                      </span>
+                    </Button>
+                    // </Link>
                   )}
                 <div className="relative mt-auto">
                   <Image
@@ -531,6 +538,9 @@ export default function TransactionDetailContent({
         bookingCode={transaction?.bookingCode}
         bookingId={bookingId}
         statusTahapan={statusTahapan}
+        idOrganisasi={
+          transaction?.packageSnapshot?.snapshot.package.organizationInstance.id
+        }
       />
 
       <Script

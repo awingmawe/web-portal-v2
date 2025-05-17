@@ -203,6 +203,7 @@ export default function TransactionUpcoming() {
         totalPages={totalPages}
         setCurrentPage={setCurrentPage}
         transactions={transactions}
+        fetchTransactions={fetchTransactions}
       />
 
       {/* Pagination */}

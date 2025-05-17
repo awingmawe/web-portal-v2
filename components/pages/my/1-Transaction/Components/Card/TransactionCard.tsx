@@ -18,6 +18,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Skeleton } from '@/components/ui/skeleton'
+import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { getOrderPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -46,7 +47,9 @@ export interface TransactionCardProps {
   detailOnly?: boolean
   noLabelNotif?: boolean
   showDpButton?: boolean
+  organizationInstanceId?: any
   noFooter?: boolean
+  fetchTransactions?: any
 }
 
 function renderManifestComplete(
@@ -123,6 +126,8 @@ export default function TransactionCard({
   noLabelNotif,
   showDpButton,
   noFooter,
+  organizationInstanceId,
+  fetchTransactions,
 }: TransactionCardProps) {
   const { lg } = useTailwindBreakpoint()
   const [orderPayment, setOrderPayment] = useState<any>(null)
@@ -381,17 +386,21 @@ export default function TransactionCard({
                   </div>
                 </div>
               ) : (
-                <TransactionCardFooter
-                  detailOnly={detailOnly}
-                  isPaidOff={isPaidOff}
-                  isCompletedManifest={isCompletedManifest}
-                  showDpButton={showDpButton}
-                  bookingId={bookingId}
-                  id={id}
-                  status={status}
-                  statusTahapanDetail={statusTahapanDetail}
-                  paymentAmount={orderPayment?.orderPayment?.paymentAmount}
-                />
+                <CanceledProvider>
+                  <TransactionCardFooter
+                    detailOnly={detailOnly}
+                    isPaidOff={isPaidOff}
+                    isCompletedManifest={isCompletedManifest}
+                    showDpButton={showDpButton}
+                    bookingId={bookingId}
+                    id={id}
+                    status={status}
+                    statusTahapanDetail={statusTahapanDetail}
+                    paymentAmount={orderPayment?.orderPayment?.paymentAmount}
+                    organizationInstanceId={organizationInstanceId}
+                    fetchTransactions={fetchTransactions}
+                  />
+                </CanceledProvider>
               )}
             </Fragment>
           )}
