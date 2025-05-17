@@ -139,6 +139,8 @@ export const isValidImage = (fileName: any) => {
 export function mapProductsToCardData(
   products: GenericResponse<Package>
 ): CardData[] {
+  console.log(products)
+
   return (
     products?.results?.map((product: Package) => ({
       id: product?.id ?? 0,
@@ -153,23 +155,9 @@ export function mapProductsToCardData(
       provinceId: product.organizationInstance?.provinceId,
       organizationName: product.organizationInstance?.name || 'Unknown',
       originalPrice: product.packageVariant
-        ? formatCurrency(
-            getMinimumNonZeroPrice(
-              Number(product.packageVariant?.originalPriceDouble),
-              Number(product.packageVariant?.originalPriceTriple),
-              Number(product.packageVariant?.originalPriceQuad)
-            )
-          )
+        ? formatCurrency(product.originalPrice)
         : 'Rp0',
-      price: product.packageVariant
-        ? formatCurrency(
-            getMinimumNonZeroPrice(
-              Number(product.packageVariant?.priceDouble),
-              Number(product.packageVariant?.priceTriple),
-              Number(product.packageVariant?.priceQuad)
-            )
-          )
-        : 'Rp0',
+      price: product.packageVariant ? formatCurrency(product.price) : 'Rp0',
       rating: getHotelRating(product),
       slugOrganization: product.organizationInstance?.slug || '',
       slugPackage: product.slug || '',

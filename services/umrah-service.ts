@@ -46,7 +46,7 @@ export async function getPackageList(
 ): Promise<GenericResponse<Package>> {
   try {
     const response = await api.get(
-      `/public/umrah/v2/package?${qs.stringify(query)}`
+      `/public/umrah/v2_1/package?${qs.stringify(query)}`
     )
     return response.data
   } catch (error) {
@@ -367,6 +367,31 @@ export async function getInvoiceTranasction(
   try {
     const response = await apiWithAuth.get(
       `/umrah/v1/invoice-transaction/${bookingCode}/print`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
+
+export async function getPreCanceled(bookingCode: any): Promise<any> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v2/client/booking-canceled/pre-cancel/${bookingCode}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
+
+export async function getPostCanceled(payload: any): Promise<any> {
+  try {
+    const response = await apiWithAuth.post(
+      `/umrah/v2/client/booking-canceled/cancel-user`,
+      payload
     )
     return response.data
   } catch (error) {

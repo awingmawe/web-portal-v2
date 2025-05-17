@@ -49,7 +49,6 @@ export const PackageResults: React.FC = () => {
   useEffect(() => {
     initializeFiltersFromURL()
   }, [])
-  console.log(searchParams.get('sort'))
 
   useEffect(() => {
     if (!isLoadingSkeleton) {

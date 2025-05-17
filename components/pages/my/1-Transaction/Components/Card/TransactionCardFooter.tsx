@@ -3,6 +3,9 @@
 
 import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
 import { TransactionDetail } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetail'
+import { BatalkanPesanan } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesanan'
+import ModalPengembalianDanaDetail from '@/components/pages/my/1-Transaction/Components/Modal/modalPengembalianDanaDetail'
+import ModalSuccessCanceled from '@/components/pages/my/1-Transaction/Components/Modal/modalSukses'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -10,6 +13,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import { useCanceled } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { formatCurrency } from '@/lib/utils'
 import {
@@ -33,6 +37,8 @@ export interface TransactionCardFooter {
   status: string
   statusTahapanDetail: string
   paymentAmount?: number
+  organizationInstanceId?: any
+  fetchTransactions?: any
 }
 
 export default function TransactionCardFooter({
@@ -45,6 +51,8 @@ export default function TransactionCardFooter({
   bookingId,
   id,
   paymentAmount,
+  organizationInstanceId,
+  fetchTransactions,
 }: TransactionCardFooter) {
   const { lg } = useTailwindBreakpoint()
 
@@ -110,8 +118,24 @@ export default function TransactionCardFooter({
     }
   }, [fetcPaymentTransaction, showDpButton])
 
-  const [open, setOpen] = useState(false)
-
+  const {
+    open,
+    setOpen,
+    openBatalkan,
+    setOpenBatalkan,
+    openModalRefund,
+    setOpenModalRefund,
+    openModalSukses,
+    setOpenModalSukses,
+    dataRefundPolicy,
+    setDataRefundPolicy,
+    parsedContent,
+    setParsedContent,
+    reason,
+    setReason,
+    description,
+    setDescription,
+  } = useCanceled()
   return (
     <Fragment>
       <div className="flex items-center gap-2 max-lg:hidden">
@@ -165,15 +189,16 @@ export default function TransactionCardFooter({
                 </PopoverTrigger>
                 <PopoverContent className="rounded-2xl p-0 px-1">
                   <div className="flex flex-col divide-y">
-                    <a
-                      href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                    <span
+                      // href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
                       className="cursor-pointer p-3 hover:bg-gray-50"
-                      target="_blank"
+                      // target="_blank"
+                      onClick={() => setOpenBatalkan(true)}
                     >
                       <p className="text-m-regular text-error-500">
                         Batalkan Pesanan
                       </p>
-                    </a>
+                    </span>
                   </div>
                 </PopoverContent>
               </Popover>
@@ -347,6 +372,44 @@ export default function TransactionCardFooter({
           onOpenChange={setOpen}
           bookingId={bookingId}
           statusTahapan={statusTahapanDetail}
+          setOpenBatalkan={setOpenBatalkan}
+        />
+      )}
+      {openBatalkan && (
+        <BatalkanPesanan
+          open={openBatalkan}
+          bookingId={bookingId}
+          onOpenChange={setOpenBatalkan}
+          setParsedContent={setParsedContent}
+          setDataRefundPolicy={setDataRefundPolicy}
+          organizationInstanceId={organizationInstanceId}
+          setOpenModalRefund={setOpenModalRefund}
+          setDescription={setDescription}
+          description={description}
+          setReason={setReason}
+          reason={reason}
+        />
+      )}
+      {openModalRefund && (
+        <ModalPengembalianDanaDetail
+          open={openModalRefund}
+          openBatalkan={setOpenBatalkan}
+          onOpenChange={setOpenModalRefund}
+          dataRefundPolicy={dataRefundPolicy}
+          reason={reason}
+          setDescription={setDescription}
+          setReason={setReason}
+          description={description}
+          bookingId={bookingId}
+          parsedContent={parsedContent}
+          setOpenModalSukses={setOpenModalSukses}
+        />
+      )}
+      {openModalSukses && (
+        <ModalSuccessCanceled
+          open={openModalSukses}
+          onOpenChange={setOpenModalSukses}
+          fetchTransactions={fetchTransactions}
         />
       )}
     </Fragment>
