@@ -70,30 +70,34 @@ export default function TransactionDetailPayment({
           </div>
         </div>
       ) : (
-        <div
-          className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} mt-1 mb-3 hidden w-fit w-full rounded-full px-3 py-2 max-lg:block`}
-        >
-          <div
-            className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'text-warning-700 ' : 'text-error-700'} flex items-center gap-1`}
-          >
-            <InfoCircleIcon />
-            <p className="text-s-regular text-current">
-              {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
-                <span className="text-current">
-                  Harap lunasi sebelum{' '}
-                  {dayjs(startDate)
-                    .subtract(21, 'day')
-                    .locale('id')
-                    .format('DD MMM YYYY')}
-                </span>
-              ) : (
-                <span className="text-current">
-                  {' '}
-                  Segera lunasi pembayaran paket!
-                </span>
-              )}
-            </p>
-          </div>
+        <div>
+          {statusTahapan !== 'Waiting' && (
+            <div
+              className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} mt-1 mb-3 hidden w-fit w-full rounded-full px-3 py-2 max-lg:block`}
+            >
+              <div
+                className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'text-warning-700 ' : 'text-error-700'} flex items-center gap-1`}
+              >
+                <InfoCircleIcon />
+                <p className="text-s-regular text-current">
+                  {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
+                    <span className="text-current">
+                      Harap lunasi sebelum{' '}
+                      {dayjs(startDate)
+                        .subtract(21, 'day')
+                        .locale('id')
+                        .format('DD MMM YYYY')}
+                    </span>
+                  ) : (
+                    <span className="text-current">
+                      {' '}
+                      Segera lunasi pembayaran paket!
+                    </span>
+                  )}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -117,12 +121,12 @@ export default function TransactionDetailPayment({
                       </span>
                     </div>
                   ) : (
-                    <div className="flex justify-between">
+                    <div className="flex items-center justify-between">
                       <span className="text-sm text-neutral-500 max-lg:text-xs">
                         {item.label}
                       </span>
                       <span
-                        className={`font-seminold text-sm max-lg:text-xs max-lg:font-medium ${Number(item.amount) < 0 ? 'text-error-500' : ''}`}
+                        className={`text-sm font-semibold max-lg:text-xs max-lg:font-medium ${item.label === 'Uang Muka' ? 'text-error-500' : Number(item.amount) < 0 ? 'text-error-500' : ''} ${index === paymentDetails.length - 1 ? '!text-base' : ''}`}
                       >
                         {formatCurrency(item.amount)}
                       </span>
