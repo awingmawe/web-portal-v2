@@ -46,7 +46,7 @@ const PaymentSection = () => {
             </p>
           </div>
 
-          <Link href="/packages">
+          <Link href="/search">
             <Button
               className="my-8 flex h-10 items-center rounded-full px-4 text-xs whitespace-nowrap sm:h-12 sm:px-6 md:px-8 lg:mb-8"
               variant="default"
