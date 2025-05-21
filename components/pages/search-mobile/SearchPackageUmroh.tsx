@@ -171,7 +171,7 @@ const SearchMobileUmroh: React.FC = () => {
           </DrawerTrigger>
           <DrawerContent className="px-4 pt-4 pb-8">
             <DrawerTitle className="p-0" />
-            <div className="mb-5 space-y-4 overflow-y-auto">
+            <div className="mb-14 space-y-4 overflow-y-auto">
               <HotelStarSelector
                 onRatingChange={setHotelStars}
                 selectedRating={hotelStars}
