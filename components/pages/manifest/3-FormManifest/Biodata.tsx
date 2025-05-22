@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input'
 
 import KotaAsalCombobox from '@/components/pages/manifest/3-FormManifest/KotaAsal'
+import TriggerCalendar from '@/components/pages/manifest/3-FormManifest/TriggerCalendar'
 import { FileUpload } from '@/components/pages/manifest/3-FormManifest/UploadDokumen'
 import {
   ConfirmSubmitDrawer,
@@ -190,7 +191,7 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
     }
     const request = {
       name: values?.name ?? '',
-      phoneNumber: values?.phoneNumber ?? '',
+      phoneNumber: `+62${values?.phoneNumber}`,
       address: values?.address ?? '',
       email: values?.email ?? '',
       nik: values?.nik ?? '',
@@ -270,7 +271,7 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
   // Input validation functions for numbers only
   const handleNumberOnly = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Only allow digits
-    const value = e.target.value.replace(/\D/g, '')
+    const value = e.target.value.replace(/\D0/g, '')
     e.target.value = value
     return value
   }
@@ -377,20 +378,33 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
                       Nomor Telepon <span className="text-error-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="+62 085867467367"
-                        type="tel"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        onChange={(e) => {
-                          const value = handleNumberOnly(e)
-                          field.onChange(value)
-                        }}
-                        value={field.value}
-                        onBlur={field.onBlur}
-                        name={field.name}
-                        ref={field.ref}
-                      />
+                      <div className="relative flex items-center">
+                        <p className="text-m-regular absolute left-3 flex items-center text-neutral-500">
+                          +62
+                        </p>
+                        <Input
+                          className="pl-11"
+                          placeholder="85867467367"
+                          type="tel"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          onChange={(e) => {
+                            // Remove any existing prefix if user manually types it
+                            let value = e.target.value.replace(/^\+?62/, '')
+                            // Apply handleNumberOnly to clean the input
+                            value = handleNumberOnly({
+                              ...e,
+                              target: { ...e.target, value },
+                            })
+                            // Store the value without the prefix in the form
+                            field.onChange(value)
+                          }}
+                          value={field.value.replace(/^\+?62/, '')}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -478,41 +492,7 @@ export default function BiodataForm({ idBooking }: { idBooking: number }) {
                     <FormLabel className="text-s-medium text-neutral-900">
                       Tanggal Lahir <span className="text-error-500">*</span>
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger
-                        className={`flex w-full items-center justify-between rounded-full border border-neutral-200 px-4 py-2.5 text-left`}
-                      >
-                        <span
-                          className={`
-                          text-m-regular w-full text-left
-                          ${!field.value && 'text-neutral-400'}
-                        `}
-                        >
-                          {field.value
-                            ? format(new Date(field.value), 'dd MMMM yyyy', {
-                                locale: id,
-                              })
-                            : 'Pilih tanggal lahir'}
-                        </span>
-                        <CalendarDays size={18} />
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={
-                            field.value ? new Date(field.value) : undefined
-                          }
-                          onSelect={(date) =>
-                            field.onChange(
-                              date ? format(date, 'yyyy-MM-dd') : ''
-                            )
-                          }
-                          locale={id}
-                          disabled={(date) => date > new Date()}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <TriggerCalendar field={field} />
                     <FormMessage />
                   </FormItem>
                 )}

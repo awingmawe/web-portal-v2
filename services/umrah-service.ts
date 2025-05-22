@@ -46,7 +46,7 @@ export async function getPackageList(
 ): Promise<GenericResponse<Package>> {
   try {
     const response = await api.get(
-      `/public/umrah/v2_1/package?${qs.stringify(query)}`
+      `/public/umrah/v2.1/package?${qs.stringify(query)}`
     )
     return response.data
   } catch (error) {

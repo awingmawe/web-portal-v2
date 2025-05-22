@@ -47,10 +47,10 @@ export default function BankingSection() {
               mitra institusi keuangan tepercaya.
             </p>
 
-            <div className="mx-auto mb-8 flex w-full max-w-md flex-row gap-3 max-lg:justify-between max-lg:gap-2 lg:mx-0 lg:mb-12">
+            <div className="mx-auto mb-8 flex w-full max-w-md flex-row gap-3 max-[350px]:flex-col max-lg:justify-between max-lg:gap-2 lg:mx-0 lg:mb-12">
               <Link
                 href={'/banking?page=tabungan'}
-                className="flex max-lg:flex-1 sm:w-1/2 lg:w-auto"
+                className="flex max-[350px]:w-full max-lg:flex-1 sm:w-1/2 lg:w-auto"
               >
                 <Button
                   variant="outline"
@@ -63,7 +63,7 @@ export default function BankingSection() {
               </Link>
               <Link
                 href={'/banking?page=pembiayaan'}
-                className="w-fit max-lg:flex-1 sm:w-1/2 lg:w-auto"
+                className="w-fit max-[350px]:w-full max-lg:flex-1 sm:w-1/2 lg:w-auto"
               >
                 <Button
                   variant="outline"
@@ -77,7 +77,7 @@ export default function BankingSection() {
             </div>
 
             {/* Features */}
-            <div className="flex gap-4 max-lg:gap-2 lg:justify-between">
+            <div className="flex gap-4 max-[350px]:flex-col max-lg:gap-2 lg:justify-between">
               {/* Feature 1 */}
               <div className="flex flex-col items-center text-center">
                 <div className="border-primary-100 text-primary-500 mb-3 flex h-12 w-12 items-center justify-center rounded-lg border">

@@ -37,7 +37,7 @@ export default async function FormManifest({ params }: { params: any }) {
           width={0}
           height={0}
           sizes="100vw"
-          className="absolute top-0 z-[1] h-full w-full max-lg:hidden"
+          className="absolute top-0 z-[1] h-auto w-full max-lg:hidden"
         />
         <MobileTopbar variant="title" showBackButton title="Manifest Jemaah" />
         <section className="scrollbar-hide container mx-auto grid grid-cols-12 gap-5 max-lg:absolute max-lg:top-[55px] max-lg:bottom-0 max-lg:z-11 max-lg:h-full max-lg:w-full max-lg:max-w-full max-lg:gap-3 max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:py-7.5 max-lg:pb-[130px] max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">

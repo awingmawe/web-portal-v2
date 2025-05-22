@@ -227,7 +227,7 @@ export default function TransactionDetailContent({
       ) : (
         <Fragment>
           <div
-            className={`${statusTahapan !== 'Selesai' ? 'grid md:grid-cols-[1fr_300px]' : 'grid md:grid-cols-1'} rounded-lg bg-white shadow-md max-lg:h-auto`}
+            className={`${statusTahapan !== 'Selesai' ? 'grid grid-cols-1 lg:grid-cols-[1fr_300px]' : 'grid md:grid-cols-1'} rounded-lg bg-white shadow-md max-lg:h-auto`}
           >
             <div className="scrollbar-hide max-h-[80vh] overflow-y-auto border-r border-neutral-100 py-4 max-lg:max-h-full">
               {/* Header */}
@@ -330,30 +330,34 @@ export default function TransactionDetailContent({
                     </div>
                   </div>
                 ) : (
-                  <div
-                    className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
-                  >
-                    <div
-                      className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
-                    >
-                      <InfoCircleIcon />
-                      <p className="text-s-regular text-current">
-                        {dayjs(transaction.createdAt).add(3, 'day') >
-                        dayjs() ? (
-                          <span className="text-current">
-                            Lengkapi sebelum{' '}
-                            {dayjs(transaction.createdAt)
-                              .add(3, 'day')
-                              .locale('id')
-                              .format('DD MMM YYYY')}
-                          </span>
-                        ) : (
-                          <span className="text-current">
-                            Segera lengkapi manifest
-                          </span>
-                        )}
-                      </p>
-                    </div>
+                  <div>
+                    {statusTahapan !== 'Waiting' && (
+                      <div
+                        className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
+                      >
+                        <div
+                          className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                        >
+                          <InfoCircleIcon />
+                          <p className="text-s-regular text-current">
+                            {dayjs(transaction.createdAt).add(3, 'day') >
+                            dayjs() ? (
+                              <span className="text-current">
+                                Lengkapi sebelum{' '}
+                                {dayjs(transaction.createdAt)
+                                  .add(3, 'day')
+                                  .locale('id')
+                                  .format('DD MMM YYYY')}
+                              </span>
+                            ) : (
+                              <span className="text-current">
+                                Segera lengkapi manifest
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 

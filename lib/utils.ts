@@ -359,3 +359,5 @@ export function isMobileUserAgent(userAgent: string): boolean {
     userAgent
   )
 }
+
+export const starOptions = [5, 4, 3, 2, 1]

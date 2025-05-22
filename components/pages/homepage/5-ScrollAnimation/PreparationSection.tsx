@@ -24,14 +24,14 @@ export default function PreparationSection() {
               Persiapan{' '}
               <span className="relative font-bold">
                 Matang
-                <LineMatang className="absolute -right-2 -bottom-8 w-24 sm:-right-3 sm:w-32 lg:-right-3 lg:-bottom-6 lg:w-40 xl:-bottom-7 xl:w-60" />
+                <LineMatang className="absolute -right-2 -bottom-8 w-24 sm:-right-3 sm:w-32 lg:-right-3 lg:-bottom-6 lg:w-50 xl:-bottom-7 xl:w-60" />
               </span>
             </h1>
             <h1 className="text-2xl font-medium sm:text-3xl lg:text-5xl xl:text-6xl">
               Umroh Lebih{' '}
               <span className="relative font-bold">
                 Tenang
-                <LineMatang className="absolute -right-2 -bottom-8 w-24 sm:-right-3 sm:w-32 lg:-right-3 lg:-bottom-6 lg:w-40 xl:-bottom-7 xl:w-60" />
+                <LineMatang className="absolute -right-2 -bottom-8 w-24 sm:-right-3 sm:w-32 lg:-right-3 lg:-bottom-6 lg:w-50 xl:-bottom-7 xl:w-60" />
               </span>
             </h1>
           </div>
