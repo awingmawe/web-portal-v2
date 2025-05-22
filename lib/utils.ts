@@ -139,8 +139,6 @@ export const isValidImage = (fileName: any) => {
 export function mapProductsToCardData(
   products: GenericResponse<Package>
 ): CardData[] {
-  console.log(products)
-
   return (
     products?.results?.map((product: Package) => ({
       id: product?.id ?? 0,

@@ -154,6 +154,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           return <div className="text-l-medium flex-1 text-center">{title}</div>
 
         case 'plain':
+          return <div className="text-l-medium flex-1 text-center">{title}</div>
         case 'transparent':
         default:
           return null
