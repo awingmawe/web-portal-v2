@@ -152,6 +152,7 @@ export function mapProductsToCardData(
       province: product.organizationInstance?.province.name || 'Unknown',
       provinceId: product.organizationInstance?.provinceId,
       organizationName: product.organizationInstance?.name || 'Unknown',
+      variant: product.packageVariant || [],
       originalPrice: product.packageVariant
         ? formatCurrency(product.originalPrice)
         : 'Rp0',

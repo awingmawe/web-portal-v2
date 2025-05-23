@@ -5,7 +5,7 @@ export enum Gender {
 
 export type Persona = {
   id?: string
-  gender?: Gender
+  gender?: string
   born?: string
   phoneNumber?: string
   modifiedAt?: string

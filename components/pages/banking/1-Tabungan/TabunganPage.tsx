@@ -1,112 +1,218 @@
-/* eslint-disable @next/next/no-img-element */
+// Tambahkan debugging dan perbaikan untuk desktop view
 'use client'
 import { Button } from '@/components/ui/button'
+import { postSaving } from '@/services/banking-service'
+import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { TabunganForm } from './TabunganForm'
+
+type TabunganFormValues = {
+  fullName: string
+  email: string
+  phoneNumber: string
+  gender: 'male' | 'female'
+  job?: string
+  provinceId?: string
+  cityId?: string
+  provinceName?: string
+  cityName?: string
+  address?: string
+}
 
 const TabunganPage = () => {
   const [showForm, setShowForm] = useState(false)
-  const [step, setStep] = useState(1) // 1 = Data Diri, 2 = Form Pengajuan
+  const [loading, setLoading] = useState(false)
+  const [screenSize, setScreenSize] = useState<'mobile' | 'desktop'>('mobile')
+
+  // Debug: Monitor screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isMobile = window.innerWidth < 768
+      setScreenSize(isMobile ? 'mobile' : 'desktop')
+      console.log(
+        'Screen width:',
+        window.innerWidth,
+        'Mode:',
+        isMobile ? 'mobile' : 'desktop'
+      )
+    }
+
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
 
   const openForm = () => {
     setShowForm(true)
-    setStep(1)
   }
 
   const closeForm = () => {
     setShowForm(false)
-    setStep(1)
   }
 
-  const handleNext = () => {
-    if (step === 1) setStep(2)
+  const handleFormSubmit = async (values: TabunganFormValues) => {
+    setLoading(true)
+    try {
+      const { cityName, provinceName, fullName, email, ...payload } = values
+
+      await updateProfile({
+        name: fullName,
+        persona: payload,
+      })
+
+      const Allpayload = {
+        ...payload,
+        name: fullName,
+        phoneNumber: `+62${values.phoneNumber}`,
+        email,
+        provinceName,
+        cityName,
+        providerId: 1,
+        address: values.address,
+        status: 'Diajukan',
+      }
+
+      await postSaving(Allpayload)
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      closeForm()
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      throw error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Mobile Form View
+  if (showForm && screenSize === 'mobile') {
+    return (
+      <div className="min-h-screen bg-yellow-400">
+        <div className="bg-yellow-400 px-4 py-4 pt-12">
+          <div className="flex items-center justify-center">
+            <div className="mr-2 flex h-5 w-5 items-center justify-center rounded-full bg-white">
+              <span className="text-xs font-medium text-yellow-600">1</span>
+            </div>
+            <span className="text-sm text-white">Data Diri</span>
+          </div>
+        </div>
+
+        <div className="-mt-2 flex-1 rounded-t-3xl bg-white px-6 py-6">
+          <TabunganForm
+            onSubmit={handleFormSubmit}
+            onCancel={closeForm}
+            isLoading={loading}
+          />
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-12 md:pb-12 ">
-      {/* Mobile Header */}
-      <div className="md:hidden">
-        <div className="relative mb-4 rounded-lg bg-teal-600 p-4">
-          <Image
-            src="/images/logo-permata-tabungan.svg"
-            width={342}
-            height={250}
-            alt="Permata Tabungan"
-          />
-        </div>
+    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-2 md:pb-12">
+      {/* Debug Info - hapus di production */}
+      {/* <div className="mb-4 rounded bg-blue-100 p-2 text-xs">
+        Debug: {screenSize} mode, Screen:{' '}
+        {typeof window !== 'undefined' ? window.innerWidth : 'unknown'}px
+      </div> */}
 
-        <div className="mb-4">
-          <h1 className="text-lg font-bold text-black">
-            Program Tabungan Umrah
-          </h1>
-          <div className="mt-4 flex items-center text-xs text-gray-500">
-            <span>Didukung oleh</span>
+      {/* Mobile Header - hanya tampil di mobile */}
+      {screenSize === 'mobile' && (
+        <div>
+          <div className="relative mb-4 justify-items-center rounded-lg">
             <Image
-              src="/images/logo-permata.svg"
-              width={129}
-              height={32}
-              alt="Permata Bank"
-              className="ml-4"
+              src="/images/logo-permata-tabungan.svg"
+              width={342}
+              height={250}
+              alt="Permata Tabungan"
             />
           </div>
-        </div>
-      </div>
 
-      {/* Desktop Header */}
-      <div className="hidden bg-white p-4 md:block">
-        <button className="flex items-center text-gray-800">
-          <ChevronLeft className="mr-4" size={24} />
-          <span className="text-[24px] font-[600] text-[#30302F]">Kembali</span>
-        </button>
-      </div>
-
-      {/* Banner */}
-      <div className="hidden md:block">
-        <div className="flex h-[250px] w-full flex-col items-center justify-center rounded-[20px] bg-gray-200 p-12">
-          <div className="mb-4 rounded-full bg-white p-6">
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9" />
-              <path d="M12 12v9" />
-              <path d="m8 17 4 4 4-4" />
-            </svg>
-          </div>
-          <p className="text-center text-sm text-gray-500">
-            Gambar ini bisa diisi banner tsp program Pendanaan
-          </p>
-        </div>
-      </div>
-
-      <div className="hidden p-6 md:block">
-        <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-[32px] font-[600] text-[#30302F]">
-            Program Tabungan Umrah
-          </h1>
-          <div className="flex items-center">
-            <span className="mr-2 text-xs text-gray-500">Didukung oleh</span>
-            <Image
-              src="/images/logo-permata.svg"
-              width={129}
-              height={32}
-              alt="Permata Bank"
-              className="ml-4"
-            />
+          <div className="mb-4">
+            <h1 className="text-lg font-bold text-black">
+              Program Tabungan Umrah
+            </h1>
+            <div className="mt-4 flex items-center text-xs text-gray-500">
+              <span>Didukung oleh</span>
+              <Image
+                src="/images/logo-permata.svg"
+                width={129}
+                height={32}
+                alt="Permata Bank"
+                className="ml-4"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Deskripsi */}
-      <div className="md:px-6">
+      {/* Desktop Header - hanya tampil di desktop */}
+      {screenSize === 'desktop' && (
+        <div className="bg-white p-4">
+          <button className="flex items-center text-gray-800">
+            <ChevronLeft className="mr-4" size={24} />
+            <span className="text-2xl font-semibold text-gray-800">
+              Kembali
+            </span>
+          </button>
+        </div>
+      )}
+
+      {/* Desktop Banner - hanya tampil di desktop */}
+      {screenSize === 'desktop' && (
+        <div className="mb-6">
+          <div className="flex h-64 w-full flex-col items-center justify-center rounded-3xl bg-gray-200 p-12">
+            <div className="mb-4 rounded-full bg-white p-6">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9" />
+                <path d="M12 12v9" />
+                <path d="m8 17 4 4 4-4" />
+              </svg>
+            </div>
+            <p className="text-center text-sm text-gray-500">
+              Gambar ini bisa diisi banner tsp program Pendanaan
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Title - hanya tampil di desktop */}
+      {screenSize === 'desktop' && (
+        <div className="p-6">
+          <div className="mb-6 flex items-center justify-between">
+            <h1 className="text-3xl font-semibold text-gray-800">
+              Program Tabungan Umrah
+            </h1>
+            <div className="flex items-center">
+              <span className="mr-2 text-xs text-gray-500">Didukung oleh</span>
+              <Image
+                src="/images/logo-permata.svg"
+                width={129}
+                height={32}
+                alt="Permata Bank"
+                className="ml-4"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Content - tampil di kedua mode */}
+      <div className={screenSize === 'desktop' ? 'px-6' : ''}>
         <div className="mb-3 md:mb-6">
-          <p className="text-[12px] leading-tight text-[#30302F] md:text-[14px]">
-            Lorem ipsum dolor sit amet...
+          <p className="text-xs leading-tight text-gray-800 md:text-sm">
+            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
           </p>
         </div>
 
@@ -114,21 +220,32 @@ const TabunganPage = () => {
           {[...Array(4)].map((_, idx) => (
             <li
               key={idx}
-              className="text-[12px] font-[400] text-[#30302F] md:text-[14px]"
+              className="text-xs font-normal text-gray-800 md:text-sm"
             >
               <span className="font-semibold">
                 Curabitur tempor quis eros tempus lacinia.
               </span>{' '}
-              Nam bibendum pellentesque quam a convallis...
+              Nam bibendum pellentesque quam a convallis. Sed ut perspiciatis
+              unde omnis iste natus error sit voluptatem accusantium doloremque
+              laudantium.
             </li>
           ))}
         </ol>
 
-        <p className="mb-8 text-[12px] font-[400] text-[#30302F] md:text-[14px]">
-          Curabitur tempor quis eros...
+        <p className="mb-8 text-xs font-normal text-gray-800 md:text-sm">
+          Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque
+          quam a convallis. Sed ut perspiciatis unde omnis iste natus error sit
+          voluptatem accusantium doloremque laudantium, totam rem aperiam.
         </p>
 
-        <div className="fixed right-0 bottom-0 left-0 mt-4 mb-4 flex justify-center px-4 md:relative md:px-0">
+        {/* Button - responsive positioning */}
+        <div
+          className={
+            screenSize === 'mobile'
+              ? 'fixed right-0 bottom-0 left-0 mt-4 mb-4 flex justify-center px-4'
+              : 'mt-4 mb-4 flex justify-center'
+          }
+        >
           <Button
             className="w-full rounded-full bg-yellow-500 px-6 py-3 font-medium text-gray-800 hover:bg-yellow-600 md:w-auto md:max-w-xs"
             onClick={openForm}
@@ -138,220 +255,40 @@ const TabunganPage = () => {
         </div>
       </div>
 
-      {/* Modal Form */}
-
-      {showForm && (
+      {/* Desktop Modal Form */}
+      {showForm && screenSize === 'desktop' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="relative h-[657px] w-full max-w-4xl rounded-[20px] bg-white shadow-lg">
+          <div className="relative h-auto w-full max-w-4xl rounded-3xl bg-white shadow-lg">
             <div className="flex p-6">
-              <h2 className="text-xl font-semibold">Form Program Pendanaan</h2>
+              <h2 className="text-xl font-semibold">Form Program Tabungan</h2>
             </div>
 
-            {/* Center the form container */}
-            <div className="flex justify-center">
-              <div className="flex h-[499px] w-[800px] rounded-[20px] border border-[#E8E8E8]">
-                {/* Sidebar kiri with overflow scrolling */}
-                <div className="w-1/2 overflow-y-auto border-r border-[#E8E8E8]">
+            <div className="flex justify-center pb-6">
+              <div className="flex h-auto w-full max-w-4xl rounded-3xl border border-gray-200">
+                {/* Sidebar kiri */}
+                <div className="w-1/3 border-r border-gray-200">
                   <div className="p-0">
-                    <div
-                      className={`flex cursor-pointer items-center p-6 transition ${step === 1 ? 'bg-yellow-50' : ''} rounded-tl-[20px]`}
-                      onClick={() => setStep(1)}
-                    >
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full ${step === 1 ? 'bg-yellow-400' : 'bg-gray-200'}`}
-                      >
-                        <span
-                          className={`text-base font-medium ${step === 1 ? 'text-black' : 'text-gray-600'}`}
-                        >
+                    <div className="flex cursor-pointer items-center rounded-tl-3xl bg-yellow-50 p-6 transition">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400">
+                        <span className="text-base font-medium text-black">
                           1
                         </span>
                       </div>
-                      <span className="ml-3 text-[14px] font-[500] text-[#30302F]">
+                      <span className="ml-3 text-sm font-medium text-gray-800">
                         Data Diri
-                      </span>
-                    </div>
-                    <div
-                      className={`flex cursor-pointer items-center p-6 transition ${step === 2 ? 'bg-yellow-50' : ''}`}
-                      onClick={() => setStep(2)}
-                    >
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full ${step === 2 ? 'bg-yellow-400' : 'bg-gray-200'}`}
-                      >
-                        <span
-                          className={`text-base font-medium ${step === 2 ? 'text-black' : 'text-gray-600'}`}
-                        >
-                          2
-                        </span>
-                      </div>
-                      <span className="ml-3  text-[14px] font-[500] text-[#30302F]">
-                        Form Pengajuan
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Form kanan with overflow scrolling */}
-                <div className="h-[499px] w-3/4 overflow-y-auto">
+                {/* Form kanan */}
+                <div className="w-2/3 overflow-y-auto">
                   <div className="p-6">
-                    <form>
-                      <div className="space-y-4">
-                        {step === 1 && (
-                          <>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Nama Sesuai KTP
-                              </label>
-                              <input
-                                type="text"
-                                placeholder="Masukkan nama sesuai KTP"
-                                required
-                                className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
-                              />
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Email
-                              </label>
-                              <input
-                                type="email"
-                                required
-                                placeholder="Masukkan Email"
-                                className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
-                              />
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                No. Telp
-                              </label>
-                              <input
-                                type="number"
-                                required
-                                placeholder="62"
-                                className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
-                              />
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Jenis Kelamin
-                              </label>
-                              <div className="mt-2 flex gap-6">
-                                <label className="flex items-center text-[12px] font-[400] text-[#414141]">
-                                  <input
-                                    type="radio"
-                                    name="gender"
-                                    className="mr-2 text-[12px] font-[400] text-[#414141]"
-                                  />{' '}
-                                  Pria
-                                </label>
-                                <label className="flex items-center text-[12px] font-[400] text-[#414141]">
-                                  <input
-                                    type="radio"
-                                    name="gender"
-                                    className="mr-2 "
-                                  />{' '}
-                                  Wanita
-                                </label>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Pekerjaan
-                              </label>
-                              <input
-                                type="text"
-                                placeholder="Masukkan Pekerjaan"
-                                className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
-                              />
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Provinsi
-                              </label>
-                              <select className="w-full rounded-[20px] border border-[#D2D2D1] p-2">
-                                <option>Pilih Provinsi</option>
-                              </select>
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Kabupaten/Kota
-                              </label>
-                              <select className="w-full rounded-[20px] border border-[#D2D2D1] p-2">
-                                <option>Pilih Kabupaten/Kota</option>
-                              </select>
-                            </div>
-
-                            <div className="mt-8 flex items-center justify-end space-x-4">
-                              <Button
-                                type="button"
-                                onClick={closeForm}
-                                className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
-                              >
-                                Batal
-                              </Button>
-                              <Button
-                                type="submit"
-                                className="rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
-                                onClick={handleNext}
-                              >
-                                Lanjut
-                              </Button>
-                            </div>
-                          </>
-                        )}
-
-                        {step === 2 && (
-                          <>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Kamar Hotel
-                              </label>
-                              <input
-                                type="text"
-                                required
-                                className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
-                              />
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Varian
-                              </label>
-                              <input
-                                type="text"
-                                required
-                                className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
-                              />
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-[12px] font-[400] text-[#414141]">
-                                Jumlah Jamaah
-                              </label>
-                              <input
-                                type="number"
-                                required
-                                className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
-                              />
-                            </div>
-
-                            <div className="mt-8 flex items-center justify-end space-x-4">
-                              <Button
-                                type="button"
-                                onClick={() => setStep(1)}
-                                className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
-                              >
-                                Kembali
-                              </Button>
-                              <Button
-                                type="submit"
-                                className="rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
-                                // onClick={handleNext}
-                              >
-                                Kirim
-                              </Button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </form>
+                    <TabunganForm
+                      onSubmit={handleFormSubmit}
+                      onCancel={closeForm}
+                      isLoading={loading}
+                    />
                   </div>
                 </div>
               </div>
