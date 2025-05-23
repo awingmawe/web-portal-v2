@@ -10,7 +10,7 @@ export function useFetchPackage() {
       const sortParam = queryParams.sortParam || 'price-low'
 
       // Determine sort order and field
-      let orderBy = 'packageVariant.priceQuad'
+      let orderBy
       let filterPrice
       let order = 'asc'
 

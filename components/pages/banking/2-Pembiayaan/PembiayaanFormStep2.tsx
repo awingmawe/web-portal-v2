@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
@@ -161,7 +162,7 @@ export function PembiayaanFormStep2({
   // Create search parameters
   const createSearchParams = useCallback(() => {
     return {
-      [`search`]: searchTerm ? `%${searchTerm}%` : undefined,
+      [`query`]: searchTerm ? `%${searchTerm}%` : undefined,
     }
   }, [searchTerm])
 
@@ -252,7 +253,7 @@ export function PembiayaanFormStep2({
         monthlyInstallment: calculatedPricing.monthlyInstallment,
       }
       await onSubmit(submitData)
-      toast.success('Pengajuan pembiayaan berhasil dikirim!')
+      // toast.success('Pengajuan pembiayaan berhasil dikirim!')
     } catch (error: any) {
       const errorMsg = error?.message || 'Terjadi kesalahan. Silakan coba lagi.'
       toast.error(errorMsg)
@@ -282,15 +283,18 @@ export function PembiayaanFormStep2({
       form.setValue('varian', firstVariant.name)
     }
   }, [dataVariant, form])
+
   return (
     <div>
       {/* Back button for mobile */}
-      <div className="mb-4 flex items-center gap-2 md:hidden">
-        <Button variant="ghost" size="sm" onClick={onBack} className="p-1">
-          <ChevronLeft size={20} />
-        </Button>
-        <span className="text-sm font-medium">Kembali</span>
-      </div>
+      {showPackageSelection && (
+        <div className="mb-4 flex items-center gap-2 md:hidden">
+          <Button variant="ghost" size="sm" onClick={onBack} className="p-1">
+            <ChevronLeft size={20} />
+          </Button>
+          <span className="text-sm font-medium">Kembali</span>
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -348,9 +352,15 @@ export function PembiayaanFormStep2({
 
               {/* Package List with Infinite Scroll */}
               <div
-                className="h-[550px] flex-1 space-y-3 overflow-y-auto"
+                className={`flex-1 space-y-3 overflow-y-auto ${
+                  screenSize === 'mobile' ? '' : 'h-[550px]'
+                }`}
                 onScroll={handleScroll}
-                // style={{ maxHeight: 'calc(100vh - 160px)' }}
+                style={
+                  screenSize === 'mobile'
+                    ? { maxHeight: 'calc(100vh - 160px)' }
+                    : undefined
+                }
               >
                 {dataPaket.length === 0 && !packagesLoading ? (
                   <div className="py-8 text-center">
@@ -502,7 +512,7 @@ export function PembiayaanFormStep2({
                   pkg.id === selectedPackage
               )
 
-              return selectedPkg ? (
+              return (
                 <>
                   {/* Form Fields - Always Visible */}
                   <div className="space-y-4">
@@ -693,7 +703,7 @@ export function PembiayaanFormStep2({
                     </div>
                   </div>
                 </>
-              ) : null
+              )
             })()}
           </div>
           {screenSize === 'desktop' ? (

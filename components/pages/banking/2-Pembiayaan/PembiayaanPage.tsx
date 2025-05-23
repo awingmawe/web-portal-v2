@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @next/next/no-img-element */
+
 'use client'
 
 import { PembiayaanForm } from '@/components/pages/banking/2-Pembiayaan/PembiayaanForm'
 import { PembiayaanFormStep2 } from '@/components/pages/banking/2-Pembiayaan/PembiayaanFormStep2'
+import SuccessModal from '@/components/pages/banking/2-Pembiayaan/SuccessModal '
 import { Button } from '@/components/ui/button'
 import { bankCredit } from '@/services/banking-service'
 import { updateProfile } from '@/services/identity-service'
@@ -30,6 +31,8 @@ const PembiayaanPage: React.FC = () => {
   const [step, setStep] = useState(1) // 1 = Data Diri, 2 = Form Pengajuan
   const [screenSize, setScreenSize] = useState<'mobile' | 'desktop'>('mobile')
   const [formData, setFormData] = useState<PembiayaanFormValues | null>(null)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [submissionData, setSubmissionData] = useState()
   // Monitor screen size
   useEffect(() => {
     const checkScreenSize = () => {
@@ -74,7 +77,6 @@ const PembiayaanPage: React.FC = () => {
     setLoading(true)
     try {
       // Combine data from both steps
-
       const dataProfile = {
         name: formData?.fullName,
         email: formData?.email,
@@ -103,15 +105,14 @@ const PembiayaanPage: React.FC = () => {
         status: 'Diajukan',
         providerId: 1,
       }
-
       await updateProfile(dataProfile)
-      // Here you would normally submit to your API
+      // // Here you would normally submit to your API
       await bankCredit(dataKirim)
-
-      // Simulate API call
+      // // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000))
-
       closeForm()
+      setSubmissionData(values)
+      setShowSuccessModal(true)
     } catch (error) {
       console.error('Error submitting form:', error)
       throw error
@@ -212,6 +213,12 @@ const PembiayaanPage: React.FC = () => {
               />
             </>
           )}
+          <SuccessModal
+            open={showSuccessModal}
+            onOpenChange={setShowSuccessModal}
+            screenSize={screenSize}
+            submissionData={submissionData}
+          />
           {/* </div> */}
           {/* </form> */}
         </div>
@@ -451,6 +458,12 @@ const PembiayaanPage: React.FC = () => {
           </div>
         </div>
       )}
+      <SuccessModal
+        open={showSuccessModal}
+        onOpenChange={setShowSuccessModal}
+        screenSize={screenSize}
+        submissionData={[]}
+      />
     </div>
   )
 }

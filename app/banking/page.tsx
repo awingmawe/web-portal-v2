@@ -8,7 +8,7 @@ import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
 interface SearchGeneralProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: any
 }
 
 export default async function SearchGeneral({
