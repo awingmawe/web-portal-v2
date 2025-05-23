@@ -183,7 +183,10 @@ export default function Footer({
             >
               <PlaystoreIcon />
             </Link>
-            <Link href="#" aria-label="Download on the App Store">
+            <Link
+              href="https://apps.apple.com/id/app/muslim-app/id6742533171"
+              aria-label="Download on the App Store"
+            >
               <AppStoreIcon />
             </Link>
           </div>
