@@ -5,8 +5,10 @@
 import { PembiayaanForm } from '@/components/pages/banking/2-Pembiayaan/PembiayaanForm'
 import { PembiayaanFormStep2 } from '@/components/pages/banking/2-Pembiayaan/PembiayaanFormStep2'
 import SuccessModal from '@/components/pages/banking/2-Pembiayaan/SuccessModal '
+import DrawerAlreadyHave from '@/components/pages/banking/mobile/DrawerAlreadyHave'
+import ModalAlreadyHave from '@/components/pages/banking/modal/modalAlreadyHave'
 import { Button } from '@/components/ui/button'
-import { bankCredit } from '@/services/banking-service'
+import { bankCredit, getbankCredit } from '@/services/banking-service'
 import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
@@ -33,6 +35,7 @@ const PembiayaanPage: React.FC = () => {
   const [formData, setFormData] = useState<PembiayaanFormValues | null>(null)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [submissionData, setSubmissionData] = useState()
+  const [showFormCurrent, setShowFormCurrent] = useState(false)
   // Monitor screen size
   useEffect(() => {
     const checkScreenSize = () => {
@@ -45,9 +48,26 @@ const PembiayaanPage: React.FC = () => {
     return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
 
-  const openForm = () => {
-    setShowForm(true)
-    setStep(1)
+  // const openForm = async () => {
+  //   const res = await getSaving()
+  //   console.log(res)
+
+  //   // setShowForm(true)
+  //   // setStep(1)
+  // }
+
+  const openForm = async () => {
+    try {
+      const res = await getbankCredit()
+      if (res) {
+        setShowFormCurrent(true)
+      } else {
+        setShowForm(true)
+        setStep(1)
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const closeForm = () => {
@@ -464,6 +484,19 @@ const PembiayaanPage: React.FC = () => {
         screenSize={screenSize}
         submissionData={[]}
       />
+      {showFormCurrent && screenSize === 'desktop' ? (
+        <ModalAlreadyHave
+          text={'Pendanaan'}
+          open={showFormCurrent}
+          onOpenChange={setShowFormCurrent}
+        />
+      ) : (
+        <DrawerAlreadyHave
+          text={'Pendanaan'}
+          open={showFormCurrent}
+          setOpen={setShowFormCurrent}
+        />
+      )}
     </div>
   )
 }
