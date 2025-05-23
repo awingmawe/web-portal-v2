@@ -94,6 +94,7 @@ export default async function Home() {
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
+      {/* Input for mobile responsive */}
       <Link
         href={'/search-mobile-package'}
         className="focus-within::outline-none absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5 outline-none focus-visible:outline-0 lg:hidden"

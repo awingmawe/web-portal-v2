@@ -12,15 +12,23 @@ import { Banner } from '@/constant/types/BannerProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { dissolve } from '@/lib/animation-setup'
-import { isEmpty } from '@/lib/utils'
+import { cn, isEmpty } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
 export function CarouselBanner({
   dataBanner,
+  title = 'Program Muslim101',
+  description = 'Jangan lewatkan program menarik dari Muslim 101',
+  className = '',
+  showPerItem = 3,
 }: {
   dataBanner: GenericResponse<Banner>
+  title?: string
+  description?: string
+  className?: string
+  showPerItem?: number
 }) {
   const { pushEvent } = useEventTracker()
   // State to track image loading
@@ -31,13 +39,24 @@ export function CarouselBanner({
     setImagesLoaded((prev) => ({ ...prev, [index]: true }))
   }
 
+  const handlePerItem = () => {
+    if (showPerItem === 1) {
+      return 'basis-1'
+    }
+    if (showPerItem === 2) {
+      return 'basis-1/2'
+    }
+    if (showPerItem === 3) {
+      return 'basis-1/3'
+    }
+  }
   return (
-    <section>
-      <p className="heading-2-bold mt-16 mb-0.5 text-neutral-900 max-lg:mx-4 max-lg:mt-[30px] max-lg:text-xl max-lg:leading-6.5">
-        Program Muslim101
+    <section className={cn(className)}>
+      <p className="heading-2-bold mb-0.5 text-neutral-900 max-lg:mx-4 max-lg:mt-[30px] max-lg:text-xl max-lg:leading-6.5">
+        {title}
       </p>
       <p className="text-l-regular mb-7 text-neutral-900 max-lg:mx-4 max-lg:mb-2 max-lg:text-xs max-lg:leading-4">
-        Jangan lewatkan program menarik dari Muslim 101
+        {description}
       </p>
       <Carousel
         opts={{
@@ -51,7 +70,7 @@ export function CarouselBanner({
           {dataBanner?.results.map((banner, index) => (
             <CarouselItem
               key={index}
-              className={`basis-4/5 overflow-hidden pl-5 md:basis-1/2 lg:basis-1/3`}
+              className={`${handlePerItem()} overflow-hidden pl-5 max-lg:basis-1/3 max-md:basis-1/2 max-sm:basis-4/5`}
             >
               <Link
                 href={banner.url ?? ''}

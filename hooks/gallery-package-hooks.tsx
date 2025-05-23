@@ -79,7 +79,7 @@ export const useGalleryNavigation = () => {
  */
 export const useGallerySharing = () => {
   // Handle share click - copy current URL to clipboard
-  const shareViaCopyLink = useCallback(() => {
+  const shareViaCopyLink = () => {
     if (!navigator.clipboard) {
       toast.error("Your browser doesn't support clipboard access")
       return
@@ -103,7 +103,7 @@ export const useGallerySharing = () => {
       console.error('Share action failed: ', err)
       toast.error('Gagal menyalin link, terjadi kesalahan.')
     }
-  }, [])
+  }
 
   // Handle WhatsApp share
   const shareViaWhatsApp = useCallback(

@@ -15,6 +15,23 @@ export const formatDateToYYYYMMDD = (date: Date): any => {
   return format(date, 'yyyy-MM-dd') // This converts to YYYY-MM-DD format
 }
 
+export const formatDateToDDMMYYYY = (date: Date): any => {
+  return format(date, 'dd MMMM yyyy', { locale: id }) // This converts to YYYY-MM-DD format
+}
+
+export const formatReadTime = (time: number) => {
+  const hours = Math.floor(time / 60)
+  const minutes = time % 60
+
+  if (hours > 0 && minutes > 0) {
+    return `${hours} jam ${minutes} menit membaca`
+  } else if (hours > 0) {
+    return `${hours} jam membaca`
+  } else {
+    return `${minutes} menit membaca`
+  }
+}
+
 export const isEmpty = (value: unknown): boolean => {
   if (value === null || value === undefined) return true
   if (typeof value === 'string' && value.trim() === '') return true

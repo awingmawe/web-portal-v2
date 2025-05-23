@@ -56,7 +56,6 @@ function AnimationScrollV2({
         ec.style.top = 'unset'
         ec.style.left = 'unset'
         ex.style.transform = `scale(1)`
-        console.log('kaluhur')
       }
 
       const targetJeShow =

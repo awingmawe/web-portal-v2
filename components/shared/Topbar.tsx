@@ -203,7 +203,7 @@ const Topbar: React.FC<TopbarProps> = ({
   // Extract topbar content to its own component to prevent unnecessary rerenders
   const TopbarContent = React.memo(() => {
     const { searchQuery, handleSearchChange, handleSearchDesktop } =
-      useSearchQuery()
+      useSearchQuery({ redirectUri: 'search' })
     return (
       <Fragment>
         {/* Logo */}

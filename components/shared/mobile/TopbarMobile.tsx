@@ -27,6 +27,7 @@ interface MobileTopbarProps {
     | 'transparent'
     | 'transactionTopbar'
     | 'profileTopbar'
+    | 'logo'
   titleLink?: string
   title?: string
   token?: string
@@ -66,7 +67,9 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
     const router = useRouter()
     // Use the same search hook as desktop version
-    const { searchQuery, handleSearchChange, handleSearch } = useSearchQuery()
+    const { searchQuery, handleSearchChange, handleSearch } = useSearchQuery({
+      redirectUri: 'search',
+    })
     const { dateRange, departureAirport, arrivalAirport } = filters
 
     // Memoize formatted date range to prevent unnecessary recalculations
@@ -153,6 +156,16 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'title':
           return <div className="text-l-medium flex-1 text-center">{title}</div>
 
+        case 'logo':
+          return (
+            <Image
+              src="/images/logo.svg"
+              alt="logo-muslim101"
+              width={134}
+              height={16}
+              className="mx-auto"
+            />
+          )
         case 'plain':
           return (
             <div className="text-l-medium mr-8 flex-1 text-center">{title}</div>
@@ -251,6 +264,10 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           positionClasses =
             'absolute -top-25 left-1/2 transform -translate-x-1/2'
           backgroundClasses = ''
+          break
+        case 'logo':
+          positionClasses = 'fixed top-0'
+          backgroundClasses = 'bg-neutral-0 border-b border-b-neutral-100'
           break
         default:
           positionClasses = 'fixed top-3.5'
