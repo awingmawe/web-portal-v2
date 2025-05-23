@@ -1,7 +1,9 @@
 // Tambahkan debugging dan perbaikan untuk desktop view
 'use client'
+import DrawerAlreadyHave from '@/components/pages/banking/mobile/DrawerAlreadyHave'
+import ModalAlreadyHave from '@/components/pages/banking/modal/modalAlreadyHave'
 import { Button } from '@/components/ui/button'
-import { postSaving } from '@/services/banking-service'
+import { getSaving, postSaving } from '@/services/banking-service'
 import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
@@ -23,6 +25,7 @@ type TabunganFormValues = {
 
 const TabunganPage = () => {
   const [showForm, setShowForm] = useState(false)
+  const [showFormCurrent, setShowFormCurrent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [screenSize, setScreenSize] = useState<'mobile' | 'desktop'>('mobile')
 
@@ -38,8 +41,17 @@ const TabunganPage = () => {
     return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
 
-  const openForm = () => {
-    setShowForm(true)
+  const openForm = async () => {
+    try {
+      const res = await getSaving()
+      if (res) {
+        setShowFormCurrent(true)
+      } else {
+        setShowForm(true)
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const closeForm = () => {
@@ -289,6 +301,19 @@ const TabunganPage = () => {
             </div>
           </div>
         </div>
+      )}
+      {showFormCurrent && screenSize === 'desktop' ? (
+        <ModalAlreadyHave
+          text={'Tabungan'}
+          open={showFormCurrent}
+          onOpenChange={setShowFormCurrent}
+        />
+      ) : (
+        <DrawerAlreadyHave
+          text={'Tabungan'}
+          open={showFormCurrent}
+          setOpen={setShowFormCurrent}
+        />
       )}
     </div>
   )
