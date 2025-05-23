@@ -54,6 +54,7 @@ export interface CardData {
   codeCountry?: AdditionalCountry[]
   releasedAt: string
   packageType: string
+  variant?: any
 }
 
 export interface PackageDetail {
