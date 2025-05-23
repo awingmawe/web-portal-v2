@@ -31,12 +31,6 @@ const TabunganPage = () => {
     const checkScreenSize = () => {
       const isMobile = window.innerWidth < 768
       setScreenSize(isMobile ? 'mobile' : 'desktop')
-      console.log(
-        'Screen width:',
-        window.innerWidth,
-        'Mode:',
-        isMobile ? 'mobile' : 'desktop'
-      )
     }
 
     checkScreenSize()
