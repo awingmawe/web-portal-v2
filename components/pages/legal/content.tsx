@@ -12,9 +12,9 @@ export default function ContentLegal({ data }: { data: Legal | undefined }) {
       </p>
 
       <div
+        className="html-content"
         dangerouslySetInnerHTML={{ __html: data?.body || '' }}
-        className="legal-content"
-      ></div>
+      />
     </div>
   )
 }
