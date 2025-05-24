@@ -34,12 +34,10 @@ export default function Footer({
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
-                      Karir
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
+                    <Link
+                      href="https://wa.me/628888551101"
+                      className="text-m-regular text-neutral-900"
+                    >
                       Bantuan
                     </Link>
                   </li>
@@ -52,25 +50,18 @@ export default function Footer({
                 <ul className="list-none space-y-2">
                   <li>
                     <Link
-                      href="#"
+                      href="https://www.instagram.com/growat101"
                       className="text-m-regular text-neutral-900 italic"
                     >
-                      Life at 101
+                      Grow at 101
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
+                    <Link
+                      href="/article"
+                      className="text-m-regular text-neutral-900"
+                    >
                       Artikel
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
-                      Muslimpedia
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
-                      Wukala Academy
                     </Link>
                   </li>
                 </ul>
@@ -83,17 +74,18 @@ export default function Footer({
                 </h3>
                 <ul className="list-none space-y-2">
                   <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
-                      Perusahaan
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
+                    <Link
+                      href="/travel/list"
+                      className="text-m-regular text-neutral-900"
+                    >
                       Travel
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" className="text-m-regular text-neutral-900">
+                    <Link
+                      href="/wukala"
+                      className="text-m-regular text-neutral-900"
+                    >
                       Wukala ~ <span className="italic">Affiliate</span>
                     </Link>
                   </li>
