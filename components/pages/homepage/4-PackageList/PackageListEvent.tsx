@@ -155,7 +155,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       header: header,
     },
     {
-      title: 'Umroh Plus',
+      title: 'Umroh Plus Liburan',
       description: 'Umroh istimewa plus jalan-jalan ke destinasi pilihan!',
       type: 'plus' as const,
       data: dataPlus || [],
