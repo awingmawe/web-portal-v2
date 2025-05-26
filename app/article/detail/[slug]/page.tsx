@@ -16,8 +16,7 @@ export async function generateMetadata() {
   }
 }
 
-export default async function ArtilceDetail({ searchParams, params }: any) {
-  const awaitedParams = await searchParams
+export default async function ArtilceDetail({ params }: any) {
   const { slug } = await params
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
@@ -33,7 +32,7 @@ export default async function ArtilceDetail({ searchParams, params }: any) {
   ])
 
   return (
-    <LayoutArticle searchParams={awaitedParams}>
+    <LayoutArticle>
       <main className="container mx-auto mt-7.5 mb-12.5 max-lg:px-4">
         <ImageDetail
           created_at={dataArticleDetail.created_at}

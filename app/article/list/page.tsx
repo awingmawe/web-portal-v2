@@ -26,7 +26,7 @@ export default async function ArtilceSearch({ searchParams }: any) {
   ])
 
   return (
-    <LayoutArticle searchParams={awaitedParams}>
+    <LayoutArticle>
       <main className="container mx-auto mt-7.5 mb-12.5 max-lg:px-4">
         <WidgetFilter />
         <ListArticle

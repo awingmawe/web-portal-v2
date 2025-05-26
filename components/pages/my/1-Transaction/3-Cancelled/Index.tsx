@@ -8,7 +8,7 @@ import {
 } from '@/components/pages/my/1-Transaction/3-Cancelled/Filter'
 import List from '@/components/pages/my/1-Transaction/3-Cancelled/List'
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
-import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
+import { CustomPagination } from '@/components/shared/CustomPagination'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'

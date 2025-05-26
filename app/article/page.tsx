@@ -35,7 +35,7 @@ export default async function ArticleHome({ searchParams }: any) {
   ])
 
   return (
-    <LayoutArticle searchParams={awaitedParams}>
+    <LayoutArticle>
       <ArticleSearchWidget params={awaitedParams} />
       <main className="mb-12.5 max-lg:mx-4">
         <NewsArticle dataArticleTerbaru={dataArticleTerbaru.results} />
