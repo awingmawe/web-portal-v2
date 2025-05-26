@@ -21,12 +21,26 @@ const SORT_OPTIONS = [
   { label: 'Relevan', value: 'relevant' },
 ]
 
-const WidgetFilter: React.FC = () => {
+interface WidgetFilterProps {
+  eventCategory: string
+}
+
+const WidgetFilter: React.FC<WidgetFilterProps> = ({ eventCategory }) => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
 
   const { searchQuery, setSearchQuery, handleSearch, loading } = useSearchQuery(
-    { redirectUri: 'article/list' }
+    {
+      redirectUri: 'article/list',
+      dataEventTracker: {
+        name: 'search_article',
+        topic: 'general',
+        category: eventCategory,
+        data: {
+          keyword: searchParams.get('query') || '',
+        },
+      },
+    }
   )
   const currentSort = searchParams.get('sort') || 'new' // Default sort
 

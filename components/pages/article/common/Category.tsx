@@ -1,5 +1,6 @@
 'use client'
 
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { cn } from '@/lib/utils'
 import { useRef, useState } from 'react'
 
@@ -61,7 +62,13 @@ export function ScrollableCategories({
 }
 
 // Example usage
-export default function CategoryNavigation() {
+export default function CategoryNavigation({
+  eventCategory,
+}: {
+  eventCategory: string
+}) {
+  const { pushEvent } = useEventTracker()
+
   const categories = [
     { id: 'all', name: 'Semua Kategori' },
     { id: 'tips-umrah', name: 'Tips Umrah' },
@@ -76,7 +83,16 @@ export default function CategoryNavigation() {
   ]
 
   const handleCategoryChange = (category: Category) => {
+    pushEvent({
+      name: 'click_article_category',
+      topic: 'general',
+      category: eventCategory,
+      data: {
+        name: category.name,
+      },
+    })
     console.log(`Selected category: ${category.name}`)
+
     // Implement your filter logic here
   }
 

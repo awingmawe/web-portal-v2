@@ -15,7 +15,7 @@ export function ArticleSearchWidget({ params }: any) {
         <p className="text-neutral-0 heading-4-medium max-lg:text-xs max-lg:leading-4">
           Menjelajahi Ilmu, Menyebarkan Manfaat
         </p>
-        <WidgetFilter />
+        <WidgetFilter eventCategory="article" />
       </div>
       {/* IMAGE FOR DESKTOP */}
       <Image

@@ -34,7 +34,7 @@ export function ListArticle({
       <p className="heading-4-semibold max-lg:text-[16px] max-lg:leading-6">
         <span className="border-b-primary-500 border-b-4 ">Kategori</span>
       </p>
-      <CategoryNavigation />
+      <CategoryNavigation eventCategory="article_index" />
       <div className="grid grid-cols-12 gap-5">
         {dataAllArticle.map((article: Article) => (
           <div key={article.id} className="col-span-6 max-sm:col-span-12">
