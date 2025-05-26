@@ -1,17 +1,21 @@
 'use client'
 
 import { Article } from '@/constant/types/ArticleProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { cn } from '@/lib/utils'
 import { format, formatDistance } from 'date-fns'
 import { id } from 'date-fns/locale'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useRef } from 'react'
 
 interface ArticleCardProps {
   article: Article
   height?: number | string
   className?: string
   aspect?: number | string
+  eventCategory?: string
+  section?: string
 }
 
 export const ArticleCard = ({
@@ -19,7 +23,25 @@ export const ArticleCard = ({
   className,
   height = 'auto',
   aspect,
+  eventCategory = 'article',
+  section = 'Artikel Terbaru',
 }: ArticleCardProps) => {
+  const elem = useRef<HTMLDivElement>(null)
+  const { observe, pushEvent } = useEventTracker()
+
+  const dataForTracker = {
+    articleId: article?.id,
+    articleCategory: article?.category?.name,
+    articleType: article?.type,
+    title: article?.title,
+    slug: article?.slug,
+    description: article?.description,
+    publishedAt: article?.published_at,
+    // author: dataArticleDetail?.author?.name,
+    tag: article?.hashtags?.map((tag) => tag).join(', '),
+    section,
+  }
+
   // Format the date to the Indonesian format (DD Bulan YYYY)
   const publishedAt = new Date(article?.published_at ?? Date.now())
   const now = new Date()
@@ -31,10 +53,32 @@ export const ArticleCard = ({
           locale: id,
         })
 
+  // Observe the element for tracking
+  useEffect(() => {
+    if (elem.current) {
+      observe(elem.current, () => {
+        pushEvent({
+          name: 'impression_package_card',
+          topic: 'general',
+          category: eventCategory,
+          data: dataForTracker,
+        })
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elem])
   return (
     <Link
       href={`/article/detail/${article?.slug}`}
       className={cn('block', className)}
+      onClick={() => {
+        pushEvent({
+          name: 'click_article_card',
+          topic: 'general',
+          category: eventCategory,
+          data: dataForTracker,
+        })
+      }}
     >
       <div
         className="group relative w-full overflow-hidden rounded-xl"

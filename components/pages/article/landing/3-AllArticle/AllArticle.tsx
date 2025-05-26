@@ -48,7 +48,7 @@ export function AllArticle({
             <span className="border-b-primary-500 border-b-4 ">Seluruh</span>{' '}
             Artikel
           </p>
-          <CategoryNavigation />
+          <CategoryNavigation eventCategory="article" />
           <div className="grid grid-cols-12 gap-4.5">
             {dataArticleLainnya.map((article: Article) => (
               <div
@@ -60,6 +60,7 @@ export function AllArticle({
                   className="h-full"
                   height={isMobile ? 200 : '100%'}
                   aspect={isMobile ? 16 / 9 : 3 / 4}
+                  section="Seluruh Artikel"
                 />
               </div>
             ))}
@@ -85,6 +86,7 @@ export function AllArticle({
                   height={200}
                   className="h-full"
                   aspect={16 / 9}
+                  section="Artikel Terpopuler"
                 />
                 {index !== dataTerpopular.length - 1 && (
                   <div className="my-2.5 h-px w-full bg-[#D2D2D1] max-lg:hidden" />

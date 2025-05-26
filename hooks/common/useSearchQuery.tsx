@@ -1,5 +1,6 @@
 'use client'
 
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useSearchHistory } from '@/hooks/common/useSearchHistory'
 import { useSearchParams } from 'next/navigation'
@@ -7,12 +8,17 @@ import { FormEvent, useCallback, useMemo, useState } from 'react'
 
 export interface UseSearchQueryProps {
   redirectUri: string
+  dataEventTracker?: any
 }
 
-export function useSearchQuery({ redirectUri }: UseSearchQueryProps) {
+export function useSearchQuery({
+  redirectUri,
+  dataEventTracker,
+}: UseSearchQueryProps) {
   const { searchQuery, setSearchQuery } = useFilterProduct()
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
+  const { pushEvent } = useEventTracker()
 
   // Use the search history hook
   const { searchHistory, addToHistory } = useSearchHistory()
@@ -37,13 +43,23 @@ export function useSearchQuery({ redirectUri }: UseSearchQueryProps) {
       addToHistory(searchQuery)
 
       params.set('query', searchQuery)
+
+      pushEvent(dataEventTracker)
       // Set a timer to simulate API call or processing
       setTimeout(() => {
         window.location.href = `/${redirectUri}?${params.toString()}`
         setLoading(false)
       }, 500)
     },
-    [loading, searchParams, searchQuery, addToHistory, redirectUri]
+    [
+      loading,
+      searchQuery,
+      searchParams,
+      addToHistory,
+      pushEvent,
+      dataEventTracker,
+      redirectUri,
+    ]
   )
 
   // Handle selecting a history item

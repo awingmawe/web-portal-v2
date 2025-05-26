@@ -3,6 +3,7 @@ import { ArticleSearchWidget } from '@/components/pages/article/landing/1-Widget
 import { NewsArticle } from '@/components/pages/article/landing/2-NewArticle/NewArticle'
 import { AllArticle } from '@/components/pages/article/landing/3-AllArticle/AllArticle'
 import LayoutArticle from '@/components/pages/article/Layout'
+import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { getArticleList } from '@/services/article-service'
 
 export async function generateMetadata() {
@@ -45,6 +46,12 @@ export default async function ArticleHome({ searchParams }: any) {
           dataTerpopular={[]}
         />
       </main>
+      <EventTrackerImpression
+        nameDidMount="impression_article"
+        nameDidUnmount="exit_article"
+        topic="general"
+        category="article"
+      />
     </LayoutArticle>
   )
 }
