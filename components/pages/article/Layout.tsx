@@ -11,9 +11,19 @@ export default async function LayoutArticle({
 }: {
   children: React.ReactNode
 }) {
+  const cookieStore = await cookies()
   const tokenFromHeader = (await headers()).get('single-use-token') || ''
   const isWebview = (await headers()).get('is-web-view') || ''
-  const cookieStore = await cookies()
+  const sessionId = (await headers()).get('session-id') || ''
+
+  if (tokenFromHeader) {
+    cookieStore.set(cookieNames.USER_ACCESS_TOKEN, tokenFromHeader)
+  }
+
+  if (sessionId) {
+    cookieStore.set(cookieNames.SESSION_ID, sessionId)
+  }
+
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
   return (

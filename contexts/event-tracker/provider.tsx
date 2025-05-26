@@ -5,6 +5,7 @@ import { getMyProfile } from '@/contexts/auth/shared/api'
 import { Profile } from '@/contexts/auth/shared/type'
 import { EventTrackerContext } from '@/contexts/event-tracker/context'
 import { getAccessToken } from '@/services/common/auth'
+import { cookieNames, getCookie } from '@/services/common/cookie'
 import axios from 'axios'
 import { usePathname } from 'next/navigation'
 import queryString from 'query-string'
@@ -197,9 +198,10 @@ export function EventTrackerProvider({
 
   useEffect(() => {
     if (hasLoggedIn()) getProfile()
+    const __sessionIdFromCookie = getCookie(cookieNames.SESSION_ID)
     const __sessionId = window?.sessionStorage.getItem('session-id') || uuid()
     window.sessionStorage.setItem('session-id', __sessionId)
-    setSessionId(__sessionId)
+    setSessionId(__sessionId ?? __sessionIdFromCookie)
     initObserver()
 
     window.addEventListener('beforeunload', beforeUnload)
