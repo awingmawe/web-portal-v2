@@ -19,9 +19,15 @@ export default async function LayoutArticle({
   return (
     <Fragment>
       <Topbar token={token ?? tokenFromHeader} shadow scrolled type="normal" />
-      {!isWebview && <MobileTopbar variant="logo" showBackButton={false} />}
+      {isWebview === 'true' ? (
+        ''
+      ) : (
+        <MobileTopbar variant="logo" showBackButton={false} />
+      )}
       {children}
-      <Footer className={`max-lg:mb-0 ${!isWebview && 'max-lg:hidden'}`} />
+      <Footer
+        className={`max-lg:mb-0 ${isWebview === 'true' ? 'max-lg:hidden' : ''}`}
+      />
     </Fragment>
   )
 }
