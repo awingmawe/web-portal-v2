@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 interface CheckQuotaModalProps {
   open: boolean
@@ -20,6 +21,7 @@ const ModalAlreadyHave = ({
   onOpenChange,
   text,
 }: CheckQuotaModalProps) => {
+  const router = useRouter()
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-xl px-6 py-4 shadow-lg ">
@@ -48,7 +50,14 @@ const ModalAlreadyHave = ({
         <div className="mt-6 flex justify-center">
           <Button
             className="w-[50%] rounded-full bg-yellow-400 text-sm font-semibold text-black hover:bg-yellow-500"
-            onClick={() => onOpenChange(false)}
+            onClick={() => {
+              onOpenChange(false)
+              if (text === 'Tabungan') {
+                router.push('/my/saving')
+              } else {
+                router.push('/my/banking')
+              }
+            }}
           >
             Lihat Pendanaan Aktif
           </Button>

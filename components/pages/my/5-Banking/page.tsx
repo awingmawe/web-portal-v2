@@ -17,28 +17,30 @@ const BankingPageDetail: React.FC = () => {
     try {
       setLoading(true)
       const res = await getbankCredit()
+      if (res !== '') {
+        const resPackage = (await getPackageById(res.packageId)) as any
+        const resVariant = (await getPackageVariantById(
+          res.packageVariantId
+        )) as any
 
-      const resPackage = (await getPackageById(res.packageId)) as any
-      const resVariant = (await getPackageVariantById(
-        res.packageVariantId
-      )) as any
-
-      const saveData = {
-        organizationInstanceName: resPackage.organizationInstanceName,
-        title: resPackage.title,
-        thumbnail: resPackage.thumbnail,
-        departureDate: resVariant.departureDate,
-        arrivalDate: resVariant.arrivalDate,
-        roomType: res.roomType,
-        status: res.status,
-        submissionCreditHistory: res.submissionCreditHistory || [], // Added fallback
-        jumlahJamaah: res.jumlahJemaah,
-        tenor: res.tenor,
-        totalPrice: res.totalPrice,
-        createdAt: res.createdAt,
-        packageType: resPackage.packageType,
+        const saveData = {
+          organizationInstanceName: resPackage.organizationInstanceName,
+          title: resPackage.title,
+          thumbnail: resPackage.thumbnail,
+          departureDate: resVariant.departureDate,
+          arrivalDate: resVariant.arrivalDate,
+          roomType: res.roomType,
+          status: res.status,
+          submissionCreditHistory: res.submissionCreditHistory || [], // Added fallback
+          jumlahJamaah: res.jumlahJemaah,
+          tenor: res.tenor,
+          totalPrice: res.totalPrice,
+          createdAt: res.createdAt,
+          packageType: resPackage.packageType,
+          slug: resPackage.slug,
+        }
+        setData(saveData)
       }
-      setData(saveData)
     } catch (error) {
       console.log(error)
     } finally {
@@ -131,7 +133,15 @@ const BankingPageDetail: React.FC = () => {
   if (!data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600">Data tidak ditemukan</div>
+        <Image
+          src="/images/tidak-adadata.svg"
+          alt="Package Thumbnail"
+          width={242}
+          height={190}
+          // className="h-full w-full object-cover"
+        />
+
+        {/* <div className="text-gray-600">Data tidak ditemukan</div> */}
       </div>
     )
   }
@@ -205,7 +215,14 @@ const BankingPageDetail: React.FC = () => {
             </div>
 
             {/* Product Details */}
-            <div className="rounded-lg bg-white p-3 shadow-sm md:p-6">
+            <div
+              className="cursor-pointer rounded-lg bg-white p-3 shadow-sm md:p-6"
+              onClick={() => {
+                router.push(
+                  `/${data.packageType}/${data.organizationInstanceName}/${data.slug}`
+                )
+              }}
+            >
               <div className="mb-3 flex items-center justify-between md:mb-4">
                 {/* Kiri */}
                 <span className="text-sm text-gray-600 md:text-base">

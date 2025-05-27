@@ -20,15 +20,18 @@ const SavingPageDetail: React.FC = () => {
       // const resVariant = (await getPackageVariantById(
       //   res.packageVariantId
       // )) as any
+      if (res !== '') {
+        const saveData = {
+          status: res.status,
+          submissionCreditHistory: res.submissionSavingsHistory || [], // Added fallback
 
-      const saveData = {
-        status: res.status,
-        submissionCreditHistory: res.submissionSavingsHistory || [], // Added fallback
+          createdAt: res.createdAt,
+          packageType: 'Tabungan Umroh',
+        }
+        // console.log(saveData)
 
-        createdAt: res.createdAt,
-        packageType: 'Tabungan Umroh',
+        setData(saveData)
       }
-      setData(saveData)
     } catch (error) {
       console.log(error)
     } finally {
@@ -114,7 +117,13 @@ const SavingPageDetail: React.FC = () => {
   if (!data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600">Data tidak ditemukan</div>
+        <Image
+          src="/images/tidak-adadata.svg"
+          alt="Package Thumbnail"
+          width={242}
+          height={190}
+          // className="h-full w-full object-cover"
+        />
       </div>
     )
   }
