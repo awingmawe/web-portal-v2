@@ -149,7 +149,7 @@ const PembiayaanPage: React.FC = () => {
   // Mobile Form View
   if (showForm && screenSize === 'mobile') {
     return (
-      <div className="min-h-screen bg-yellow-400">
+      <div className="min-h-screen bg-yellow-400 ">
         {/* Mobile Form Header */}
         <div className="px-4 pt-12 pb-4">
           <div className="mt-4 flex items-center justify-center">
@@ -247,7 +247,7 @@ const PembiayaanPage: React.FC = () => {
   }
 
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-2 md:pb-12">
+    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-8 md:pb-12">
       {/* Mobile Header - Only visible on mobile */}
       {screenSize === 'mobile' && (
         <div>

@@ -116,7 +116,7 @@ const TabunganPage = () => {
   }
 
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-2 md:pb-12">
+    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-8 md:pb-12">
       {/* Debug Info - hapus di production */}
       {/* <div className="mb-4 rounded bg-blue-100 p-2 text-xs">
         Debug: {screenSize} mode, Screen:{' '}

@@ -24,23 +24,51 @@ export default async function SearchGeneral({
     <Fragment>
       <Topbar shadow scrolled token={token} />
 
-      {awaitedParams.page === 'pembiayaan' ? (
-        <>
-          <MobileTopbar
-            variant="plainBank"
-            showBackButton
-            title="Pendanaan Syariah"
-          />
-          <PembiayaanPage />
-        </>
-      ) : (
-        <>
-          <MobileTopbar variant="plainBank" showBackButton title="Tabungan" />
-          <TabunganPage />
-        </>
-      )}
+      {/* Mobile (tanpa wrapper) */}
+      <div className="block lg:hidden">
+        {awaitedParams.page === 'pembiayaan' ? (
+          <>
+            <MobileTopbar
+              variant="plainBank"
+              showBackButton
+              title="Pendanaan Syariah"
+            />
+            <PembiayaanPage />
+          </>
+        ) : (
+          <>
+            <MobileTopbar variant="plainBank" showBackButton title="Tabungan" />
+            <TabunganPage />
+          </>
+        )}
+      </div>
 
-      <Footer type={'compact'} className="hidden md:block" />
+      {/* Desktop (dengan wrapper) */}
+      <div className="hidden lg:block">
+        <div className="mx-auto w-[85%] lg:px-4">
+          {awaitedParams.page === 'pembiayaan' ? (
+            <>
+              <MobileTopbar
+                variant="plainBank"
+                showBackButton
+                title="Pendanaan Syariah"
+              />
+              <PembiayaanPage />
+            </>
+          ) : (
+            <>
+              <MobileTopbar
+                variant="plainBank"
+                showBackButton
+                title="Tabungan"
+              />
+              <TabunganPage />
+            </>
+          )}
+        </div>
+      </div>
+
+      <Footer type="compact" className="hidden md:block" />
     </Fragment>
   )
 }

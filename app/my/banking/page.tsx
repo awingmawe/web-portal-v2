@@ -6,7 +6,6 @@ export default async function BankingPage() {
     <LayoutMy>
       <div className="mx-auto max-w-7xl lg:px-4">
         {/* <TransactionUpcoming /> */}
-
         <BankingPageDetail />
         {/* <BottomNavigation /> */}
       </div>

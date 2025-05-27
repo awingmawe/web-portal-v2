@@ -25,7 +25,7 @@ const SavingPageDetail: React.FC = () => {
         const saveData = {
           status: res.status,
           submissionCreditHistory: res.submissionSavingsHistory || [], // Added fallback
-
+          submissionId: res.submissionId,
           createdAt: res.createdAt,
           packageType: 'Tabungan Umroh',
         }
@@ -43,16 +43,29 @@ const SavingPageDetail: React.FC = () => {
   useEffect(() => {
     getDataPengajuan()
   }, [])
-
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'Diajukan':
+        return 'border-yellow-200 bg-yellow-100 text-yellow-800'
+      case 'Verifikasi':
+        return 'border-blue-200 bg-blue-100 text-blue-800'
+      case 'Diterima':
+        return 'border-emerald-200 bg-emerald-100 text-emerald-800'
+      case 'Ditolak':
+        return 'border-red-200 bg-red-100 text-red-800'
+      default:
+        return 'border-gray-200 bg-gray-100 text-gray-800'
+    }
+  }
   const statusPengajuan = (status: string) => {
     switch (status) {
       case 'Diajukan':
         return (
-          <span className="font-medium text-yellow-800">
+          <span className="bg-yellow-100 font-medium  text-yellow-800">
             Pengajuan Telah Diterima
           </span>
         )
-      case 'Proses':
+      case 'Verifikasi':
         return (
           <span
             className="font-medium"
@@ -65,7 +78,20 @@ const SavingPageDetail: React.FC = () => {
             Pengajuan Dalam Proses Verifikasi
           </span>
         )
-      case 'Selesai':
+      case 'Diterima':
+        return (
+          <span
+            className="font-medium"
+            style={{
+              backgroundColor: '#BDFFEA',
+              padding: '2px 6px',
+              borderRadius: '4px',
+            }}
+          >
+            Pengajuan Diterima
+          </span>
+        )
+      case 'Ditolak':
         return (
           <span
             className="font-medium"
@@ -118,13 +144,19 @@ const SavingPageDetail: React.FC = () => {
   if (!data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Image
-          src="/images/tidak-adadata.svg"
-          alt="Package Thumbnail"
-          width={242}
-          height={190}
-          // className="h-full w-full object-cover"
-        />
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            src="/images/tidak-adadata.svg"
+            alt="Package Thumbnail"
+            width={242}
+            height={190}
+          />
+          <Link href={'/banking?page=tabungan'}>
+            <button className="w-[191px] rounded-[100px] bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-[12px]">
+              Ajukan Tabungan
+            </button>
+          </Link>
+        </div>
       </div>
     )
   }
@@ -166,10 +198,10 @@ const SavingPageDetail: React.FC = () => {
           {/* Main Content */}
           <div className="space-y-4 md:space-y-6 lg:col-span-2">
             {/* Status Banner */}
-            <div className="rounded-lg border border-yellow-200 bg-yellow-100 p-3 text-center md:p-4">
-              <div className="text-sm font-medium text-yellow-800 md:text-base">
-                {statusPengajuan(data.status)}
-              </div>
+            <div
+              className={`rounded-lg border p-3 text-center md:p-4 ${getStatusStyle(data.status)}`}
+            >
+              {statusPengajuan(data.status)}
             </div>
 
             {/* Application Details */}
@@ -184,7 +216,7 @@ const SavingPageDetail: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <span className="text-gray-600">ID Pengajuan</span>
                   <p className="text-right font-medium text-gray-800">
-                    UM82192830
+                    {data.submissionId}
                   </p>
                 </div>
                 <div className="flex items-start justify-between">
@@ -219,9 +251,9 @@ const SavingPageDetail: React.FC = () => {
                           <span className="text-sm font-medium text-gray-800">
                             {formatTanggal3(historyItem.createdAt)}
                           </span>
-                          <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
-                            {statusPengajuan(historyItem.status)}
-                          </span>
+                          {/* <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800"> */}
+                          {statusPengajuan(historyItem.status)}
+                          {/* </span> */}
                         </div>
                         <p className="text-sm text-gray-600">
                           Pengajuan kamu telah diterima dan akan segera kami
