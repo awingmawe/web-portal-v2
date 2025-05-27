@@ -119,13 +119,13 @@ export const SidebarMobileProfile = () => {
           icon={<MoneysIcon />}
           label="Pendanaan Syariah"
           loading={profile ? false : true}
-          href="/banking?page=pembiayaan"
+          href="/my/banking"
         />
         <MenuItem
           icon={<MoneysIcon />}
           label="Tabungan"
           loading={profile ? false : true}
-          href="/banking?page=credit"
+          href="/my/saving"
         />
         {/* <Separator className="mx-auto !w-[90%] bg-neutral-100" /> */}
         {/* 

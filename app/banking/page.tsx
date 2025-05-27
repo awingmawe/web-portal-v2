@@ -27,7 +27,7 @@ export default async function SearchGeneral({
       {awaitedParams.page === 'pembiayaan' ? (
         <>
           <MobileTopbar
-            variant="plain"
+            variant="plainBank"
             showBackButton
             title="Pendanaan Syariah"
           />
@@ -35,7 +35,7 @@ export default async function SearchGeneral({
         </>
       ) : (
         <>
-          <MobileTopbar variant="plain" showBackButton title="Tabungan" />
+          <MobileTopbar variant="plainBank" showBackButton title="Tabungan" />
           <TabunganPage />
         </>
       )}
