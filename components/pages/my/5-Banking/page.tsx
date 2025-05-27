@@ -39,6 +39,7 @@ const BankingPageDetail: React.FC = () => {
           createdAt: res.createdAt,
           packageType: resPackage.packageType,
           slug: resPackage.slug,
+          submissionId: res.submissionId,
         }
         setData(saveData)
       }
@@ -134,19 +135,36 @@ const BankingPageDetail: React.FC = () => {
   if (!data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Image
-          src="/images/tidak-adadata.svg"
-          alt="Package Thumbnail"
-          width={242}
-          height={190}
-          // className="h-full w-full object-cover"
-        />
-
-        {/* <div className="text-gray-600">Data tidak ditemukan</div> */}
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            src="/images/tidak-adadata.svg"
+            alt="Package Thumbnail"
+            width={242}
+            height={190}
+          />
+          <Link href={'/banking?page=pembiayaan'}>
+            <button className="w-[191px] rounded-[100px] bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-[12px]">
+              Ajukan Pendanaan
+            </button>
+          </Link>
+        </div>
       </div>
     )
   }
-
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'Diajukan':
+        return 'border-yellow-200 bg-yellow-100 text-yellow-800'
+      case 'Verifikasi':
+        return 'border-blue-200 bg-blue-100 text-blue-800'
+      case 'Diterima':
+        return 'border-emerald-200 bg-emerald-100 text-emerald-800'
+      case 'Ditolak':
+        return 'border-red-200 bg-red-100 text-red-800'
+      default:
+        return 'border-gray-200 bg-gray-100 text-gray-800'
+    }
+  }
   return (
     <div>
       {/* Mobile Topbar - Only visible on mobile */}
@@ -185,10 +203,10 @@ const BankingPageDetail: React.FC = () => {
           {/* Main Content */}
           <div className="space-y-4 md:space-y-6 lg:col-span-2">
             {/* Status Banner */}
-            <div className="rounded-lg border border-yellow-200 bg-yellow-100 p-3 text-center md:p-4">
-              <div className="text-sm font-medium text-yellow-800 md:text-base">
-                {statusPengajuan(data.status)}
-              </div>
+            <div
+              className={`rounded-lg border p-3 text-center md:p-4 ${getStatusStyle(data.status)}`}
+            >
+              {statusPengajuan(data.status)}
             </div>
 
             {/* Application Details */}
@@ -203,7 +221,7 @@ const BankingPageDetail: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <span className="text-gray-600">ID Pengajuan</span>
                   <p className="text-right font-medium text-gray-800">
-                    UM82192830
+                    {data.submissionId}
                   </p>
                 </div>
                 <div className="flex items-start justify-between">
