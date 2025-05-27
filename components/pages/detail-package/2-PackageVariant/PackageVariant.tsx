@@ -720,7 +720,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             atau
           </div>
           <Link
-            href={`/banking/credit`}
+            href={`/banking?page=pembiayaan`}
             onClick={() => handlePushEvent('click_paylater')}
           >
             <Button
