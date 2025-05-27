@@ -4,7 +4,8 @@ import { StarIconPrimary } from '@/components/icons/star'
 import { HotelRatingSkeleton } from '@/components/pages/search-packages/2-FilterLeftbar/RatingHotelFilter/RatingHotelSkeleton'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { starOptions } from '@/lib/utils'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface HotelRatingOptionsProps {
   selectedRating?: number
@@ -26,9 +27,6 @@ export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
   useEffect(() => {
     setLocalRating(selectedRating)
   }, [selectedRating])
-
-  // Star rating options (5, 4, 3 stars)
-  const starOptions = useMemo(() => [5, 4, 3], [])
 
   // Custom debounce hook
   const useDebounce = (value: any, delay: number) => {

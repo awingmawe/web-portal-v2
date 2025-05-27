@@ -79,7 +79,7 @@ export const useGalleryNavigation = () => {
  */
 export const useGallerySharing = () => {
   // Handle share click - copy current URL to clipboard
-  const shareViaCopyLink = useCallback(() => {
+  const shareViaCopyLink = () => {
     if (!navigator.clipboard) {
       toast.error("Your browser doesn't support clipboard access")
       return
@@ -103,7 +103,7 @@ export const useGallerySharing = () => {
       console.error('Share action failed: ', err)
       toast.error('Gagal menyalin link, terjadi kesalahan.')
     }
-  }, [])
+  }
 
   // Handle WhatsApp share
   const shareViaWhatsApp = useCallback(
@@ -112,7 +112,7 @@ export const useGallerySharing = () => {
       const currentUrl = window.location.href
       const url = phoneNumber
         ? `https://api.whatsapp.com/send?phone=${phoneNumber}&text=Assalamualaikum warahmatullahi wabarakatuh! Saya ingin bertanya tentang paket ini.%0A%0APaket ${providedTitle}%0A%0A${currentUrl}%0A%0AYang ingin ditanyakan:`
-        : `https://wa.me/?text=${encodeURIComponent(`Umroh aman, nyaman dan berizin klik disini!\n\nPaket ${shareTitle}\n\n${currentUrl}`)}`
+        : `https://wa.me/?text=${encodeURIComponent(`Umroh aman, nyaman dan berizin klik disini!\n${shareTitle}\n\n${currentUrl}`)}`
 
       const whatsappUrl = url
       window.open(whatsappUrl, '_blank')

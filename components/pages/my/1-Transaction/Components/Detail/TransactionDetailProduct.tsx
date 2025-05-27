@@ -59,7 +59,7 @@ export default function TransactionDetailProduct({
       </div>
 
       <div className="mb-4 flex w-11/12 gap-4 max-lg:flex-col max-lg:gap-1">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 max-lg:items-start">
           <div className="h-34 w-34 overflow-hidden rounded-lg max-lg:h-20 max-lg:w-20">
             <Image
               src={packageCover || '/thumbnail.png'}
@@ -79,9 +79,9 @@ export default function TransactionDetailProduct({
           <div className="mt-2 flex items-center">
             <Calendar2 className="h-5 w-5 text-neutral-500" />
             <p className="ml-2 flex items-center text-sm text-neutral-500 max-lg:text-xs">
-              {dayjs(arrivalDate).locale('id').format('DD MMMM YYYY')}{' '}
-              <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
               {dayjs(departureDate).locale('id').format('DD MMMM YYYY')}
+              <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
+              {dayjs(arrivalDate).locale('id').format('DD MMMM YYYY')}{' '}
             </p>
           </div>
           <div className="mt-2 flex items-center">

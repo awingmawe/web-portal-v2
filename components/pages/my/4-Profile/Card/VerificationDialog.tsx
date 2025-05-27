@@ -122,7 +122,6 @@ export default function VerificationDialog({
   }, [isResend])
 
   const handleResend = () => {
-    console.log('sads')
     onResendOtp?.()
     setIsResend(60)
   }

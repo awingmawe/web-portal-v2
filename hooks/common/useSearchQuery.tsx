@@ -1,12 +1,24 @@
+'use client'
+
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useSearchHistory } from '@/hooks/common/useSearchHistory'
 import { useSearchParams } from 'next/navigation'
 import { FormEvent, useCallback, useMemo, useState } from 'react'
 
-export function useSearchQuery() {
+export interface UseSearchQueryProps {
+  redirectUri: string
+  dataEventTracker?: any
+}
+
+export function useSearchQuery({
+  redirectUri,
+  dataEventTracker,
+}: UseSearchQueryProps) {
   const { searchQuery, setSearchQuery } = useFilterProduct()
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
+  const { pushEvent } = useEventTracker()
 
   // Use the search history hook
   const { searchHistory, addToHistory } = useSearchHistory()
@@ -31,13 +43,23 @@ export function useSearchQuery() {
       addToHistory(searchQuery)
 
       params.set('query', searchQuery)
+
+      pushEvent(dataEventTracker)
       // Set a timer to simulate API call or processing
       setTimeout(() => {
-        window.location.href = `/search?${params.toString()}`
+        window.location.href = `/${redirectUri}?${params.toString()}`
         setLoading(false)
       }, 500)
     },
-    [loading, searchParams, searchQuery, addToHistory]
+    [
+      loading,
+      searchQuery,
+      searchParams,
+      addToHistory,
+      pushEvent,
+      dataEventTracker,
+      redirectUri,
+    ]
   )
 
   // Handle selecting a history item
@@ -51,9 +73,9 @@ export function useSearchQuery() {
       // Add to search history when selecting from history
       addToHistory(historyItem)
 
-      window.location.href = `/search?${params.toString()}`
+      window.location.href = `/${redirectUri}?${params.toString()}`
     },
-    [searchParams, setSearchQuery, addToHistory]
+    [searchParams, setSearchQuery, addToHistory, redirectUri]
   )
 
   const handleSearchDesktop = useMemo(() => {
@@ -62,8 +84,8 @@ export function useSearchQuery() {
     params.set('query', searchQuery)
     const queryString = params.toString()
 
-    return queryString ? `/search?${queryString}` : '/search'
-  }, [searchParams, searchQuery])
+    return queryString ? `/${redirectUri}?${queryString}` : redirectUri
+  }, [searchParams, searchQuery, redirectUri])
 
   const clearSearch = useCallback(() => {
     setSearchQuery('')

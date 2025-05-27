@@ -3,8 +3,8 @@
 
 import EmptyStateWishlist from '@/components/pages/my/3-Wishlist/EmptyState'
 import { SearchAndFilterWishlist } from '@/components/pages/my/3-Wishlist/TopFilter'
-import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
 import { CardPackage } from '@/components/shared/CardPackage'
+import { CustomPagination } from '@/components/shared/CustomPagination'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { CardData } from '@/constant/types/PackageProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'

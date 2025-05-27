@@ -3,7 +3,8 @@
 
 import { StarIconFilterMobile, StarIconPrimary } from '@/components/icons/star'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import React, { Fragment, useCallback, useMemo } from 'react'
+import { starOptions } from '@/lib/utils'
+import React, { Fragment, useCallback } from 'react'
 
 interface HotelStarSelectorProps {
   selectedRating?: number
@@ -14,9 +15,6 @@ const HotelStarSelector: React.FC<HotelStarSelectorProps> = ({
   selectedRating,
   onRatingChange,
 }) => {
-  // Star rating options (5, 4, 3, 2, 1 stars)
-  const starOptions = useMemo(() => [5, 4, 3, 2, 1], [])
-
   // Handle star selection
   const handleStarSelection = useCallback((value: string) => {
     const rating = parseInt(value)

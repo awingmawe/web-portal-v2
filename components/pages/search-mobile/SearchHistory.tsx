@@ -5,7 +5,7 @@ import { TrendingUp, X } from 'lucide-react'
 
 export function SearchHistory() {
   const { searchHistory, removeFromHistory, clearHistory } = useSearchHistory()
-  const { handleHistoryItemClick } = useSearchQuery()
+  const { handleHistoryItemClick } = useSearchQuery({ redirectUri: 'search' })
 
   if (searchHistory.length === 0) {
     return (

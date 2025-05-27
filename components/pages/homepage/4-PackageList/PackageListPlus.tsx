@@ -123,7 +123,7 @@ export const PackageListPlus: React.FC<PackageListPlusProps> = ({
   // Package section configurations
   const sections = [
     {
-      title: 'Umroh Plus',
+      title: 'Umroh Plus Liburan',
       description: 'Umroh istimewa plus jalan-jalan ke destinasi pilihan!',
       type: 'plus' as const,
       data: dataPlus,

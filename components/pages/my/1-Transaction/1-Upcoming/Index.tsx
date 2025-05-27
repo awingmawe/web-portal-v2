@@ -9,7 +9,7 @@ import {
 import List from '@/components/pages/my/1-Transaction/1-Upcoming/List'
 import NeedPaymentLink from '@/components/pages/my/1-Transaction/1-Upcoming/NeedPaymentLink'
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
-import { CustomPagination } from '@/components/pages/search-packages/3-PackageList/PaginationPackageList'
+import { CustomPagination } from '@/components/shared/CustomPagination'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -203,6 +203,7 @@ export default function TransactionUpcoming() {
         totalPages={totalPages}
         setCurrentPage={setCurrentPage}
         transactions={transactions}
+        fetchTransactions={fetchTransactions}
       />
 
       {/* Pagination */}

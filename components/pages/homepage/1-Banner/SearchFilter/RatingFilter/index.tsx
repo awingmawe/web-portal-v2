@@ -15,6 +15,8 @@ const HotelStarFilter: React.FC = () => {
 
   const hotelStars = filters.hotelStars
   // Memoized handlers
+  const handleHotelStar1 = useCallback(() => setHotelStars(1), [setHotelStars])
+  const handleHotelStar2 = useCallback(() => setHotelStars(2), [setHotelStars])
   const handleHotelStar3 = useCallback(() => setHotelStars(3), [setHotelStars])
   const handleHotelStar4 = useCallback(() => setHotelStars(4), [setHotelStars])
   const handleHotelStar5 = useCallback(() => setHotelStars(5), [setHotelStars])
@@ -49,8 +51,26 @@ const HotelStarFilter: React.FC = () => {
         stars: 3,
         handler: handleHotelStar3,
       },
+      {
+        value: 2,
+        label: 'Hotel Bintang 2',
+        stars: 2,
+        handler: handleHotelStar2,
+      },
+      {
+        value: 1,
+        label: 'Hotel Bintang 1',
+        stars: 1,
+        handler: handleHotelStar1,
+      },
     ],
-    [handleHotelStar3, handleHotelStar4, handleHotelStar5]
+    [
+      handleHotelStar1,
+      handleHotelStar2,
+      handleHotelStar3,
+      handleHotelStar4,
+      handleHotelStar5,
+    ]
   )
 
   return (

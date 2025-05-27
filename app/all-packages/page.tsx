@@ -66,15 +66,14 @@ export default async function SearchGeneral({
   // Order Filter
   // Handle sorting options
   let orderBy = 'packageVariant.priceQuad' // Default sort field
+  let filterPrice
   let order = 'asc' // Default sort order
 
   // Price sorting
   if (awaitedParams.sort === 'price-low') {
-    orderBy = 'packageVariant.priceQuad'
-    order = 'asc'
+    filterPrice = 'lowest-price'
   } else if (awaitedParams.sort === 'price-high') {
-    orderBy = 'packageVariant.priceDouble'
-    order = 'desc'
+    filterPrice = 'highest-price'
   }
   // Departure date sorting
   else if (awaitedParams.sort === 'depart-early') {
@@ -90,6 +89,7 @@ export default async function SearchGeneral({
     size,
     orderBy,
     order,
+    filterPrice,
     [`search`]: query ? `%${query}%` : undefined,
     startDate,
     endDate,

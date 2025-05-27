@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { PackageTagSlug } from '@/constant/types/ArticleProps'
 import { CardData } from '@/constant/types/PackageProps'
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -17,16 +18,17 @@ interface PackageListEventProps {
   dataPromo?: CardData[]
   dataRegular?: CardData[]
   dataPlus?: CardData[]
+  dataCustom?: PackageTagSlug
   isLoading?: boolean
   header?: boolean
 }
 
 interface PackageSectionProps {
   title: string
-  description: string
-  type: 'promo' | 'regular' | 'plus'
+  description?: string
+  type?: 'promo' | 'regular' | 'plus' | string
   data: CardData[]
-  isLoading: boolean
+  isLoading?: boolean
   header: boolean
   renderSkeletonItems: (count: number, isLoading: boolean) => React.ReactNode
 }
@@ -61,7 +63,11 @@ const PackageSection = ({
       {data.length !== 0 && (
         <div>
           {header && (
-            <HeaderPackageList title={title} desc={description} type={type} />
+            <HeaderPackageList
+              title={title}
+              desc={description ?? ''}
+              type={type ?? ''}
+            />
           )}
           <Carousel
             opts={{
@@ -87,6 +93,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   dataPromo,
   dataRegular,
   dataPlus,
+  dataCustom,
   isLoading: externalLoading,
   header,
 }) => {
@@ -155,11 +162,17 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       header: header,
     },
     {
-      title: 'Umroh Plus',
+      title: 'Umroh Plus Liburan',
       description: 'Umroh istimewa plus jalan-jalan ke destinasi pilihan!',
       type: 'plus' as const,
       data: dataPlus || [],
       isLoading: isPlusLoading || loading,
+      header: header,
+    },
+    {
+      title: 'Penawaran Lainnya',
+      type: dataCustom?.slug,
+      data: dataCustom?.data,
       header: header,
     },
   ]
@@ -171,16 +184,18 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   return (
     <section className="flex flex-col">
       {sections.map((section) => (
-        <PackageSection
-          key={section.type}
-          title={section.title}
-          description={section.description}
-          type={section.type}
-          header={section.header ?? true}
-          data={section.data ?? []}
-          isLoading={section.isLoading}
-          renderSkeletonItems={renderSkeletonItems}
-        />
+        <Fragment key={section.title}>
+          <PackageSection
+            key={section.type}
+            title={section.title}
+            description={section.description}
+            type={section.type ?? ''}
+            header={section.header ?? true}
+            data={section.data ?? []}
+            isLoading={section.isLoading}
+            renderSkeletonItems={renderSkeletonItems}
+          />
+        </Fragment>
       ))}
     </section>
   )

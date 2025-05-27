@@ -2,6 +2,7 @@
 'use client'
 
 import { CardPackage } from '@/components/shared/CardPackage'
+import { CustomPagination } from '@/components/shared/CustomPagination'
 import { CustomInfiniteScroll } from '@/components/shared/InfiniteScroll'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
@@ -11,7 +12,6 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
 import { NoResults } from './NoResultPackageList'
-import { CustomPagination } from './PaginationPackageList'
 import {
   PackageGridSkeleton,
   PaginationSkeleton,
@@ -70,7 +70,7 @@ export const PackageResults: React.FC = () => {
         fetchPackageData(paramsFilter)
       }
     }
-  }, [isLoadingSkeleton, currentSort, searchParams])
+  }, [isLoadingSkeleton, currentSort, searchParams, isMobile])
 
   // Improved loadMoreData function that checks loading/hasMore status first
   const loadMoreData = useCallback(() => {

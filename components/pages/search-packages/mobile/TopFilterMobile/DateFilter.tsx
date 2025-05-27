@@ -34,7 +34,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
           cellClassName={{
             cell: 'w-full',
             head_cell: 'w-full h-full',
-            month: 'p-0',
+            month: 'p-0 flex-1',
             day: 'w-full',
           }}
         />

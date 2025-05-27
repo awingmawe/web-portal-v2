@@ -1,12 +1,18 @@
 import { IconProps } from '@/constant/types/IconProps'
 
-const ShareIcon: React.FC<IconProps> = ({ size, className, ...props }) => (
+const ShareIcon: React.FC<IconProps> = ({
+  size,
+  className,
+  onClick,
+  ...props
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     viewBox="0 0 28 28"
     fill="none"
+    onClick={onClick}
     className={className}
     {...props}
   >

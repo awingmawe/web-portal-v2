@@ -10,15 +10,14 @@ export function useFetchPackage() {
       const sortParam = queryParams.sortParam || 'price-low'
 
       // Determine sort order and field
-      let orderBy = 'packageVariant.priceQuad'
+      let orderBy
+      let filterPrice
       let order = 'asc'
 
       if (sortParam === 'price-low') {
-        orderBy = 'packageVariant.priceQuad'
-        order = 'asc'
+        filterPrice = 'lowest-price'
       } else if (sortParam === 'price-high') {
-        orderBy = 'packageVariant.priceDouble'
-        order = 'desc'
+        filterPrice = 'highest-price'
       } else if (sortParam === 'depart-early') {
         orderBy = 'packageVariant.departureDate'
         order = 'asc'
@@ -32,6 +31,7 @@ export function useFetchPackage() {
         page: queryParams.page || 1,
         size,
         orderBy,
+        filterPrice,
         order,
         [`search`]: queryParams.query ? `%${queryParams.query}%` : undefined,
         startDate: queryParams.startDate,

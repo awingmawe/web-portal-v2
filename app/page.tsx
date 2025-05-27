@@ -27,7 +27,7 @@ import { Fragment } from 'react'
 export async function generateMetadata() {
   return {
     ...metadata(
-      'Muslim 101 | All in One Islamic Digital Platform',
+      'Muslim 101 | Semua Ada Semua Berkah',
       'Daftar paket umrah yang ada di Muslim101'
     ),
   }
@@ -94,9 +94,10 @@ export default async function Home() {
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
+      {/* Input for mobile responsive */}
       <Link
         href={'/search-mobile-package'}
-        className="absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5 lg:hidden"
+        className="focus-within::outline-none absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5 outline-none focus-visible:outline-0 lg:hidden"
       >
         <div className="flex items-center gap-1 rounded-full border-1 border-neutral-200 bg-white px-4 py-1.5">
           <Search size={16} className="text-neutral-300" />

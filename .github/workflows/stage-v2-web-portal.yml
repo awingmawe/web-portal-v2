@@ -3,7 +3,7 @@ name: Staging RUNNER web-portal-v2 CI/CD with Docker on Registry env64 & uniq Ta
 # Staging Trigger untuk Pre-release dan Published Release
 on:
   release:
-    types: [prereleased]
+    types: [prereleased, published]
 
 env:
   IMAGE_NAME: registry.digitalocean.com/imgreg-m101/stage-web-portal-v2

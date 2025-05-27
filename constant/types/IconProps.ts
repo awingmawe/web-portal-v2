@@ -3,4 +3,5 @@ export interface IconProps {
   size?: number | string
   background?: string
   color?: string
+  onClick?: () => void
 }

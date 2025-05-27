@@ -30,7 +30,6 @@ export function SortDrawer({
 }: SortDrawerProps) {
   const searchParams = useSearchParams()
   const updateQueryParams = useUpdateQueryParams()
-
   const SORT_OPTIONS: SortOption[] = [
     { value: 'price-low', label: 'Harga Terendah' },
     { value: 'price-high', label: 'Harga Tertinggi' },

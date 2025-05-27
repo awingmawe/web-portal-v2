@@ -54,6 +54,7 @@ export interface CardData {
   codeCountry?: AdditionalCountry[]
   releasedAt: string
   packageType: string
+  variant?: any
 }
 
 export interface PackageDetail {
@@ -127,6 +128,7 @@ export interface Package {
   detail: PackageDetail
   tag?: null | any
   price: number
+  originalPrice: number
 }
 
 export type TotalLike = {

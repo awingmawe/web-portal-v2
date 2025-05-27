@@ -15,6 +15,23 @@ export const formatDateToYYYYMMDD = (date: Date): any => {
   return format(date, 'yyyy-MM-dd') // This converts to YYYY-MM-DD format
 }
 
+export const formatDateToDDMMYYYY = (date: Date): any => {
+  return format(date, 'dd MMMM yyyy', { locale: id }) // This converts to YYYY-MM-DD format
+}
+
+export const formatReadTime = (time: number) => {
+  const hours = Math.floor(time / 60)
+  const minutes = time % 60
+
+  if (hours > 0 && minutes > 0) {
+    return `${hours} jam ${minutes} menit membaca`
+  } else if (hours > 0) {
+    return `${hours} jam membaca`
+  } else {
+    return `${minutes} menit membaca`
+  }
+}
+
 export const isEmpty = (value: unknown): boolean => {
   if (value === null || value === undefined) return true
   if (typeof value === 'string' && value.trim() === '') return true
@@ -152,24 +169,11 @@ export function mapProductsToCardData(
       province: product.organizationInstance?.province.name || 'Unknown',
       provinceId: product.organizationInstance?.provinceId,
       organizationName: product.organizationInstance?.name || 'Unknown',
+      variant: product.packageVariant || [],
       originalPrice: product.packageVariant
-        ? formatCurrency(
-            getMinimumNonZeroPrice(
-              Number(product.packageVariant?.originalPriceDouble),
-              Number(product.packageVariant?.originalPriceTriple),
-              Number(product.packageVariant?.originalPriceQuad)
-            )
-          )
+        ? formatCurrency(product.originalPrice)
         : 'Rp0',
-      price: product.packageVariant
-        ? formatCurrency(
-            getMinimumNonZeroPrice(
-              Number(product.packageVariant?.priceDouble),
-              Number(product.packageVariant?.priceTriple),
-              Number(product.packageVariant?.priceQuad)
-            )
-          )
-        : 'Rp0',
+      price: product.packageVariant ? formatCurrency(product.price) : 'Rp0',
       rating: getHotelRating(product),
       slugOrganization: product.organizationInstance?.slug || '',
       slugPackage: product.slug || '',
@@ -373,3 +377,5 @@ export function isMobileUserAgent(userAgent: string): boolean {
     userAgent
   )
 }
+
+export const starOptions = [5, 4, 3, 2, 1]

@@ -32,7 +32,19 @@ export async function getKota(
     throw error
   }
 }
-
+export async function getProvince(
+  query: GetListQuery
+): Promise<GenericResponse<any>> {
+  try {
+    const response = await api.get(
+      `/public/identity/location/province?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching kota:', error)
+    throw error
+  }
+}
 export async function updateProfile(payload: Profile): Promise<Profile> {
   try {
     const response = await apiWithAuth.put(`/identity/my-profile`, payload)

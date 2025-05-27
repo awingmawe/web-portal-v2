@@ -16,7 +16,7 @@ const SubmenuCards = () => {
     {
       icon: <MoneySavingIcon size={25} color="white" />,
       label: 'Tabungan Umroh',
-      href: '/tabungan-umroh',
+      href: '/banking?page=tabungan',
       background: 'bg-[#EC9200]',
     },
     {
@@ -28,7 +28,7 @@ const SubmenuCards = () => {
     {
       icon: <SavingIcon size={25} color="white" />,
       label: 'Pendanaan Syariah',
-      href: '/pembiayaan',
+      href: '/banking?page=pembiayaan',
       background: 'bg-[#03DAC8]',
     },
     // {

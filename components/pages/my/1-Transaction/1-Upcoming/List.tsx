@@ -13,6 +13,7 @@ interface ListProps {
   totalPages: number
   setCurrentPage: (value: number) => void
   transactions: Transaction[]
+  fetchTransactions?: any
 }
 
 export default function List({
@@ -23,6 +24,7 @@ export default function List({
   totalPages,
   setCurrentPage,
   transactions,
+  fetchTransactions,
 }: ListProps) {
   return (
     <Fragment>
@@ -62,6 +64,10 @@ export default function List({
                         endDate={
                           transaction?.packageSnapshot?.snapshot?.arrivalDate
                         }
+                        organizationInstanceId={
+                          transaction?.packageSnapshot?.snapshot?.package
+                            .organizationInstanceId
+                        }
                         createdDate={transaction.createdAt}
                         jemaah={Number.parseInt(transaction.quantity, 10)}
                         bookingId={String(transaction.id)}
@@ -74,6 +80,7 @@ export default function List({
                           (transaction.isPaidOff &&
                             transaction.isCompletedManifest)
                         }
+                        fetchTransactions={fetchTransactions}
                       />
                     </div>
                   ))
@@ -124,6 +131,11 @@ export default function List({
                     isPaidOff={transaction.isPaidOff}
                     statusTahapan="Akan Datang"
                     statusTahapanDetail={'Akan Datang'}
+                    organizationInstanceId={
+                      transaction?.packageSnapshot?.snapshot?.package
+                        .organizationInstanceId
+                    }
+                    fetchTransactions={fetchTransactions}
                   />
                 </div>
               ))}

@@ -30,6 +30,7 @@ interface TransactionDetailContentProps {
   bookingId: string
   isFixedLoading: boolean
   onOpenChange?: any
+  setOpenBatalkan?: (open: boolean) => void
 }
 
 // Declare window with Snap interface
@@ -45,6 +46,7 @@ export default function TransactionDetailContent({
   isFixedLoading,
   bookingId,
   onOpenChange,
+  setOpenBatalkan,
 }: TransactionDetailContentProps) {
   const [loading, setLoading] = useState(true)
   const [transaction, setTransaction] = useState<any>(null)
@@ -225,7 +227,7 @@ export default function TransactionDetailContent({
       ) : (
         <Fragment>
           <div
-            className={`${statusTahapan !== 'Selesai' ? 'grid md:grid-cols-[1fr_300px]' : 'grid md:grid-cols-1'} rounded-lg bg-white shadow-md max-lg:h-auto`}
+            className={`${statusTahapan !== 'Selesai' ? 'grid grid-cols-1 lg:grid-cols-[1fr_300px]' : 'grid md:grid-cols-1'} rounded-lg bg-white shadow-md max-lg:h-auto`}
           >
             <div className="scrollbar-hide max-h-[80vh] overflow-y-auto border-r border-neutral-100 py-4 max-lg:max-h-full">
               {/* Header */}
@@ -328,30 +330,34 @@ export default function TransactionDetailContent({
                     </div>
                   </div>
                 ) : (
-                  <div
-                    className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
-                  >
-                    <div
-                      className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
-                    >
-                      <InfoCircleIcon />
-                      <p className="text-s-regular text-current">
-                        {dayjs(transaction.createdAt).add(3, 'day') >
-                        dayjs() ? (
-                          <span className="text-current">
-                            Lengkapi sebelum{' '}
-                            {dayjs(transaction.createdAt)
-                              .add(3, 'day')
-                              .locale('id')
-                              .format('DD MMM YYYY')}
-                          </span>
-                        ) : (
-                          <span className="text-current">
-                            Segera lengkapi manifest
-                          </span>
-                        )}
-                      </p>
-                    </div>
+                  <div>
+                    {statusTahapan !== 'Waiting' && (
+                      <div
+                        className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
+                      >
+                        <div
+                          className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                        >
+                          <InfoCircleIcon />
+                          <p className="text-s-regular text-current">
+                            {dayjs(transaction.createdAt).add(3, 'day') >
+                            dayjs() ? (
+                              <span className="text-current">
+                                Lengkapi sebelum{' '}
+                                {dayjs(transaction.createdAt)
+                                  .add(3, 'day')
+                                  .locale('id')
+                                  .format('DD MMM YYYY')}
+                              </span>
+                            ) : (
+                              <span className="text-current">
+                                Segera lengkapi manifest
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -497,20 +503,25 @@ export default function TransactionDetailContent({
                 {transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' && (
-                    <Link
-                      href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                      target="_blank"
-                      className="w-full"
+                    // <Link
+                    //   href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                    //   target="_blank"
+                    //   className="w-full"
+                    // >
+                    <Button
+                      variant="outline"
+                      className="border-error-500  block w-full border-2"
+                      onClick={() => {
+                        if (typeof setOpenBatalkan === 'function') {
+                          setOpenBatalkan(true)
+                        }
+                      }}
                     >
-                      <Button
-                        variant="outline"
-                        className="border-error-500  block w-full border-2"
-                      >
-                        <span className="text-error-500 font-medium">
-                          Batalkan Pesanan
-                        </span>
-                      </Button>
-                    </Link>
+                      <span className="text-error-500 font-medium">
+                        Batalkan Pesanan
+                      </span>
+                    </Button>
+                    // </Link>
                   )}
                 <div className="relative mt-auto">
                   <Image
@@ -531,6 +542,9 @@ export default function TransactionDetailContent({
         bookingCode={transaction?.bookingCode}
         bookingId={bookingId}
         statusTahapan={statusTahapan}
+        idOrganisasi={
+          transaction?.packageSnapshot?.snapshot.package.organizationInstance.id
+        }
       />
 
       <Script

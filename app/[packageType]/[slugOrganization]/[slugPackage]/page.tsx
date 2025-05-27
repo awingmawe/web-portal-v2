@@ -34,16 +34,15 @@ import {
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: any
-}) {
-  const resolvedSearchParams = await searchParams
+export async function generateMetadata({ params }: { params: any }) {
+  const { slugPackage } = await params
+  const detailData = await getPackageDetail(slugPackage)
+
   return {
     ...metadata(
-      'Muslim 101 | Daftar Paket Muslim101',
-      `Daftar pencarian paket ${resolvedSearchParams.query || ''}`
+      `Muslim 101 | Detail Paket ${detailData.title}`,
+      `Detail paket ${detailData.title}`,
+      detailData.thumbnail
     ),
   }
 }
