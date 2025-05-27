@@ -29,7 +29,6 @@ import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import {
   formatCurrency,
-  formatPhoneNumber,
   getHotelRating,
   getTripDuration,
   isEmpty,
@@ -59,7 +58,7 @@ interface PackageVariantComponentProps {
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   variants = [],
-  organization,
+  // organization,
   titlePackage,
   package: pkg,
   token,
@@ -189,11 +188,14 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     }, 500)
   }, [variants])
 
-  const phoneNumberUsed = organization?.directContact
-    ? formatPhoneNumber(organization?.phoneNumber)
-    : formatPhoneNumber(
-        organization?.bdm?.persona?.phoneNumber ?? '628888551101'
-      )
+  const phoneNumberUsed = '628888551101'
+
+  // Uncomment this when need to change again
+  // const phoneNumberUsed = organization?.directContact
+  //   ? formatPhoneNumber(organization?.phoneNumber)
+  //   : formatPhoneNumber(
+  //       organization?.bdm?.persona?.phoneNumber ?? '628888551101'
+  //     )
 
   // Check room type availability based on price
   const availableRoomTypes = useMemo(() => {
