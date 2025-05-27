@@ -28,6 +28,7 @@ interface MobileTopbarProps {
     | 'transactionTopbar'
     | 'profileTopbar'
     | 'logo'
+    | 'pendanaanSyariah'
   titleLink?: string
   title?: string
   token?: string
@@ -152,6 +153,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           )
 
         case 'profileTopbar':
+        case 'pendanaanSyariah':
         case 'transactionTopbar':
         case 'title':
           return <div className="text-l-medium flex-1 text-center">{title}</div>
@@ -211,6 +213,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       // Using switch case to handle different variants
       switch (variant) {
         case 'profileTopbar':
+        case 'pendanaanSyariah':
         case 'transactionTopbar':
         case 'title':
         case 'search':
@@ -221,6 +224,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             !showFixedHeader ? 'shadow-[0px_0px_4px_0px_rgba(0,0,0,0.15)]' : ''
           }`
         case 'plain':
+        case 'pendanaanSyariah':
         default:
           return `bg-neutral-0 rounded-[20px] p-1 ${
             !showFixedHeader ? 'shadow-[0px_0px_4px_0px_rgba(0,0,0,0.15)]' : ''
@@ -263,6 +267,10 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'profileTopbar':
           positionClasses =
             'absolute -top-25 left-1/2 transform -translate-x-1/2'
+          backgroundClasses = ''
+          break
+        case 'pendanaanSyariah':
+          positionClasses = 'absolute -top-15'
           backgroundClasses = ''
           break
         case 'logo':

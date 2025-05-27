@@ -142,13 +142,15 @@ export const Sidebar = () => {
             icon={<MoneysIcon />}
             label="Pendanaan Syariah"
             loading={profile ? false : true}
-            href="/banking?page=pembiayaan"
+            isActive={pathname === '/my/banking'}
+            href="/my/banking"
           />
           <MenuItem
             icon={<MoneysIcon />}
             label="Tabungan"
             loading={profile ? false : true}
-            href="/banking?page=credit"
+            isActive={pathname === '/my/saving'}
+            href="/my/saving"
           />
           <Separator className="mx-auto !w-[90%] bg-neutral-100" />
           {/* 

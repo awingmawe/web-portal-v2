@@ -399,3 +399,27 @@ export async function getPostCanceled(payload: any): Promise<any> {
     throw error
   }
 }
+
+export async function getPackageVariantById(
+  id: any
+): Promise<GenericResponse<PackageVariant>> {
+  try {
+    const response = await api.get(`/public/umrah/v1/package-variant/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching package variant data list:', error)
+    throw error
+  }
+}
+
+export async function getPackageById(
+  id: any
+): Promise<GenericResponse<Package>> {
+  try {
+    const response = await api.get(`/public/umrah/v1/package/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching package data list:', error)
+    throw error
+  }
+}

@@ -46,7 +46,7 @@ export default async function LayoutMy({
         </section>
       </main>
 
-      <Footer type="compact" />
+      <Footer type="compact" className="hidden md:block" />
     </Fragment>
   )
 }
