@@ -8,7 +8,7 @@ import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
-import { formatPhoneNumber, isEmpty } from '@/lib/utils'
+import { isEmpty } from '@/lib/utils'
 import Link from 'next/link'
 import { useEffect } from 'react'
 
@@ -23,7 +23,7 @@ interface ActionCheckoutProps {
 export default function ActionCheckoutMobile({
   variants,
   title,
-  organization,
+  // organization,
   thumbnail,
   token,
 }: ActionCheckoutProps) {
@@ -38,11 +38,13 @@ export default function ActionCheckoutMobile({
     }
   }, [variants, setVariants])
 
-  const phoneNumberUsed = organization?.directContact
-    ? formatPhoneNumber(organization?.phoneNumber)
-    : formatPhoneNumber(
-        organization?.bdm?.persona?.phoneNumber ?? '628888551101'
-      )
+  const phoneNumberUsed = '628888551101'
+
+  // const phoneNumberUsed = organization?.directContact
+  //   ? formatPhoneNumber(organization?.phoneNumber)
+  //   : formatPhoneNumber(
+  //       organization?.bdm?.persona?.phoneNumber ?? '628888551101'
+  //     )
 
   // Create a richer message when variant is selected
   const handleWhatsAppShare = () => {
