@@ -5,6 +5,7 @@ import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
 import { Bed, Calendar, Users } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -17,28 +18,30 @@ const BankingPageDetail: React.FC = () => {
     try {
       setLoading(true)
       const res = await getbankCredit()
+      if (res !== '') {
+        const resPackage = (await getPackageById(res.packageId)) as any
+        const resVariant = (await getPackageVariantById(
+          res.packageVariantId
+        )) as any
 
-      const resPackage = (await getPackageById(res.packageId)) as any
-      const resVariant = (await getPackageVariantById(
-        res.packageVariantId
-      )) as any
-
-      const saveData = {
-        organizationInstanceName: resPackage.organizationInstanceName,
-        title: resPackage.title,
-        thumbnail: resPackage.thumbnail,
-        departureDate: resVariant.departureDate,
-        arrivalDate: resVariant.arrivalDate,
-        roomType: res.roomType,
-        status: res.status,
-        submissionCreditHistory: res.submissionCreditHistory || [], // Added fallback
-        jumlahJamaah: res.jumlahJemaah,
-        tenor: res.tenor,
-        totalPrice: res.totalPrice,
-        createdAt: res.createdAt,
-        packageType: resPackage.packageType,
+        const saveData = {
+          organizationInstanceName: resPackage.organizationInstanceName,
+          title: resPackage.title,
+          thumbnail: resPackage.thumbnail,
+          departureDate: resVariant.departureDate,
+          arrivalDate: resVariant.arrivalDate,
+          roomType: res.roomType,
+          status: res.status,
+          submissionCreditHistory: res.submissionCreditHistory || [], // Added fallback
+          jumlahJamaah: res.jumlahJemaah,
+          tenor: res.tenor,
+          totalPrice: res.totalPrice,
+          createdAt: res.createdAt,
+          packageType: resPackage.packageType,
+          slug: resPackage.slug,
+        }
+        setData(saveData)
       }
-      setData(saveData)
     } catch (error) {
       console.log(error)
     } finally {
@@ -131,7 +134,15 @@ const BankingPageDetail: React.FC = () => {
   if (!data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600">Data tidak ditemukan</div>
+        <Image
+          src="/images/tidak-adadata.svg"
+          alt="Package Thumbnail"
+          width={242}
+          height={190}
+          // className="h-full w-full object-cover"
+        />
+
+        {/* <div className="text-gray-600">Data tidak ditemukan</div> */}
       </div>
     )
   }
@@ -205,7 +216,14 @@ const BankingPageDetail: React.FC = () => {
             </div>
 
             {/* Product Details */}
-            <div className="rounded-lg bg-white p-3 shadow-sm md:p-6">
+            <div
+              className="cursor-pointer rounded-lg bg-white p-3 shadow-sm md:p-6"
+              onClick={() => {
+                router.push(
+                  `/${data.packageType}/${data.organizationInstanceName}/${data.slug}`
+                )
+              }}
+            >
               <div className="mb-3 flex items-center justify-between md:mb-4">
                 {/* Kiri */}
                 <span className="text-sm text-gray-600 md:text-base">
@@ -348,9 +366,14 @@ const BankingPageDetail: React.FC = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="rounded-lg bg-white p-4 text-center shadow-sm md:p-6">
-              <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
-                Bantuan
-              </button>
+              <Link
+                href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
+                target="_blank"
+              >
+                <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+                  Bantuan
+                </button>
+              </Link>
             </div>
 
             {/* Banking Illustration - Hidden on mobile */}

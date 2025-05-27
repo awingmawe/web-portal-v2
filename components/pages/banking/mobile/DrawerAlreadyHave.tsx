@@ -8,13 +8,14 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 const DrawerAlreadyHave = React.memo(
   ({ open, setOpen, text }: { open: any; setOpen: any; text: any }) => {
     // const closeRef = useRef<HTMLButtonElement>(null)
     const [openSukses, setOpenSukses] = useState(false)
-
+    const router = useRouter()
     return (
       <>
         <Drawer open={open} onOpenChange={setOpen}>
@@ -49,7 +50,14 @@ const DrawerAlreadyHave = React.memo(
               <div className="mt-6 flex justify-center">
                 <Button
                   className="w-[50%] rounded-full bg-yellow-400 text-sm font-semibold text-black hover:bg-yellow-500"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setOpen(false)
+                    if (text === 'Tabungan') {
+                      router.push('/my/saving')
+                    } else {
+                      router.push('/my/banking')
+                    }
+                  }}
                 >
                   Lihat Pendanaan Aktif
                 </Button>
