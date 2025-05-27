@@ -179,15 +179,14 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   useEffect(() => {
     if (variants.length > 0) {
       const variant = variants.find((v) => v.id === packageVariantId)
-
       setSelectedVariant(variant || variants[0])
       setSelectedVariantId(packageVariantId)
 
       // Turn off loading after a short delay to allow for smoother transitions
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
     }
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
   }, [variants])
 
   const phoneNumberUsed = organization?.directContact
@@ -762,82 +761,117 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           )}
         </div>
       ) : (
-        <Button
-          className="w-full rounded-full py-3 max-lg:hidden"
-          variant="outline"
-          disabled
-          size="lg"
-        >
-          Kursi tidak tersedia
-        </Button>
+        <div>
+          <Button
+            className="w-full rounded-full py-3 max-lg:hidden"
+            variant="outline"
+            disabled
+            size="lg"
+          >
+            Kursi tidak tersedia
+          </Button>
+          {token ? (
+            <DrawerCheckAvailibility
+              statusStock={statusStock}
+              onSubmit={handleQuotaCheckDrawer}
+            >
+              <Button
+                className="w-full rounded-full py-2 lg:hidden"
+                variant="outline"
+                size="lg"
+                disabled
+                id="btn-check-quota"
+              >
+                Cek Kuota
+                <ArrowIcon size={12} className="-rotate-45" />
+              </Button>
+            </DrawerCheckAvailibility>
+          ) : (
+            <Button
+              className="w-full rounded-full py-2 lg:hidden"
+              variant="outline"
+              size="lg"
+              id="btn-check-quota"
+              disabled
+              onClick={() => {
+                window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${URL}/${path}`
+              }}
+            >
+              Cek Kuota
+              <ArrowIcon size={12} className="-rotate-45" />
+            </Button>
+          )}
+        </div>
       )}
 
       {/* Bottom actions */}
-      {variants.length > 0 && (
-        <div className="flex items-center justify-between max-lg:hidden">
-          <div
-            className="flex cursor-pointer items-center gap-1 transition-colors"
-            onClick={() => handleToggleLike()}
-          >
-            <span
-              className={`text-s-medium ${isLiked ? 'text-error-500' : 'text-neutral-900'}`}
+      <div className="flex items-center justify-between max-lg:hidden">
+        {variants.length > 0 && (
+          <>
+            <div
+              className="flex cursor-pointer items-center gap-1 transition-colors"
+              onClick={() => handleToggleLike()}
             >
-              {'Wishlist'}
-            </span>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isLiked ? 'liked' : 'unliked'}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
+              <span
+                className={`text-s-medium ${isLiked ? 'text-error-500' : 'text-neutral-900'}`}
               >
-                <Heart
-                  size={16}
-                  className={
-                    isLiked
-                      ? 'fill-error-500 text-error-500'
-                      : 'text-neutral-900'
-                  }
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          <div className="h-[15px] w-px bg-neutral-200" />
-          <div
-            onClick={() => {
-              handlePushEvent('click_consultation', true)
-              shareViaWhatsApp(titlePackage, phoneNumberUsed)
-            }}
-            className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
-          >
-            <span className="text-s-medium">Konsultasi</span>
-            <WhatsappIcon size={16} />
-          </div>
-          <div className="h-[15px] w-px bg-neutral-200" />
-          <div
-            className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors"
-            onClick={() => {
-              if (token) {
-                if (statusStock === false) {
-                  setIsQuotaModalOpen(true)
-                } else {
-                  setIsQuotaModalWaiting(true)
-                }
+                {'Wishlist'}
+              </span>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={isLiked ? 'liked' : 'unliked'}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                >
+                  <Heart
+                    size={16}
+                    className={
+                      isLiked
+                        ? 'fill-error-500 text-error-500'
+                        : 'text-neutral-900'
+                    }
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <div className="h-[15px] w-px bg-neutral-200" />
+            <div
+              onClick={() => {
+                handlePushEvent('click_consultation', true)
+                shareViaWhatsApp(titlePackage, phoneNumberUsed)
+              }}
+              className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
+            >
+              <span className="text-s-medium">Konsultasi</span>
+              <WhatsappIcon size={16} />
+            </div>
+            <div className="h-[15px] w-px bg-neutral-200" />
+          </>
+        )}
+        <div
+          className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors"
+          onClick={() => {
+            if (token) {
+              if (statusStock === false) {
+                setIsQuotaModalOpen(true)
               } else {
-                window.location.href =
-                  `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
-                  `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
+                setIsQuotaModalWaiting(true)
               }
-              handlePushEvent('check_availability', true)
-            }}
-          >
-            <span className="text-s-medium">Cek Kuota</span>
-            <ArrowIcon size={16} className="-rotate-45 text-neutral-900" />
-          </div>
+            } else {
+              window.location.href =
+                `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
+                `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
+            }
+            handlePushEvent('check_availability', true)
+          }}
+        >
+          <span className="text-s-medium">Cek Kuota</span>
+          <ArrowIcon size={16} className="-rotate-45 text-neutral-900" />
         </div>
-      )}
+      </div>
       <CheckQuotaModal
         open={isQuotaModalOpen}
         onOpenChange={setIsQuotaModalOpen}
