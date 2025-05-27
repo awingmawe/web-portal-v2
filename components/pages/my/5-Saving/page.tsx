@@ -3,6 +3,7 @@
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { getSaving } from '@/services/banking-service'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -240,10 +241,17 @@ const SavingPageDetail: React.FC = () => {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="hidden rounded-lg bg-white p-4 text-center shadow-sm md:p-6 lg:block">
-              <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
-                Bantuan
-              </button>
+            <div className="rounded-lg bg-white p-4 text-center shadow-sm md:p-6">
+              <Link
+                href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+tabungan?`}
+                target="_blank"
+              >
+                <div className="hidden rounded-lg bg-white p-4 text-center shadow-sm md:p-6 lg:block">
+                  <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+                    Bantuan
+                  </button>
+                </div>
+              </Link>
             </div>
 
             {/* Banking Illustration - Hidden on mobile */}
@@ -255,10 +263,17 @@ const SavingPageDetail: React.FC = () => {
                 height={190}
               />
             </div>
-            <div className="fixed right-0 bottom-0 left-0 bg-white p-4 shadow-lg md:hidden">
-              <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500">
-                Bantuan
-              </button>
+            <div className="rounded-lg bg-white p-4 text-center shadow-sm md:p-6">
+              <Link
+                href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+tabungan?`}
+                target="_blank"
+              >
+                <div className="fixed right-0 bottom-0 left-0 bg-white p-4 shadow-lg md:hidden">
+                  <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500">
+                    Bantuan
+                  </button>
+                </div>
+              </Link>
             </div>
           </div>
         </div>

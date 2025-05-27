@@ -5,6 +5,7 @@ import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
 import { Bed, Calendar, Users } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -365,9 +366,14 @@ const BankingPageDetail: React.FC = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="rounded-lg bg-white p-4 text-center shadow-sm md:p-6">
-              <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
-                Bantuan
-              </button>
+              <Link
+                href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
+                target="_blank"
+              >
+                <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+                  Bantuan
+                </button>
+              </Link>
             </div>
 
             {/* Banking Illustration - Hidden on mobile */}
