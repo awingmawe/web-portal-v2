@@ -29,6 +29,7 @@ interface MobileTopbarProps {
     | 'profileTopbar'
     | 'logo'
     | 'pendanaanSyariah'
+    | 'plainBank'
   titleLink?: string
   title?: string
   token?: string
@@ -168,10 +169,12 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               className="mx-auto"
             />
           )
+        case 'plainBank':
         case 'plain':
           return (
             <div className="text-l-medium mr-8 flex-1 text-center">{title}</div>
           )
+
         case 'transparent':
         default:
           return null
@@ -224,6 +227,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             !showFixedHeader ? 'shadow-[0px_0px_4px_0px_rgba(0,0,0,0.15)]' : ''
           }`
         case 'plain':
+        case 'plainBank':
         case 'pendanaanSyariah':
         default:
           return `bg-neutral-0 rounded-[20px] p-1 ${
@@ -246,13 +250,19 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
       switch (variant) {
         case 'plain':
+
         case 'transparent':
           positionClasses = 'fixed top-0'
           backgroundClasses = showFixedHeader
             ? 'bg-neutral-0 border-b border-b-neutral-100'
             : 'border-b-transparent bg-transparent'
           break
-
+        case 'plainBank':
+          positionClasses = 'absolute top-0'
+          backgroundClasses = showFixedHeader
+            ? 'bg-neutral-0 border-b border-b-neutral-100'
+            : 'border-b-transparent bg-transparent'
+          break
         case 'title':
         case 'search':
         case 'filter':
