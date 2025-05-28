@@ -261,17 +261,19 @@ const PembiayaanPage: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <h1 className="text-lg font-bold text-black">
+            <h1 className="text-[32px] font-[600] text-black">
               Program Pendanaan Syariah Umrah
             </h1>
             <div className="mt-4 flex items-center text-xs text-gray-500">
-              <span>Didukung oleh</span>
+              <span className="text-[14px] font-[400] text-[#8E8E8B]">
+                Didukung oleh
+              </span>
               <Image
                 src="/images/logo-permata.svg"
                 width={129}
                 height={32}
                 alt="Permata Bank"
-                className="ml-4"
+                className="ml-1"
               />
             </div>
           </div>
@@ -339,7 +341,7 @@ const PembiayaanPage: React.FC = () => {
       {/* Content area */}
       <div className={screenSize === 'desktop' ? 'px-6' : ''}>
         <div className="mb-3 md:mb-6">
-          <p className="text-xs leading-tight text-gray-800 md:text-sm">
+          <p className="text-[14px] leading-tight text-black md:text-[14px] md:font-[400] md:text-black">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
             turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
             nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum
@@ -353,7 +355,7 @@ const PembiayaanPage: React.FC = () => {
           {[...Array(4)].map((_, idx) => (
             <li
               key={idx}
-              className="text-xs font-normal text-gray-800 md:text-sm"
+              className="text-xs font-normal text-gray-800 md:text-[14px] md:font-[400] md:text-black"
             >
               <span className="font-semibold">
                 Curabitur tempor quis eros tempus lacinia.
@@ -364,7 +366,7 @@ const PembiayaanPage: React.FC = () => {
           ))}
         </ol>
 
-        <p className="mb-8 text-xs font-normal text-gray-800 md:text-sm">
+        <p className="mb-8 text-xs font-normal text-gray-800 md:text-[14px] md:font-[400] md:text-black">
           Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque
           quam a convallis. Sed ut vulputate nisi. Integer in felis sed leo
           vestibulum venenatis. Suspendisse quis arcu sem. Aenean feugiat ex eu
@@ -407,7 +409,7 @@ const PembiayaanPage: React.FC = () => {
                 <div className="w-1/3 border-r border-gray-200">
                   <div className="p-0">
                     <div
-                      className={`flex cursor-pointer items-center p-6 transition ${step === 1 ? 'bg-yellow-50' : ''} rounded-tl-3xl`}
+                      className={`flex cursor-pointer items-center border-b border-[#E8E8E8] p-6 transition ${step === 1 ? 'bg-yellow-50' : ''} rounded-tl-3xl`}
                       onClick={() => setStep(1)}
                     >
                       <div
@@ -424,7 +426,7 @@ const PembiayaanPage: React.FC = () => {
                       </span>
                     </div>
                     <div
-                      className={`flex cursor-pointer items-center p-6 transition ${step === 2 ? 'bg-yellow-50' : ''}`}
+                      className={`flex cursor-pointer items-center border-b border-[#E8E8E8] p-6 transition ${step === 2 ? 'bg-yellow-50' : ''}`}
                       onClick={() => setStep(2)}
                     >
                       <div

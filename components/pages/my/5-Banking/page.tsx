@@ -180,7 +180,7 @@ const BankingPageDetail: React.FC = () => {
       </div>
 
       {/* Desktop Header - Only visible on desktop */}
-      <div className="top-0 z-10 hidden md:block">
+      <div className="top-0 z-10 hidden md:block md:border-b md:border-[#E8E8E8]">
         <div className="flex items-center justify-between px-4 py-4">
           <h1 className="text-xl font-semibold text-gray-800">
             Detail Pengajuan
@@ -198,20 +198,20 @@ const BankingPageDetail: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-4 py-4 md:py-6">
+      <div className="px-4 py-4 md:top-0  md:py-6">
         <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-3">
           {/* Main Content */}
-          <div className="space-y-4 md:space-y-6 lg:col-span-2">
+          <div className="space-y-4 md:space-y-6 md:border-r md:border-[#E8E8E8] lg:col-span-2">
             {/* Status Banner */}
-            <div
-              className={`rounded-lg border p-3 text-center md:p-4 ${getStatusStyle(data.status)}`}
-            >
-              {statusPengajuan(data.status)}
-            </div>
 
             {/* Application Details */}
-            <div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
+            <div className="rounded-lg bg-white p-4  md:p-6">
               <div className="space-y-3 text-sm">
+                <div
+                  className={`rounded-[100px] border p-3 text-center md:p-4 ${getStatusStyle(data.status)}`}
+                >
+                  {statusPengajuan(data.status)}
+                </div>
                 <div className="flex items-start justify-between">
                   <span className="text-gray-600">Kategori Produk</span>
                   <p className="text-right font-medium text-gray-800">
@@ -232,10 +232,10 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-
+            <div className="h-[8px] w-full bg-[#E8E8E8]" />
             {/* Product Details */}
             <div
-              className="cursor-pointer rounded-lg bg-white p-3 shadow-sm md:p-6"
+              className="cursor-pointer rounded-lg bg-white p-3 md:mt-0 md:p-2"
               onClick={() => {
                 router.push(
                   `/${data.packageType}/${data.organizationInstanceName}/${data.slug}`
@@ -250,7 +250,13 @@ const BankingPageDetail: React.FC = () => {
 
                 {/* Kanan - Always shown, different styling for mobile/desktop */}
                 <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded bg-yellow-500 md:h-6 md:w-6"></div>
+                  <Image
+                    src="/images/logo-koper.svg"
+                    alt="Package Thumbnail"
+                    width={20}
+                    height={20}
+                    // className="h-full w-full object-cover"
+                  />
                   <h2 className="text-sm font-medium text-gray-800 md:text-base md:font-semibold">
                     {data.organizationInstanceName}
                   </h2>
@@ -312,9 +318,9 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-
+            <div className="h-[8px] w-full bg-[#E8E8E8]" />
             {/* Pricing Details */}
-            <div className="rounded-lg bg-white p-4 shadow-sm md:p-6">
+            <div className="rounded-lg bg-white p-4 md:p-6">
               <h3 className="mb-4 text-base font-semibold text-gray-800 md:text-lg">
                 Rincian Pengajuan
               </h3>
@@ -337,33 +343,37 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-
+            <div className="h-[8px] w-full bg-[#E8E8E8]" />
             {/* Status Timeline */}
-            <div className="rounded-lg bg-white p-6 shadow-sm">
+            <div className="rounded-lg bg-white p-6 ">
               <h3 className="mb-4 font-semibold text-gray-800">
                 Status Pengajuan
               </h3>
-              {/* Added safe array check */}
               {data.submissionCreditHistory &&
               Array.isArray(data.submissionCreditHistory) &&
               data.submissionCreditHistory.length > 0 ? (
                 data.submissionCreditHistory.map(
                   (historyItem: any, index: number) => (
-                    <div className="flex items-start gap-4" key={index}>
+                    <div className="mb-5 flex items-start gap-4" key={index}>
+                      {/* Tanggal di kiri */}
+                      <span className="mt-1 w-24 text-right text-[14px] font-medium text-[#8E8E8B]">
+                        {formatTanggal3(historyItem.createdAt)}
+                      </span>
+
+                      {/* Icon bulat + garis */}
                       <div className="flex flex-col items-center">
                         <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
                         {index < data.submissionCreditHistory.length - 1 && (
-                          <div className="mt-2 h-8 w-0.5 bg-gray-200"></div>
+                          <div className="mt-2 h-10 w-0.5 bg-gray-200"></div>
                         )}
                       </div>
+
+                      {/* Konten status */}
                       <div className="flex-1">
                         <div className="mb-1 flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-800">
-                            {formatTanggal3(historyItem.createdAt)}
-                          </span>
-                          <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
-                            {statusPengajuan(historyItem.status)}
-                          </span>
+                          {/* <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800"> */}
+                          {statusPengajuan(historyItem.status)}
+                          {/* </span> */}
                         </div>
                         <p className="text-sm text-gray-600">
                           Pengajuan kamu telah diterima dan akan segera kami
@@ -383,16 +393,16 @@ const BankingPageDetail: React.FC = () => {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="rounded-lg bg-white p-4 text-center shadow-sm md:p-6">
-              <Link
-                href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
-                target="_blank"
-              >
-                <button className="w-full rounded-lg bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
-                  Bantuan
-                </button>
-              </Link>
-            </div>
+            {/* <div className="rounded-lg bg-white p-4 text-center shadow-sm md:p-6"> */}
+            <Link
+              href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
+              target="_blank"
+            >
+              <button className="w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+                Bantuan
+              </button>
+            </Link>
+            {/* </div> */}
 
             {/* Banking Illustration - Hidden on mobile */}
             <div className="absolute bottom-12  ml-20 hidden lg:block">
