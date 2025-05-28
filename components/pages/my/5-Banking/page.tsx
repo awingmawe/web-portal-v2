@@ -58,16 +58,16 @@ const BankingPageDetail: React.FC = () => {
     switch (status) {
       case 'Diajukan':
         return (
-          <span className="font-medium text-yellow-800">
+          <span className=" text-[14px] font-medium  text-yellow-800">
             Pengajuan Telah Diterima
           </span>
         )
-      case 'Proses':
+      case 'Verifikasi':
         return (
           <span
-            className="font-medium"
+            className="text-[14px] font-medium"
             style={{
-              backgroundColor: '#C8E4F8',
+              // backgroundColor: '#C8E4F8',
               padding: '2px 6px',
               borderRadius: '4px',
             }}
@@ -75,12 +75,25 @@ const BankingPageDetail: React.FC = () => {
             Pengajuan Dalam Proses Verifikasi
           </span>
         )
-      case 'Selesai':
+      case 'Diterima':
         return (
           <span
-            className="font-medium"
+            className="text-[14px] font-medium"
             style={{
-              backgroundColor: '#BDFFEA',
+              // backgroundColor: '#BDFFEA',
+              padding: '2px 6px',
+              borderRadius: '4px',
+            }}
+          >
+            Pengajuan Diterima
+          </span>
+        )
+      case 'Ditolak':
+        return (
+          <span
+            className="text-[14px] font-medium"
+            style={{
+              // backgroundColor: '#BDFFEA',
               padding: '2px 6px',
               borderRadius: '4px',
             }}
