@@ -61,16 +61,16 @@ const SavingPageDetail: React.FC = () => {
     switch (status) {
       case 'Diajukan':
         return (
-          <span className="bg-yellow-100 font-medium  text-yellow-800">
+          <span className=" text-[14px] font-medium  text-yellow-800">
             Pengajuan Telah Diterima
           </span>
         )
       case 'Verifikasi':
         return (
           <span
-            className="font-medium"
+            className="text-[14px] font-medium"
             style={{
-              backgroundColor: '#C8E4F8',
+              // backgroundColor: '#C8E4F8',
               padding: '2px 6px',
               borderRadius: '4px',
             }}
@@ -81,9 +81,9 @@ const SavingPageDetail: React.FC = () => {
       case 'Diterima':
         return (
           <span
-            className="font-medium"
+            className="text-[14px] font-medium"
             style={{
-              backgroundColor: '#BDFFEA',
+              // backgroundColor: '#BDFFEA',
               padding: '2px 6px',
               borderRadius: '4px',
             }}
@@ -94,9 +94,9 @@ const SavingPageDetail: React.FC = () => {
       case 'Ditolak':
         return (
           <span
-            className="font-medium"
+            className="text-[14px] font-medium"
             style={{
-              backgroundColor: '#BDFFEA',
+              // backgroundColor: '#BDFFEA',
               padding: '2px 6px',
               borderRadius: '4px',
             }}
@@ -203,7 +203,7 @@ const SavingPageDetail: React.FC = () => {
             <div className="rounded-lg bg-white p-4  md:p-6">
               <div className="space-y-3 text-sm">
                 <div
-                  className={`rounded-lg border p-3 text-center md:p-4 ${getStatusStyle(data.status)}`}
+                  className={`rounded-[100px] border p-3 text-center md:p-4 ${getStatusStyle(data.status)}`}
                 >
                   {statusPengajuan(data.status)}
                 </div>
@@ -239,26 +239,34 @@ const SavingPageDetail: React.FC = () => {
               data.submissionCreditHistory.length > 0 ? (
                 data.submissionCreditHistory.map(
                   (historyItem: any, index: number) => (
-                    <div className="mb-5 flex items-start gap-4" key={index}>
-                      {/* Tanggal di kiri */}
-                      <span className="mt-1 w-24 text-right text-[14px] font-medium text-[#8E8E8B]">
+                    <div
+                      className="mb-5 flex flex-row items-start gap-2 sm:gap-4"
+                      key={index}
+                    >
+                      {/* Tanggal di kanan */}
+                      <span className="mt-1 w-24 text-right text-sm font-medium text-[#8E8E8B]">
                         {formatTanggal3(historyItem.createdAt)}
                       </span>
 
                       {/* Icon bulat + garis */}
                       <div className="flex flex-col items-center">
-                        <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
+                        <Image
+                          src="/images/icon-bulet.svg"
+                          alt="Package Thumbnail"
+                          width={32}
+                          height={32}
+                        />
                         {index < data.submissionCreditHistory.length - 1 && (
                           <div className="mt-2 h-10 w-0.5 bg-gray-200"></div>
                         )}
                       </div>
 
                       {/* Konten status */}
-                      <div className=" flex-1">
-                        <div className="mb-1 flex items-center gap-2">
-                          {/* <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800"> */}
+                      <div className="flex-1">
+                        <div
+                          className={`mb-1 inline-flex max-h-full w-fit max-w-full items-center gap-2 rounded-[100px] border px-3 py-2 text-center text-xs md:px-4 md:py-3 md:text-[14px] ${getStatusStyle(historyItem.status)}`}
+                        >
                           {statusPengajuan(historyItem.status)}
-                          {/* </span> */}
                         </div>
                         <p className="text-sm text-gray-600">
                           Pengajuan kamu telah diterima dan akan segera kami
