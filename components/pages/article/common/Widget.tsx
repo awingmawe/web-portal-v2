@@ -11,10 +11,9 @@ import {
 } from '@/components/ui/popover'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { dissolve } from '@/lib/animation-setup'
+import { PopoverClose } from '@radix-ui/react-popover'
 import { CheckIcon } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 const SORT_OPTIONS = [
   { label: 'Terbaru', value: 'new' },
@@ -26,47 +25,33 @@ interface WidgetFilterProps {
 }
 
 const WidgetFilter: React.FC<WidgetFilterProps> = ({ eventCategory }) => {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
+  const [sort, setSort] = useState<string>('new')
 
   const { searchQuery, setSearchQuery, handleSearch, loading } = useSearchQuery(
     {
       redirectUri: 'article/list',
+      sort,
       dataEventTracker: {
         name: 'search_article',
         topic: 'general',
         category: eventCategory,
-        data: {
-          keyword: searchParams.get('query') || '',
-        },
       },
     }
   )
-  const currentSort = searchParams.get('sort') || 'new' // Default sort
 
   const isActive = useCallback(
     (sortValue: string) => {
-      return currentSort === sortValue
+      return sort === sortValue
     },
-    [currentSort]
+    [sort]
   )
 
   // Get display text for current sort
   const currentSortText = useMemo(() => {
-    const option = SORT_OPTIONS.find((option) => option.value === currentSort)
+    const option = SORT_OPTIONS.find((option) => option.value === sort)
     return option?.label || 'Terbaru'
-  }, [currentSort])
+  }, [sort])
 
-  // Function to create URL with new sort parameter
-  const createSortUrl = useCallback(
-    (sortValue: string) => {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set('sort', sortValue)
-      params.set('page', '1') // Reset to page 1 when sorting changes
-      return `${pathname}?${params.toString()}`
-    },
-    [pathname, searchParams]
-  )
   return (
     <div className="flex w-full rounded-4xl border-1 border-neutral-100 bg-white p-6 max-lg:flex-col max-lg:gap-4 max-lg:border-0 max-lg:p-4">
       {/* Search input */}
@@ -118,13 +103,17 @@ const WidgetFilter: React.FC<WidgetFilterProps> = ({ eventCategory }) => {
             {SORT_OPTIONS.map((option, index) => (
               <div key={`sortBy-${option.value}-${index}`}>
                 {index > 0 && <div className="mx-1 h-px bg-neutral-100" />}
-                <Link
-                  href={createSortUrl(option.value)}
-                  className={`text-m-regular flex w-full cursor-pointer items-center justify-between px-3 py-2.5 hover:bg-neutral-100 ${dissolve} ${isActive(option.value) ? 'bg-primary-50 text-primary-600 font-medium' : ''}`}
-                >
-                  <span>{option.label}</span>
-                  {isActive(option.value) && <CheckIcon className="h-4 w-4" />}
-                </Link>
+                <PopoverClose className="w-full">
+                  <span
+                    onClick={() => setSort(option.value)}
+                    className={`text-m-regular flex w-full cursor-pointer items-center justify-between px-3 py-2.5 hover:bg-neutral-100 ${dissolve} ${isActive(option.value) ? 'bg-primary-50 font-medium' : ''}`}
+                  >
+                    {option.label}
+                    {isActive(option.value) && (
+                      <CheckIcon className="text-primary-500 h-4 w-4" />
+                    )}
+                  </span>
+                </PopoverClose>
               </div>
             ))}
           </PopoverContent>

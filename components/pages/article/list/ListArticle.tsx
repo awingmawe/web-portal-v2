@@ -3,7 +3,7 @@
 import { ArticleCard } from '@/components/pages/article/common/CardArticle'
 import CategoryNavigation from '@/components/pages/article/common/Category'
 import { CustomPagination } from '@/components/shared/CustomPagination'
-import { Article } from '@/constant/types/ArticleProps'
+import { Article, Category } from '@/constant/types/ArticleProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
@@ -11,9 +11,11 @@ import { useCallback, useMemo } from 'react'
 export function ListArticle({
   dataAllArticle,
   total,
+  dataCategories,
 }: {
   dataAllArticle: Article[]
   total: number
+  dataCategories: Category[]
 }) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -34,18 +36,29 @@ export function ListArticle({
       <p className="heading-4-semibold max-lg:text-[16px] max-lg:leading-6">
         <span className="border-b-primary-500 border-b-4 ">Kategori</span>
       </p>
-      <CategoryNavigation eventCategory="article_index" />
+      <CategoryNavigation
+        eventCategory="article_index"
+        dataCategories={dataCategories}
+      />
       <div className="grid grid-cols-12 gap-5">
-        {dataAllArticle.map((article: Article) => (
-          <div key={article.id} className="col-span-6 max-sm:col-span-12">
-            <ArticleCard
-              article={article}
-              className="h-full"
-              height={isMobile ? 200 : '100%'}
-              aspect={isMobile ? 16 / 9 : 63 / 40}
-            />
+        {dataAllArticle?.length > 0 ? (
+          dataAllArticle?.map((article: Article) => (
+            <div key={article.id} className="col-span-6 max-sm:col-span-12">
+              <ArticleCard
+                article={article}
+                className="h-full"
+                height={isMobile ? 200 : '100%'}
+                aspect={isMobile ? 16 / 9 : 63 / 40}
+              />
+            </div>
+          ))
+        ) : (
+          <div className="col-span-12 flex h-[300px] flex-col items-center justify-center text-center">
+            <p className="text-m-regular text-neutral-500 max-lg:text-sm max-lg:leading-5">
+              Artikel tidak ditemukan
+            </p>
           </div>
-        ))}
+        )}
       </div>
       <div className="col-span-12">
         <CustomPagination

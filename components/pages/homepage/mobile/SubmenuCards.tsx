@@ -1,6 +1,7 @@
 'use client'
 import DealIcon from '@/components/icons/deal'
 import MoneySavingIcon from '@/components/icons/money-saving'
+import MoonIcon from '@/components/icons/moon'
 import { SavingIcon } from '@/components/icons/saving'
 import WukalaIcon from '@/components/icons/wukala'
 import Link from 'next/link'
@@ -31,12 +32,12 @@ const SubmenuCards = () => {
       href: '/banking?page=pembiayaan',
       background: 'bg-[#03DAC8]',
     },
-    // {
-    //   icon: <MoonIcon size={25} />,
-    //   label: 'Artikel',
-    //   href: '/articles',
-    //   background: 'bg-primary-500',
-    // },
+    {
+      icon: <MoonIcon size={25} />,
+      label: 'Artikel',
+      href: '/article',
+      background: 'bg-primary-500',
+    },
   ]
 
   return (

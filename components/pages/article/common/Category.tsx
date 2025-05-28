@@ -2,6 +2,7 @@
 
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { cn } from '@/lib/utils'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useRef, useState } from 'react'
 
 interface Category {
@@ -64,23 +65,16 @@ export function ScrollableCategories({
 // Example usage
 export default function CategoryNavigation({
   eventCategory,
+  dataCategories,
 }: {
   eventCategory: string
+  dataCategories: Category[]
 }) {
   const { pushEvent } = useEventTracker()
 
-  const categories = [
-    { id: 'all', name: 'Semua Kategori' },
-    { id: 'tips-umrah', name: 'Tips Umrah' },
-    { id: 'informasi', name: 'Informasi' },
-    { id: 'tips-jalan', name: 'Tips Jalan-jalan Islami' },
-    { id: 'ilmu', name: 'Ilmu Pengetahuan' },
-    { id: 'fiqih', name: 'Fiqih' },
-    { id: 'berita', name: 'Berita' },
-    { id: 'kisah', name: 'Kisah Inspiratif' },
-    { id: 'adab', name: 'Adab & Akhlak' },
-    { id: 'quran', name: 'Quran & Hadist' },
-  ]
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
 
   const handleCategoryChange = (category: Category) => {
     pushEvent({
@@ -91,15 +85,25 @@ export default function CategoryNavigation({
         name: category.name,
       },
     })
-    console.log(`Selected category: ${category.name}`)
 
-    // Implement your filter logic here
+    // Set category slug as query param
+    const newSearchParams = new URLSearchParams(searchParams)
+    if (category.id !== 'all') {
+      newSearchParams.set('category', category.slug ?? '')
+    } else {
+      newSearchParams.delete('category')
+    }
+    newSearchParams.set('page', '1')
+
+    router.push(`${pathname}?${newSearchParams.toString()}`, {
+      scroll: false,
+    })
   }
 
   return (
     <div className="mx-auto my-5 w-full">
       <ScrollableCategories
-        categories={categories}
+        categories={dataCategories}
         defaultActiveId="all"
         onCategoryChange={handleCategoryChange}
       />

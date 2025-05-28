@@ -213,3 +213,13 @@ export async function updatePhoneNumber(payload: {
     throw error
   }
 }
+
+export async function getUserById(id: number): Promise<Profile> {
+  try {
+    const response = await api.get(`/public/identity/user-account/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching profile detail:', error)
+    throw error
+  }
+}

@@ -6,7 +6,7 @@ import Image from 'next/image'
 export function ArticleSearchWidget({ params }: any) {
   return (
     <section
-      className={`relative mx-auto mt-7.5 w-full overflow-hidden rounded-[40px] max-lg:mx-0 ${params?.header ? 'max-lg:mt-10' : 'max-lg:mt-0'}  max-lg:rounded-none lg:container`}
+      className={`relative mx-auto mt-7.5 w-full overflow-hidden rounded-[40px] max-lg:mx-0 ${params === 'true' ? 'max-lg:mt-0' : 'max-lg:mt-10'}  max-lg:rounded-none lg:container`}
     >
       <div className="flex flex-col items-center justify-center gap-6 px-10 py-8 max-lg:gap-2 max-lg:p-4">
         <p className="text-neutral-0 heading-1-semibold max-lg:text-2xl max-lg:leading-7.5">

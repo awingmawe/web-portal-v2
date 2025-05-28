@@ -41,7 +41,7 @@ export default function TestimoniSection({
             inViewThreshold: 1,
             watchDrag: true,
           }}
-          className="mt-7 mb-0 w-full max-lg:mt-0 lg:my-7"
+          className="mt-7 mb-0 w-full max-lg:mt-0"
         >
           <CarouselContent className="-ml-4.5 px-2">
             {dataCarousel.map((testi) => (

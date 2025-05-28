@@ -55,7 +55,7 @@ export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
       debouncedSection !== selectedSectionPackage
     ) {
       onSectionPackageChange(debouncedSection)
-      updateQueryParams(['section'], [debouncedSection.toString()])
+      updateQueryParams(['section', 'page'], [debouncedSection.toString(), 1])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSection])

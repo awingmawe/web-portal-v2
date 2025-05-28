@@ -485,16 +485,22 @@ export const FilterProductProvider: React.FC<{
         values.push(airline.name)
       }
 
+      // Always set page to 1 when new filter is applied
+      keys.push('page')
+      values.push('1')
+
       pushEvent({
         name: 'submit_filter',
         category: 'umrah',
         data: {
           filterName: filters.filterName,
-          hotelRating: filters.hotelStars,
-          dateRangeFrom: filters.dateRange?.from,
-          dateRangeTo: filters.dateRange?.to,
-          airport: filters.departureAirport?.name,
-          airline: filters.airline?.name,
+          hotelRating: hotelStars && hotelStars,
+          dateRangeFrom:
+            dateRange?.from && formatDateToYYYYMMDD(dateRange?.from as Date),
+          dateRangeTo:
+            dateRange?.to && formatDateToYYYYMMDD(dateRange?.to as Date),
+          airport: departureAirport?.name && departureAirport,
+          airline: airline?.name && airline?.name,
         },
       })
       // Only update the query parameters if we have keys/values to update

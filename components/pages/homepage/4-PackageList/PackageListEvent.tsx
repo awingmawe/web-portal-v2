@@ -20,7 +20,9 @@ interface PackageListEventProps {
   dataPlus?: CardData[]
   dataCustom?: PackageTagSlug
   isLoading?: boolean
+  eventCategory?: string
   header?: boolean
+  params?: string
 }
 
 interface PackageSectionProps {
@@ -30,6 +32,8 @@ interface PackageSectionProps {
   data: CardData[]
   isLoading?: boolean
   header: boolean
+  eventCategory?: string
+  params?: string
   renderSkeletonItems: (count: number, isLoading: boolean) => React.ReactNode
 }
 
@@ -41,6 +45,8 @@ const PackageSection = ({
   data,
   isLoading,
   header = true,
+  eventCategory,
+  params,
   renderSkeletonItems,
 }: PackageSectionProps) => {
   // Memoize the package items
@@ -51,7 +57,11 @@ const PackageSection = ({
           key={`package-items-${item.title}-${index}`}
           className="basis-4/5 items-center pl-4.5 md:basis-1/2 lg:basis-1/4"
         >
-          <CardPackage data={item} section={type} />
+          <CardPackage
+            data={item}
+            section={type}
+            eventCategory={eventCategory}
+          />
         </CarouselItem>
       )),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,6 +77,7 @@ const PackageSection = ({
               title={title}
               desc={description ?? ''}
               type={type ?? ''}
+              params={params ?? 'section'}
             />
           )}
           <Carousel
@@ -80,8 +91,8 @@ const PackageSection = ({
             <CarouselContent className="-ml-4.5 px-2 max-lg:ml-0">
               {isLoading ? renderSkeletonItems(4, true) : packageItems}
             </CarouselContent>
-            <CarouselPrevious className="top-[35%] max-sm:hidden" />
-            <CarouselNext className="top-[35%] max-sm:hidden" />
+            <CarouselPrevious className="top-[35%] max-lg:hidden" />
+            <CarouselNext className="top-[35%] max-lg:hidden" />
           </Carousel>
         </div>
       )}
@@ -95,7 +106,9 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   dataPlus,
   dataCustom,
   isLoading: externalLoading,
+  eventCategory,
   header,
+  params,
 }) => {
   // Internal loading states
   const [isPromoLoading, setIsPromoLoading] = useState(true)
@@ -151,6 +164,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       data: dataPromo,
       isLoading: isPromoLoading || loading,
       header: header,
+      eventCategory,
     },
     {
       title: 'Umroh Reguler',
@@ -160,6 +174,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       data: dataRegular,
       isLoading: isRegularLoading || loading,
       header: header,
+      eventCategory,
     },
     {
       title: 'Umroh Plus Liburan',
@@ -168,18 +183,17 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       data: dataPlus || [],
       isLoading: isPlusLoading || loading,
       header: header,
+      eventCategory,
     },
     {
       title: 'Penawaran Lainnya',
       type: dataCustom?.slug,
       data: dataCustom?.data,
       header: header,
+      eventCategory,
+      params,
     },
   ]
-
-  if (!dataPlus) {
-    sections.pop()
-  }
 
   return (
     <section className="flex flex-col">
@@ -193,6 +207,8 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
             header={section.header ?? true}
             data={section.data ?? []}
             isLoading={section.isLoading}
+            eventCategory={section.eventCategory}
+            params={section.params}
             renderSkeletonItems={renderSkeletonItems}
           />
         </Fragment>

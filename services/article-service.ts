@@ -20,7 +20,7 @@ export async function getArticleDetail(slug: string): Promise<Article> {
 
 export async function getArticleList(
   query: GetListQuery
-): Promise<ApiResponseList> {
+): Promise<ApiResponseList<Article>> {
   try {
     const response = await api.get(
       `/public/articles/v1/article?${qs.stringify(query)}`
@@ -57,7 +57,9 @@ export async function getArticleCategories(
     const response = await api.get(
       `/public/articles/v1/categories?${qs.stringify(query)}`
     )
-    return response.data.results
+    const results = response.data.results
+    results.unshift({ id: 'all', name: 'Semua', slug: '' })
+    return results
   } catch (error) {
     console.error('Error fetching article category:', error)
     throw error
@@ -65,14 +67,14 @@ export async function getArticleCategories(
 }
 
 export async function getArticleCommentPublic(
-  articleID: number,
+  slug: string,
   query: GetListQuery
-): Promise<ApiResponseList[]> {
+): Promise<ApiResponseList<Comment>> {
   try {
     const response = await api.get(
-      `/public/articles/v1/comments/article/${articleID}?${qs.stringify(query)}`
+      `/public/articles/v1/comments/article/slug/${slug}?${qs.stringify(query)}`
     )
-    return response.data.results
+    return response.data
   } catch (error) {
     console.error('Error fetching article comment public:', error)
     throw error
@@ -80,17 +82,17 @@ export async function getArticleCommentPublic(
 }
 
 export async function getArticleComment(
-  articleID: number,
+  slug: string,
   query: GetListQuery,
   token?: string
-): Promise<ApiResponseList[]> {
+): Promise<ApiResponseList<Comment>> {
   try {
     // Use token if provided (server-side), otherwise use existing client (client-side)
     const client = token ? createServerApiClient(token) : apiWithAuth
     const response = await client.get(
-      `/public/articles/v1/comments/article/${articleID}?${qs.stringify(query)}`
+      `/public/articles/v1/comments/article/slug/${slug}?${qs.stringify(query)}`
     )
-    return response.data.results
+    return response.data
   } catch (error) {
     console.error('Error fetching article comment:', error)
     throw error

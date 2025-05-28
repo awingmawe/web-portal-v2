@@ -136,6 +136,38 @@ export function formatJoinedDate(dateString: string) {
   }
 }
 
+export function formatCreatedDate(dateString: Date) {
+  // Parse the given date
+  const createdDate = new Date(dateString)
+  const currentDate = new Date()
+
+  // Calculate difference in milliseconds
+  const diffTime = currentDate.getTime() - createdDate.getTime()
+
+  // Convert to seconds, minutes, hours, days, months, years
+  const diffSeconds = Math.floor(diffTime / 1000)
+  const diffMinutes = Math.floor(diffSeconds / 60)
+  const diffHours = Math.floor(diffMinutes / 60)
+  const diffDays = Math.floor(diffHours / 24)
+  const diffMonths = Math.floor(diffDays / 30)
+  const diffYears = Math.floor(diffDays / 365)
+
+  // Format the message
+  if (diffYears > 0) {
+    return `${diffYears} tahun lalu`
+  } else if (diffMonths > 0) {
+    return `${diffMonths} bulan lalu`
+  } else if (diffDays > 0) {
+    return `${diffDays} hari lalu`
+  } else if (diffHours > 0) {
+    return `${diffHours} jam lalu`
+  } else if (diffMinutes > 0) {
+    return `${diffMinutes} menit lalu`
+  } else {
+    return `${diffSeconds + 1} detik lalu`
+  }
+}
+
 export const handleDiscountType = (
   discountType: string,
   discount: string | number
