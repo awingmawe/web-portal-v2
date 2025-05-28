@@ -57,7 +57,7 @@ export function usePriceRangeFilter({
 
   // Handler when slider interaction ends - update URL params
   const handleSliderChangeEnd = useCallback((value: [number, number]) => {
-    updateQueryParams(['prMin', 'prMax'], [value[0], value[1]])
+    updateQueryParams(['prMin', 'prMax', 'page'], [value[0], value[1], 1])
   }, [])
 
   // Input handlers
@@ -140,7 +140,8 @@ export function usePriceRangeFilter({
       )
 
       // Update the filter and URL params on blur
-      updateQueryParams(['prMax', 'prMin'], [boundedValue, range[0]])
+
+      updateQueryParams(['prMax', 'prMin', 'page'], [boundedValue, range[0], 1])
     }
   }, [filters.hargaMax, initialMax, range])
 
@@ -156,7 +157,7 @@ export function usePriceRangeFilter({
       )
 
       // Update the filter and URL params on blur
-      updateQueryParams(['prMin', 'prMax'], [boundedValue, range[1]])
+      updateQueryParams(['prMin', 'prMax', 'page'], [boundedValue, range[1], 1])
     }
   }, [filters.hargaMin, initialMin, range])
 

@@ -3,22 +3,28 @@
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useSearchHistory } from '@/hooks/common/useSearchHistory'
-import { useSearchParams } from 'next/navigation'
+import { isEmpty } from '@/lib/utils'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { FormEvent, useCallback, useMemo, useState } from 'react'
 
 export interface UseSearchQueryProps {
   redirectUri: string
   dataEventTracker?: any
+  sort?: string
+  useHistory?: boolean
 }
 
 export function useSearchQuery({
   redirectUri,
   dataEventTracker,
+  useHistory,
+  sort,
 }: UseSearchQueryProps) {
   const { searchQuery, setSearchQuery } = useFilterProduct()
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
   const { pushEvent } = useEventTracker()
+  const router = useRouter()
 
   // Use the search history hook
   const { searchHistory, addToHistory } = useSearchHistory()
@@ -34,30 +40,46 @@ export function useSearchQuery({
     (e: FormEvent) => {
       e.preventDefault()
 
-      if (loading || !searchQuery.trim()) return
+      if (loading) return
 
       setLoading(true)
       const params = new URLSearchParams(searchParams.toString())
 
-      // Add to search history when searching
-      addToHistory(searchQuery)
+      // If using history, add the current search query to history
+      if (useHistory) {
+        addToHistory(searchQuery)
+      }
 
-      params.set('query', searchQuery)
+      if (sort) {
+        params.set('sort', sort)
+      }
 
-      pushEvent(dataEventTracker)
+      if (!isEmpty(searchQuery)) {
+        params.set('query', searchQuery)
+      } else {
+        params.delete('query')
+      }
+
+      if (dataEventTracker) {
+        pushEvent({ ...dataEventTracker, data: { keyword: searchQuery } })
+      }
+
       // Set a timer to simulate API call or processing
       setTimeout(() => {
-        window.location.href = `/${redirectUri}?${params.toString()}`
+        router.push(`/${redirectUri}?${params.toString()}`)
         setLoading(false)
       }, 500)
     },
     [
       loading,
-      searchQuery,
       searchParams,
+      useHistory,
+      sort,
+      searchQuery,
+      dataEventTracker,
       addToHistory,
       pushEvent,
-      dataEventTracker,
+      router,
       redirectUri,
     ]
   )

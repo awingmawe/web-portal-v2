@@ -8,6 +8,7 @@ import {
 } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScrollV2'
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
+import ArtikelSection from '@/components/pages/homepage/7-Artikel/ArtikelSection'
 import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
@@ -15,6 +16,7 @@ import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import Topbar from '@/components/shared/Topbar'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
+import { getArticleList } from '@/services/article-service'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
@@ -45,6 +47,7 @@ export default async function Home() {
     dataRegular,
     dataGallery,
     dataCarousel,
+    dataArtikel,
   ] = await Promise.all([
     getBanner({
       page: 1,
@@ -89,6 +92,10 @@ export default async function Home() {
       size: 6,
       [`category:likeLower`]: 'testi_landing',
     }),
+    getArticleList({
+      page: 1,
+      size: 4,
+    }),
   ])
 
   return (
@@ -121,18 +128,23 @@ export default async function Home() {
           <PackageListEvent
             dataPromo={mapProductsToCardData(dataPromo)}
             dataRegular={mapProductsToCardData(dataRegular)}
+            eventCategory="home"
           />
         </div>
       </main>
       <main
         className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-lg:mt-0`}
       >
-        <PackageListPlus dataPlus={mapProductsToCardData(dataPlus)} />
+        <PackageListPlus
+          dataPlus={mapProductsToCardData(dataPlus)}
+          eventCategory="home"
+        />
       </main>
       {!token && (
         <Fragment>
           <OverscrollTracker dataGallery={dataGallery.results} />
           <TestimoniSection dataCarousel={dataCarousel.results} />
+          <ArtikelSection dataCarousel={dataArtikel.results} />
         </Fragment>
       )}
       <BottomNavigation />

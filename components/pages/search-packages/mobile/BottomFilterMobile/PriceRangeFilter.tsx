@@ -162,8 +162,8 @@ export const PriceDrawer = ({
     }
     // Update URL parameters
     updateQueryParams(
-      ['prMin', 'prMax'],
-      [range[0].toString(), range[1].toString()]
+      ['prMin', 'prMax', 'page'],
+      [range[0].toString(), range[1].toString(), 1]
     )
 
     // Close drawer and apply filters

@@ -21,6 +21,7 @@ export interface Article {
   title: string
   hashtags: string[]
   other_articles: Article[]
+  promo_tag: string
 }
 
 export interface Category {
@@ -31,8 +32,8 @@ export interface Category {
   description: string
 }
 
-export interface ApiResponseList {
-  results: Article[]
+export interface ApiResponseList<T> {
+  results: T[]
   total: number
 }
 
@@ -49,7 +50,7 @@ export interface PackageTagSlug {
 export interface Comment {
   article_id: number
   content: string
-  created_at: string
+  created_at: Date
   id: number
   is_approve: boolean
   updated_at: string
@@ -58,10 +59,8 @@ export interface Comment {
 }
 
 export interface User {
+  name: string
+  id: number
   email: string
-  id: string
-  isActive: boolean
-  permissions: string[]
-  role: string
-  username: string
+  avatar: string
 }

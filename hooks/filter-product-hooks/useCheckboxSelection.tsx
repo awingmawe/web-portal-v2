@@ -50,7 +50,7 @@ export function useCheckboxSelection({
       // Update URL parameters
       if (!isMobile) {
         if (itemsString) {
-          updateQueryParams([paramName], [itemsString])
+          updateQueryParams([paramName, 'page'], [itemsString, 1])
         } else {
           // If no items selected, remove the parameter from URL
           updateQueryParams([paramName], [''])
@@ -65,7 +65,7 @@ export function useCheckboxSelection({
 
   const onSaveFacilityFilter = () => {
     if (selectedItems.length > 0) {
-      updateQueryParams([paramName], [selectedItems.join(',')])
+      updateQueryParams([paramName, 'page'], [selectedItems.join(','), 1])
     } else {
       // If no items selected, remove the parameter from URL
       updateQueryParams([paramName], [''])

@@ -52,7 +52,7 @@ export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
   useEffect(() => {
     if (debouncedRating !== undefined && debouncedRating !== selectedRating) {
       onRatingChange(debouncedRating)
-      updateQueryParams(['hR'], [debouncedRating.toString()])
+      updateQueryParams(['hR', 'page'], [debouncedRating.toString(), 1])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedRating])

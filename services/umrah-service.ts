@@ -14,7 +14,7 @@ import {
   TotalLike,
 } from '@/constant/types/PackageProps'
 import qs from 'query-string'
-import { TagPackages } from '@/constant/types/TagPackageProps'
+import { Tag, TagPackages } from '@/constant/types/TagPackageProps'
 import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { PaymentStatement } from '@/constant/types/PaymentStatement'
@@ -420,6 +420,29 @@ export async function getPackageById(
     return response.data
   } catch (error) {
     console.error('Error fetching package data list:', error)
+    throw error
+  }
+}
+
+export async function getTag(
+  query: GetListQuery
+): Promise<GenericResponse<Tag>> {
+  try {
+    const response = await api.get(
+      `/public/umrah/v1/tag?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching tag list:', error)
+    throw error
+  }
+}
+export async function getTagById(id: number): Promise<Tag> {
+  try {
+    const response = await api.get(`/public/umrah/v1/tag/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching tag detail:', error)
     throw error
   }
 }

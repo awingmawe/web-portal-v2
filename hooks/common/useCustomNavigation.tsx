@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 
 const MAX_HISTORY_LENGTH = 10
 const HISTORY_KEY = 'app_navigation_history'
-const EXCLUDED_PATHS = ['/login', '/register', '/my', '/banking'] // Add paths you want to exclude from history
+const EXCLUDED_PATHS = ['/login', '/register', '/my', '/banking', '/umrah'] // Add paths you want to exclude from history
 
 export function useCustomNavigation() {
   const router = useRouter()

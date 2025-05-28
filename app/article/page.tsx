@@ -4,7 +4,11 @@ import { NewsArticle } from '@/components/pages/article/landing/2-NewArticle/New
 import { AllArticle } from '@/components/pages/article/landing/3-AllArticle/AllArticle'
 import LayoutArticle from '@/components/pages/article/Layout'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
-import { getArticleList } from '@/services/article-service'
+import {
+  getArticleCategories,
+  getArticleList,
+} from '@/services/article-service'
+import { headers } from 'next/headers'
 
 export async function generateMetadata() {
   return {
@@ -14,11 +18,13 @@ export async function generateMetadata() {
 
 export default async function ArticleHome({ searchParams }: any) {
   const awaitedParams = await searchParams
-  const { page } = awaitedParams
+  const { page, category } = awaitedParams
+  const isWebview = (await headers()).get('is-web-view') || ''
 
   const [
-    dataArticleTerbaru,
-    dataAllArticle,
+    dataArticleTerbaruResponse,
+    dataAllArticleResponse,
+    dataCategories,
     // dataTerpopular
   ] = await Promise.all([
     getArticleList({
@@ -28,6 +34,12 @@ export default async function ArticleHome({ searchParams }: any) {
     getArticleList({
       page: page ?? 1,
       size: page > 1 ? 9 : 13,
+      category,
+    }),
+    getArticleCategories({
+      is_active: true,
+      page: 1,
+      size: 100,
     }),
     // getArticleByHiglight({
     //   type: 'popular',
@@ -35,15 +47,30 @@ export default async function ArticleHome({ searchParams }: any) {
     // }),
   ])
 
+  const dataArticleTerbaru = dataArticleTerbaruResponse.results
+
+  // Filter out dataArticleTerbaru from dataAllArticle
+  const terbaruIds = new Set(dataArticleTerbaru.map((article) => article.id))
+  const filteredAllArticles = dataAllArticleResponse?.results?.filter(
+    (article) => !terbaruIds.has(article.id)
+  )
+
+  const dataAllArticle = {
+    ...dataAllArticleResponse,
+    results: filteredAllArticles,
+    total: dataAllArticleResponse.total,
+  }
+
   return (
     <LayoutArticle>
-      <ArticleSearchWidget params={awaitedParams} />
+      <ArticleSearchWidget params={isWebview} />
       <main className="mb-12.5 max-lg:mx-4">
-        <NewsArticle dataArticleTerbaru={dataArticleTerbaru.results} />
+        <NewsArticle dataArticleTerbaru={dataArticleTerbaru} />
         <AllArticle
           dataAllArticle={dataAllArticle.results}
           total={dataAllArticle.total}
           dataTerpopular={[]}
+          dataCategories={dataCategories}
         />
       </main>
       <EventTrackerImpression

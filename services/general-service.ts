@@ -17,11 +17,11 @@ export async function getAirports({
   search,
 }: GetAirportsParams): Promise<GenericResponse<Airport>> {
   try {
-    const response = await api.get(`/public/general/v1/airport`, {
+    const response = await api.get(`/public/umrah/v2/package/airport-package`, {
       params: {
         page,
         size,
-        [`cityName|code|name:likeLower`]: search ? `%${search}%` : undefined,
+        search,
       },
     })
     return response.data
@@ -37,11 +37,11 @@ export async function getAirline({
   search,
 }: GetAirlinesParams): Promise<GenericResponse<Airline>> {
   try {
-    const response = await api.get(`/public/general/v1/airline`, {
+    const response = await api.get(`/public/umrah/v2/package/airline-package`, {
       params: {
         page,
         size,
-        [`code|countryName|name:likeLower`]: search ? `%${search}%` : undefined,
+        search,
       },
     })
     return response.data

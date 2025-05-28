@@ -30,7 +30,7 @@ export function SectionDrawer({
   // Apply section filter and update URL
   const handleApplySection = () => {
     // Update URL with selected section option
-    updateQueryParams(['section'], [filters.section])
+    updateQueryParams(['section', 'page'], [filters.section, 1])
 
     // Close drawer and apply filters
     applyFilters(itemId)

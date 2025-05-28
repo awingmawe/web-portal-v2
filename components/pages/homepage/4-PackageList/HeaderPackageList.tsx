@@ -8,12 +8,14 @@ interface HeaderPackageProps {
   title: string
   desc: string
   type: string
+  params: string
 }
 
 export const HeaderPackageList = memo(function HeaderPackageList({
   title,
   desc,
   type,
+  params = 'section',
 }: HeaderPackageProps) {
   const { pushEvent } = useEventTracker()
   return (
@@ -25,7 +27,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
         <p className="text-m-regular max-sm:text-xs max-sm:leading-4">{desc}</p>
       </div>
       <Link
-        href={`/search?section=${type}`}
+        href={`/search?${params}=${type}`}
         id={`link-see-all-${type}`}
         className="max-sm:hidden"
         onClick={() => {
