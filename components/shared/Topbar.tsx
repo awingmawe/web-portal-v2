@@ -459,7 +459,7 @@ const Topbar: React.FC<TopbarProps> = ({
       {(type === 'normal' || type === 'plain') && (
         <header
           className={cn(
-            `h-[72px] w-full bg-white px-4 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
+            `h-[80px] w-full bg-white px-4 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
             className
           )}
         >
