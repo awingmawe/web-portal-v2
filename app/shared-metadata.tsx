@@ -1,9 +1,4 @@
-export const metadata = (
-  title: any,
-  description: any,
-  image?: any,
-  tags?: string[]
-) => ({
+export const metadata = (title: any, description: any, image?: any) => ({
   metadataBase: new URL(process.env.NEXT_PUBLIC_URL as string),
   title: title,
   description: description,
@@ -16,7 +11,6 @@ export const metadata = (
     'travel haji',
     'muslim',
     'umat muslim',
-    ...(tags ?? []),
   ],
   openGraph: {
     title: title,

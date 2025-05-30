@@ -24,8 +24,7 @@ export async function generateMetadata({ params }: any) {
     ...metadata(
       `Muslim 101 | ${dataDetail.title}`,
       dataDetail.description,
-      dataDetail.thumbnail,
-      dataDetail.hashtags
+      dataDetail.thumbnail
     ),
   }
 }
