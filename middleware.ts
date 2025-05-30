@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
     }
 
     if (isWebView) {
-      cookieStore.set(cookieNames.IS_WEBVIEW, sessionId)
+      cookieStore.set(cookieNames.IS_WEBVIEW, isWebView)
     }
   }
 
