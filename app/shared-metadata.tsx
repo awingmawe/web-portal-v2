@@ -16,7 +16,7 @@ export const metadata = (
     'travel haji',
     'muslim',
     'umat muslim',
-    tags,
+    ...(tags ?? []),
   ],
   openGraph: {
     title: title,
