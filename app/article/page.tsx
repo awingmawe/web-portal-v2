@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import TopbarMobileArticle from '@/components/pages/article/common/TopbarMobile'
 import { ArticleSearchWidget } from '@/components/pages/article/landing/1-Widget/Widget'
 import { NewsArticle } from '@/components/pages/article/landing/2-NewArticle/NewArticle'
 import { AllArticle } from '@/components/pages/article/landing/3-AllArticle/AllArticle'
@@ -9,7 +10,8 @@ import {
   getArticleCategories,
   getArticleList,
 } from '@/services/article-service'
-import { headers } from 'next/headers'
+import { cookieNames } from '@/services/common/cookie'
+import { cookies } from 'next/headers'
 
 export async function generateMetadata() {
   return {
@@ -18,8 +20,11 @@ export async function generateMetadata() {
 }
 
 export default async function ArticleHome({ searchParams }: any) {
+  const cookieStore = await cookies()
+
   const { category } = await searchParams
-  const isWebview = (await headers()).get('is-web-view') || ''
+  const isWebview =
+    (cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string) || false
 
   const [
     dataArticleTerbaruResponse,
@@ -66,6 +71,7 @@ export default async function ArticleHome({ searchParams }: any) {
 
   return (
     <LayoutArticle>
+      <TopbarMobileArticle href={isWebview ? 'back' : '/close-web-app'} />
       <ArticleSearchWidget params={isWebview} />
       <main className="mb-12.5 max-lg:mx-4">
         <NewsArticle dataArticleTerbaru={dataArticleTerbaru} />
