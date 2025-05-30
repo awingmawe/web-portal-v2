@@ -13,7 +13,7 @@ import {
 import { cookieNames } from '@/services/common/cookie'
 import { getUserById } from '@/services/identity-service'
 import { getBanner, getPackageList, getTagById } from '@/services/umrah-service'
-import { cookies, headers } from 'next/headers'
+import { cookies } from 'next/headers'
 
 export async function generateMetadata({ params }: any) {
   const { slug } = await params
@@ -93,16 +93,9 @@ export default async function ArtilceDetail({ params }: any) {
     tag: dataArticleDetail?.hashtags?.map((tag) => tag).join(', '),
   }
 
-  const tokenFromHeader2 = (await headers()).get('single-use-token') || ''
-  const sessionId2 = (await headers()).get('session-id') || ''
-  const isWebView2 = (await headers()).get('is-web-view') || ''
-
   return (
     <LayoutArticle>
       <main className="container mx-auto mt-7.5 mb-12.5 max-lg:mt-12.5 max-lg:px-4">
-        <p>session ID : {JSON.stringify(tokenFromHeader2)}</p>
-        <p>TOKEN : {JSON.stringify(sessionId2)}</p>
-        <p>isWebview : {JSON.stringify(isWebView2)}</p>
         <ImageDetail
           created_at={dataArticleDetail.created_at}
           thumbnail_url={dataArticleDetail.thumbnail}
