@@ -31,6 +31,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useRef, useState } from 'react'
+import renderHTML from 'react-render-html'
 import { toast } from 'sonner' // Assuming you have toast notifications
 
 export default function ContentArticle({
@@ -195,10 +196,9 @@ export default function ContentArticle({
         className={`${isPromoPackage ? 'col-start-1 col-end-4' : 'col-span-4 col-start-2'} max-lg:col-span-12`}
       >
         <div className="flex flex-col gap-6">
-          <div
-            className="html-content break-all"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+          <div className="prose prose-img:inline prose-ul:[list-style:auto] prose-ol:[list-style:auto] prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
+            {renderHTML(content || '')}
+          </div>
           {(button_link || button_text) && (
             <div className="bg-primary-500 flex items-center justify-center rounded-[20px] py-3">
               <Link href={button_link} target="_blank">
