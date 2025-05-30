@@ -61,7 +61,6 @@ const WidgetFilter: React.FC<WidgetFilterProps> = ({ eventCategory }) => {
           placeholder="Cari Artikel"
           value={searchQuery}
           disabled={loading}
-          className="max-lg:!text-base"
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
         />

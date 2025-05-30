@@ -270,7 +270,7 @@ export default function ContentArticle({
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       disabled={isSubmitting}
-                      className="bg-neutral-0 w-full resize-none border-1 border-neutral-200 px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:opacity-50 max-lg:!text-base"
+                      className="bg-neutral-0 w-full resize-none border-1 border-neutral-200 px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:opacity-50"
                     />
                   </div>
 

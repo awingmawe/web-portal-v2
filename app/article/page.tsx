@@ -71,7 +71,7 @@ export default async function ArticleHome({ searchParams }: any) {
 
   return (
     <LayoutArticle>
-      <TopbarMobileArticle href={isWebview ? 'back' : '/close-web-app'} />
+      <TopbarMobileArticle href={isWebview ? '/close-web-view' : 'back'} />
       <ArticleSearchWidget params={isWebview} />
       <main className="mb-12.5 max-lg:mx-4">
         <NewsArticle dataArticleTerbaru={dataArticleTerbaru} />
