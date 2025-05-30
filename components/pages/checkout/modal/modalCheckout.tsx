@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import dayjs from 'dayjs'
 import { X } from 'lucide-react'
+import renderHTML from 'react-render-html'
 
 interface CheckQuotaModalProps {
   open: boolean
@@ -46,10 +47,9 @@ const ModalCheckout = ({
           Terakhir diperbarui:{' '}
           {dayjs(dataSK?.modifiedAt).format('DD MMMM YYYY')}
         </div>
-        <div
-          className="text-m mt-4 text-neutral-700"
-          dangerouslySetInnerHTML={{ __html: dataSK?.body }}
-        ></div>
+        <div className="text-m mt-4 text-neutral-700">
+          {renderHTML(dataSK?.body || '')}
+        </div>
 
         <div className="mt-6 flex justify-center">
           <Button

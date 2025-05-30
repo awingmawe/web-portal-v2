@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { getPostCanceled } from '@/services/umrah-service'
 import { X } from 'lucide-react'
+import renderHTML from 'react-render-html'
 
 interface CheckQuotaModalProps {
   open: boolean
@@ -77,10 +78,9 @@ const ModalPengembalianDanaDetail = ({
 
         {/* Konten scrollable */}
         <div className="mt-4 max-h-[370px] overflow-y-auto pr-1">
-          <div
-            className="text-[14px] leading-relaxed font-[400] text-[#8E8E8B]"
-            dangerouslySetInnerHTML={{ __html: dataRefundPolicy?.content }}
-          ></div>
+          <div className="text-[14px] leading-relaxed font-[400] text-[#8E8E8B]">
+            {renderHTML(dataRefundPolicy?.content || '')}
+          </div>
 
           {parsedContent && parsedContent.length > 0 ? (
             <div className="mt-6">

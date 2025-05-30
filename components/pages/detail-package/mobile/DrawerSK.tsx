@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/drawer'
 import dayjs from 'dayjs'
 import React, { useRef } from 'react'
+import renderHTML from 'react-render-html'
 
 const DrawerSK = React.memo(
   ({ children, dataSk }: { children: React.ReactNode; dataSk: any }) => {
@@ -38,10 +39,9 @@ const DrawerSK = React.memo(
               Terakhir diperbarui:{' '}
               {dayjs(dataSk?.modifiedAt).format('DD MMMM YYYY')}
             </div>
-            <div
-              className="text-m mt-4 p-2 text-neutral-700"
-              dangerouslySetInnerHTML={{ __html: dataSk?.body }}
-            ></div>
+            <div className="text-m mt-4 p-2 text-neutral-700">
+              {renderHTML(dataSk?.body || '')}
+            </div>
 
             <div className="mt-6 flex justify-center">
               <Button

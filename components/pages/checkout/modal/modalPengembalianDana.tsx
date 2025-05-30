@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { X } from 'lucide-react'
+import renderHTML from 'react-render-html'
 
 interface CheckQuotaModalProps {
   open: boolean
@@ -53,10 +54,9 @@ const ModalPengembalianDana = ({
           </div>
         </DialogHeader>
         <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
-        <div
-          className="mt-4 text-sm text-neutral-700"
-          dangerouslySetInnerHTML={{ __html: dataRefundPolicy?.content }}
-        ></div>
+        <div className="mt-4 text-sm text-neutral-700">
+          {renderHTML(dataRefundPolicy?.content || '')}
+        </div>
         {parsedContent && parsedContent.length > 0 ? (
           <div className="mt-6 overflow-x-auto">
             <table className="w-full table-auto border border-gray-300 text-sm text-neutral-800">
