@@ -9,6 +9,7 @@ import { getSaving, postSaving } from '@/services/banking-service'
 import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { TabunganForm, TabunganFormRef } from './TabunganForm'
 
@@ -173,26 +174,40 @@ const TabunganPage = () => {
 
       {/* Desktop Header - hanya tampil di desktop */}
       {screenSize === 'desktop' && (
-        <div className="bg-white p-4">
-          <button className="flex items-center text-gray-800">
-            <ChevronLeft className="mr-4" size={24} />
-            <span className="text-2xl font-semibold text-gray-800">
-              Kembali
-            </span>
-          </button>
-        </div>
+        <Link href={'/'}>
+          <div className="bg-white p-4">
+            <button className="flex cursor-pointer items-center text-gray-800">
+              <ChevronLeft className="mr-4" size={24} />
+
+              <span className="text-2xl font-semibold text-gray-800">
+                Kembali
+              </span>
+            </button>
+          </div>
+        </Link>
       )}
 
       {/* Desktop Banner - hanya tampil di desktop */}
       {screenSize === 'desktop' && (
         <div className="mb-6">
-          <div className="relative h-64 w-full">
-            <Image
-              src="/images/image-landing.svg"
-              alt="Permata Bank"
-              fill
-              className="object-contain"
-            />
+          <div className="flex h-64 w-full flex-col items-center justify-center rounded-3xl bg-gray-200 p-12">
+            <div className="mb-4 rounded-full bg-white p-6">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9" />
+                <path d="M12 12v9" />
+                <path d="m8 17 4 4 4-4" />
+              </svg>
+            </div>
+            <p className="text-center text-sm text-gray-500">
+              Gambar ini bisa diisi banner tsp program Pendanaan
+            </p>
           </div>
         </div>
       )}
