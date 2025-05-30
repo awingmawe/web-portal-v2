@@ -28,7 +28,10 @@ export default async function LayoutArticle({
         className="h-[80px]"
       />
 
-      <MobileTopbar variant="logo" showBackButton={false} />
+      <MobileTopbar variant="logo" showBackButton={true} />
+      <p>tokenFromHeader : {JSON.stringify(tokenFromHeader)}</p>
+      <p>TOKEN : {JSON.stringify(token)}</p>
+      <p>isWebview : {JSON.stringify(isWebview)}</p>
       {children}
       <Footer
         className={`max-lg:mb-0 ${isWebview === 'true' ? 'max-lg:hidden' : ''}`}
