@@ -3,7 +3,7 @@
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
-import { Bed, Calendar, Users } from 'lucide-react'
+import { BedDouble, CalendarDays, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -265,7 +265,7 @@ const BankingPageDetail: React.FC = () => {
             <div className="rounded-lg bg-white p-4  md:p-6">
               <div className="space-y-3 text-sm">
                 <div
-                  className={`flex h-8 items-center justify-center rounded-[100px] border text-center md:h-auto md:p-4 ${getStatusStyle(data.status)}`}
+                  className={`flex h-8 items-center justify-center rounded-[100px] border text-center md:h-9 md:p-4 ${getStatusStyle(data.status)}`}
                 >
                   {statusPengajuan(data.status)}
                 </div>
@@ -289,7 +289,7 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="h-[8px] w-full bg-neutral-100" />
+            <div className="h-[6px] w-full bg-neutral-100 opacity-50" />
             {/* Product Details */}
             <Link
               href={`/${data.packageType}/${data.organizationInstanceName}/${data.slug}`}
@@ -381,7 +381,7 @@ const BankingPageDetail: React.FC = () => {
                   <div className="min-w-0 flex-1">
                     <div className="space-y-2 text-gray-600 md:space-y-2">
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
+                        <CalendarDays className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
                         <span className="text-xs leading-relaxed text-neutral-500 md:text-sm">
                           {formatTanggal2(data.departureDate)} →{' '}
                           {formatTanggal2(data.arrivalDate)}
@@ -394,7 +394,7 @@ const BankingPageDetail: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Bed className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4 " />
+                        <BedDouble className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4 " />
                         <span className="text-xs text-neutral-500 md:text-sm">
                           {data.roomType}
                         </span>
@@ -404,7 +404,7 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </Link>
-            <div className="h-[8px] w-full bg-neutral-100" />
+            <div className="h-[6px] w-full bg-neutral-100 opacity-50" />
             {/* Pricing Details */}
             <div className="rounded-lg bg-white p-4 pt-0 md:p-2 md:pt-0 ">
               <h3 className="mb-4 text-base font-semibold text-gray-800 md:text-lg">
@@ -429,7 +429,7 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="h-[8px] w-full bg-[#E8E8E8]" />
+            <div className="h-[6px] w-full bg-neutral-100 opacity-50" />
             {/* Status Timeline */}
             <div className="rounded-lg bg-white p-4 pt-0 md:p-6 md:pt-0">
               <h3 className="mb-4 font-semibold text-gray-800">
@@ -475,7 +475,7 @@ const BankingPageDetail: React.FC = () => {
                         {/* Konten status */}
                         <div className="flex flex-1 flex-col pb-5">
                           <div
-                            className={`mb-1 inline-flex h-8 max-h-full w-fit max-w-full items-center gap-2 rounded-[100px] border px-3 py-2 text-center text-xs md:h-auto md:px-4 md:py-3 md:text-[14px] ${getStatusStyle(historyItem.status, isOlderStatus)}`}
+                            className={`mb-1 inline-flex h-8 max-h-full w-fit max-w-full items-center gap-2 rounded-[100px] border px-3 py-2 text-center text-xs md:h-9 md:px-4 md:py-3 md:text-[14px] ${getStatusStyle(historyItem.status, isOlderStatus)}`}
                           >
                             {isOlderStatus ? (
                               <span className="text-[14px] font-medium text-gray-500">

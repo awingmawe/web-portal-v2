@@ -243,7 +243,7 @@ const SavingPageDetail: React.FC = () => {
             <div className="rounded-lg bg-white p-4 md:p-6">
               <div className="space-y-3 text-sm">
                 <div
-                  className={`flex h-8 items-center justify-center rounded-[100px] border text-center md:h-auto  md:p-4 ${getStatusStyle(data.status)}`}
+                  className={`flex h-8 items-center justify-center rounded-[100px] border text-center md:h-9  md:p-4 ${getStatusStyle(data.status)}`}
                 >
                   {statusPengajuan(data.status)}
                 </div>
@@ -267,7 +267,7 @@ const SavingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="h-[6px] w-full bg-neutral-100" />
+            <div className="h-[6px] w-full bg-neutral-100 opacity-50" />
             {/* Status Timeline */}
             <div className="rounded-lg bg-white p-4 pt-0 md:p-6 md:pt-0">
               <h3 className="mb-4 font-semibold text-gray-800">
@@ -314,7 +314,7 @@ const SavingPageDetail: React.FC = () => {
                         {/* Konten status */}
                         <div className="flex flex-1 flex-col pb-5">
                           <div
-                            className={`mb-1 inline-flex h-8 max-h-full w-fit max-w-full items-center gap-2 rounded-[100px] border px-3 py-2 text-center text-xs md:h-auto md:px-4 md:py-3 md:text-[14px] ${getStatusStyle(historyItem.status, isOlderStatus)}`}
+                            className={`mb-1 inline-flex h-8 max-h-full w-fit max-w-full items-center gap-2 rounded-[100px] border px-3 py-2 text-center text-xs md:h-9 md:px-4 md:py-3 md:text-[14px] ${getStatusStyle(historyItem.status, isOlderStatus)}`}
                           >
                             {isOlderStatus ? (
                               <span className="text-[14px] font-medium text-gray-500">
