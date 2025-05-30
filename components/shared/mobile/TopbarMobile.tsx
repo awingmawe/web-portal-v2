@@ -30,6 +30,7 @@ interface MobileTopbarProps {
     | 'logo'
     | 'pendanaanSyariah'
     | 'plainBank'
+    | 'suksesBanking'
   titleLink?: string
   title?: string
   token?: string
@@ -132,6 +133,8 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             </div>
           )
 
+        case 'suksesBanking':
+          return <div className="text-l-medium flex-1 text-center">{title}</div>
         case 'filter':
           return (
             <div className="flex w-full flex-col items-center">
@@ -220,6 +223,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'transactionTopbar':
         case 'title':
         case 'search':
+        case 'suksesBanking':
         case 'filter':
           return ''
         case 'transparent':
@@ -265,6 +269,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           break
         case 'title':
         case 'search':
+        case 'suksesBanking':
         case 'filter':
           positionClasses =
             'max-lg:bg-primary-500 absolute h-[100px] -top-[22px]'
@@ -318,7 +323,8 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       <div className={containerClasses}>
         {(variant === 'filter' ||
           variant === 'title' ||
-          variant === 'search') && (
+          variant === 'search' ||
+          variant === 'suksesBanking') && (
           <>
             {/* Circle Background for mobile */}
             <Image

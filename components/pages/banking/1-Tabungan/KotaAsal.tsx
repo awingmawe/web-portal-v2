@@ -217,7 +217,7 @@ export default function KotaAsalCombobox({ control }: KotaAsalComboboxProps) {
 
   return (
     <div className="w-full">
-      <FormLabel className="text-s-medium text-neutral-900">
+      <FormLabel className="text-[12px] font-[400] text-[#414141]">
         Kota Asal <span className="text-error-500">*</span>
       </FormLabel>
       <Popover open={open} onOpenChange={setOpen}>

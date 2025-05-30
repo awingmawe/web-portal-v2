@@ -1,10 +1,18 @@
+/* eslint-disable react/display-name */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -43,6 +51,10 @@ export const pembiayaanStep2Schema = z.object({
 
 type PembiayaanStep2Values = z.infer<typeof pembiayaanStep2Schema>
 
+export interface PembiayaanFormStep2Ref {
+  submit: () => void
+  isValid: () => boolean
+}
 interface PembiayaanStep2Props {
   onSubmit: (values: any) => Promise<void>
   onBack: () => void
@@ -51,13 +63,10 @@ interface PembiayaanStep2Props {
   onCancel?: any
 }
 
-export function PembiayaanFormStep2({
-  onSubmit,
-  onBack,
-  isLoading = false,
-  screenSize,
-  onCancel,
-}: PembiayaanStep2Props) {
+export const PembiayaanFormStep2 = forwardRef<
+  PembiayaanFormStep2Ref,
+  PembiayaanStep2Props
+>(({ onSubmit, onBack, isLoading = false, screenSize, onCancel }, ref) => {
   const [selectedPackage, setSelectedPackage] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -68,7 +77,29 @@ export function PembiayaanFormStep2({
   )
   const [selectedVariantDetails, setSelectedVariantDetails] =
     useState<any>(null)
-
+  // Define form with default values
+  const form = useForm<PembiayaanStep2Values>({
+    resolver: zodResolver(pembiayaanStep2Schema),
+    defaultValues: {
+      kamarHotel: '',
+      varian: '',
+      jumlahJamaah: 0,
+      selectedPackage: '',
+      tenor: '24',
+    },
+  })
+  useImperativeHandle(
+    ref,
+    () => ({
+      submit: () => {
+        form.handleSubmit(handleSubmit)()
+      },
+      isValid: () => {
+        return form.formState.isValid
+      },
+    }),
+    [form]
+  )
   // Add this function to handle variant change
   const handleVariantChange = (variantName: string) => {
     const selectedVariant = dataVariant.find(
@@ -87,18 +118,6 @@ export function PembiayaanFormStep2({
     fetchInitialPackages,
     totalPackages,
   } = useCustomInfiniteScroll(20) // Page size of 20
-
-  // Define form with default values
-  const form = useForm<PembiayaanStep2Values>({
-    resolver: zodResolver(pembiayaanStep2Schema),
-    defaultValues: {
-      kamarHotel: '',
-      varian: '',
-      jumlahJamaah: 0,
-      selectedPackage: '',
-      tenor: '24',
-    },
-  })
 
   // Watch form values for dynamic calculation
   const watchedValues = form.watch()
@@ -252,6 +271,8 @@ export function PembiayaanFormStep2({
         totalFunding: calculatedPricing.totalFunding,
         monthlyInstallment: calculatedPricing.monthlyInstallment,
       }
+      console.log(submitData)
+
       await onSubmit(submitData)
       // toast.success('Pengajuan pembiayaan berhasil dikirim!')
     } catch (error: any) {
@@ -303,7 +324,7 @@ export function PembiayaanFormStep2({
             <div
               className={
                 screenSize === 'desktop'
-                  ? 'fixed z-5 bg-white p-4'
+                  ? 'fixed z-5 w-[480px] bg-white p-4'
                   : 'fixed inset-0 z-50 bg-white p-4'
               }
             >
@@ -317,24 +338,22 @@ export function PembiayaanFormStep2({
                 >
                   <ChevronLeft size={20} />
                 </Button>
-                <span className="text-sm font-medium">
-                  Pilih Paket {totalPackages > 0 && `(${totalPackages} paket)`}
-                </span>
+                <span className="text-sm font-medium">Kembali</span>
               </div>
 
               {/* Search Bar and Date Filter */}
               <div className="mb-4 flex gap-2">
                 {/* Search Bar */}
                 <div className="relative flex-1">
-                  <Search
-                    className="absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400"
-                    size={16}
-                  />
                   <Input
-                    placeholder="Cari Umrah"
-                    className="rounded-full border border-gray-300 pl-10"
+                    placeholder="Cari Paket"
+                    className="rounded-full border border-gray-300 pl-2"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <Search
+                    className=" absolute top-1/2 right-3 -translate-y-1/2 transform text-[black]"
+                    size={16}
                   />
                 </div>
 
@@ -343,17 +362,17 @@ export function PembiayaanFormStep2({
                   <Button
                     type="button"
                     variant="outline"
-                    className="h-10 w-full rounded-full text-xs"
+                    className="h-10 w-[200px] max-w-[200px] truncate rounded-full p-0 text-left text-xs"
                   >
-                    Semua Tanggal
+                    Semua Tanggal Keberangkatan
                   </Button>
                 </div>
               </div>
 
               {/* Package List with Infinite Scroll */}
               <div
-                className={`flex-1 space-y-3 overflow-y-auto ${
-                  screenSize === 'mobile' ? '' : 'h-[550px]'
+                className={`grid flex-1 justify-items-center space-y-3 overflow-y-auto ${
+                  screenSize === 'mobile' ? '' : 'h-[350px]'
                 }`}
                 onScroll={handleScroll}
                 style={
@@ -375,7 +394,10 @@ export function PembiayaanFormStep2({
                     {dataPaket.map((pkg: any, index: number) => (
                       <div
                         key={`packages-${pkg.slugPackage}-${index}`}
-                        className="cursor-pointer"
+                        className="w-[350px] cursor-pointer "
+                        onClick={() =>
+                          handlePackageSelect(pkg.slugPackage || pkg.id)
+                        }
                       >
                         <CardPackage2
                           data={pkg}
@@ -429,11 +451,35 @@ export function PembiayaanFormStep2({
           <div className="h-[600px] flex-1 space-y-4 overflow-y-auto px-4 pb-4">
             {/* Package Selection Button */}
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-gray-800">
+              {/* <h3 className="text-sm font-medium text-gray-800">
                 Pilih paket terlebih dahulu
-              </h3>
+              </h3> */}
+              {!selectedPackage && (
+                <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-white p-4">
+                  <div className="flex items-center justify-between">
+                    {/* Left Side Text */}
+                    <div className="flex-1">
+                      <span className="text-sm text-gray-600">
+                        Pilih paket terlebih dahulu
+                      </span>
+                    </div>
 
-              {selectedPackage ? (
+                    {/* Right Side Button */}
+                    <div className="ml-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="border-0 bg-yellow-400 px-6 py-2 text-sm font-medium text-white hover:bg-yellow-500"
+                        onClick={() => setShowPackageSelection(true)}
+                      >
+                        Pilih Paket
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedPackage && (
                 /* Selected Package Display */
                 <div className="rounded-2xl border border-gray-200 bg-white p-3">
                   <div className="flex gap-3">
@@ -479,16 +525,6 @@ export function PembiayaanFormStep2({
                     })()}
                   </div>
                 </div>
-              ) : (
-                /* Choose Package Button */
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full rounded-full border-yellow-400 bg-yellow-50 text-yellow-600 hover:bg-yellow-100"
-                  onClick={() => setShowPackageSelection(true)}
-                >
-                  Pilih Paket
-                </Button>
               )}
 
               {/* Hidden field for form validation */}
@@ -529,13 +565,13 @@ export function PembiayaanFormStep2({
                             onValueChange={handleVariantChange}
                             defaultValue={field.value}
                           >
-                            <FormControl>
-                              <SelectTrigger className="rounded-2xl border-gray-300">
+                            <FormControl className="w-full">
+                              <SelectTrigger className=" w-full rounded-2xl border-gray-300">
                                 <SelectValue placeholder="Pilih varian paket" />
                               </SelectTrigger>
                             </FormControl>
 
-                            <SelectContent>
+                            <SelectContent className=" w-full rounded-2xl border-gray-300">
                               {dataVariant.map((res: any, index: any) => (
                                 <SelectItem
                                   key={`variant-${res.id || index}`}
@@ -583,12 +619,12 @@ export function PembiayaanFormStep2({
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                           >
-                            <FormControl>
-                              <SelectTrigger className="rounded-2xl border-gray-300">
+                            <FormControl className="w-full">
+                              <SelectTrigger className="w-full rounded-2xl border-gray-300">
                                 <SelectValue placeholder="Pilih Kamar Hotel" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent>
+                            <SelectContent className=" w-full rounded-2xl border-gray-300">
                               <SelectItem value="double">
                                 Double - Rp
                                 {Number(
@@ -649,8 +685,8 @@ export function PembiayaanFormStep2({
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                           >
-                            <FormControl>
-                              <SelectTrigger className="mt-1 rounded-2xl border-gray-300">
+                            <FormControl className="w-full">
+                              <SelectTrigger className="mt-1 w-full rounded-2xl border-gray-300">
                                 <SelectValue placeholder="Pilih tenor" />
                               </SelectTrigger>
                             </FormControl>
@@ -666,14 +702,14 @@ export function PembiayaanFormStep2({
                     />
 
                     {/* Simulasi Pendanaan - Updated with dynamic calculation */}
-                    <div className="space-y-2 rounded-2xl bg-gray-50 p-4">
-                      <h4 className="text-sm font-medium text-gray-800">
+                    <div className="space-y-2 rounded-2xl border border-[#E8E8E8] p-4">
+                      <h4 className="text-sm font-medium text-neutral-900">
                         Simulasi Pendanaan
                       </h4>
                       <div className="space-y-1">
                         {calculatedPricing.totalPrice > 0 && (
                           <div className="flex justify-between text-xs">
-                            <span className="text-gray-600">
+                            <span className="text-[12px] text-gray-400">
                               Total Pendanaan
                             </span>
                             <span className="font-medium">
@@ -685,7 +721,7 @@ export function PembiayaanFormStep2({
                           </div>
                         )}
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-600">
+                          <span className="text-[12px] text-gray-400">
                             Angsuran Per Bulan
                           </span>
                           <span className="font-medium">
@@ -696,7 +732,7 @@ export function PembiayaanFormStep2({
                           </span>
                         </div>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-center text-[12px] text-neutral-500">
                         *Perhitungan ini hanya simulasi, data dapat berubah
                         sesuai dengan ketentuan syariah terkait.
                       </p>
@@ -706,25 +742,20 @@ export function PembiayaanFormStep2({
               )
             })()}
           </div>
-          {screenSize === 'desktop' ? (
-            <div className="mt-8 flex items-center justify-end space-x-4">
-              <Button
-                type="button"
-                onClick={onCancel}
-                className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
-                disabled={isLoading}
-              >
-                Batal
-              </Button>
+          {screenSize !== 'dekstop' && (
+            <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-gray-100 bg-white p-4">
               <Button
                 type="submit"
-                className="mr-4 rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
+                className="w-full rounded-full bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600"
                 disabled={isLoading}
                 isLoading={isLoading}
               >
                 Kirim Permintaan
               </Button>
             </div>
+          )}
+          {/* {screenSize === 'desktop' ? (
+            <></>
           ) : (
             <div className="sticky bottom-0 border-t border-gray-100 bg-white p-4">
               <Button
@@ -736,10 +767,10 @@ export function PembiayaanFormStep2({
                 Kirim Permintaan
               </Button>
             </div>
-          )}
+          )} */}
           {/* Submit Button - Fixed at bottom */}
         </form>
       </Form>
     </div>
   )
-}
+})

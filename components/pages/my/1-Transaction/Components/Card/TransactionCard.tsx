@@ -50,6 +50,7 @@ export interface TransactionCardProps {
   organizationInstanceId?: any
   noFooter?: boolean
   fetchTransactions?: any
+  transaction?: any
 }
 
 function renderManifestComplete(
@@ -128,6 +129,7 @@ export default function TransactionCard({
   noFooter,
   organizationInstanceId,
   fetchTransactions,
+  transaction,
 }: TransactionCardProps) {
   const { lg } = useTailwindBreakpoint()
   const [orderPayment, setOrderPayment] = useState<any>(null)
@@ -207,6 +209,7 @@ export default function TransactionCard({
       return status
     }
   }
+  console.log(transaction)
 
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200 ">
@@ -399,6 +402,7 @@ export default function TransactionCard({
                     paymentAmount={orderPayment?.orderPayment?.paymentAmount}
                     organizationInstanceId={organizationInstanceId}
                     fetchTransactions={fetchTransactions}
+                    transaction={transaction}
                   />
                 </CanceledProvider>
               )}
