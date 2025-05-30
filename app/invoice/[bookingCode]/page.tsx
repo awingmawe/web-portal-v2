@@ -108,9 +108,7 @@ export default function InvoicePage() {
 
           <div className="w-full max-w-2xl">
             <div id="print-section" ref={contentRef} className="p-4">
-              <div dangerouslySetInnerHTML={{ __html: printData }}>
-                {renderHTML(printData)}
-              </div>
+              <div>{renderHTML(printData)}</div>
             </div>
           </div>
         </div>
