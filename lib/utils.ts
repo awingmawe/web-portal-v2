@@ -164,7 +164,7 @@ export function formatCreatedDate(dateString: Date) {
   } else if (diffMinutes > 0) {
     return `${diffMinutes} menit lalu`
   } else {
-    return `${diffSeconds + 1} detik lalu`
+    return `${diffSeconds < 0 ? 0 : diffSeconds} detik lalu`
   }
 }
 

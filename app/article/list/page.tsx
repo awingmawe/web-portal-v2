@@ -24,7 +24,7 @@ export default async function ArtilceSearch({ searchParams }: any) {
   const [dataAllArticle, dataCategories] = await Promise.all([
     getArticleList({
       page: page ?? 1,
-      size: 9,
+      size: 10,
       q: query,
       category,
     }),
@@ -43,6 +43,7 @@ export default async function ArtilceSearch({ searchParams }: any) {
           dataAllArticle={dataAllArticle.results}
           total={dataAllArticle.total}
           dataCategories={dataCategories}
+          size={10}
         />
       </main>
       <EventTrackerImpression

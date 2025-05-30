@@ -4,6 +4,7 @@ const WhatsappIcon: React.FC<IconProps> = ({
   size,
   className,
   color,
+  onClick,
   ...props
 }) => (
   <svg
@@ -13,6 +14,7 @@ const WhatsappIcon: React.FC<IconProps> = ({
     viewBox="0 0 32 32"
     fill="none"
     className={className}
+    onClick={onClick}
     {...props}
   >
     <path

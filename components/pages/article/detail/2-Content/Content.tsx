@@ -29,7 +29,9 @@ import {
 } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Fragment, useRef, useState } from 'react'
+import renderHTML from 'react-render-html'
 import { toast } from 'sonner' // Assuming you have toast notifications
 
 export default function ContentArticle({
@@ -42,7 +44,7 @@ export default function ContentArticle({
   read_time,
   button_link,
   button_text,
-  other_articles,
+  otherArticles,
   type,
   packageCampaign,
   dataBannerCarousel,
@@ -58,7 +60,7 @@ export default function ContentArticle({
   read_time: number
   button_link: string
   button_text: string
-  other_articles: Article[]
+  otherArticles: Article[]
   type: string
   packageCampaign?: PackageTagSlug
   dataBannerCarousel: GenericResponse<Banner>
@@ -66,6 +68,7 @@ export default function ContentArticle({
   id: number // Add this prop
 }) {
   const { shareViaCopyLink } = useGallerySharing()
+  const router = useRouter()
   const { profile } = useAuth()
 
   const [isCommentFocused, setIsCommentFocused] = useState(false)
@@ -79,7 +82,7 @@ export default function ContentArticle({
       articleId: id,
     })
 
-  const isPromoPackage = type === 'reguler' && other_articles
+  const isPromoPackage = type === 'regular' && otherArticles
 
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) {
@@ -170,7 +173,15 @@ export default function ContentArticle({
           </p>
           <div className="flex items-center gap-2 max-lg:hidden">
             <p className="text-l-regular text-neutral-500">Bagikan:</p>
-            <WhatsappIcon size={20} className="cursor-pointer" />
+            <WhatsappIcon
+              size={20}
+              className="cursor-pointer"
+              onClick={() =>
+                router.push(
+                  `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+                )
+              }
+            />
             <ShareIcon
               size={20}
               onClick={shareViaCopyLink}
@@ -185,16 +196,19 @@ export default function ContentArticle({
         className={`${isPromoPackage ? 'col-start-1 col-end-4' : 'col-span-4 col-start-2'} max-lg:col-span-12`}
       >
         <div className="flex flex-col gap-6">
-          <div
-            className="article-content break-all"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+          <div className="prose prose-img:inline prose-ul:[list-style:auto] prose-ol:[list-style:auto] prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
+            {renderHTML(content || '')}
+          </div>
           {(button_link || button_text) && (
             <div className="bg-primary-500 flex items-center justify-center rounded-[20px] py-3">
-              <Button className="bg-neutral-0 px-10 py-3">{button_text}</Button>
+              <Link href={button_link} target="_blank">
+                <Button className="bg-neutral-0 px-10 py-3">
+                  {button_text}
+                </Button>
+              </Link>
             </div>
           )}
-          {type !== 'reguler' && (
+          {type === 'promo-umrah' && (
             <>
               {packageCampaign && (
                 <PackageListEvent
@@ -230,7 +244,7 @@ export default function ContentArticle({
                   className="p-4"
                   initial={false}
                   animate={{
-                    paddingBottom: isCommentFocused ? 16 : 16,
+                    paddingBottom: isCommentFocused ? 16 : 24,
                   }}
                   transition={{ duration: 0.3 }}
                 >
@@ -256,7 +270,7 @@ export default function ContentArticle({
                       onFocus={handleInputFocus}
                       onBlur={handleInputBlur}
                       disabled={isSubmitting}
-                      className="w-full resize-none border-0 bg-neutral-50 px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:opacity-50"
+                      className="bg-neutral-0 w-full resize-none border-1 border-neutral-200 px-4 py-3 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:opacity-50"
                     />
                   </div>
 
@@ -311,12 +325,9 @@ export default function ContentArticle({
                   </AnimatePresence>
                 </motion.div>
                 {comments?.length > 0 ? (
-                  <div className="max-h-96 overflow-y-auto p-4 px-0 pt-0">
+                  <div className="flex max-h-96 flex-col gap-6 overflow-y-auto p-4 pt-0">
                     {comments?.map((comment) => (
-                      <div
-                        key={comment.id}
-                        className="mb-4 flex flex-col gap-2.5"
-                      >
+                      <div key={comment.id} className="flex flex-col gap-2.5">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-12 w-12">
                             <AvatarImage
@@ -343,7 +354,7 @@ export default function ContentArticle({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-s-regular p-4 text-center text-neutral-500">
+                  <p className="text-s-regular p-4 pt-0 text-center text-neutral-500">
                     Belum ada komentar. Jadilah yang pertama!
                   </p>
                 )}
@@ -408,7 +419,7 @@ export default function ContentArticle({
               <span className="border-b-primary-500 border-b-4">Artikel</span>{' '}
               Lainnya
             </p>
-            {other_articles.map((article, idx) => {
+            {otherArticles.map((article, idx) => {
               return (
                 <Fragment key={`article-${idx}-${article.title}`}>
                   <ArticleCard
@@ -418,7 +429,7 @@ export default function ContentArticle({
                     aspect={16 / 9}
                     eventCategory="article-detail"
                   />
-                  {idx !== other_articles.length - 1 && (
+                  {idx !== otherArticles.length - 1 && (
                     <div className="my-2.5 h-px w-full bg-[#D2D2D1] max-lg:hidden" />
                   )}
                 </Fragment>

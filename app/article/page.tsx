@@ -5,6 +5,7 @@ import { AllArticle } from '@/components/pages/article/landing/3-AllArticle/AllA
 import LayoutArticle from '@/components/pages/article/Layout'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import {
+  getArticleByHiglight,
   getArticleCategories,
   getArticleList,
 } from '@/services/article-service'
@@ -17,23 +18,22 @@ export async function generateMetadata() {
 }
 
 export default async function ArticleHome({ searchParams }: any) {
-  const awaitedParams = await searchParams
-  const { page, category } = awaitedParams
+  const { category } = searchParams
   const isWebview = (await headers()).get('is-web-view') || ''
 
   const [
     dataArticleTerbaruResponse,
     dataAllArticleResponse,
     dataCategories,
-    // dataTerpopular
+    dataTerpopular,
   ] = await Promise.all([
     getArticleList({
       page: 1,
       size: 4,
     }),
     getArticleList({
-      page: page ?? 1,
-      size: page > 1 ? 9 : 13,
+      page: 1,
+      size: 13,
       category,
     }),
     getArticleCategories({
@@ -41,10 +41,13 @@ export default async function ArticleHome({ searchParams }: any) {
       page: 1,
       size: 100,
     }),
-    // getArticleByHiglight({
-    //   type: 'popular',
-    //   limit: 3,
-    // }),
+    getArticleByHiglight({
+      slug: 'popular',
+      query: {
+        page: 1,
+        size: 3,
+      },
+    }),
   ])
 
   const dataArticleTerbaru = dataArticleTerbaruResponse.results
@@ -58,7 +61,7 @@ export default async function ArticleHome({ searchParams }: any) {
   const dataAllArticle = {
     ...dataAllArticleResponse,
     results: filteredAllArticles,
-    total: dataAllArticleResponse.total,
+    total: dataAllArticleResponse.total - 4,
   }
 
   return (
@@ -69,8 +72,9 @@ export default async function ArticleHome({ searchParams }: any) {
         <AllArticle
           dataAllArticle={dataAllArticle.results}
           total={dataAllArticle.total}
-          dataTerpopular={[]}
+          dataTerpopular={dataTerpopular}
           dataCategories={dataCategories}
+          isPagination={false}
         />
       </main>
       <EventTrackerImpression

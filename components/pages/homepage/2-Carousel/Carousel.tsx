@@ -52,7 +52,9 @@ export function CarouselBanner({
   }
   return (
     <section className={cn(className)}>
-      <p className="heading-2-bold mb-0.5 text-neutral-900 max-lg:mx-4 max-lg:mt-[30px] max-lg:text-xl max-lg:leading-6.5">
+      <p
+        className={`heading-3-bold mb-6 text-neutral-900  max-lg:text-xl max-lg:leading-6.5`}
+      >
         {title}
       </p>
       <p className="text-l-regular mb-7 text-neutral-900 max-lg:mx-4 max-lg:mb-2 max-lg:text-xs max-lg:leading-4">

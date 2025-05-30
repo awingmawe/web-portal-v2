@@ -33,17 +33,17 @@ export async function getArticleList(
 }
 
 export async function getArticleByHiglight({
-  type,
-  limit,
+  slug,
+  query,
 }: {
-  type: string
-  limit: number
+  slug: string
+  query: GetListQuery
 }): Promise<Article[]> {
   try {
     const response = await api.get(
-      `/public/articles/v1/highlights?type=${type}&limit=${limit}&offset=0`
+      `/public/articles/v1/highlights/slug/${slug}/articles?${qs.stringify(query)}`
     )
-    return response.data.data
+    return response.data.results.articles
   } catch (error) {
     console.error('Error fetching article list highlight:', error)
     throw error
@@ -90,7 +90,7 @@ export async function getArticleComment(
     // Use token if provided (server-side), otherwise use existing client (client-side)
     const client = token ? createServerApiClient(token) : apiWithAuth
     const response = await client.get(
-      `/public/articles/v1/comments/article/slug/${slug}?${qs.stringify(query)}`
+      `/articles/v1/comments/article/slug/${slug}?${qs.stringify(query)}`
     )
     return response.data
   } catch (error) {
