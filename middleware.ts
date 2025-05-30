@@ -1,32 +1,58 @@
 import { ACCOUNT_URL } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
-import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-  const cookieStore = await cookies()
-  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next()
 
-  // Parse the current URL
-  const url = new URL(request.url)
-  const loginToken = url.searchParams.get('accessToken')
+  // ✅ Tambahkan cookie dari header jika ada
+  const tokenFromHeader = request.headers.get('single-use-token')
+  const sessionId = request.headers.get('session-id')
 
-  if (!token && loginToken) {
-    cookieStore.set(cookieNames.USER_ACCESS_TOKEN, loginToken)
+  if (tokenFromHeader) {
+    response.cookies.set(cookieNames.USER_ACCESS_TOKEN, tokenFromHeader, {
+      httpOnly: true,
+      path: '/',
+    })
   }
 
-  // If no token, redirect to login page
-  if (!token) {
-    const loginUrl = new URL(
-      `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(request.nextUrl.toString())}`
-    )
-    return NextResponse.redirect(loginUrl)
+  if (sessionId) {
+    response.cookies.set(cookieNames.SESSION_ID, sessionId, {
+      httpOnly: true,
+      path: '/',
+    })
   }
 
-  return NextResponse.next()
+  // ✅ Cek URL yang perlu redirect login
+  const pathname = request.nextUrl.pathname
+
+  if (pathname.startsWith('/my')) {
+    const token = request.cookies.get(cookieNames.USER_ACCESS_TOKEN)?.value
+
+    const url = new URL(request.url)
+    const loginToken = url.searchParams.get('accessToken')
+
+    // Jika tidak ada token dan token dari query, set cookie
+    if (!token && loginToken) {
+      response.cookies.set(cookieNames.USER_ACCESS_TOKEN, loginToken, {
+        httpOnly: true,
+        path: '/',
+      })
+    }
+
+    // Jika tidak ada token sama sekali, redirect ke login
+    if (!token && !loginToken) {
+      const loginUrl = new URL(
+        `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(request.nextUrl.toString())}`
+      )
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
+  return response
 }
 
 export const config = {
-  matcher: ['/my(.*)'], // Apply middleware to any route starting with /my
+  matcher: ['/my(.*)', '/article(.*)'],
 }
