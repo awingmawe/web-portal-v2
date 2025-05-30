@@ -1,48 +1,39 @@
 import { ACCOUNT_URL } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
+import { cookies, headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
-  const response = NextResponse.next()
-
-  // ✅ Tambahkan cookie dari header jika ada
-  const tokenFromHeader = request.headers.get('single-use-token')
-  const sessionId = request.headers.get('session-id')
-
-  if (tokenFromHeader) {
-    response.cookies.set(cookieNames.USER_ACCESS_TOKEN, tokenFromHeader, {
-      httpOnly: true,
-      path: '/',
-    })
-  }
-
-  if (sessionId) {
-    response.cookies.set(cookieNames.SESSION_ID, sessionId, {
-      httpOnly: true,
-      path: '/',
-    })
-  }
-
-  // ✅ Cek URL yang perlu redirect login
+export async function middleware(request: NextRequest) {
+  const cookieStore = await cookies()
   const pathname = request.nextUrl.pathname
 
-  if (pathname.startsWith('/my')) {
-    const token = request.cookies.get(cookieNames.USER_ACCESS_TOKEN)?.value
+  if (pathname.startsWith('/article')) {
+    const tokenFromHeader = (await headers()).get('single-use-token') || ''
+    const sessionId = (await headers()).get('session-id') || ''
 
+    if (tokenFromHeader) {
+      cookieStore.set(cookieNames.USER_ACCESS_TOKEN, tokenFromHeader)
+    }
+
+    if (sessionId) {
+      cookieStore.set(cookieNames.SESSION_ID, sessionId)
+    }
+  }
+
+  if (pathname.startsWith('/my')) {
+    const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value
+
+    // Parse the current URL
     const url = new URL(request.url)
     const loginToken = url.searchParams.get('accessToken')
 
-    // Jika tidak ada token dan token dari query, set cookie
     if (!token && loginToken) {
-      response.cookies.set(cookieNames.USER_ACCESS_TOKEN, loginToken, {
-        httpOnly: true,
-        path: '/',
-      })
+      cookieStore.set(cookieNames.USER_ACCESS_TOKEN, loginToken)
     }
 
-    // Jika tidak ada token sama sekali, redirect ke login
-    if (!token && !loginToken) {
+    // If no token, redirect to login page
+    if (!token) {
       const loginUrl = new URL(
         `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(request.nextUrl.toString())}`
       )
@@ -50,7 +41,7 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  return response
+  return NextResponse.next()
 }
 
 export const config = {
