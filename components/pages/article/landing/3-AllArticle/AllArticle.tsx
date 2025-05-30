@@ -7,6 +7,7 @@ import { CustomPagination } from '@/components/shared/CustomPagination'
 import { Button } from '@/components/ui/button'
 import { Article, Category } from '@/constant/types/ArticleProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useCallback, useMemo } from 'react'
 
@@ -81,15 +82,14 @@ export function AllArticle({
                 goToPage={goToPage}
               />
             ) : (
-              <Button
-                className="m-auto mt-6 items-center gap-1 px-3 py-2"
-                size="xs"
-              >
-                <p className="text-m-regular text-neutral-900">
-                  Lihat Artikel Lainnya
-                </p>
-                <ArrowDiagonalIcon size={24} />
-              </Button>
+              <Link href="/article/list" className="m-auto mt-6">
+                <Button className="items-center gap-1 px-3 py-2" size="xs">
+                  <p className="text-m-regular text-neutral-900">
+                    Lihat Artikel Lainnya
+                  </p>
+                  <ArrowDiagonalIcon size={24} />
+                </Button>
+              </Link>
             )}
           </div>
         </div>

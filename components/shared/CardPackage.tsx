@@ -79,7 +79,8 @@ export const CardPackage = memo(function CardPackage({
   // Memoize the stars rendering
   const ratingStars = useMemo(
     () =>
-      [...Array(rating)].map((_, i) => (
+      Number(rating) > 0 &&
+      [...Array(Number(rating))].map((_, i) => (
         <StarIconPrimary size={13} key={`star-icon-${i}`} />
       )),
     [rating]
@@ -209,10 +210,12 @@ export const CardPackage = memo(function CardPackage({
         </h3>
 
         {/* Rating */}
-        <div className="flex items-center gap-2">
-          <BuildingIcon size={16} color="text-neutral-500" />
-          <div className="flex gap-1">{ratingStars}</div>
-        </div>
+        {Number(rating) > 0 && (
+          <div className="flex items-center gap-2">
+            <BuildingIcon size={16} color="text-neutral-500" />
+            <div className="flex gap-1">{ratingStars}</div>
+          </div>
+        )}
 
         {/* Departure and Arrival Date */}
         <div className="flex items-center justify-between">
