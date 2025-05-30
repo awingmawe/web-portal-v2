@@ -17,10 +17,10 @@ export interface Article {
   slug: string
   status: string
   tags: string
-  thumbnail_url: string
+  thumbnail: string
   title: string
   hashtags: string[]
-  other_articles: Article[]
+  otherArticles: Article[]
   promo_tag: string
 }
 

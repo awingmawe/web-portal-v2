@@ -1,8 +1,10 @@
 'use client'
 
+import { ArrowDiagonalIcon } from '@/components/icons/arrow'
 import { ArticleCard } from '@/components/pages/article/common/CardArticle'
 import CategoryNavigation from '@/components/pages/article/common/Category'
 import { CustomPagination } from '@/components/shared/CustomPagination'
+import { Button } from '@/components/ui/button'
 import { Article, Category } from '@/constant/types/ArticleProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -13,11 +15,13 @@ export function AllArticle({
   dataTerpopular,
   total,
   dataCategories,
+  isPagination = true,
 }: {
   dataAllArticle: Article[]
   total: number
   dataTerpopular: Article[]
   dataCategories: Category[]
+  isPagination?: boolean
 }) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -69,12 +73,24 @@ export function AllArticle({
               </p>
             </div>
           )}
-          <div className="col-span-12">
-            <CustomPagination
-              currentPage={parseInt(searchParams.get('page') || '1', 10)}
-              totalPages={totalPages}
-              goToPage={goToPage}
-            />
+          <div className="col-span-12 grid">
+            {isPagination ? (
+              <CustomPagination
+                currentPage={parseInt(searchParams.get('page') || '1', 10)}
+                totalPages={totalPages}
+                goToPage={goToPage}
+              />
+            ) : (
+              <Button
+                className="m-auto mt-6 items-center gap-1 px-3 py-2"
+                size="xs"
+              >
+                <p className="text-m-regular text-neutral-900">
+                  Lihat Artikel Lainnya
+                </p>
+                <ArrowDiagonalIcon size={24} />
+              </Button>
+            )}
           </div>
         </div>
         {dataTerpopular.length > 0 && (

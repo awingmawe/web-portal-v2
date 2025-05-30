@@ -119,7 +119,10 @@ export default async function Home() {
           <ProgramCards className="absolute -top-19 left-0 z-99 px-4 py-3" />
           <SubmenuCards />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
-            <CarouselBanner dataBanner={dataBannerCarousel} />
+            <CarouselBanner
+              dataBanner={dataBannerCarousel}
+              className="max-lg:mt-[30px]"
+            />
             {dataTravels.total > 0 && (
               <CarouselTravel dataTravel={dataTravels} />
             )}

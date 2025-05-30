@@ -1,7 +1,7 @@
 'use client'
 
 import { useEventTracker } from '@/contexts/event-tracker/context'
-import { cn } from '@/lib/utils'
+import { cn, isEmpty } from '@/lib/utils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useRef, useState } from 'react'
 
@@ -25,13 +25,13 @@ export function ScrollableCategories({
   className,
 }: ScrollableCategoriesProps) {
   const [activeId, setActiveId] = useState<string | number>(
-    defaultActiveId || categories[0]?.id || ''
+    defaultActiveId || categories[0]?.slug || ''
   )
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Handle category selection
   const handleCategoryClick = (category: Category) => {
-    setActiveId(category.id)
+    setActiveId(category.slug ?? '')
     if (onCategoryChange) {
       onCategoryChange(category)
     }
@@ -50,7 +50,7 @@ export function ScrollableCategories({
               key={category.id}
               onClick={() => handleCategoryClick(category)}
               className={`
-                rounded-full px-3 py-1 whitespace-nowrap text-neutral-900 transition-all duration-500 ease-in-out ${activeId === category.id ? 'bg-primary-300 ' : 'bg-primary-100 hover:bg-primary-200'} text-m-semibold cursor-pointer outline-0 focus-within:outline-0 focus:outline-0 focus-visible:outline-0
+                rounded-full px-3 py-1 whitespace-nowrap text-neutral-900 transition-all duration-500 ease-in-out ${activeId === category.slug ? 'bg-primary-300 ' : 'bg-primary-100 hover:bg-primary-200'} text-m-semibold cursor-pointer outline-0 focus-within:outline-0 focus:outline-0 focus-visible:outline-0
               `}
             >
               {category.name}
@@ -88,7 +88,7 @@ export default function CategoryNavigation({
 
     // Set category slug as query param
     const newSearchParams = new URLSearchParams(searchParams)
-    if (category.id !== 'all') {
+    if (!isEmpty(category.slug)) {
       newSearchParams.set('category', category.slug ?? '')
     } else {
       newSearchParams.delete('category')
@@ -104,7 +104,7 @@ export default function CategoryNavigation({
     <div className="mx-auto my-5 w-full">
       <ScrollableCategories
         categories={dataCategories}
-        defaultActiveId="all"
+        defaultActiveId={searchParams.get('category') ?? ''}
         onCategoryChange={handleCategoryChange}
       />
     </div>

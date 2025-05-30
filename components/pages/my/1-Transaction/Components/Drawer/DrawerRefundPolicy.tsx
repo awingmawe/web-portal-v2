@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/drawer'
 import { getPostCanceled } from '@/services/umrah-service'
 import React, { useRef, useState } from 'react'
+import renderHTML from 'react-render-html'
 
 const DrawerRefundPolicy = React.memo(
   ({
@@ -78,12 +79,9 @@ const DrawerRefundPolicy = React.memo(
               </DrawerHeader>
 
               <div className="mt-4 max-h-[440px] overflow-y-auto pr-1">
-                <div
-                  className="text-[14px] leading-relaxed font-[400] text-[#8E8E8B]"
-                  dangerouslySetInnerHTML={{
-                    __html: dataRefundPolicy?.content,
-                  }}
-                ></div>
+                <div className="text-[14px] leading-relaxed font-[400] text-[#8E8E8B]">
+                  {renderHTML(dataRefundPolicy?.content || '')}
+                </div>
 
                 {parsedContent && parsedContent.length > 0 ? (
                   <div className="mt-6">

@@ -8,6 +8,7 @@ import jsPDF from 'jspdf'
 import { DownloadIcon } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
+import renderHTML from 'react-render-html'
 
 export default function InvoicePage() {
   const { bookingCode } = useParams()
@@ -107,7 +108,7 @@ export default function InvoicePage() {
 
           <div className="w-full max-w-2xl">
             <div id="print-section" ref={contentRef} className="p-4">
-              <div dangerouslySetInnerHTML={{ __html: printData }} />
+              <div>{renderHTML(printData)}</div>
             </div>
           </div>
         </div>

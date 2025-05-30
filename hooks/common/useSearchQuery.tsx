@@ -60,6 +60,7 @@ export function useSearchQuery({
         params.delete('query')
       }
 
+      params.set('page', '1')
       if (dataEventTracker) {
         pushEvent({ ...dataEventTracker, data: { keyword: searchQuery } })
       }

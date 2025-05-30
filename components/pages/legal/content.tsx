@@ -1,5 +1,6 @@
 import { Legal } from '@/constant/types/LegalProps'
 import dayjs from 'dayjs'
+import renderHTML from 'react-render-html'
 
 export default function ContentLegal({ data }: { data: Legal | undefined }) {
   return (
@@ -11,10 +12,9 @@ export default function ContentLegal({ data }: { data: Legal | undefined }) {
         Terakhir diperbarui: {dayjs(data?.modifiedAt).format('MMMM YYYY')}
       </p>
 
-      <div
-        className="html-content"
-        dangerouslySetInnerHTML={{ __html: data?.body || '' }}
-      />
+      <div className="prose prose-img:inline prose-ul:[list-style:auto] prose-ol:[list-style:auto] prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
+        {renderHTML(data?.body || '')}
+      </div>
     </div>
   )
 }
