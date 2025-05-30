@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/article')) {
     const tokenFromHeader = (await headers()).get('single-use-token') || ''
     const sessionId = (await headers()).get('session-id') || ''
+    const isWebView = (await headers()).get('is-web-view') || ''
 
     if (tokenFromHeader) {
       cookieStore.set(cookieNames.USER_ACCESS_TOKEN, tokenFromHeader)
@@ -18,6 +19,10 @@ export async function middleware(request: NextRequest) {
 
     if (sessionId) {
       cookieStore.set(cookieNames.SESSION_ID, sessionId)
+    }
+
+    if (isWebView) {
+      cookieStore.set(cookieNames.IS_WEBVIEW, sessionId)
     }
   }
 
