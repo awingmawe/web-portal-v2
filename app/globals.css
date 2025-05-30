@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
+@plugin "@tailwindcss/typography";
 
 @import './typography.css';
 
@@ -366,85 +367,4 @@
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-/* Container styling for HugerTE/TinyMCE output */
-.html-content {
-  @apply leading-relaxed text-gray-800;
-}
-
-/* Headings */
-.html-content h1 {
-  @apply mt-6 mb-4 inline text-3xl font-bold;
-}
-.html-content h2 {
-  @apply mt-5 mb-3 inline text-2xl font-semibold;
-}
-.html-content h3 {
-  @apply mt-4 mb-2 inline text-xl font-medium;
-}
-.html-content h4 {
-  @apply mt-3 mb-2 inline text-lg font-semibold;
-}
-
-/* Paragraphs */
-.html-content p {
-  @apply mb-4;
-}
-
-/* Lists */
-.html-content ul {
-  @apply mb-4 list-disc pl-6;
-}
-.html-content ol {
-  @apply mb-4 list-decimal pl-6;
-}
-.html-content li {
-  @apply mb-2;
-}
-
-/* Links */
-.html-content a {
-  @apply text-blue-600 underline hover:text-blue-800;
-}
-
-/* Text formatting */
-.html-content strong {
-  @apply font-bold;
-}
-.html-content em {
-  @apply italic;
-}
-.html-content u {
-  @apply underline;
-}
-
-/* Blockquotes */
-.html-content blockquote {
-  @apply my-4 border-l-4 border-gray-300 pl-4 text-gray-600 italic;
-}
-
-/* Images */
-.html-content img {
-  @apply my-4 h-auto max-w-full rounded;
-}
-
-/* Tables */
-.html-content table {
-  @apply my-4 w-full table-auto border-collapse border border-gray-300;
-}
-.html-content th,
-.html-content td {
-  @apply border border-gray-300 px-4 py-2;
-}
-.html-content th {
-  @apply bg-gray-100 font-semibold;
-}
-
-/* Code blocks */
-.html-content pre {
-  @apply my-4 overflow-x-auto rounded bg-gray-100 p-4 text-sm;
-}
-.html-content code {
-  @apply rounded bg-gray-100 px-1 font-mono text-sm;
 }

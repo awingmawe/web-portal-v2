@@ -1589,6 +1589,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tailwindcss/typography@npm:^0.5.16":
+  version: 0.5.16
+  resolution: "@tailwindcss/typography@npm:0.5.16"
+  dependencies:
+    lodash.castarray: "npm:^4.4.0"
+    lodash.isplainobject: "npm:^4.0.6"
+    lodash.merge: "npm:^4.6.2"
+    postcss-selector-parser: "npm:6.0.10"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 10c0/35a7387876810c23c270a23848b920517229b707c8ead6a63c8bb7d6720a62f23728c3117f0a93b422a66d1e5ee9c7ad8a6c3f0fbf5255b535c0e4971ffa0158
+  languageName: node
+  linkType: hard
+
 "@tybys/wasm-util@npm:^0.9.0":
   version: 0.9.0
   resolution: "@tybys/wasm-util@npm:0.9.0"
@@ -1616,6 +1630,15 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: 10c0/6bf5337bc447b706bb5b4431d37686aa2ea6d07cfd6f79cc31de80170d6ff9b1c7384a9c0ccbc45b3f512bae9e9f75c2e12109806a15331dc94e8a8db6dbb4ac
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:*":
+  version: 22.15.27
+  resolution: "@types/node@npm:22.15.27"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10c0/1057dfabd9dc1a9c0de35b057341f0b22e4b54082d432cca6c30209e16bd67668cdb41a794ea753deaaf15f6d6fdc1e1cb2551afe21a78952e0b82386697b133
   languageName: node
   linkType: hard
 
@@ -2391,6 +2414,15 @@ __metadata:
   version: 0.1.2
   resolution: "css-mediaquery@npm:0.1.2"
   checksum: 10c0/b7825a78f52ce8a8198e004fcad0d7be1d3c9a0463ecd05ba31a0f2c94fb81468ad6f4d7bf715a6ca775696e7a17500c2a339b5216a6d0f789cbf78f9454d048
+  languageName: node
+  linkType: hard
+
+"cssesc@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "cssesc@npm:3.0.0"
+  bin:
+    cssesc: bin/cssesc
+  checksum: 10c0/6bcfd898662671be15ae7827120472c5667afb3d7429f1f917737f3bf84c4176003228131b643ae74543f17a394446247df090c597bb9a728cce298606ed0aa7
   languageName: node
   linkType: hard
 
@@ -3997,6 +4029,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.castarray@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "lodash.castarray@npm:4.4.0"
+  checksum: 10c0/0bf523ad1596a5bf17869ba047235b4453eee927005013ae152345e2b291b81a02e7f2b7c38f876a1d16f73c34aa3c3241e965193e5b31595035bc8f330c4358
+  languageName: node
+  linkType: hard
+
+"lodash.isplainobject@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "lodash.isplainobject@npm:4.0.6"
+  checksum: 10c0/afd70b5c450d1e09f32a737bed06ff85b873ecd3d3d3400458725283e3f2e0bb6bf48e67dbe7a309eb371a822b16a26cca4a63c8c52db3fc7dc9d5f9dd324cbb
+  languageName: node
+  linkType: hard
+
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
@@ -4370,6 +4416,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"parse5@npm:^3.0.2":
+  version: 3.0.3
+  resolution: "parse5@npm:3.0.3"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/b9ea8adfb03fb55bbc0e090233f8ccf6b47210daf71b4c8785612b27484f6e98a83b9b3998c54c1d26ba1f1d9ebc9402f7e4b3c285a7650df1a0d2532fe79cb1
+  languageName: node
+  linkType: hard
+
 "path-exists@npm:^4.0.0":
   version: 4.0.0
   resolution: "path-exists@npm:4.0.0"
@@ -4423,6 +4478,16 @@ __metadata:
   version: 1.1.0
   resolution: "possible-typed-array-names@npm:1.1.0"
   checksum: 10c0/c810983414142071da1d644662ce4caebce890203eb2bc7bf119f37f3fe5796226e117e6cca146b521921fa6531072674174a3325066ac66fce089a53e1e5196
+  languageName: node
+  linkType: hard
+
+"postcss-selector-parser@npm:6.0.10":
+  version: 6.0.10
+  resolution: "postcss-selector-parser@npm:6.0.10"
+  dependencies:
+    cssesc: "npm:^3.0.0"
+    util-deprecate: "npm:^1.0.2"
+  checksum: 10c0/a0b27c5e3f7604c8dc7cd83f145fdd7b21448e0d86072da99e0d78e536ba27aa9db2d42024c50aa530408ee517c4bdc0260529e1afb56608f9a82e839c207e82
   languageName: node
   linkType: hard
 
@@ -4574,6 +4639,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-attr-converter@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "react-attr-converter@npm:0.3.1"
+  checksum: 10c0/c460dafcbcca6058a2589c69bace1947c1614ca06865561ded3503095618c87318e508ec93edde18044a89ca90520adc5c38aeefb3b45683f40eb9ba6616fc64
+  languageName: node
+  linkType: hard
+
 "react-day-picker@npm:8.10.1":
   version: 8.10.1
   resolution: "react-day-picker@npm:8.10.1"
@@ -4643,6 +4715,18 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/068e9704ff26816fffc4c8903e2c6c8df7291ee08615d7c1ab0cf8751f7080e2c5a5d78ef5d908b11b9cfc189f176d312e44cb02ea291ca0466d8283b479b438
+  languageName: node
+  linkType: hard
+
+"react-render-html@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "react-render-html@npm:0.6.0"
+  dependencies:
+    parse5: "npm:^3.0.2"
+    react-attr-converter: "npm:^0.3.1"
+  peerDependencies:
+    react: ^16.1.0
+  checksum: 10c0/7cd330008c22e2a13eae1a254d010010851760d7e83ebc42404dbeb4311d4b84a5cbc6b9f7279a4af631394e99bae3ee53f384ecbb0f2d20805622e0c68c7682
   languageName: node
   linkType: hard
 
@@ -5475,6 +5559,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
+  languageName: node
+  linkType: hard
+
 "unrs-resolver@npm:^1.6.2":
   version: 1.7.0
   resolution: "unrs-resolver@npm:1.7.0"
@@ -5594,6 +5685,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"util-deprecate@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "util-deprecate@npm:1.0.2"
+  checksum: 10c0/41a5bdd214df2f6c3ecf8622745e4a366c4adced864bc3c833739791aeeeb1838119af7daed4ba36428114b5c67dcda034a79c882e97e43c03e66a4dd7389942
+  languageName: node
+  linkType: hard
+
 "utrie@npm:^1.0.2":
   version: 1.0.2
   resolution: "utrie@npm:1.0.2"
@@ -5648,6 +5746,7 @@ __metadata:
     "@radix-ui/react-tabs": "npm:^1.1.4"
     "@tailwindcss/line-clamp": "npm:^0.4.4"
     "@tailwindcss/postcss": "npm:^4"
+    "@tailwindcss/typography": "npm:^0.5.16"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
@@ -5677,6 +5776,7 @@ __metadata:
     react-day-picker: "npm:8.10.1"
     react-dom: "npm:^19.0.0"
     react-hook-form: "npm:^7.56.1"
+    react-render-html: "npm:^0.6.0"
     react-responsive: "npm:^10.0.1"
     react-scroll-motion: "npm:^0.3.5"
     react-to-pdf: "npm:^2.0.0"

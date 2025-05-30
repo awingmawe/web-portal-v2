@@ -12,13 +12,11 @@ import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import renderHTML from 'react-render-html'
 
 // Memoized content component
 const TermsContent = React.memo(({ content }: { content: string }) => (
-  <div
-    dangerouslySetInnerHTML={{ __html: content }}
-    className="list-terms-condition text-sm"
-  />
+  <div className="list-terms-condition text-sm">{renderHTML(content)}</div>
 ))
 
 TermsContent.displayName = 'TermsContent'
