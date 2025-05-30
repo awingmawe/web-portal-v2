@@ -26,6 +26,8 @@ export default function List({
   transactions,
   fetchTransactions,
 }: ListProps) {
+  console.log(transactions)
+
   return (
     <Fragment>
       {lg ? (
@@ -80,6 +82,7 @@ export default function List({
                           (transaction.isPaidOff &&
                             transaction.isCompletedManifest)
                         }
+                        transaction={transaction}
                         fetchTransactions={fetchTransactions}
                       />
                     </div>
@@ -135,6 +138,7 @@ export default function List({
                       transaction?.packageSnapshot?.snapshot?.package
                         .organizationInstanceId
                     }
+                    transaction={transaction}
                     fetchTransactions={fetchTransactions}
                   />
                 </div>

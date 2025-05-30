@@ -85,7 +85,7 @@ const BankingPageDetail: React.FC = () => {
               borderRadius: '4px',
             }}
           >
-            Pengajuan Diterima
+            Pengajuan Disetujui
           </span>
         )
       case 'Ditolak':
@@ -98,12 +98,49 @@ const BankingPageDetail: React.FC = () => {
               borderRadius: '4px',
             }}
           >
-            Pengajuan Diterima
+            Pengajuan Ditolak
           </span>
         )
       default:
         return (
           <span className="text-gray-500 italic">Status tidak diketahui</span>
+        )
+    }
+  }
+
+  const textStatusPengajuan = (status: string, textColor?: string) => {
+    const colorClass = textColor ? `text-${textColor}` : ''
+
+    switch (status) {
+      case 'Diajukan':
+        return (
+          <span className={`text-[14px] font-medium ${colorClass} `}>
+            Pengajuan kamu telah diterima dan akan segera kami proses.
+          </span>
+        )
+      case 'Verifikasi':
+        return (
+          <span className={`text-[14px] font-medium ${colorClass}`}>
+            Pengajuan kamu sedang dalam proses verifikasi oleh pihak mitra.
+          </span>
+        )
+      case 'Diterima':
+        return (
+          <span className={`text-[14px] font-medium ${colorClass}`}>
+            Pengajuan kamu disetujui oleh pihak mitra.
+          </span>
+        )
+      case 'Ditolak':
+        return (
+          <span className={`text-[14px] font-medium ${colorClass}`}>
+            Pengajuan kamu ditolak oleh pihak mitra.
+          </span>
+        )
+      default:
+        return (
+          <span className={`italic ${colorClass || 'text-gray-500'}`}>
+            Status tidak diketahui
+          </span>
         )
     }
   }
@@ -164,7 +201,13 @@ const BankingPageDetail: React.FC = () => {
       </div>
     )
   }
-  const getStatusStyle = (status: string) => {
+
+  const getStatusStyle = (status: string, isOlderStatus: boolean = false) => {
+    // If it's an older status and there are multiple statuses, make it gray
+    if (isOlderStatus) {
+      return 'border-gray-200 bg-gray-100 text-gray-500'
+    }
+
     switch (status) {
       case 'Diajukan':
         return 'border-yellow-200 bg-yellow-100 text-yellow-800'
@@ -178,6 +221,7 @@ const BankingPageDetail: React.FC = () => {
         return 'border-gray-200 bg-gray-100 text-gray-800'
     }
   }
+
   return (
     <div>
       {/* Mobile Topbar - Only visible on mobile */}
@@ -211,8 +255,8 @@ const BankingPageDetail: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-4 py-4 md:top-0  md:py-6">
-        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-3">
+      <div className="pb-10 ">
+        <div className="mt-0 grid grid-cols-1 gap-4 shadow-[0_4px_4px_-2px_rgba(0,0,0,0.1)] md:gap-6 lg:grid-cols-3">
           {/* Main Content */}
           <div className="space-y-4 md:space-y-6 md:border-r md:border-[#E8E8E8] lg:col-span-2">
             {/* Status Banner */}
@@ -221,7 +265,7 @@ const BankingPageDetail: React.FC = () => {
             <div className="rounded-lg bg-white p-4  md:p-6">
               <div className="space-y-3 text-sm">
                 <div
-                  className={`rounded-[100px] border p-3 text-center md:p-4 ${getStatusStyle(data.status)}`}
+                  className={`flex h-8 items-center justify-center rounded-[100px] border text-center md:h-auto md:p-4 ${getStatusStyle(data.status)}`}
                 >
                   {statusPengajuan(data.status)}
                 </div>
@@ -245,95 +289,124 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="h-[8px] w-full bg-[#E8E8E8]" />
+            <div className="h-[8px] w-full bg-neutral-100" />
             {/* Product Details */}
-            <div
-              className="cursor-pointer rounded-lg bg-white p-3 md:mt-0 md:p-2"
-              onClick={() => {
-                router.push(
-                  `/${data.packageType}/${data.organizationInstanceName}/${data.slug}`
-                )
-              }}
+            <Link
+              href={`/${data.packageType}/${data.organizationInstanceName}/${data.slug}`}
             >
-              <div className="mb-3 flex items-center justify-between md:mb-4">
-                {/* Kiri */}
-                <span className="text-sm text-gray-600 md:text-base">
-                  Detail Produk
-                </span>
-
-                {/* Kanan - Always shown, different styling for mobile/desktop */}
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/images/logo-koper.svg"
-                    alt="Package Thumbnail"
-                    width={20}
-                    height={20}
-                    // className="h-full w-full object-cover"
-                  />
-                  <h2 className="text-sm font-medium text-gray-800 md:text-base md:font-semibold">
-                    {data.organizationInstanceName}
-                  </h2>
-                  <svg
-                    className=" h-5 w-5 text-gray-400 "
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              <div className="flex gap-3 md:gap-4">
-                {/* Image Container */}
-                <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 md:h-24 md:w-32">
-                  <Image
-                    src={data.thumbnail}
-                    alt="Package Thumbnail"
-                    width={242}
-                    height={190}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-
-                {/* Content Container */}
-                <div className="min-w-0 flex-1">
-                  <h3 className="mb-3 line-clamp-2 text-sm leading-tight font-semibold text-gray-800 md:mb-3 md:text-lg md:leading-normal">
-                    {data.title}
-                  </h3>
-
-                  <div className="space-y-2 text-gray-600 md:space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-3 w-3 flex-shrink-0 md:h-4 md:w-4" />
-                      <span className="text-xs leading-relaxed md:text-sm">
-                        {formatTanggal2(data.departureDate)} →{' '}
-                        {formatTanggal2(data.arrivalDate)}
+              <div className="mt-0 cursor-pointer rounded-lg bg-white p-4 pt-0 md:mt-0 md:p-2 md:pt-0">
+                {/* Header - Different layout for mobile/desktop */}
+                <div className="mb-3 md:mb-4">
+                  {/* Mobile Layout */}
+                  <div className="flex items-center justify-between md:hidden">
+                    <span className="text-sm text-gray-600">Detail Produk</span>
+                    <div className="flex items-center gap-1 rounded-full bg-orange-100 px-2 py-1">
+                      <Image
+                        src="/images/logo-koper.svg"
+                        alt="Package Thumbnail"
+                        width={16}
+                        height={16}
+                      />
+                      <span className="text-xs font-medium text-orange-600">
+                        {data.organizationInstanceName}
                       </span>
+                      <svg
+                        className="h-4 w-4 text-orange-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
                     </div>
+                  </div>
+
+                  {/* Desktop Layout */}
+                  <div className="hidden items-center justify-between md:flex">
+                    <span className="text-[12px] font-[500] text-neutral-900">
+                      Detail Produk
+                    </span>
                     <div className="flex items-center gap-2">
-                      <Users className="h-3 w-3 flex-shrink-0 md:h-4 md:w-4" />
-                      <span className="text-xs md:text-sm">
-                        {data.jumlahJamaah} Jemaah
-                      </span>
+                      <Image
+                        src="/images/logo-koper.svg"
+                        alt="Package Thumbnail"
+                        width={20}
+                        height={20}
+                      />
+                      <h2 className="text-base font-semibold text-gray-800">
+                        {data.organizationInstanceName}
+                      </h2>
+                      <svg
+                        className="h-5 w-5 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Bed className="h-3 w-3 flex-shrink-0 md:h-4 md:w-4" />
-                      <span className="text-xs md:text-sm">
-                        {data.roomType}
-                      </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 md:gap-4">
+                  {/* Image Container */}
+                  <div className="flex !flex-row items-center gap-3 md:gap-4">
+                    <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 md:h-24 md:w-32">
+                      <Image
+                        src={data.thumbnail}
+                        alt="Package Thumbnail"
+                        width={242}
+                        height={190}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className=" flex h-full min-w-0 flex-1 items-center">
+                      <h3 className="line-clamp-2 text-[12px] leading-tight font-semibold text-neutral-900 md:text-lg md:leading-normal">
+                        {data.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Content Container */}
+                  <div className="min-w-0 flex-1">
+                    <div className="space-y-2 text-gray-600 md:space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
+                        <span className="text-xs leading-relaxed text-neutral-500 md:text-sm">
+                          {formatTanggal2(data.departureDate)} →{' '}
+                          {formatTanggal2(data.arrivalDate)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
+                        <span className="text-xs text-neutral-500 md:text-sm">
+                          {data.jumlahJamaah} Jemaah
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Bed className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4 " />
+                        <span className="text-xs text-neutral-500 md:text-sm">
+                          {data.roomType}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="h-[8px] w-full bg-[#E8E8E8]" />
+            </Link>
+            <div className="h-[8px] w-full bg-neutral-100" />
             {/* Pricing Details */}
-            <div className="rounded-lg bg-white p-4 md:p-6">
+            <div className="rounded-lg bg-white p-4 pt-0 md:p-2 md:pt-0 ">
               <h3 className="mb-4 text-base font-semibold text-gray-800 md:text-lg">
                 Rincian Pengajuan
               </h3>
@@ -358,7 +431,7 @@ const BankingPageDetail: React.FC = () => {
             </div>
             <div className="h-[8px] w-full bg-[#E8E8E8]" />
             {/* Status Timeline */}
-            <div className="rounded-lg bg-white p-6 ">
+            <div className="rounded-lg bg-white p-4 pt-0 md:p-6 md:pt-0">
               <h3 className="mb-4 font-semibold text-gray-800">
                 Status Pengajuan
               </h3>
@@ -366,43 +439,68 @@ const BankingPageDetail: React.FC = () => {
               Array.isArray(data.submissionCreditHistory) &&
               data.submissionCreditHistory.length > 0 ? (
                 data.submissionCreditHistory.map(
-                  (historyItem: any, index: number) => (
-                    <div
-                      className="mb-5 flex flex-row items-start gap-2 sm:gap-4"
-                      key={index}
-                    >
-                      {/* Tanggal di kanan */}
-                      <span className="mt-1 w-24 text-right text-sm font-medium text-[#8E8E8B]">
-                        {formatTanggal3(historyItem.createdAt)}
-                      </span>
+                  (historyItem: any, index: number) => {
+                    // Check if this is an older status (not the first/latest one)
+                    const isOlderStatus =
+                      index > 0 && data.submissionCreditHistory.length > 1
 
-                      {/* Icon bulat + garis */}
-                      <div className="flex flex-col items-center">
-                        <Image
-                          src="/images/icon-bulet.svg"
-                          alt="Package Thumbnail"
-                          width={32}
-                          height={32}
-                        />
-                        {index < data.submissionCreditHistory.length - 1 && (
-                          <div className="mt-2 h-10 w-0.5 bg-gray-200"></div>
-                        )}
-                      </div>
-
-                      {/* Konten status */}
-                      <div className="flex-1">
-                        <div
-                          className={`mb-1 inline-flex max-h-full w-fit max-w-full items-center gap-2 rounded-[100px] border px-3 py-2 text-center text-xs md:px-4 md:py-3 md:text-[14px] ${getStatusStyle(historyItem.status)}`}
+                    return (
+                      <div
+                        className="flex flex-row items-start gap-2 sm:gap-4"
+                        key={index}
+                      >
+                        {/* Tanggal di kanan */}
+                        <span
+                          className={`mt-1 w-24 text-right text-sm font-medium ${isOlderStatus ? 'text-gray-400' : 'text-[#8E8E8B]'}`}
                         >
-                          {statusPengajuan(historyItem.status)}
+                          {formatTanggal3(historyItem.createdAt)}
+                        </span>
+
+                        {/* Icon bulat + garis */}
+                        <div className="relative flex flex-col items-center">
+                          <Image
+                            src="/images/icon-bulet.svg"
+                            alt="Package Thumbnail"
+                            width={32}
+                            height={32}
+                            className={
+                              isOlderStatus ? 'brightness-[90%] grayscale' : ''
+                            }
+                          />
+                          {index < data.submissionCreditHistory.length - 1 && (
+                            <div className="absolute top-8 h-20 w-0.5 bg-gray-200"></div>
+                          )}
                         </div>
-                        <p className="text-sm text-gray-600">
-                          Pengajuan kamu telah diterima dan akan segera kami
-                          proses
-                        </p>
+
+                        {/* Konten status */}
+                        <div className="flex flex-1 flex-col pb-5">
+                          <div
+                            className={`mb-1 inline-flex h-8 max-h-full w-fit max-w-full items-center gap-2 rounded-[100px] border px-3 py-2 text-center text-xs md:h-auto md:px-4 md:py-3 md:text-[14px] ${getStatusStyle(historyItem.status, isOlderStatus)}`}
+                          >
+                            {isOlderStatus ? (
+                              <span className="text-[14px] font-medium text-gray-500">
+                                {historyItem.status === 'Diajukan' &&
+                                  'Pengajuan Telah Diterima'}
+                                {historyItem.status === 'Verifikasi' &&
+                                  'Pengajuan Dalam Proses Verifikasi'}
+                                {historyItem.status === 'Diterima' &&
+                                  'Pengajuan Disetujui'}
+                                {historyItem.status === 'Ditolak' &&
+                                  'Pengajuan Ditolak'}
+                              </span>
+                            ) : (
+                              statusPengajuan(historyItem.status)
+                            )}
+                          </div>
+
+                          {textStatusPengajuan(
+                            historyItem.status,
+                            isOlderStatus ? 'gray-400' : undefined
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )
+                    )
+                  }
                 )
               ) : (
                 <div className="py-4 text-center text-gray-500">
@@ -414,16 +512,15 @@ const BankingPageDetail: React.FC = () => {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            {/* <div className="rounded-lg bg-white p-4 text-center shadow-sm md:p-6"> */}
             <Link
               href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
               target="_blank"
+              className="hidden lg:block"
             >
-              <button className="w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+              <button className="mt-5 w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
                 Bantuan
               </button>
             </Link>
-            {/* </div> */}
 
             {/* Banking Illustration - Hidden on mobile */}
             <div className="absolute bottom-12  ml-20 hidden lg:block">
@@ -434,6 +531,17 @@ const BankingPageDetail: React.FC = () => {
                 height={190}
               />
             </div>
+
+            <Link
+              href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
+              target="_blank"
+            >
+              <div className="fixed right-0 bottom-0 left-0 bg-white p-4 shadow-[0_-4px_6px_rgba(0,0,0,0.1)] md:hidden">
+                <button className="w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+                  Bantuan
+                </button>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

@@ -2,8 +2,14 @@
 
 'use client'
 
-import { PembiayaanForm } from '@/components/pages/banking/2-Pembiayaan/PembiayaanForm'
-import { PembiayaanFormStep2 } from '@/components/pages/banking/2-Pembiayaan/PembiayaanFormStep2'
+import {
+  PembiayaanForm,
+  PembiayaanFormRef,
+} from '@/components/pages/banking/2-Pembiayaan/PembiayaanForm'
+import {
+  PembiayaanFormStep2,
+  PembiayaanFormStep2Ref,
+} from '@/components/pages/banking/2-Pembiayaan/PembiayaanFormStep2'
 import SuccessModal from '@/components/pages/banking/2-Pembiayaan/SuccessModal '
 import DrawerAlreadyHave from '@/components/pages/banking/mobile/DrawerAlreadyHave'
 import ModalAlreadyHave from '@/components/pages/banking/modal/modalAlreadyHave'
@@ -12,7 +18,9 @@ import { bankCredit, getbankCredit } from '@/services/banking-service'
 import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import React, { useEffect, useRef, useState } from 'react'
+
 type PembiayaanFormValues = {
   fullName: string
   email: string
@@ -34,7 +42,7 @@ const PembiayaanPage: React.FC = () => {
   const [screenSize, setScreenSize] = useState<'mobile' | 'desktop'>('mobile')
   const [formData, setFormData] = useState<PembiayaanFormValues | null>(null)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [submissionData, setSubmissionData] = useState()
+  const [submissionData, setSubmissionData] = useState<any>()
   const [showFormCurrent, setShowFormCurrent] = useState(false)
   // Monitor screen size
   useEffect(() => {
@@ -48,14 +56,8 @@ const PembiayaanPage: React.FC = () => {
     return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
 
-  // const openForm = async () => {
-  //   const res = await getSaving()
-  //   console.log(res)
-
-  //   // setShowForm(true)
-  //   // setStep(1)
-  // }
-
+  const formRef = useRef<PembiayaanFormRef>(null)
+  const formStep2Ref = useRef<PembiayaanFormStep2Ref>(null)
   const openForm = async () => {
     try {
       const res = await getbankCredit()
@@ -125,14 +127,15 @@ const PembiayaanPage: React.FC = () => {
         status: 'Diajukan',
         providerId: 1,
       }
+
       await updateProfile(dataProfile)
-      // // Here you would normally submit to your API
+      // // // Here you would normally submit to your API
       await bankCredit(dataKirim)
       // // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      closeForm()
-      setSubmissionData(values)
+      // closeForm()
       setShowSuccessModal(true)
+      setSubmissionData(values)
     } catch (error) {
       console.error('Error submitting form:', error)
       throw error
@@ -145,6 +148,17 @@ const PembiayaanPage: React.FC = () => {
     if (step === 2) {
       setStep(1)
     }
+  }
+
+  const handleExternalSubmit = () => {
+    if (formRef.current) {
+      formRef.current.submit()
+    }
+  }
+
+  // Handler untuk validasi form
+  const isFormValid = () => {
+    return formRef.current?.isValid() || false
   }
   // Mobile Form View
   if (showForm && screenSize === 'mobile') {
@@ -245,7 +259,16 @@ const PembiayaanPage: React.FC = () => {
       </div>
     )
   }
+  const handleExternalSubmitStep2 = () => {
+    if (formStep2Ref.current) {
+      formStep2Ref.current.submit()
+    }
+  }
 
+  // Handler untuk validasi form step 2
+  const isFormStep2Valid = () => {
+    return formStep2Ref.current?.isValid() || false
+  }
   return (
     <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-8 md:pb-12">
       {/* Mobile Header - Only visible on mobile */}
@@ -254,18 +277,18 @@ const PembiayaanPage: React.FC = () => {
           <div className="relative mb-4 justify-items-center rounded-lg">
             <Image
               src="/images/logo-permata-pembiayaan.svg"
-              width={342}
+              width={400}
               height={250}
               alt="Permata Pembiayaan"
             />
           </div>
 
           <div className="mb-4">
-            <h1 className="text-[32px] font-[600] text-black">
+            <h1 className="text-[14px] font-[600] text-neutral-900">
               Program Pendanaan Syariah Umrah
             </h1>
             <div className="mt-4 flex items-center text-xs text-gray-500">
-              <span className="text-[14px] font-[400] text-[#8E8E8B]">
+              <span className="text-[12px] font-[400] text-neutral-500">
                 Didukung oleh
               </span>
               <Image
@@ -273,7 +296,7 @@ const PembiayaanPage: React.FC = () => {
                 width={129}
                 height={32}
                 alt="Permata Bank"
-                className="ml-1"
+                className="ml-6"
               />
             </div>
           </div>
@@ -282,37 +305,28 @@ const PembiayaanPage: React.FC = () => {
 
       {/* Desktop Header - Only visible on desktop */}
       {screenSize === 'desktop' && (
-        <div className="bg-white p-4">
-          <button className="flex items-center text-gray-800">
-            <ChevronLeft className="mr-4" size={24} />
-            <span className="text-2xl font-semibold text-gray-800">
-              Kembali
-            </span>
-          </button>
-        </div>
+        <Link href={'/'}>
+          <div className="bg-white p-4">
+            <button className="flex cursor-pointer items-center text-gray-800">
+              <ChevronLeft className="mr-4" size={24} />
+              <span className="text-2xl font-semibold text-gray-800">
+                Kembali
+              </span>
+            </button>
+          </div>
+        </Link>
       )}
 
       {/* Desktop Banner - Only visible on desktop */}
       {screenSize === 'desktop' && (
         <div className="mb-6">
-          <div className="flex h-64 w-full flex-col items-center justify-center rounded-3xl bg-gray-200 p-12">
-            <div className="mb-4 rounded-full bg-white p-6">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9" />
-                <path d="M12 12v9" />
-                <path d="m8 17 4 4 4-4" />
-              </svg>
-            </div>
-            <p className="text-center text-sm text-gray-500">
-              Gambar ini bisa diisi banner tsp program Pendanaan
-            </p>
+          <div className="relative h-64 w-full">
+            <Image
+              src="/images/image-landing.svg"
+              alt="Permata Bank"
+              fill
+              className="object-contain"
+            />
           </div>
         </div>
       )}
@@ -341,41 +355,49 @@ const PembiayaanPage: React.FC = () => {
       {/* Content area */}
       <div className={screenSize === 'desktop' ? 'px-6' : ''}>
         <div className="mb-3 md:mb-6">
-          <p className="text-[14px] leading-tight text-black md:text-[14px] md:font-[400] md:text-black">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu
-            turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus
-            nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum
-            tellus elit sed risus. Maecenas eget condimentum velit, sit amet
-            feugiat lectus. Cras ornare sagittis erat, sit amet eleifend purus
-            hendrerit non. Duis sed dui ante.
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Mau ibadah ke Tanah Suci, tapi kantong lagi tipis?
+          </p>
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Tenang aja! Solusi manis lewat pendanaan syariah
+          </p>
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            InsyaAllah jadi langkah mudah sampai ke Baitullah
           </p>
         </div>
 
-        <ol className="mb-4 list-decimal space-y-3 pl-6 md:mb-6">
-          {[...Array(4)].map((_, idx) => (
-            <li
-              key={idx}
-              className="text-xs font-normal text-gray-800 md:text-[14px] md:font-[400] md:text-black"
-            >
-              <span className="font-semibold">
-                Curabitur tempor quis eros tempus lacinia.
-              </span>{' '}
-              Nam bibendum pellentesque quam a convallis. Sed ut vulputate nisi.
-              Integer in felis sed leo vestibulum venenatis.
+        <div className="mb-3 md:mb-6">
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Bersama KTA iB Multiguna PermataBank, kami hadir untuk mempermudah
+            umat Muslim mewujudkan impiannya dalam melaksanakan ibadah ke Tanah
+            Suci. Kamu bisa mengajukan pendanaan syariah untuk ibadah Umroh dan
+            Haji dengan paket apa pun melalui akad Ijarah Multijasa.
+          </p>
+        </div>
+        <div className="mb-3 md:mb-6">
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Berikut rincian proses pengajuan yang dapat dilakukan:
+          </p>
+          <ol className="list-decimal  text-[12px] font-[400] text-black md:text-sm">
+            <li>
+              Pilih paket Umroh atau Haji yang diinginkan, check out dengan
+              pilihan pembayaran <strong>Bayar Nanti</strong>.
             </li>
-          ))}
-        </ol>
+            <li>Masukkan data diri secara lengkap.</li>
+            <li>
+              Cek kembali paket yang dipilih, kamar hotel, jumlah jemaah, serta
+              nominal angsuran pembayaran sesuai tenor yang kamu pilih.
+            </li>
+            <li>Klik ajukan pendanaan.</li>
+          </ol>
+        </div>
 
-        <p className="mb-8 text-xs font-normal text-gray-800 md:text-[14px] md:font-[400] md:text-black">
-          Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque
-          quam a convallis. Sed ut vulputate nisi. Integer in felis sed leo
-          vestibulum venenatis. Suspendisse quis arcu sem. Aenean feugiat ex eu
-          vestibulum vestibulum. Morbi a eleifend magna. Nam metus lacus,
-          porttitor eu mauris a, blandit ultrices nibh. Mauris sit amet magna
-          non ligula vestibulum eleifend. Nulla varius volutpat turpis sed
-          lacinia. Nam eget mi in purus lobortis eleifend. Sed nec ante dictum
-          sem condimentum ullamcorper quis venenatis nisi. Proin vitae facilibus
-          nisi, ac posuere leo.
+        <p className="text-[12px] font-[400] text-[black] md:text-sm">
+          Perlu diingat bahwa jumlah jemaah memengaruhi besarnya biaya angsuran
+          dan seluruhnya akan ditanggung oleh pemohon. Masa pengajuan pendanaan
+          akan berlangsung selama maksimal 14 hari kerja. Harap untuk selalu
+          memantau notifikasi secara berkala untuk melihat hasil status
+          pengajuan.
         </p>
 
         {/* Action button */}
@@ -403,7 +425,7 @@ const PembiayaanPage: React.FC = () => {
               <h2 className="text-xl font-semibold">Form Program Pendanaan</h2>
             </div>
 
-            <div className="flex justify-center pb-6">
+            <div className="flex justify-center pr-15 pl-15">
               <div className="flex h-auto w-full max-w-4xl rounded-3xl border border-gray-200">
                 {/* Sidebar kiri */}
                 <div className="w-1/3 border-r border-gray-200">
@@ -446,13 +468,20 @@ const PembiayaanPage: React.FC = () => {
                 </div>
 
                 {/* Form kanan */}
-                <div className="w-2/3 overflow-y-auto ">
-                  <div className="p-6">
+                <div
+                  className="w-2/3 overflow-y-auto "
+                  style={{
+                    scrollbarWidth: 'none', // Firefox
+                    msOverflowStyle: 'none', // IE 10+
+                  }}
+                >
+                  <div className="h-[500px] p-6 [&::-webkit-scrollbar]:hidden">
                     {/* <form onSubmit={handleSubmit}> */}
 
                     {step === 1 && (
                       <>
                         <PembiayaanForm
+                          ref={formRef}
                           screenSize={screenSize}
                           onSubmit={handleFormSubmit}
                           isLoading={loading}
@@ -464,6 +493,7 @@ const PembiayaanPage: React.FC = () => {
                     {step === 2 && (
                       <>
                         <PembiayaanFormStep2
+                          ref={formStep2Ref} // Tambahkan ref ini
                           onSubmit={handleFormSubmit2}
                           onBack={goBack}
                           isLoading={loading}
@@ -473,10 +503,54 @@ const PembiayaanPage: React.FC = () => {
                       </>
                     )}
                   </div>
+
                   {/* </form> */}
                 </div>
               </div>
             </div>
+            {step === 1 ? (
+              <div className="mt-8 mr-15 mb-8 flex items-center justify-end space-x-4">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    closeForm()
+                  }}
+                  className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
+                  disabled={loading}
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleExternalSubmit}
+                  className="rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
+                  disabled={loading}
+                >
+                  {loading ? 'Loading...' : 'Lanjut'}
+                </Button>
+              </div>
+            ) : (
+              <div className="mt-8 mr-15 mb-8 flex items-center justify-end space-x-4">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    closeForm()
+                  }}
+                  className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
+                  disabled={loading}
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="button" // Ubah ke type="button"
+                  onClick={handleExternalSubmitStep2} // Gunakan handler baru
+                  className="mr-4 rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
+                  disabled={loading}
+                >
+                  {loading ? 'Loading...' : 'Kirim Permintaan'}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}

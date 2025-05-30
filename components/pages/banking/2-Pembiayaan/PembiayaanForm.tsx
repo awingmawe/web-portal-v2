@@ -1,6 +1,9 @@
+/* eslint-disable react/display-name */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { forwardRef, useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -54,6 +57,13 @@ const defaultValues: PembiayaanFormValues = {
   address: '',
 }
 
+// Form ref interface for external control
+export interface PembiayaanFormRef {
+  submit: () => void
+  isValid: () => boolean
+  getValues: () => PembiayaanFormValues
+}
+
 interface PembiayaanFormProps {
   onSubmit: (values: PembiayaanFormValues) => Promise<void>
   isLoading?: boolean
@@ -61,12 +71,10 @@ interface PembiayaanFormProps {
   onCancel?: any
 }
 
-export function PembiayaanForm({
-  onSubmit,
-  isLoading = false,
-  screenSize,
-  onCancel,
-}: PembiayaanFormProps) {
+export const PembiayaanForm = forwardRef<
+  PembiayaanFormRef,
+  PembiayaanFormProps
+>(({ onSubmit, isLoading = false, screenSize, onCancel }, ref) => {
   const { profile } = useAuth()
 
   // Define your form
@@ -74,6 +82,15 @@ export function PembiayaanForm({
     resolver: zodResolver(pembiayaanFormSchema),
     defaultValues,
   })
+
+  // Expose form methods to parent component
+  useImperativeHandle(ref, () => ({
+    submit: () => {
+      form.handleSubmit(handleSubmit)()
+    },
+    isValid: () => form.formState.isValid,
+    getValues: () => form.getValues(),
+  }))
 
   // Update form values when profile changes
   useEffect(() => {
@@ -115,7 +132,10 @@ export function PembiayaanForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form
+        className={`space-y-4 ${screenSize !== 'desktop' ? 'pb-20' : 'pb-2'}`}
+        onSubmit={form.handleSubmit(handleSubmit)}
+      >
         {/* Nama Sesuai KTP */}
         <FormField
           control={form.control}
@@ -266,6 +286,7 @@ export function PembiayaanForm({
 
         {/* Kabupaten/Kota */}
         <KotaAsalCombobox control={form.control} />
+
         {/* Alamat Lengkap */}
         <FormField
           control={form.control}
@@ -286,31 +307,11 @@ export function PembiayaanForm({
             </FormItem>
           )}
         />
-        {/* Form Actions */}
-        {screenSize === 'desktop' ? (
-          <div className="mt-8 flex items-center justify-end space-x-4">
-            <Button
-              type="button"
-              onClick={onCancel}
-              className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
-              disabled={isLoading}
-            >
-              Batal
-            </Button>
+        {screenSize !== 'dekstop' && (
+          <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-gray-100 bg-white p-4">
             <Button
               type="submit"
-              className="rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
-              disabled={isLoading}
-              isLoading={isLoading}
-            >
-              Lanjut
-            </Button>
-          </div>
-        ) : (
-          <div className="mt-8 flex items-center justify-end space-x-4">
-            <Button
-              type="submit"
-              className="w-[100%] rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
+              className="w-full rounded-full bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600"
               disabled={isLoading}
               isLoading={isLoading}
             >
@@ -321,4 +322,4 @@ export function PembiayaanForm({
       </form>
     </Form>
   )
-}
+})

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Tambahkan debugging dan perbaikan untuk desktop view
 'use client'
+import SuccessModal from '@/components/pages/banking/1-Tabungan/SuccessModal '
 import DrawerAlreadyHave from '@/components/pages/banking/mobile/DrawerAlreadyHave'
 import ModalAlreadyHave from '@/components/pages/banking/modal/modalAlreadyHave'
 import { Button } from '@/components/ui/button'
@@ -7,8 +9,9 @@ import { getSaving, postSaving } from '@/services/banking-service'
 import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import { TabunganForm } from './TabunganForm'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
+import { TabunganForm, TabunganFormRef } from './TabunganForm'
 
 type TabunganFormValues = {
   fullName: string
@@ -28,7 +31,8 @@ const TabunganPage = () => {
   const [showFormCurrent, setShowFormCurrent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [screenSize, setScreenSize] = useState<'mobile' | 'desktop'>('mobile')
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [submissionData, setSubmissionData] = useState<any>()
   // Debug: Monitor screen size
   useEffect(() => {
     const checkScreenSize = () => {
@@ -57,7 +61,17 @@ const TabunganPage = () => {
   const closeForm = () => {
     setShowForm(false)
   }
+  const formRef = useRef<TabunganFormRef>(null)
+  const handleExternalSubmit = () => {
+    if (formRef.current) {
+      formRef.current.submit()
+    }
+  }
 
+  // Handler untuk validasi form
+  const isFormValid = () => {
+    return formRef.current?.isValid() || false
+  }
   const handleFormSubmit = async (values: TabunganFormValues) => {
     setLoading(true)
     try {
@@ -79,9 +93,12 @@ const TabunganPage = () => {
         address: values.address,
         status: 'Diajukan',
       }
+      // console.log(Allpayload)
 
       await postSaving(Allpayload)
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      // await new Promise((resolve) => setTimeout(resolve, 2000))
+      setShowSuccessModal(true)
+      setSubmissionData(Allpayload)
       closeForm()
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -111,42 +128,44 @@ const TabunganPage = () => {
             isLoading={loading}
           />
         </div>
+        <SuccessModal
+          open={showSuccessModal}
+          onOpenChange={setShowSuccessModal}
+          screenSize={screenSize}
+          submissionData={submissionData}
+        />
       </div>
     )
   }
 
   return (
     <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-8 md:pb-12">
-      {/* Debug Info - hapus di production */}
-      {/* <div className="mb-4 rounded bg-blue-100 p-2 text-xs">
-        Debug: {screenSize} mode, Screen:{' '}
-        {typeof window !== 'undefined' ? window.innerWidth : 'unknown'}px
-      </div> */}
-
       {/* Mobile Header - hanya tampil di mobile */}
       {screenSize === 'mobile' && (
         <div>
-          <div className="relative mb-4 justify-items-center rounded-lg">
+          <div className="relative h-64 w-full">
             <Image
-              src="/images/logo-permata-tabungan.svg"
-              width={342}
-              height={250}
-              alt="Permata Tabungan"
+              src="/images/image-landing.svg"
+              alt="Permata Bank"
+              fill
+              className="object-contain"
             />
           </div>
 
           <div className="mb-4">
-            <h1 className="text-lg font-bold text-black">
+            <h1 className="text-[14px] font-[600] text-neutral-900">
               Program Tabungan Umrah
             </h1>
             <div className="mt-4 flex items-center text-xs text-gray-500">
-              <span>Didukung oleh</span>
+              <span className="text-[12px] font-[400] text-neutral-500">
+                Didukung oleh
+              </span>
               <Image
                 src="/images/logo-permata.svg"
                 width={129}
                 height={32}
                 alt="Permata Bank"
-                className="ml-4"
+                className="ml-6"
               />
             </div>
           </div>
@@ -155,14 +174,17 @@ const TabunganPage = () => {
 
       {/* Desktop Header - hanya tampil di desktop */}
       {screenSize === 'desktop' && (
-        <div className="bg-white p-4">
-          <button className="flex items-center text-gray-800">
-            <ChevronLeft className="mr-4" size={24} />
-            <span className="text-2xl font-semibold text-gray-800">
-              Kembali
-            </span>
-          </button>
-        </div>
+        <Link href={'/'}>
+          <div className="bg-white p-4">
+            <button className="flex cursor-pointer items-center text-gray-800">
+              <ChevronLeft className="mr-4" size={24} />
+
+              <span className="text-2xl font-semibold text-gray-800">
+                Kembali
+              </span>
+            </button>
+          </div>
+        </Link>
       )}
 
       {/* Desktop Banner - hanya tampil di desktop */}
@@ -214,7 +236,7 @@ const TabunganPage = () => {
       {/* Content - tampil di kedua mode */}
       <div className={screenSize === 'desktop' ? 'px-6' : ''}>
         <div className="mb-3 md:mb-6">
-          <p className="text-xs leading-tight text-gray-800 md:text-sm">
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
             Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -226,19 +248,19 @@ const TabunganPage = () => {
           {[...Array(4)].map((_, idx) => (
             <li
               key={idx}
-              className="text-xs font-normal text-gray-800 md:text-sm"
+              className="text-[12px] font-[400] text-[black] md:text-sm"
             >
-              <span className="font-semibold">
-                Curabitur tempor quis eros tempus lacinia.
+              <span className="text-[12px] font-[400] text-[black]">
+                Curabitur tempor quis eros tempus lacinia. Nam bibendum
+                pellentesque quam a convallis. Sed ut perspiciatis unde omnis
+                iste natus error sit voluptatem accusantium doloremque
+                laudantium.
               </span>{' '}
-              Nam bibendum pellentesque quam a convallis. Sed ut perspiciatis
-              unde omnis iste natus error sit voluptatem accusantium doloremque
-              laudantium.
             </li>
           ))}
         </ol>
 
-        <p className="mb-8 text-xs font-normal text-gray-800 md:text-sm">
+        <p className="text-[12px] font-[400] text-[black] md:text-sm">
           Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque
           quam a convallis. Sed ut perspiciatis unde omnis iste natus error sit
           voluptatem accusantium doloremque laudantium, totam rem aperiam.
@@ -269,7 +291,7 @@ const TabunganPage = () => {
               <h2 className="text-xl font-semibold">Form Program Tabungan</h2>
             </div>
 
-            <div className="flex justify-center pb-6">
+            <div className="flex justify-center pr-15 pl-15">
               <div className="flex h-auto w-full max-w-4xl rounded-3xl border border-gray-200">
                 {/* Sidebar kiri */}
                 <div className="w-1/3 border-r border-gray-200">
@@ -288,20 +310,54 @@ const TabunganPage = () => {
                 </div>
 
                 {/* Form kanan */}
-                <div className="w-2/3 overflow-y-auto">
-                  <div className="p-6">
+                <div
+                  className="w-2/3 overflow-y-auto "
+                  style={{
+                    scrollbarWidth: 'none', // Firefox
+                    msOverflowStyle: 'none', // IE 10+
+                  }}
+                >
+                  <div className="h-[500px] p-6 [&::-webkit-scrollbar]:hidden">
                     <TabunganForm
+                      ref={formRef}
                       onSubmit={handleFormSubmit}
                       onCancel={closeForm}
                       isLoading={loading}
+                      screenSize={screenSize}
                     />
                   </div>
                 </div>
               </div>
             </div>
+            <div className="mt-8 mr-15 mb-8 flex items-center justify-end space-x-4">
+              <Button
+                type="button"
+                onClick={() => {
+                  closeForm()
+                }}
+                className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
+                disabled={loading}
+              >
+                Batal
+              </Button>
+              <Button
+                type="button" // Ubah ke type="button"
+                onClick={handleExternalSubmit} // Gunakan handler baru
+                className="mr-4 rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Submit'}
+              </Button>
+            </div>
           </div>
         </div>
       )}
+      <SuccessModal
+        open={showSuccessModal}
+        onOpenChange={setShowSuccessModal}
+        screenSize={screenSize}
+        submissionData={[]}
+      />
       {showFormCurrent && screenSize === 'desktop' ? (
         <ModalAlreadyHave
           text={'Tabungan'}

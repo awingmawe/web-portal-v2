@@ -39,6 +39,7 @@ export interface TransactionCardFooter {
   paymentAmount?: number
   organizationInstanceId?: any
   fetchTransactions?: any
+  transaction?: any
 }
 
 export default function TransactionCardFooter({
@@ -53,6 +54,7 @@ export default function TransactionCardFooter({
   paymentAmount,
   organizationInstanceId,
   fetchTransactions,
+  transaction,
 }: TransactionCardFooter) {
   const { lg } = useTailwindBreakpoint()
 
@@ -136,6 +138,9 @@ export default function TransactionCardFooter({
     description,
     setDescription,
   } = useCanceled()
+
+  // console.log(transaction)
+
   return (
     <Fragment>
       <div className="flex items-center gap-2 max-lg:hidden">
@@ -359,6 +364,7 @@ export default function TransactionCardFooter({
           </Fragment>
         )}
       </div>
+
       <Script
         src={SNAP_URL}
         data-client-key={MIDTRANS_CLIENT_KEY}
