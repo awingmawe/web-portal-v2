@@ -289,7 +289,7 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="h-[8px] w-full bg-neutral-100" />
+            <div className="h-[6px] w-full bg-neutral-100 opacity-50" />
             {/* Product Details */}
             <Link
               href={`/${data.packageType}/${data.organizationInstanceName}/${data.slug}`}
@@ -404,7 +404,7 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </Link>
-            <div className="h-[8px] w-full bg-neutral-100" />
+            <div className="h-[6px] w-full bg-neutral-100 opacity-50" />
             {/* Pricing Details */}
             <div className="rounded-lg bg-white p-4 pt-0 md:p-2 md:pt-0 ">
               <h3 className="mb-4 text-base font-semibold text-gray-800 md:text-lg">
@@ -429,7 +429,7 @@ const BankingPageDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="h-[8px] w-full bg-[#E8E8E8]" />
+            <div className="h-[6px] w-full bg-neutral-100 opacity-50" />
             {/* Status Timeline */}
             <div className="rounded-lg bg-white p-4 pt-0 md:p-6 md:pt-0">
               <h3 className="mb-4 font-semibold text-gray-800">
