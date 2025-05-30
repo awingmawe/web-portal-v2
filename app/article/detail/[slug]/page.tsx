@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import TopbarMobileArticle from '@/components/pages/article/common/TopbarMobile'
 import ImageDetail from '@/components/pages/article/detail/1-Image/ImageDetail'
 import ContentArticle from '@/components/pages/article/detail/2-Content/Content'
 import LayoutArticle from '@/components/pages/article/Layout'
@@ -95,7 +96,8 @@ export default async function ArtilceDetail({ params }: any) {
 
   return (
     <LayoutArticle>
-      <main className="container mx-auto mt-7.5 mb-12.5 max-lg:mt-12.5 max-lg:px-4">
+      <TopbarMobileArticle href="back" applyRouter />
+      <main className="container mx-auto mt-7.5 mb-12.5 max-lg:mt-15 max-lg:px-4">
         <ImageDetail
           created_at={dataArticleDetail.created_at}
           thumbnail_url={dataArticleDetail.thumbnail}

@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import TopbarMobileArticle from '@/components/pages/article/common/TopbarMobile'
 import WidgetFilter from '@/components/pages/article/common/Widget'
 import LayoutArticle from '@/components/pages/article/Layout'
 import { ListArticle } from '@/components/pages/article/list/ListArticle'
@@ -37,6 +38,7 @@ export default async function ArtilceSearch({ searchParams }: any) {
 
   return (
     <LayoutArticle>
+      <TopbarMobileArticle href="/article" applyRouter />
       <main className="container mx-auto mt-10 mb-12.5 max-lg:px-4">
         <WidgetFilter eventCategory="article_index" />
         <ListArticle
