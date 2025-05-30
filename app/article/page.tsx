@@ -18,7 +18,7 @@ export async function generateMetadata() {
 }
 
 export default async function ArticleHome({ searchParams }: any) {
-  const { category } = searchParams
+  const { category } = await searchParams
   const isWebview = (await headers()).get('is-web-view') || ''
 
   const [
