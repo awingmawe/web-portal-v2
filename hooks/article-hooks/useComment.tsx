@@ -1,7 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { Comment } from '@/constant/types/ArticleProps'
+import { useAuth } from '@/contexts/auth/context'
 import { postComment } from '@/services/article-service'
 import { useCallback, useState } from 'react'
 
@@ -25,11 +25,12 @@ export const useComments = ({
   const [comments, setComments] = useState<Comment[]>(initialComments)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { profile } = useAuth()
 
   const submitComment = useCallback(
     async (content: string) => {
       if (!content.trim()) {
-        setError('Comment cannot be empty')
+        setError('Comment tidak boleh kosong')
         return
       }
 
@@ -43,25 +44,28 @@ export const useComments = ({
         })
 
         // Add the new comment to the beginning of the list
-        if (comments?.length > 0) {
-          setComments((prevComments) => [newComment, ...prevComments])
-        } else {
-          setComments([newComment])
-        }
+        setComments((prevComments) => [
+          {
+            ...newComment,
+            user: {
+              name: profile?.name ?? '', // Ensure name is always a string
+              avatar: profile?.avatarProvider ?? '',
+            },
+          } as Comment,
+          ...(prevComments ?? []),
+        ])
       } catch (err) {
-        console.log(err)
-
         const errorMessage =
           err instanceof Error
             ? err.message
-            : 'Failed to submit comment. Please try again.'
+            : 'Gagal membuat komen. Tolong ulangi beberapa saat lagi.'
         setError(errorMessage)
         throw err // Re-throw so the component can handle it if needed
       } finally {
         setIsSubmitting(false)
       }
     },
-    [articleId]
+    [articleId, profile]
   )
 
   const clearError = useCallback(() => {

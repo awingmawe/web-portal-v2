@@ -43,12 +43,16 @@ export const ArticleCard = ({
   }
 
   // Format the date to the Indonesian format (DD Bulan YYYY)
-  const publishedAt = new Date(article?.published_at ?? Date.now())
+  const publishedAt = new Date(article?.published_at ?? article?.created_at)
   const now = new Date()
 
   const formattedDate =
     publishedAt.toDateString() === now.toDateString()
-      ? formatDistance(publishedAt, now, { addSuffix: true, locale: id })
+      ? formatDistance(publishedAt, now, {
+          addSuffix: true,
+          locale: id,
+          includeSeconds: true,
+        })
       : format(publishedAt, 'dd MMMM yyyy', {
           locale: id,
         })
@@ -86,7 +90,7 @@ export const ArticleCard = ({
       >
         {/* Image */}
         <Image
-          src={article?.thumbnail_url ?? '/images/no-image-placeholder.png'}
+          src={article?.thumbnail ?? '/images/no-image-placeholder.png'}
           alt={article?.title ?? 'Article Image'}
           width={0}
           height={0}

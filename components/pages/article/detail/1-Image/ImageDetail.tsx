@@ -5,14 +5,21 @@ import WhatsappIcon from '@/components/icons/whatsapp'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 type ImageDetailProps = {
   created_at: Date | string
-  thumbnail: string | null
+  thumbnail_url: string | null
+  title: string
 }
 
-const ImageDetail = ({ created_at, thumbnail }: ImageDetailProps) => {
+const ImageDetail = ({
+  created_at,
+  thumbnail_url,
+  title,
+}: ImageDetailProps) => {
   const { shareViaCopyLink } = useGallerySharing()
+  const router = useRouter()
 
   return (
     <>
@@ -24,17 +31,24 @@ const ImageDetail = ({ created_at, thumbnail }: ImageDetailProps) => {
         </p>
         <div className="flex items-center gap-2">
           <p className="text-s-regular text-neutral-500">Bagikan:</p>
-          <WhatsappIcon size={20} />
+          <WhatsappIcon
+            size={20}
+            onClick={() =>
+              router.push(
+                `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+              )
+            }
+          />
           <ShareIcon size={20} onClick={shareViaCopyLink} />
         </div>
       </div>
       <Image
-        src={thumbnail ?? `/images/no-image-placeholder.png`}
+        src={thumbnail_url ?? `/images/no-image-placeholder.png`}
         width={0}
         height={0}
         sizes="100vw"
         className="aspect-32/15 w-full rounded-[20px] object-cover"
-        alt={thumbnail ?? 'No Image'}
+        alt={thumbnail_url ?? 'No Image'}
       />
     </>
   )

@@ -845,7 +845,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                 handlePushEvent('click_consultation', true)
                 shareViaWhatsApp(titlePackage, phoneNumberUsed)
               }}
-              className="hover:text-primary-500 flex items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
+              className="hover:text-primary-500 flex cursor-pointer items-center gap-1 text-sm font-medium text-neutral-900 transition-colors"
             >
               <span className="text-s-medium">Konsultasi</span>
               <WhatsappIcon size={16} />

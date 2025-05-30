@@ -12,17 +12,19 @@ export function ListArticle({
   dataAllArticle,
   total,
   dataCategories,
+  size = 9,
 }: {
   dataAllArticle: Article[]
   total: number
   dataCategories: Category[]
+  size?: number
 }) {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { md: isMobile } = useTailwindBreakpoint()
   const totalPages = useMemo(() => {
-    return Math.ceil(total / 9)
-  }, [total])
+    return Math.ceil(total / size)
+  }, [total, size])
 
   // Create page navigation function
   const goToPage = useCallback(

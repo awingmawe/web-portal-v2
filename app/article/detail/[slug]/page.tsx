@@ -15,11 +15,17 @@ import { getUserById } from '@/services/identity-service'
 import { getBanner, getPackageList, getTagById } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: any) {
+  const { slug } = await params
+
+  const dataDetail = await getArticleDetail(slug)
+
   return {
     ...metadata(
-      'Muslim 101 | Pencarian Article',
-      `Muslim 101 Pencarian Article`
+      `Muslim 101 | ${dataDetail.title}`,
+      dataDetail.description,
+      dataDetail.thumbnail,
+      dataDetail.hashtags
     ),
   }
 }
@@ -53,15 +59,26 @@ export default async function ArtilceDetail({ params }: any) {
           }),
     ])
 
-  const tag = await getTagById(Number(dataArticleDetail.promo_tag))
+  let tag
+  if (dataArticleDetail.type === 'promo-umrah') {
+    tag = await getTagById(Number(dataArticleDetail.promo_tag))
+  }
 
   const dataPerTag = await getPackageList({
     page: 1,
     size: 12,
-    ['tagPackage.tagSlug']: tag.slug,
+    ['tagPackage.tagSlug']: tag?.slug ?? undefined,
     order: 'desc',
     orderBy: 'createdAt',
   })
+
+  let dataPackageSlug: PackageTagSlug | undefined = undefined
+  if (dataArticleDetail.type === 'promo-umrah') {
+    dataPackageSlug = {
+      slug: tag?.slug ?? '',
+      data: mapProductsToCardData(dataPerTag),
+    }
+  }
 
   const dataUser = await getUserById(dataArticleDetail?.author_id)
 
@@ -77,16 +94,13 @@ export default async function ArtilceDetail({ params }: any) {
     tag: dataArticleDetail?.hashtags?.map((tag) => tag).join(', '),
   }
 
-  const dataPackageSlug: PackageTagSlug = {
-    slug: tag.slug,
-    data: mapProductsToCardData(dataPerTag),
-  }
   return (
     <LayoutArticle>
       <main className="container mx-auto mt-7.5 mb-12.5 max-lg:mt-12.5 max-lg:px-4">
         <ImageDetail
           created_at={dataArticleDetail.created_at}
-          thumbnail={dataArticleDetail.thumbnail_url}
+          thumbnail_url={dataArticleDetail.thumbnail}
+          title={dataArticleDetail.title}
         />
         <ContentArticle
           {...dataArticleDetail}

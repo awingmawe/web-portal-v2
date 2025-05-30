@@ -1,4 +1,4 @@
-import { ArrowIcon } from '@/components/icons/arrow'
+import { ArrowDiagonalIcon } from '@/components/icons/arrow'
 import { Button } from '@/components/ui/button'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import Link from 'next/link'
@@ -19,12 +19,14 @@ export const HeaderPackageList = memo(function HeaderPackageList({
 }: HeaderPackageProps) {
   const { pushEvent } = useEventTracker()
   return (
-    <div className="mt-[36px] mb-6 flex justify-between max-lg:mt-8 max-lg:pl-4">
+    <div
+      className={`${params !== 'section' ? 'mt-0 max-lg:pl-0' : 'mt-[36px] max-lg:mt-8 max-lg:pl-4'}  mb-6 flex items-center justify-between`}
+    >
       <div className="flex flex-col gap-0.5">
-        <p className="heading-2-bold max-sm:text-xl max-sm:leading-6.5">
+        <p className="heading-3-bold max-lg:text-xl max-lg:leading-6.5">
           {title}
         </p>
-        <p className="text-m-regular max-sm:text-xs max-sm:leading-4">{desc}</p>
+        <p className="text-m-regular max-lg:text-xs max-lg:leading-4">{desc}</p>
       </div>
       <Link
         href={`/search?${params}=${type}`}
@@ -43,7 +45,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
       >
         <Button className="items-center gap-1 px-3 py-2" size="xs">
           <p className="text-m-regular text-neutral-900">Lihat Paket Lainnya</p>
-          <ArrowIcon size={24} className="-rotate-45" />
+          <ArrowDiagonalIcon size={24} />
         </Button>
       </Link>
     </div>
