@@ -3,7 +3,7 @@
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
-import { Bed, Calendar, Users } from 'lucide-react'
+import { BedDouble, CalendarDays, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -381,7 +381,7 @@ const BankingPageDetail: React.FC = () => {
                   <div className="min-w-0 flex-1">
                     <div className="space-y-2 text-gray-600 md:space-y-2">
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
+                        <CalendarDays className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
                         <span className="text-xs leading-relaxed text-neutral-500 md:text-sm">
                           {formatTanggal2(data.departureDate)} →{' '}
                           {formatTanggal2(data.arrivalDate)}
@@ -394,7 +394,7 @@ const BankingPageDetail: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Bed className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4 " />
+                        <BedDouble className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4 " />
                         <span className="text-xs text-neutral-500 md:text-sm">
                           {data.roomType}
                         </span>
