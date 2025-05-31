@@ -57,7 +57,6 @@ export default function TransactionCardFooter({
   transaction,
 }: TransactionCardFooter) {
   const { lg } = useTailwindBreakpoint()
-
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
   const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
@@ -139,8 +138,6 @@ export default function TransactionCardFooter({
     setDescription,
   } = useCanceled()
 
-  // console.log(transaction)
-
   return (
     <Fragment>
       <div className="flex items-center gap-2 max-lg:hidden">
@@ -153,7 +150,7 @@ export default function TransactionCardFooter({
         </Button>
         {!detailOnly && (
           <Fragment>
-            {isPaidOff ? (
+            {status === 'waiting-cancellation' ? null : isPaidOff ? (
               <Button
                 variant="outline"
                 className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
@@ -175,14 +172,40 @@ export default function TransactionCardFooter({
                 </Button>
               )
             )}
-            {!isCompletedManifest && (
+
+            {/* {isPaidOff ? (
+              <Button
+                variant="outline"
+                className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                disabled
+              >
+                <ChecklistCircle />
+                Pelunasan
+              </Button>
+            ) : (
+              status !== 'waiting-approval' && (
+                <Button
+                  variant="outline"
+                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                  onClick={() => {
+                    fetchPaymentStatement(bookingId)
+                  }}
+                >
+                  Bayar Pelunasan
+                </Button>
+              )
+            )} */}
+
+            {!isCompletedManifest && status !== 'waiting-cancellation' && (
               <Link href={`/manifest/${bookingId}`}>
                 <Button className="w-full px-4 py-3 text-nowrap">
                   Lengkapi Data Jemaah
                 </Button>
               </Link>
             )}
-            {(status === 'approved' || status === 'waiting-approval') && (
+            {(status === 'approved' ||
+              status === 'waiting-approval' ||
+              status === 'waiting-down-payment') && (
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -210,50 +233,76 @@ export default function TransactionCardFooter({
             )}
           </Fragment>
         )}
+
         {showDpButton && (
           // <a
           //   href={paymentTransaction ? paymentTransaction.paymentLink : ''}
           //   target="_blank"
           // >
+          <>
+            <Button
+              className="w-full px-8 py-3 text-nowrap"
+              disabled={loadingPaymentTransaction || loading}
+              onClick={async () => {
+                setLoading(true)
 
-          <Button
-            className="w-full px-8 py-3 text-nowrap"
-            disabled={loadingPaymentTransaction || loading}
-            onClick={async () => {
-              setLoading(true)
-
-              try {
-                if (window.snap) {
-                  window.snap.pay(paymentTransaction?.paymentToken, {
-                    onSuccess: async (result: any) => {
-                      console.log(result)
-                      // router.replace('/my/transaction') // replace & refresh
-                      window.location.reload()
-                    },
-                    onPending: async (result: any) => {
-                      console.log('Payment pending', result)
-                      router.push(`/my/need-payment`)
-                      // Add expiration check logic
-                    },
-                    onError: (error: any) => {
-                      console.log(error)
-                    },
-                    onClose: () => {
-                      // router.push(`/my/need-payment`)
-                      // Additional logic on close
-                    },
-                  })
+                try {
+                  if (window.snap) {
+                    window.snap.pay(paymentTransaction?.paymentToken, {
+                      onSuccess: async (result: any) => {
+                        console.log(result)
+                        // router.replace('/my/transaction') // replace & refresh
+                        window.location.reload()
+                      },
+                      onPending: async (result: any) => {
+                        console.log('Payment pending', result)
+                        router.push(`/my/need-payment`)
+                        // Add expiration check logic
+                      },
+                      onError: (error: any) => {
+                        console.log(error)
+                      },
+                      onClose: () => {
+                        // router.push(`/my/need-payment`)
+                        // Additional logic on close
+                      },
+                    })
+                    setLoading(false)
+                  }
+                } catch (error) {
+                  console.log(error)
+                } finally {
                   setLoading(false)
                 }
-              } catch (error) {
-                console.log(error)
-              } finally {
-                setLoading(false)
-              }
-            }}
-          >
-            Bayar Uang Muka
-          </Button>
+              }}
+            >
+              Bayar Uang Muka
+            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  className="cursor-pointer !rounded-md border border-neutral-900 p-1"
+                  variant={'outline'}
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="rounded-2xl p-0 px-1">
+                <div className="flex flex-col divide-y">
+                  <span
+                    // href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                    className="cursor-pointer p-3 hover:bg-gray-50"
+                    // target="_blank"
+                    onClick={() => setOpenBatalkan(true)}
+                  >
+                    <p className="text-m-regular text-error-500">
+                      Batalkan Pesanan
+                    </p>
+                  </span>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </>
           // </a>
         )}
 

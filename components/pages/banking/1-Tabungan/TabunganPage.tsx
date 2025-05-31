@@ -30,21 +30,27 @@ const TabunganPage = () => {
   const [showForm, setShowForm] = useState(false)
   const [showFormCurrent, setShowFormCurrent] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [screenSize, setScreenSize] = useState<'mobile' | 'desktop'>('mobile')
+  const [screenSize, setScreenSize] = useState<'mobile' | 'desktop' | 'tab'>()
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [submissionData, setSubmissionData] = useState<any>()
   // Debug: Monitor screen size
   useEffect(() => {
     const checkScreenSize = () => {
-      const isMobile = window.innerWidth < 768
-      setScreenSize(isMobile ? 'mobile' : 'desktop')
+      const width = window.innerWidth
+
+      if (width < 768) {
+        setScreenSize('mobile')
+      } else if (width < 1020) {
+        setScreenSize('tab')
+      } else {
+        setScreenSize('desktop')
+      }
     }
 
     checkScreenSize()
     window.addEventListener('resize', checkScreenSize)
     return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
-
   const openForm = async () => {
     try {
       const res = await getSaving()
@@ -139,16 +145,16 @@ const TabunganPage = () => {
   }
 
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-8 md:pb-12">
+    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-0 md:pb-0">
       {/* Mobile Header - hanya tampil di mobile */}
       {screenSize === 'mobile' && (
         <div>
-          <div className="relative h-64 w-full">
+          <div className="relative mb-5 h-64 w-full">
             <Image
-              src="/images/image-landing.svg"
+              src="/images/icon-tabungan-mobile.svg"
               alt="Permata Bank"
               fill
-              className="object-contain"
+              className="object-cover"
             />
           </div>
 
@@ -190,28 +196,29 @@ const TabunganPage = () => {
       {/* Desktop Banner - hanya tampil di desktop */}
       {screenSize === 'desktop' && (
         <div className="mb-6">
-          <div className="flex h-64 w-full flex-col items-center justify-center rounded-3xl bg-gray-200 p-12">
-            <div className="mb-4 rounded-full bg-white p-6">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9" />
-                <path d="M12 12v9" />
-                <path d="m8 17 4 4 4-4" />
-              </svg>
-            </div>
-            <p className="text-center text-sm text-gray-500">
-              Gambar ini bisa diisi banner tsp program Pendanaan
-            </p>
+          <div className="relative  mb-5 h-64 w-full">
+            <Image
+              src="/images/icon-tabungan.svg"
+              alt="Permata Bank"
+              fill
+              className="object-cover"
+            />
           </div>
         </div>
       )}
-
+      {/* Tab Banner - Only visible on desktop */}
+      {screenSize === 'tab' && (
+        <div className="mb-6">
+          <div className="relative mt-10 mb-5 h-64 w-full">
+            <Image
+              src="/images/icon-tabungan-tab.svg"
+              alt="Permata Bank"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+      )}
       {/* Desktop Title - hanya tampil di desktop */}
       {screenSize === 'desktop' && (
         <div className="p-6">
@@ -237,33 +244,45 @@ const TabunganPage = () => {
       <div className={screenSize === 'desktop' ? 'px-6' : ''}>
         <div className="mb-3 md:mb-6">
           <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            Mau ibadah ke Tanah Suci, tapi dompet belum tebel?
+          </p>
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Cek Muslim101 aja! Setoran tabungan yang ringan dan fleksibel
+          </p>
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Rencana ibadah makin simpel
           </p>
         </div>
 
-        <ol className="mb-4 list-decimal space-y-3 pl-6 md:mb-6">
-          {[...Array(4)].map((_, idx) => (
-            <li
-              key={idx}
-              className="text-[12px] font-[400] text-[black] md:text-sm"
-            >
-              <span className="text-[12px] font-[400] text-[black]">
-                Curabitur tempor quis eros tempus lacinia. Nam bibendum
-                pellentesque quam a convallis. Sed ut perspiciatis unde omnis
-                iste natus error sit voluptatem accusantium doloremque
-                laudantium.
-              </span>{' '}
+        <div className="mb-3 md:mb-6">
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Bersama PermataBank, kami hadir untuk mempermudah umat Muslim
+            mewujudkan impiannya dalam melaksanakan ibadah ke Tanah Suci.
+            Manfaatkan program tabungan syariah untuk ibadah Umroh dan Haji
+            dengan paket apa pun melalui akad Wadiah Yad Dhamanah.
+          </p>
+        </div>
+        <div className="mb-3 md:mb-6">
+          <p className="text-[12px] font-[400] text-[black] md:text-sm">
+            Berikut rincian proses pengajuan yang dapat dilakukan:
+          </p>
+          <ol className="list-decimal  text-[12px] font-[400] text-black md:text-sm">
+            <li>⁠Daftar atau masuk akun via Website atau App Muslim101.</li>
+            <li>
+              ⁠Buka profil dan cek fitur <strong>“Tabungan Umroh”</strong>.
             </li>
-          ))}
-        </ol>
+            <li>Isi data diri anda.</li>
+            <li>
+              ⁠⁠Cek kembali paket yang dipilih, kamar hotel, jumlah jemaah,
+              serta nominal setoran tabungan sesuai tenor yang kamu pilih.
+            </li>
+            <li>⁠Klik ajukan tabungan.</li>
+          </ol>
+        </div>
 
         <p className="text-[12px] font-[400] text-[black] md:text-sm">
-          Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque
-          quam a convallis. Sed ut perspiciatis unde omnis iste natus error sit
-          voluptatem accusantium doloremque laudantium, totam rem aperiam.
+          Harap untuk selalu memantau notifikasi secara berkala untuk melihat
+          hasil status pengajuan.
         </p>
 
         {/* Button - responsive positioning */}
