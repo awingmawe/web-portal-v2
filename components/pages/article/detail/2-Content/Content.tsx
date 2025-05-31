@@ -37,6 +37,7 @@ import { toast } from 'sonner' // Assuming you have toast notifications
 export default function ContentArticle({
   content,
   title,
+  slug,
   author,
   token,
   created_at,
@@ -53,6 +54,7 @@ export default function ContentArticle({
 }: {
   content: string
   title: string
+  slug: string
   token?: string
   author?: Profile
   created_at: Date | string
@@ -366,8 +368,9 @@ export default function ContentArticle({
                   <p className="text-s-regular">
                     Kamu membutuhkan akun untuk mulai berkomentar!
                   </p>
+                  {`${ACCOUNT_URL}/auth/login?redirectUri=${typeof window !== 'undefined' ? window.location.href : ''}`}
                   <Link
-                    href={`${ACCOUNT_URL}/auth/login?redirectUri=${typeof window !== 'undefined' ? window.location.href : ''}`}
+                    href={`${ACCOUNT_URL}/auth/login?redirectUri=${typeof window !== 'undefined' ? `${window.location.origin}/article/detail/${slug}` : ''}`}
                     className="text-s-semibold bg-primary-500 rounded-full px-10 py-2 text-neutral-900"
                   >
                     Masuk/Buat Akun
