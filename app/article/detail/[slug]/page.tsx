@@ -34,6 +34,7 @@ export default async function ArtilceDetail({ params }: any) {
   const { slug } = await params
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
+  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string
 
   const [dataArticleDetail, dataBannerCarousel, dataComments] =
     await Promise.all([
@@ -102,6 +103,7 @@ export default async function ArtilceDetail({ params }: any) {
           created_at={dataArticleDetail.created_at}
           thumbnail_url={dataArticleDetail.thumbnail}
           title={dataArticleDetail.title}
+          isWebview={isWebview}
         />
         <ContentArticle
           {...dataArticleDetail}

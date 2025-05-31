@@ -6,20 +6,39 @@ import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type ImageDetailProps = {
   created_at: Date | string
   thumbnail_url: string | null
   title: string
+  isWebview?: string
 }
 
 const ImageDetail = ({
   created_at,
   thumbnail_url,
   title,
+  isWebview,
 }: ImageDetailProps) => {
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
+  const shareLinkWa = `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+  const [disabledWa, setDisabledWa] = useState(false)
+  const handleShareWebview = () => {
+    window.flutter_inappwebview.callHandler('wa-share', shareLinkWa)
+  }
+
+  useEffect(() => {
+    if (isWebview == 'true') {
+      window.addEventListener('flutterInAppWebViewPlatformReady', function () {
+        console.log('WebView is ready')
+        setDisabledWa(true)
+      })
+    } else {
+      setDisabledWa(false)
+    }
+  }, [isWebview])
 
   return (
     <>
@@ -33,11 +52,15 @@ const ImageDetail = ({
           <p className="text-s-regular text-neutral-500">Bagikan:</p>
           <WhatsappIcon
             size={20}
-            onClick={() =>
-              router.push(
-                `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
-              )
-            }
+            onClick={() => {
+              if (disabledWa) {
+                if (isWebview === 'true') {
+                  handleShareWebview()
+                } else {
+                  router.push(shareLinkWa)
+                }
+              }
+            }}
           />
           <ShareIcon size={20} onClick={shareViaCopyLink} />
         </div>
