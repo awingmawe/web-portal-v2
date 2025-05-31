@@ -5,7 +5,7 @@ export default function WebViewAccess() {
   useEffect(() => {
     setTimeout(() => {
       window.location.href = '/article'
-    }, 3000)
+    }, 1000)
   }, [])
   return (
     <div className="flex h-screen w-full items-center justify-center bg-white">
