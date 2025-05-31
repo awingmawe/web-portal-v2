@@ -89,7 +89,6 @@ const PembiayaanPage: React.FC = () => {
   // const handleNext = () => {
   //   if (step === 1) setStep(2)
   // }
-  console.log(screenSize)
 
   const [loading, setLoading] = useState(false)
   const handleFormSubmit = async (values: PembiayaanFormValues) => {
@@ -289,7 +288,7 @@ const PembiayaanPage: React.FC = () => {
               src="/images/icon-pembiayaan-mobile.svg"
               alt="Permata Bank"
               fill
-              className="object-contain"
+              className="object-cover"
             />
           </div>
 
