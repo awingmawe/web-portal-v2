@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation'
 interface SuccessModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  screenSize?: 'mobile' | 'desktop'
+  screenSize?: 'mobile' | 'desktop' | 'tab'
   submissionData?: any
 }
 

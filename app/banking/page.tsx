@@ -25,7 +25,7 @@ export default async function SearchGeneral({
       <Topbar shadow scrolled token={token} />
 
       {/* Mobile (tanpa wrapper) */}
-      <div className="block lg:hidden">
+      <div className="container mx-auto block lg:hidden">
         {awaitedParams.page === 'pembiayaan' ? (
           <>
             <MobileTopbar
@@ -44,28 +44,22 @@ export default async function SearchGeneral({
       </div>
 
       {/* Desktop (dengan wrapper) */}
-      <div className="hidden lg:block">
-        <div className="mx-auto w-[85%] lg:px-4">
-          {awaitedParams.page === 'pembiayaan' ? (
-            <>
-              <MobileTopbar
-                variant="plainBank"
-                showBackButton
-                title="Pendanaan Syariah"
-              />
-              <PembiayaanPage />
-            </>
-          ) : (
-            <>
-              <MobileTopbar
-                variant="plainBank"
-                showBackButton
-                title="Tabungan"
-              />
-              <TabunganPage />
-            </>
-          )}
-        </div>
+      <div className="container mx-auto hidden lg:block">
+        {awaitedParams.page === 'pembiayaan' ? (
+          <>
+            <MobileTopbar
+              variant="plainBank"
+              showBackButton
+              title="Pendanaan Syariah"
+            />
+            <PembiayaanPage />
+          </>
+        ) : (
+          <>
+            <MobileTopbar variant="plainBank" showBackButton title="Tabungan" />
+            <TabunganPage />
+          </>
+        )}
       </div>
 
       <Footer type="compact" className="hidden md:block" />

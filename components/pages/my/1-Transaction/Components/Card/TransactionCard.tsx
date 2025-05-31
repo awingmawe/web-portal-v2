@@ -12,10 +12,7 @@ import TransactionCardHeader from '@/components/pages/my/1-Transaction/Component
 import TransactionCardPayment from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardPayment'
 import DrawerBatalkan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerBatalkan'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  CanceledProvider,
-  useCanceled,
-} from '@/contexts/canceled-package-context'
+import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { getOrderPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -206,7 +203,8 @@ export default function TransactionCard({
       return status
     }
   }
-  const { setOpen, openBatalkan } = useCanceled()
+
+  console.log(status)
 
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200 ">

@@ -3,6 +3,7 @@ import EmptyState from '@/components/pages/my/1-Transaction/Components/EmptyStat
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { Transaction } from '@/constant/types/Transaction'
+import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { Fragment } from 'react'
 
 interface ListProps {
@@ -46,45 +47,49 @@ export default function List({
                       key={`${transaction.id}-${new Date().getTime()}-${Math.random()}`}
                       className="max-lg:px-5"
                     >
-                      <TransactionCard
-                        status={transaction.status.slug}
-                        id={transaction.bookingCode}
-                        packageName={
-                          transaction?.packageSnapshot?.snapshot?.package?.title
-                        }
-                        thumbnail={
-                          transaction?.packageSnapshot?.snapshot?.package
-                            .thumbnail
-                        }
-                        startDate={
-                          transaction?.packageSnapshot?.snapshot?.departureDate
-                        }
-                        endDate={
-                          transaction?.packageSnapshot?.snapshot?.arrivalDate
-                        }
-                        createdDate={transaction.createdAt}
-                        jemaah={Number.parseInt(transaction.quantity)}
-                        bookingId={String(transaction.id)}
-                        isCompletedManifest={transaction.isCompletedManifest}
-                        isPaidOff={transaction.isPaidOff}
-                        statusTahapan={
-                          transaction.status.slug == 'waiting-cancellation'
-                            ? 'Dalam Proses Pembatalan'
-                            : transaction.status.slug == 'canceled-by-travel'
-                              ? 'Dibatalkan Travel'
-                              : transaction.status.slug == 'canceled-by-user'
-                                ? 'Dibatalkan Jemaah'
-                                : transaction.status.slug == 'expired'
-                                  ? 'Dibatalkan Sistem'
-                                  : ''
-                        }
-                        statusTahapanDetail={'Dibatalkan'}
-                        noHeader
-                        noAmountLeft
-                        detailOnly
-                        noLabelNotif
-                        noFooter
-                      />
+                      <CanceledProvider>
+                        <TransactionCard
+                          status={transaction.status.slug}
+                          id={transaction.bookingCode}
+                          packageName={
+                            transaction?.packageSnapshot?.snapshot?.package
+                              ?.title
+                          }
+                          thumbnail={
+                            transaction?.packageSnapshot?.snapshot?.package
+                              .thumbnail
+                          }
+                          startDate={
+                            transaction?.packageSnapshot?.snapshot
+                              ?.departureDate
+                          }
+                          endDate={
+                            transaction?.packageSnapshot?.snapshot?.arrivalDate
+                          }
+                          createdDate={transaction.createdAt}
+                          jemaah={Number.parseInt(transaction.quantity)}
+                          bookingId={String(transaction.id)}
+                          isCompletedManifest={transaction.isCompletedManifest}
+                          isPaidOff={transaction.isPaidOff}
+                          statusTahapan={
+                            transaction.status.slug == 'waiting-cancellation'
+                              ? 'Dalam Proses Pembatalan'
+                              : transaction.status.slug == 'canceled-by-travel'
+                                ? 'Dibatalkan Travel'
+                                : transaction.status.slug == 'canceled-by-user'
+                                  ? 'Dibatalkan Jemaah'
+                                  : transaction.status.slug == 'expired'
+                                    ? 'Dibatalkan Sistem'
+                                    : ''
+                          }
+                          statusTahapanDetail={'Dibatalkan'}
+                          noHeader
+                          noAmountLeft
+                          detailOnly
+                          noLabelNotif
+                          noFooter
+                        />
+                      </CanceledProvider>
                     </div>
                   ))
                 ) : (
@@ -112,41 +117,44 @@ export default function List({
                   key={transaction.id + '-' + new Date()}
                   className="max-lg:px-5"
                 >
-                  <TransactionCard
-                    status={transaction.status.slug}
-                    id={transaction.bookingCode}
-                    packageName={transaction?.packageSnapshot?.snapshot?.name}
-                    thumbnail={
-                      transaction?.packageSnapshot?.snapshot?.package.thumbnail
-                    }
-                    startDate={
-                      transaction?.packageSnapshot?.snapshot?.departureDate
-                    }
-                    endDate={
-                      transaction?.packageSnapshot?.snapshot?.arrivalDate
-                    }
-                    createdDate={transaction.createdAt}
-                    jemaah={Number.parseInt(transaction.quantity)}
-                    bookingId={String(transaction.id)}
-                    isCompletedManifest={transaction.isCompletedManifest}
-                    isPaidOff={transaction.isPaidOff}
-                    statusTahapan={
-                      transaction.status.slug == 'waiting-cancellation'
-                        ? 'Dalam Proses Pembatalan'
-                        : transaction.status.slug == 'canceled-by-travel'
-                          ? 'Dibatalkan Travel'
-                          : transaction.status.slug == 'canceled-by-user'
-                            ? 'Dibatalkan Jemaah'
-                            : transaction.status.slug == 'expired'
-                              ? 'Dibatalkan Sistem'
-                              : ''
-                    }
-                    statusTahapanDetail={'Dibatalkan'}
-                    noHeader
-                    noAmountLeft
-                    detailOnly
-                    noLabelNotif
-                  />
+                  <CanceledProvider>
+                    <TransactionCard
+                      status={transaction.status.slug}
+                      id={transaction.bookingCode}
+                      packageName={transaction?.packageSnapshot?.snapshot?.name}
+                      thumbnail={
+                        transaction?.packageSnapshot?.snapshot?.package
+                          .thumbnail
+                      }
+                      startDate={
+                        transaction?.packageSnapshot?.snapshot?.departureDate
+                      }
+                      endDate={
+                        transaction?.packageSnapshot?.snapshot?.arrivalDate
+                      }
+                      createdDate={transaction.createdAt}
+                      jemaah={Number.parseInt(transaction.quantity)}
+                      bookingId={String(transaction.id)}
+                      isCompletedManifest={transaction.isCompletedManifest}
+                      isPaidOff={transaction.isPaidOff}
+                      statusTahapan={
+                        transaction.status.slug == 'waiting-cancellation'
+                          ? 'Dalam Proses Pembatalan'
+                          : transaction.status.slug == 'canceled-by-travel'
+                            ? 'Dibatalkan Travel'
+                            : transaction.status.slug == 'canceled-by-user'
+                              ? 'Dibatalkan Jemaah'
+                              : transaction.status.slug == 'expired'
+                                ? 'Dibatalkan Sistem'
+                                : ''
+                      }
+                      statusTahapanDetail={'Dibatalkan'}
+                      noHeader
+                      noAmountLeft
+                      detailOnly
+                      noLabelNotif
+                    />
+                  </CanceledProvider>
                 </div>
               ))}
             </Fragment>

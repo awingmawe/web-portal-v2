@@ -1,5 +1,6 @@
 'use client'
 
+import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
@@ -175,8 +176,8 @@ const BankingPageDetail: React.FC = () => {
   // Show loading state
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
+      <div className="flex !h-[500px] items-center justify-center">
+        <TransactionSkeletonLoading noTabs noFilter noPagination />
       </div>
     )
   }
@@ -184,7 +185,7 @@ const BankingPageDetail: React.FC = () => {
   // Show error state if data is null
   if (!data) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex !h-[500px]  items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Image
             src="/images/tidak-adadata.svg"

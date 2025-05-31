@@ -39,7 +39,9 @@ type PembiayaanFormValues = {
 const PembiayaanPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false)
   const [step, setStep] = useState(1) // 1 = Data Diri, 2 = Form Pengajuan
-  const [screenSize, setScreenSize] = useState<'mobile' | 'desktop'>('mobile')
+  const [screenSize, setScreenSize] = useState<'mobile' | 'desktop' | 'tab'>(
+    'mobile'
+  )
   const [formData, setFormData] = useState<PembiayaanFormValues | null>(null)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [submissionData, setSubmissionData] = useState<any>()
@@ -47,8 +49,15 @@ const PembiayaanPage: React.FC = () => {
   // Monitor screen size
   useEffect(() => {
     const checkScreenSize = () => {
-      const isMobile = window.innerWidth < 768
-      setScreenSize(isMobile ? 'mobile' : 'desktop')
+      const width = window.innerWidth
+
+      if (width < 768) {
+        setScreenSize('mobile')
+      } else if (width < 1020) {
+        setScreenSize('tab')
+      } else {
+        setScreenSize('desktop')
+      }
     }
 
     checkScreenSize()
@@ -80,6 +89,7 @@ const PembiayaanPage: React.FC = () => {
   // const handleNext = () => {
   //   if (step === 1) setStep(2)
   // }
+  console.log(screenSize)
 
   const [loading, setLoading] = useState(false)
   const handleFormSubmit = async (values: PembiayaanFormValues) => {
@@ -270,16 +280,16 @@ const PembiayaanPage: React.FC = () => {
     return formStep2Ref.current?.isValid() || false
   }
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-0 md:p-8 md:pb-12">
+    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-0 md:pb-0">
       {/* Mobile Header - Only visible on mobile */}
       {screenSize === 'mobile' && (
         <div>
-          <div className="relative mb-4 justify-items-center rounded-lg">
+          <div className="relative mb-5 h-64 w-full">
             <Image
-              src="/images/logo-permata-pembiayaan.svg"
-              width={400}
-              height={250}
-              alt="Permata Pembiayaan"
+              src="/images/icon-pembiayaan-mobile.svg"
+              alt="Permata Bank"
+              fill
+              className="object-contain"
             />
           </div>
 
@@ -320,12 +330,26 @@ const PembiayaanPage: React.FC = () => {
       {/* Desktop Banner - Only visible on desktop */}
       {screenSize === 'desktop' && (
         <div className="mb-6">
-          <div className="relative h-64 w-full">
+          <div className="relative  mb-5 h-64 w-full">
             <Image
               src="/images/image-landing.svg"
               alt="Permata Bank"
               fill
-              className="object-contain"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Tab Banner - Only visible on desktop */}
+      {screenSize === 'tab' && (
+        <div className="mb-6">
+          <div className="relative mt-10 mb-5 h-64 w-full">
+            <Image
+              src="/images/icon-pembiayan-tab.svg"
+              alt="Permata Bank"
+              fill
+              className="object-cover"
             />
           </div>
         </div>

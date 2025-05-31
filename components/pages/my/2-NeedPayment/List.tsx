@@ -3,6 +3,7 @@ import EmptyState from '@/components/pages/my/1-Transaction/Components/EmptyStat
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { Transaction } from '@/constant/types/Transaction'
+import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { Fragment } from 'react'
 
 interface ListProps {
@@ -46,35 +47,38 @@ export default function List({
                       key={`${transaction.id}-${new Date().getTime()}-${Math.random()}`}
                       className="max-lg:px-3"
                     >
-                      <TransactionCard
-                        status={transaction.status.slug}
-                        id={transaction.bookingCode}
-                        packageName={
-                          transaction?.packageSnapshot?.snapshot?.name
-                        }
-                        thumbnail={
-                          transaction?.packageSnapshot?.snapshot?.package
-                            .thumbnail
-                        }
-                        startDate={
-                          transaction?.packageSnapshot?.snapshot?.departureDate
-                        }
-                        endDate={
-                          transaction?.packageSnapshot?.snapshot?.arrivalDate
-                        }
-                        createdDate={transaction.createdAt}
-                        jemaah={Number.parseInt(transaction.quantity)}
-                        bookingId={String(transaction.id)}
-                        isCompletedManifest={transaction.isCompletedManifest}
-                        isPaidOff={transaction.isPaidOff}
-                        statusTahapan="Waiting"
-                        statusTahapanDetail="Waiting"
-                        noHeader
-                        noAmountLeft
-                        detailOnly
-                        noLabelNotif
-                        showDpButton
-                      />
+                      <CanceledProvider>
+                        <TransactionCard
+                          status={transaction.status.slug}
+                          id={transaction.bookingCode}
+                          packageName={
+                            transaction?.packageSnapshot?.snapshot?.name
+                          }
+                          thumbnail={
+                            transaction?.packageSnapshot?.snapshot?.package
+                              .thumbnail
+                          }
+                          startDate={
+                            transaction?.packageSnapshot?.snapshot
+                              ?.departureDate
+                          }
+                          endDate={
+                            transaction?.packageSnapshot?.snapshot?.arrivalDate
+                          }
+                          createdDate={transaction.createdAt}
+                          jemaah={Number.parseInt(transaction.quantity)}
+                          bookingId={String(transaction.id)}
+                          isCompletedManifest={transaction.isCompletedManifest}
+                          isPaidOff={transaction.isPaidOff}
+                          statusTahapan="Waiting"
+                          statusTahapanDetail="Waiting"
+                          noHeader
+                          noAmountLeft
+                          detailOnly
+                          noLabelNotif
+                          showDpButton
+                        />
+                      </CanceledProvider>
                     </div>
                   ))
                 ) : (
@@ -102,34 +106,37 @@ export default function List({
                   key={transaction.id + '-' + new Date()}
                   className="max-lg:px-5"
                 >
-                  <TransactionCard
-                    status={transaction.status.slug}
-                    id={transaction.bookingCode}
-                    packageName={
-                      transaction?.packageSnapshot?.snapshot?.package?.title
-                    }
-                    thumbnail={
-                      transaction?.packageSnapshot?.snapshot?.package.thumbnail
-                    }
-                    startDate={
-                      transaction?.packageSnapshot?.snapshot?.departureDate
-                    }
-                    endDate={
-                      transaction?.packageSnapshot?.snapshot?.arrivalDate
-                    }
-                    createdDate={transaction.createdAt}
-                    jemaah={Number.parseInt(transaction.quantity)}
-                    bookingId={String(transaction.id)}
-                    isCompletedManifest={transaction.isCompletedManifest}
-                    isPaidOff={transaction.isPaidOff}
-                    statusTahapan="Waiting"
-                    statusTahapanDetail="Waiting"
-                    noHeader
-                    noAmountLeft
-                    detailOnly
-                    noLabelNotif
-                    showDpButton
-                  />
+                  <CanceledProvider>
+                    <TransactionCard
+                      status={transaction.status.slug}
+                      id={transaction.bookingCode}
+                      packageName={
+                        transaction?.packageSnapshot?.snapshot?.package?.title
+                      }
+                      thumbnail={
+                        transaction?.packageSnapshot?.snapshot?.package
+                          .thumbnail
+                      }
+                      startDate={
+                        transaction?.packageSnapshot?.snapshot?.departureDate
+                      }
+                      endDate={
+                        transaction?.packageSnapshot?.snapshot?.arrivalDate
+                      }
+                      createdDate={transaction.createdAt}
+                      jemaah={Number.parseInt(transaction.quantity)}
+                      bookingId={String(transaction.id)}
+                      isCompletedManifest={transaction.isCompletedManifest}
+                      isPaidOff={transaction.isPaidOff}
+                      statusTahapan="Waiting"
+                      statusTahapanDetail="Waiting"
+                      noHeader
+                      noAmountLeft
+                      detailOnly
+                      noLabelNotif
+                      showDpButton
+                    />
+                  </CanceledProvider>
                 </div>
               ))}
             </Fragment>
