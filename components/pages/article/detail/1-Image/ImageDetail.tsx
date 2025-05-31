@@ -41,10 +41,8 @@ const ImageDetail = ({
           alert(`clicked - ${shareLinkWa}`)
           if (isWebview === 'true') {
             if (window.flutter_inappwebview) {
-              alert('triggered')
               handleShareWebview()
             } else {
-              alert('not triggered')
             }
           } else {
             router.push(shareLinkWa)
