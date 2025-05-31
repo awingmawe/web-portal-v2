@@ -6,6 +6,7 @@ import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 type ImageDetailProps = {
   created_at: Date | string
@@ -22,22 +23,23 @@ const ImageDetail = ({
 }: ImageDetailProps) => {
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
+  const shareLinkWa = `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+  const [disabledWa, setDisabledWa] = useState(false)
   const handleShareWebview = () => {
-    window.WA_SHARE.postMessage(
-      {
-        type: 'wa-share',
-        data: {
-          title,
-          url: window.location.href,
-        },
-      },
-      '*'
-    )
-    window.flutter_inappwebview.callHandler('wa-share', {
-      title,
-      url: window.location.href,
-    })
+    window.flutter_inappwebview.callHandler('wa-share', shareLinkWa)
   }
+
+  useEffect(() => {
+    if (isWebview == 'true') {
+      window.addEventListener('flutterInAppWebViewPlatformReady', function () {
+        console.log('WebView is ready')
+        setDisabledWa(true)
+      })
+    } else {
+      setDisabledWa(false)
+    }
+  }, [isWebview])
+
   return (
     <>
       <div className="mb-3 flex items-center justify-between lg:hidden">
@@ -51,12 +53,12 @@ const ImageDetail = ({
           <WhatsappIcon
             size={20}
             onClick={() => {
-              if (isWebview === 'true') {
-                handleShareWebview()
-              } else {
-                router.push(
-                  `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
-                )
+              if (disabledWa) {
+                if (isWebview === 'true') {
+                  handleShareWebview()
+                } else {
+                  router.push(shareLinkWa)
+                }
               }
             }}
           />

@@ -196,9 +196,10 @@ export default function ContentArticle({
         className={`${isPromoPackage ? 'col-start-1 col-end-4' : 'col-span-4 col-start-2'} max-lg:col-span-12`}
       >
         <div className="flex flex-col gap-6">
-          <div className="prose prose-img:inline prose-ul:[list-style:auto] prose-ol:[list-style:auto] prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs">
+          <div className="prose prose-img:inline prose-ul:[list-style:inherit] prose-ol:[list-style:inherit] prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs prose-li:[:marker:initial]  min-w-full break-all marker:text-inherit">
             {renderHTML(content || '')}
           </div>
+          {/* prose-ul:[--tw-prose-ol-marker:initial,list-style:inherit] prose-ol:[--tw-prose-ol-marker:initial,list-style:inherit] */}
           {(button_link || button_text) && (
             <div className="bg-primary-500 flex items-center justify-center rounded-[20px] py-3">
               <Link href={button_link} target="_blank">
