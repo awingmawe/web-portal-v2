@@ -37,7 +37,7 @@ const SuccessModal = ({
             <MobileTopbar
               variant="suksesBanking"
               showBackButton={false}
-              // title="Pendanaan Syariah"
+              // title="Talangan Umroh"
             />
           </DialogTitle>
           <div className="fixed inset-0 z-50 mt-[30px] rounded-tl-[50px] rounded-tr-[50px] bg-white">

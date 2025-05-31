@@ -28,7 +28,7 @@ const SubmenuCards = () => {
     },
     {
       icon: <SavingIcon size={25} color="white" />,
-      label: 'Pendanaan Syariah',
+      label: 'Talangan Umroh',
       href: '/banking?page=pembiayaan',
       background: 'bg-[#03DAC8]',
     },
