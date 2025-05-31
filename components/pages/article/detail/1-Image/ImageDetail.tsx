@@ -23,7 +23,7 @@ const ImageDetail = ({
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
   const handleShareWebview = () => {
-    window.postMessage(
+    window.WA_SHARE.postMessage(
       {
         type: 'wa-share',
         data: {
@@ -33,6 +33,10 @@ const ImageDetail = ({
       },
       '*'
     )
+    window.flutter_inappwebview.callHandler('wa-share', {
+      title,
+      url: window.location.href,
+    })
   }
   return (
     <>
