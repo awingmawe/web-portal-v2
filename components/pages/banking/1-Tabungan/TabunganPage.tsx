@@ -296,9 +296,16 @@ const TabunganPage = () => {
                 {/* Sidebar kiri */}
                 <div className="w-1/3 border-r border-gray-200">
                   <div className="p-0">
-                    <div className="flex cursor-pointer items-center rounded-tl-3xl bg-yellow-50 p-6 transition">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400">
-                        <span className="text-base font-medium text-black">
+                    <div
+                      className={`flex cursor-pointer items-center rounded-tl-3xl border-b border-[#E8E8E8] bg-yellow-50 p-6 transition`}
+                    >
+                      <div className="relative flex h-12 w-12 items-center justify-center">
+                        <div
+                          className={`border-primary-500 absolute h-10 w-10 rounded-full border-6`}
+                        ></div>
+                        <span
+                          className={`text-[14px] leading-none font-bold text-neutral-900`}
+                        >
                           1
                         </span>
                       </div>

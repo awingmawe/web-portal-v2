@@ -17,7 +17,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 const SORT_OPTIONS = [
   { label: 'Terbaru', value: 'new' },
-  { label: 'Relevan', value: 'most-relevant' },
+  { label: 'Relevan', value: 'most_relevant' },
 ]
 
 interface WidgetFilterProps {

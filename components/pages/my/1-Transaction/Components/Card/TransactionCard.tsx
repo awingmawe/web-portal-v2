@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { ArrowIcon } from '@/components/icons/arrow'
@@ -9,16 +10,12 @@ import { UsersIcon } from '@/components/icons/user'
 import TransactionCardFooter from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardFooter'
 import TransactionCardHeader from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardHeader'
 import TransactionCardPayment from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardPayment'
-import { Button } from '@/components/ui/button'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
+import DrawerBatalkan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerBatalkan'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CanceledProvider } from '@/contexts/canceled-package-context'
+import {
+  CanceledProvider,
+  useCanceled,
+} from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { getOrderPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -209,7 +206,7 @@ export default function TransactionCard({
       return status
     }
   }
-  console.log(transaction)
+  const { setOpen, openBatalkan } = useCanceled()
 
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200 ">
@@ -230,66 +227,47 @@ export default function TransactionCard({
       <div
         className={`${!noHeader ? '-mt-5' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
       >
+        <div className="flex items-center justify-between border-b border-neutral-200 p-4">
+          <div className="flex items-center gap-2 max-lg:block">
+            <p className="font-medium max-lg:text-xs">Umroh</p>
+            <p className="font-medium max-lg:hidden">/ </p>
+            <p className="text-neutral-500 max-lg:hidden">ID : {id}</p>
+            <p className="hidden text-neutral-500 max-lg:block max-lg:text-xs">
+              Dibuat Pada: {dayjs(createdDate).locale(id).format('DD MMM YYYY')}
+            </p>
+          </div>
+          <div className="flex items-center">
+            <p
+              className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2 max-lg:py-1 max-lg:text-xs ${statusTahapan === 'Waiting' ? 'max-lg:px-0' : 'max-lg:px-2'}`}
+            >
+              {renderStatusTahapanText(statusTahapan)}
+            </p>
+            {!isPaidOff && (
+              <Fragment>
+                {(status === 'approved' ||
+                  status === 'waiting-approval' ||
+                  status === 'waiting-down-payment') && (
+                  <DrawerBatalkan
+                    bookingId={bookingId}
+                    idOrganisasi={organizationInstanceId}
+                  >
+                    {/* <Button
+                      className="!rounded-lg border-2 border-neutral-900 px-1 py-1"
+                      variant="outline"
+                    > */}
+                    <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
+                    {/* </Button> */}
+                  </DrawerBatalkan>
+                )}
+              </Fragment>
+            )}
+          </div>
+        </div>
         <RenderLinkToDetail
           lg={lg}
           bookingId={bookingId}
           statusTahapan={statusTahapan}
         >
-          <div className="flex items-center justify-between border-b border-neutral-200 p-4">
-            <div className="flex items-center gap-2 max-lg:block">
-              <p className="font-medium max-lg:text-xs">Umroh</p>
-              <p className="font-medium max-lg:hidden">/ </p>
-              <p className="text-neutral-500 max-lg:hidden">ID : {id}</p>
-              <p className="hidden text-neutral-500 max-lg:block max-lg:text-xs">
-                Dibuat Pada:{' '}
-                {dayjs(createdDate).locale(id).format('DD MMM YYYY')}
-              </p>
-            </div>
-            <div className="flex items-center">
-              <p
-                className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} rounded-full px-6 py-2 max-lg:py-1 max-lg:text-xs ${statusTahapan === 'Waiting' ? 'max-lg:px-0' : 'max-lg:px-2'}`}
-              >
-                {renderStatusTahapanText(statusTahapan)}
-              </p>
-              {!isPaidOff && (
-                <Fragment>
-                  {(status === 'approved' ||
-                    status === 'waiting-approval' ||
-                    status === 'waiting-down-payment') && (
-                    <Drawer>
-                      <DrawerTrigger asChild>
-                        <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
-                      </DrawerTrigger>
-                      <DrawerContent className="z-100 border-0 outline-0">
-                        <DrawerHeader className="p-3">
-                          <DrawerTitle className="flex items-center">
-                            <p className="text-m-semibold ml-2 font-semibold">
-                              Lainnya
-                            </p>
-                          </DrawerTitle>
-                        </DrawerHeader>
-                        <div className="flex w-full px-3 pt-3 pb-5">
-                          <Link
-                            href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                            target="_blank"
-                            className="w-full"
-                          >
-                            <Button
-                              variant="outline"
-                              type="button"
-                              className="border-error-500 w-full border-2 py-3"
-                            >
-                              Batalkan Pesanan
-                            </Button>
-                          </Link>
-                        </div>
-                      </DrawerContent>
-                    </Drawer>
-                  )}
-                </Fragment>
-              )}
-            </div>
-          </div>
           <div className="grid grid-cols-1 gap-2 p-4 md:grid-cols-3 lg:gap-4">
             <p className="text-s-regular hidden text-neutral-500 max-lg:block">
               ID : {id}
@@ -410,6 +388,15 @@ export default function TransactionCard({
           )}
         </div>
       </div>
+      {/* {openBatalkan && (
+         <DrawerBatalkanPesanan
+          bookingId={bookingId}
+          idOrganisasi={organizationInstanceId}
+          openForm={openForm}
+          setOpenForm={setOpenForm}
+          setOpen={setOpen}
+        />
+      )} */}
     </div>
   )
 }

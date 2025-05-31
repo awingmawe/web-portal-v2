@@ -94,6 +94,10 @@ export default async function ArtilceDetail({ params }: any) {
     tag: dataArticleDetail?.hashtags?.map((tag) => tag).join(', '),
   }
 
+  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as
+    | string
+    | undefined
+
   return (
     <LayoutArticle>
       <TopbarMobileArticle href="back" applyRouter />
@@ -102,6 +106,7 @@ export default async function ArtilceDetail({ params }: any) {
           created_at={dataArticleDetail.created_at}
           thumbnail_url={dataArticleDetail.thumbnail}
           title={dataArticleDetail.title}
+          isWebview={isWebview}
         />
         <ContentArticle
           {...dataArticleDetail}

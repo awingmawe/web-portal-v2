@@ -318,7 +318,10 @@ export const PembiayaanFormStep2 = forwardRef<
       )}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className={`space-y-4 ${screenSize !== 'desktop' ? 'pb-20' : 'pb-2'}`}
+        >
           {/* Show Package Selection Modal/Overlay */}
           {showPackageSelection && (
             <div
@@ -742,7 +745,7 @@ export const PembiayaanFormStep2 = forwardRef<
               )
             })()}
           </div>
-          {screenSize !== 'dekstop' && (
+          {screenSize !== 'desktop' && (
             <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-gray-100 bg-white p-4">
               <Button
                 type="submit"

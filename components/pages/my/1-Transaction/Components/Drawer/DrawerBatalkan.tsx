@@ -35,7 +35,7 @@ const DrawerBatalkan = React.memo(
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerTrigger asChild>{children}</DrawerTrigger>
 
-          <DrawerContent className="border-0 outline-0">
+          <DrawerContent className="z-[999] border-0 outline-0">
             <DrawerHeader className="p-3">
               <DrawerTitle className="flex items-center">
                 <DrawerClose ref={closeRef} className="hidden" />

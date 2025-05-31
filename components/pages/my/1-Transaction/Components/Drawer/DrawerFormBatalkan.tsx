@@ -21,11 +21,11 @@ const DrawerBatalkanPesanan = React.memo(
     setOpenForm,
     setOpen,
   }: {
-    bookingId: any
-    idOrganisasi: any
-    openForm: any
-    setOpenForm: any
-    setOpen: any
+    bookingId?: any
+    idOrganisasi?: any
+    openForm?: any
+    setOpenForm?: any
+    setOpen?: any
   }) => {
     const closeRef = useRef<HTMLButtonElement>(null)
     const cancellationReasons = [
@@ -76,7 +76,7 @@ const DrawerBatalkanPesanan = React.memo(
     return (
       <>
         <Drawer open={openForm} onOpenChange={setOpenForm}>
-          <DrawerContent className="bg-white p-0">
+          <DrawerContent className="z-[999] bg-white p-0">
             <div className="mx-auto w-full max-w-md">
               <DrawerHeader className="border-gray-200 px-4 py-3">
                 <div className="flex items-center">
