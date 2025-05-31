@@ -36,7 +36,7 @@ const ImageDetail = ({
         setDisabledWa(true)
       })
     } else {
-      setDisabledWa(false)
+      setDisabledWa(true)
     }
   }, [isWebview])
 
