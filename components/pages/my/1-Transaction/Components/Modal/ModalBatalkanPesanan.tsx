@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { checkRefundPolicy } from '@/services/identity-service'
 import { getPreCanceled } from '@/services/umrah-service'
 import { DialogClose } from '@radix-ui/react-dialog'
-import { X } from 'lucide-react'
+import { CircleX } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
@@ -95,9 +95,7 @@ export function BatalkanPesanan({
       <DialogContent className="w-[640px] gap-0 overflow-hidden rounded-2xl bg-white px-6 py-4 text-black">
         {/* Header */}
         <DialogTitle asChild>
-          <div className="flex items-center gap-3  pb-3">
-            {/* <div className="rounded-md bg-yellow-100 p-2"> */}
-            {/* Icon bisa diganti sesuai kebutuhan */}
+          <div className="relative flex items-center gap-3 pb-3">
             <Image
               src="/images/IconModalBatalkan.svg"
               width={56}
@@ -105,15 +103,14 @@ export function BatalkanPesanan({
               alt="check icon"
               className="mr-2 bg-[#FFF2CC]"
             />
-            {/* </div> */}
             <div>
               <p className="text-[24px] font-semibold">Batalkan pesanan</p>
               <p className="mt-2 text-[14px] font-[400] text-gray-500">
                 Berikan alasan untuk membatalkan pesanan
               </p>
             </div>
-            <DialogClose className="ml-auto">
-              <X className="text-gray-500" />
+            <DialogClose className="absolute top-4 right-4">
+              <CircleX className="text-gray-500" />
             </DialogClose>
           </div>
         </DialogTitle>
