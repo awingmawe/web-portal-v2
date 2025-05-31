@@ -307,7 +307,7 @@ export const PembiayaanForm = forwardRef<
             </FormItem>
           )}
         />
-        {screenSize !== 'dekstop' && (
+        {screenSize !== 'desktop' && (
           <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-gray-100 bg-white p-4">
             <Button
               type="submit"

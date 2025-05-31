@@ -334,7 +334,7 @@ const PembiayaanPage: React.FC = () => {
       {/* Desktop Title - Only visible on desktop */}
       {screenSize === 'desktop' && (
         <div className="p-6">
-          <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <h1 className="text-3xl font-semibold text-gray-800">
               Program Pendanaan Syariah Umrah
             </h1>
@@ -434,11 +434,16 @@ const PembiayaanPage: React.FC = () => {
                       className={`flex cursor-pointer items-center border-b border-[#E8E8E8] p-6 transition ${step === 1 ? 'bg-yellow-50' : ''} rounded-tl-3xl`}
                       onClick={() => setStep(1)}
                     >
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full ${step === 1 ? 'bg-yellow-400' : 'bg-gray-200'}`}
-                      >
+                      <div className="relative flex h-12 w-12 items-center justify-center">
+                        <div
+                          className={`absolute h-10 w-10 rounded-full border-6 ${
+                            step === 1
+                              ? 'border-primary-500'
+                              : 'border-neutral-200'
+                          }`}
+                        ></div>
                         <span
-                          className={`text-base font-medium ${step === 1 ? 'text-black' : 'text-gray-600'}`}
+                          className={`text-[14px] leading-none font-bold text-neutral-900`}
                         >
                           1
                         </span>
@@ -451,11 +456,16 @@ const PembiayaanPage: React.FC = () => {
                       className={`flex cursor-pointer items-center border-b border-[#E8E8E8] p-6 transition ${step === 2 ? 'bg-yellow-50' : ''}`}
                       onClick={() => setStep(2)}
                     >
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full ${step === 2 ? 'bg-yellow-400' : 'bg-gray-200'}`}
-                      >
+                      <div className="relative flex h-12 w-12 items-center justify-center">
+                        <div
+                          className={`absolute h-10 w-10 rounded-full border-6 ${
+                            step === 2
+                              ? 'border-primary-500'
+                              : 'border-neutral-200'
+                          }`}
+                        ></div>
                         <span
-                          className={`text-base font-medium ${step === 2 ? 'text-black' : 'text-gray-600'}`}
+                          className={`text-[14px] leading-none font-bold text-neutral-900`}
                         >
                           2
                         </span>
