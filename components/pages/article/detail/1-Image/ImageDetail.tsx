@@ -4,7 +4,6 @@ import ShareIcon from '@/components/icons/share'
 import WhatsappIcon from '@/components/icons/whatsapp'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
-import { getCookie } from '@/services/common/cookie'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -12,16 +11,17 @@ type ImageDetailProps = {
   created_at: Date | string
   thumbnail_url: string | null
   title: string
+  isWebview?: string
 }
 
 const ImageDetail = ({
   created_at,
   thumbnail_url,
   title,
+  isWebview,
 }: ImageDetailProps) => {
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
-  const isWebView = getCookie('is-web-view')
   const handleShareWebview = () => {
     window.postMessage(
       {
@@ -47,7 +47,7 @@ const ImageDetail = ({
           <WhatsappIcon
             size={20}
             onClick={() => {
-              if (isWebView === 'true') {
+              if (isWebview === 'true') {
                 handleShareWebview()
               } else {
                 router.push(
