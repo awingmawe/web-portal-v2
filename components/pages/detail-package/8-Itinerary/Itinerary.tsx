@@ -17,12 +17,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // Separate memoized component for each activity
 const Activity = React.memo(
   ({ time, activity }: { time: string; activity: string }) => (
-    <div className="flex items-center justify-between gap-3">
-      <p className="text-m-regular flex-1 text-neutral-900">{time}</p>
-      <p className="text-m-regular  text-neutral-900">-</p>
-      <p className="text-m-regular flex-16 text-neutral-900 max-lg:flex-6">
-        {activity}
+    <div className="flex items-start justify-between gap-3">
+      <p className="text-m-regular min-w-[75px] flex-2 text-neutral-900 max-[600px]:flex-4">
+        {time}
       </p>
+      <p className="text-m-regular text-neutral-900">-</p>
+      <p className="text-m-regular flex-16 text-neutral-900 ">{activity}</p>
     </div>
   )
 )
@@ -32,7 +32,6 @@ Activity.displayName = 'Activity'
 // Separate memoized component for each day
 const ItineraryDay = React.memo(
   ({
-    day,
     title,
     activities,
   }: {
@@ -41,9 +40,7 @@ const ItineraryDay = React.memo(
     activities: { time: string; activity: string }[]
   }) => (
     <div className="mb-4 flex flex-col gap-1">
-      <p className="text-m-semibold text-neutral-900">
-        Hari {day}: {title}
-      </p>
+      <p className="text-m-semibold text-neutral-900">{title}</p>
       {activities.map((activity, index) => (
         <Activity
           key={`activity-${index}`}

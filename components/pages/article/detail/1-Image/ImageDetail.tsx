@@ -4,6 +4,7 @@ import ShareIcon from '@/components/icons/share'
 import WhatsappIcon from '@/components/icons/whatsapp'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
+import { getCookie } from '@/services/common/cookie'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -20,7 +21,19 @@ const ImageDetail = ({
 }: ImageDetailProps) => {
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
-
+  const isWebView = getCookie('is-web-view')
+  const handleShareWebview = () => {
+    window.postMessage(
+      {
+        type: 'wa-share',
+        data: {
+          title,
+          url: window.location.href,
+        },
+      },
+      '*'
+    )
+  }
   return (
     <>
       <div className="mb-3 flex items-center justify-between lg:hidden">
@@ -33,11 +46,15 @@ const ImageDetail = ({
           <p className="text-s-regular text-neutral-500">Bagikan:</p>
           <WhatsappIcon
             size={20}
-            onClick={() =>
-              router.push(
-                `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
-              )
-            }
+            onClick={() => {
+              if (isWebView === 'true') {
+                handleShareWebview()
+              } else {
+                router.push(
+                  `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+                )
+              }
+            }}
           />
           <ShareIcon size={20} onClick={shareViaCopyLink} />
         </div>
