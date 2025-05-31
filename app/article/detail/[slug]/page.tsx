@@ -34,6 +34,7 @@ export default async function ArtilceDetail({ params }: any) {
   const { slug } = await params
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
+  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string
 
   const [dataArticleDetail, dataBannerCarousel, dataComments] =
     await Promise.all([
@@ -93,10 +94,6 @@ export default async function ArtilceDetail({ params }: any) {
     publishedAt: dataArticleDetail?.published_at,
     tag: dataArticleDetail?.hashtags?.map((tag) => tag).join(', '),
   }
-
-  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as
-    | string
-    | undefined
 
   return (
     <LayoutArticle>
