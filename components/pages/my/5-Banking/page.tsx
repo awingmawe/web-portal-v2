@@ -229,7 +229,7 @@ const BankingPageDetail: React.FC = () => {
       <div className="md:hidden">
         <MobileTopbar
           variant="pendanaanSyariah"
-          title="Detail Pendanaan Syariah"
+          title="Detail Talangan Umroh"
           showBackButton
           onBackClick={() => {
             router.push('/my')

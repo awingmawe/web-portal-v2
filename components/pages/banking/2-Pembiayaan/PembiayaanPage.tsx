@@ -295,7 +295,7 @@ const PembiayaanPage: React.FC = () => {
 
           <div className="mb-4">
             <h1 className="text-[14px] font-[600] text-neutral-900">
-              Program Pendanaan Syariah Umrah
+              Program Talangan Umroh
             </h1>
             <div className="mt-4 flex items-center text-xs text-gray-500">
               <span className="text-[12px] font-[400] text-neutral-500">
@@ -360,7 +360,7 @@ const PembiayaanPage: React.FC = () => {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-semibold text-gray-800">
-              Program Pendanaan Syariah Umrah
+              Program Talangan Umroh
             </h1>
             <div className="flex items-center">
               <span className="mr-2 text-xs text-gray-500">Didukung oleh</span>
@@ -383,7 +383,7 @@ const PembiayaanPage: React.FC = () => {
             Mau ibadah ke Tanah Suci, tapi kantong lagi tipis?
           </p>
           <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            Tenang aja! Solusi manis lewat pendanaan syariah
+            Tenang aja! Solusi manis lewat Talangan Umroh
           </p>
           <p className="text-[12px] font-[400] text-[black] md:text-sm">
             InsyaAllah jadi langkah mudah sampai ke Baitullah
@@ -394,7 +394,7 @@ const PembiayaanPage: React.FC = () => {
           <p className="text-[12px] font-[400] text-[black] md:text-sm">
             Bersama KTA iB Multiguna PermataBank, kami hadir untuk mempermudah
             umat Muslim mewujudkan impiannya dalam melaksanakan ibadah ke Tanah
-            Suci. Kamu bisa mengajukan pendanaan syariah untuk ibadah Umroh dan
+            Suci. Kamu bisa mengajukan Talangan Umroh untuk ibadah Umroh dan
             Haji dengan paket apa pun melalui akad Ijarah Multijasa.
           </p>
         </div>

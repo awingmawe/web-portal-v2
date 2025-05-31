@@ -31,7 +31,7 @@ export default async function SearchGeneral({
             <MobileTopbar
               variant="plainBank"
               showBackButton
-              title="Pendanaan Syariah"
+              title="Talangan Umroh"
             />
             <PembiayaanPage />
           </>
@@ -50,7 +50,7 @@ export default async function SearchGeneral({
             <MobileTopbar
               variant="plainBank"
               showBackButton
-              title="Pendanaan Syariah"
+              title="Talangan Umroh"
             />
             <PembiayaanPage />
           </>
