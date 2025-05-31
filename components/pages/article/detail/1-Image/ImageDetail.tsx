@@ -11,16 +11,29 @@ type ImageDetailProps = {
   created_at: Date | string
   thumbnail_url: string | null
   title: string
+  isWebview?: string
 }
 
 const ImageDetail = ({
   created_at,
   thumbnail_url,
   title,
+  isWebview,
 }: ImageDetailProps) => {
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
-
+  const handleShareWebview = () => {
+    window.postMessage(
+      {
+        type: 'wa-share',
+        data: {
+          title,
+          url: window.location.href,
+        },
+      },
+      '*'
+    )
+  }
   return (
     <>
       <div className="mb-3 flex items-center justify-between lg:hidden">
@@ -33,11 +46,15 @@ const ImageDetail = ({
           <p className="text-s-regular text-neutral-500">Bagikan:</p>
           <WhatsappIcon
             size={20}
-            onClick={() =>
-              router.push(
-                `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
-              )
-            }
+            onClick={() => {
+              if (isWebview === 'true') {
+                handleShareWebview()
+              } else {
+                router.push(
+                  `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+                )
+              }
+            }}
           />
           <ShareIcon size={20} onClick={shareViaCopyLink} />
         </div>

@@ -244,7 +244,7 @@ export default function ContentArticle({
                   className="p-4"
                   initial={false}
                   animate={{
-                    paddingBottom: isCommentFocused ? 16 : 24,
+                    paddingBottom: isCommentFocused || commentText ? 16 : 24,
                   }}
                   transition={{ duration: 0.3 }}
                 >
@@ -276,7 +276,7 @@ export default function ContentArticle({
 
                   {/* Action buttons - only show when focused */}
                   <AnimatePresence>
-                    {isCommentFocused && (
+                    {(isCommentFocused || commentText) && (
                       <motion.div
                         initial={{ opacity: 0, height: 0, marginTop: 0 }}
                         animate={{ opacity: 1, height: 'auto', marginTop: 20 }}
@@ -285,7 +285,7 @@ export default function ContentArticle({
                           duration: 0.3,
                           ease: [0.4, 0, 0.2, 1],
                         }}
-                        className="comment-actions mt-2 flex items-center justify-between px-2"
+                        className="comment-actions mt-2 flex items-center justify-between gap-3 px-2 max-sm:flex-col"
                       >
                         {/* Comment guidelines */}
                         <div className="flex flex-1 flex-row items-center gap-1">
@@ -298,7 +298,7 @@ export default function ContentArticle({
                         {/* Action buttons */}
                         <div className="flex items-center gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => {
                               setIsCommentFocused(false)
@@ -307,7 +307,7 @@ export default function ContentArticle({
                               inputRef.current?.blur()
                             }}
                             disabled={isSubmitting}
-                            className="px-10 py-2 text-neutral-600 hover:text-neutral-800 disabled:opacity-50"
+                            className="border-primary-500 px-10 py-2 text-neutral-600 hover:text-neutral-800 disabled:opacity-50"
                           >
                             Batal
                           </Button>
