@@ -23,22 +23,38 @@ const ImageDetail = ({
 }: ImageDetailProps) => {
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
+  const [disabledWa, setDisabledWa] = useState(true)
   const shareLinkWa = `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
-  const [disabledWa, setDisabledWa] = useState(false)
   const handleShareWebview = () => {
     window.flutter_inappwebview.callHandler('wa-share', shareLinkWa)
   }
 
   useEffect(() => {
-    if (isWebview == 'true') {
-      window.addEventListener('flutterInAppWebViewPlatformReady', function () {
-        console.log('WebView is ready')
-        setDisabledWa(true)
-      })
-    } else {
+    setTimeout(() => {
+      window.addEventListener(
+        'flutterInAppWebViewPlatformReady',
+        function () {}
+      )
+      document
+        .getElementById('sendToFlutter')
+        ?.addEventListener('click', function () {
+          alert(`clicked - ${shareLinkWa}`)
+          if (isWebview === 'true') {
+            if (window.flutter_inappwebview) {
+              alert('triggered')
+              handleShareWebview()
+            } else {
+              alert('not triggered')
+            }
+          } else {
+            router.push(shareLinkWa)
+          }
+        })
+
       setDisabledWa(false)
-    }
-  }, [isWebview])
+    }, 1000)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
@@ -50,18 +66,9 @@ const ImageDetail = ({
         </p>
         <div className="flex items-center gap-2">
           <p className="text-s-regular text-neutral-500">Bagikan:</p>
-          <WhatsappIcon
-            size={20}
-            onClick={() => {
-              if (disabledWa) {
-                if (isWebview === 'true') {
-                  handleShareWebview()
-                } else {
-                  router.push(shareLinkWa)
-                }
-              }
-            }}
-          />
+          <button id="sendToFlutter" disabled={disabledWa}>
+            <WhatsappIcon size={20} />
+          </button>
           <ShareIcon size={20} onClick={shareViaCopyLink} />
         </div>
       </div>
