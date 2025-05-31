@@ -368,3 +368,14 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.normalize-content ul {
+  list-style-type: none;
+}
+.normalize-content ul li:before {
+  content: '\2022';
+  margin-right: 10px;
+}
+.normalize-content ul li {
+  display: flex;
+}
