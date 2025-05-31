@@ -67,7 +67,7 @@ const DrawerRefundPolicy = React.memo(
           >
             {children}
           </DrawerTrigger> */}
-          <DrawerContent className="bg-white p-4">
+          <DrawerContent className="z-[999] bg-white p-4">
             <div className="mx-auto w-full max-w-md">
               <DrawerHeader className="border-gray-200 px-4 py-3">
                 <div className="flex items-center">
