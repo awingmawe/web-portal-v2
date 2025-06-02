@@ -2,6 +2,7 @@
 
 import WhatsappIcon from '@/components/icons/whatsapp'
 import { Button } from '@/components/ui/button'
+import { CALL_CENTER } from '@/constant/env'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import {
@@ -36,7 +37,7 @@ const TravelDetail = ({
 
   const phoneNumberUsed = directContact
     ? formatPhoneNumber(phoneNumber)
-    : formatPhoneNumber(bdm?.persona?.phoneNumber ?? '628888551101')
+    : formatPhoneNumber(bdm?.persona?.phoneNumber ?? String(CALL_CENTER))
 
   return (
     <div

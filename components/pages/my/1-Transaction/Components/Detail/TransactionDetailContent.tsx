@@ -10,7 +10,7 @@ import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Compo
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import { CALL_CENTER, MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import {
   getManifestDetail,
   getPaymentStatement,
@@ -488,7 +488,7 @@ export default function TransactionDetailContent({
                   </Button>
                 )}
                 <Link
-                  href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                  href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                   target="_blank"
                   className="w-full"
                 >
@@ -504,7 +504,7 @@ export default function TransactionDetailContent({
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' && (
                     // <Link
-                    //   href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                    //   href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                     //   target="_blank"
                     //   className="w-full"
                     // >

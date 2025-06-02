@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { toast } from '@/components/ui/sonner'
-import { ACCOUNT_URL, URL } from '@/constant/env'
+import { ACCOUNT_URL, CALL_CENTER, URL } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -188,13 +188,13 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     }, 500)
   }, [variants])
 
-  const phoneNumberUsed = '628888551101'
+  const phoneNumberUsed = CALL_CENTER
 
   // Uncomment this when need to change again
   // const phoneNumberUsed = organization?.directContact
   //   ? formatPhoneNumber(organization?.phoneNumber)
   //   : formatPhoneNumber(
-  //       organization?.bdm?.persona?.phoneNumber ?? '628888551101'
+  //       organization?.bdm?.persona?.phoneNumber ?? 62888855110'
   //     )
 
   // Check room type availability based on price
