@@ -15,15 +15,13 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import renderHTML from 'react-render-html'
 
 // Memoized content component
-const PackageDescriptionContent = React.memo(
-  ({ content }: { content: string }) => (
-    <div className="list-terms-condition text-sm">{renderHTML(content)}</div>
-  )
-)
+const TermsContent = React.memo(({ content }: { content: string }) => (
+  <div className="list-terms-condition text-sm">{renderHTML(content)}</div>
+))
 
-PackageDescriptionContent.displayName = 'PackageDescriptionContent'
+TermsContent.displayName = 'TermsContent'
 
-const PackageDescriptionTemplate = ({
+const TermsConditionTemplate = ({
   termsCondition,
 }: {
   termsCondition: string
@@ -97,7 +95,7 @@ const PackageDescriptionTemplate = ({
       <div className="flex gap-3">
         <div className="bg-primary-500 h-auto w-[6px] rounded-full" />
         <p className="heading-3-semibold font-semibold max-lg:text-sm max-lg:leading-5">
-          Deskripsi Paket
+          Syarat Ketentuan
         </p>
       </div>
 
@@ -108,7 +106,7 @@ const PackageDescriptionTemplate = ({
           {...animationProps}
           className="overflow-hidden"
         >
-          <PackageDescriptionContent content={termsCondition} />
+          <TermsContent content={termsCondition} />
         </motion.div>
 
         {/* Gradient overlay for fade effect when collapsed */}
@@ -162,7 +160,7 @@ const PackageDescriptionTemplate = ({
               </DrawerTitle>
             </DrawerHeader>
             <div className="overflow-y-auto px-4 pb-4 text-sm">
-              <PackageDescriptionContent content={termsCondition} />
+              <TermsContent content={termsCondition} />
             </div>
           </DrawerContent>
         </Drawer>
@@ -171,4 +169,4 @@ const PackageDescriptionTemplate = ({
   )
 }
 
-export default PackageDescriptionTemplate
+export default TermsConditionTemplate

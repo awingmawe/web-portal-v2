@@ -11,6 +11,7 @@ import TermsCondition from '@/components/pages/detail-package/6-TermsCondition/T
 import { Facilities } from '@/components/pages/detail-package/7-Facilities/Facilities'
 import { OtherFacilities } from '@/components/pages/detail-package/7-Facilities/Souvenir'
 import Itinerary from '@/components/pages/detail-package/8-Itinerary/Itinerary'
+import PacakgeDescription from '@/components/pages/detail-package/9-PackageDescription/PacakgeDescription'
 import ActionCheckoutMobile from '@/components/pages/detail-package/mobile/ActionCheckout'
 import TitlePackageMobile from '@/components/pages/detail-package/mobile/TitlePackage'
 import Footer from '@/components/shared/Footer'
@@ -144,7 +145,7 @@ export default async function DetailPackage({ params }: { params: any }) {
                 madinahHotel={detailData?.medinaHotel?.name}
               />
 
-              <TermsCondition
+              <PacakgeDescription
                 termsCondition={detailData?.detail?.description}
               />
 
