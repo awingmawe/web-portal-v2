@@ -143,6 +143,11 @@ export default async function DetailPackage({ params }: { params: any }) {
                 meccaHotel={detailData?.meccaHotel?.name}
                 madinahHotel={detailData?.medinaHotel?.name}
               />
+
+              <TermsCondition
+                termsCondition={detailData?.detail?.description}
+              />
+
               <HotelMecca
                 mecca={detailData?.meccaHotel}
                 meccaHotelImages={meccaHotelImages}
