@@ -1,5 +1,6 @@
 import { AppStoreIcon } from '@/components/icons/appstore'
 import { PlaystoreIcon } from '@/components/icons/playstore'
+import { CALL_CENTER } from '@/constant/env'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { Fragment } from 'react'
@@ -35,7 +36,7 @@ export default function Footer({
                   </li>
                   <li>
                     <Link
-                      href="https://wa.me/628888551101"
+                      href={`https://wa.me/${CALL_CENTER}`}
                       className="text-m-regular text-neutral-900"
                     >
                       Bantuan

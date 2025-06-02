@@ -1,6 +1,7 @@
 'use client'
 
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
+import { CALL_CENTER } from '@/constant/env'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
 import { BedDouble, CalendarDays, Users } from 'lucide-react'
@@ -513,7 +514,7 @@ const BankingPageDetail: React.FC = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <Link
-              href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
+              href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
               target="_blank"
               className="hidden lg:block"
             >
@@ -533,7 +534,7 @@ const BankingPageDetail: React.FC = () => {
             </div>
 
             <Link
-              href={`https://wa.me/628888551101?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
+              href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+dengan+customer+service+Muslim+101+saya+mau+bertanya+tentang+pendanaan?`}
               target="_blank"
             >
               <div className="fixed right-0 bottom-0 left-0 bg-white p-4 shadow-[0_-4px_6px_rgba(0,0,0,0.1)] md:hidden">

@@ -3,6 +3,7 @@
 import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import { Button } from '@/components/ui/button'
+import { CALL_CENTER } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
@@ -38,12 +39,12 @@ export default function ActionCheckoutMobile({
     }
   }, [variants, setVariants])
 
-  const phoneNumberUsed = '628888551101'
+  const phoneNumberUsed = CALL_CENTER
 
   // const phoneNumberUsed = organization?.directContact
   //   ? formatPhoneNumber(organization?.phoneNumber)
   //   : formatPhoneNumber(
-  //       organization?.bdm?.persona?.phoneNumber ?? '628888551101'
+  //       organization?.bdm?.persona?.phoneNumber ?? 'CALL_CENTER'
   //     )
 
   // Create a richer message when variant is selected

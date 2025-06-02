@@ -7,12 +7,9 @@
           "6CTU6LL73A.com.muslim101.muslimapp.dev"
         ],
         "paths": [
-            "/umrah/*"
-        ],
-        "components": [
-          {
-            "/": "/*"
-          }
+          "/umrah/*",
+          "/article/*",
+          "/travel/*"
         ]
       }
     ]
