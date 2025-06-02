@@ -24,7 +24,7 @@ const ImageDetail = ({
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
   const [disabledWa, setDisabledWa] = useState(true)
-  const shareLinkWa = `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+  const shareLinkWa = `Baca Artikel ini ${title} - ${window.location.href}`
   const handleShareWebview = () => {
     window.flutter_inappwebview.callHandler('wa-share', shareLinkWa)
   }
@@ -44,7 +44,7 @@ const ImageDetail = ({
             } else {
             }
           } else {
-            router.push(shareLinkWa)
+            router.push(`https://wa.me/?text=${shareLinkWa}`)
           }
         })
 
