@@ -38,7 +38,6 @@ const ImageDetail = ({
       document
         .getElementById('sendToFlutter')
         ?.addEventListener('click', function () {
-          alert(`clicked - ${shareLinkWa}`)
           if (isWebview === 'true') {
             if (window.flutter_inappwebview) {
               handleShareWebview()
