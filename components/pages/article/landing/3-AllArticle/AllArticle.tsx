@@ -3,41 +3,23 @@
 import { ArrowDiagonalIcon } from '@/components/icons/arrow'
 import { ArticleCard } from '@/components/pages/article/common/CardArticle'
 import CategoryNavigation from '@/components/pages/article/common/Category'
-import { CustomPagination } from '@/components/shared/CustomPagination'
 import { Button } from '@/components/ui/button'
 import { Article, Category } from '@/constant/types/ArticleProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import React, { useCallback, useMemo } from 'react'
+import React from 'react'
 
 export function AllArticle({
   dataAllArticle,
   dataTerpopular,
-  total,
   dataCategories,
-  isPagination = true,
 }: {
   dataAllArticle: Article[]
-  total: number
   dataTerpopular: Article[]
   dataCategories: Category[]
-  isPagination?: boolean
 }) {
-  const searchParams = useSearchParams()
-  const router = useRouter()
   const { md: isMobile } = useTailwindBreakpoint()
-  const totalPages = useMemo(() => {
-    return Math.ceil(total / 9)
-  }, [total])
 
-  // Create page navigation function
-  const goToPage = useCallback(
-    (page: number) => {
-      router.push(`/article?page=${page}`, { scroll: false })
-    },
-    [router]
-  )
   return (
     <section className="container mx-auto mt-10 w-full max-lg:mt-7.5">
       <div className="grid grid-cols-12 gap-4.5">
@@ -51,49 +33,43 @@ export function AllArticle({
             dataCategories={dataCategories}
           />
           {dataAllArticle?.length > 0 ? (
-            <div className="grid grid-cols-12 gap-4.5">
-              {dataAllArticle?.map((article: Article) => (
-                <div
-                  key={article.id}
-                  className="col-span-4 max-md:col-span-6 max-sm:col-span-12"
-                >
-                  <ArticleCard
-                    article={article}
-                    className="h-full"
-                    height={isMobile ? 200 : '100%'}
-                    aspect={isMobile ? 16 / 9 : 3 / 4}
-                    section="Seluruh Artikel"
-                  />
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-12 gap-4.5">
+                {dataAllArticle?.map((article: Article) => (
+                  <div
+                    key={article.id}
+                    className="col-span-4 max-md:col-span-6 max-sm:col-span-12"
+                  >
+                    <ArticleCard
+                      article={article}
+                      className="h-full"
+                      height={isMobile ? 200 : '100%'}
+                      aspect={isMobile ? 16 / 9 : 3 / 4}
+                      section="Seluruh Artikel"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="col-span-12 grid">
+                <Link href="/article/list" className="m-auto mt-6">
+                  <Button className="items-center gap-1 px-3 py-2" size="xs">
+                    <p className="text-m-regular text-neutral-900">
+                      Lihat Artikel Lainnya
+                    </p>
+                    <ArrowDiagonalIcon size={24} />
+                  </Button>
+                </Link>
+              </div>
+            </>
           ) : (
             <div className="col-span-12 flex h-[300px] items-center justify-center text-center">
               <p className="text-m-regular text-neutral-500 max-lg:text-sm max-lg:leading-5">
-                Artikel tidak ditemukan
+                Artikel tidak tersedia
               </p>
             </div>
           )}
-          <div className="col-span-12 grid">
-            {isPagination ? (
-              <CustomPagination
-                currentPage={parseInt(searchParams.get('page') || '1', 10)}
-                totalPages={totalPages}
-                goToPage={goToPage}
-              />
-            ) : (
-              <Link href="/article/list" className="m-auto mt-6">
-                <Button className="items-center gap-1 px-3 py-2" size="xs">
-                  <p className="text-m-regular text-neutral-900">
-                    Lihat Artikel Lainnya
-                  </p>
-                  <ArrowDiagonalIcon size={24} />
-                </Button>
-              </Link>
-            )}
-          </div>
         </div>
-        {dataTerpopular.length > 0 && (
+        {dataTerpopular?.length > 0 && (
           <div className="col-span-4 max-lg:col-span-12">
             <div className="max-lg:rounded-0 flex flex-col rounded-[20px] border-1 border-neutral-200 p-4 max-lg:gap-5 max-lg:border-0 max-lg:p-0">
               <p className="heading-4-semibold mb-4 max-lg:mb-0 max-lg:text-[16px] max-lg:leading-6">

@@ -54,7 +54,7 @@ export default function ArtikelSection({
           className="mt-7 mb-0 w-full max-lg:mt-0 lg:my-7"
         >
           <CarouselContent className="-ml-4.5 px-2">
-            {dataCarousel.map((article) => (
+            {dataCarousel?.map((article) => (
               <CarouselItem
                 key={`testimoni-${article.id}`}
                 className="basis-1/4 items-center pl-4.5 max-lg:basis-3/5"
