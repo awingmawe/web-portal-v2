@@ -34,7 +34,8 @@ export default function LandingLinkAja() {
       </div>
       <h1 className="heading-2-bold mt-5">
         Umrah jadi lebih <br /> mudah dan aman <br />
-        bareng Link Aja
+        bareng LinkAja & <br />
+        LinkAja Syariah
       </h1>
       <p className="text-l-regular mt-2">
         Nikmati pengalaman ibadah yang damai <br /> dan nyaman dengan harga
@@ -42,7 +43,7 @@ export default function LandingLinkAja() {
       </p>
       <div className="mt-5 w-full">
         <Button
-          className="w-full py-3"
+          className="w-full"
           onClick={() => {
             document
               .getElementById('packageList')

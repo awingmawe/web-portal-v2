@@ -48,7 +48,7 @@ export default async function SearchGeneral() {
           <MobileTopbar variant="filter" showBackButton={false} forceMobile />
           <section className="absolute top-[55px] bottom-0 z-11 mt-0 h-full w-full max-w-full overflow-y-auto rounded-tl-3xl rounded-tr-3xl bg-white px-4 py-7.5 pb-[130px] shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
             <div className="col-span-12">
-              <PackageResults />
+              <PackageResults isCompact />
             </div>
           </section>
         </main>

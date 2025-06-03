@@ -2,6 +2,7 @@
 'use client'
 
 import { CardPackage } from '@/components/shared/CardPackage'
+import { CardPackageCompact } from '@/components/shared/CardPackageCompact'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { CustomInfiniteScroll } from '@/components/shared/InfiniteScroll'
 import { useFilterProduct } from '@/contexts/filter-product-context'
@@ -9,7 +10,7 @@ import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useMemo } from 'react'
+import { Fragment, useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
 import { NoResults } from './NoResultPackageList'
 import {
@@ -17,8 +18,13 @@ import {
   PaginationSkeleton,
   ResultsHeaderSkeleton,
 } from './SkeletonPackageList'
+export interface PackageResultsProps {
+  isCompact?: boolean
+}
 
-export const PackageResults: React.FC = () => {
+export const PackageResults: React.FC<PackageResultsProps> = ({
+  isCompact = false,
+}) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const {
@@ -156,11 +162,16 @@ export const PackageResults: React.FC = () => {
             // Mobile view with infinite scroll
             <>
               {infinitePackages?.map((packageData, index) => (
-                <CardPackage
-                  key={`packages-${packageData.slugPackage}-${index}`}
-                  data={packageData}
-                  eventCategory="search"
-                />
+                <Fragment key={`packages-${packageData.slugPackage}-${index}`}>
+                  {isCompact ? (
+                    <CardPackageCompact
+                      data={packageData}
+                      eventCategory="search"
+                    />
+                  ) : (
+                    <CardPackage data={packageData} eventCategory="search" />
+                  )}
+                </Fragment>
               ))}
               {/* Only show infinite scroll on mobile */}
               <CustomInfiniteScroll
@@ -173,11 +184,16 @@ export const PackageResults: React.FC = () => {
           ) : (
             // Desktop view with pagination
             packageDataCSR?.map((packageData, index) => (
-              <CardPackage
-                key={`packages-${packageData.slugPackage}-${index}`}
-                data={packageData}
-                eventCategory="search"
-              />
+              <Fragment key={`packages-${packageData.slugPackage}-${index}`}>
+                {isCompact ? (
+                  <CardPackageCompact
+                    data={packageData}
+                    eventCategory="search"
+                  />
+                ) : (
+                  <CardPackage data={packageData} eventCategory="search" />
+                )}
+              </Fragment>
             ))
           )}
         </div>
