@@ -23,7 +23,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // Memoized component for a single facility item
 const FacilityItem = React.memo(({ item }: { item: string }) => (
-  <div className="flex items-center gap-1 break-all max-lg:pl-2">
+  <div className="flex items-center gap-1 max-lg:pl-2 lg:break-all">
     <div className="h-1 min-h-1.5 w-1 min-w-1.5 flex-shrink-0 rounded-full bg-neutral-900" />
     <p className="text-m-regular text-neutral-900">{item}</p>
   </div>
