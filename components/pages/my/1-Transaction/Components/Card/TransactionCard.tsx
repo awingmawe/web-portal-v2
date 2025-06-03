@@ -204,8 +204,6 @@ export default function TransactionCard({
     }
   }
 
-  console.log(status)
-
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200 ">
       <RenderLinkToDetail

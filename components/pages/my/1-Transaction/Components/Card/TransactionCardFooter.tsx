@@ -3,9 +3,12 @@
 
 import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
 import { TransactionDetail } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetail'
+import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
 import { BatalkanPesanan } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesanan'
+
 import ModalPengembalianDanaDetail from '@/components/pages/my/1-Transaction/Components/Modal/modalPengembalianDanaDetail'
 import ModalSuccessCanceled from '@/components/pages/my/1-Transaction/Components/Modal/modalSukses'
+import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -136,6 +139,10 @@ export default function TransactionCardFooter({
     setReason,
     description,
     setDescription,
+    openFormRefund,
+    setOpenFormRefund,
+    openVerifikasiEmail,
+    setOpenVerifikasiEmail,
   } = useCanceled()
 
   return (
@@ -148,6 +155,18 @@ export default function TransactionCardFooter({
         >
           Lihat Detail Pesanan
         </Button>
+        {(status === 'canceled-by-user' || status === 'canceled-by-travel') &&
+          transaction.isRefundAvailable === true && (
+            <Button
+              variant="outline"
+              className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+              onClick={() => {
+                setOpenFormRefund(true)
+              }}
+            >
+              Proses Refund
+            </Button>
+          )}
         {!detailOnly && (
           <Fragment>
             {status === 'waiting-cancellation' ? null : isPaidOff ? (
@@ -296,7 +315,7 @@ export default function TransactionCardFooter({
                     onClick={() => setOpenBatalkan(true)}
                   >
                     <p className="text-m-regular text-error-500">
-                      Batalkan Pesanan
+                      Batalkan Pesanans
                     </p>
                   </span>
                 </div>
@@ -347,7 +366,21 @@ export default function TransactionCardFooter({
           </div>
         ) : (
           <Fragment>
-            {isCompletedManifest ? (
+            {statusTahapanDetail === 'Dibatalkan' ? (
+              (status === 'canceled-by-user' ||
+                status === 'canceled-by-travel') &&
+              transaction.isRefundAvailable === true && (
+                <Button
+                  variant="outline"
+                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                  onClick={() => {
+                    setOpenFormRefund(true)
+                  }}
+                >
+                  Proses Refund
+                </Button>
+              )
+            ) : isCompletedManifest ? (
               <Fragment>
                 {!isPaidOff && (
                   <Fragment>
@@ -410,6 +443,82 @@ export default function TransactionCardFooter({
                 )}
               </Fragment>
             )}
+            {/* {(status === 'canceled-by-user' ||
+              status === 'canceled-by-travel') &&
+              transaction.isRefundAvailable === true && (
+                <Button
+                  variant="outline"
+                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                  onClick={() => {
+                    setOpenFormRefund(true)
+                  }}
+                >
+                  Proses Refund
+                </Button>
+              )} */}
+            {/* {isCompletedManifest ? (
+              <Fragment>
+                {!isPaidOff && (
+                  <Fragment>
+                    <Button
+                      className="border-primary-500  w-full border-2 px-8 py-3 text-nowrap"
+                      disabled={loadingPaymentTransaction}
+                      onClick={() => {
+                        fetchPaymentStatement(bookingId)
+                      }}
+                    >
+                      Bayar Pelunasan
+                    </Button>
+                    <Button
+                      className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200 "
+                      variant="outline"
+                      disabled={true}
+                    >
+                      <ChecklistCircle2 />
+                      Data Jemaah Lengkap
+                    </Button>
+                  </Fragment>
+                )}
+              </Fragment>
+            ) : (
+              <Fragment>
+                {isPaidOff ? (
+                  <Fragment>
+                    <Link href={`/manifest/${bookingId}`}>
+                      <Button className="w-full px-8 py-3 text-nowrap">
+                        Lengkapi Data Jemaah
+                      </Button>
+                    </Link>
+                    <Button
+                      className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200 "
+                      variant={'outline'}
+                      disabled={true}
+                    >
+                      <ChecklistCircle2 />
+                      Pelunasan
+                    </Button>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <Link href={`/manifest/${bookingId}`}>
+                      <Button className="w-full px-8 py-3 text-nowrap">
+                        Lengkapi Data Jemaah
+                      </Button>
+                    </Link>
+                    <Button
+                      className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                      variant={'outline'}
+                      disabled={loadingPaymentTransaction}
+                      onClick={() => {
+                        fetchPaymentStatement(bookingId)
+                      }}
+                    >
+                      Bayar Pelunasan
+                    </Button>
+                  </Fragment>
+                )}
+              </Fragment>
+            )} */}
           </Fragment>
         )}
       </div>
@@ -465,6 +574,19 @@ export default function TransactionCardFooter({
           open={openModalSukses}
           onOpenChange={setOpenModalSukses}
           fetchTransactions={fetchTransactions}
+        />
+      )}
+      {openFormRefund && (
+        <ModalFormRefund
+          open={openFormRefund}
+          onOpenChange={setOpenFormRefund}
+          setOpenVerifikasiEmail={setOpenVerifikasiEmail}
+        />
+      )}
+      {openVerifikasiEmail && (
+        <VerificationDialog
+          open={openVerifikasiEmail}
+          onOpenChange={setOpenVerifikasiEmail}
         />
       )}
     </Fragment>
