@@ -11,6 +11,7 @@ import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { CALL_CENTER, MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import { CanceledProvider } from '@/contexts/canceled-package-context'
 import {
   getManifestDetail,
   getPaymentStatement,
@@ -537,16 +538,19 @@ export default function TransactionDetailContent({
           </div>
         </Fragment>
       )}
-
-      <TransactionDetailMobileAction
-        bookingCode={transaction?.bookingCode}
-        bookingId={bookingId}
-        statusTahapan={statusTahapan}
-        idOrganisasi={
-          transaction?.packageSnapshot?.snapshot.package.organizationInstance.id
-        }
-      />
-
+      <CanceledProvider>
+        <TransactionDetailMobileAction
+          bookingCode={transaction?.bookingCode}
+          bookingId={bookingId}
+          statusTahapan={statusTahapan}
+          idOrganisasi={
+            transaction?.packageSnapshot?.snapshot.package.organizationInstance
+              .id
+          }
+          transaction={transaction}
+          // status={transaction.status.slug}
+        />
+      </CanceledProvider>
       <Script
         src={SNAP_URL}
         data-client-key={MIDTRANS_CLIENT_KEY}

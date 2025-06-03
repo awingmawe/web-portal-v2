@@ -19,25 +19,32 @@ import {
 } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { verifyEmailOtpBookingCanceled } from '@/services/identity-service'
+import { getPostReqRefund } from '@/services/umrah-service'
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 interface VerificationDialogProps {
   open: boolean
-  //   isLoading?: boolean
-  //   icon?: React.ReactNode
+
   onOpenChange: (open: boolean) => void
-  //   onVerify: (otp: string) => void
-  //   onResendOtp?: () => void
+
+  selectedBank: any
+  accountNumber: any
+  accountName: any
+  transaction: any
+  setOpenSuksesRefund: any
 }
 
 export default function VerificationDialog({
   open,
-  //   isLoading,
-  //   icon,
+
   onOpenChange,
-  //   onResendOtp,
-  //   onVerify,
+  selectedBank,
+  accountNumber,
+  accountName,
+  transaction,
+  setOpenSuksesRefund,
 }: VerificationDialogProps) {
   const { lg } = useTailwindBreakpoint()
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''))
@@ -91,11 +98,24 @@ export default function VerificationDialog({
     }
   }
 
-  const handleVerify = () => {
-    const otpString = otp.join('')
-    console.log(otpString)
+  const handleVerify = async () => {
+    try {
+      const otpString = otp.join('')
 
-    // onVerify(otpString)
+      const data = {
+        bookingCancelId: transaction.bookingCanceled.id,
+        accountBank: selectedBank,
+        accountName: accountName,
+        accountNumber: accountNumber,
+        otp: otpString,
+      }
+
+      await getPostReqRefund(data)
+      onOpenChange(false)
+      setOpenSuksesRefund(true)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -113,9 +133,10 @@ export default function VerificationDialog({
     }
   }, [isResend])
 
-  const handleResend = () => {
+  const handleResend = async () => {
     // onResendOtp?.()
-    setIsResend(60)
+    await verifyEmailOtpBookingCanceled()
+    // setIsResend(60)
   }
 
   const formContent = (

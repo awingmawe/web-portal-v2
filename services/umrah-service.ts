@@ -446,3 +446,16 @@ export async function getTagById(id: number): Promise<Tag> {
     throw error
   }
 }
+
+export async function getPostReqRefund(payload: any): Promise<any> {
+  try {
+    const response = await apiWithAuth.post(
+      `/umrah/v2/client/booking-canceled/req-refund`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
