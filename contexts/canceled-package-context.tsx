@@ -16,6 +16,9 @@ export const CanceledProvider = ({ children }: { children: ReactNode }) => {
   const [openFormRefund, setOpenFormRefund] = useState(false)
   const [openVerifikasiEmail, setOpenVerifikasiEmail] = useState(false)
   const [openSuksesRefund, setOpenSuksesRefund] = useState(false)
+  const [selectedBank, setSelectedBank] = useState('')
+  const [accountNumber, setAccountNumber] = useState('')
+  const [accountName, setAccountName] = useState('')
   const value = {
     open,
     setOpen,
@@ -39,6 +42,12 @@ export const CanceledProvider = ({ children }: { children: ReactNode }) => {
     setOpenVerifikasiEmail,
     openSuksesRefund,
     setOpenSuksesRefund,
+    setSelectedBank,
+    selectedBank,
+    setAccountNumber,
+    accountNumber,
+    setAccountName,
+    accountName,
   }
   return (
     <CanceledContext.Provider value={value}>

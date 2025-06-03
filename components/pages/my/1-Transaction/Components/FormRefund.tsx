@@ -12,6 +12,10 @@ import { Facility } from '@/constant/types/FacilityProps'
 import { useAuth } from '@/contexts/auth/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { getFacilityEnum } from '@/services/general-service'
+import {
+  updateProfile,
+  verifyEmailOtpBookingCanceled,
+} from '@/services/identity-service'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { CircleX, EditIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -21,17 +25,27 @@ interface FormRefundProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   setOpenVerifikasiEmail: any
+  setSelectedBank: any
+  selectedBank: any
+  setAccountNumber: any
+  accountNumber: any
+  setAccountName: any
+  accountName: any
 }
 
 export function ModalFormRefund({
   open,
   onOpenChange,
   setOpenVerifikasiEmail,
+  setSelectedBank,
+  selectedBank,
+  setAccountNumber,
+  accountNumber,
+  setAccountName,
+  accountName,
 }: FormRefundProps) {
   const { profile } = useAuth()
-  const [selectedBank, setSelectedBank] = useState('')
-  const [accountNumber, setAccountNumber] = useState('')
-  const [accountName, setAccountName] = useState('')
+
   const [isEditing, setIsEditing] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { lg } = useTailwindBreakpoint()
@@ -102,9 +116,7 @@ export function ModalFormRefund({
       setAccountName('')
     }
 
-    if (!savedBankData && !hasExistingBankData) {
-      onOpenChange(false)
-    }
+    onOpenChange(false)
   }
 
   const handleClose = () => {
@@ -122,25 +134,23 @@ export function ModalFormRefund({
     setIsLoading(true)
 
     try {
+      const selectedBankData = banks.find((bank) => bank.name === selectedBank)
       // Update profile API call
-      const updateProfileResponse = await fetch('/api/profile/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const data = {
+        persona: {
           accountBank: selectedBank,
           accountNumber: accountNumber,
           accountName: accountName,
-        }),
-      })
-
-      if (!updateProfileResponse.ok) {
+          bankLogo: selectedBankData?.image,
+        },
+      }
+      const updateProfileResponse = await updateProfile(data)
+      if (!updateProfileResponse) {
         throw new Error('Failed to update profile')
       }
 
       // Simpan data yang baru untuk ditampilkan
-      const selectedBankData = banks.find((bank) => bank.name === selectedBank)
+
       setSavedBankData({
         bank: selectedBank,
         accountNumber: accountNumber,
@@ -165,30 +175,7 @@ export function ModalFormRefund({
     setIsLoading(true)
 
     try {
-      const currentBank = savedBankData?.bank || profile?.persona?.accountBank
-      const currentAccountNumber =
-        savedBankData?.accountNumber || profile?.persona?.accountNumber
-      const currentAccountName =
-        savedBankData?.accountName || profile?.persona?.accountName
-
-      // Process refund API call
-      const refundResponse = await fetch('/api/refund/process', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          bankName: currentBank,
-          accountNumber: currentAccountNumber,
-          accountName: currentAccountName,
-        }),
-      })
-
-      if (!refundResponse.ok) {
-        throw new Error('Failed to process refund')
-      }
-
-      console.log('Refund processed successfully')
+      await verifyEmailOtpBookingCanceled()
       // Handle success - maybe close modal or show success message
       onOpenChange(false)
       setOpenVerifikasiEmail(true)
@@ -222,7 +209,7 @@ export function ModalFormRefund({
 
   const content = (
     <>
-      <div className="mt-6 space-y-4">
+      <div className="mt-3 space-y-4">
         {/* Bank Selection */}
         <div>
           {!isEditing && (savedBankData || hasExistingBankData) ? (
@@ -332,11 +319,24 @@ export function ModalFormRefund({
   if (lg) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className=" z-[999] px-4 pb-6">
+        <DrawerContent className=" z-[999] px-4 ">
           <DrawerHeader className="gap-3 px-0 pb-2">
-            <DrawerTitle className="text-m-semibold mb-2">
-              {isEditing ? 'Ubah Data Rekening' : 'Tambah Rekening'}
-            </DrawerTitle>
+            <div className="flex items-center">
+              <div className="flex h-[40px] w-[40px] items-center justify-center rounded-[8px] bg-yellow-100 ">
+                <Image
+                  src={'/images/icon-refund.svg'}
+                  width={30}
+                  height={30}
+                  alt="refund"
+                />
+              </div>
+              <DrawerTitle className="ml-3 text-[14px] font-[600] text-neutral-900">
+                Proses Refund
+              </DrawerTitle>
+            </div>
+            <p className="ml-1 text-[14px] font-[400] text-[#000]">
+              Pastikan data rekening sudah sesuai
+            </p>
           </DrawerHeader>
           {content}
         </DrawerContent>
