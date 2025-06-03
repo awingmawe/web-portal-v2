@@ -24,8 +24,8 @@ const ModalWaitingHasil = ({ open, onOpenChange }: CheckQuotaModalProps) => {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100">
                 <X className="h-6 w-6 text-red-600" />
               </div>
-              <DialogTitle className="hidden text-base font-semibold text-neutral-900">
-                Tidak Dapat Mengajukan Pendanaan
+              <DialogTitle className="text-base font-semibold text-neutral-900">
+                Anda Sudah Meminta Pengecekan Ketersediaan Kuota Kursi
               </DialogTitle>
             </div>
             <button
@@ -39,7 +39,8 @@ const ModalWaitingHasil = ({ open, onOpenChange }: CheckQuotaModalProps) => {
         </DialogHeader>
 
         <div className="mt-4 text-sm text-neutral-700">
-          Tidak Dapat Mengajukan Pendanaan
+          Mohon menunggu 1x24 jam sebelum melakukan pengecekan ketersediaan
+          kembali.
         </div>
 
         <div className="mt-6 flex justify-end">
