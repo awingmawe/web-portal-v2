@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 
 type ImageDetailProps = {
   created_at: Date | string
+  slug: string
   thumbnail_url: string | null
   title: string
   isWebview?: string
@@ -17,6 +18,7 @@ type ImageDetailProps = {
 
 const ImageDetail = ({
   created_at,
+  slug,
   thumbnail_url,
   title,
   isWebview,
@@ -24,7 +26,7 @@ const ImageDetail = ({
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
   const [disabledWa, setDisabledWa] = useState(true)
-  const shareLinkWa = `https://wa.me/?text=Baca Artikel ini ${title} - ${window.location.href}`
+  const shareLinkWa = `Baca Artikel ini ${title} - ${window.location.origin}/article/detail/${slug}`
   const handleShareWebview = () => {
     window.flutter_inappwebview.callHandler('wa-share', shareLinkWa)
   }
@@ -44,7 +46,7 @@ const ImageDetail = ({
             } else {
             }
           } else {
-            router.push(shareLinkWa)
+            router.push(`https://wa.me/?text=${shareLinkWa}`)
           }
         })
 

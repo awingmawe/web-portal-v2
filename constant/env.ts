@@ -6,3 +6,4 @@ export const SNAP_URL = process.env.NEXT_PUBLIC_SNAP_URL
 export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 export const ACCOUNT_URL = process.env.NEXT_PUBLIC_ACCOUNT_URL
 export const HMAC_SECRET = process.env.NEXT_PUBLIC_HMAC_SECRET
+export const CALL_CENTER = process.env.NEXT_PUBLIC_CALL_CENTER
