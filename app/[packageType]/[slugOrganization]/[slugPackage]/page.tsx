@@ -165,17 +165,38 @@ export default async function DetailPackage({ params }: { params: any }) {
                 termsCondition={detailData?.detail?.termsCondition}
               />
 
-              <Facilities
-                facilities={detailData?.detail?.additionalInfo?.facilities}
-              />
+              {(detailData?.detail?.additionalInfo?.facilities?.length > 0 ||
+                detailData?.detail?.additionalInfo?.otherFacilities?.length >
+                  0) && (
+                <div className="flex flex-col gap-3">
+                  <div className="flex gap-3">
+                    <div className="bg-primary-500 h-auto w-[6px] rounded-full" />
+                    <p className="heading-3-semibold font-semibold max-lg:text-sm max-lg:leading-5">
+                      Fasilitas & Lainnya
+                    </p>
+                  </div>
+                  {detailData?.detail?.additionalInfo?.facilities?.length >
+                    0 && (
+                    <Facilities
+                      facilities={
+                        detailData?.detail?.additionalInfo?.facilities
+                      }
+                    />
+                  )}
+                  {detailData?.detail?.additionalInfo?.otherFacilities?.length >
+                    0 && (
+                    <OtherFacilities
+                      otherFacilities={
+                        detailData?.detail?.additionalInfo?.otherFacilities
+                      }
+                    />
+                  )}
+                </div>
+              )}
 
-              <OtherFacilities
-                otherFacilities={
-                  detailData?.detail?.additionalInfo?.otherFacilities
-                }
-              />
-
-              <Itinerary itinerary={detailData?.itinerary?.agenda ?? []} />
+              {(detailData?.itinerary?.agenda ?? []).length > 0 && (
+                <Itinerary itinerary={detailData?.itinerary?.agenda ?? []} />
+              )}
             </div>
             <div className="col-span-4 flex-col gap-4 max-lg:order-1 max-lg:flex">
               {/* Adjust grid for mobile responsive */}
