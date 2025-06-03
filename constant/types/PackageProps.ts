@@ -61,6 +61,10 @@ export interface CardData {
   departure: TravelRoute
   arrival: TravelRoute
   tripDuration: number
+  medinaHotel?: any
+  meccaHotel?: any
+  departure: TravelRoute
+  arrival: TravelRoute
 }
 
 export interface PackageDetail {

@@ -221,6 +221,10 @@ export function mapProductsToCardData(
       departure: product?.departure,
       arrival: product.arrival,
       tripDuration: product?.packageVariant?.tripDuration,
+      meccaHotel: product?.meccaHotel,
+      medinaHotel: product?.medinaHotel,
+      departure: product?.departure,
+      arrival: product.arrival,
     })) || []
   )
 }
