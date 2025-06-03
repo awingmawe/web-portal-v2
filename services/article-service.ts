@@ -58,7 +58,7 @@ export async function getArticleCategories(
       `/public/articles/v1/categories?${qs.stringify(query)}`
     )
     const results = response.data.results
-    results.unshift({ id: 'all', name: 'Semua', slug: '' })
+    results?.unshift({ id: 'all', name: 'Semua', slug: '' })
     return results
   } catch (error) {
     console.error('Error fetching article category:', error)

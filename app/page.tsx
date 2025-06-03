@@ -147,7 +147,9 @@ export default async function Home() {
         <Fragment>
           <OverscrollTracker dataGallery={dataGallery.results} />
           <TestimoniSection dataCarousel={dataCarousel.results} />
-          <ArtikelSection dataCarousel={dataArtikel.results} />
+          {dataArtikel.total > 0 && (
+            <ArtikelSection dataCarousel={dataArtikel.results} />
+          )}
         </Fragment>
       )}
       <BottomNavigation />

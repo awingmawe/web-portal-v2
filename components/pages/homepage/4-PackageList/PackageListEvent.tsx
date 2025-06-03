@@ -186,7 +186,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       eventCategory,
     },
     {
-      title: 'Penawaran Lainnya',
+      title: 'Paket Promo Ini!',
       type: dataCustom?.slug,
       data: dataCustom?.data,
       header: header,

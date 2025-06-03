@@ -330,23 +330,23 @@ export default function ContentArticle({
                 {comments?.length > 0 ? (
                   <div className="flex max-h-96 flex-col gap-6 overflow-y-auto p-4 pt-0">
                     {comments?.map((comment) => (
-                      <div key={comment.id} className="flex flex-col gap-2.5">
+                      <div key={comment?.id} className="flex flex-col gap-2.5">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-12 w-12">
                             <AvatarImage
-                              src={comment.user?.avatar}
+                              src={comment?.user?.avatar}
                               alt="User avatar"
                             />
                             <AvatarFallback className="text-sm font-medium text-neutral-800">
-                              {comment.user?.name?.slice(0, 2).toUpperCase()}
+                              {comment?.user?.name?.slice(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col gap-1">
                             <p className="text-sm font-medium text-neutral-900">
-                              {comment.user?.name || 'Anonymous User'}
+                              {comment?.user?.name || 'Anonymous User'}
                             </p>
                             <p className="text-xs-regular text-neutral-500">
-                              {formatCreatedDate(comment.created_at)}
+                              {formatCreatedDate(comment?.created_at)}
                             </p>
                           </div>
                         </div>
@@ -379,25 +379,25 @@ export default function ContentArticle({
                   <div className="max-h-96 overflow-y-auto p-4 px-0 pt-0">
                     {comments?.map((comment) => (
                       <div
-                        key={comment.id}
+                        key={comment?.id}
                         className="mb-4 flex flex-col gap-2.5"
                       >
                         <div className="flex items-center gap-3">
                           <Avatar className="h-12 w-12">
                             <AvatarImage
-                              src={comment.user?.avatar}
+                              src={comment?.user?.avatar}
                               alt="User avatar"
                             />
                             <AvatarFallback className="text-sm font-medium text-neutral-800">
-                              {comment.user?.name?.slice(0, 2).toUpperCase()}
+                              {comment?.user?.name?.slice(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col gap-1">
                             <p className="text-sm font-medium text-neutral-900">
-                              {comment.user?.name || 'Anonymous User'}
+                              {comment?.user?.name || 'Anonymous User'}
                             </p>
                             <p className="text-xs-regular text-neutral-500">
-                              {formatCreatedDate(comment.created_at)}
+                              {formatCreatedDate(comment?.created_at)}
                             </p>
                           </div>
                         </div>
