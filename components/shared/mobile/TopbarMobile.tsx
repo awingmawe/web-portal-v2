@@ -32,6 +32,7 @@ interface MobileTopbarProps {
     | 'pendanaanSyariah'
     | 'plainBank'
     | 'suksesBanking'
+  forceMobile?: boolean
   titleLink?: string
   title?: string
   token?: string
@@ -60,6 +61,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     showBackButton = true,
     showCallCenter = false,
     onBackClick,
+    forceMobile = false,
     titleLink = '',
     token,
     packageId,
@@ -246,7 +248,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       // Base classes that apply to all variants
       const baseClasses = [
         dissolve,
-        'z-10 flex w-full items-center justify-between px-4 py-3 lg:hidden',
+        `z-10 flex w-full items-center justify-between px-4 py-3 ${forceMobile ? '' : 'lg:hidden'}`,
       ]
 
       // Position classes based on variant
@@ -272,8 +274,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'search':
         case 'suksesBanking':
         case 'filter':
-          positionClasses =
-            'max-lg:bg-primary-500 absolute h-[100px] -top-[22px]'
+          positionClasses = `${forceMobile ? 'max-w-xl w-full bg-primary-500' : 'max-lg:bg-primary-500'} absolute h-[100px] -top-[22px]`
           backgroundClasses = ''
           break
         case 'transactionTopbar':
@@ -334,7 +335,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               width={0}
               height={0}
               sizes="100vw"
-              className="absolute right-0 bottom-0 -z-1 h-auto w-1/4 lg:hidden"
+              className={`absolute right-0 bottom-0 -z-1 h-auto w-1/4 ${forceMobile ? '' : 'lg:hidden'}`}
             />
             <Image
               src="/images/circle-2.svg"
@@ -342,7 +343,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               width={0}
               height={0}
               sizes="100vw"
-              className="absolute top-0 left-0 -z-1 h-auto w-1/2 lg:hidden"
+              className={`absolute top-0 left-0 -z-1 h-auto w-1/2 ${forceMobile ? '' : 'lg:hidden'}`}
             />
             {/* End of Circle Background for Mobile */}
           </>
