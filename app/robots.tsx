@@ -4,6 +4,6 @@ export default function robots() {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://dev.moslem101.com/sitemap.xml',
+    sitemap: `${process.env.NEXT_PUBLIC_URL}/sitemap.xml`,
   }
 }

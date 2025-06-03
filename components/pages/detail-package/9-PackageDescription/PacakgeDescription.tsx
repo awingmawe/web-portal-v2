@@ -106,7 +106,7 @@ const PackageDescriptionTemplate = ({
         <motion.div
           ref={contentRef}
           {...animationProps}
-          className="overflow-hidden"
+          className="content-description overflow-hidden"
         >
           <PackageDescriptionContent content={termsCondition} />
         </motion.div>
