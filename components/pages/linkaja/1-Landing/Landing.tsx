@@ -15,9 +15,30 @@ import { MoneyTickIcon } from '@/components/icons/money-tick'
 import { MouseSquareIcon } from '@/components/icons/mouse-square'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { Button } from '@/components/ui/button'
+import { useFilterProduct } from '@/contexts/filter-product-context'
+import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import Image from 'next/image'
+import { useEffect } from 'react'
 
 export default function LandingLinkAja() {
+  const { filters, setFilters } = useFilterProduct()
+  const updateQueryParams = useUpdateQueryParams()
+
+  useEffect(() => {
+    setFilters({
+      ...filters,
+      priceRange: {
+        hargaMin: '0',
+        hargaMax: '40000000',
+      },
+    })
+
+    // Update URL parameters
+    updateQueryParams(['prMin', 'prMax', 'page'], [0, 40000000, 1])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div
       className="bg-primary-500 relative z-10 overflow-hidden px-4 pt-6 pb-30"

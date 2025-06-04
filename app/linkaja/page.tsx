@@ -4,11 +4,7 @@ import { PackageResults } from '@/components/pages/search-packages/3-PackageList
 import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilterMobile/BottomFilter'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { getFacilityEnum } from '@/services/general-service'
-import {
-  getMinMaxPrice,
-  getSectionEnum,
-  getTagPackagesEnum,
-} from '@/services/umrah-service'
+import { getSectionEnum, getTagPackagesEnum } from '@/services/umrah-service'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -25,13 +21,13 @@ export async function generateMetadata({
   }
 }
 
-export default async function SearchGeneral() {
+export default async function LinkAja() {
   //   const cookieStore = await cookies()
   //   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
   const [dataMinMax, dataTagPackages, dataFacility, dataSection] =
     await Promise.all([
-      getMinMaxPrice(),
+      { min: '1000000', max: '40000000' },
       getTagPackagesEnum(),
       getFacilityEnum('umrah-facility'),
       getSectionEnum(),
@@ -45,7 +41,11 @@ export default async function SearchGeneral() {
           className="relative mt-auto mb-0 h-[100vh] w-full max-w-lg overflow-hidden bg-transparent"
           id="packageList"
         >
-          <MobileTopbar variant="filter" showBackButton={false} forceMobile />
+          <MobileTopbar
+            variant="filterPermata"
+            showBackButton={false}
+            forceMobile
+          />
           <section className="absolute top-[55px] bottom-0 z-11 mt-0 h-full w-full max-w-full overflow-y-auto rounded-tl-3xl rounded-tr-3xl bg-white px-4 py-7.5 pb-[130px] shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
             <div className="col-span-12">
               <PackageResults isCompact />

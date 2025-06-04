@@ -5,6 +5,7 @@ import { ArrowIcon } from '@/components/icons/arrow'
 import { CallCenterIcon } from '@/components/icons/call-center'
 import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
 import FilterDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/FilterDrawerMobile'
+import QuestionDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/QuestionDrawer'
 import { Input } from '@/components/ui/input'
 import { CALL_CENTER } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
@@ -16,7 +17,13 @@ import { Bell, Search } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 // Define the props interface with all possible options
 interface MobileTopbarProps {
@@ -24,6 +31,7 @@ interface MobileTopbarProps {
     | 'search'
     | 'title'
     | 'filter'
+    | 'filterPermata'
     | 'plain'
     | 'transparent'
     | 'transactionTopbar'
@@ -139,6 +147,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'suksesBanking':
           return <div className="text-l-medium flex-1 text-center">{title}</div>
         case 'filter':
+        case 'filterPermata':
           return (
             <div className="flex w-full flex-col items-center">
               {isEmpty(formattedDateRange) &&
@@ -228,6 +237,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'search':
         case 'suksesBanking':
         case 'filter':
+        case 'filterPermata':
           return ''
         case 'transparent':
           return `bg-neutral-0 rounded-[20px] p-1 ${
@@ -274,6 +284,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'search':
         case 'suksesBanking':
         case 'filter':
+        case 'filterPermata':
           positionClasses = `${forceMobile ? 'max-w-xl w-full bg-primary-500' : 'max-lg:bg-primary-500'} absolute h-[100px] -top-[22px]`
           backgroundClasses = ''
           break
@@ -316,6 +327,13 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         )
       } else if (variant === 'filter') {
         return <FilterDrawer />
+      } else if (variant === 'filterPermata') {
+        return (
+          <Fragment>
+            <FilterDrawer />
+            <QuestionDrawer />
+          </Fragment>
+        )
       }
 
       return null
@@ -324,6 +342,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     return (
       <div className={containerClasses}>
         {(variant === 'filter' ||
+          variant === 'filterPermata' ||
           variant === 'title' ||
           variant === 'search' ||
           variant === 'suksesBanking') && (

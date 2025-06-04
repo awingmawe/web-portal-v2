@@ -101,7 +101,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     resetFilters()
 
     // 2. Delete all search params
-    window.history.pushState({}, '', '/search')
+    window.history.pushState({}, '', window.location.pathname)
   }, [resetFilters])
 
   // Function to create URL with new sort parameter

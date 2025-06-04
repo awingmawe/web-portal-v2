@@ -4,13 +4,12 @@ import { BuildingIcon } from '@/components/icons/building'
 import { CalendarIcon } from '@/components/icons/date'
 import { InfoIcon } from '@/components/icons/info'
 import { StarIconPrimary } from '@/components/icons/star'
-import { StoreIcon } from '@/components/icons/store'
 import BadgePromo from '@/components/shared/Badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
-import { capitalizeText, isEmpty } from '@/lib/utils'
+import { isEmpty } from '@/lib/utils'
 import { differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
@@ -93,7 +92,7 @@ export const CardPackageCompact = memo(function CardPackageCompact({
         height={0}
         className={`aspect-square ${
           index === 0
-            ? 'z-2 mt-0 h-12 w-12'
+            ? 'z-2 mt-0 h-12 w-12 rounded-tr-[18px]'
             : 'z-1 -mt-4 h-16 w-12 object-cover'
         } rounded-bl-[18px] shadow-[1px_2px_2px_0px_rgba(0,0,0,0.40)]`}
         key={`flag-${value.country.alpha2Code}`}
@@ -135,41 +134,21 @@ export const CardPackageCompact = memo(function CardPackageCompact({
   return (
     <div className="relative" id="card-package">
       {/* Image */}
-      {showDiscount && <BadgePromo title="PROMO 🎉" className="-top-5" />}
+      {showDiscount && <BadgePromo title="PROMO 🎉" className="-top-5 z-30" />}
       <div
         style={{
           background: 'linear-gradient(0deg, #FFFFFF 46.42%, #FFDC71 290.1%)',
         }}
-        className="rounded-2xl border border-neutral-100 px-5 py-2"
+        className="relative z-10 rounded-2xl border border-neutral-100 px-5 pt-2 pb-5"
       >
-        <div className="relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md">
-          {!isEmpty(codeCountry) && isPlus && (
-            <div className="absolute right-0 flex flex-col">{countryFlags}</div>
-          )}
-          <div className="absolute bottom-[-4%] left-1/2 inline-flex w-[95%] -translate-x-1/2 -translate-y-1/2 items-center justify-start gap-2 rounded-2xl bg-white/60 px-3 py-1.5 backdrop-blur-[5.20px]">
-            <StoreIcon size={20} />
-            <div className="flex flex-col gap-0.5">
-              <p className="text-m-medium break-after-all text-neutral-900 uppercase max-sm:text-xs max-sm:leading-4">
-                {organizationName}
-              </p>
-              <p className="text-s-regular text-neutral-900 max-sm:text-[10px] max-sm:leading-3.5">
-                {capitalizeText(location)}
-              </p>
-            </div>
+        {!isEmpty(codeCountry) && isPlus && (
+          <div className="absolute top-0 right-0 flex flex-col rounded-[20px]">
+            {countryFlags}
           </div>
-        </div>
+        )}
 
         {/* Content */}
         <div className="mt-3 flex flex-col gap-1" ref={elem}>
-          {differenceInDays(releasedAt, new Date()) <= 10 && (
-            <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1">
-              <InfoIcon size={20} className="text-primary-700 stroke-0" />
-              <p className="text-s-regular text-primary-700">
-                Batas booking {formattedReleasedAt}
-              </p>
-            </div>
-          )}
-
           {/* Title */}
           <h3 className="text-l-medium line-clamp-2 break-all text-neutral-900 uppercase max-sm:text-sm max-sm:leading-5">
             {title}
@@ -321,6 +300,14 @@ export const CardPackageCompact = memo(function CardPackageCompact({
           </Link>
         </div>
       </div>
+      {differenceInDays(releasedAt, new Date()) <= 10 && (
+        <div className="bg-primary-100 relative z-5 -mt-5 flex items-center justify-center gap-[5px] rounded-2xl px-5 pt-7 pb-2">
+          <InfoIcon size={20} className="text-primary-700 stroke-0" />
+          <p className="text-s-regular text-primary-700">
+            Batas booking {formattedReleasedAt}
+          </p>
+        </div>
+      )}
     </div>
   )
 })
