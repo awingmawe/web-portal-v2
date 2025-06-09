@@ -6,9 +6,14 @@
         "appIDs": [
           "6CTU6LL73A.com.muslim101.muslimapp.dev"
         ],
-        "paths": [
-          "/*",
-          "NOT /check-availability/*"
+        "components": [
+          {
+            "/": "/*"
+          },
+          {
+            "/": "/check-availability/*",
+            "exclude": true
+          }
         ]
       }
     ]
