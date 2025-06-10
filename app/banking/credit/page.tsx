@@ -11,6 +11,7 @@ export async function generateMetadata() {
     ...metadata('Muslim 101 | Talangan Umroh', `Talangan Umroh`),
   }
 }
+
 export default async function SearchGeneral() {
   const cookieStore = cookies()
   const token = (await cookieStore).get(cookieNames.USER_ACCESS_TOKEN)
@@ -23,15 +24,30 @@ export default async function SearchGeneral() {
       {/* Mobile (tanpa wrapper) */}
       <MobileTopbar variant="plainBank" showBackButton title="Talangan Umroh" />
       <div className="mx-auto block lg:container lg:hidden">
+        <div className="container mx-auto block lg:hidden">
+          <MobileTopbar
+            variant="plainBank"
+            showBackButton
+            title="Talangan Umroh"
+          />
+          <PembiayaanPage />
+        </div>
+
+        {/* Desktop (dengan wrapper) */}
+        <div className="container mx-auto hidden lg:block">
+          <PembiayaanPage />
+        </div>
+
+        <Footer type="compact" className="hidden lg:block" />
+        <MobileTopbar
+          variant="plainBank"
+          showBackButton
+          title="Talangan Umroh"
+        />
         <PembiayaanPage />
       </div>
 
-      {/* Desktop (dengan wrapper) */}
-      <div className="container mx-auto hidden lg:block">
-        <PembiayaanPage />
-      </div>
-
-      <Footer type="compact" className="hidden lg:block" />
+      <Footer type="compact" className="hidden md:block" />
     </Fragment>
   )
 }
