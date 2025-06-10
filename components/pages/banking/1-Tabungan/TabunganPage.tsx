@@ -54,7 +54,7 @@ const TabunganPage = () => {
   const openForm = async () => {
     try {
       const res = await getSaving()
-      if (res) {
+      if (res.status === 'Diajukan' || res.status === 'Verifikasi') {
         setShowFormCurrent(true)
       } else {
         setShowForm(true)

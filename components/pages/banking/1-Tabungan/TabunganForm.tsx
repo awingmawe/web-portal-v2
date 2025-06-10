@@ -33,6 +33,7 @@ export const tabunganFormSchema = z.object({
     required_error: 'Jenis kelamin wajib dipilih',
   }),
   job: z.string().optional(),
+  born: z.string().min(1, 'Tanggal lahir wajib diisi'),
   provinceId: z.string().optional(),
   cityId: z.string().optional(),
   provinceName: z.string().optional(),
@@ -48,6 +49,7 @@ const defaultValues: TabunganFormValues = {
   email: '',
   phoneNumber: '',
   gender: 'male',
+  born: '',
   job: '',
   provinceId: '',
   cityId: '',
@@ -86,6 +88,7 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
           phoneNumber: profile?.persona?.phoneNumber || '',
           gender: (profile?.persona?.gender as 'male' | 'female') || 'male',
           job: profile?.persona?.job || '',
+          born: profile?.persona?.born || '',
           provinceId: profile?.persona?.provinceId?.toString() || '',
           cityId: profile?.persona?.cityId?.toString() || '',
           provinceName: profile?.persona?.province?.name.toString() || '',
@@ -251,7 +254,26 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
               </FormItem>
             )}
           />
-
+          {/* Tanggal Lahir */}
+          <FormField
+            control={form.control}
+            name="born"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                  Tanggal Lahir <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           {/* Pekerjaan */}
           <FormField
             control={form.control}
@@ -311,24 +333,6 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
               </Button>
             </div>
           )}
-          {/* <div className="mt-8 flex items-center justify-end space-x-4">
-          <Button
-            type="button"
-            onClick={onCancel}
-            className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"
-            disabled={isLoading}
-          >
-            Batal
-          </Button>
-          <Button
-            type="submit"
-            className="rounded-full bg-yellow-500 px-8 py-3 text-sm font-medium text-white hover:bg-yellow-600"
-            disabled={isLoading}
-            isLoading={isLoading}
-          >
-            Submit
-          </Button>
-        </div> */}
         </form>
       </Form>
     )

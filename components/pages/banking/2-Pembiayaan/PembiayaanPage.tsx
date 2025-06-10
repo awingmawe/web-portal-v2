@@ -29,6 +29,7 @@ type PembiayaanFormValues = {
   job?: string
   provinceId?: string
   cityId?: string
+  born?: string
   provinceName?: string
   cityName?: string
   address?: string
@@ -70,7 +71,7 @@ const PembiayaanPage: React.FC = () => {
   const openForm = async () => {
     try {
       const res = await getbankCredit()
-      if (res) {
+      if (res.status === 'Diajukan' || res.status === 'Verifikasi') {
         setShowFormCurrent(true)
       } else {
         setShowForm(true)
@@ -115,6 +116,7 @@ const PembiayaanPage: React.FC = () => {
           address: formData?.address,
           cityId: formData?.cityId,
           cityName: formData?.cityName,
+          born: formData?.born,
           gender: formData?.gender,
           job: formData?.job,
           phoneNumber: formData?.phoneNumber,
@@ -132,6 +134,7 @@ const PembiayaanPage: React.FC = () => {
         totalPrice: values.totalPrice,
         memilikiTagihanLain: false,
         memilikiAngunanLain: false,
+        born: formData?.born,
         tenor: Number(values.tenor),
         status: 'Diajukan',
         providerId: 1,
