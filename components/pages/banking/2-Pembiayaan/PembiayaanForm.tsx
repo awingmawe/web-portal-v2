@@ -34,6 +34,7 @@ export const pembiayaanFormSchema = z.object({
     required_error: 'Jenis kelamin wajib dipilih',
   }),
   job: z.string().optional(),
+  born: z.string().min(1, 'Tanggal lahir wajib diisi'),
   provinceId: z.string().optional(),
   cityId: z.string().optional(),
   provinceName: z.string().optional(),
@@ -48,6 +49,7 @@ const defaultValues: PembiayaanFormValues = {
   fullName: '',
   email: '',
   phoneNumber: '',
+  born: '',
   gender: 'male',
   job: '',
   provinceId: '',
@@ -101,6 +103,7 @@ export const PembiayaanForm = forwardRef<
         phoneNumber: profile?.persona?.phoneNumber || '',
         gender: (profile?.persona?.gender as 'male' | 'female') || 'male',
         job: profile?.persona?.job || '',
+        born: profile?.persona?.born || '',
         provinceId: profile?.persona?.provinceId?.toString() || '',
         cityId: profile?.persona?.cityId?.toString() || '',
         provinceName: profile?.persona?.province?.name.toString() || '',
@@ -259,7 +262,26 @@ export const PembiayaanForm = forwardRef<
             </FormItem>
           )}
         />
-
+        {/* Tanggal Lahir */}
+        <FormField
+          control={form.control}
+          name="born"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                Tanggal Lahir <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="date"
+                  className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {/* Pekerjaan */}
         <FormField
           control={form.control}

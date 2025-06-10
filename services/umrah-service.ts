@@ -55,7 +55,7 @@ export async function getPackageList(
   }
 }
 export async function getPackageVariantList(
-  query: GetListQuery
+  query: any
 ): Promise<GenericResponse<PackageVariant>> {
   try {
     const response = await api.get(

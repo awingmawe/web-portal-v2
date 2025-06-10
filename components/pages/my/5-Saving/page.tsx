@@ -193,7 +193,7 @@ const SavingPageDetail: React.FC = () => {
             width={242}
             height={190}
           />
-          <Link href={'/banking?page=tabungan'}>
+          <Link href={'/banking/saving'}>
             <button className="w-[191px] rounded-[100px] bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-[12px]">
               Ajukan Tabungan
             </button>

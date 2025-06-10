@@ -48,7 +48,7 @@ const SuccessModal = ({
                 {/* Title with Icon */}
                 <div className="mb-3 flex items-center justify-center gap-3">
                   <Image
-                    src="/images/icon-sukses.svg"
+                    src="/images/Icon-sukses.svg"
                     width={56}
                     height={56}
                     alt="check icon"
