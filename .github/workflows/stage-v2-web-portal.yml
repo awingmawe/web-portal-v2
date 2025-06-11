@@ -174,4 +174,6 @@ jobs:
           else
             echo "❌ Local port $PORT is closed. Health check failed."
           fi
+
+          docker image prune -a
      
