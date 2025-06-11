@@ -1,3 +1,4 @@
+import MazeAnalytics from '@/components/shared/MazeAnalytics'
 import { Toaster } from '@/components/ui/sonner'
 import { GTM_ID } from '@/constant/env'
 import { ContextProviders } from '@/contexts/providers'
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
       <body>
+        <MazeAnalytics />
         <Suspense>
           <GoogleTagManager gtmId={GTM_ID as string} />
 
