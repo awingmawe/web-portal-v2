@@ -1,6 +1,10 @@
 'use client'
 
-import { Package, PackageVariant } from '@/constant/types/PackageProps'
+import {
+  Package,
+  PackageVariant,
+  VariantPriceType,
+} from '@/constant/types/PackageProps'
 import { formatCurrencyIndonesia, formatDateToRangeString } from '@/lib/utils'
 import React, {
   createContext,
@@ -35,6 +39,10 @@ interface PackageVariantContextState {
     discountType: string,
     amount: number | string
   ) => string | null
+  variantsPrice: VariantPriceType[]
+  getVariantsPrice: (
+    type: 'double' | 'triple' | 'quad'
+  ) => VariantPriceType | null
 }
 
 // Initial state
@@ -56,6 +64,8 @@ const initialState: PackageVariantContextState = {
   formattedArrival: '',
   numberOfDays: 0,
   handleBadgePromo: () => null,
+  variantsPrice: [],
+  getVariantsPrice: () => null,
 }
 
 // Create context
@@ -121,6 +131,39 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     }
   }, [selectedVariant, selectedRoomType])
 
+  const variantsPrice: VariantPriceType[] = variants.flatMap((variant) => [
+    {
+      type: 'double',
+      price: variant.priceDouble,
+      originalPrice: variant.originalPriceDouble,
+      hasDiscount: variant.discountAmount
+        ? Number(variant.discountAmount) > 0
+        : false,
+    },
+    {
+      type: 'triple',
+      price: variant.priceTriple,
+      originalPrice: variant.originalPriceTriple,
+      hasDiscount: variant.discountAmount
+        ? Number(variant.discountAmount) > 0
+        : false,
+    },
+    {
+      type: 'quad',
+      price: variant.priceQuad,
+      originalPrice: variant.originalPriceQuad,
+      hasDiscount: variant.discountAmount
+        ? Number(variant.discountAmount) > 0
+        : false,
+    },
+  ])
+
+  const getVariantsPrice = (
+    type: 'double' | 'triple' | 'quad'
+  ): VariantPriceType | null => {
+    return variantsPrice.find((variant) => variant.type === type) || null
+  }
+
   // Helper function to check if the selected variant has a discount
   const hasDiscount = useCallback((): boolean => {
     if (!selectedVariant) return false
@@ -175,6 +218,8 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     formattedArrival,
     numberOfDays,
     handleBadgePromo,
+    variantsPrice,
+    getVariantsPrice,
   }
 
   return (

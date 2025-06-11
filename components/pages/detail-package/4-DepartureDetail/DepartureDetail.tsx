@@ -2,6 +2,7 @@
 
 import { AirlineIcon } from '@/components/icons/airline'
 import { BuildingIcon } from '@/components/icons/building'
+import { KabbahIcon } from '@/components/icons/kabbah'
 import { TravelRoute } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
@@ -13,6 +14,7 @@ interface DetailDepartureProps {
   arrival: TravelRoute
   meccaHotel?: string
   madinahHotel?: string
+  type: string
 }
 
 const DepartureDetail: React.FC<DetailDepartureProps> = ({
@@ -20,6 +22,7 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   arrival,
   meccaHotel,
   madinahHotel,
+  type,
 }) => {
   const { isLoading } = usePackageVariant()
 
@@ -33,33 +36,44 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   // Left column items
   const leftColumnItems = [
     {
+      icon: <KabbahIcon size={24} />,
+      title: 'Tipe Perjalanan',
+      value: `${type}`,
+      orderForMobile: 1,
+    },
+    {
       icon: <PlaneTakeoff size={24} />,
       title: 'Keberangkatan',
       value: `${departureAirportFrom} → ${departureAirportTo}`,
+      orderForMobile: 2,
     },
     {
-      icon: <PlaneLanding size={24} />,
-      title: 'Kepulangan',
-      value: `${arrivelAirportFrom} → ${arrivelAirportTo}`,
-    },
-    {
-      icon: <AirlineIcon size={24} />,
-      title: 'Maskapai Penerbangan',
-      value: airlineName,
+      icon: <BuildingIcon size={24} color="neutral-900" />,
+      title: 'Hotel Makkah',
+      value: meccaHotel || '-',
+      orderForMobile: 5,
     },
   ]
 
   // Right column items
   const rightColumnItems = [
     {
-      icon: <BuildingIcon size={24} color="neutral-900" />,
-      title: 'Hotel Makkah',
-      value: meccaHotel || '-',
+      icon: <AirlineIcon size={24} />,
+      title: 'Maskapai Penerbangan',
+      value: airlineName,
+      orderForMobile: 4,
+    },
+    {
+      icon: <PlaneLanding size={24} />,
+      title: 'Kepulangan',
+      value: `${arrivelAirportFrom} → ${arrivelAirportTo}`,
+      orderForMobile: 3,
     },
     {
       icon: <BuildingIcon size={24} color="neutral-900" />,
       title: 'Hotel Madinah',
       value: madinahHotel || '-',
+      orderForMobile: 6,
     },
   ]
 
@@ -98,7 +112,10 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
 
   // Render item function for both columns
   const renderItem = (item: (typeof leftColumnItems)[0], index: number) => (
-    <div key={index} className={`flex items-center gap-3`}>
+    <div
+      key={index}
+      className={`flex items-center gap-3 order-${item.orderForMobile}`}
+    >
       {item.icon}
       <div>
         <p className="text-s-medium font-medium text-neutral-500 max-lg:text-xs max-lg:leading-4">

@@ -2,22 +2,17 @@
 'use client'
 
 import { ArrowIcon, ArrowLongIcon } from '@/components/icons/arrow'
-import { BedIcon } from '@/components/icons/bed'
 import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
 import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
 import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
+import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/SelectHotel'
 import DrawerCheckAvailibility from '@/components/pages/detail-package/mobile/DrawerCheckavailibility'
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import { toast } from '@/components/ui/sonner'
 import { ACCOUNT_URL, CALL_CENTER, URL } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
@@ -39,10 +34,9 @@ import {
   getStatusStock,
   toggleLike,
 } from '@/services/umrah-service'
-import { PopoverClose } from '@radix-ui/react-popover'
 import { differenceInDays } from 'date-fns'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronDownIcon, Heart } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Fragment, useEffect, useMemo, useState } from 'react'
@@ -83,6 +77,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     formattedArrival,
     formattedDeparture,
     numberOfDays,
+    getVariantsPrice,
   } = usePackageVariant()
   const router = useRouter()
   const path = usePathname()
@@ -209,27 +204,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
     }
   }, [selectedVariant])
-
-  // Get room type label with availability status
-  const getRoomTypeLabel = () => {
-    if (!selectedRoomType) return 'Pilih kamar hotel'
-
-    switch (selectedRoomType) {
-      case 'double':
-        return 'Double (1 Kamar berdua)'
-      case 'triple':
-        return 'Triple (1 Kamar bertiga)'
-      case 'quad':
-        return 'Quad (1 Kamar berempat)'
-      default:
-        return 'Pilih kamar hotel'
-    }
-  }
-
-  // Check if any room type is available
-  const hasAvailableRoomTypes = useMemo(() => {
-    return Object.values(availableRoomTypes).some((available) => available)
-  }, [availableRoomTypes])
 
   // Set initial room type if current selection is not available
   useEffect(() => {
@@ -477,7 +451,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   {variant.discountAmount &&
                     Number(variant.discountAmount) > 0 && (
                       <BadgePromo
-                        className="!text-s-semibold -top-[20px]"
+                        className="!text-s-semibold -top-[25px]"
                         title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
                       />
                     )}
@@ -535,165 +509,35 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
       {/* Hotel selection with Popover */}
       {variants.length > 0 && (
-        <div className="max-lg:hidden">
-          <div className="text-s-regular mb-1 text-neutral-800">
-            Kamar Hotel
-          </div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                className="flex w-full cursor-pointer items-center justify-between rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-left"
-                disabled={!hasAvailableRoomTypes}
-              >
-                <div className="flex items-center gap-1">
-                  <BedIcon />
-                  <span
-                    className={`text-m-regular ${!selectedRoomType ? 'text-neutral-300' : 'text-neutral-900'}`}
-                  >
-                    {getRoomTypeLabel()}
-                  </span>
-                </div>
-                <ChevronDownIcon size={18} />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent
-              className="w-[300px] p-0"
-              align="start"
-              sideOffset={4}
-            >
-              <PopoverClose className="w-full">
-                <div
-                  className={`flex w-full items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
-                    availableRoomTypes.double
-                      ? 'cursor-pointer hover:bg-neutral-50'
-                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
-                  }`}
-                  onClick={() =>
-                    availableRoomTypes.double && setSelectedRoomType('double')
-                  }
-                >
-                  <span className="text-m-regular">
-                    Double (1 Kamar berdua)
-                  </span>
-                  {!availableRoomTypes.double && (
-                    <span className="text-s-regular text-error-500 ml-auto">
-                      Tidak tersedia
-                    </span>
-                  )}
-                  {selectedRoomType === 'double' &&
-                    availableRoomTypes.double && (
-                      <svg
-                        className="text-primary-500 ml-auto h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                </div>
-              </PopoverClose>
-              <PopoverClose className="w-full">
-                <div
-                  className={`flex items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
-                    availableRoomTypes.triple
-                      ? 'cursor-pointer hover:bg-neutral-50'
-                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
-                  }`}
-                  onClick={() =>
-                    availableRoomTypes.triple && setSelectedRoomType('triple')
-                  }
-                >
-                  <span className="text-m-regular">
-                    Triple (1 Kamar bertiga)
-                  </span>
-                  {!availableRoomTypes.triple && (
-                    <span className="text-s-regular text-error-500 ml-auto">
-                      Tidak tersedia
-                    </span>
-                  )}
-                  {selectedRoomType === 'triple' &&
-                    availableRoomTypes.triple && (
-                      <svg
-                        className="text-primary-500 ml-auto h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                </div>
-              </PopoverClose>
-              <PopoverClose className="w-full">
-                <div
-                  className={`flex items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
-                    availableRoomTypes.quad
-                      ? 'cursor-pointer hover:bg-neutral-50'
-                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
-                  }`}
-                  onClick={() =>
-                    availableRoomTypes.quad && setSelectedRoomType('quad')
-                  }
-                >
-                  <span className="text-m-regular">
-                    Quad (1 Kamar berempat)
-                  </span>
-                  {!availableRoomTypes.quad && (
-                    <span className="text-s-regular text-error-500 ml-auto">
-                      Tidak tersedia
-                    </span>
-                  )}
-                  {selectedRoomType === 'quad' && availableRoomTypes.quad && (
-                    <svg
-                      className="text-primary-500 ml-auto h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
-                </div>
-              </PopoverClose>
-              {!hasAvailableRoomTypes && (
-                <div className="bg-error-100 text-error-700 text-s-regular p-3">
-                  Mohon maaf, semua tipe kamar untuk varian ini sudah habis
-                  terjual.
-                </div>
-              )}
-            </PopoverContent>
-          </Popover>
-        </div>
+        <SelectHotel
+          availableRoomTypes={availableRoomTypes}
+          setSelectedRoomType={(value) => {
+            console.log(value)
+          }}
+          getVariantsPrice={getVariantsPrice}
+        />
       )}
 
       {/* Total price */}
       <div className="flex items-center justify-between max-lg:hidden">
         <div className="text-m-regular text-neutral-500">Total Harga</div>
-        <div className="flex items-center">
-          {hasDiscount() && (
-            <span className="text-s-regular mr-2 text-neutral-500 line-through">
-              {formatCurrency(getOriginalPrice())}
-            </span>
-          )}
-          <span className="heading-4-bold text-neutral-900">
+        <div className="flex flex-col items-start">
+          <span className="text-l-semibold text-neutral-900">
             {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice())}
           </span>
+          {hasDiscount() && (
+            <div className="flex items-center">
+              <span className="text-s-regular mr-1 text-neutral-500 line-through">
+                {formatCurrency(getOriginalPrice())}
+              </span>
+              <span className="text-s-regular bg-error-500 rounded-md p-1 text-white">
+                {handleBadgePromo(
+                  String(selectedVariant?.discountType),
+                  String(selectedVariant?.discountAmount)
+                )}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
