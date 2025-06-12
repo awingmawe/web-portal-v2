@@ -115,7 +115,7 @@ const TabunganPage = () => {
   }
 
   // Mobile Form View
-  if (showForm && screenSize === 'mobile') {
+  if (showForm && (screenSize === 'mobile' || screenSize === 'tab')) {
     return (
       <div className="min-h-screen bg-yellow-400">
         <div className="bg-yellow-400 px-4 py-4 pt-12">
@@ -145,7 +145,7 @@ const TabunganPage = () => {
   }
 
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-0 md:pb-0">
+    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-4 md:pb-0">
       {/* Mobile Header - hanya tampil di mobile */}
       {screenSize === 'mobile' && (
         <div>

@@ -437,7 +437,7 @@ export const PembiayaanFormStep2 = forwardRef<
               {/* Package List with Infinite Scroll */}
               <div
                 className={`grid flex-1 justify-items-center space-y-3 overflow-y-auto ${
-                  screenSize === 'mobile' ? '' : 'h-[350px]'
+                  screenSize === 'mobile' ? '' : 'h-[750px]'
                 }`}
                 onScroll={handleScroll}
                 style={

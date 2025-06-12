@@ -145,7 +145,7 @@ const PembiayaanPage: React.FC = () => {
       await bankCredit(dataKirim)
       // // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000))
-      // closeForm()
+      closeForm()
       setShowSuccessModal(true)
       setSubmissionData(values)
     } catch (error) {
@@ -173,11 +173,11 @@ const PembiayaanPage: React.FC = () => {
     return formRef.current?.isValid() || false
   }
   // Mobile Form View
-  if (showForm && screenSize === 'mobile') {
+  if (showForm && (screenSize === 'mobile' || screenSize === 'tab')) {
     return (
-      <div className="min-h-screen bg-yellow-400 ">
+      <div className="min-h-screen w-full bg-yellow-400 ">
         {/* Mobile Form Header */}
-        <div className="px-4 pt-12 pb-4">
+        <div className="px-4 pt-12 pb-4 md:px-8">
           <div className="mt-4 flex items-center justify-center">
             {/* Progress Indicator */}
             <div className="flex items-center">
@@ -195,9 +195,7 @@ const PembiayaanPage: React.FC = () => {
                   1
                 </div>
                 <span
-                  className={`ml-2 text-sm font-medium ${
-                    step === 1 ? 'text-white' : 'text-black/70'
-                  }`}
+                  className={`ml-2 text-sm font-medium md:text-base ${step === 1 ? 'text-white' : 'text-black/70'}`}
                 >
                   Data Diri
                 </span>
@@ -236,28 +234,22 @@ const PembiayaanPage: React.FC = () => {
         </div>
 
         {/* Mobile Form Content with rounded top */}
-        <div className="-mt-2 h-[772px] flex-1 rounded-t-3xl bg-white px-6 py-6">
-          {/* <form onSubmit={handleSubmit}> */}
-          {/* <div className="space-y-4"> */}
+        <div className="-mt-2 h-[772px] flex-1 rounded-t-3xl bg-white px-6 py-6 md:h-[820px] md:px-10">
           {step === 1 && (
-            <>
-              <PembiayaanForm
-                onSubmit={handleFormSubmit}
-                isLoading={loading}
-                screenSize={screenSize}
-              />
-            </>
+            <PembiayaanForm
+              onSubmit={handleFormSubmit}
+              isLoading={loading}
+              screenSize={screenSize}
+            />
           )}
 
           {step === 2 && (
-            <>
-              <PembiayaanFormStep2
-                onSubmit={handleFormSubmit2}
-                onBack={goBack}
-                isLoading={loading}
-                screenSize={screenSize}
-              />
-            </>
+            <PembiayaanFormStep2
+              onSubmit={handleFormSubmit2}
+              onBack={goBack}
+              isLoading={loading}
+              screenSize={screenSize}
+            />
           )}
           <SuccessModal
             open={showSuccessModal}
@@ -265,8 +257,6 @@ const PembiayaanPage: React.FC = () => {
             screenSize={screenSize}
             submissionData={submissionData}
           />
-          {/* </div> */}
-          {/* </form> */}
         </div>
       </div>
     )
@@ -282,7 +272,7 @@ const PembiayaanPage: React.FC = () => {
     return formStep2Ref.current?.isValid() || false
   }
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-0 md:pb-0">
+    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-4 md:pb-0">
       {/* Mobile Header - Only visible on mobile */}
       {screenSize === 'mobile' && (
         <div>
