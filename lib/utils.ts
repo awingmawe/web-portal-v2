@@ -216,6 +216,7 @@ export function mapProductsToCardData(
       arrivalDate: product?.packageVariant?.arrivalDate,
       releasedAt: product?.packageVariant?.releasedAt,
       packageType: product?.packageType || 'umrah',
+      tripDuration: product?.packageVariant?.tripDuration,
     })) || []
   )
 }

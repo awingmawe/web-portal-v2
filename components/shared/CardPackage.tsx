@@ -47,6 +47,7 @@ export const CardPackage = memo(function CardPackage({
     releasedAt,
     packageType,
     id: packageId,
+    tripDuration,
     isLastCall,
   } = data
 
@@ -71,7 +72,7 @@ export const CardPackage = memo(function CardPackage({
     [releasedAt]
   )
 
-  const tripDuration = useMemo(
+  const numberOfDays = useMemo(
     () => differenceInDays(arrivalDate, departureDate) + 1,
     [arrivalDate, departureDate]
   )
@@ -119,7 +120,7 @@ export const CardPackage = memo(function CardPackage({
             title,
             slug: slugPackage,
             hotelRating: rating,
-            tripDuration,
+            tripDuration: tripDuration ? tripDuration : numberOfDays,
             travelName: organizationName,
             travelCity: location,
             travelCityId: locationId,
@@ -149,7 +150,7 @@ export const CardPackage = memo(function CardPackage({
             title,
             slug: slugPackage,
             hotelRating: rating,
-            tripDuration,
+            tripDuration: tripDuration ? tripDuration : numberOfDays,
             travelName: organizationName,
             travelCity: location,
             travelCityId: locationId,
@@ -227,7 +228,7 @@ export const CardPackage = memo(function CardPackage({
           </div>
           <div className="bg-primary-500 inline-flex items-center justify-center gap-2.5 rounded-[100px] p-1.5">
             <p className="text-s-regular text-center text-neutral-900">
-              {tripDuration} Hari
+              {tripDuration ? tripDuration : numberOfDays} Hari
             </p>
           </div>
         </div>

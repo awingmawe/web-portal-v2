@@ -23,6 +23,7 @@ export interface PackageVariant {
   package: {
     dpAmount: number
   }
+  tripDuration: number
 }
 
 export interface PriceParams {
@@ -55,6 +56,7 @@ export interface CardData {
   releasedAt: string
   packageType: string
   variant?: any
+  tripDuration: number
 }
 
 export interface PackageDetail {
