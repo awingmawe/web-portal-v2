@@ -1,5 +1,6 @@
 'use client'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
+import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { useRouter } from 'next/navigation'
 
 export default function TopbarMobileArticle({
@@ -10,13 +11,15 @@ export default function TopbarMobileArticle({
   applyRouter?: boolean
 }) {
   const router = useRouter()
+  const { goBack } = useCustomNavigation()
+
   return (
     <MobileTopbar
       variant="logo"
       showBackButton={true}
       onBackClick={() => {
         if (href == 'back') {
-          router.back()
+          goBack()
           return
         }
 
