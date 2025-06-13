@@ -142,11 +142,17 @@ export const TransactionDetailMobileAction = ({
         return null
     }
   }
+  console.log(transaction)
+
   return (
     <div className="hidden max-lg:block">
       {statusTahapan == 'Akan Datang' && (
         <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
-          <DrawerBatalkan bookingId={bookingId} idOrganisasi={idOrganisasi}>
+          <DrawerBatalkan
+            bookingId={bookingId}
+            idOrganisasi={idOrganisasi}
+            id={transaction?.bookingCode}
+          >
             <Button
               className="!rounded-lg border-2 border-neutral-900 px-1 py-1"
               variant="outline"
