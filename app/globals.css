@@ -379,3 +379,8 @@
 .normalize-content ul li {
   display: flex;
 }
+
+.content-description hr:last-child,
+.content-description hr:first-child {
+  display: none;
+}

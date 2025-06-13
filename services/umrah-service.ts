@@ -55,7 +55,7 @@ export async function getPackageList(
   }
 }
 export async function getPackageVariantList(
-  query: GetListQuery
+  query: any
 ): Promise<GenericResponse<PackageVariant>> {
   try {
     const response = await api.get(
@@ -443,6 +443,19 @@ export async function getTagById(id: number): Promise<Tag> {
     return response.data
   } catch (error) {
     console.error('Error fetching tag detail:', error)
+    throw error
+  }
+}
+
+export async function getPostReqRefund(payload: any): Promise<any> {
+  try {
+    const response = await apiWithAuth.post(
+      `/umrah/v2/client/booking-canceled/req-refund`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
     throw error
   }
 }

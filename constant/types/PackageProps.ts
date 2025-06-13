@@ -23,6 +23,7 @@ export interface PackageVariant {
   package: {
     dpAmount: number
   }
+  tripDuration: number
 }
 
 export interface PriceParams {
@@ -59,6 +60,7 @@ export interface CardData {
   meccaHotel?: any
   departure: TravelRoute
   arrival: TravelRoute
+  tripDuration: number
 }
 
 export interface PackageDetail {

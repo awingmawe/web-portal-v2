@@ -137,8 +137,9 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   const formattedArrival = selectedVariant?.arrivalDate
     ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
     : '-'
-  const numberOfDays =
-    selectedVariant?.departureDate && selectedVariant?.arrivalDate
+  const numberOfDays = selectedVariant?.tripDuration
+    ? selectedVariant?.tripDuration
+    : selectedVariant?.departureDate && selectedVariant?.arrivalDate
       ? Math.ceil(
           (new Date(selectedVariant.arrivalDate).getTime() -
             new Date(selectedVariant.departureDate).getTime()) /

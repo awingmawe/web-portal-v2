@@ -16,6 +16,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { CardPackage2 } from '@/components/shared/CardPackage2'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -34,8 +35,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from '@/components/ui/sonner'
-// import { useCustomInfiniteScroll } from '@/hooks/common/useCustomInfiniteScroll'
-import { CardPackage2 } from '@/components/shared/CardPackage2'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { getPackageVariantList } from '@/services/umrah-service'
 import { ChevronLeft, Edit3, Loader2, Search } from 'lucide-react'
@@ -77,6 +76,7 @@ export const PembiayaanFormStep2 = forwardRef<
   )
   const [selectedVariantDetails, setSelectedVariantDetails] =
     useState<any>(null)
+
   // Define form with default values
   const form = useForm<PembiayaanStep2Values>({
     resolver: zodResolver(pembiayaanStep2Schema),
@@ -88,26 +88,7 @@ export const PembiayaanFormStep2 = forwardRef<
       tenor: '24',
     },
   })
-  useImperativeHandle(
-    ref,
-    () => ({
-      submit: () => {
-        form.handleSubmit(handleSubmit)()
-      },
-      isValid: () => {
-        return form.formState.isValid
-      },
-    }),
-    [form]
-  )
-  // Add this function to handle variant change
-  const handleVariantChange = (variantName: string) => {
-    const selectedVariant = dataVariant.find(
-      (variant: any) => variant.name === variantName
-    )
-    setSelectedVariantDetails(selectedVariant)
-    form.setValue('varian', variantName)
-  }
+
   // Use the infinite scroll hook
   const {
     packages: dataPaket,
@@ -121,6 +102,108 @@ export const PembiayaanFormStep2 = forwardRef<
 
   // Watch form values for dynamic calculation
   const watchedValues = form.watch()
+
+  // Form submit handler - PERBAIKAN UTAMA
+  const handleSubmit = useCallback(
+    async (values: PembiayaanStep2Values) => {
+      try {
+        // Pastikan data ada sebelum submit
+        if (!dataPaket || dataPaket.length === 0) {
+          toast.error('Data paket tidak tersedia. Silakan muat ulang halaman.')
+          return
+        }
+
+        if (!dataVariant || dataVariant.length === 0) {
+          toast.error(
+            'Data varian tidak tersedia. Silakan pilih paket terlebih dahulu.'
+          )
+          return
+        }
+
+        if (!selectedVariantDetails) {
+          toast.error(
+            'Detail varian tidak tersedia. Silakan pilih varian terlebih dahulu.'
+          )
+          return
+        }
+
+        const selectedPkg = dataPaket.find(
+          (pkg: any) =>
+            pkg.id === values.selectedPackage ||
+            pkg.slugPackage === values.selectedPackage
+        )
+
+        if (!selectedPkg) {
+          toast.error('Paket yang dipilih tidak ditemukan.')
+          return
+        }
+
+        // Calculate pricing
+        let roomPrice = 0
+        switch (values.kamarHotel) {
+          case 'double':
+            roomPrice = Number(selectedVariantDetails.originalPriceDouble) || 0
+            break
+          case 'triple':
+            roomPrice = Number(selectedVariantDetails.originalPriceTriple) || 0
+            break
+          case 'quad':
+            roomPrice = Number(selectedVariantDetails.originalPriceQuad) || 0
+            break
+          default:
+            roomPrice = 0
+        }
+
+        const totalPrice = roomPrice * Number(values.jumlahJamaah)
+        const totalFunding = totalPrice * 0.0139
+        const tenorMonths = Number(values.tenor)
+        const monthlyInstallment = totalPrice / tenorMonths + totalFunding
+
+        const submitData = {
+          ...values,
+          packageDetails: selectedPkg,
+          selectedVariantDetails,
+          totalPrice,
+          totalFunding,
+          monthlyInstallment,
+        }
+
+        await onSubmit(submitData)
+      } catch (error: any) {
+        console.error('Submit error:', error)
+        const errorMsg =
+          error?.message || 'Terjadi kesalahan. Silakan coba lagi.'
+        toast.error(errorMsg)
+      }
+    },
+    [dataPaket, dataVariant, selectedVariantDetails, onSubmit]
+  )
+
+  // PERBAIKAN: Update useImperativeHandle untuk menggunakan callback yang sudah di-memoize
+  useImperativeHandle(
+    ref,
+    () => ({
+      submit: () => {
+        form.handleSubmit(handleSubmit)()
+      },
+      isValid: () => {
+        const isValid = form.formState.isValid
+
+        return isValid
+      },
+    }),
+    [form, handleSubmit]
+  )
+
+  // Add this function to handle variant change
+  const handleVariantChange = (variantName: string) => {
+    const selectedVariant = dataVariant.find(
+      (variant: any) => variant.name === variantName
+    )
+
+    setSelectedVariantDetails(selectedVariant)
+    form.setValue('varian', variantName)
+  }
 
   // Calculate dynamic pricing
   const calculatedPricing = useMemo(() => {
@@ -221,9 +304,11 @@ export const PembiayaanFormStep2 = forwardRef<
         orderBy: 'createdAt',
         order: 'asc',
       })
+
       setDataVariant(res.results)
     } catch (error) {
-      console.log(error)
+      console.error('Error fetching variants:', error)
+      toast.error('Gagal memuat varian paket')
     }
   }
 
@@ -255,31 +340,7 @@ export const PembiayaanFormStep2 = forwardRef<
     [handleLoadMore]
   )
 
-  // Form submit handler
-  const handleSubmit = async (values: PembiayaanStep2Values) => {
-    try {
-      const selectedPkg = dataPaket.find(
-        (pkg: any) =>
-          pkg.id === values.selectedPackage ||
-          pkg.slugPackage === values.selectedPackage
-      )
-      const submitData = {
-        ...values,
-        packageDetails: selectedPkg,
-        selectedVariantDetails,
-        totalPrice: calculatedPricing.totalPrice,
-        totalFunding: calculatedPricing.totalFunding,
-        monthlyInstallment: calculatedPricing.monthlyInstallment,
-      }
-      console.log(submitData)
-
-      await onSubmit(submitData)
-      // toast.success('Pengajuan pembiayaan berhasil dikirim!')
-    } catch (error: any) {
-      const errorMsg = error?.message || 'Terjadi kesalahan. Silakan coba lagi.'
-      toast.error(errorMsg)
-    }
-  }
+  // PERBAIKAN: Update effect untuk fetch variants
   useEffect(() => {
     const selectedPkg = dataPaket.find(
       (pkg: any) =>
@@ -294,12 +355,13 @@ export const PembiayaanFormStep2 = forwardRef<
       setSelectedVariantDetails(null)
       form.setValue('varian', '') // Clear form value
     }
-  }, [selectedPackage, dataPaket])
+  }, [selectedPackage, dataPaket, form])
 
   // Add another useEffect to set the first variant as default when dataVariant changes
   useEffect(() => {
     if (dataVariant.length > 0) {
       const firstVariant = dataVariant[0]
+
       setSelectedVariantDetails(firstVariant)
       form.setValue('varian', firstVariant.name)
     }
@@ -375,7 +437,7 @@ export const PembiayaanFormStep2 = forwardRef<
               {/* Package List with Infinite Scroll */}
               <div
                 className={`grid flex-1 justify-items-center space-y-3 overflow-y-auto ${
-                  screenSize === 'mobile' ? '' : 'h-[350px]'
+                  screenSize === 'mobile' ? '' : 'h-[750px]'
                 }`}
                 onScroll={handleScroll}
                 style={
@@ -454,9 +516,6 @@ export const PembiayaanFormStep2 = forwardRef<
           <div className="h-[600px] flex-1 space-y-4 overflow-y-auto px-4 pb-4">
             {/* Package Selection Button */}
             <div className="space-y-2">
-              {/* <h3 className="text-sm font-medium text-gray-800">
-                Pilih paket terlebih dahulu
-              </h3> */}
               {!selectedPackage && (
                 <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-white p-4">
                   <div className="flex items-center justify-between">
@@ -757,21 +816,6 @@ export const PembiayaanFormStep2 = forwardRef<
               </Button>
             </div>
           )}
-          {/* {screenSize === 'desktop' ? (
-            <></>
-          ) : (
-            <div className="sticky bottom-0 border-t border-gray-100 bg-white p-4">
-              <Button
-                type="submit"
-                className="w-full rounded-full bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600"
-                disabled={isLoading}
-                isLoading={isLoading}
-              >
-                Kirim Permintaan
-              </Button>
-            </div>
-          )} */}
-          {/* Submit Button - Fixed at bottom */}
         </form>
       </Form>
     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
@@ -11,6 +12,7 @@ import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { CALL_CENTER, MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import { CanceledProvider } from '@/contexts/canceled-package-context'
 import {
   getManifestDetail,
   getPaymentStatement,
@@ -502,26 +504,27 @@ export default function TransactionDetailContent({
 
                 {transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
-                  transaction?.status.slug !== 'expired' && (
-                    // <Link
-                    //   href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                    //   target="_blank"
-                    //   className="w-full"
-                    // >
-                    <Button
-                      variant="outline"
-                      className="border-error-500  block w-full border-2"
-                      onClick={() => {
-                        if (typeof setOpenBatalkan === 'function') {
-                          setOpenBatalkan(true)
-                        }
-                      }}
+                  transaction?.status.slug !== 'expired' &&
+                  transaction?.status.slug !== 'waiting-cancellation' && (
+                    <Link
+                      href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                      target="_blank"
+                      className="w-full"
                     >
-                      <span className="text-error-500 font-medium">
-                        Batalkan Pesanan
-                      </span>
-                    </Button>
-                    // </Link>
+                      <Button
+                        variant="outline"
+                        className="border-error-500  block w-full border-2"
+                        //    onClick={() => {
+                        //     if (typeof setOpenBatalkan === 'function') {
+                        //      setOpenBatalkan(true)
+                        //   }
+                        // }}
+                      >
+                        <span className="text-error-500 font-medium">
+                          Batalkan Pesanan
+                        </span>
+                      </Button>
+                    </Link>
                   )}
                 <div className="relative mt-auto">
                   <Image
@@ -537,16 +540,19 @@ export default function TransactionDetailContent({
           </div>
         </Fragment>
       )}
-
-      <TransactionDetailMobileAction
-        bookingCode={transaction?.bookingCode}
-        bookingId={bookingId}
-        statusTahapan={statusTahapan}
-        idOrganisasi={
-          transaction?.packageSnapshot?.snapshot.package.organizationInstance.id
-        }
-      />
-
+      <CanceledProvider>
+        <TransactionDetailMobileAction
+          bookingCode={transaction?.bookingCode}
+          bookingId={bookingId}
+          statusTahapan={statusTahapan}
+          idOrganisasi={
+            transaction?.packageSnapshot?.snapshot.package.organizationInstance
+              .id
+          }
+          transaction={transaction}
+          // status={transaction.status.slug}
+        />
+      </CanceledProvider>
       <Script
         src={SNAP_URL}
         data-client-key={MIDTRANS_CLIENT_KEY}

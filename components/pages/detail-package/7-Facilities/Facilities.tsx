@@ -24,7 +24,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // Memoized component for a single facility item
 const FacilityItem = React.memo(({ facility }: { facility: Facility }) => (
-  <div className="flex items-center gap-1">
+  <div className="flex gap-1">
     <Image
       src={facility.image}
       alt={facility.code}
@@ -143,86 +143,78 @@ export const Facilities = ({ facilities = [] }: { facilities: Facility[] }) => {
   )
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex gap-3">
-        <div className="bg-primary-500 h-auto w-[6px] rounded-full" />
-        <p className="heading-3-semibold font-semibold max-lg:text-sm max-lg:leading-5">
-          Fasilitas & Lainnya
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-4 max-lg:col-span-12">
+        <p className="text-l-semibold text-neutral-900 max-lg:text-sm max-lg:leading-5">
+          Fasilitas
         </p>
       </div>
-      <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-4 max-lg:col-span-12">
-          <p className="text-l-semibold text-neutral-900 max-lg:text-sm max-lg:leading-5">
-            Fasilitas
-          </p>
-        </div>
-        <div className="col-span-8 border-b border-neutral-200 pb-6 max-lg:col-span-12">
-          <div className="relative">
-            <div ref={contentRef} className="overflow-hidden">
-              {facilitiesGrid}
-            </div>
-
-            {/* Gradient overlay when truncated */}
-            {shouldTruncate && (
-              <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-[173px] bg-gradient-to-t from-white to-transparent" />
-            )}
+      <div className="col-span-8 border-b border-neutral-200 pb-6 max-lg:col-span-12">
+        <div className="relative">
+          <div ref={contentRef} className="overflow-hidden">
+            {facilitiesGrid}
           </div>
 
-          {/* Desktop dialog */}
-          {shouldTruncate && !lg && (
-            <Dialog>
-              <DialogTrigger asChild>
-                <div className="text-s-medium mt-2 mb-2.5 ml-auto flex w-fit cursor-pointer items-center gap-0.5 text-[#000] underline">
-                  Lihat Seluruh Fasilitas
-                </div>
-              </DialogTrigger>
-              <DialogContent className="flex flex-col gap-5 border-0 p-8 outline-0 md:max-w-[620px]">
-                <DialogHeader className="flex flex-row justify-between">
-                  <DialogTitle className="text-xl font-semibold">
-                    Daftar Fasilitas
-                  </DialogTitle>
-                  <DialogClose className="inline-flex w-fit">
-                    <X />
-                  </DialogClose>
-                </DialogHeader>
-                <div className="overflow-y-auto">{dialogContent}</div>
-                <DialogClose className="text-s-regular bg-primary-500 ml-auto inline-block rounded-full px-10 py-3">
-                  Tutup
-                </DialogClose>
-              </DialogContent>
-            </Dialog>
-          )}
-
-          {/* Mobile drawer */}
-          {shouldTruncate && lg && (
-            <Drawer>
-              <DrawerTrigger asChild>
-                <button className="text-s-medium mt-2 flex items-center gap-0.5 text-[#000] underline">
-                  Lihat Selengkapnya
-                  <ChevronRight size={16} />
-                </button>
-              </DrawerTrigger>
-              <DrawerContent className="border-0 outline-0">
-                <DrawerHeader className="p-3">
-                  <DrawerTitle className="flex justify-between">
-                    <div className="flex gap-3">
-                      <div className="bg-primary-500 h-auto w-[6px] rounded-full" />
-                      <p className="heading-3-semibold font-semibold max-lg:text-sm max-lg:leading-5">
-                        Fasilitas
-                      </p>
-                    </div>
-                    <DrawerClose>
-                      <X className="text-primary-900" />
-                    </DrawerClose>
-                  </DrawerTitle>
-                </DrawerHeader>
-                <div className="max-h-[70vh] overflow-y-auto px-4 pb-4">
-                  {drawerContent}
-                </div>
-              </DrawerContent>
-            </Drawer>
+          {/* Gradient overlay when truncated */}
+          {shouldTruncate && (
+            <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-[173px] bg-gradient-to-t from-white to-transparent" />
           )}
         </div>
+
+        {/* Desktop dialog */}
+        {shouldTruncate && !lg && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="text-s-medium mt-2 mb-2.5 ml-auto flex w-fit cursor-pointer items-center gap-0.5 text-[#000] underline">
+                Lihat Seluruh Fasilitas
+              </div>
+            </DialogTrigger>
+            <DialogContent className="flex flex-col gap-5 border-0 p-8 outline-0 md:max-w-[620px]">
+              <DialogHeader className="flex flex-row justify-between">
+                <DialogTitle className="text-xl font-semibold">
+                  Daftar Fasilitas
+                </DialogTitle>
+                <DialogClose className="inline-flex w-fit">
+                  <X />
+                </DialogClose>
+              </DialogHeader>
+              <div className="overflow-y-auto">{dialogContent}</div>
+              <DialogClose className="text-s-regular bg-primary-500 ml-auto inline-block rounded-full px-10 py-3">
+                Tutup
+              </DialogClose>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {/* Mobile drawer */}
+        {shouldTruncate && lg && (
+          <Drawer>
+            <DrawerTrigger asChild>
+              <button className="text-s-medium mt-2 flex items-center gap-0.5 text-[#000] underline">
+                Lihat Selengkapnya
+                <ChevronRight size={16} />
+              </button>
+            </DrawerTrigger>
+            <DrawerContent className="border-0 outline-0">
+              <DrawerHeader className="p-3">
+                <DrawerTitle className="flex justify-between">
+                  <div className="flex gap-3">
+                    <div className="bg-primary-500 h-auto w-[6px] rounded-full" />
+                    <p className="heading-3-semibold font-semibold max-lg:text-sm max-lg:leading-5">
+                      Fasilitas
+                    </p>
+                  </div>
+                  <DrawerClose>
+                    <X className="text-primary-900" />
+                  </DrawerClose>
+                </DrawerTitle>
+              </DrawerHeader>
+              <div className="max-h-[70vh] overflow-y-auto px-4 pb-4">
+                {drawerContent}
+              </div>
+            </DrawerContent>
+          </Drawer>
+        )}
       </div>
     </div>
   )

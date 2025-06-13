@@ -3,11 +3,13 @@
 import { Article } from '@/constant/types/ArticleProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { cn } from '@/lib/utils'
-import { format, formatDistance } from 'date-fns'
-import { id } from 'date-fns/locale'
+import dayjs from 'dayjs'
+import 'dayjs/locale/id'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
+dayjs.extend(relativeTime)
 
 interface ArticleCardProps {
   article: Article
@@ -44,18 +46,8 @@ export const ArticleCard = ({
 
   // Format the date to the Indonesian format (DD Bulan YYYY)
   const publishedAt = new Date(article?.published_at ?? article?.created_at)
-  const now = new Date()
 
-  const formattedDate =
-    publishedAt.toDateString() === now.toDateString()
-      ? formatDistance(publishedAt, now, {
-          addSuffix: true,
-          locale: id,
-          includeSeconds: true,
-        })
-      : format(publishedAt, 'dd MMMM yyyy', {
-          locale: id,
-        })
+  const formattedDate = dayjs(publishedAt).locale('id').fromNow()
 
   // Observe the element for tracking
   useEffect(() => {

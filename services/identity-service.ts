@@ -223,3 +223,15 @@ export async function getUserById(id: number): Promise<Profile> {
     throw error
   }
 }
+
+export async function verifyEmailOtpBookingCanceled(): Promise<string> {
+  try {
+    const response = await apiWithAuth.get(
+      `/identity/verification/otp/booking-canceled`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error get otp verify email:', error)
+    throw error
+  }
+}

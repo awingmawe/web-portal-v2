@@ -3,16 +3,20 @@
 
 import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
 import { TransactionDetail } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetail'
+import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
 import { BatalkanPesanan } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesanan'
+
 import ModalPengembalianDanaDetail from '@/components/pages/my/1-Transaction/Components/Modal/modalPengembalianDanaDetail'
 import ModalSuccessCanceled from '@/components/pages/my/1-Transaction/Components/Modal/modalSukses'
+import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
+import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import { CALL_CENTER, MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { formatCurrency } from '@/lib/utils'
@@ -21,6 +25,7 @@ import {
   getPaymentTransaction,
   postNextPayment,
 } from '@/services/umrah-service'
+import dayjs from 'dayjs'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -136,7 +141,156 @@ export default function TransactionCardFooter({
     setReason,
     description,
     setDescription,
+    openFormRefund,
+    setOpenFormRefund,
+    openVerifikasiEmail,
+    setOpenVerifikasiEmail,
+    setSelectedBank,
+    selectedBank,
+    setAccountNumber,
+    accountNumber,
+    setAccountName,
+    accountName,
+    openSuksesRefund,
+    setOpenSuksesRefund,
   } = useCanceled()
+  const renderActionButton = () => {
+    const isCanceled =
+      status === 'canceled-by-user' || status === 'canceled-by-travel'
+
+    switch (true) {
+      // Case 1: Proses Refund
+      case statusTahapanDetail === 'Dibatalkan' &&
+        isCanceled &&
+        transaction?.isRefundAvailable === true:
+        return (
+          <Button
+            variant="outline"
+            className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+            onClick={() => setOpenFormRefund(true)}
+          >
+            Proses Refund
+          </Button>
+        )
+
+      // Case 2: Refund sedang diproses (disbursement belum disalurkan)
+      case statusTahapanDetail === 'Dibatalkan' &&
+        isCanceled &&
+        transaction?.bookingCanceled?.disbursementUser !== null &&
+        transaction?.bookingCanceled?.disbursementUser?.disbursed === false:
+        return (
+          <div className="flex items-center gap-2 rounded-full bg-[#FFF7DC] px-4 py-2 text-sm text-[#A17800]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 flex-shrink-0"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.75 15h-1.5v-1.5h1.5V17zm0-3h-1.5V7h1.5v7z" />
+            </svg>
+            <span>
+              Permintaan refund sedang dalam proses, harap tunggu 15–30 hari
+              kerja
+            </span>
+          </div>
+        )
+      // Case 2: Refund sedang diproses (disbursement sudah disalurkan)
+      case statusTahapanDetail === 'Dibatalkan' &&
+        isCanceled &&
+        transaction?.bookingCanceled?.disbursementUser !== null &&
+        transaction?.bookingCanceled?.disbursementUser?.disbursed === true:
+        return (
+          <div className="flex items-center gap-2 rounded-full bg-[#C1FFE9] px-4 py-2 text-sm text-[#007C59]">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#007C59]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3 w-3 text-white"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M9 16.17 4.83 12 3.41 13.41 9 19 21 7 19.59 5.59z" />
+              </svg>
+            </div>
+            <span>
+              Dana telah berhasil di refund pada{' '}
+              {dayjs(
+                transaction?.bookingCanceled?.disbursementUser?.modifiedAt
+              ).format('DD MMMM YYYY, HH:mm')}
+            </span>
+          </div>
+        )
+      // Case 3: Selesai manifest tapi belum lunas
+      case statusTahapanDetail !== 'Dibatalkan' &&
+        isCompletedManifest &&
+        !isPaidOff:
+        return (
+          <>
+            <Button
+              className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
+              disabled={loadingPaymentTransaction}
+              onClick={() => fetchPaymentStatement(bookingId)}
+            >
+              Bayar Pelunasan
+            </Button>
+            <Button
+              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+              variant="outline"
+              disabled
+            >
+              <ChecklistCircle2 />
+              Data Jemaah Lengkap
+            </Button>
+          </>
+        )
+
+      // Case 4: Sudah lunas, tapi belum manifest
+      case statusTahapanDetail !== 'Dibatalkan' &&
+        !isCompletedManifest &&
+        isPaidOff:
+        return (
+          <>
+            <Link href={`/manifest/${bookingId}`}>
+              <Button className="w-full px-8 py-3 text-nowrap">
+                Lengkapi Data Jemaah
+              </Button>
+            </Link>
+            <Button
+              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+              variant="outline"
+              disabled
+            >
+              <ChecklistCircle2 />
+              Pelunasan
+            </Button>
+          </>
+        )
+
+      // Case 5: Belum lunas dan belum manifest
+      case statusTahapanDetail !== 'Dibatalkan' &&
+        !isCompletedManifest &&
+        !isPaidOff:
+        return (
+          <>
+            <Link href={`/manifest/${bookingId}`}>
+              <Button className="w-full px-8 py-3 text-nowrap">
+                Lengkapi Data Jemaah
+              </Button>
+            </Link>
+            <Button
+              className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+              variant="outline"
+              disabled={loadingPaymentTransaction}
+              onClick={() => fetchPaymentStatement(bookingId)}
+            >
+              Bayar Pelunasan
+            </Button>
+          </>
+        )
+
+      default:
+        return null
+    }
+  }
 
   return (
     <Fragment>
@@ -148,6 +302,18 @@ export default function TransactionCardFooter({
         >
           Lihat Detail Pesanan
         </Button>
+        {(status === 'canceled-by-user' || status === 'canceled-by-travel') &&
+          transaction.isRefundAvailable === true && (
+            <Button
+              variant="outline"
+              className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+              onClick={() => {
+                setOpenFormRefund(true)
+              }}
+            >
+              Proses Refund
+            </Button>
+          )}
         {!detailOnly && (
           <Fragment>
             {status === 'waiting-cancellation' ? null : isPaidOff ? (
@@ -217,16 +383,16 @@ export default function TransactionCardFooter({
                 </PopoverTrigger>
                 <PopoverContent className="rounded-2xl p-0 px-1">
                   <div className="flex flex-col divide-y">
-                    <span
-                      // href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                    <Link
+                      href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
                       className="cursor-pointer p-3 hover:bg-gray-50"
-                      // target="_blank"
-                      onClick={() => setOpenBatalkan(true)}
+                      target="_blank"
+                      // onClick={() => setOpenBatalkan(true)}
                     >
                       <p className="text-m-regular text-error-500">
                         Batalkan Pesanan
                       </p>
-                    </span>
+                    </Link>
                   </div>
                 </PopoverContent>
               </Popover>
@@ -289,16 +455,16 @@ export default function TransactionCardFooter({
               </PopoverTrigger>
               <PopoverContent className="rounded-2xl p-0 px-1">
                 <div className="flex flex-col divide-y">
-                  <span
-                    // href={`https://wa.me/628888551101?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                  <Link
+                    href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
                     className="cursor-pointer p-3 hover:bg-gray-50"
-                    // target="_blank"
-                    onClick={() => setOpenBatalkan(true)}
+                    target="_blank"
+                    // onClick={() => setOpenBatalkan(true)}
                   >
                     <p className="text-m-regular text-error-500">
                       Batalkan Pesanan
                     </p>
-                  </span>
+                  </Link>
                 </div>
               </PopoverContent>
             </Popover>
@@ -346,71 +512,7 @@ export default function TransactionCardFooter({
             </div>
           </div>
         ) : (
-          <Fragment>
-            {isCompletedManifest ? (
-              <Fragment>
-                {!isPaidOff && (
-                  <Fragment>
-                    <Button
-                      className="border-primary-500  w-full border-2 px-8 py-3 text-nowrap"
-                      disabled={loadingPaymentTransaction}
-                      onClick={() => {
-                        fetchPaymentStatement(bookingId)
-                      }}
-                    >
-                      Bayar Pelunasan
-                    </Button>
-                    <Button
-                      className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200 "
-                      variant="outline"
-                      disabled={true}
-                    >
-                      <ChecklistCircle2 />
-                      Data Jemaah Lengkap
-                    </Button>
-                  </Fragment>
-                )}
-              </Fragment>
-            ) : (
-              <Fragment>
-                {isPaidOff ? (
-                  <Fragment>
-                    <Link href={`/manifest/${bookingId}`}>
-                      <Button className="w-full px-8 py-3 text-nowrap">
-                        Lengkapi Data Jemaah
-                      </Button>
-                    </Link>
-                    <Button
-                      className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200 "
-                      variant={'outline'}
-                      disabled={true}
-                    >
-                      <ChecklistCircle2 />
-                      Pelunasan
-                    </Button>
-                  </Fragment>
-                ) : (
-                  <Fragment>
-                    <Link href={`/manifest/${bookingId}`}>
-                      <Button className="w-full px-8 py-3 text-nowrap">
-                        Lengkapi Data Jemaah
-                      </Button>
-                    </Link>
-                    <Button
-                      className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
-                      variant={'outline'}
-                      disabled={loadingPaymentTransaction}
-                      onClick={() => {
-                        fetchPaymentStatement(bookingId)
-                      }}
-                    >
-                      Bayar Pelunasan
-                    </Button>
-                  </Fragment>
-                )}
-              </Fragment>
-            )}
-          </Fragment>
+          <Fragment>{renderActionButton()}</Fragment>
         )}
       </div>
 
@@ -465,6 +567,36 @@ export default function TransactionCardFooter({
           open={openModalSukses}
           onOpenChange={setOpenModalSukses}
           fetchTransactions={fetchTransactions}
+        />
+      )}
+      {openFormRefund && (
+        <ModalFormRefund
+          open={openFormRefund}
+          onOpenChange={setOpenFormRefund}
+          setOpenVerifikasiEmail={setOpenVerifikasiEmail}
+          setSelectedBank={setSelectedBank}
+          selectedBank={selectedBank}
+          setAccountNumber={setAccountNumber}
+          accountNumber={accountNumber}
+          setAccountName={setAccountName}
+          accountName={accountName}
+        />
+      )}
+      {openVerifikasiEmail && (
+        <VerificationDialog
+          open={openVerifikasiEmail}
+          onOpenChange={setOpenVerifikasiEmail}
+          selectedBank={selectedBank}
+          accountNumber={accountNumber}
+          accountName={accountName}
+          transaction={transaction}
+          setOpenSuksesRefund={setOpenSuksesRefund}
+        />
+      )}
+      {openSuksesRefund && (
+        <SuksesDialog
+          open={openSuksesRefund}
+          onOpenChange={setOpenSuksesRefund}
         />
       )}
     </Fragment>

@@ -83,11 +83,12 @@ export default function List({
                                     : ''
                           }
                           statusTahapanDetail={'Dibatalkan'}
+                          transaction={transaction}
                           noHeader
                           noAmountLeft
                           detailOnly
                           noLabelNotif
-                          noFooter
+                          // noFooter
                         />
                       </CanceledProvider>
                     </div>
@@ -121,6 +122,7 @@ export default function List({
                     <TransactionCard
                       status={transaction.status.slug}
                       id={transaction.bookingCode}
+                      transaction={transaction}
                       packageName={transaction?.packageSnapshot?.snapshot?.name}
                       thumbnail={
                         transaction?.packageSnapshot?.snapshot?.package

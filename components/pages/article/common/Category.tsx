@@ -25,7 +25,7 @@ export function ScrollableCategories({
   className,
 }: ScrollableCategoriesProps) {
   const [activeId, setActiveId] = useState<string | number>(
-    defaultActiveId || categories[0]?.slug || ''
+    defaultActiveId || (categories && categories[0]?.slug) || ''
   )
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
@@ -45,7 +45,7 @@ export function ScrollableCategories({
         className="scrollbar-hide flex w-full overflow-x-auto"
       >
         <div className="flex gap-2">
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <button
               key={category.id}
               onClick={() => handleCategoryClick(category)}

@@ -220,6 +220,7 @@ export function mapProductsToCardData(
       medinaHotel: product?.medinaHotel,
       departure: product?.departure,
       arrival: product.arrival,
+      tripDuration: product?.packageVariant?.tripDuration,
     })) || []
   )
 }

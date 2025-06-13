@@ -165,7 +165,7 @@ export default function Itinerary({ itinerary }: { itinerary: Agenda[] }) {
         <>
           {/* Desktop expand/collapse button */}
           {!lg && (
-            <div className="flex justify-end">
+            <div className="z-9 flex justify-end">
               <button
                 onClick={toggleExpand}
                 className="text-s-medium flex w-fit cursor-pointer items-center gap-0.5 text-[#000] underline"
@@ -186,7 +186,7 @@ export default function Itinerary({ itinerary }: { itinerary: Agenda[] }) {
             <div className="flex justify-start">
               <Drawer>
                 <DrawerTrigger asChild>
-                  <button className="text-s-medium flex items-center gap-0.5 text-[#000] underline">
+                  <button className="text-s-medium z-9 flex items-center gap-0.5 text-[#000] underline">
                     Lihat Selengkapnya
                     <ChevronRight size={16} />
                   </button>
