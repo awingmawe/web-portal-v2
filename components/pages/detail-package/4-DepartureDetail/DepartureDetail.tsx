@@ -96,7 +96,7 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
 
         {/* Right Column Skeleton */}
         <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
-          {[1, 2].map((_, index) => (
+          {[1, 2, 3].map((_, index) => (
             <div key={index} className="flex items-center gap-3">
               <div className="h-6 w-6 animate-pulse rounded-full bg-neutral-200"></div>
               <div>
@@ -132,15 +132,24 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
     <div
       className={`grid grid-cols-12 flex-col border-b border-b-neutral-200 pb-4 max-lg:flex max-lg:gap-2 ${dissolve}`}
     >
+      {/* className={`flex flex-col border-b border-b-neutral-200 pb-4 max-lg:gap-2 ${dissolve}`} */}
+
       {/* Left Column */}
-      <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
+      <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
         {leftColumnItems.map(renderItem)}
       </div>
 
       {/* Right Column */}
-      <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
+      <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
         {rightColumnItems.map(renderItem)}
       </div>
+
+      <div className=" hidden flex-col gap-3 max-lg:flex">
+        {leftColumnItems.map(renderItem)}
+        {rightColumnItems.map(renderItem)}
+      </div>
+      {/* predefined tailwindscsss */}
+      <div className="order-1 order-2 order-3 order-4 order-5 order-6 order-7 order-8 order-9"></div>
     </div>
   )
 }
