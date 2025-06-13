@@ -504,7 +504,8 @@ export default function TransactionDetailContent({
 
                 {transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
-                  transaction?.status.slug !== 'expired' && (
+                  transaction?.status.slug !== 'expired' &&
+                  transaction?.status.slug !== 'waiting-cancellation' && (
                     <Link
                       href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                       target="_blank"
