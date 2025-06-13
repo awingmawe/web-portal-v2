@@ -48,7 +48,7 @@ export function useCustomNavigation() {
       const history: string[] = historyString ? JSON.parse(historyString) : []
 
       if (EXCLUDED_PATHS.includes(pathname)) router.back()
-
+      console.log(history)
       if (history.length > 0) {
         // Remove current path
         history.pop()
