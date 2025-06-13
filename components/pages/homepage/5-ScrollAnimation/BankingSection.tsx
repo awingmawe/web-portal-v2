@@ -49,7 +49,7 @@ export default function BankingSection() {
 
             <div className="mx-auto mb-8 flex w-full max-w-md flex-row gap-3 max-[350px]:flex-col max-lg:justify-between max-lg:gap-2 lg:mx-0 lg:mb-12">
               <Link
-                href={'/banking?page=tabungan'}
+                href={'/banking/saving'}
                 className="flex max-[350px]:w-full max-lg:flex-1 sm:w-1/2 lg:w-auto"
               >
                 <Button
@@ -62,7 +62,7 @@ export default function BankingSection() {
                 </Button>
               </Link>
               <Link
-                href={'/banking?page=pembiayaan'}
+                href={'/banking/credit'}
                 className="w-fit max-[350px]:w-full max-lg:flex-1 sm:w-1/2 lg:w-auto"
               >
                 <Button

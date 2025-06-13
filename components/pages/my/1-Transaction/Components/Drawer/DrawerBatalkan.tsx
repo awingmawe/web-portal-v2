@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import DrawerBatalkanPesanan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerFormBatalkan'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,6 +9,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { CALL_CENTER } from '@/constant/env'
+import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 
 const DrawerBatalkan = React.memo(
@@ -15,10 +18,12 @@ const DrawerBatalkan = React.memo(
     children,
     bookingId,
     idOrganisasi,
+    id,
   }: {
     children: React.ReactNode
     bookingId: any
     idOrganisasi: any
+    id: any
   }) => {
     const closeRef = useRef<HTMLButtonElement>(null)
     const [open, setOpen] = useState(false)
@@ -26,9 +31,9 @@ const DrawerBatalkan = React.memo(
 
     const handleBuka = () => {
       setOpen(false) // tutup drawer refund
-      setTimeout(() => {
-        setOpenForm(true) // buka drawer sukses
-      }, 300)
+      // setTimeout(() => {
+      //   setOpenForm(true) // buka drawer sukses
+      // }, 300)
     }
     return (
       <>
@@ -43,20 +48,18 @@ const DrawerBatalkan = React.memo(
               </DrawerTitle>
             </DrawerHeader>
             <div className="flex w-full px-3 pt-3 pb-5">
-              {/* <Link
-                    href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${bookingCode}`}
-                    target="_blank"
-                    className="w-full"
-                  > */}
-
-              <Button
-                className="border-error-500 w-full rounded-full border-2 bg-white py-3"
-                onClick={handleBuka}
+              <Link
+                href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                target="_blank"
+                className="w-full"
               >
-                Batalkan Pesanan
-              </Button>
-
-              {/* </Link> */}
+                <Button
+                  className="border-error-500 w-full rounded-full border-2 bg-white py-3"
+                  onClick={handleBuka}
+                >
+                  Batalkan Pesanan
+                </Button>
+              </Link>
             </div>
           </DrawerContent>
         </Drawer>

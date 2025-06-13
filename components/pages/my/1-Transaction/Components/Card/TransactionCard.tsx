@@ -246,6 +246,7 @@ export default function TransactionCard({
                   <DrawerBatalkan
                     bookingId={bookingId}
                     idOrganisasi={organizationInstanceId}
+                    id={id}
                   >
                     {/* <Button
                       className="!rounded-lg border-2 border-neutral-900 px-1 py-1"
