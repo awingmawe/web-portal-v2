@@ -1,3 +1,4 @@
+// INI DIPAKE BUAT ARTIKEL WEBVIEW
 export default function CloseWebView() {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-white">
