@@ -1,6 +1,8 @@
 import { metadata } from '@/app/shared-metadata'
-import UmrohLandingSection from '@/components/pages/umrah-personal/landing/Banner'
-import LearnMoreSection from '@/components/pages/umrah-personal/learn-more/Carousel'
+import UmrohLandingSection from '@/components/pages/umrah-personal/landing/1-Landing/Landing'
+import LearnMoreSection from '@/components/pages/umrah-personal/landing/2-LearnMore'
+import TopbarMobile from '@/components/pages/umrah-personal/landing/2-LearnMore/mobile/Topbar'
+import UmrohPersonalStartSection from '@/components/pages/umrah-personal/landing/3-UmrahPersonalStart/BannerStart'
 import Topbar from '@/components/shared/Topbar'
 
 export async function generateMetadata() {
@@ -11,12 +13,17 @@ export async function generateMetadata() {
 
 export default async function UmrahPersonalLanding() {
   return (
-    <main className="snap-y snap-mandatory">
+    <>
       <Topbar type="homepage" />
 
-      <UmrohLandingSection />
+      <TopbarMobile />
+      <main className="lg:h-screen lg:snap-y lg:snap-proximity lg:overflow-y-auto">
+        <UmrohLandingSection />
 
-      <LearnMoreSection />
-    </main>
+        <LearnMoreSection />
+
+        <UmrohPersonalStartSection />
+      </main>
+    </>
   )
 }

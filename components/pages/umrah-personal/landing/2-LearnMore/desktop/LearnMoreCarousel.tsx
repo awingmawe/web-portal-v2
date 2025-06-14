@@ -1,6 +1,7 @@
 'use client'
 
 import ChecklistIcon from '@/components/icons/checklist'
+import { STEP_LEARN } from '@/components/pages/umrah-personal/constant'
 import {
   Carousel,
   CarouselContent,
@@ -9,54 +10,29 @@ import {
 } from '@/components/ui/carousel'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-const STORAGE_LINK =
-  'https://storage.googleapis.com/m101-prods/umroh-personal/bg-umrah-personal-'
-
-const LearnMoreSection: React.FC = () => {
+const LearnMoreSectionDesktop: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
   const sectionRef = useRef<HTMLElement>(null)
+  const lastScrollTime = useRef<number>(0)
+  const scrollThrottle = 150 // minimum time between scroll events in ms
 
-  const learnMoreDescription = [
-    {
-      title: 'Flexibilitas',
-      description:
-        'Seluruh kendali dan rencana perjalanan Anda dapat dikontrol penuh sesuai dengan keinginan Anda.',
-      items: ['Tanggal Keberangkatan', 'Lokasi Embarkasi', 'Jumlah Jemaah'],
-    },
-    {
-      title: 'Beragam Pilihan Maskapai',
-      description:
-        'Sesuaikan anggaran perjalanan anda dengan memilih maskapai sesuai kebutuhan Anda.',
-    },
-    {
-      title: 'Beragam Pilihan Hotel',
-      description:
-        'Plihan hotel mulai dari bintang 3 hingga bintang 5. Pilih dan sesuaikan hotel yang Anda butuhkan untuk perjalanan Umroh Anda',
-    },
-    {
-      title: 'Beragam Moda Transportasi',
-      description:
-        'Banyaknya pilihan moda transportasi yang dapat anda pilih sesuai kebutuhan Anda untuk menemani perjalanan Umroh Anda.',
-    },
-    {
-      title: 'Muthowif Berpengalaman',
-      description:
-        'Seluruh kendali dan rencana perjalanan Anda dapat dikontrol penuh sesuai dengan keinginan Anda.',
-    },
-  ]
+  const stepLearn = STEP_LEARN
 
-  const stepLearn = learnMoreDescription.map((item, index) => {
-    return {
-      id: item,
-      image: `${STORAGE_LINK}${index + 1}.jpg`,
-      slideshow: `/images/slideshow-umrah-personal-${index + 1}.png`,
-      ...item,
-    }
-  })
+  // Safe setter function that ensures bounds
+  const setCurrentIndexSafely = useCallback(
+    (newIndex: number | ((prev: number) => number)) => {
+      setCurrentIndex((prev) => {
+        const index = typeof newIndex === 'function' ? newIndex(prev) : newIndex
+        // Clamp the index to valid bounds
+        return Math.max(0, Math.min(stepLearn.length - 1, index))
+      })
+    },
+    [stepLearn.length]
+  )
 
   // Function to check if section is in viewport
   const isElementInViewport = (element: HTMLElement) => {
@@ -86,7 +62,13 @@ const LearnMoreSection: React.FC = () => {
 
     const handleCarouselSelect = () => {
       if (!isScrolling) {
-        setCurrentIndex(carouselApi.selectedScrollSnap())
+        const selectedIndex = carouselApi.selectedScrollSnap()
+        // Ensure the selected index is within bounds
+        const clampedIndex = Math.max(
+          0,
+          Math.min(stepLearn.length - 1, selectedIndex)
+        )
+        setCurrentIndexSafely(clampedIndex)
       }
     }
 
@@ -94,7 +76,7 @@ const LearnMoreSection: React.FC = () => {
     return () => {
       carouselApi.off('select', handleCarouselSelect)
     }
-  }, [carouselApi, isScrolling])
+  }, [carouselApi, isScrolling, stepLearn.length, setCurrentIndexSafely])
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
@@ -103,16 +85,30 @@ const LearnMoreSection: React.FC = () => {
         return // Allow normal scrolling if not in this section
       }
 
+      // Throttle scroll events to prevent rapid firing
+      const now = Date.now()
+      if (now - lastScrollTime.current < scrollThrottle) {
+        e.preventDefault()
+        return
+      }
+      lastScrollTime.current = now
+
       const isScrollingDown = e.deltaY > 0
       const isScrollingUp = e.deltaY < 0
 
+      // Get current index in a safe way
+      const safeCurrentIndex = Math.max(
+        0,
+        Math.min(stepLearn.length - 1, currentIndex)
+      )
+
       // Handle boundary conditions for vertical scroll
-      if (currentIndex === 0 && isScrollingUp) {
+      if (safeCurrentIndex === 0 && isScrollingUp) {
         // At first item and scrolling up - allow vertical scroll to previous section
         return
       }
 
-      if (currentIndex === stepLearn.length - 1 && isScrollingDown) {
+      if (safeCurrentIndex === stepLearn.length - 1 && isScrollingDown) {
         // At last item and scrolling down - allow vertical scroll to next section
         return
       }
@@ -124,13 +120,14 @@ const LearnMoreSection: React.FC = () => {
 
       setIsScrolling(true)
 
-      if (isScrollingDown && currentIndex < stepLearn.length - 1) {
-        setCurrentIndex((prev) => prev + 1)
-      } else if (isScrollingUp && currentIndex > 0) {
-        setCurrentIndex((prev) => prev - 1)
+      if (isScrollingDown && safeCurrentIndex < stepLearn.length - 1) {
+        setCurrentIndexSafely((prev) => prev + 1)
+      } else if (isScrollingUp && safeCurrentIndex > 0) {
+        setCurrentIndexSafely((prev) => prev - 1)
       }
 
-      setTimeout(() => setIsScrolling(false), 600)
+      // Use longer timeout to prevent rapid scrolling
+      setTimeout(() => setIsScrolling(false), 800)
     }
 
     // Add event listener to the window
@@ -139,13 +136,28 @@ const LearnMoreSection: React.FC = () => {
     return () => {
       window.removeEventListener('wheel', handleWheel)
     }
-  }, [currentIndex, isScrolling, stepLearn.length])
+  }, [currentIndex, isScrolling, stepLearn.length, setCurrentIndexSafely])
+
+  // Safety check: ensure currentIndex is always within bounds
+  useEffect(() => {
+    if (currentIndex < 0 || currentIndex >= stepLearn.length) {
+      setCurrentIndexSafely(
+        Math.max(0, Math.min(stepLearn.length - 1, currentIndex))
+      )
+    }
+  }, [currentIndex, stepLearn.length, setCurrentIndexSafely])
+
+  // Get safe current index for rendering
+  const safeCurrentIndex = Math.max(
+    0,
+    Math.min(stepLearn.length - 1, currentIndex)
+  )
 
   return (
     <section
       ref={sectionRef}
-      className="relative h-[calc(100dvh-70px)] snap-center overflow-hidden bg-white max-lg:h-[100dvh]"
-      id="section-learn-more"
+      className="relative mt-18 h-screen snap-center overflow-hidden bg-white max-lg:hidden"
+      id="section-learn-more-1"
     >
       {/* Background Images with Fade Animation */}
       <div className="absolute inset-0 h-full w-full">
@@ -154,9 +166,9 @@ const LearnMoreSection: React.FC = () => {
             key={index}
             initial={{ opacity: 0 }}
             animate={{
-              opacity: index === currentIndex ? 1 : 0,
+              opacity: index === safeCurrentIndex ? 1 : 0,
             }}
-            transition={{ duration: 0.8, ease: 'easeInOut' }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
             className="absolute top-0 left-0 h-full w-full"
           >
             {/* Background Image */}
@@ -196,9 +208,12 @@ const LearnMoreSection: React.FC = () => {
         <Carousel
           setApi={setCarouselApi}
           opts={{
-            align: 'center',
             loop: false,
+            slidesToScroll: 1,
+            containScroll: 'trimSnaps',
             skipSnaps: false,
+            dragFree: false,
+            duration: 75,
           }}
           className="w-full"
         >
@@ -210,20 +225,20 @@ const LearnMoreSection: React.FC = () => {
           >
             Mengapa Anda Harus Menggunakan Layanan Umroh Mandiri Muslim101?
           </motion.p>
-          <CarouselContent className="mx-auto max-w-6xl px-10">
+          <CarouselContent className="mx-auto px-10">
             {stepLearn.map((step, index) => (
               <CarouselItem
                 key={index}
-                className="flex items-center justify-center gap-10"
+                className="flex basis-full items-center justify-center gap-10 px-10"
               >
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
                   animate={{
-                    opacity: index === currentIndex ? 1 : 0.8,
-                    x: index === currentIndex ? 0 : -50,
+                    opacity: index === safeCurrentIndex ? 1 : 0.8,
+                    x: index === safeCurrentIndex ? 0 : -50,
                   }}
                   transition={{ duration: 0.6, delay: 0.2 }}
-                  className="text-white"
+                  className="text-white max-xl:max-w-[400px]"
                 >
                   {/* Slideshow Image */}
                   <Image
@@ -238,11 +253,11 @@ const LearnMoreSection: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0, x: 50 }}
                   animate={{
-                    opacity: index === currentIndex ? 1 : 0.8,
-                    x: index === currentIndex ? 0 : 50,
+                    opacity: index === safeCurrentIndex ? 1 : 0.8,
+                    x: index === safeCurrentIndex ? 0 : 50,
                   }}
                   transition={{ duration: 0.6, delay: 0.3 }}
-                  className="flex flex-col gap-4"
+                  className="flex max-w-[600px] flex-col gap-4 max-2xl:max-w-[420px] max-xl:max-w-[275px]"
                 >
                   <p className="heading-2-bold text-neutral-0">0{index + 1}</p>
                   <p className="heading-1-semibold text-neutral-0">
@@ -257,8 +272,8 @@ const LearnMoreSection: React.FC = () => {
                         key={item}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{
-                          opacity: index === currentIndex ? 1 : 0.8,
-                          y: index === currentIndex ? 0 : 20,
+                          opacity: index === safeCurrentIndex ? 1 : 0.8,
+                          y: index === safeCurrentIndex ? 0 : 20,
                         }}
                         transition={{
                           duration: 0.4,
@@ -280,20 +295,18 @@ const LearnMoreSection: React.FC = () => {
       {/* Scroll Hints */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: currentIndex === 0 ? 1 : 0 }}
+        animate={{ opacity: safeCurrentIndex === 0 ? 1 : 0 }}
         transition={{ duration: 0.6 }}
-        className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2"
+        className="absolute right-8 bottom-10 z-20"
       >
         <div className="flex flex-col items-center">
-          <p className="text-m-regular mb-2 text-center text-white">
-            {currentIndex === 0
-              ? 'Scroll up to go back or down to continue'
-              : 'Scroll to navigate'}
+          <p className="text-s-regular mb-2 text-center text-white">
+            Scroll up to go back or down to continue
           </p>
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="h-8 w-1 rounded-full bg-white"
+            className="h-6 w-1 rounded-full bg-white"
           />
         </div>
       </motion.div>
@@ -301,7 +314,7 @@ const LearnMoreSection: React.FC = () => {
       {/* Bottom boundary hint */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: currentIndex === stepLearn.length - 1 ? 1 : 0 }}
+        animate={{ opacity: safeCurrentIndex === stepLearn.length - 1 ? 1 : 0 }}
         transition={{ duration: 0.6 }}
         className="absolute right-8 bottom-10 z-20"
       >
@@ -320,4 +333,4 @@ const LearnMoreSection: React.FC = () => {
   )
 }
 
-export default LearnMoreSection
+export default LearnMoreSectionDesktop

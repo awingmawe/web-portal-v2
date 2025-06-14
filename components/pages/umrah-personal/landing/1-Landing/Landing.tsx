@@ -1,6 +1,9 @@
+'use client'
+
 import ChecklistIcon from '@/components/icons/checklist'
 import { Button } from '@/components/ui/button'
 import Frame from '@/public/images/frame-umrah-personal.png'
+import { animate } from 'framer-motion'
 import Image from 'next/image'
 import React from 'react'
 
@@ -12,9 +15,49 @@ const UmrohLandingSection: React.FC = () => {
     'Tentukan maskapai yang paling nyaman untuk Anda',
   ]
 
+  const onClickLearnMore = () => {
+    // Look for the first learn more section
+    const element = document.getElementById('section-learn-more-1')
+    console.log(element)
+
+    if (!element) {
+      console.warn('Target section not found')
+      return
+    }
+
+    const currentScroll = window.scrollY
+    const targetScroll = element.offsetTop
+    const distance = Math.abs(targetScroll - currentScroll)
+
+    // Skip animation if already close to target
+    if (distance < 50) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
+    const duration = Math.min(1.8 + distance / 5000, 3.0)
+
+    animate(currentScroll, targetScroll, {
+      duration,
+      ease: [0.25, 0.46, 0.45, 0.94],
+      onUpdate: (value) => {
+        window.scrollTo({
+          top: value,
+          behavior: 'auto',
+        })
+      },
+      onComplete: () => {
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'auto',
+        })
+      },
+    })
+  }
+
   return (
     <section
-      className={`relative snap-center overflow-hidden bg-white p-6 max-lg:p-0 lg:h-[100vh]`}
+      className={`relative snap-center overflow-hidden bg-white p-6 max-lg:mt-12 max-lg:p-0 lg:h-[100vh]`}
       id="umrah-landing"
     >
       <div className="relative grid h-full w-full grid-cols-2 overflow-hidden rounded-xl bg-gradient-to-b from-[#FFF6DD] to-[#FFF]">
@@ -47,6 +90,7 @@ const UmrohLandingSection: React.FC = () => {
               className="bg-transparent px-10 py-4 max-lg:w-full"
               type="button"
               variant="outline"
+              onClick={onClickLearnMore}
             >
               Pelajari Lebih Lanjut
             </Button>
