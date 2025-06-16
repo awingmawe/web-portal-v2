@@ -56,6 +56,10 @@ export interface CardData {
   releasedAt: string
   packageType: string
   variant?: any
+  medinaHotel?: any
+  meccaHotel?: any
+  departure: TravelRoute
+  arrival: TravelRoute
   tripDuration: number
 }
 
