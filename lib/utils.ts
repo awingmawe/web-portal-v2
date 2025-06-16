@@ -412,3 +412,20 @@ export function isMobileUserAgent(userAgent: string): boolean {
 }
 
 export const starOptions = [5, 4, 3, 2, 1]
+
+export const isNullOrEmpty = (value: any): boolean => {
+  if (value == null) {
+    // Checks for null or undefined
+    return true
+  }
+
+  if (typeof value === 'string' || Array.isArray(value)) {
+    return value.length === 0 // Checks for empty string or array
+  }
+
+  if (typeof value === 'object') {
+    return Object.keys(value).length === 0 // Checks for empty object
+  }
+
+  return false // For other types like numbers, booleans, etc.
+}

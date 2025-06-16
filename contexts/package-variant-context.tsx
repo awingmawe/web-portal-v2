@@ -1,6 +1,10 @@
 'use client'
 
-import { Package, PackageVariant } from '@/constant/types/PackageProps'
+import {
+  Package,
+  PackageVariant,
+  VariantPriceType,
+} from '@/constant/types/PackageProps'
 import { formatCurrencyIndonesia, formatDateToRangeString } from '@/lib/utils'
 import React, {
   createContext,
@@ -11,7 +15,7 @@ import React, {
 } from 'react'
 
 // Room type options
-export type RoomType = 'quad' | 'triple' | 'double' | null
+export type RoomType = { [key: string]: number } | null
 
 // Context state interface
 interface PackageVariantContextState {
@@ -35,6 +39,11 @@ interface PackageVariantContextState {
     discountType: string,
     amount: number | string
   ) => string | null
+  variantsPrice: VariantPriceType[]
+  getVariantsPrice: (
+    type: 'double' | 'triple' | 'quad'
+  ) => VariantPriceType | null
+  getTotalQty: () => number
 }
 
 // Initial state
@@ -56,6 +65,9 @@ const initialState: PackageVariantContextState = {
   formattedArrival: '',
   numberOfDays: 0,
   handleBadgePromo: () => null,
+  variantsPrice: [],
+  getVariantsPrice: () => null,
+  getTotalQty: () => 0,
 }
 
 // Create context
@@ -76,7 +88,6 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   children,
   initialVariants = [],
   initialSelectedVariant = null,
-  initialRoomType = null,
   initialLoading = true,
 }) => {
   const [currentPackage, setCurrentPackage] = useState<Package | null>()
@@ -87,39 +98,100 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     initialSelectedVariant?.id || null
   )
   const [variants, setVariants] = useState<PackageVariant[]>(initialVariants)
-  const [selectedRoomType, setSelectedRoomType] =
-    useState<RoomType>(initialRoomType)
+  const [selectedRoomType, setSelectedRoomType] = useState<{
+    [key: string]: number
+  } | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(initialLoading)
 
   // Helper function to get current price based on selected variant and room type
   const getPrice = useCallback((): number => {
     if (!selectedVariant) return 0
 
-    switch (selectedRoomType) {
-      case 'double':
-        return selectedVariant.priceDouble
-      case 'triple':
-        return selectedVariant.priceTriple
-      case 'quad':
-      default:
-        return selectedVariant.priceQuad
-    }
+    const { priceDouble, priceTriple, priceQuad } = selectedVariant
+    let total = 0
+    Object.entries(selectedRoomType || {}).forEach(([roomType, qty]) => {
+      switch (roomType) {
+        case 'double':
+          total += priceDouble * qty
+          break
+        case 'triple':
+          total += priceTriple * qty
+          break
+        case 'quad':
+          total += priceQuad * qty
+          break
+        default:
+          break
+      }
+    })
+    return total
   }, [selectedVariant, selectedRoomType])
 
   // Helper function to get original price based on selected variant and room type
   const getOriginalPrice = useCallback((): number => {
     if (!selectedVariant) return 0
+    const { originalPriceDouble, originalPriceQuad, originalPriceTriple } =
+      selectedVariant
+    let total = 0
+    Object.entries(selectedRoomType || {}).forEach(([roomType, qty]) => {
+      switch (roomType) {
+        case 'double':
+          total += originalPriceDouble * qty
+          break
+        case 'triple':
+          total += originalPriceTriple * qty
+          break
+        case 'quad':
+          total += originalPriceQuad * qty
+          break
+        default:
+          break
+      }
+    })
 
-    switch (selectedRoomType) {
-      case 'double':
-        return selectedVariant.originalPriceDouble
-      case 'triple':
-        return selectedVariant.originalPriceTriple
-      case 'quad':
-      default:
-        return selectedVariant.originalPriceQuad
-    }
+    return total
   }, [selectedVariant, selectedRoomType])
+
+  const getTotalQty = useCallback(() => {
+    return (
+      (selectedRoomType?.double || 0) +
+      (selectedRoomType?.triple || 0) +
+      (selectedRoomType?.quad || 0)
+    )
+  }, [selectedRoomType])
+
+  const variantsPrice: VariantPriceType[] = variants.flatMap((variant) => [
+    {
+      type: 'double',
+      price: variant.priceDouble,
+      originalPrice: variant.originalPriceDouble,
+      hasDiscount: variant.discountAmount
+        ? Number(variant.discountAmount) > 0
+        : false,
+    },
+    {
+      type: 'triple',
+      price: variant.priceTriple,
+      originalPrice: variant.originalPriceTriple,
+      hasDiscount: variant.discountAmount
+        ? Number(variant.discountAmount) > 0
+        : false,
+    },
+    {
+      type: 'quad',
+      price: variant.priceQuad,
+      originalPrice: variant.originalPriceQuad,
+      hasDiscount: variant.discountAmount
+        ? Number(variant.discountAmount) > 0
+        : false,
+    },
+  ])
+
+  const getVariantsPrice = (
+    type: 'double' | 'triple' | 'quad'
+  ): VariantPriceType | null => {
+    return variantsPrice.find((variant) => variant.type === type) || null
+  }
 
   // Helper function to check if the selected variant has a discount
   const hasDiscount = useCallback((): boolean => {
@@ -176,6 +248,9 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     formattedArrival,
     numberOfDays,
     handleBadgePromo,
+    variantsPrice,
+    getVariantsPrice,
+    getTotalQty,
   }
 
   return (

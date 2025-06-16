@@ -1,25 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { ArrowIcon, ArrowLongIcon } from '@/components/icons/arrow'
-import { BedIcon } from '@/components/icons/bed'
+import { ArrowLongIcon } from '@/components/icons/arrow'
 import { WarningIconInfo } from '@/components/icons/info'
 import WhatsappIcon from '@/components/icons/whatsapp'
-import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
-import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
-import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
-import DrawerCheckAvailibility from '@/components/pages/detail-package/mobile/DrawerCheckavailibility'
+import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
+import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
+import ModalSelectHotel from '@/components/pages/detail-package/2-PackageVariant/modal/ModalSelectHotel'
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import { toast } from '@/components/ui/sonner'
-import { ACCOUNT_URL, CALL_CENTER, URL } from '@/constant/env'
+import { ACCOUNT_URL, CALL_CENTER } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -27,25 +20,14 @@ import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
-import {
-  formatCurrency,
-  getHotelRating,
-  getTripDuration,
-  isEmpty,
-} from '@/lib/utils'
-import {
-  checkAvailibility,
-  getStatusLiked,
-  getStatusStock,
-  toggleLike,
-} from '@/services/umrah-service'
-import { PopoverClose } from '@radix-ui/react-popover'
+import { getHotelRating, getTripDuration } from '@/lib/utils'
+import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { differenceInDays } from 'date-fns'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronDownIcon, Heart } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Fragment, useEffect, useState } from 'react'
 
 interface PackageVariantComponentProps {
   variants: PackageVariant[]
@@ -75,23 +57,16 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     setIsLoading,
     setSelectedVariant,
     setSelectedVariantId,
-    setSelectedRoomType,
     getPrice,
-    getOriginalPrice,
-    hasDiscount,
     handleBadgePromo,
     formattedArrival,
     formattedDeparture,
     numberOfDays,
   } = usePackageVariant()
   const router = useRouter()
-  const path = usePathname()
   const { lg } = useTailwindBreakpoint()
-  const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
-  const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
-  const [isQuotaModalWating, setIsQuotaModalWaiting] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
-  const [statusStock, setStatusStock] = useState<boolean>(false)
+  const [isSelectHotelModalOpen, setIsSelectHotelModalOpen] = useState(false)
   // const [likeCount, setLikeCount] = useState<number>(0)
   // const totalLike = async () => {
   //   const totalLike = await getTotalLikedPackage(pkg?.id as number)
@@ -162,17 +137,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       setSelectedVariant(variants[0])
       setSelectedVariantId(variants[0].id)
 
-      // Default to quad room type if none selected
-      if (!selectedRoomType) {
-        setSelectedRoomType('quad')
-      }
-
       // Turn off loading after a short delay to allow for smoother transitions
       setTimeout(() => {
         setIsLoading(false)
       }, 500)
     }
-  }, [variants, selectedVariant, selectedVariantId, selectedRoomType])
+  }, [variants, selectedVariant, selectedVariantId])
 
   // Set into first variant when first load
   useEffect(() => {
@@ -198,56 +168,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   //     )
 
   // Check room type availability based on price
-  const availableRoomTypes = useMemo(() => {
-    if (!selectedVariant) return { double: false, triple: false, quad: false }
-
-    return {
-      double:
-        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
-      triple:
-        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
-      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
-    }
-  }, [selectedVariant])
-
-  // Get room type label with availability status
-  const getRoomTypeLabel = () => {
-    if (!selectedRoomType) return 'Pilih kamar hotel'
-
-    switch (selectedRoomType) {
-      case 'double':
-        return 'Double (1 Kamar berdua)'
-      case 'triple':
-        return 'Triple (1 Kamar bertiga)'
-      case 'quad':
-        return 'Quad (1 Kamar berempat)'
-      default:
-        return 'Pilih kamar hotel'
-    }
-  }
-
-  // Check if any room type is available
-  const hasAvailableRoomTypes = useMemo(() => {
-    return Object.values(availableRoomTypes).some((available) => available)
-  }, [availableRoomTypes])
-
-  // Set initial room type if current selection is not available
-  useEffect(() => {
-    if (selectedVariant && selectedRoomType) {
-      // If the current room type is not available, clear the selection
-      if (!availableRoomTypes[selectedRoomType]) {
-        setSelectedRoomType(null)
-      }
-    }
-  }, [
-    selectedVariant,
-    selectedRoomType,
-    availableRoomTypes,
-    setSelectedRoomType,
-  ])
 
   // When all version 2 muslim101 released, remove this
-  const handleLocalStorage = () => {
+  const handleCheckout = () => {
+    // !selectedRoomType || Object.keys(selectedRoomType).length === 0
+    setIsSelectHotelModalOpen(true)
+    return
     if (!token) {
       window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
       return
@@ -300,66 +226,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     })
   }
 
-  const handleQuotaCheck = async (quotaAmount: string) => {
-    // Handle the quota check logic here
-    try {
-      const payload = {
-        idVariant: selectedVariant?.id,
-        value: quotaAmount,
-      }
-      await checkAvailibility(payload)
-
-      setIsQuotaModalOpen(false)
-      setIsQuotaModalSuccess(true)
-      statusStockVariable()
-    } catch (error) {
-      console.log(error)
-    }
-    // You might want to call an API or update state here
-  }
-  const handleQuotaCheckDrawer = async (quotaAmount: string) => {
-    // Handle the quota check logic here
-    try {
-      const payload = {
-        idVariant: selectedVariant?.id,
-        value: quotaAmount,
-      }
-      await checkAvailibility(payload)
-      toast.success('Pengecekan Kuota Berhasil Terkirim')
-      statusStockVariable()
-    } catch (error) {
-      console.log(error)
-    }
-    // You might want to call an API or update state here
-  }
-  const isNullOrEmpty = (value: any): boolean => {
-    if (value == null) {
-      // Checks for null or undefined
-      return true
-    }
-
-    if (typeof value === 'string' || Array.isArray(value)) {
-      return value.length === 0 // Checks for empty string or array
-    }
-
-    if (typeof value === 'object') {
-      return Object.keys(value).length === 0 // Checks for empty object
-    }
-
-    return false // For other types like numbers, booleans, etc.
-  }
-  const statusStockVariable = async () => {
-    if (!isNullOrEmpty(selectedVariant) && token) {
-      const status = await getStatusStock(selectedVariant?.id, token)
-      setStatusStock(status.status)
-    }
-  }
-
-  useEffect(() => {
-    if (token) {
-      statusStockVariable()
-    }
-  }, [selectedVariant?.id])
   // Show s loader when loading
   if (isLoading) {
     return (
@@ -477,7 +343,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   {variant.discountAmount &&
                     Number(variant.discountAmount) > 0 && (
                       <BadgePromo
-                        className="!text-s-semibold -top-[20px]"
+                        className="!text-s-semibold -top-[25px]"
                         title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
                       />
                     )}
@@ -534,168 +400,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
 
       {/* Hotel selection with Popover */}
-      {variants.length > 0 && (
-        <div className="max-lg:hidden">
-          <div className="text-s-regular mb-1 text-neutral-800">
-            Kamar Hotel
-          </div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                className="flex w-full cursor-pointer items-center justify-between rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-left"
-                disabled={!hasAvailableRoomTypes}
-              >
-                <div className="flex items-center gap-1">
-                  <BedIcon />
-                  <span
-                    className={`text-m-regular ${!selectedRoomType ? 'text-neutral-300' : 'text-neutral-900'}`}
-                  >
-                    {getRoomTypeLabel()}
-                  </span>
-                </div>
-                <ChevronDownIcon size={18} />
-              </button>
-            </PopoverTrigger>
-            <PopoverContent
-              className="w-[300px] p-0"
-              align="start"
-              sideOffset={4}
-            >
-              <PopoverClose className="w-full">
-                <div
-                  className={`flex w-full items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
-                    availableRoomTypes.double
-                      ? 'cursor-pointer hover:bg-neutral-50'
-                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
-                  }`}
-                  onClick={() =>
-                    availableRoomTypes.double && setSelectedRoomType('double')
-                  }
-                >
-                  <span className="text-m-regular">
-                    Double (1 Kamar berdua)
-                  </span>
-                  {!availableRoomTypes.double && (
-                    <span className="text-s-regular text-error-500 ml-auto">
-                      Tidak tersedia
-                    </span>
-                  )}
-                  {selectedRoomType === 'double' &&
-                    availableRoomTypes.double && (
-                      <svg
-                        className="text-primary-500 ml-auto h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                </div>
-              </PopoverClose>
-              <PopoverClose className="w-full">
-                <div
-                  className={`flex items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
-                    availableRoomTypes.triple
-                      ? 'cursor-pointer hover:bg-neutral-50'
-                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
-                  }`}
-                  onClick={() =>
-                    availableRoomTypes.triple && setSelectedRoomType('triple')
-                  }
-                >
-                  <span className="text-m-regular">
-                    Triple (1 Kamar bertiga)
-                  </span>
-                  {!availableRoomTypes.triple && (
-                    <span className="text-s-regular text-error-500 ml-auto">
-                      Tidak tersedia
-                    </span>
-                  )}
-                  {selectedRoomType === 'triple' &&
-                    availableRoomTypes.triple && (
-                      <svg
-                        className="text-primary-500 ml-auto h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    )}
-                </div>
-              </PopoverClose>
-              <PopoverClose className="w-full">
-                <div
-                  className={`flex items-center gap-2 border-b border-neutral-100 px-3 py-2.5 ${
-                    availableRoomTypes.quad
-                      ? 'cursor-pointer hover:bg-neutral-50'
-                      : 'cursor-not-allowed bg-neutral-50 opacity-50'
-                  }`}
-                  onClick={() =>
-                    availableRoomTypes.quad && setSelectedRoomType('quad')
-                  }
-                >
-                  <span className="text-m-regular">
-                    Quad (1 Kamar berempat)
-                  </span>
-                  {!availableRoomTypes.quad && (
-                    <span className="text-s-regular text-error-500 ml-auto">
-                      Tidak tersedia
-                    </span>
-                  )}
-                  {selectedRoomType === 'quad' && availableRoomTypes.quad && (
-                    <svg
-                      className="text-primary-500 ml-auto h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
-                </div>
-              </PopoverClose>
-              {!hasAvailableRoomTypes && (
-                <div className="bg-error-100 text-error-700 text-s-regular p-3">
-                  Mohon maaf, semua tipe kamar untuk varian ini sudah habis
-                  terjual.
-                </div>
-              )}
-            </PopoverContent>
-          </Popover>
-        </div>
-      )}
-
-      {/* Total price */}
-      <div className="flex items-center justify-between max-lg:hidden">
-        <div className="text-m-regular text-neutral-500">Total Harga</div>
-        <div className="flex items-center">
-          {hasDiscount() && (
-            <span className="text-s-regular mr-2 text-neutral-500 line-through">
-              {formatCurrency(getOriginalPrice())}
-            </span>
-          )}
-          <span className="heading-4-bold text-neutral-900">
-            {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice())}
-          </span>
-        </div>
-      </div>
+      {variants.length > 0 && <SelectHotel />}
 
       {/* Action buttons */}
       {variants.length > 0 ? (
@@ -708,9 +413,8 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             variant="default"
             size="lg"
             id="btn-checkout-desktop"
-            disabled={!selectedVariant}
             // When all version 2 muslim101 released, remove this
-            onClick={handleLocalStorage}
+            onClick={handleCheckout}
           >
             Checkout Sekarang
           </Button>
@@ -732,35 +436,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
               Pesan Sekarang, Bayar Nanti
             </Button>
           </Link>
-          {token ? (
-            <DrawerCheckAvailibility
-              statusStock={statusStock}
-              onSubmit={handleQuotaCheckDrawer}
-            >
-              <Button
-                className="w-full rounded-full py-2 lg:hidden"
-                variant="outline"
-                size="lg"
-                id="btn-check-quota"
-              >
-                Cek Kuota
-                <ArrowIcon size={12} className="-rotate-45" />
-              </Button>
-            </DrawerCheckAvailibility>
-          ) : (
-            <Button
-              className="w-full rounded-full py-2 lg:hidden"
-              variant="outline"
-              size="lg"
-              id="btn-check-quota"
-              onClick={() => {
-                window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${URL}/${path}`
-              }}
-            >
-              Cek Kuota
-              <ArrowIcon size={12} className="-rotate-45" />
-            </Button>
-          )}
+          <CheckAvailibility
+            token={token || ''}
+            handlePushEvent={handlePushEvent}
+          />
         </div>
       ) : (
         <div>
@@ -772,37 +451,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           >
             Kursi tidak tersedia
           </Button>
-          {token ? (
-            <DrawerCheckAvailibility
-              statusStock={statusStock}
-              onSubmit={handleQuotaCheckDrawer}
-            >
-              <Button
-                className="w-full rounded-full py-2 lg:hidden"
-                variant="outline"
-                size="lg"
-                disabled
-                id="btn-check-quota"
-              >
-                Cek Kuota
-                <ArrowIcon size={12} className="-rotate-45" />
-              </Button>
-            </DrawerCheckAvailibility>
-          ) : (
-            <Button
-              className="w-full rounded-full py-2 lg:hidden"
-              variant="outline"
-              size="lg"
-              id="btn-check-quota"
-              disabled
-              onClick={() => {
-                window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${URL}/${path}`
-              }}
-            >
-              Cek Kuota
-              <ArrowIcon size={12} className="-rotate-45" />
-            </Button>
-          )}
+          <CheckAvailibility
+            token={token || ''}
+            handlePushEvent={handlePushEvent}
+          />
         </div>
       )}
 
@@ -853,43 +505,16 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             <div className="h-[15px] w-px bg-neutral-200" />
           </>
         )}
-        <div
-          className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors"
-          onClick={() => {
-            if (token) {
-              if (statusStock === false) {
-                setIsQuotaModalOpen(true)
-              } else {
-                setIsQuotaModalWaiting(true)
-              }
-            } else {
-              window.location.href =
-                `${ACCOUNT_URL}/auth/login?redirectUri=${`${URL}/${path}`} ` ||
-                `https://dev.account.moslem101.com/auth/login?redirectUri=${`${URL}/${path}`}`
-            }
-            handlePushEvent('check_availability', true)
-          }}
-        >
-          <span className="text-s-medium">Cek Kuota</span>
-          <ArrowIcon size={16} className="-rotate-45 text-neutral-900" />
-        </div>
+        <CheckAvailibility
+          type="footer"
+          token={token || ''}
+          handlePushEvent={handlePushEvent}
+        />
+        <ModalSelectHotel
+          open={isSelectHotelModalOpen}
+          onOpenChange={setIsSelectHotelModalOpen}
+        />
       </div>
-      <CheckQuotaModal
-        open={isQuotaModalOpen}
-        onOpenChange={setIsQuotaModalOpen}
-        onSubmit={handleQuotaCheck}
-      />
-      <ModalSuccess
-        open={isQuotaModalSuccess}
-        onOpenChange={setIsQuotaModalSuccess}
-        statusStockVariable={statusStockVariable}
-        // onSubmit={handleQuotaCheck}
-      />
-      <ModalWaitingHasil
-        open={isQuotaModalWating}
-        onOpenChange={setIsQuotaModalWaiting}
-        // onSubmit={handleQuotaCheck}
-      />
     </div>
   )
 }

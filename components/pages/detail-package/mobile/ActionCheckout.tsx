@@ -9,9 +9,8 @@ import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
-import { isEmpty } from '@/lib/utils'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 interface ActionCheckoutProps {
   variants: PackageVariant[]
@@ -29,8 +28,7 @@ export default function ActionCheckoutMobile({
   token,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
-  const { isLoading, selectedVariant, setVariants, selectedRoomType } =
-    usePackageVariant()
+  const { isLoading, selectedVariant, setVariants } = usePackageVariant()
 
   // Initialize variants in context when component mounts
   useEffect(() => {
@@ -40,6 +38,22 @@ export default function ActionCheckoutMobile({
   }, [variants, setVariants])
 
   const phoneNumberUsed = CALL_CENTER
+
+  const availableRoomTypes = useMemo(() => {
+    if (!selectedVariant) return { double: false, triple: false, quad: false }
+
+    return {
+      double:
+        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
+      triple:
+        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
+      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
+    }
+  }, [selectedVariant])
+
+  const hasAvailableRoomTypes = useMemo(() => {
+    return Object.values(availableRoomTypes).some((available) => available)
+  }, [availableRoomTypes])
 
   // const phoneNumberUsed = organization?.directContact
   //   ? formatPhoneNumber(organization?.phoneNumber)
@@ -105,7 +119,7 @@ export default function ActionCheckoutMobile({
               className="w-full rounded-full"
               size="md"
               id="btn-checkout-mobile"
-              disabled={isEmpty(selectedRoomType)}
+              disabled={!hasAvailableRoomTypes}
             >
               <p className="text-xs-semibold">Checkout Sekarang</p>
             </Button>

@@ -141,3 +141,10 @@ export type ToggleLike = {
   status: boolean
   message: string
 }
+
+export type VariantPriceType = {
+  type: 'double' | 'triple' | 'quad'
+  price: number
+  originalPrice: number
+  hasDiscount: boolean
+}
