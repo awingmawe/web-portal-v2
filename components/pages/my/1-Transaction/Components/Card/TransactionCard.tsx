@@ -310,7 +310,7 @@ export default function TransactionCard({
                   <div className="mt-4 flex items-center gap-2 max-lg:hidden">
                     <UsersIcon className="h-5 w-5 text-neutral-500" />
                     <p className="text-m-regular text-neutral-500">
-                      {jemaah} Jemaah
+                      {jemaah} Jemaahs
                     </p>
                     {!noLabelNotif &&
                       renderManifestComplete(isCompletedManifest, createdDate)}
