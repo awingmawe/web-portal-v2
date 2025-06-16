@@ -1667,6 +1667,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-json-to-csv@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@types/react-json-to-csv@npm:1.2.4"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/b658f06bc3ba5c9deca190b9c81af835b247ad2eaf5190cd84249606d05c82d2f8d6564fe5485efe83253bc7eafd338652d677cc902dd4a40b1331e2395a80a8
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:*":
+  version: 19.1.6
+  resolution: "@types/react@npm:19.1.6"
+  dependencies:
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/8b10b198e28997b3c57559750f8bcf5ae7b33c554b16b6f4fe2ece1d4de6a2fc8cb53e7effe08ec9cb939d2f479eb97c5e08aac2cf83b10a90164fe451cc8ea2
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:^19":
   version: 19.1.2
   resolution: "@types/react@npm:19.1.2"
@@ -5750,6 +5768,7 @@ __metadata:
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
+    "@types/react-json-to-csv": "npm:^1.2.4"
     add: "npm:^2.0.6"
     axios: "npm:^1.8.2"
     class-variance-authority: "npm:^0.7.1"

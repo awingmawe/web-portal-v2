@@ -143,6 +143,9 @@ export default async function DetailPackage({ params }: { params: any }) {
                 arrival={detailData?.arrival}
                 meccaHotel={detailData?.meccaHotel?.name}
                 madinahHotel={detailData?.medinaHotel?.name}
+                type={
+                  detailData?.isPlus ? 'Umroh Plus Liburan' : 'Umroh Regular'
+                }
               />
 
               <PacakgeDescription
