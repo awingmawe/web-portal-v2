@@ -137,6 +137,20 @@ export async function getTransactionListUmrah(
   }
 }
 
+export async function getCheckListUmrah(
+  query: GetListQuery
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/check-availability/data/list?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction umrah:', error)
+    throw error
+  }
+}
+
 export async function getTransactionDetail(
   bookingId: string
 ): Promise<GenericResponse<Transaction>> {
