@@ -145,8 +145,7 @@ const LearnMoreSectionMobile: React.FC = () => {
             sectionRefs.current[index] = el
           }}
           id={`section-learn-more-${index + 1}`}
-          className="relative h-screen overflow-hidden bg-white"
-          style={{ minHeight: '100vh' }}
+          className={`relative h-screen ${index === 0 && 'min-h-[850px]'} overflow-hidden bg-white`}
         >
           {/* Background Images with Overlays */}
           <div className="absolute inset-0 h-full w-full">

@@ -18,7 +18,6 @@ const UmrohLandingSection: React.FC = () => {
   const onClickLearnMore = () => {
     // Look for the first learn more section
     const element = document.getElementById('section-learn-more-1')
-    console.log(element)
 
     if (!element) {
       console.warn('Target section not found')
@@ -57,7 +56,7 @@ const UmrohLandingSection: React.FC = () => {
 
   return (
     <section
-      className={`relative snap-center overflow-hidden bg-white p-6 max-lg:mt-12 max-lg:p-0 lg:h-[100vh]`}
+      className={`relative overflow-hidden bg-white p-6 max-lg:mt-12 max-lg:p-0 lg:h-[100vh]`}
       id="umrah-landing"
     >
       <div className="relative grid h-full w-full grid-cols-2 overflow-hidden rounded-xl bg-gradient-to-b from-[#FFF6DD] to-[#FFF]">

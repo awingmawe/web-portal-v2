@@ -8,7 +8,7 @@ import {
   CarouselItem,
   type CarouselApi,
 } from '@/components/ui/carousel'
-import { motion } from 'framer-motion'
+import { animate, motion } from 'framer-motion'
 import Image from 'next/image'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -16,9 +16,15 @@ const LearnMoreSectionDesktop: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [snapPosition, setSnapPosition] = useState<'before' | 'in' | 'after'>(
+    'before'
+  )
+  const [isSnapAnimating, setIsSnapAnimating] = useState(false)
+
   const sectionRef = useRef<HTMLElement>(null)
   const lastScrollTime = useRef<number>(0)
-  const scrollThrottle = 150 // minimum time between scroll events in ms
+  const scrollThrottle = 150
+  const snapThrottle = useRef<number>(0)
 
   const stepLearn = STEP_LEARN
 
@@ -27,27 +33,110 @@ const LearnMoreSectionDesktop: React.FC = () => {
     (newIndex: number | ((prev: number) => number)) => {
       setCurrentIndex((prev) => {
         const index = typeof newIndex === 'function' ? newIndex(prev) : newIndex
-        // Clamp the index to valid bounds
         return Math.max(0, Math.min(stepLearn.length - 1, index))
       })
     },
     [stepLearn.length]
   )
 
-  // Function to check if section is in viewport
-  const isElementInViewport = (element: HTMLElement) => {
-    const rect = element.getBoundingClientRect()
-    const windowHeight =
-      window.innerHeight || document.documentElement.clientHeight
-    const windowWidth =
-      window.innerWidth || document.documentElement.clientWidth
+  // Function to get section position info
+  const getSectionPositions = useCallback(() => {
+    if (!sectionRef.current) return null
 
-    // Check if the element is fully visible in viewport
-    const verticalInView = rect.top >= 0 && rect.bottom <= windowHeight
-    const horizontalInView = rect.left >= 0 && rect.right <= windowWidth
+    const sectionRect = sectionRef.current.getBoundingClientRect()
+    const sectionTop = sectionRef.current.offsetTop
+    const sectionHeight = sectionRef.current.offsetHeight
+    const windowHeight = window.innerHeight
+    const currentScroll = window.scrollY
 
-    return verticalInView && horizontalInView
-  }
+    return {
+      sectionTop,
+      sectionHeight,
+      sectionBottom: sectionTop + sectionHeight,
+      windowHeight,
+      currentScroll,
+      sectionRect,
+    }
+  }, [])
+
+  // Function to determine current snap position
+  const getCurrentSnapPosition = useCallback(() => {
+    const positions = getSectionPositions()
+    if (!positions) return 'before'
+
+    const { sectionTop, sectionHeight, currentScroll, windowHeight } = positions
+    const scrollCenter = currentScroll + windowHeight / 2
+
+    // Snap zones
+    const beforeZone = sectionTop - windowHeight * 0.3
+    const afterZone = sectionTop + sectionHeight + windowHeight * 0.3
+
+    if (scrollCenter < beforeZone) return 'before'
+    if (scrollCenter > afterZone) return 'after'
+    return 'in'
+  }, [getSectionPositions])
+
+  // Function to snap to a position
+  const snapToPosition = useCallback(
+    (targetPosition: 'before' | 'in' | 'after') => {
+      const positions = getSectionPositions()
+      if (!positions || isSnapAnimating) return
+
+      const { sectionTop, sectionHeight, windowHeight } = positions
+      let targetScroll: number
+
+      switch (targetPosition) {
+        case 'before':
+          targetScroll = sectionTop - windowHeight
+          break
+        case 'in':
+          targetScroll = sectionTop
+          break
+        case 'after':
+          targetScroll = sectionTop + sectionHeight
+          break
+      }
+
+      setIsSnapAnimating(true)
+      setSnapPosition(targetPosition)
+
+      animate(window.scrollY, targetScroll, {
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        onUpdate: (value) => {
+          window.scrollTo({
+            top: value,
+            behavior: 'auto',
+          })
+        },
+        onComplete: () => {
+          setIsSnapAnimating(false)
+        },
+      })
+    },
+    [getSectionPositions, isSnapAnimating]
+  )
+
+  // Update snap position on scroll (but only when not animating)
+  useEffect(() => {
+    if (isSnapAnimating) return
+
+    const updateSnapPosition = () => {
+      const newPosition = getCurrentSnapPosition()
+      if (newPosition !== snapPosition) {
+        setSnapPosition(newPosition)
+      }
+    }
+
+    const handleScroll = () => {
+      if (!isSnapAnimating) {
+        updateSnapPosition()
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [snapPosition, getCurrentSnapPosition, isSnapAnimating])
 
   // Sync carousel with currentIndex when it changes from wheel scroll
   useEffect(() => {
@@ -63,7 +152,6 @@ const LearnMoreSectionDesktop: React.FC = () => {
     const handleCarouselSelect = () => {
       if (!isScrolling) {
         const selectedIndex = carouselApi.selectedScrollSnap()
-        // Ensure the selected index is within bounds
         const clampedIndex = Math.max(
           0,
           Math.min(stepLearn.length - 1, selectedIndex)
@@ -80,63 +168,97 @@ const LearnMoreSectionDesktop: React.FC = () => {
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      // Check if we're in the learn more section
-      if (!sectionRef.current || !isElementInViewport(sectionRef.current)) {
-        return // Allow normal scrolling if not in this section
-      }
-
-      // Throttle scroll events to prevent rapid firing
       const now = Date.now()
+
+      // Prevent rapid firing
       if (now - lastScrollTime.current < scrollThrottle) {
         e.preventDefault()
         return
       }
       lastScrollTime.current = now
 
+      // Skip if we're already animating a snap
+      if (isSnapAnimating) {
+        e.preventDefault()
+        return
+      }
+
       const isScrollingDown = e.deltaY > 0
       const isScrollingUp = e.deltaY < 0
+      const currentSnapPos = getCurrentSnapPosition()
 
-      // Get current index in a safe way
-      const safeCurrentIndex = Math.max(
-        0,
-        Math.min(stepLearn.length - 1, currentIndex)
-      )
+      // Handle snap navigation
+      if (now - snapThrottle.current > 800) {
+        // Prevent rapid snap changes
+        snapThrottle.current = now
 
-      // Handle boundary conditions for vertical scroll
-      if (safeCurrentIndex === 0 && isScrollingUp) {
-        // At first item and scrolling up - allow vertical scroll to previous section
-        return
+        if (currentSnapPos === 'before' && isScrollingDown) {
+          e.preventDefault()
+          snapToPosition('in')
+          return
+        }
+
+        if (currentSnapPos === 'in') {
+          // Handle carousel navigation within the section
+          const safeCurrentIndex = Math.max(
+            0,
+            Math.min(stepLearn.length - 1, currentIndex)
+          )
+
+          if (isScrollingUp && safeCurrentIndex === 0) {
+            // At first carousel item, snap to before section
+            e.preventDefault()
+            snapToPosition('before')
+            return
+          }
+
+          if (isScrollingDown && safeCurrentIndex === stepLearn.length - 1) {
+            // At last carousel item, snap to after section
+            e.preventDefault()
+            snapToPosition('after')
+            return
+          }
+
+          // Navigate within carousel
+          e.preventDefault()
+          if (isScrolling) return
+
+          setIsScrolling(true)
+
+          if (isScrollingDown && safeCurrentIndex < stepLearn.length - 1) {
+            setCurrentIndexSafely((prev) => prev + 1)
+          } else if (isScrollingUp && safeCurrentIndex > 0) {
+            setCurrentIndexSafely((prev) => prev - 1)
+          }
+
+          setTimeout(() => setIsScrolling(false), 800)
+          return
+        }
+
+        if (currentSnapPos === 'after' && isScrollingUp) {
+          e.preventDefault()
+          snapToPosition('in')
+          return
+        }
+      } else if (currentSnapPos === 'in') {
+        // Always prevent scrolling when in the section (unless it's carousel navigation)
+        e.preventDefault()
       }
-
-      if (safeCurrentIndex === stepLearn.length - 1 && isScrollingDown) {
-        // At last item and scrolling down - allow vertical scroll to next section
-        return
-      }
-
-      // Prevent default scroll for horizontal navigation within the section
-      e.preventDefault()
-
-      if (isScrolling) return
-
-      setIsScrolling(true)
-
-      if (isScrollingDown && safeCurrentIndex < stepLearn.length - 1) {
-        setCurrentIndexSafely((prev) => prev + 1)
-      } else if (isScrollingUp && safeCurrentIndex > 0) {
-        setCurrentIndexSafely((prev) => prev - 1)
-      }
-
-      // Use longer timeout to prevent rapid scrolling
-      setTimeout(() => setIsScrolling(false), 800)
     }
 
-    // Add event listener to the window
     window.addEventListener('wheel', handleWheel, { passive: false })
-
     return () => {
       window.removeEventListener('wheel', handleWheel)
     }
-  }, [currentIndex, isScrolling, stepLearn.length, setCurrentIndexSafely])
+  }, [
+    currentIndex,
+    isScrolling,
+    stepLearn.length,
+    setCurrentIndexSafely,
+    getCurrentSnapPosition,
+    snapToPosition,
+    isSnapAnimating,
+  ])
 
   // Safety check: ensure currentIndex is always within bounds
   useEffect(() => {
@@ -156,7 +278,7 @@ const LearnMoreSectionDesktop: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative mt-18 h-screen snap-center overflow-hidden bg-white max-lg:hidden"
+      className="relative h-screen overflow-hidden bg-white pt-20 max-lg:hidden"
       id="section-learn-more-1"
     >
       {/* Background Images with Fade Animation */}
@@ -292,10 +414,12 @@ const LearnMoreSectionDesktop: React.FC = () => {
         </Carousel>
       </div>
 
-      {/* Scroll Hints */}
+      {/* Dynamic Scroll Hints */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: safeCurrentIndex === 0 ? 1 : 0 }}
+        animate={{
+          opacity: snapPosition === 'in' && safeCurrentIndex === 0 ? 1 : 0,
+        }}
         transition={{ duration: 0.6 }}
         className="absolute right-8 bottom-10 z-20"
       >
@@ -314,7 +438,12 @@ const LearnMoreSectionDesktop: React.FC = () => {
       {/* Bottom boundary hint */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: safeCurrentIndex === stepLearn.length - 1 ? 1 : 0 }}
+        animate={{
+          opacity:
+            snapPosition === 'in' && safeCurrentIndex === stepLearn.length - 1
+              ? 1
+              : 0,
+        }}
         transition={{ duration: 0.6 }}
         className="absolute right-8 bottom-10 z-20"
       >
