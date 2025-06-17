@@ -153,7 +153,7 @@ const MobileCheckoutPage = ({}) => {
               <p className="mb-1 text-[10px] text-gray-500">Tipe Kamar</p>
               <p className="text-[12px] font-medium capitalize">
                 {' '}
-                {selectedVariant?.roomType}
+                {JSON.stringify(selectedVariant?.roomType)}
               </p>
             </div>
           </div>

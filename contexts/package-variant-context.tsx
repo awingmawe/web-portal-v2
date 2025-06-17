@@ -11,6 +11,8 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
+  useMemo,
   useState,
 } from 'react'
 
@@ -44,6 +46,7 @@ interface PackageVariantContextState {
     type: 'double' | 'triple' | 'quad'
   ) => VariantPriceType | null
   getTotalQty: () => number
+  isEmptyRoomType: boolean
 }
 
 // Initial state
@@ -68,6 +71,7 @@ const initialState: PackageVariantContextState = {
   variantsPrice: [],
   getVariantsPrice: () => null,
   getTotalQty: () => 0,
+  isEmptyRoomType: false,
 }
 
 // Create context
@@ -160,32 +164,48 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     )
   }, [selectedRoomType])
 
-  const variantsPrice: VariantPriceType[] = variants.flatMap((variant) => [
-    {
-      type: 'double',
-      price: variant.priceDouble,
-      originalPrice: variant.originalPriceDouble,
-      hasDiscount: variant.discountAmount
-        ? Number(variant.discountAmount) > 0
-        : false,
-    },
-    {
-      type: 'triple',
-      price: variant.priceTriple,
-      originalPrice: variant.originalPriceTriple,
-      hasDiscount: variant.discountAmount
-        ? Number(variant.discountAmount) > 0
-        : false,
-    },
-    {
-      type: 'quad',
-      price: variant.priceQuad,
-      originalPrice: variant.originalPriceQuad,
-      hasDiscount: variant.discountAmount
-        ? Number(variant.discountAmount) > 0
-        : false,
-    },
-  ])
+  const variantsPrice = useMemo(
+    () =>
+      selectedVariant
+        ? ['double', 'triple', 'quad'].map((type) => ({
+            type: type as 'double' | 'triple' | 'quad',
+            price:
+              type === 'double'
+                ? selectedVariant.priceDouble
+                : type === 'triple'
+                  ? selectedVariant.priceTriple
+                  : selectedVariant.priceQuad,
+            originalPrice:
+              type === 'double'
+                ? selectedVariant.originalPriceDouble
+                : type === 'triple'
+                  ? selectedVariant.originalPriceTriple
+                  : selectedVariant.originalPriceQuad,
+            hasDiscount: selectedVariant.discountAmount
+              ? Number(selectedVariant.discountAmount) > 0
+              : false,
+          }))
+        : [],
+    [selectedVariant]
+  )
+  const [prevSelectedVariant, setPrevSelectedVariant] =
+    useState<PackageVariant | null>(null)
+
+  useEffect(() => {
+    setPrevSelectedVariant(selectedVariant)
+  }, [selectedVariant])
+
+  useEffect(() => {
+    if (selectedVariant?.id !== prevSelectedVariant?.id) {
+      setSelectedRoomType({
+        double:
+          selectedVariant?.priceDouble == 0 ? 0 : selectedRoomType?.double || 0,
+        triple:
+          selectedVariant?.priceTriple == 0 ? 0 : selectedRoomType?.triple || 0,
+        quad: selectedVariant?.priceQuad == 0 ? 0 : selectedRoomType?.quad || 0,
+      })
+    }
+  }, [selectedVariant, prevSelectedVariant, variantsPrice, selectedRoomType])
 
   const getVariantsPrice = (
     type: 'double' | 'triple' | 'quad'
@@ -227,6 +247,16 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     return null
   }
 
+  const isEmptyRoomType = useMemo(() => {
+    return (
+      (selectedRoomType?.double === 0 ||
+        selectedRoomType?.double === undefined) &&
+      (selectedRoomType?.triple === 0 ||
+        selectedRoomType?.triple === undefined) &&
+      (selectedRoomType?.quad === 0 || selectedRoomType?.quad === undefined)
+    )
+  }, [selectedRoomType])
+
   // Context value
   const value = {
     currentPackage,
@@ -251,6 +281,7 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     variantsPrice,
     getVariantsPrice,
     getTotalQty,
+    isEmptyRoomType,
   }
 
   return (
