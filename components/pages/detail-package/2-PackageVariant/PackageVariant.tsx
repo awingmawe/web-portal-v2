@@ -172,8 +172,15 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   // When all version 2 muslim101 released, remove this
   const handleCheckout = () => {
     // !selectedRoomType || Object.keys(selectedRoomType).length === 0
-    setIsSelectHotelModalOpen(true)
-    return
+    console.log(selectedRoomType)
+    if (
+      selectedRoomType &&
+      Object.keys(selectedRoomType).length > 0 &&
+      Object.values(selectedRoomType).every((v) => v === 0)
+    ) {
+      setIsSelectHotelModalOpen(true)
+      return
+    }
     if (!token) {
       window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
       return
@@ -187,6 +194,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         price: getPrice(),
         roomType: selectedRoomType,
         variantId: selectedVariant?.id,
+        variant: selectedVariant,
         name: selectedVariant?.name,
       })
     )
@@ -513,6 +521,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         <ModalSelectHotel
           open={isSelectHotelModalOpen}
           onOpenChange={setIsSelectHotelModalOpen}
+          onSubmit={handleCheckout}
         />
       </div>
     </div>

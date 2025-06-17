@@ -3,20 +3,39 @@
 import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { PackageVariant } from '@/constant/types/PackageProps'
 import { RoomType, usePackageVariant } from '@/contexts/package-variant-context'
 import { formatCurrency, isEmpty } from '@/lib/utils'
 import { Minus, Plus } from 'lucide-react'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useEffect, useMemo } from 'react'
 
 export interface SelectHotelProps {
   isMobile?: boolean
+  defaultValue?: RoomType
+  defaultPackageVariant?: PackageVariant | null
+  defaultPackageVariantId?: number | null
+  disabled?: boolean
+  variant?: 'normal' | 'checkout'
+  onChange?: (roomType: RoomType, price: number) => void
 }
 
-export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
+export default function SelectHotel({
+  isMobile = false,
+  defaultValue,
+  defaultPackageVariant,
+  defaultPackageVariantId,
+  variant = 'normal',
+  disabled = false,
+  onChange,
+}: SelectHotelProps) {
   const {
     selectedVariant,
+    selectedVariantId,
     selectedRoomType,
+    isEmptyRoomType,
     setSelectedRoomType,
+    setSelectedVariant,
+    setSelectedVariantId,
     getPrice,
     getOriginalPrice,
     hasDiscount,
@@ -24,6 +43,30 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
     getVariantsPrice,
     getTotalQty,
   } = usePackageVariant()
+
+  useEffect(() => {
+    if (!selectedRoomType && defaultValue) {
+      setSelectedRoomType(defaultValue)
+    }
+
+    if (!selectedVariant && defaultPackageVariant) {
+      setSelectedVariant(defaultPackageVariant)
+    }
+
+    if (!selectedVariantId && defaultPackageVariantId) {
+      setSelectedVariantId(defaultPackageVariantId)
+    }
+  }, [
+    defaultValue,
+    selectedRoomType,
+    selectedVariant,
+    selectedVariantId,
+    defaultPackageVariant,
+    defaultPackageVariantId,
+    setSelectedRoomType,
+    setSelectedVariant,
+    setSelectedVariantId,
+  ])
 
   const availableRoomTypes = useMemo(() => {
     if (!selectedVariant) return { double: false, triple: false, quad: false }
@@ -49,8 +92,8 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
     } else {
       updatedRooms = { ...prev, [roomType]: newQuantity }
     }
-
     setSelectedRoomType(updatedRooms)
+    onChange?.(updatedRooms, getPrice())
   }
 
   const handleAddRoom = (roomType: string) => {
@@ -60,14 +103,17 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
     }
 
     setSelectedRoomType(updatedRooms)
+    onChange?.(updatedRooms, getPrice())
   }
 
   return (
     <div>
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
-        <div className="text-s-regular mb-2 text-neutral-800">
-          Jumlah Jemaah Per Kamar
-        </div>
+        {variant == 'normal' && (
+          <div className="text-s-regular mb-2 text-neutral-800">
+            Jumlah Jemaah Per Kamar
+          </div>
+        )}
         <div className="flex gap-2 max-xl:flex-col">
           <Card
             className={`w-full min-w-[52px] border-1 ${
@@ -79,11 +125,15 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
             } bg-white px-1 py-3 shadow-none`}
           >
             <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
-              <div className="flex flex-col space-y-3">
+              <div
+                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3'}`}
+              >
                 <BedIcon3 className="mb-2 text-neutral-700" />
-                <div className="space-y-1">
+                <div
+                  className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
+                >
                   <p className="text-s-regular text-neutral-900">
-                    Kamar Berdua
+                    Kamar {variant == 'checkout' && <br />} Berdua
                   </p>
                   {availableRoomTypes.double ? (
                     <div>
@@ -105,12 +155,15 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                   )}
                 </div>
               </div>
-              <div className="mt-5 w-[130px]">
+              <div
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+              >
                 {selectedRoomType?.double ? (
                   <div className="flex h-10 w-full items-center justify-center rounded-full border-1 border-neutral-300 bg-white">
                     <Button
                       onClick={() => handleQuantityChange('double', -1)}
                       variant="ghost"
+                      disabled={disabled}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Minus className="h-4 w-4" />
@@ -121,6 +174,7 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                     <Button
                       onClick={() => handleQuantityChange('double', 1)}
                       variant="ghost"
+                      disabled={disabled}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
@@ -133,6 +187,7 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                         onClick={() => handleAddRoom('double')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
                         variant="outline"
+                        disabled={disabled}
                       >
                         <span className="text-s-regular">Tambah</span>
                       </Button>
@@ -154,11 +209,15 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
             } bg-white px-1 py-3 shadow-none`}
           >
             <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
-              <div className="flex flex-col space-y-3">
+              <div
+                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3'}`}
+              >
                 <BedIcon2 className="mb-2 text-neutral-700" />
-                <div className="space-y-1">
+                <div
+                  className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
+                >
                   <p className="text-s-regular text-neutral-900">
-                    Kamar Bertiga
+                    Kamar {variant == 'checkout' && <br />} Bertiga
                   </p>
                   {availableRoomTypes.triple ? (
                     <div>
@@ -180,12 +239,15 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                   )}
                 </div>
               </div>
-              <div className="mt-5 w-[130px]">
+              <div
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+              >
                 {selectedRoomType?.triple ? (
                   <div className="flex h-10 w-full items-center justify-center rounded-full border-1 border-neutral-300 bg-white">
                     <Button
                       onClick={() => handleQuantityChange('triple', -1)}
                       variant="ghost"
+                      disabled={disabled}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Minus className="h-4 w-4" />
@@ -196,6 +258,7 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                     <Button
                       onClick={() => handleQuantityChange('triple', 1)}
                       variant="ghost"
+                      disabled={disabled}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
@@ -208,6 +271,7 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                         onClick={() => handleAddRoom('triple')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
                         variant="outline"
+                        disabled={disabled}
                       >
                         <span className="text-s-regular">Tambah</span>
                       </Button>
@@ -229,11 +293,15 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
             } bg-white px-1 py-3 shadow-none`}
           >
             <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
-              <div className="flex flex-col space-y-3">
+              <div
+                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3'}`}
+              >
                 <BedIcon2 className="mb-2 text-neutral-700" />
-                <div className="space-y-1">
+                <div
+                  className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
+                >
                   <p className="text-s-regular text-neutral-900">
-                    Kamar Berempat
+                    Kamar {variant == 'checkout' && <br />} Berempat
                   </p>
                   {availableRoomTypes.quad ? (
                     <div>
@@ -255,12 +323,15 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                   )}
                 </div>
               </div>
-              <div className="mt-5 w-[130px]">
+              <div
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+              >
                 {selectedRoomType?.quad ? (
                   <div className="flex h-10 w-full items-center justify-center rounded-full border-1 border-neutral-300 bg-white">
                     <Button
                       onClick={() => handleQuantityChange('quad', -1)}
                       variant="ghost"
+                      disabled={disabled}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Minus className="h-4 w-4" />
@@ -271,6 +342,7 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                     <Button
                       onClick={() => handleQuantityChange('quad', 1)}
                       variant="ghost"
+                      disabled={disabled}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
@@ -283,6 +355,7 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
                         onClick={() => handleAddRoom('quad')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
                         variant="outline"
+                        disabled={disabled}
                       >
                         <span className="text-s-regular">Tambah</span>
                       </Button>
@@ -293,31 +366,39 @@ export default function SelectHotel({ isMobile = false }: SelectHotelProps) {
             </CardContent>
           </Card>
         </div>
+        {variant == 'checkout' && isEmptyRoomType && (
+          <p className="text-m-regular text-error-500 my-3">
+            Harap pilih minimal 1 jemaah
+          </p>
+        )}
       </div>
       {/* Total price */}
-      <div className="mt-3 flex items-center justify-between max-lg:hidden">
-        <div className="text-m-regular text-neutral-500">Total Harga</div>
-        <div className="flex flex-col items-start">
-          <span className="text-l-semibold text-neutral-900">
-            {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice())}
-          </span>
-          {hasDiscount() && getOriginalPrice() > 0 && (
-            <div className="flex items-center">
-              <span className="text-s-regular mr-1 text-neutral-500 line-through">
-                {formatCurrency(getOriginalPrice())}
-              </span>
-              <span className="text-s-regular bg-error-500 rounded-md p-1 text-white">
-                {handleBadgePromo(
-                  String(selectedVariant?.discountType),
-                  String(
-                    Number(selectedVariant?.discountAmount || 0) * getTotalQty()
-                  )
-                )}
-              </span>
-            </div>
-          )}
+      {variant == 'normal' && (
+        <div className="mt-3 flex items-center justify-between max-lg:hidden">
+          <div className="text-m-regular text-neutral-500">Total Harga</div>
+          <div className="flex flex-col items-start">
+            <span className="text-l-semibold text-neutral-900">
+              {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice())}
+            </span>
+            {hasDiscount() && getOriginalPrice() > 0 && (
+              <div className="flex items-center">
+                <span className="text-s-regular mr-1 text-neutral-500 line-through">
+                  {formatCurrency(getOriginalPrice())}
+                </span>
+                <span className="text-s-regular bg-error-500 rounded-md p-1 text-white">
+                  {handleBadgePromo(
+                    String(selectedVariant?.discountType),
+                    String(
+                      Number(selectedVariant?.discountAmount || 0) *
+                        getTotalQty()
+                    )
+                  )}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
