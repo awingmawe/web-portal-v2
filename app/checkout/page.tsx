@@ -22,12 +22,12 @@ function CheckoutContent() {
   }
   return (
     <Fragment>
-      <div className="hidden sm:block">
+      <div className="hidden lg:block">
         <Topbar token={token} shadow scrolled />
         <Checkout />
         <Footer type="compact" />
       </div>
-      <div className="block sm:hidden">
+      <div className="block lg:hidden">
         <MobileCheckoutPage />
       </div>
 

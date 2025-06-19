@@ -172,7 +172,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   // When all version 2 muslim101 released, remove this
   const handleCheckout = () => {
     // !selectedRoomType || Object.keys(selectedRoomType).length === 0
-    console.log(selectedRoomType)
     if (
       selectedRoomType &&
       Object.keys(selectedRoomType).length > 0 &&

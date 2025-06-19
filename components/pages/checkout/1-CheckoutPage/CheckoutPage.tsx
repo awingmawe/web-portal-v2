@@ -167,6 +167,7 @@ const CheckoutPage = () => {
               <div className="px-4 pb-4">
                 <SelectHotel
                   variant="checkout"
+                  isMobile
                   defaultValue={selectedVariant?.roomType}
                   defaultPackageVariant={selectedVariant.variant}
                   defaultPackageVariantId={selectedVariant.variantId}
@@ -175,7 +176,6 @@ const CheckoutPage = () => {
                     setSelectedRoomType(roomType)
                     setShouldRunCheckPre(true)
                     setRawInputValue(String(paymentAmount * totalQty))
-                    console.log(paymentAmount, totalQty)
                   }}
                 />
               </div>
@@ -233,7 +233,6 @@ const CheckoutPage = () => {
                         onBlur={() => {
                           const value = parseInt(rawInputValue) || 0
                           const minAmount = selectedVariant.netAmount * totalQty
-                          console.log(minAmount)
                           const maxAmount =
                             preBooking?.totalPrice || totalPrice * totalQty
 
