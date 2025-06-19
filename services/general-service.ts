@@ -55,7 +55,7 @@ export async function getFacilityEnum(
   type?: string
 ): Promise<GenericResponse<Facility>> {
   try {
-    const response = await api.get(`/public/general/v1/reference`, {
+    const response = await api.get(`/public/general/v1/reference?size=1000`, {
       params: {
         type,
       },
