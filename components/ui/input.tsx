@@ -39,7 +39,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }
 
     const textSizeClasses = {
-      compact: 'text-m-regular',
+      compact: 'text-s-regular',
       normal: 'text-m-regular',
       expended: 'text-l-regular',
     }

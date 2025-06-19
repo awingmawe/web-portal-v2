@@ -3,7 +3,7 @@
 import { ArrowIcon } from '@/components/icons/arrow'
 import { useRouter } from 'next/navigation'
 
-const TopbarMobile = () => {
+const TopbarMobileLandingUmrahPersonal = () => {
   const router = useRouter()
   const handleBack = () => {
     router.back()
@@ -17,4 +17,4 @@ const TopbarMobile = () => {
   )
 }
 
-export default TopbarMobile
+export default TopbarMobileLandingUmrahPersonal

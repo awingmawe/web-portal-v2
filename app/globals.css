@@ -181,6 +181,7 @@
   .scrollbar-hide {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    border: 1px solid red;
   }
 
   ::-webkit-scrollbar {

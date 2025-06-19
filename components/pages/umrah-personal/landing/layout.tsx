@@ -1,21 +1,20 @@
 'use client'
 
+import TopbarMobileLandingUmrahPersonal from '@/components/pages/umrah-personal/landing/mobile/Topbar'
 import Topbar from '@/components/shared/Topbar'
 import { ReactNode } from 'react'
 
 interface ScrollContainerWrapperProps {
   children: ReactNode
-  topbarMobile: ReactNode
 }
 
 const ScrollContainerWrapper: React.FC<ScrollContainerWrapperProps> = ({
   children,
-  topbarMobile,
 }) => {
   return (
     <>
       <Topbar type="homepage" />
-      {topbarMobile}
+      <TopbarMobileLandingUmrahPersonal />
       <main>{children}</main>
     </>
   )
