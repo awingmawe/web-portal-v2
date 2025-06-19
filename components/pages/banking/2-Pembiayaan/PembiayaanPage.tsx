@@ -272,10 +272,10 @@ const PembiayaanPage: React.FC = () => {
     return formStep2Ref.current?.isValid() || false
   }
   return (
-    <div className="mt-10 flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-4 md:pb-0">
+    <div className=" flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-4 md:pb-0">
       {/* Mobile Header - Only visible on mobile */}
       {screenSize === 'mobile' && (
-        <div>
+        <div className="mt-10">
           <div className="relative mb-5 h-64 w-full">
             <Image
               src="/images/icon-pembiayaan-mobile.svg"
@@ -438,7 +438,9 @@ const PembiayaanPage: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="relative h-auto w-full max-w-4xl rounded-3xl bg-white shadow-lg">
             <div className="flex p-6">
-              <h2 className="text-xl font-semibold">Form Program Pendanaan</h2>
+              <h2 className="text-xl font-semibold">
+                Form Program Talangan Umroh
+              </h2>
             </div>
 
             <div className="flex justify-center pr-15 pl-15">
