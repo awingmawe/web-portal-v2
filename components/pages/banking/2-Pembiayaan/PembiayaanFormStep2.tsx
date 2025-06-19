@@ -88,7 +88,23 @@ export const PembiayaanFormStep2 = forwardRef<
       tenor: '24',
     },
   })
+  const isRoomDisabled = (roomType: string) => {
+    if (!selectedVariantDetails) return true
 
+    const price =
+      selectedVariantDetails[
+        `originalPrice${roomType.charAt(0).toUpperCase() + roomType.slice(1)}`
+      ]
+    return !price || Number(price) === 0
+  }
+
+  // Function to get available room options
+  const getAvailableRoomOptions = () => {
+    if (!selectedVariantDetails) return []
+
+    const roomTypes = ['double', 'triple', 'quad']
+    return roomTypes.filter((roomType) => !isRoomDisabled(roomType))
+  }
   // Use the infinite scroll hook
   const {
     packages: dataPaket,
@@ -437,7 +453,11 @@ export const PembiayaanFormStep2 = forwardRef<
               {/* Package List with Infinite Scroll */}
               <div
                 className={`grid flex-1 justify-items-center space-y-3 overflow-y-auto ${
-                  screenSize === 'mobile' ? '' : 'h-[750px]'
+                  screenSize === 'mobile'
+                    ? ''
+                    : screenSize === 'tab'
+                      ? 'h-[750px]'
+                      : 'h-[350px]'
                 }`}
                 onScroll={handleScroll}
                 style={
@@ -687,26 +707,58 @@ export const PembiayaanFormStep2 = forwardRef<
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className=" w-full rounded-2xl border-gray-300">
-                              <SelectItem value="double">
+                              <SelectItem
+                                value="double"
+                                disabled={isRoomDisabled('double')}
+                                className={
+                                  isRoomDisabled('double')
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : ''
+                                }
+                              >
                                 Double - Rp
                                 {Number(
-                                  selectedVariantDetails?.originalPriceDouble
+                                  selectedVariantDetails?.originalPriceDouble ||
+                                    0
                                 ).toLocaleString('id-ID')}
+                                {isRoomDisabled('double') &&
+                                  ' (Tidak Tersedia)'}
                               </SelectItem>
-                              <SelectItem value="triple">
+                              <SelectItem
+                                value="triple"
+                                disabled={isRoomDisabled('triple')}
+                                className={
+                                  isRoomDisabled('triple')
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : ''
+                                }
+                              >
                                 Triple - Rp
                                 {Number(
-                                  selectedVariantDetails?.originalPriceTriple
+                                  selectedVariantDetails?.originalPriceTriple ||
+                                    0
                                 ).toLocaleString('id-ID')}
+                                {isRoomDisabled('triple') &&
+                                  ' (Tidak Tersedia)'}
                               </SelectItem>
-                              <SelectItem value="quad">
+                              <SelectItem
+                                value="quad"
+                                disabled={isRoomDisabled('quad')}
+                                className={
+                                  isRoomDisabled('quad')
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : ''
+                                }
+                              >
                                 Quad - Rp
                                 {Number(
-                                  selectedVariantDetails?.originalPriceQuad
+                                  selectedVariantDetails?.originalPriceQuad || 0
                                 ).toLocaleString('id-ID')}
+                                {isRoomDisabled('quad') && ' (Tidak Tersedia)'}
                               </SelectItem>
                             </SelectContent>
                           </Select>
+
                           <FormMessage />
                         </FormItem>
                       )}
