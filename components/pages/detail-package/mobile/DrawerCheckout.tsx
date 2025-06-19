@@ -48,6 +48,7 @@ const CheckoutDrawerMobile = React.memo(
       selectedVariantId,
       selectedRoomType,
       setSelectedRoomType,
+      isEmptyRoomType,
       handleBadgePromo,
       numberOfDays,
       formattedArrival,
@@ -235,10 +236,7 @@ const CheckoutDrawerMobile = React.memo(
                       <Button
                         className="w-full py-3"
                         variant="default"
-                        disabled={
-                          !selectedRoomType ||
-                          Object.keys(selectedRoomType).length === 0
-                        }
+                        disabled={isEmptyRoomType}
                         onClick={handleLocalStorage}
                       >
                         Checkout Sekarang

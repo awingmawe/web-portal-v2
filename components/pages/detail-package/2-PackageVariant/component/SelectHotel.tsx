@@ -110,7 +110,7 @@ export default function SelectHotel({
     <div>
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
         {variant == 'normal' && (
-          <div className="text-s-regular mb-2 text-neutral-800">
+          <div className="text-s-regular mb-2 text-neutral-800 max-lg:text-sm max-lg:font-semibold">
             Jumlah Jemaah Per Kamar
           </div>
         )}
@@ -126,7 +126,7 @@ export default function SelectHotel({
           >
             <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3'}`}
+                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
               >
                 <BedIcon3 className="mb-2 text-neutral-700" />
                 <div
@@ -210,7 +210,7 @@ export default function SelectHotel({
           >
             <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3'}`}
+                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
               >
                 <BedIcon2 className="mb-2 text-neutral-700" />
                 <div
@@ -294,7 +294,7 @@ export default function SelectHotel({
           >
             <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3'}`}
+                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
               >
                 <BedIcon2 className="mb-2 text-neutral-700" />
                 <div
