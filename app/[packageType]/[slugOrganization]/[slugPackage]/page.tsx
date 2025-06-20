@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: any }) {
 
   return {
     ...metadata(
-      `Muslim 101 | Detail Paket ${detailData.title}`,
+      `Muslim101 | Detail Paket ${detailData.title}`,
       `Detail paket ${detailData.title}`,
       detailData.thumbnail
     ),

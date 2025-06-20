@@ -14,7 +14,7 @@ export async function generateMetadata({
   const resolvedSearchParams = await searchParams
   return {
     ...metadata(
-      'Muslim 101 | Pencarian Paket Muslim101',
+      'Muslim101 | Pencarian Paket Muslim101',
       `Daftar pencarian paket ${resolvedSearchParams.query || ''}`
     ),
   }

@@ -7,8 +7,8 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import './globals.css'
 export const metadata: Metadata = {
-  title: 'Muslim 101 | Semua Ada Semua Berkah',
-  description: 'Muslim 101 | Semua Ada Semua Berkah',
+  title: 'Muslim101 | Semua Ada Semua Berkah',
+  description: 'Muslim101 | Semua Ada Semua Berkah',
 }
 
 export default function RootLayout({

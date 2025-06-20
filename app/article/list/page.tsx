@@ -11,10 +11,7 @@ import {
 
 export async function generateMetadata() {
   return {
-    ...metadata(
-      'Muslim 101 | Pencarian Article',
-      `Muslim 101 Pencarian Article`
-    ),
+    ...metadata('Muslim101 | Pencarian Article', `Muslim101 Pencarian Article`),
   }
 }
 

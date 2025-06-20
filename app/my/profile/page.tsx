@@ -6,7 +6,7 @@ import { isMobileUserAgent } from '@/lib/utils'
 import { headers } from 'next/headers'
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim 101 | Profile', `Profile`),
+    ...metadata('Muslim101 | Profile', `Profile`),
   }
 }
 function LayoutProfile({

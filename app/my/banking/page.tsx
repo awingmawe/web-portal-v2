@@ -4,7 +4,7 @@ import LayoutMy from '@/components/pages/my/Layout'
 export async function generateMetadata() {
   return {
     ...metadata(
-      'Muslim 101 | Daftar List Talangan Umroh',
+      'Muslim101 | Daftar List Talangan Umroh',
       `Daftar List Talangan Umroh`
     ),
   }
