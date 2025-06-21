@@ -583,7 +583,7 @@ const MobileCheckoutPage = ({}) => {
                   Syarat & Ketentuan
                 </span>
               </DrawerSK>
-              , {/* </Link> */}
+              , dan{' '}
               <DrawerPengembalianDana
                 parsedContent={parsedContent}
                 dataRefundPolicy={dataRefundPolicy}
@@ -596,11 +596,7 @@ const MobileCheckoutPage = ({}) => {
                 >
                   Pengembalian Dana
                 </span>
-              </DrawerPengembalianDana>
-              , dan{' '}
-              <span className="cursor-pointer text-black">
-                Persetujuan Pengguna
-              </span>{' '}
+              </DrawerPengembalianDana>{' '}
               yang berlaku.
             </span>
           </div>
