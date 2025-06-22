@@ -33,14 +33,10 @@ import { UseFormReturn } from 'react-hook-form'
 
 interface Step1JourneyInfoProps {
   form: UseFormReturn<UmrahPersonalFormType>
-  onNext: () => void
 }
 
-const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({
-  form,
-  onNext,
-}) => {
-  const { currentStep } = useUmrahPersonal()
+const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
+  const { currentStep, handleNext } = useUmrahPersonal()
   const checkStep1Validity = () => {
     const values = form.getValues(STEP_1)
     return (
@@ -55,6 +51,12 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({
   }
 
   const isStep1Valid = checkStep1Validity()
+
+  const onNext = async () => {
+    if (handleNext) {
+      handleNext(form.trigger, form)
+    }
+  }
 
   return (
     <div
@@ -213,14 +215,16 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({
                       </label>
                       <label
                         className={cn(
-                          'flex flex-1 cursor-not-allowed items-center gap-2 rounded-full border-1 px-2 py-2.5 opacity-50',
+                          'flex flex-1 cursor-not-allowed items-center gap-2 rounded-full border-1 px-2 py-2.5 ',
                           !field.value
                             ? 'border-primary-500'
-                            : 'border-neutral-200 bg-white'
+                            : 'border-[#D2D2D150] bg-white'
                         )}
                       >
                         <RadioGroupItem value="false" disabled={true} />
-                        <p className="text-s-regular">Tidak Perlu Visa</p>
+                        <p className="text-s-regular text-[#30302F50]">
+                          Tidak Perlu Visa
+                        </p>
                       </label>
                     </RadioGroup>
                   </FormControl>

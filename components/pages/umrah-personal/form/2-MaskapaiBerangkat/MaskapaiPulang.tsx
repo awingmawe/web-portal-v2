@@ -1,7 +1,6 @@
 'use client'
 
 import AirportFilter from '@/components/pages/homepage/1-Banner/SearchFilter/AirportFilter'
-import { Button } from '@/components/ui/button'
 import {
   FormControl,
   FormField,
@@ -18,47 +17,27 @@ import {
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { STEP_2 } from '@/contexts/umrah-personal/constant'
 import { cn } from '@/lib/utils'
-import { ChevronRightCircle } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface ArrivalFlightFormProps {
   form: UseFormReturn<UmrahPersonalFormType>
-  onNext: () => void
-  onPrevious?: () => void
+  children?: React.ReactNode
 }
 
 const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
   form,
-  onNext,
-  onPrevious,
+  children,
 }) => {
-  const checkStep2Validity = () => {
-    const values = form.getValues(STEP_2)
-    return (
-      values.departure.from.airport.id > 0 &&
-      values.departure.to.airport.id > 0 &&
-      values.departure.airline.id > 0 &&
-      values.departure.flightClass &&
-      values.departure.flightRoute &&
-      values.arrival.from.airport.id > 0 &&
-      values.arrival.to.airport.id > 0 &&
-      values.arrival.airline.id > 0 &&
-      values.arrival.flightClass &&
-      values.arrival.flightRoute
-    )
-  }
-
-  const isStep2Valid = checkStep2Validity()
-
   return (
     <div className="lg:rounded-[24px] lg:border lg:border-neutral-100">
       {/* Form Content */}
       <div className="p-8 pb-6 max-lg:p-4">
         {/* Title and Description */}
         <div className="space-y-2 pb-6">
-          <p className="text-l-medium text-neutral-900">Maskapai Kepulangan</p>
+          <p className="text-l-medium text-neutral-900">Detail Kepulangan</p>
           <p className="text-m-regular text-neutral-500">
-            Pilih maskapai penerbangan kepulangan untuk perjalanan Anda.
+            Silakan pilih lokasi keberangkatan dan kedatangan serta maskapai
+            yang ingin digunakan.
           </p>
         </div>
 
@@ -401,26 +380,7 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div
-        className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${isStep2Valid && 'max-lg:sticky max-lg:bottom-0 max-lg:z-99 max-lg:bg-white'} max-lg:px-4`}
-      >
-        <p
-          className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden"
-          onClick={onPrevious}
-        >
-          Batalkan Pembuatan Paket
-        </p>
-        <Button
-          onClick={onNext}
-          disabled={!isStep2Valid}
-          className="flex items-center gap-1.5 px-8 py-4 max-lg:w-full"
-          id="lanjut-step-2"
-        >
-          Lanjut
-          <ChevronRightCircle size={14} />
-        </Button>
-      </div>
+      {children}
     </div>
   )
 }

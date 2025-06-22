@@ -71,23 +71,49 @@ export const UmrahPersonalProvider: React.FC<{
     form: UseFormReturn<UmrahPersonalFormType>
   ) => {
     let isValid = false
+    let stepToValidate = ''
 
     switch (currentStep) {
       case 1:
+        stepToValidate = STEP_1
         isValid = await trigger(STEP_1)
         break
       case 2:
+        stepToValidate = STEP_2
         isValid = await trigger(STEP_2)
         break
       case 3:
+        stepToValidate = STEP_3
         isValid = await trigger(STEP_3)
         break
       case 4:
+        stepToValidate = STEP_4
         isValid = await trigger(STEP_4)
         break
       case 5:
-        isValid = true // Review step doesn't need validation
+        isValid = true
         break
+    }
+
+    // Enhanced debugging
+    console.log('=== VALIDATION DEBUG ===')
+    console.log('Current Step:', currentStep)
+    console.log('Step to Validate:', stepToValidate)
+    console.log('Is Valid:', isValid)
+    console.log('Form Values:', form.getValues())
+    console.log('Form Errors:', form.formState.errors)
+    console.log('Touched Fields:', form.formState.touchedFields)
+    console.log('========================')
+
+    // Check specific field values for step 2
+    if (currentStep === 2) {
+      const flightInfo = form.getValues('flightInformation')
+      console.log('Flight Info Values:', flightInfo)
+      console.log(
+        'Departure Airport ID:',
+        flightInfo?.departure?.from?.airport?.id
+      )
+      console.log('Arrival Airport ID:', flightInfo?.departure?.to?.airport?.id)
     }
 
     if (Object.keys(form.formState.errors).length > 0) {
@@ -96,10 +122,12 @@ export const UmrahPersonalProvider: React.FC<{
         (form.formState.errors as Record<string, any>)[firstError] ?? {}
       )[0]
 
+      console.log('First Error:', firstError)
+      console.log('First Error Step:', firstErrorStep)
+
       const errorElement = document.getElementById(
         `${firstError}.${firstErrorStep}`
       )
-
       if (errorElement) {
         errorElement.scrollIntoView({
           behavior: 'smooth',
@@ -110,10 +138,7 @@ export const UmrahPersonalProvider: React.FC<{
 
     if (isValid) {
       const nextStep = currentStep + 1
-
       setCurrentStep(nextStep)
-
-      // Scroll to next step after state update
       setTimeout(() => {
         scrollToStep(nextStep)
       }, 100)

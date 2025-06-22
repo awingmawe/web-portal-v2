@@ -58,24 +58,24 @@ export const flightInformationSchema = z.object({
         id: z
           .number()
           .min(1, { message: 'Bandara keberangkatan harus dipilih!' }),
-        code: z.string().min(1),
-        name: z.string().min(1),
-        cityName: z.string().min(1),
+        code: z.string(),
+        name: z.string(),
+        cityName: z.string(),
       }),
     }),
     to: z.object({
       airport: z.object({
         id: z.number().min(1, { message: 'Bandara tujuan harus dipilih!' }),
-        code: z.string().min(1),
-        name: z.string().min(1),
-        cityName: z.string().min(1),
+        code: z.string(),
+        name: z.string(),
+        cityName: z.string(),
       }),
     }),
     airline: z.object({
       id: z.number().min(1, { message: 'Maskapai harus dipilih!' }),
-      code: z.string().min(1),
-      name: z.string().min(1),
-      countryName: z.string().min(1),
+      code: z.string(),
+      name: z.string(),
+      countryName: z.string(),
     }),
     flightClass: z.enum(
       [
@@ -97,24 +97,24 @@ export const flightInformationSchema = z.object({
         id: z
           .number()
           .min(1, { message: 'Bandara keberangkatan harus dipilih!' }),
-        code: z.string().min(1),
-        name: z.string().min(1),
-        cityName: z.string().min(1),
+        code: z.string(),
+        name: z.string(),
+        cityName: z.string(),
       }),
     }),
     to: z.object({
       airport: z.object({
         id: z.number().min(1, { message: 'Bandara tujuan harus dipilih!' }),
-        code: z.string().min(1),
-        name: z.string().min(1),
-        cityName: z.string().min(1),
+        code: z.string(),
+        name: z.string(),
+        cityName: z.string(),
       }),
     }),
     airline: z.object({
       id: z.number().min(1, { message: 'Maskapai harus dipilih!' }),
-      code: z.string().min(1),
-      name: z.string().min(1),
-      countryName: z.string().min(1),
+      code: z.string(),
+      name: z.string(),
+      countryName: z.string(),
     }),
     flightClass: z.enum(
       [

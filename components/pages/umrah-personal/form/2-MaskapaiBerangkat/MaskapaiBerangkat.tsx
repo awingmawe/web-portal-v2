@@ -1,6 +1,6 @@
 'use client'
 
-import AirportFilter from '@/components/pages/homepage/1-Banner/SearchFilter/AirportFilter'
+import { FieldAirport } from '@/components/pages/umrah-personal/form/2-MaskapaiBerangkat/FieldAirport'
 import {
   FormControl,
   FormField,
@@ -30,11 +30,10 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
       <div className="p-8 pb-6 max-lg:p-4">
         {/* Title and Description */}
         <div className="space-y-2 pb-6">
-          <p className="text-l-medium text-neutral-900">
-            Maskapai Keberangkatan
-          </p>
+          <p className="text-l-medium text-neutral-900">Detail Keberangkatan</p>
           <p className="text-m-regular text-neutral-500">
-            Pilih maskapai penerbangan keberangkatan untuk perjalanan Anda.
+            Silakan pilih lokasi keberangkatan dan kedatangan serta maskapai
+            yang ingin digunakan.
           </p>
         </div>
 
@@ -52,12 +51,10 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
                     <span className="text-red-500">*</span>
                   </p>
                   <FormControl>
-                    <div className="rounded-full border border-neutral-200 p-3">
-                      <AirportFilter
-                        whatPage="umrah-form"
-                        colorIcon="primary-500"
-                      />
-                    </div>
+                    <FieldAirport
+                      placeholder="Pilih bandara keberangkatan"
+                      field={field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -73,12 +70,10 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
                     Bandara Kedatangan <span className="text-red-500">*</span>
                   </p>
                   <FormControl>
-                    <div className="rounded-full border border-neutral-200 p-3">
-                      <AirportFilter
-                        whatPage="umrah-form"
-                        colorIcon="primary-500"
-                      />
-                    </div>
+                    <FieldAirport
+                      placeholder="Pilih bandara kedatangan"
+                      field={field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
