@@ -32,6 +32,10 @@ import {
   getPackageDetail,
   getPackageVariantList,
 } from '@/services/umrah-service'
+import {
+  checkReferralCodeToken,
+  WukalaSetting,
+} from '@/services/wukala-service'
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
@@ -48,10 +52,27 @@ export async function generateMetadata({ params }: { params: any }) {
   }
 }
 
-export default async function DetailPackage({ params }: { params: any }) {
+export default async function DetailPackage({
+  params,
+  searchParams,
+}: {
+  params: any
+  searchParams: any
+}) {
   const { slugPackage } = await params
+  const { referralCode } = await searchParams
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
+
+  let responseReferral: WukalaSetting | undefined
+  if (referralCode && token) {
+    try {
+      responseReferral = await checkReferralCodeToken(token, referralCode)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      responseReferral = undefined
+    }
+  }
 
   const detailData = await getPackageDetail(slugPackage)
   const idDetailPackage = detailData.id
@@ -213,6 +234,7 @@ export default async function DetailPackage({ params }: { params: any }) {
                 package={detailData}
                 packageVariantId={detailData?.packageVariant?.id}
                 token={token}
+                referralCodeParams={responseReferral?.referralCode}
               />
             </div>
           </div>

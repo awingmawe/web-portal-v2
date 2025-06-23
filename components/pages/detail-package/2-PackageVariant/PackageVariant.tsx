@@ -46,7 +46,6 @@ import { ChevronDownIcon, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Fragment, useEffect, useMemo, useState } from 'react'
-
 interface PackageVariantComponentProps {
   variants: PackageVariant[]
   titlePackage: string
@@ -54,6 +53,7 @@ interface PackageVariantComponentProps {
   package: Package
   token?: string
   packageVariantId: number
+  referralCodeParams?: string
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
@@ -63,6 +63,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   package: pkg,
   token,
   packageVariantId,
+  referralCodeParams,
 }) => {
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
@@ -92,6 +93,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const [isQuotaModalWating, setIsQuotaModalWaiting] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   const [statusStock, setStatusStock] = useState<boolean>(false)
+
   // const [likeCount, setLikeCount] = useState<number>(0)
   // const totalLike = async () => {
   //   const totalLike = await getTotalLikedPackage(pkg?.id as number)
@@ -107,12 +109,14 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   //   totalLike()
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [isLiked])
-
   useEffect(() => {
     if (token) {
       statusLike()
+      if (referralCodeParams) {
+        sessionStorage.setItem('referralCode', referralCodeParams)
+      }
     }
-  }, [isLiked, token])
+  }, [isLiked, token, referralCodeParams])
 
   const handleToggleLike = async () => {
     if (!token) {
