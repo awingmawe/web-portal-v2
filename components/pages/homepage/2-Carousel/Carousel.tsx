@@ -20,7 +20,7 @@ import { useState } from 'react'
 export function CarouselBanner({
   dataBanner,
   title = 'Program Muslim101',
-  description = 'Jangan lewatkan program menarik dari Muslim 101',
+  description = 'Jangan lewatkan program menarik dari Muslim101',
   className = '',
   showPerItem = 3,
 }: {

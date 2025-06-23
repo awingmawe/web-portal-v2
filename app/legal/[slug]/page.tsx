@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: any }) {
     .replace(/(^|\s)\S/g, (letter: string) => letter.toUpperCase())
     .replace(/-/g, ' ')
   return {
-    ...metadata(`Muslim 101 | ${slugText}`, `Muslim 101 | ${slugText}`),
+    ...metadata(`Muslim101 | ${slugText}`, `Muslim101 | ${slugText}`),
   }
 }
 

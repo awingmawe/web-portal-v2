@@ -9,6 +9,7 @@ import { z } from 'zod'
 
 import KotaAsalCombobox from '@/components/pages/banking/1-Tabungan/KotaAsal'
 import ProvinsiAsalCombobox from '@/components/pages/banking/1-Tabungan/ProvinsiAsal'
+import TriggerCalendar from '@/components/pages/manifest/3-FormManifest/TriggerCalendar'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -271,13 +272,14 @@ export const PembiayaanForm = forwardRef<
               <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
                 Tanggal Lahir <span className="text-red-500">*</span>
               </FormLabel>
-              <FormControl>
+              <TriggerCalendar field={field} />
+              {/* <FormControl>
                 <Input
                   type="date"
                   className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
                   {...field}
                 />
-              </FormControl>
+              </FormControl> */}
               <FormMessage />
             </FormItem>
           )}

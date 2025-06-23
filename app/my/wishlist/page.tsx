@@ -5,7 +5,7 @@ import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim 101 | Daftar List Wishlist', `Daftar List Wishlist`),
+    ...metadata('Muslim101 | Daftar List Wishlist', `Daftar List Wishlist`),
   }
 }
 

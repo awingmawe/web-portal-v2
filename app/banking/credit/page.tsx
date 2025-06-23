@@ -8,7 +8,7 @@ import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim 101 | Talangan Umroh', `Talangan Umroh`),
+    ...metadata('Muslim101 | Talangan Umroh', `Talangan Umroh`),
   }
 }
 export default async function SearchGeneral() {
