@@ -65,29 +65,60 @@ export const UmrahPersonalProvider: React.FC<{
     }
   }
 
+  // helper functions for find index of error in input field
+  const findFirstErrorPath = (
+    errors: any,
+    basePath: string = ''
+  ): string | null => {
+    if (!errors || typeof errors !== 'object') {
+      return null
+    }
+
+    for (const [key, value] of Object.entries(errors)) {
+      const currentPath = basePath ? `${basePath}.${key}` : key
+
+      // If this is an error object with a message, we found an error
+      if (value && typeof value === 'object' && 'message' in value) {
+        return currentPath
+      }
+
+      // If this is a nested object, recurse into it
+      if (value && typeof value === 'object' && !('message' in value)) {
+        const nestedPath = findFirstErrorPath(value, currentPath)
+        if (nestedPath) {
+          return nestedPath
+        }
+      }
+    }
+
+    return null
+  }
+
   // Validate current step and move to next
   const handleNext = async (
     trigger: UseFormTrigger<any>,
     form: UseFormReturn<UmrahPersonalFormType>
   ) => {
     let isValid = false
-    let stepToValidate = ''
+    let currentStepKey = ''
+
+    form.clearErrors()
 
     switch (currentStep) {
       case 1:
-        stepToValidate = STEP_1
+        currentStepKey = STEP_1
         isValid = await trigger(STEP_1)
         break
       case 2:
-        stepToValidate = STEP_2
+        currentStepKey = STEP_2
         isValid = await trigger(STEP_2)
         break
       case 3:
-        stepToValidate = STEP_3
+        currentStepKey = STEP_3
         isValid = await trigger(STEP_3)
         break
       case 4:
-        stepToValidate = STEP_4
+        currentStepKey = STEP_4
         isValid = await trigger(STEP_4)
         break
       case 5:
@@ -95,54 +126,33 @@ export const UmrahPersonalProvider: React.FC<{
         break
     }
 
-    // Enhanced debugging
-    console.log('=== VALIDATION DEBUG ===')
-    console.log('Current Step:', currentStep)
-    console.log('Step to Validate:', stepToValidate)
-    console.log('Is Valid:', isValid)
-    console.log('Form Values:', form.getValues())
-    console.log('Form Errors:', form.formState.errors)
-    console.log('Touched Fields:', form.formState.touchedFields)
-    console.log('========================')
+    if (!isValid) {
+      const stepErrors =
+        form.formState.errors[
+          currentStepKey as keyof typeof form.formState.errors
+        ]
 
-    // Check specific field values for step 2
-    if (currentStep === 2) {
-      const flightInfo = form.getValues('flightInformation')
-      console.log('Flight Info Values:', flightInfo)
-      console.log(
-        'Departure Airport ID:',
-        flightInfo?.departure?.from?.airport?.id
-      )
-      console.log('Arrival Airport ID:', flightInfo?.departure?.to?.airport?.id)
-    }
+      if (stepErrors) {
+        const firstErrorPath = findFirstErrorPath(stepErrors, currentStepKey)
 
-    if (Object.keys(form.formState.errors).length > 0) {
-      const firstError = Object.keys(form.formState.errors)[0]
-      const firstErrorStep = Object.keys(
-        (form.formState.errors as Record<string, any>)[firstError] ?? {}
-      )[0]
-
-      console.log('First Error:', firstError)
-      console.log('First Error Step:', firstErrorStep)
-
-      const errorElement = document.getElementById(
-        `${firstError}.${firstErrorStep}`
-      )
-      if (errorElement) {
-        errorElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        })
+        if (firstErrorPath) {
+          const errorElement = document.getElementById(firstErrorPath)
+          if (errorElement) {
+            errorElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+            })
+          }
+        }
       }
+      return
     }
 
-    if (isValid) {
-      const nextStep = currentStep + 1
-      setCurrentStep(nextStep)
-      setTimeout(() => {
-        scrollToStep(nextStep)
-      }, 100)
-    }
+    const nextStep = currentStep + 1
+    setCurrentStep(nextStep)
+    setTimeout(() => {
+      scrollToStep(nextStep)
+    }, 100)
   }
 
   const value = {

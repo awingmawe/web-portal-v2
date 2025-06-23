@@ -1,5 +1,6 @@
 'use client'
 
+import AirlineSelection from '@/components/pages/umrah-personal/form/2-MaskapaiBerangkat/FieldAirline'
 import { FieldAirport } from '@/components/pages/umrah-personal/form/2-MaskapaiBerangkat/FieldAirport'
 import {
   FormControl,
@@ -45,7 +46,10 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
               control={form.control}
               name={`${STEP_2}.departure.from.airport`}
               render={({ field }) => (
-                <FormItem className="gap-1">
+                <FormItem
+                  className="gap-1"
+                  id={`${STEP_2}.departure.from.airport.id`}
+                >
                   <p className="text-s-regular text-neutral-800">
                     Bandara Keberangkatan{' '}
                     <span className="text-red-500">*</span>
@@ -65,7 +69,10 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
               control={form.control}
               name={`${STEP_2}.departure.to.airport`}
               render={({ field }) => (
-                <FormItem className="gap-1">
+                <FormItem
+                  className="gap-1"
+                  id={`${STEP_2}.departure.to.airport.id`}
+                >
                   <p className="text-s-regular text-neutral-800">
                     Bandara Kedatangan <span className="text-red-500">*</span>
                   </p>
@@ -86,7 +93,10 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
             control={form.control}
             name={`${STEP_2}.departure.flightClass`}
             render={({ field }) => (
-              <FormItem className="gap-1">
+              <FormItem
+                className="gap-1"
+                id={`${STEP_2}.departure.flightClass`}
+              >
                 <p className="text-s-regular text-neutral-800">
                   Kelas Maskapai Keberangkatan{' '}
                   <span className="text-red-500">*</span>
@@ -148,7 +158,10 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
             control={form.control}
             name={`${STEP_2}.departure.flightRoute`}
             render={({ field }) => (
-              <FormItem className="gap-1">
+              <FormItem
+                className="gap-1"
+                id={`${STEP_2}.departure.flightRoute`}
+              >
                 <p className="text-s-regular text-neutral-800">
                   Rute Penerbangan <span className="text-red-500">*</span>
                 </p>
@@ -196,174 +209,26 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
             control={form.control}
             name={`${STEP_2}.departure.airline`}
             render={({ field }) => (
-              <FormItem className="gap-1">
+              <FormItem className="gap-1" id={`${STEP_2}.departure.airline.id`}>
                 <p className="text-s-regular text-neutral-800">
                   Maskapai Penerbangan <span className="text-red-500">*</span>
                 </p>
                 <FormControl>
-                  <div className="grid grid-cols-3 gap-3 max-lg:grid-cols-2 max-sm:grid-cols-1">
-                    {/* Air Asia */}
-                    <label
-                      className={cn(
-                        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-1 p-4',
-                        field.value?.name === 'Air Asia'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-neutral-200 bg-white hover:border-neutral-300'
-                      )}
-                      onClick={() =>
-                        field.onChange({
-                          id: 1,
-                          code: 'AK',
-                          name: 'Air Asia',
-                          countryName: 'Malaysia',
-                        })
-                      }
-                    >
-                      <div className="flex h-12 w-16 items-center justify-center">
-                        <img
-                          src="/api/placeholder/64/48"
-                          alt="Air Asia"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                      <p className="text-center text-xs">Air Asia</p>
-                    </label>
-
-                    {/* Saudia */}
-                    <label
-                      className={cn(
-                        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-1 p-4',
-                        field.value?.name === 'Saudia'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-neutral-200 bg-white hover:border-neutral-300'
-                      )}
-                      onClick={() =>
-                        field.onChange({
-                          id: 2,
-                          code: 'SV',
-                          name: 'Saudia',
-                          countryName: 'Saudi Arabia',
-                        })
-                      }
-                    >
-                      <div className="flex h-12 w-16 items-center justify-center">
-                        <img
-                          src="/api/placeholder/64/48"
-                          alt="Saudia"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                      <p className="text-center text-xs">Saudia</p>
-                    </label>
-
-                    {/* Garuda Indonesia */}
-                    <label
-                      className={cn(
-                        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-1 p-4',
-                        field.value?.name === 'Garuda Indonesia'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-neutral-200 bg-white hover:border-neutral-300'
-                      )}
-                      onClick={() =>
-                        field.onChange({
-                          id: 3,
-                          code: 'GA',
-                          name: 'Garuda Indonesia',
-                          countryName: 'Indonesia',
-                        })
-                      }
-                    >
-                      <div className="flex h-12 w-16 items-center justify-center">
-                        <img
-                          src="/api/placeholder/64/48"
-                          alt="Garuda Indonesia"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                      <p className="text-center text-xs">Garuda Indonesia</p>
-                    </label>
-
-                    {/* Singapore Airlines */}
-                    <label
-                      className={cn(
-                        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-1 p-4',
-                        field.value?.name === 'Singapore Airlines'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-neutral-200 bg-white hover:border-neutral-300'
-                      )}
-                      onClick={() =>
-                        field.onChange({
-                          id: 4,
-                          code: 'SQ',
-                          name: 'Singapore Airlines',
-                          countryName: 'Singapore',
-                        })
-                      }
-                    >
-                      <div className="flex h-12 w-16 items-center justify-center">
-                        <img
-                          src="/api/placeholder/64/48"
-                          alt="Singapore Airlines"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                      <p className="text-center text-xs">Singapore Airlines</p>
-                    </label>
-
-                    {/* Qatar */}
-                    <label
-                      className={cn(
-                        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-1 p-4',
-                        field.value?.name === 'Qatar Airways'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-neutral-200 bg-white hover:border-neutral-300'
-                      )}
-                      onClick={() =>
-                        field.onChange({
-                          id: 5,
-                          code: 'QR',
-                          name: 'Qatar Airways',
-                          countryName: 'Qatar',
-                        })
-                      }
-                    >
-                      <div className="flex h-12 w-16 items-center justify-center">
-                        <img
-                          src="/api/placeholder/64/48"
-                          alt="Qatar Airways"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                      <p className="text-center text-xs">Qatar</p>
-                    </label>
-
-                    {/* Emirates */}
-                    <label
-                      className={cn(
-                        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-1 p-4',
-                        field.value?.name === 'Emirates'
-                          ? 'border-primary-500 bg-primary-50'
-                          : 'border-neutral-200 bg-white hover:border-neutral-300'
-                      )}
-                      onClick={() =>
-                        field.onChange({
-                          id: 6,
-                          code: 'EK',
-                          name: 'Emirates',
-                          countryName: 'UAE',
-                        })
-                      }
-                    >
-                      <div className="flex h-12 w-16 items-center justify-center">
-                        <img
-                          src="/api/placeholder/64/48"
-                          alt="Emirates"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                      <p className="text-center text-xs">Emirates</p>
-                    </label>
-                  </div>
+                  <AirlineSelection
+                    field={{
+                      value: field.value
+                        ? {
+                            ...field.value,
+                            countryId:
+                              'countryId' in field.value
+                                ? (field.value as any).countryId
+                                : 0, // or provide a sensible default/fallback
+                          }
+                        : undefined,
+                      onChange: field.onChange,
+                    }}
+                    showSearch={false}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

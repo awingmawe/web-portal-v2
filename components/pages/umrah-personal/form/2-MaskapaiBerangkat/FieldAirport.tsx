@@ -99,62 +99,63 @@ export const FieldAirport = ({ field, placeholder }: FieldAirportProps) => {
             placeholder="Cari Bandara"
             endIcon={<SearchIcon size={18} className="text-neutral-900" />}
             onChange={handleAirportSearchChange}
-            value={airportSearchQuery}
           />
 
           {/* Results container */}
           <div className="scrollbar-hide max-h-60 overflow-y-auto">
             {/* Error message */}
-            {error && (
+            {error ? (
               <div className="grid h-40 place-content-center p-3 text-center text-red-500">
                 <p className="text-sm">
                   Gagal memuat data bandara. Silakan coba lagi.
                 </p>
               </div>
-            )}
-
-            {/* Airport list with infinite scroll */}
-            {airports.length > 0 ? (
-              <InfiniteScroll
-                isLoading={airportLoading}
-                hasMore={airportHasMore}
-                next={loadMoreAirports}
-                threshold={0.8}
-              >
-                {airports.map((airport: Airport) => (
-                  <div
-                    key={`airport-${airport.id}`}
-                    className={cn(
-                      'flex cursor-pointer items-center border-b border-neutral-100 px-3 py-2.5 transition-colors hover:bg-neutral-100',
-                      dissolve,
-                      field.value?.id === airport.id && 'bg-primary-100'
-                    )}
-                    onClick={() => handleAirportSelect(airport)}
-                  >
-                    <div className="flex flex-col">
-                      <p className="text-m-regular text-neutral-900">
-                        {airport.name} ({airport.code})
-                      </p>
-                      <p className="text-s-regular text-neutral-500">
-                        {capitalizeText(airport.cityName)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </InfiniteScroll>
             ) : (
-              <div className="grid h-40 place-content-center p-3 text-center text-neutral-500">
-                <p className="text-sm">
-                  {airportSearchQuery
-                    ? 'Tidak ada bandara yang ditemukan'
-                    : 'Masukkan nama bandara atau kota'}
-                </p>
-              </div>
-            )}
+              <>
+                {/* Airport list with infinite scroll */}
+                {airports.length > 0 ? (
+                  <InfiniteScroll
+                    isLoading={airportLoading}
+                    hasMore={airportHasMore}
+                    next={loadMoreAirports}
+                    threshold={0.8}
+                  >
+                    {airports.map((airport: Airport) => (
+                      <div
+                        key={`airport-${airport.id}`}
+                        className={cn(
+                          'flex cursor-pointer items-center border-b border-neutral-100 px-3 py-2.5 transition-colors hover:bg-neutral-100',
+                          dissolve,
+                          field.value?.id === airport.id && 'bg-primary-100'
+                        )}
+                        onClick={() => handleAirportSelect(airport)}
+                      >
+                        <div className="flex flex-col">
+                          <p className="text-m-regular text-neutral-900">
+                            {airport.name} ({airport.code})
+                          </p>
+                          <p className="text-s-regular text-neutral-500">
+                            {capitalizeText(airport.cityName)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </InfiniteScroll>
+                ) : (
+                  <div className="grid h-40 place-content-center p-3 text-center text-neutral-500">
+                    <p className="text-sm">
+                      {airportSearchQuery
+                        ? 'Tidak ada bandara yang ditemukan'
+                        : 'Masukkan nama bandara atau kota'}
+                    </p>
+                  </div>
+                )}
 
-            {/* Loading more indicator */}
-            {airportLoading && airportHasMore && (
-              <AirportSkeletonList count={3} />
+                {/* Loading more indicator */}
+                {airportLoading && airportHasMore && (
+                  <AirportSkeletonList count={3} />
+                )}
+              </>
             )}
           </div>
         </div>
