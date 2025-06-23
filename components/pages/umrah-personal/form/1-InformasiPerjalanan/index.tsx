@@ -453,6 +453,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
             Batalkan Pembuatan Paket
           </p>
           <Button
+            type="button"
             onClick={onNext}
             className="flex items-center gap-1.5 px-8 py-4 max-lg:w-full"
             id="lanjut-step-1"

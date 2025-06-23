@@ -134,6 +134,7 @@ export const UmrahPersonalProvider: React.FC<{
 
       if (stepErrors) {
         const firstErrorPath = findFirstErrorPath(stepErrors, currentStepKey)
+        console.log(stepErrors)
 
         if (firstErrorPath) {
           const errorElement = document.getElementById(firstErrorPath)

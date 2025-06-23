@@ -1,7 +1,7 @@
 'use client'
 
 import ChecklistIcon from '@/components/icons/checklist'
-import { STEP_LEARN } from '@/components/pages/umrah-personal/constant'
+import { STEP_LEARN } from '@/components/pages/umrah-personal/landing/constant'
 import {
   Carousel,
   CarouselContent,

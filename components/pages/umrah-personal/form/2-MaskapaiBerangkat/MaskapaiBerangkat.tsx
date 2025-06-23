@@ -48,7 +48,7 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
               render={({ field }) => (
                 <FormItem
                   className="gap-1"
-                  id={`${STEP_2}.departure.from.airport.id`}
+                  id={`${STEP_2}.departure.from.airport`}
                 >
                   <p className="text-s-regular text-neutral-800">
                     Bandara Keberangkatan{' '}
@@ -60,7 +60,9 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
                       field={field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="lg:min-h-4">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -71,7 +73,7 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
               render={({ field }) => (
                 <FormItem
                   className="gap-1"
-                  id={`${STEP_2}.departure.to.airport.id`}
+                  id={`${STEP_2}.departure.to.airport`}
                 >
                   <p className="text-s-regular text-neutral-800">
                     Bandara Kedatangan <span className="text-red-500">*</span>
@@ -82,7 +84,9 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
                       field={field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <div className="lg:min-h-4">
+                    <FormMessage />
+                  </div>
                 </FormItem>
               )}
             />
@@ -94,7 +98,7 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
             name={`${STEP_2}.departure.flightClass`}
             render={({ field }) => (
               <FormItem
-                className="gap-1"
+                className={`gap-1 ${form.formState.errors.flightInformation?.departure?.from?.airport ? 'mt-0' : '-mt-4 max-lg:mt-0'}`}
                 id={`${STEP_2}.departure.flightClass`}
               >
                 <p className="text-s-regular text-neutral-800">
@@ -209,28 +213,19 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
             control={form.control}
             name={`${STEP_2}.departure.airline`}
             render={({ field }) => (
-              <FormItem className="gap-1" id={`${STEP_2}.departure.airline.id`}>
+              <FormItem className="gap-1.5" id={`${STEP_2}.departure.airline`}>
                 <p className="text-s-regular text-neutral-800">
                   Maskapai Penerbangan <span className="text-red-500">*</span>
                 </p>
+                {form.formState.errors.flightInformation?.departure
+                  ?.airline && (
+                  <div className="bg-error-100 rounded-md px-3 py-1.5">
+                    <FormMessage />
+                  </div>
+                )}
                 <FormControl>
-                  <AirlineSelection
-                    field={{
-                      value: field.value
-                        ? {
-                            ...field.value,
-                            countryId:
-                              'countryId' in field.value
-                                ? (field.value as any).countryId
-                                : 0, // or provide a sensible default/fallback
-                          }
-                        : undefined,
-                      onChange: field.onChange,
-                    }}
-                    showSearch={false}
-                  />
+                  <AirlineSelection field={field} showSearch={false} />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />

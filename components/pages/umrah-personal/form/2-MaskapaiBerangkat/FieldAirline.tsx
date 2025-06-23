@@ -8,10 +8,17 @@ import Image from 'next/image'
 import React from 'react'
 
 // Define props for the component
+export interface AirportOption {
+  id: number
+  code: string
+  name: string
+  countryName: string
+}
+
 interface AirlineSelectionProps {
   field: {
-    value?: Airline
-    onChange: (airline: Airline) => void
+    value?: AirportOption
+    onChange: (airline: AirportOption) => void
   }
   showSearch?: boolean
   pageSize?: number
@@ -41,7 +48,12 @@ const AirlineSelection: React.FC<AirlineSelectionProps> = ({
       (airline) => airline.id.toString() === value
     )
     if (selectedAirline) {
-      field.onChange(selectedAirline)
+      field.onChange({
+        id: selectedAirline.id,
+        code: selectedAirline.code,
+        name: selectedAirline.name,
+        countryName: selectedAirline.countryName,
+      })
     }
   }
 

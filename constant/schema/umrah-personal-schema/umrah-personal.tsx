@@ -54,29 +54,39 @@ export const journeyInformationSchema = z
 export const flightInformationSchema = z.object({
   departure: z.object({
     from: z.object({
-      airport: z.object({
-        id: z
-          .number()
-          .min(1, { message: 'Bandara keberangkatan harus dipilih!' }),
-        code: z.string(),
-        name: z.string(),
-        cityName: z.string(),
-      }),
+      airport: z
+        .object({
+          id: z.number(),
+          code: z.string(),
+          name: z.string(),
+          cityName: z.string(),
+        })
+        .refine((airport) => airport.id > 0, {
+          message: 'Bandara keberangkatan harus dipilih!',
+        }),
     }),
     to: z.object({
-      airport: z.object({
-        id: z.number().min(1, { message: 'Bandara tujuan harus dipilih!' }),
+      airport: z
+        .object({
+          id: z.number(),
+          code: z.string(),
+          name: z.string(),
+          cityName: z.string(),
+        })
+        .refine((airport) => airport.id > 0, {
+          message: 'Bandara kedatangan harus dipilih!',
+        }),
+    }),
+    airline: z
+      .object({
+        id: z.number(),
         code: z.string(),
         name: z.string(),
-        cityName: z.string(),
+        countryName: z.string(),
+      })
+      .refine((airline) => airline.id > 0, {
+        message: 'Maskapai penerbangan harus dipilih',
       }),
-    }),
-    airline: z.object({
-      id: z.number().min(1, { message: 'Maskapai harus dipilih!' }),
-      code: z.string(),
-      name: z.string(),
-      countryName: z.string(),
-    }),
     flightClass: z.enum(
       [
         FLIGHT_CLASSES.ECONOMIC,
@@ -93,29 +103,39 @@ export const flightInformationSchema = z.object({
   }),
   arrival: z.object({
     from: z.object({
-      airport: z.object({
-        id: z
-          .number()
-          .min(1, { message: 'Bandara keberangkatan harus dipilih!' }),
-        code: z.string(),
-        name: z.string(),
-        cityName: z.string(),
-      }),
+      airport: z
+        .object({
+          id: z.number(),
+          code: z.string(),
+          name: z.string(),
+          cityName: z.string(),
+        })
+        .refine((airport) => airport.id > 0, {
+          message: 'Bandara keberangkatan harus dipilih!',
+        }),
     }),
     to: z.object({
-      airport: z.object({
-        id: z.number().min(1, { message: 'Bandara tujuan harus dipilih!' }),
+      airport: z
+        .object({
+          id: z.number(),
+          code: z.string(),
+          name: z.string(),
+          cityName: z.string(),
+        })
+        .refine((airport) => airport.id > 0, {
+          message: 'Bandara kedatangan harus dipilih!',
+        }),
+    }),
+    airline: z
+      .object({
+        id: z.number(),
         code: z.string(),
         name: z.string(),
-        cityName: z.string(),
+        countryName: z.string(),
+      })
+      .refine((airline) => airline.id > 0, {
+        message: 'Maskapai penerbangan harus dipilih',
       }),
-    }),
-    airline: z.object({
-      id: z.number().min(1, { message: 'Maskapai harus dipilih!' }),
-      code: z.string(),
-      name: z.string(),
-      countryName: z.string(),
-    }),
     flightClass: z.enum(
       [
         FLIGHT_CLASSES.ECONOMIC,

@@ -52,7 +52,7 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
               render={({ field }) => (
                 <FormItem
                   className="gap-1"
-                  id={`${STEP_2}.arrival.from.airport.id`}
+                  id={`${STEP_2}.arrival.from.airport`}
                 >
                   <p className="text-s-regular text-neutral-800">
                     Bandara Keberangkatan{' '}
@@ -75,10 +75,7 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
               control={form.control}
               name={`${STEP_2}.arrival.to.airport`}
               render={({ field }) => (
-                <FormItem
-                  className="gap-1"
-                  id={`${STEP_2}.arrival.to.airport.id`}
-                >
+                <FormItem className="gap-1" id={`${STEP_2}.arrival.to.airport`}>
                   <p className="text-s-regular text-neutral-800">
                     Bandara Kedatangan <span className="text-red-500">*</span>
                   </p>
@@ -102,7 +99,7 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
             name={`${STEP_2}.arrival.flightClass`}
             render={({ field }) => (
               <FormItem
-                className={`gap-1 ${form.formState.errors.flightInformation?.arrival?.from?.airport?.id ? 'mt-0' : '-mt-4 max-lg:mt-0'}`}
+                className={`gap-1 ${form.formState.errors.flightInformation?.arrival?.from?.airport ? 'mt-0' : '-mt-4 max-lg:mt-0'}`}
                 id={`${STEP_2}.arrival.flightClass`}
               >
                 <p className="text-s-regular text-neutral-800">
@@ -214,28 +211,18 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
             control={form.control}
             name={`${STEP_2}.arrival.airline`}
             render={({ field }) => (
-              <FormItem className="gap-1" id={`${STEP_2}.arrival.airline.id`}>
+              <FormItem className="gap-1" id={`${STEP_2}.arrival.airline`}>
                 <p className="text-s-regular text-neutral-800">
                   Maskapai Penerbangan <span className="text-red-500">*</span>
                 </p>
+                {form.formState.errors.flightInformation?.arrival?.airline && (
+                  <div className="bg-error-100 rounded-md px-3 py-1.5">
+                    <FormMessage />
+                  </div>
+                )}
                 <FormControl>
-                  <AirlineSelection
-                    field={{
-                      value: field.value
-                        ? {
-                            ...field.value,
-                            countryId:
-                              'countryId' in field.value
-                                ? (field.value as any).countryId
-                                : 0, // or provide a sensible default/fallback
-                          }
-                        : undefined,
-                      onChange: field.onChange,
-                    }}
-                    showSearch={false}
-                  />
+                  <AirlineSelection field={field} showSearch={false} />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />

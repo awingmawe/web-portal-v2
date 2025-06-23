@@ -2,7 +2,7 @@
 
 import ChecklistIcon from '@/components/icons/checklist'
 import { ChevronCircleDown } from '@/components/icons/chevron'
-import { STEP_LEARN } from '@/components/pages/umrah-personal/constant'
+import { STEP_LEARN } from '@/components/pages/umrah-personal/landing/constant'
 import { Button } from '@/components/ui/button'
 import { animate, motion } from 'framer-motion'
 import { X } from 'lucide-react'

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { STEP_2 } from '@/contexts/umrah-personal/constant'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
+import { isEmpty } from '@/lib/utils'
 import { ChevronRightCircle } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 
@@ -19,7 +20,7 @@ const Step2FlightInfo: React.FC<Step2FlightInfoProps> = ({ form }) => {
   const checkStep2Validity = () => {
     const values = form.getValues(STEP_2)
     return (
-      values.departure.from.airport.id > 0 &&
+      !isEmpty(values.departure.from.airport) &&
       values.departure.to.airport.id > 0 &&
       values.departure.airline.id > 0 &&
       values.departure.flightClass &&
@@ -57,6 +58,7 @@ const Step2FlightInfo: React.FC<Step2FlightInfoProps> = ({ form }) => {
             Batalkan Pembuatan Paket
           </p>
           <Button
+            type="button"
             onClick={onNext}
             className="flex items-center gap-1.5 px-8 py-4 max-lg:w-full"
             id="lanjut-step-2"
