@@ -14,9 +14,9 @@ export default function TitlePackageMobile({ title }: TitlePackageMobileProps) {
   const {
     isLoading,
     selectedVariant,
-    getPrice,
+    getPriceSelected,
     hasDiscount,
-    getOriginalPrice,
+    getOriginalPriceSelected,
   } = usePackageVariant()
 
   // Show skeleton loader when loading
@@ -48,11 +48,11 @@ export default function TitlePackageMobile({ title }: TitlePackageMobileProps) {
           <div className="mt-1 flex items-center gap-2">
             {hasDiscount() && (
               <span className="text-s-regular text-neutral-500 line-through">
-                {formatCurrency(getOriginalPrice())}
+                {formatCurrency(getOriginalPriceSelected())}
               </span>
             )}
             <span className="text-l-semibold text-primary-500">
-              {formatCurrency(getPrice())}
+              {formatCurrency(getPriceSelected())}
             </span>
           </div>
         </>

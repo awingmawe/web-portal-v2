@@ -47,7 +47,6 @@ const CheckoutDrawerMobile = React.memo(
       setSelectedVariantId,
       selectedVariantId,
       selectedRoomType,
-      setSelectedRoomType,
       isEmptyRoomType,
       handleBadgePromo,
       numberOfDays,
@@ -90,7 +89,7 @@ const CheckoutDrawerMobile = React.memo(
     }
 
     return (
-      <Drawer onClose={() => setSelectedRoomType(null)}>
+      <Drawer>
         <DrawerTrigger className="w-fit" asChild>
           {children}
         </DrawerTrigger>

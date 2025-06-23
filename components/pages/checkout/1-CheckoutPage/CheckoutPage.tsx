@@ -384,7 +384,7 @@ const CheckoutPage = () => {
                   >
                     Syarat & Ketentuan
                   </span>
-                  , {/* </Link> */}
+                  , dan{' '}
                   <span
                     className="cursor-pointer text-black underline"
                     onClick={() => {
@@ -392,10 +392,6 @@ const CheckoutPage = () => {
                     }}
                   >
                     Pengembalian Dana
-                  </span>
-                  , dan{' '}
-                  <span className="cursor-pointer text-black underline">
-                    Persetujuan Pengguna
                   </span>{' '}
                   yang berlaku.
                 </span>

@@ -46,6 +46,8 @@ interface PackageVariantContextState {
     type: 'double' | 'triple' | 'quad'
   ) => VariantPriceType | null
   getTotalQty: () => number
+  getPriceSelected: () => number
+  getOriginalPriceSelected: () => number
   isEmptyRoomType: boolean
 }
 
@@ -72,6 +74,8 @@ const initialState: PackageVariantContextState = {
   getVariantsPrice: () => null,
   getTotalQty: () => 0,
   isEmptyRoomType: false,
+  getOriginalPriceSelected: () => 0,
+  getPriceSelected: () => 0,
 }
 
 // Create context
@@ -131,6 +135,19 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     return total
   }, [selectedVariant, selectedRoomType])
 
+  const getPriceSelected = useCallback((): number => {
+    if (!selectedVariant) return 0
+    const { priceDouble, priceTriple, priceQuad } = selectedVariant
+    return Math.min(priceDouble, priceTriple, priceQuad)
+  }, [selectedVariant])
+
+  const getOriginalPriceSelected = useCallback((): number => {
+    if (!selectedVariant) return 0
+    const { originalPriceDouble, originalPriceTriple, originalPriceQuad } =
+      selectedVariant
+    return Math.min(originalPriceDouble, originalPriceTriple, originalPriceQuad)
+  }, [selectedVariant])
+
   // Helper function to get original price based on selected variant and room type
   const getOriginalPrice = useCallback((): number => {
     if (!selectedVariant) return 0
@@ -152,6 +169,8 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
           break
       }
     })
+
+    console.log(selectedRoomType)
 
     return total
   }, [selectedVariant, selectedRoomType])
@@ -282,6 +301,8 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     getVariantsPrice,
     getTotalQty,
     isEmptyRoomType,
+    getOriginalPriceSelected,
+    getPriceSelected,
   }
 
   return (
