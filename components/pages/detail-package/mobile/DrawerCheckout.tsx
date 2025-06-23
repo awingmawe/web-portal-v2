@@ -82,6 +82,7 @@ const CheckoutDrawerMobile = React.memo(
           price: getPrice(),
           roomType: selectedRoomType,
           variantId: selectedVariant?.id,
+          variant: selectedVariant,
           name: selectedVariant?.name,
         })
       )
