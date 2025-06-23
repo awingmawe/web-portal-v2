@@ -1,6 +1,5 @@
-import { ChevronIcon } from '@/components/icons/chevron'
+import TriggerCalendar from '@/components/pages/manifest/3-FormManifest/TriggerCalendar'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
@@ -11,16 +10,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { toast } from '@/components/ui/sonner'
 import { Textarea } from '@/components/ui/textarea'
 import { Gender, Profile } from '@/contexts/auth/shared/type'
-import { cn } from '@/lib/utils'
 import { updateProfile } from '@/services/identity-service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
@@ -173,41 +166,11 @@ export default function CardProfile(props: { profile: Profile | undefined }) {
                     <FormLabel className="text-s-regular block">
                       Tanggal Lahir <span className="text-red-500">*</span>
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl className="flex items-center">
-                          <span
-                            id="born"
-                            className={cn(
-                              'text-m-regular inline-flex w-full cursor-pointer items-center rounded-full border border-neutral-200 bg-transparent px-3 py-2.5 text-left text-sm font-normal transition-all duration-300 ease-out hover:bg-neutral-100 focus-visible:outline-none active:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50',
-                              !field.value && 'text-neutral-400'
-                            )}
-                          >
-                            {field.value ? (
-                              dayjs(field.value)
-                                .locale('id')
-                                .format('DD MMMM YYYY')
-                            ) : (
-                              <span className="flex w-full items-center justify-between text-neutral-400">
-                                Belum dipilih
-                                <ChevronIcon />
-                              </span>
-                            )}
-                          </span>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value as unknown as Date}
-                          onSelect={(date) =>
-                            field.onChange(date?.toISOString())
-                          }
-                          disabled={(date) => date > new Date()}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+
+                    <FormControl className="flex items-center">
+                      <TriggerCalendar field={field} />
+                    </FormControl>
+
                     <FormMessage />
                   </FormItem>
                 )}
