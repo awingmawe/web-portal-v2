@@ -327,7 +327,7 @@ const MobileCheckoutPage = ({}) => {
                 </div>
                 <p className="text-xs-regular ml-2 text-neutral-900">
                   Minimal pembayaran uang muka adalah{' '}
-                  {formatCurrency(selectedVariant.netAmount * totalQty)}/orang
+                  {formatCurrency(selectedVariant.netAmount)}/orang
                 </p>
               </div>
             </div>

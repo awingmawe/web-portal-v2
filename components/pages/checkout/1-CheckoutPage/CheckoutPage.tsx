@@ -204,8 +204,7 @@ const CheckoutPage = () => {
                   atur!
                 </p>
                 <span className="text-s-regular whitespace-nowrap text-neutral-500">
-                  *uang muka minimal{' '}
-                  {formatCurrency(selectedVariant.netAmount * totalQty)}
+                  *uang muka minimal {formatCurrency(selectedVariant.netAmount)}
                   /orang
                 </span>
               </div>
