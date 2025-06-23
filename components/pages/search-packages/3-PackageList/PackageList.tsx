@@ -157,7 +157,9 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       {isLoadingSkeleton || isLoading ? (
         <PackageGridSkeleton />
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={`${isCompact ? 'grid-cols-2' : 'grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'} `}
+        >
           {isMobile ? (
             // Mobile view with infinite scroll
             <>
