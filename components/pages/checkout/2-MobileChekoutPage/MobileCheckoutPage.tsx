@@ -13,13 +13,15 @@ import { useCheckout } from '@/contexts/checkout-context'
 import { formatCurrency } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import renderHTML from 'react-render-html'
 
 const MobileCheckoutPage = ({}) => {
   const [isOpenModal, setOpenModal] = useState(false)
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
+  const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
+  const searchParams = useSearchParams()
 
   const {
     token,
@@ -77,6 +79,20 @@ const MobileCheckoutPage = ({}) => {
     setShouldRunCheckPre,
   } = useCheckout()
   const router = useRouter()
+
+  useEffect(() => {
+    const referralCodeFromParams = searchParams.get('referralCode')
+    const currentReferralCodeFromStorage =
+      sessionStorage.getItem('referralCode')
+    if (referralCodeFromParams) {
+      sessionStorage.setItem('referralCode', referralCodeFromParams)
+      setReferralCode(referralCodeFromParams)
+      setIsHaveReferralCode(true)
+    } else if (currentReferralCodeFromStorage) {
+      setReferralCode(currentReferralCodeFromStorage)
+      setIsHaveReferralCode(true)
+    }
+  }, [searchParams, setReferralCode])
 
   useEffect(() => {
     setSelectedRoomType(selectedVariant?.roomType)
@@ -450,49 +466,54 @@ const MobileCheckoutPage = ({}) => {
             </p>
           </div> */}
 
-          <div className="mb-4 rounded-[16px] border border-gray-200 p-3">
-            <div className="flex items-center">
-              <Image
-                src="/images/discount-shape.svg"
-                width={24}
-                height={24}
-                alt="arrow"
-              />
-              <p className="text-m-semibold ml-2">Kode Referral</p>
-            </div>
-            <p className="text-s-regular mt-2 mb-3 text-neutral-900">
-              Apakah kamu punya kode referral? pakai kode untuk dapatkan diskon!
-            </p>
-            <div className="mt-2 flex gap-2">
-              <input
-                type="text"
-                placeholder="Masukkan kode referral"
-                className="flex-1 rounded-[100px] border border-gray-300 px-3 py-2 text-sm"
-                value={referralCode}
-                disabled={wukalaSetting}
-                onChange={(e) => setReferralCode(e.target.value)}
-              />
-              <button
-                className="cursor-pointer rounded-[100px] bg-yellow-400 px-4 py-2 text-sm font-medium"
-                onClick={
-                  wukalaSetting ? handleRemoveReferralCode : handleCheckReferral
-                }
-              >
-                {wukalaSetting ? 'Hapus' : 'Cek'}
-              </button>
-            </div>
-            {referralCode && isReferralCodeChecked && (
-              <p
-                className={`mt-5 font-medium ${
-                  isReferralValid ? 'text-[#00B97D]' : 'text-red-500'
-                }`}
-              >
-                {isReferralValid
-                  ? `Kode referral berhasil digunakan`
-                  : `Kode referral tidak valid!`}
+          {!isHaveRefferalCode && (
+            <div className="mb-4 rounded-[16px] border border-gray-200 p-3">
+              <div className="flex items-center">
+                <Image
+                  src="/images/discount-shape.svg"
+                  width={24}
+                  height={24}
+                  alt="arrow"
+                />
+                <p className="text-m-semibold ml-2">Kode Referral</p>
+              </div>
+              <p className="text-s-regular mt-2 mb-3 text-neutral-900">
+                Apakah kamu punya kode referral? pakai kode untuk dapatkan
+                diskon!
               </p>
-            )}
-          </div>
+              <div className="mt-2 flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Masukkan kode referral"
+                  className="flex-1 rounded-[100px] border border-gray-300 px-3 py-2 text-sm"
+                  value={referralCode}
+                  disabled={wukalaSetting}
+                  onChange={(e) => setReferralCode(e.target.value)}
+                />
+                <button
+                  className="cursor-pointer rounded-[100px] bg-yellow-400 px-4 py-2 text-sm font-medium"
+                  onClick={
+                    wukalaSetting
+                      ? handleRemoveReferralCode
+                      : handleCheckReferral
+                  }
+                >
+                  {wukalaSetting ? 'Hapus' : 'Cek'}
+                </button>
+              </div>
+              {referralCode && isReferralCodeChecked && (
+                <p
+                  className={`mt-5 font-medium ${
+                    isReferralValid ? 'text-[#00B97D]' : 'text-red-500'
+                  }`}
+                >
+                  {isReferralValid
+                    ? `Kode referral berhasil digunakan`
+                    : `Kode referral tidak valid!`}
+                </p>
+              )}
+            </div>
+          )}
           {/* 
           <div className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 p-3">
             <div className="flex items-center">
