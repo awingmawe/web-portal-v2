@@ -10,13 +10,15 @@ import { formatCurrency } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import renderHTML from 'react-render-html'
 
 const CheckoutPage = () => {
   const [isOpenModal, setOpenModal] = useState(false)
+  const searchParams = useSearchParams()
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
+  const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const {
     detailVariant,
     selectedVariant,
@@ -53,6 +55,20 @@ const CheckoutPage = () => {
     totalQty,
   } = useCheckout()
   const router = useRouter()
+
+  useEffect(() => {
+    const referralCodeFromParams = searchParams.get('referralCode')
+    const currentReferralCodeFromStorage =
+      sessionStorage.getItem('referralCode')
+    if (referralCodeFromParams) {
+      sessionStorage.setItem('referralCode', referralCodeFromParams)
+      setReferralCode(referralCodeFromParams)
+      setIsHaveReferralCode(true)
+    } else if (currentReferralCodeFromStorage) {
+      setReferralCode(currentReferralCodeFromStorage)
+      setIsHaveReferralCode(true)
+    }
+  }, [searchParams, setReferralCode])
 
   useEffect(() => {
     setSelectedRoomType(selectedVariant?.roomType)
@@ -304,61 +320,64 @@ const CheckoutPage = () => {
             </div>
 
             {/* Referral code */}
-            <div className="rounded-[20px] border border-neutral-100 p-6">
-              <div>
-                <div className="mb-4 flex items-center  gap-[12px]">
-                  <Image
-                    src="/images/discount-shape.svg"
-                    width={24}
-                    height={24}
-                    alt="arrow"
-                  />
 
-                  <span className="font-semibold text-gray-800">
-                    Kode Referral
-                  </span>
-                </div>
+            {!isHaveRefferalCode && (
+              <div className="rounded-[20px] bg-white p-6 shadow-sm">
+                <div>
+                  <div className="mb-4 flex items-center  gap-[12px]">
+                    <Image
+                      src="/images/discount-shape.svg"
+                      width={24}
+                      height={24}
+                      alt="arrow"
+                    />
 
-                <div className="mb-4 h-[1px] w-full bg-[#D2D2D1]" />
+                    <span className="font-bold text-gray-800">
+                      Kode Referral
+                    </span>
+                  </div>
 
-                <p className="text-m-regular mb-5">
-                  Apakah kamu punya kode referal? pakai kode tersebut untuk
-                  dapetin potongan harga!
-                </p>
+                  <div className="mb-4 h-[1px] w-full bg-[#D2D2D1]" />
 
-                <div className="mt-4 flex items-center gap-3">
-                  <input
-                    type="text"
-                    placeholder="Masukkan kode referal"
-                    className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 placeholder:text-gray-400"
-                    value={referralCode}
-                    onChange={(e) => setReferralCode(e.target.value)}
-                    disabled={wukalaSetting}
-                  />
-                  <button
-                    className="text-[#30302F]m cursor-pointer rounded-full bg-[#FFC100] px-6 py-2 text-sm transition hover:opacity-90"
-                    onClick={
-                      wukalaSetting
-                        ? handleRemoveReferralCode
-                        : handleCheckReferral
-                    }
-                  >
-                    {wukalaSetting ? 'Hapus' : 'Cek'}
-                  </button>
-                </div>
-                {referralCode && isReferralCodeChecked && (
-                  <p
-                    className={`mt-5 font-medium ${
-                      isReferralValid ? 'text-[#00B97D]' : 'text-red-500'
-                    }`}
-                  >
-                    {isReferralValid
-                      ? `Kode referral berhasil digunakan`
-                      : `Kode referral tidak valid!`}
+                  <p className="mb-5 font-medium text-gray-600">
+                    Apakah kamu punya kode referal? pakai kode tersebut untuk
+                    dapetin potongan harga!
                   </p>
-                )}
+
+                  <div className="mt-4 flex items-center gap-3">
+                    <input
+                      type="text"
+                      placeholder="Masukkan kode referal"
+                      className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 shadow-sm placeholder:text-gray-400"
+                      value={referralCode}
+                      onChange={(e) => setReferralCode(e.target.value)}
+                      disabled={wukalaSetting}
+                    />
+                    <button
+                      className="cursor-pointer rounded-full bg-[#FFC100] px-6 py-2 text-sm font-semibold text-[#30302F] shadow-sm transition hover:opacity-90"
+                      onClick={
+                        wukalaSetting
+                          ? handleRemoveReferralCode
+                          : handleCheckReferral
+                      }
+                    >
+                      {wukalaSetting ? 'Hapus' : 'Cek'}
+                    </button>
+                  </div>
+                  {referralCode && isReferralCodeChecked && (
+                    <p
+                      className={`mt-5 font-medium ${
+                        isReferralValid ? 'text-[#00B97D]' : 'text-red-500'
+                      }`}
+                    >
+                      {isReferralValid
+                        ? `Kode referral berhasil digunakan`
+                        : `Kode referral tidak valid!`}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Terms and conditions */}
             <div className="">

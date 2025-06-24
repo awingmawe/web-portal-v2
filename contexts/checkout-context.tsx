@@ -252,6 +252,8 @@ export const CheckoutProvider = ({
           // Additional logic on close
         },
       })
+
+      sessionStorage.removeItem('referralCode')
     } catch (error) {
       console.error(error)
     } finally {
