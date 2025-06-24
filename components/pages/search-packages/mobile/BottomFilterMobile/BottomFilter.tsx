@@ -61,11 +61,13 @@ export default function BottomNavigation({
   dataFacility,
   dataTagPackages,
   dataSection,
+  forceMobile = false,
 }: {
   dataMinMax: any
   dataFacility: any
   dataTagPackages: any
   dataSection: any
+  forceMobile?: boolean
 }) {
   const { filters, resetFilter, setFilters } = useFilterProduct()
   const searchParams = useSearchParams()
@@ -296,7 +298,9 @@ export default function BottomNavigation({
   }
 
   return (
-    <div className="fixed right-0 bottom-0 left-0 z-50 flex border-t border-gray-200 bg-white shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] lg:hidden">
+    <div
+      className={`fixed right-0 bottom-0 left-0 z-50 flex border-t border-gray-200 bg-white shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] ${forceMobile ? 'mx-auto w-full max-w-xl' : 'lg:hidden'}`}
+    >
       {/* Scrollable container for regular nav items */}
       <div className="scrollbar-hide flex flex-1 overflow-x-auto">
         {navItems.map((item) => renderNavItem(item))}

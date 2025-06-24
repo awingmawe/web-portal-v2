@@ -56,6 +56,10 @@ export interface CardData {
   releasedAt: string
   packageType: string
   variant?: any
+  medinaHotel?: any
+  meccaHotel?: any
+  departure: TravelRoute
+  arrival: TravelRoute
   tripDuration: number
 }
 
@@ -140,4 +144,11 @@ export type TotalLike = {
 export type ToggleLike = {
   status: boolean
   message: string
+}
+
+export type VariantPriceType = {
+  type: 'double' | 'triple' | 'quad'
+  price: number
+  originalPrice: number
+  hasDiscount: boolean
 }

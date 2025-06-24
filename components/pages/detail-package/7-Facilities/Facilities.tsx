@@ -24,13 +24,13 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // Memoized component for a single facility item
 const FacilityItem = React.memo(({ facility }: { facility: Facility }) => (
-  <div className="flex gap-1">
+  <div className="flex items-center gap-2">
     <Image
       src={facility.image}
       alt={facility.code}
       width={20}
       height={20}
-      className="aspect-square"
+      className="aspect-square object-contain"
     />
     <p className="text-m-regular text-neutral-900">{facility.name}</p>
   </div>
@@ -48,7 +48,7 @@ const FacilityRow = React.memo(
     isLastRow: boolean
   }) => (
     <div className="flex flex-col">
-      <div className="grid grid-cols-3 gap-x-3 pb-5 max-lg:grid-cols-2 max-sm:grid-cols-1">
+      <div className="grid grid-cols-1 gap-x-3 gap-y-3 pb-5 sm:grid-cols-2 md:grid-cols-3">
         {facilities.map((facility) => (
           <FacilityItem
             key={`facility-dialog-${facility.code}`}
