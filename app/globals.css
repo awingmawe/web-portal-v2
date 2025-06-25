@@ -384,3 +384,16 @@
 .content-description hr:first-child {
   display: none;
 }
+
+.qchat-form__footer q-text-center {
+  display: none;
+}
+
+.qontak-widget-iframe {
+  bottom: 0px !important;
+}
+@media (max-width: 1023px) {
+  .qontak-widget-iframe {
+    bottom: 50px !important;
+  }
+}
