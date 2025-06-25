@@ -153,81 +153,25 @@ export const flightInformationSchema = z.object({
 })
 
 // Step 3: Hotel Selection Schema (conditional based on activity)
-export const createHotelSelectionSchema = (activity?: string) => {
-  const baseSchema = z.object({
-    meccaHotel: z.object({
-      rating: z
-        .number()
-        .min(1, { message: 'Rating hotel Mekkah harus dipilih!' })
-        .max(5, { message: 'Rating hotel maksimal 5 bintang!' }),
-      selectedHotel: z
-        .object({
-          id: z.number(),
-          name: z.string(),
-          rating: z.number(),
-          address: z.string(),
-          latitude: z.string(),
-          longitude: z.string(),
-        })
-        .optional(),
-    }),
-  })
+export const hotelMeccaSchema = z.object({
+  hotelMecca: z.number().optional(),
+})
 
-  // Add medinaHotel only if activity includes Medina
-  if (activity === ACTIVITY_TYPES.MECCA_MEDINA) {
-    return baseSchema.extend({
-      medinaHotel: z.object({
-        rating: z
-          .number()
-          .min(1, { message: 'Rating hotel Madinah harus dipilih!' })
-          .max(5, { message: 'Rating hotel maksimal 5 bintang!' }),
-        selectedHotel: z
-          .object({
-            id: z.number(),
-            name: z.string(),
-            rating: z.number(),
-            address: z.string(),
-            latitude: z.string(),
-            longitude: z.string(),
-          })
-          .optional(),
-      }),
-    })
-  }
-
-  return baseSchema.extend({
-    medinaHotel: z
-      .object({
-        rating: z.number().optional(),
-        selectedHotel: z.any().optional(),
-      })
-      .optional(),
-  })
-}
-
-// Default hotel selection schema (includes both)
-export const hotelSelectionSchema = createHotelSelectionSchema(
-  ACTIVITY_TYPES.MECCA_MEDINA
-)
+export const hotelMedinaSchema = z.object({
+  hotelMedina: z.number().optional(),
+})
 
 // Step 4: Transportation Schema (Optional)
 export const transportationSchema = z.object({
-  vehicle: z
-    .object({
-      name: z.string().min(1, { message: 'Nama kendaraan harus diisi!' }),
-      code: z.string().min(1, { message: 'Kode kendaraan harus diisi!' }),
-      capacity: z
-        .number()
-        .min(1, { message: 'Kapasitas kendaraan harus lebih dari 0!' }),
-    })
-    .optional(),
+  transportation: z.number().optional(),
 })
 
 // Combined schema for the entire form
 export const umrahPersonalFormSchema = z.object({
   journeyInformation: journeyInformationSchema,
   flightInformation: flightInformationSchema,
-  hotelSelection: hotelSelectionSchema,
+  hotelMecca: hotelMeccaSchema,
+  hotelMedina: hotelMedinaSchema,
   transportation: transportationSchema,
 })
 
@@ -297,31 +241,30 @@ export const defaultFlightInformation = {
   },
 }
 
-export const defaultHotelSelection = {
-  meccaHotel: {
-    rating: 0,
-    selectedHotel: undefined,
-  },
-  medinaHotel: {
-    rating: 0,
-    selectedHotel: undefined,
-  },
+export const defaultHotelMecca = {
+  hotelMecca: 0,
+}
+
+export const defaultHotelMedina = {
+  hotelMedina: 0,
 }
 
 export const defaultTransportation = {
-  vehicle: undefined,
+  transportation: 0,
 }
 
 export const defaultUmrahPersonalForm = {
   journeyInformation: defaultJourneyInformation,
   flightInformation: defaultFlightInformation,
-  hotelSelection: defaultHotelSelection,
+  hotelMecca: defaultHotelMecca,
+  hotelMedina: defaultHotelMedina,
   transportation: defaultTransportation,
 }
 
 // Type definitions
 export type JourneyInformationType = z.infer<typeof journeyInformationSchema>
 export type FlightInformationType = z.infer<typeof flightInformationSchema>
-export type HotelSelectionType = z.infer<typeof hotelSelectionSchema>
+export type MeccaHotelType = z.infer<typeof hotelMeccaSchema>
+export type MedinaHotelType = z.infer<typeof hotelMedinaSchema>
 export type TransportationType = z.infer<typeof transportationSchema>
 export type UmrahPersonalFormType = z.infer<typeof umrahPersonalFormSchema>

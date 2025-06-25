@@ -5,8 +5,6 @@ import {
   INITIAL_STEP,
   STEP_1,
   STEP_2,
-  STEP_3,
-  STEP_4,
   TOTAL_STEPS,
 } from '@/contexts/umrah-personal/constant'
 import { UmrahPersonalContext } from '@/contexts/umrah-personal/context'
@@ -113,20 +111,12 @@ export const UmrahPersonalProvider: React.FC<{
         currentStepKey = STEP_2
         isValid = await trigger(STEP_2)
         break
-      case 3:
-        currentStepKey = STEP_3
-        isValid = await trigger(STEP_3)
-        break
-      case 4:
-        currentStepKey = STEP_4
-        isValid = await trigger(STEP_4)
-        break
       case 5:
         isValid = true
         break
     }
 
-    if (!isValid) {
+    if (!isValid && currentStep < 3) {
       const stepErrors =
         form.formState.errors[
           currentStepKey as keyof typeof form.formState.errors
@@ -134,7 +124,6 @@ export const UmrahPersonalProvider: React.FC<{
 
       if (stepErrors) {
         const firstErrorPath = findFirstErrorPath(stepErrors, currentStepKey)
-        console.log(stepErrors)
 
         if (firstErrorPath) {
           const errorElement = document.getElementById(firstErrorPath)

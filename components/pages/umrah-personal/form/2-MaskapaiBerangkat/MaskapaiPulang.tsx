@@ -22,15 +22,11 @@ import { UseFormReturn } from 'react-hook-form'
 
 interface ArrivalFlightFormProps {
   form: UseFormReturn<UmrahPersonalFormType>
-  children?: React.ReactNode
 }
 
-const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
-  form,
-  children,
-}) => {
+const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({ form }) => {
   return (
-    <div className="lg:rounded-[24px] lg:border lg:border-neutral-100">
+    <div className="lg:rounded-t-[24px] lg:border lg:border-neutral-100">
       {/* Form Content */}
       <div className="p-8 pb-6 max-lg:p-4">
         {/* Title and Description */}
@@ -228,8 +224,6 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
           />
         </div>
       </div>
-
-      {children}
     </div>
   )
 }

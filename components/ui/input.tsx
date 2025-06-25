@@ -84,7 +84,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             type={type}
             className={cn(
-              'focus-within:border-info-500 focus:border-info-500 h-full w-full bg-transparent text-neutral-900 placeholder:text-neutral-300 focus:outline-none disabled:cursor-not-allowed max-lg:!text-base',
+              'focus-within:border-info-500 focus:border-info-500 h-full w-full bg-transparent text-neutral-900 placeholder:text-neutral-300 focus:outline-none disabled:cursor-not-allowed',
               align,
               textSizeClasses[model]
             )}

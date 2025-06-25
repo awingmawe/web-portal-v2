@@ -49,25 +49,25 @@ const Step2FlightInfo: React.FC<Step2FlightInfoProps> = ({ form }) => {
       <DepartureFlightForm form={form} />
 
       {/* Arrival Flight Form */}
-      <ArrivalFlightForm form={form}>
-        {/* Action Buttons */}
-        <div
-          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${isStep2Valid && 'max-lg:sticky max-lg:bottom-0 max-lg:z-99 max-lg:bg-white'} max-lg:px-4`}
+      <ArrivalFlightForm form={form} />
+
+      {/* Action Buttons */}
+      <div
+        className={`flex items-center justify-between px-8 py-3 ${isStep2Valid && 'max-lg:sticky max-lg:bottom-0 max-lg:z-51 max-lg:bg-white'} border-1 border-t-0 border-neutral-100 max-lg:px-4 lg:rounded-b-[24px]`}
+      >
+        <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
+          Batalkan Pembuatan Paket
+        </p>
+        <Button
+          type="button"
+          onClick={onNext}
+          className="flex items-center gap-1.5 px-8 py-4 max-lg:w-full"
+          id="lanjut-step-2"
         >
-          <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
-            Batalkan Pembuatan Paket
-          </p>
-          <Button
-            type="button"
-            onClick={onNext}
-            className="flex items-center gap-1.5 px-8 py-4 max-lg:w-full"
-            id="lanjut-step-2"
-          >
-            Lanjut
-            <ChevronRightCircle size={14} />
-          </Button>
-        </div>
-      </ArrivalFlightForm>
+          Lanjut
+          <ChevronRightCircle size={14} />
+        </Button>
+      </div>
     </div>
   )
 }
