@@ -322,7 +322,7 @@ const CheckoutPage = () => {
             {/* Referral code */}
 
             {!isHaveRefferalCode && (
-              <div className="rounded-[20px] bg-white p-6 shadow-sm">
+              <div className="rounded-[20px] border border-neutral-100 p-6">
                 <div>
                   <div className="mb-4 flex items-center  gap-[12px]">
                     <Image
@@ -348,13 +348,13 @@ const CheckoutPage = () => {
                     <input
                       type="text"
                       placeholder="Masukkan kode referal"
-                      className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 shadow-sm placeholder:text-gray-400"
+                      className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700  placeholder:text-gray-400"
                       value={referralCode}
                       onChange={(e) => setReferralCode(e.target.value)}
                       disabled={wukalaSetting}
                     />
                     <button
-                      className="cursor-pointer rounded-full bg-[#FFC100] px-6 py-2 text-sm font-semibold text-[#30302F] shadow-sm transition hover:opacity-90"
+                      className="cursor-pointer rounded-full bg-[#FFC100] px-6 py-2 text-sm font-semibold text-[#30302F]  transition hover:opacity-90"
                       onClick={
                         wukalaSetting
                           ? handleRemoveReferralCode

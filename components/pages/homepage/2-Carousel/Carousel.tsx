@@ -20,7 +20,7 @@ import { useState } from 'react'
 export function CarouselBanner({
   dataBanner,
   title = 'Program Muslim101',
-  description = 'Jangan lewatkan program menarik dari Muslim101',
+  description = 'Jangan lewatkan program menarik dari Muslim 101',
   className = '',
   showPerItem = 3,
 }: {
@@ -53,7 +53,7 @@ export function CarouselBanner({
   return (
     <section className={cn(className)}>
       <p
-        className={`heading-3-bold mb-6 text-neutral-900  max-lg:mb-1 max-lg:ml-5 max-lg:text-xl max-lg:leading-6.5`}
+        className={`heading-3-bold  mt-5 text-neutral-900 max-lg:ml-5 max-lg:text-xl max-lg:leading-6.5`}
       >
         {title}
       </p>

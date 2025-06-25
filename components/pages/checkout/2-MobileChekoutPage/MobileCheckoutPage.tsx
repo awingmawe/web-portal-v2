@@ -467,7 +467,7 @@ const MobileCheckoutPage = ({}) => {
           </div> */}
 
           {!isHaveRefferalCode && (
-            <div className="mb-4 rounded-[16px] border border-gray-200 p-3">
+            <div className="mb-4 rounded-[16px] border border-neutral-100 p-3">
               <div className="flex items-center">
                 <Image
                   src="/images/discount-shape.svg"
