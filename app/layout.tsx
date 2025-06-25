@@ -1,4 +1,5 @@
 import MazeAnalytics from '@/components/shared/MazeAnalytics'
+import QontakChatWidget from '@/components/shared/QontakChatWidget'
 import { Toaster } from '@/components/ui/sonner'
 import { GTM_ID } from '@/constant/env'
 import { ContextProviders } from '@/contexts/providers'
@@ -7,8 +8,8 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import './globals.css'
 export const metadata: Metadata = {
-  title: 'Muslim101 | Semua Ada Semua Berkah',
-  description: 'Muslim101 | Semua Ada Semua Berkah',
+  title: 'Muslim 101 | Semua Ada Semua Berkah',
+  description: 'Muslim 101 | Semua Ada Semua Berkah',
 }
 
 export default function RootLayout({
@@ -26,6 +27,7 @@ export default function RootLayout({
           <ContextProviders>
             {children}
             <Toaster />
+            <QontakChatWidget />
           </ContextProviders>
         </Suspense>
       </body>
