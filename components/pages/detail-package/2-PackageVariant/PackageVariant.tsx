@@ -32,6 +32,7 @@ import {
   getHotelRating,
   getTripDuration,
   isEmpty,
+  setLocalReferralCode,
 } from '@/lib/utils'
 import {
   checkAvailibility,
@@ -113,7 +114,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     if (token) {
       statusLike()
       if (referralCodeParams) {
-        sessionStorage.setItem('referralCode', referralCodeParams)
+        setLocalReferralCode(referralCodeParams)
       }
     }
   }, [isLiked, token, referralCodeParams])

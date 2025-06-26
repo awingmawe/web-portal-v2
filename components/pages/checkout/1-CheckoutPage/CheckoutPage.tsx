@@ -3,6 +3,7 @@
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import { useCheckout } from '@/contexts/checkout-context'
+import { getLocalReferralCode, setLocalReferralCode } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
@@ -56,10 +57,9 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     const referralCodeFromParams = searchParams.get('referralCode')
-    const currentReferralCodeFromStorage =
-      sessionStorage.getItem('referralCode')
+    const currentReferralCodeFromStorage = getLocalReferralCode()
     if (referralCodeFromParams) {
-      sessionStorage.setItem('referralCode', referralCodeFromParams)
+      setLocalReferralCode(referralCodeFromParams)
       setReferralCode(referralCodeFromParams)
       setIsHaveReferralCode(true)
     } else if (currentReferralCodeFromStorage) {
