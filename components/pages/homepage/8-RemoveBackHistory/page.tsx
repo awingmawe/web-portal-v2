@@ -8,6 +8,7 @@ export default function RemoveBackHistory() {
   useEffect(() => {
     if (pathname === '/') {
       localStorage.removeItem('app_navigation_history')
+      sessionStorage.removeItem('isLinkAja')
     }
   }, [pathname])
 

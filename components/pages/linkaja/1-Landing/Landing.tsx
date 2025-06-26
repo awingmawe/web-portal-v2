@@ -35,6 +35,7 @@ export default function LandingLinkAja() {
 
     // Update URL parameters
     updateQueryParams(['prMin', 'prMax', 'page'], [0, 40000000, 1])
+    sessionStorage.setItem('isLinkAja', 'true')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
