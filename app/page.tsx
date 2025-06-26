@@ -9,7 +9,6 @@ import {
 import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScrollV2'
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ArtikelSection from '@/components/pages/homepage/7-Artikel/ArtikelSection'
-import RemoveBackHistory from '@/components/pages/homepage/8-RemoveBackHistory/page'
 import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
@@ -154,7 +153,6 @@ export default async function Home() {
         </Fragment>
       )}
       <BottomNavigation />
-      <RemoveBackHistory />
       <Footer className="footer relative z-10  max-lg:mb-0 max-lg:pb-[108px]" />
       <EventTrackerImpression
         id="home"

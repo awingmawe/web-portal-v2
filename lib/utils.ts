@@ -415,12 +415,10 @@ export function isMobileUserAgent(userAgent: string): boolean {
 export const starOptions = [5, 4, 3, 2, 1]
 
 export function setLocalReferralCode(referralCode: string) {
-  console.log(referralCode)
-
   localStorage.setItem('referralCode', referralCode)
   localStorage.setItem(
     'referralCodeExpired',
-    dayjs().add(10, 'minute').format('YYYY-MM-DD HH:mm:ss')
+    dayjs().add(1, 'day').format('YYYY-MM-DD HH:mm:ss')
   )
 }
 
@@ -431,7 +429,7 @@ export function getLocalReferralCode() {
 export function removeLocalReferralCode() {
   const expiredDate = localStorage.getItem('referralCodeExpired')
   if (expiredDate && dayjs().isAfter(expiredDate)) {
-    // localStorage.removeItem('referralCode')
-    // localStorage.removeItem('referralCodeExpired')
+    localStorage.removeItem('referralCode')
+    localStorage.removeItem('referralCodeExpired')
   }
 }
