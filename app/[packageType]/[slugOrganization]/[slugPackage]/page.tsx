@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: any }) {
 
   return {
     ...metadata(
-      `Muslim 101 | Detail Paket ${detailData.title}`,
+      `Muslim101 | Detail Paket ${detailData.title}`,
       `Detail paket ${detailData.title}`,
       detailData.thumbnail
     ),
@@ -164,6 +164,9 @@ export default async function DetailPackage({
                 arrival={detailData?.arrival}
                 meccaHotel={detailData?.meccaHotel?.name}
                 madinahHotel={detailData?.medinaHotel?.name}
+                type={
+                  detailData?.isPlus ? 'Umroh Plus Liburan' : 'Umroh Regular'
+                }
               />
 
               <PacakgeDescription

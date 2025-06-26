@@ -29,7 +29,7 @@ import { Fragment } from 'react'
 export async function generateMetadata() {
   return {
     ...metadata(
-      'Muslim 101 | Semua Ada Semua Berkah',
+      'Muslim101 | Semua Ada Semua Berkah',
       'Daftar paket umrah yang ada di Muslim101'
     ),
   }

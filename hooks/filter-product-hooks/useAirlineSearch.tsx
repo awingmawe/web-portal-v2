@@ -47,7 +47,7 @@ export function useAirlineSearch({
       setHasMore(data.results.length < data.total)
       setPage(1)
 
-      setTimeout(() => setInitialLoading(false), 500)
+      setInitialLoading(false)
     }
 
     loadInitialData()

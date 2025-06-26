@@ -15,7 +15,7 @@ on:
 
 env:
   SERVICE_PATH: web-portal-v2
-  SERVICE_NAME: dev-web-portal-v2
+  SERVICE_NAME: moslem-web-portal-v2
   SERVICE_PORT: 7110
 
 jobs:

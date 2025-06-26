@@ -1,0 +1,76 @@
+'use client'
+
+import { Warning2Icon } from '@/components/icons/warning'
+import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { useState } from 'react'
+
+interface CheckQuotaModalProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSubmit?: (quotaAmount: string) => void
+}
+
+const CheckQuotaModal = ({
+  open,
+  onOpenChange,
+  onSubmit,
+}: CheckQuotaModalProps) => {
+  const [quotaAmount, setQuotaAmount] = useState('')
+
+  const handleSubmit = () => {
+    if (onSubmit) {
+      onSubmit(quotaAmount)
+      setQuotaAmount('')
+    }
+    onOpenChange(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="w-3xl w-full rounded-2xl border-0 p-0 p-6">
+        <DialogHeader className="pb-0">
+          <div className="flex items-center gap-4">
+            <div className="rounded-lg bg-amber-50 p-3">
+              <Warning2Icon className="text-primary-600" />
+            </div>
+            <div>
+              <DialogTitle className="text-xl font-bold text-neutral-900">
+                Kamar Belum Dipilih!
+              </DialogTitle>
+            </div>
+          </div>
+        </DialogHeader>
+
+        <div className="">
+          <p className="text-m-regular mb-3 text-neutral-500">
+            Harap memilih jumlah kamar jemaah terlebih dahulu untuk bisa
+            melakukan checkout.
+          </p>
+          <SelectHotel />
+
+          <div className="mt-5 flex items-end justify-end gap-3">
+            <Button
+              variant="outline"
+              className="border-primary-500 border-2 px-15 py-2.5"
+              onClick={() => onOpenChange(false)}
+            >
+              Tutup
+            </Button>
+            <Button className="px-5 py-3" onClick={handleSubmit}>
+              Checkout Sekarang
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export default CheckQuotaModal

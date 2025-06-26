@@ -295,10 +295,9 @@ export const FilterProductProvider: React.FC<{
         // Update the previous page value for next comparison
         if (pageHasChanged && page !== null) {
           setPreviousPage(page)
-
           // Scroll to top only when page has actually changed
           window.scrollTo({
-            top: 0,
+            top: window.scrollY,
             behavior: 'smooth',
           })
         }
@@ -504,10 +503,11 @@ export const FilterProductProvider: React.FC<{
         },
       })
       // Only update the query parameters if we have keys/values to update
+      const pathName = window.location.pathname
       if (isEmpty(keys) || isEmpty(values)) {
-        window.history.pushState({ path: '/search' }, '', '/search')
+        window.history.pushState({ path: pathName }, '', pathName)
       } else {
-        updateQueryParams(keys, values, '/search')
+        updateQueryParams(keys, values, pathName)
       }
     } catch (err) {
       // Handle errors

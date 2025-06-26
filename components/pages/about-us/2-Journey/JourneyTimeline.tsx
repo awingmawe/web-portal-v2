@@ -47,7 +47,7 @@ const journeySteps = [
     content: {
       title: 'Rebrand',
       description:
-        'Muslim101 telah sukses terlibat dalam berbagai event di berbagai wilayah Indonesia. Salah satunya, pada pameran besar International Islamic Expo (IIE) yang bertemakan Umrah-Hajj & Islamic Tourism. Di sana, Muslim101 menjalankan promosi dan partnership B2B2C langsung dengan para calon mitra terbaru.',
+        'Kami melakukan perubahan untuk memperkenalkan nama dan identitas baru yang lebih mencerminkan visi besar perusahaan, sehingga dapat menjangkau pasar yang lebih luas. Berawal dari Umroh101 sebagai platform yang hanya berfokus pada perjalanan ibadah Umroh dan Haji, kami berekspansi menjadi all-in-one Muslim digital platform bernama Muslim101 dengan layanan yang lebih beragam, segar, serta modern.',
       image:
         'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-3.png',
     },
@@ -58,7 +58,7 @@ const journeySteps = [
     content: {
       title: 'Event',
       description:
-        'Muslim101 telah sukses terlibat dalam berbagai event di berbagai wilayah Indonesia. Salah satunya, pada pameran besar International Islamic Expo (lIE) yang bertemakan Umrah-Hajj & Islamic Tourism. Di sana, Muslim101 menjalinkan promosi dan partnership BBC langsung dengan para calon mitra terbaru.',
+        'Muslim101 telah sukses terlibat dalam berbagai event di berbagai wilayah Indonesia. Salah satunya, pada pameran besar International Islamic Expo (IIE) yang bertemakan Umrah-Hajj & Islamic Tourism. Di sana, Muslim101 menjalankan promosi dan partnership B2B2C langsung dengan para calon mitra terbaru.',
       image:
         'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-4.png',
     },

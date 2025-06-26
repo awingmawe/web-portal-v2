@@ -1,4 +1,5 @@
 import MazeAnalytics from '@/components/shared/MazeAnalytics'
+import QontakChatWidget from '@/components/shared/QontakChatWidget'
 import RemoveLocalReferralCode from '@/components/shared/RemoveLocalReferralCode'
 import { Toaster } from '@/components/ui/sonner'
 import { GTM_ID } from '@/constant/env'
@@ -28,6 +29,7 @@ export default function RootLayout({
             {children}
             <Toaster />
             <RemoveLocalReferralCode />
+            <QontakChatWidget />
           </ContextProviders>
         </Suspense>
       </body>

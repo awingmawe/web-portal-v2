@@ -217,6 +217,10 @@ export function mapProductsToCardData(
       arrivalDate: product?.packageVariant?.arrivalDate,
       releasedAt: product?.packageVariant?.releasedAt,
       packageType: product?.packageType || 'umrah',
+      meccaHotel: product?.meccaHotel,
+      medinaHotel: product?.medinaHotel,
+      departure: product?.departure,
+      arrival: product.arrival,
       tripDuration: product?.packageVariant?.tripDuration,
     })) || []
   )
@@ -379,7 +383,7 @@ export const formatDateRangeShort = (dateRange: DateRange): string => {
     if (dateRange.from.getFullYear() === dateRange.to.getFullYear()) {
       // Same month - only show month once
       if (dateRange.from.getMonth() === dateRange.to.getMonth()) {
-        return `${format(dateRange.from, 'd', { locale: id })}-${format(dateRange.to, 'd LLL y', { locale: id })}`
+        return `${format(dateRange.from, `d `, { locale: id })}-${format(dateRange.to, 'd LLL y', { locale: id })}`
       }
       return `${format(dateRange.from, 'd LLL', { locale: id })} - ${format(dateRange.to, 'd LLL y', { locale: id })}`
     }
@@ -432,4 +436,21 @@ export function removeLocalReferralCode() {
     localStorage.removeItem('referralCode')
     localStorage.removeItem('referralCodeExpired')
   }
+}
+
+export const isNullOrEmpty = (value: any): boolean => {
+  if (value == null) {
+    // Checks for null or undefined
+    return true
+  }
+
+  if (typeof value === 'string' || Array.isArray(value)) {
+    return value.length === 0 // Checks for empty string or array
+  }
+
+  if (typeof value === 'object') {
+    return Object.keys(value).length === 0 // Checks for empty object
+  }
+
+  return false // For other types like numbers, booleans, etc.
 }

@@ -29,3 +29,45 @@ export const EditIcon: React.FC<IconProps> = ({
     </svg>
   )
 }
+
+export const Edit2Icon: React.FC<IconProps> = ({
+  className = '',
+  size = 12,
+  ...props
+}) => {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 12 12"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M6.63164 1.79962L2.52663 6.14462C2.37163 6.30962 2.22163 6.63462 2.19163 6.85962L2.00663 8.47962C1.94163 9.06462 2.36163 9.46462 2.94163 9.36462L4.55164 9.08962C4.77664 9.04962 5.09163 8.88462 5.24663 8.71462L9.35164 4.36962C10.0616 3.61962 10.3816 2.76462 9.27664 1.71962C8.17663 0.68462 7.34164 1.04962 6.63164 1.79962Z"
+        stroke="#30302F"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.94531 2.52539C6.16031 3.90539 7.28031 4.96039 8.67031 5.10039"
+        stroke="#30302F"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M1.5 11H10.5"
+        stroke="#30302F"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}

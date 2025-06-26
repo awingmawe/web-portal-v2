@@ -35,6 +35,7 @@ import { Fragment, useCallback, useEffect, useState } from 'react'
 export interface TransactionCardFooter {
   detailOnly?: boolean
   isCompletedManifest: boolean
+  isManifestCommitted: boolean
   isPaidOff: boolean
   showDpButton?: boolean
   bookingId: string
@@ -52,6 +53,7 @@ export default function TransactionCardFooter({
   status,
   statusTahapanDetail,
   isCompletedManifest,
+  isManifestCommitted,
   isPaidOff,
   showDpButton,
   bookingId,
@@ -316,7 +318,8 @@ export default function TransactionCardFooter({
           )}
         {!detailOnly && (
           <Fragment>
-            {status === 'waiting-cancellation' ? null : isPaidOff ? (
+            {status === 'waiting-cancellation' ? null : status ===
+              'expired' ? null : isPaidOff ? (
               <Button
                 variant="outline"
                 className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
@@ -362,13 +365,16 @@ export default function TransactionCardFooter({
               )
             )} */}
 
-            {!isCompletedManifest && status !== 'waiting-cancellation' && (
-              <Link href={`/manifest/${bookingId}`}>
-                <Button className="w-full px-4 py-3 text-nowrap">
-                  Lengkapi Data Jemaah
-                </Button>
-              </Link>
-            )}
+            {!isManifestCommitted &&
+              !['waiting-cancellation', 'expired', 'waiting-approval'].includes(
+                status
+              ) && (
+                <Link href={`/manifest/${bookingId}`}>
+                  <Button className="w-full px-4 py-3 text-nowrap">
+                    Lengkapi Data Jemaah
+                  </Button>
+                </Link>
+              )}
             {(status === 'approved' ||
               status === 'waiting-approval' ||
               status === 'waiting-down-payment') && (

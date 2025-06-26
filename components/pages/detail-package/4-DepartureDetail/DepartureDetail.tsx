@@ -2,6 +2,7 @@
 
 import { AirlineIcon } from '@/components/icons/airline'
 import { BuildingIcon } from '@/components/icons/building'
+import { KabbahIcon } from '@/components/icons/kabbah'
 import { TravelRoute } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
@@ -13,6 +14,7 @@ interface DetailDepartureProps {
   arrival: TravelRoute
   meccaHotel?: string
   madinahHotel?: string
+  type: string
 }
 
 const DepartureDetail: React.FC<DetailDepartureProps> = ({
@@ -20,6 +22,7 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   arrival,
   meccaHotel,
   madinahHotel,
+  type,
 }) => {
   const { isLoading } = usePackageVariant()
 
@@ -33,33 +36,44 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   // Left column items
   const leftColumnItems = [
     {
+      icon: <KabbahIcon size={24} />,
+      title: 'Tipe Perjalanan',
+      value: `${type}`,
+      orderForMobile: 1,
+    },
+    {
       icon: <PlaneTakeoff size={24} />,
       title: 'Keberangkatan',
       value: `${departureAirportFrom} → ${departureAirportTo}`,
+      orderForMobile: 2,
     },
     {
-      icon: <PlaneLanding size={24} />,
-      title: 'Kepulangan',
-      value: `${arrivelAirportFrom} → ${arrivelAirportTo}`,
-    },
-    {
-      icon: <AirlineIcon size={24} />,
-      title: 'Maskapai Penerbangan',
-      value: airlineName,
+      icon: <BuildingIcon size={24} color="neutral-900" />,
+      title: 'Hotel Makkah',
+      value: meccaHotel || '-',
+      orderForMobile: 5,
     },
   ]
 
   // Right column items
   const rightColumnItems = [
     {
-      icon: <BuildingIcon size={24} color="neutral-900" />,
-      title: 'Hotel Makkah',
-      value: meccaHotel || '-',
+      icon: <AirlineIcon size={24} />,
+      title: 'Maskapai Penerbangan',
+      value: airlineName,
+      orderForMobile: 4,
+    },
+    {
+      icon: <PlaneLanding size={24} />,
+      title: 'Kepulangan',
+      value: `${arrivelAirportFrom} → ${arrivelAirportTo}`,
+      orderForMobile: 3,
     },
     {
       icon: <BuildingIcon size={24} color="neutral-900" />,
       title: 'Hotel Madinah',
       value: madinahHotel || '-',
+      orderForMobile: 6,
     },
   ]
 
@@ -82,7 +96,7 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
 
         {/* Right Column Skeleton */}
         <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
-          {[1, 2].map((_, index) => (
+          {[1, 2, 3].map((_, index) => (
             <div key={index} className="flex items-center gap-3">
               <div className="h-6 w-6 animate-pulse rounded-full bg-neutral-200"></div>
               <div>
@@ -98,7 +112,10 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
 
   // Render item function for both columns
   const renderItem = (item: (typeof leftColumnItems)[0], index: number) => (
-    <div key={index} className={`flex items-center gap-3`}>
+    <div
+      key={index}
+      className={`flex items-center gap-3 order-${item.orderForMobile}`}
+    >
       {item.icon}
       <div>
         <p className="text-s-medium font-medium text-neutral-500 max-lg:text-xs max-lg:leading-4">
@@ -115,15 +132,24 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
     <div
       className={`grid grid-cols-12 flex-col border-b border-b-neutral-200 pb-4 max-lg:flex max-lg:gap-2 ${dissolve}`}
     >
+      {/* className={`flex flex-col border-b border-b-neutral-200 pb-4 max-lg:gap-2 ${dissolve}`} */}
+
       {/* Left Column */}
-      <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
+      <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
         {leftColumnItems.map(renderItem)}
       </div>
 
       {/* Right Column */}
-      <div className="col-span-6 flex flex-col gap-4 max-lg:gap-2">
+      <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
         {rightColumnItems.map(renderItem)}
       </div>
+
+      <div className=" hidden flex-col gap-3 max-lg:flex">
+        {leftColumnItems.map(renderItem)}
+        {rightColumnItems.map(renderItem)}
+      </div>
+      {/* predefined tailwindscsss */}
+      <div className="order-1 order-2 order-3 order-4 order-5 order-6 order-7 order-8 order-9"></div>
     </div>
   )
 }

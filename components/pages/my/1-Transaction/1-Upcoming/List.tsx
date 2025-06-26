@@ -75,6 +75,7 @@ export default function List({
                           jemaah={Number.parseInt(transaction.quantity, 10)}
                           bookingId={String(transaction.id)}
                           isCompletedManifest={transaction.isCompletedManifest}
+                          isManifestCommitted={transaction.isManifestCommitted}
                           isPaidOff={transaction.isPaidOff}
                           statusTahapan="Akan Datang"
                           statusTahapanDetail={'Akan Datang'}
@@ -135,6 +136,7 @@ export default function List({
                       jemaah={Number.parseInt(transaction.quantity, 10)}
                       bookingId={String(transaction.id)}
                       isCompletedManifest={transaction.isCompletedManifest}
+                      isManifestCommitted={transaction.isManifestCommitted}
                       isPaidOff={transaction.isPaidOff}
                       statusTahapan="Akan Datang"
                       statusTahapanDetail={'Akan Datang'}
