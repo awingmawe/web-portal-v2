@@ -33,6 +33,7 @@ export interface TransactionCardProps {
   createdDate: string
   jemaah: number
   isCompletedManifest: boolean
+  isManifestCommitted: boolean
   isPaidOff: boolean
   statusTahapan: string
   statusTahapanDetail: string
@@ -112,6 +113,7 @@ export default function TransactionCard({
   createdDate,
   jemaah,
   isCompletedManifest,
+  isManifestCommitted,
   isPaidOff,
   statusTahapan,
   statusTahapanDetail,
@@ -310,7 +312,7 @@ export default function TransactionCard({
                   <div className="mt-4 flex items-center gap-2 max-lg:hidden">
                     <UsersIcon className="h-5 w-5 text-neutral-500" />
                     <p className="text-m-regular text-neutral-500">
-                      {jemaah} Jemaahs
+                      {jemaah} Jemaah
                     </p>
                     {!noLabelNotif &&
                       renderManifestComplete(isCompletedManifest, createdDate)}
@@ -369,6 +371,7 @@ export default function TransactionCard({
                     detailOnly={detailOnly}
                     isPaidOff={isPaidOff}
                     isCompletedManifest={isCompletedManifest}
+                    isManifestCommitted={isManifestCommitted}
                     showDpButton={showDpButton}
                     bookingId={bookingId}
                     id={id}

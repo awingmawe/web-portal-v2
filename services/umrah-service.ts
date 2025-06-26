@@ -177,6 +177,20 @@ export async function getPaymentStatement(
   }
 }
 
+export async function getBookingId(
+  bookingId: string,
+  token: string
+): Promise<any> {
+  try {
+    const client = token ? createServerApiClient(token) : apiWithAuth
+    const response = await client.get(`/umrah/v1/booking/${bookingId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching booking detail:', error)
+    throw error
+  }
+}
+
 export async function getPaymentTransaction(
   bookingId: string
 ): Promise<PaymentTransaction> {
@@ -398,6 +412,18 @@ export async function getInvoiceTranasction(
   try {
     const response = await apiWithAuth.get(
       `/umrah/v1/invoice-transaction/${bookingCode}/print`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
+
+export async function postManfestCommited(bookingCode: any): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/umrah/v2/booking/commit-manifest/${bookingCode}`
     )
     return response.data
   } catch (error) {

@@ -53,6 +53,7 @@ interface ManifestUser {
   hometown: string | null
   passportNumber: string | null
   passportExpiredAt: string | null
+  roomType: string | null
   medicalHistory: string | null
   submitted: boolean
   completed: boolean

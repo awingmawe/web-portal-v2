@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
+import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
 import CardProfileIcon from '@/components/icons/card-profile'
 import { ChecklistIcon } from '@/components/icons/checkbox'
 import {
@@ -19,6 +20,7 @@ import { useEffect, useRef } from 'react'
 
 interface DaftarJemaahProps {
   dataJemaah?: ManifestUsers
+  getDetailBooking?: any
 }
 
 const dummyDataJemaah: ManifestUsers = [
@@ -44,6 +46,7 @@ const dummyDataJemaah: ManifestUsers = [
     createdBy: null,
     modifiedBy: null,
     booking: undefined,
+    roomType: '',
     attachment: [],
   },
   {
@@ -68,6 +71,7 @@ const dummyDataJemaah: ManifestUsers = [
     createdBy: null,
     modifiedBy: null,
     booking: undefined,
+    roomType: '',
     attachment: [],
   },
   {
@@ -91,6 +95,7 @@ const dummyDataJemaah: ManifestUsers = [
     modifiedAt: '',
     createdBy: null,
     modifiedBy: null,
+    roomType: '',
     booking: undefined,
     attachment: [],
   },
@@ -148,6 +153,7 @@ const JemaahList = ({
 
 export default function DrawerDaftarJemaah({
   dataJemaah = dummyDataJemaah,
+  getDetailBooking,
 }: DaftarJemaahProps) {
   const { manifestActive, setManifestActive } = useManifest()
   const dataRef = useRef(false)
@@ -162,7 +168,6 @@ export default function DrawerDaftarJemaah({
 
     dataRef.current = true
   }, [])
-
   // Function to close the drawer (for mobile)
   const closeDrawer = () => {
     const drawerClose = document.querySelector('[data-drawer-close]')
@@ -170,23 +175,90 @@ export default function DrawerDaftarJemaah({
       drawerClose.click()
     }
   }
+  const roomTypeQuantity = getDetailBooking?.roomTypeQuantity || {
+    quad: 0,
+    double: 0,
+    triple: 0,
+  }
 
+  const getRoomTypeIcon = (type: string, numQuantity: any) => {
+    if (type === 'double') {
+      return (
+        <BedIcon3
+          className={`${numQuantity === 0 ? 'text-neutral-500' : 'text-neutral-900'}`}
+        />
+      )
+    }
+    return (
+      <BedIcon2
+        className={`${numQuantity === 0 ? 'text-neutral-500' : 'text-neutral-900'}`}
+      />
+    )
+  }
+
+  const getRoomTypeLabel = (type: string): string => {
+    const labels: Record<string, string> = {
+      double: 'Double',
+      triple: 'Triple',
+      quad: 'Quad',
+    }
+    return labels[type] || type
+  }
+  const getSelectedRoomTypeCount = (roomType: string): number => {
+    if (!dataJemaah) return 0
+    return dataJemaah.filter((jemaah: any) => jemaah.roomType === roomType)
+      .length
+  }
+  // Define room type order
+  const roomTypeOrder = ['double', 'triple', 'quad']
   return (
     <div className="mx-3.5 lg:hidden">
       <Drawer direction="bottom">
         <DrawerTrigger asChild>
-          <div className="flex w-full items-center justify-between gap-2 rounded-full border border-neutral-200 px-3 py-2.5 text-left">
-            <span className="text-m-medium flex items-center gap-2">
-              {manifestActive?.name || 'Pilih Jemaah'}
-              {manifestActive?.completed && (
-                <ChecklistIcon size={20} className="text-success-500" />
-              )}
-            </span>
-            <ChevronRight />
+          <div>
+            <div className="mb-4 px-3">
+              <h2 className="text-m-medium mb-3 text-neutral-600">
+                Kuota Kamar
+              </h2>
+              <div className="flex justify-around gap-6">
+                {roomTypeOrder.map((type, index) => {
+                  const quantity =
+                    roomTypeQuantity[type as keyof typeof roomTypeQuantity] || 0
+                  const numQuantity = Number(quantity)
+                  const selectedCount = getSelectedRoomTypeCount(type)
+                  return (
+                    <div key={index} className="flex items-center gap-2">
+                      {getRoomTypeIcon(type, numQuantity)}
+                      <div className="flex flex-col">
+                        <span
+                          className={`text-xs ${numQuantity === 0 ? 'text-neutral-500' : 'text-neutral-900'}`}
+                        >
+                          {getRoomTypeLabel(type)}
+                        </span>
+                        <span
+                          className={`text-sm font-medium ${numQuantity === 0 ? 'text-neutral-500' : 'text-primary-500'}`}
+                        >
+                          {selectedCount}/{numQuantity}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+            <div className="flex w-full items-center justify-between gap-2 rounded-full border border-neutral-200 px-3 py-2.5 text-left">
+              <span className="text-m-medium flex items-center gap-2">
+                {manifestActive?.name || 'Pilih Jemaah'}
+                {manifestActive?.completed && (
+                  <ChecklistIcon size={20} className="text-success-500" />
+                )}
+              </span>
+              <ChevronRight />
+            </div>
           </div>
         </DrawerTrigger>
         <DrawerContent className="right-auto left-0 rounded-r-lg">
-          <div className="h-full bg-white p-0">
+          <div className="h-full bg-white p-2">
             <DrawerHeader className="mb-4 flex flex-row items-center gap-1 px-4">
               <CardProfileIcon />
               <DrawerTitle className="text-l-medium">Data Jemaah</DrawerTitle>
