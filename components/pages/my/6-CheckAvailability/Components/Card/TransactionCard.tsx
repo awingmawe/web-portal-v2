@@ -110,96 +110,96 @@ export default function TransactionCard({
             </p>
           </div>
         </div>
-        <RenderLinkToDetail lg={lg} bookingId={id} statusTahapan={status}>
-          <div className="grid grid-cols-1 gap-2 p-4 md:grid-cols-3 lg:gap-4">
-            <p className="text-s-regular hidden text-neutral-500 max-lg:block">
-              ID : {id}
-            </p>
-            <div className="flex gap-4 md:col-span-2">
-              <div className="h-32 w-32 flex-shrink-0 max-lg:h-20 max-lg:w-20">
-                {thumbnail ? (
-                  <Image
-                    src={thumbnail}
-                    alt="Umroh Package"
-                    width={128}
-                    height={128}
-                    className="block h-full w-full rounded-md object-cover max-lg:hidden"
-                  />
-                ) : (
-                  <div className="block h-full w-full rounded-md bg-neutral-100 max-lg:hidden" />
-                )}
-                {thumbnail ? (
-                  <Image
-                    src={thumbnail}
-                    alt="Umroh Package"
-                    width={60}
-                    height={60}
-                    className="hidden h-full w-full rounded-md object-cover max-lg:block"
-                  />
-                ) : (
-                  <div className="hidden h-full w-full rounded-md bg-neutral-100 max-lg:block" />
-                )}
-              </div>
-              <div className="flex flex-col justify-between">
-                <div>
-                  <h2 className="text-l-semibold leading-[16px] uppercase max-lg:text-xs">
-                    {packageName}
-                  </h2>
-                  <div className="mt-4 flex items-center gap-2 max-lg:hidden">
-                    <Calendar2 className="h-5 w-5 text-neutral-500" />
-                    <p className="text-m-regular flex items-center text-neutral-500">
-                      {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
-                      <ArrowIcon size={20} className="mx-2 text-neutral-500" />{' '}
-                      {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
-                    </p>
-                  </div>
+
+        <div className="grid grid-cols-1 gap-2 p-4 md:grid-cols-3 lg:gap-4">
+          <p className="text-s-regular hidden text-neutral-500 max-lg:block">
+            ID : {id}
+          </p>
+          <div className="flex gap-4 md:col-span-2">
+            <div className="h-32 w-32 flex-shrink-0 max-lg:h-20 max-lg:w-20">
+              {thumbnail ? (
+                <Image
+                  src={thumbnail}
+                  alt="Umroh Package"
+                  width={128}
+                  height={128}
+                  className="block h-full w-full rounded-md object-cover max-lg:hidden"
+                />
+              ) : (
+                <div className="block h-full w-full rounded-md bg-neutral-100 max-lg:hidden" />
+              )}
+              {thumbnail ? (
+                <Image
+                  src={thumbnail}
+                  alt="Umroh Package"
+                  width={60}
+                  height={60}
+                  className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                />
+              ) : (
+                <div className="hidden h-full w-full rounded-md bg-neutral-100 max-lg:block" />
+              )}
+            </div>
+            <div className="flex flex-col justify-between">
+              <div>
+                <h2 className="text-l-semibold leading-[16px] uppercase max-lg:text-xs">
+                  {packageName}
+                </h2>
+                <div className="mt-4 flex items-center gap-2 max-lg:hidden">
+                  <Calendar2 className="h-5 w-5 text-neutral-500" />
+                  <p className="text-m-regular flex items-center text-neutral-500">
+                    {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
+                    <ArrowIcon size={20} className="mx-2 text-neutral-500" />{' '}
+                    {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+                  </p>
                 </div>
               </div>
             </div>
-            <TransactionCardPayment
-              jumlahJamaah={jumlahJamaah}
-              responTravel={responTravel}
-            />
-            <div className="hidden items-center gap-2 max-lg:flex">
-              <Calendar2 className="h-4 w-4 text-neutral-500" />
-              <p className="flex items-center text-xs text-neutral-500">
-                {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
-                <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
-                {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+          </div>
+          <TransactionCardPayment
+            jumlahJamaah={jumlahJamaah}
+            responTravel={responTravel}
+          />
+          <div className="hidden items-center gap-2 max-lg:flex">
+            <Calendar2 className="h-4 w-4 text-neutral-500" />
+            <p className="flex items-center text-xs text-neutral-500">
+              {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
+              <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
+              {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+            </p>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-4 lg:hidden">
+            {/* Jumlah Permintaan */}
+            <div className="flex flex-col">
+              <p className="text-s-medium mb-1 text-neutral-500">
+                Jumlah Permintaan
               </p>
+              <div className="flex items-center gap-2">
+                <UsersIcon className="h-5 w-5 text-neutral-500" />
+                <p className="text-m-medium text-neutral-900">
+                  {jumlahJamaah} Jemaah
+                </p>
+              </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-4 lg:hidden">
-              {/* Jumlah Permintaan */}
+            {/* Jumlah Kursi Tersedia */}
+            {responTravel !== null && (
               <div className="flex flex-col">
                 <p className="text-s-medium mb-1 text-neutral-500">
-                  Jumlah Permintaan
+                  Jumlah Kursi Tersedia
                 </p>
                 <div className="flex items-center gap-2">
                   <UsersIcon className="h-5 w-5 text-neutral-500" />
                   <p className="text-m-medium text-neutral-900">
-                    {jumlahJamaah} Jemaah
+                    {responTravel} Jemaah
                   </p>
                 </div>
               </div>
-
-              {/* Jumlah Kursi Tersedia */}
-              {responTravel !== null && (
-                <div className="flex flex-col">
-                  <p className="text-s-medium mb-1 text-neutral-500">
-                    Jumlah Kursi Tersedia
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <UsersIcon className="h-5 w-5 text-neutral-500" />
-                    <p className="text-m-medium text-neutral-900">
-                      {responTravel} Jemaah
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
-        </RenderLinkToDetail>
+        </div>
+
         <div
           className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
         >

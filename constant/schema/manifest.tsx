@@ -13,6 +13,7 @@ export const defaultValueManifest = {
   passportNumber: '',
   passportExpiredAt: '',
   medicalHistory: '',
+  roomtype: '',
 }
 
 export const formSchemaManifest = z.object({
@@ -54,6 +55,7 @@ export const formSchemaManifest = z.object({
   born: z.string().min(1, { message: 'Tanggal lahir harus diisi!' }),
   placeBorn: z.string().nullable().optional(),
   address: z.string().nullable().optional(),
+  roomtype: z.string().min(1, { message: 'Tipe Kamar harus diisi!' }),
   gender: z.string().min(1, { message: 'Jenis kelamin harus diisi!' }),
   hometown: z.string().min(1, { message: 'Kota asal harus diisi!' }),
   passportNumber: z.string().min(1, { message: 'Nomor paspor harus diisi!' }),
