@@ -5,6 +5,7 @@ import { EventTrackerProvider } from '@/contexts/event-tracker/provider'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
 import { ManifestProvider } from '@/contexts/manifest-context/provider'
 import { PackageVariantProvider } from '@/contexts/package-variant-context'
+import { UmrahPersonalProvider } from '@/contexts/umrah-personal/provider'
 import { ReactNode } from 'react'
 import { FilterProductProvider } from './filter-product-context'
 // Import other providers as needed, for example:
@@ -25,9 +26,11 @@ export function ContextProviders({ children }: ProvidersProps) {
         <GalleryProvider>
           <PackageVariantProvider>
             <ManifestProvider>
-              {/* Add other providers here as needed */}
-              {/* <ThemeProvider> */}
-              <AuthProvider>{children}</AuthProvider>
+              <UmrahPersonalProvider>
+                {/* Add other providers here as needed */}
+                {/* <ThemeProvider> */}
+                <AuthProvider>{children}</AuthProvider>
+              </UmrahPersonalProvider>
               {/* </ThemeProvider> */}
             </ManifestProvider>
           </PackageVariantProvider>

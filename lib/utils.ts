@@ -382,7 +382,7 @@ export const formatDateRangeShort = (dateRange: DateRange): string => {
     if (dateRange.from.getFullYear() === dateRange.to.getFullYear()) {
       // Same month - only show month once
       if (dateRange.from.getMonth() === dateRange.to.getMonth()) {
-        return `${format(dateRange.from, 'd', { locale: id })}-${format(dateRange.to, 'd LLL y', { locale: id })}`
+        return `${format(dateRange.from, `d `, { locale: id })}-${format(dateRange.to, 'd LLL y', { locale: id })}`
       }
       return `${format(dateRange.from, 'd LLL', { locale: id })} - ${format(dateRange.to, 'd LLL y', { locale: id })}`
     }

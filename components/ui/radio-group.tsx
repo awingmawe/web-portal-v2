@@ -35,7 +35,7 @@ const RadioGroupItem = React.forwardRef<
         ref={ref}
         id={props.id || id}
         className={cn(
-          'peer data-[state=checked]:bg-neutral-0 data-[state=checked]:text-neutral-0 disabled:bg-primary-200 data-[state=checked]:border-primary-500 h-[16px] w-[16px] shrink-0 cursor-pointer rounded-full border-[0.5px] border-neutral-300 bg-white outline-none disabled:cursor-not-allowed',
+          'peer data-[state=checked]:bg-neutral-0 data-[state=checked]:text-neutral-0 disabled:bg-neutral-0 data-[state=checked]:border-primary-500 h-[16px] w-[16px] shrink-0 cursor-pointer rounded-full border-[0.5px] border-neutral-300 bg-white outline-none disabled:cursor-not-allowed',
           dissolve,
           className
         )}
