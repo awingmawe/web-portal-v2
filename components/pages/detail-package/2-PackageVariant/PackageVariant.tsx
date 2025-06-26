@@ -20,7 +20,11 @@ import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
-import { getHotelRating, getTripDuration } from '@/lib/utils'
+import {
+  getHotelRating,
+  getTripDuration,
+  setLocalReferralCode,
+} from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { differenceInDays } from 'date-fns'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -87,7 +91,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     if (token) {
       statusLike()
       if (referralCodeParams) {
-        sessionStorage.setItem('referralCode', referralCodeParams)
+        setLocalReferralCode(referralCodeParams)
       }
     }
   }, [isLiked, token, referralCodeParams])

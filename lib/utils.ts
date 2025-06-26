@@ -3,6 +3,7 @@ import { CardData, Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
 import { differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
+import dayjs from 'dayjs'
 import { DateRange } from 'react-day-picker'
 import { twMerge } from 'tailwind-merge'
 
@@ -416,6 +417,26 @@ export function isMobileUserAgent(userAgent: string): boolean {
 }
 
 export const starOptions = [5, 4, 3, 2, 1]
+
+export function setLocalReferralCode(referralCode: string) {
+  localStorage.setItem('referralCode', referralCode)
+  localStorage.setItem(
+    'referralCodeExpired',
+    dayjs().add(1, 'day').format('YYYY-MM-DD HH:mm:ss')
+  )
+}
+
+export function getLocalReferralCode() {
+  return localStorage.getItem('referralCode')
+}
+
+export function removeLocalReferralCode() {
+  const expiredDate = localStorage.getItem('referralCodeExpired')
+  if (expiredDate && dayjs().isAfter(expiredDate)) {
+    localStorage.removeItem('referralCode')
+    localStorage.removeItem('referralCodeExpired')
+  }
+}
 
 export const isNullOrEmpty = (value: any): boolean => {
   if (value == null) {

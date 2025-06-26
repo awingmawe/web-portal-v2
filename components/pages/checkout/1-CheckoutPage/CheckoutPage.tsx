@@ -6,7 +6,11 @@ import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengem
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
 import { Separator } from '@/components/ui/separator'
 import { useCheckout } from '@/contexts/checkout-context'
-import { formatCurrency } from '@/lib/utils'
+import {
+  formatCurrency,
+  getLocalReferralCode,
+  setLocalReferralCode,
+} from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
@@ -58,10 +62,9 @@ const CheckoutPage = () => {
 
   useEffect(() => {
     const referralCodeFromParams = searchParams.get('referralCode')
-    const currentReferralCodeFromStorage =
-      sessionStorage.getItem('referralCode')
+    const currentReferralCodeFromStorage = getLocalReferralCode()
     if (referralCodeFromParams) {
-      sessionStorage.setItem('referralCode', referralCodeFromParams)
+      setLocalReferralCode(referralCodeFromParams)
       setReferralCode(referralCodeFromParams)
       setIsHaveReferralCode(true)
     } else if (currentReferralCodeFromStorage) {

@@ -1,8 +1,9 @@
 'use client'
+import { removeLocalReferralCode } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 
-export default function RemoveBackHistory() {
+export default function RemoveLocalReferralCode() {
   const pathname = usePathname()
 
   useEffect(() => {
@@ -10,6 +11,7 @@ export default function RemoveBackHistory() {
       localStorage.removeItem('app_navigation_history')
       sessionStorage.removeItem('isLinkAja')
     }
+    removeLocalReferralCode()
   }, [pathname])
 
   return <div className="hidden"></div>

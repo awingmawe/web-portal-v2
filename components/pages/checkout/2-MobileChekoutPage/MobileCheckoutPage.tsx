@@ -14,7 +14,11 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { useCheckout } from '@/contexts/checkout-context'
-import { formatCurrency } from '@/lib/utils'
+import {
+  formatCurrency,
+  getLocalReferralCode,
+  setLocalReferralCode,
+} from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -27,6 +31,7 @@ const MobileCheckoutPage = ({}) => {
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const searchParams = useSearchParams()
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const [selectedPayment, setSelectedPayment] = useState<string>('')
 
   const {
     token,
@@ -85,14 +90,11 @@ const MobileCheckoutPage = ({}) => {
   } = useCheckout()
   const router = useRouter()
 
-  const [selectedPayment, setSelectedPayment] = useState('')
-
   useEffect(() => {
     const referralCodeFromParams = searchParams.get('referralCode')
-    const currentReferralCodeFromStorage =
-      sessionStorage.getItem('referralCode')
+    const currentReferralCodeFromStorage = getLocalReferralCode()
     if (referralCodeFromParams) {
-      sessionStorage.setItem('referralCode', referralCodeFromParams)
+      setLocalReferralCode(referralCodeFromParams)
       setReferralCode(referralCodeFromParams)
       setIsHaveReferralCode(true)
     } else if (currentReferralCodeFromStorage) {

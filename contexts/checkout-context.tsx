@@ -253,7 +253,7 @@ export const CheckoutProvider = ({
         },
       })
 
-      sessionStorage.removeItem('referralCode')
+      localStorage.removeItem('referralCode')
     } catch (error) {
       console.error(error)
     } finally {
