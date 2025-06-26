@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import { CashReceiptIcon } from '@/components/icons/cash-receipt'
 import { InfoIcon } from '@/components/icons/info'
+import LinkAja, { LinkAjaSyariah } from '@/components/icons/linkaja'
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
 import DrawerPengembalianDana from '@/components/pages/detail-package/mobile/DrawerPengemalianDana'
 import DrawerSK from '@/components/pages/detail-package/mobile/DrawerSK'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { useCheckout } from '@/contexts/checkout-context'
 import { formatCurrency } from '@/lib/utils'
@@ -22,6 +26,7 @@ const MobileCheckoutPage = ({}) => {
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const searchParams = useSearchParams()
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
 
   const {
     token,
@@ -79,6 +84,8 @@ const MobileCheckoutPage = ({}) => {
     setShouldRunCheckPre,
   } = useCheckout()
   const router = useRouter()
+
+  const [selectedPayment, setSelectedPayment] = useState('')
 
   useEffect(() => {
     const referralCodeFromParams = searchParams.get('referralCode')
@@ -186,7 +193,7 @@ const MobileCheckoutPage = ({}) => {
                 </div> */}
           </div>
 
-          <div className="flex items-center justify-between border-t border-b border-gray-200 py-3">
+          <div className="flex items-center justify-between border-t border-b border-neutral-200 py-3">
             <div>
               <p className="mb-1 text-sm text-[10px] text-gray-500">
                 Tanggal Berangkat
@@ -315,7 +322,7 @@ const MobileCheckoutPage = ({}) => {
         {/* Payment section */}
         <div className=" bg-white p-4">
           {/* Payment method */}
-          <div className="mb-4 rounded-[16px] border border-gray-200 bg-white p-3">
+          <div className="mb-4 rounded-[16px] border border-neutral-200 bg-white p-3">
             {/* <div className="mb-3 rounded-lg bg-yellow-50 p-3">
               <p className="text-xs font-medium text-yellow-800">
                 Minimal pembayaran untuk saat ini: Rp{' '}
@@ -451,7 +458,7 @@ const MobileCheckoutPage = ({}) => {
           </div>
 
           {/* Points & Referral */}
-          {/* <div className="mb-4 rounded-lg border border-gray-200 p-3">
+          {/* <div className="mb-4 rounded-lg border border-neutral-200 p-3">
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -515,7 +522,7 @@ const MobileCheckoutPage = ({}) => {
             </div>
           )}
           {/* 
-          <div className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 p-3">
+          <div className="mb-4 flex items-center justify-between rounded-lg border border-neutral-200 p-3">
             <div className="flex items-center">
               <div className="mr-3 text-yellow-500">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -536,7 +543,7 @@ const MobileCheckoutPage = ({}) => {
         <div className="h-[4px] w-full bg-[#D2D2D1]" />
         {/* Payment Summary */}
         <div className="bg-white px-4 pt-4">
-          <div className="rounded-[16px] border border-gray-200 p-3">
+          <div className="rounded-[16px] border border-neutral-200 p-3">
             <h2 className="text-m-semibold mb-3">Rincian Pembayaran</h2>
             <div className="space-y-2 text-sm">
               {paymentDetails?.map((detail: any, index: any) => (
@@ -580,8 +587,72 @@ const MobileCheckoutPage = ({}) => {
             </div>
           </div>
         </div>
+        {/* Payment Method */}
+        {isLinkAja && (
+          <div className="bg-white px-4 pt-4">
+            <div className="rounded-[16px] border border-b border-neutral-200">
+              <div className="flex items-center border-b border-neutral-200 p-4">
+                <CashReceiptIcon className="text-neutral-900" size={20} />
+                <h2 className="text-m-semibold ml-2.5 text-neutral-900">
+                  Metode Pembayaran
+                </h2>
+              </div>
+              <RadioGroup
+                value={selectedPayment}
+                onValueChange={setSelectedPayment}
+                className="p-4"
+              >
+                {/* LinkAja Syariah */}
+                <div
+                  className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
+                  onClick={() => setSelectedPayment('linkaja-syariah')}
+                >
+                  <div className="flex items-center gap-4">
+                    <RadioGroupItem
+                      value="linkaja-syariah"
+                      id="linkaja-syariah"
+                      className="h-4 w-4"
+                    />
+                    <div className="flex items-center gap-2">
+                      <LinkAjaSyariah className="h-4 w-4" />
+                      <Label
+                        htmlFor="linkaja-syariah"
+                        className="text-l-medium cursor-pointer"
+                      >
+                        LinkAja Syariah
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LinkAja */}
+                <div
+                  className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
+                  onClick={() => setSelectedPayment('linkaja')}
+                >
+                  <div className="flex items-center gap-4">
+                    <RadioGroupItem
+                      value="linkaja"
+                      id="linkaja"
+                      className="h-4 w-4"
+                    />
+                    <div className="flex items-center gap-2">
+                      <LinkAja className="h-4 w-4" />
+                      <Label
+                        htmlFor="linkaja"
+                        className="text-l-medium cursor-pointer"
+                      >
+                        LinkAja Syariah
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+          </div>
+        )}
         <div className="bg-white p-4">
-          <div className="mb-2 flex rounded-[16px] border border-gray-200 bg-white p-3">
+          <div className="mb-2 flex rounded-[16px] border border-neutral-200 bg-white p-3">
             <input
               type="checkbox"
               className="mr-2 h-4 w-4 accent-yellow-500"
