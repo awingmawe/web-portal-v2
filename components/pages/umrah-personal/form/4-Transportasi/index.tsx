@@ -151,14 +151,14 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                     >
                       <RadioGroup
                         onValueChange={(value: string) => {
-                          const selectedAirline = dataEnumVehicle.find(
-                            (airline) => airline.id.toString() === value
+                          const selectedVehicle = dataEnumVehicle.find(
+                            (vehicle) => vehicle.id.toString() === value
                           )
-                          if (selectedAirline) {
-                            field.onChange(selectedAirline.id)
+                          if (selectedVehicle) {
+                            field.onChange(selectedVehicle)
                           }
                         }}
-                        value={field.value?.toString()}
+                        value={field.value?.id?.toString()}
                         className="grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-lg:gap-3 max-sm:grid-cols-1"
                       >
                         {dataEnumVehicle.map((vehicle: Facility) => {
@@ -169,7 +169,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                               key={vehicle.id}
                               className={cn(
                                 'relative flex cursor-pointer flex-col rounded-lg border-1 px-8 py-2 transition-colors max-lg:p-2 lg:h-[120px] lg:items-center lg:justify-center lg:gap-2',
-                                field.value === vehicle.id
+                                field.value.id === vehicle.id
                                   ? 'border-primary-500 bg-primary-50'
                                   : 'border-neutral-200 bg-white hover:border-neutral-300',
                                 isRecommended && 'max-lg:mt-2'

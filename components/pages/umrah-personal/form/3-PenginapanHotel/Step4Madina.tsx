@@ -154,7 +154,12 @@ const Step4HotelInfo: React.FC<Step4HotelInfoProps> = ({
                       hotel={hotel}
                       form={form}
                       onSelect={async () => {
-                        form.setValue(`${STEP_4}.hotelMedina`, hotel.id)
+                        form.setValue(`${STEP_4}.hotelMedina`, {
+                          id: hotel.id,
+                          name: hotel.name,
+                          hotelDestination: hotel.hotelDestination,
+                          hotelGallery: hotel.hotelGallery ?? [],
+                        })
                         if (handleNext) {
                           handleNext(form.trigger, form)
                         }

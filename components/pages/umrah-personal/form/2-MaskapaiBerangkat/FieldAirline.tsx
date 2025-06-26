@@ -13,6 +13,7 @@ export interface AirportOption {
   code: string
   name: string
   countryName: string
+  logo: string
 }
 
 interface AirlineSelectionProps {
@@ -52,6 +53,7 @@ const AirlineSelection: React.FC<AirlineSelectionProps> = ({
         id: selectedAirline.id,
         code: selectedAirline.code,
         name: selectedAirline.name,
+        logo: selectedAirline.logo ?? '',
         countryName: selectedAirline.countryName,
       })
     }

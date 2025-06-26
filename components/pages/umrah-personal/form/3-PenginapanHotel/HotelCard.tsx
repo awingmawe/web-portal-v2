@@ -40,7 +40,7 @@ export const HotelCard = ({
 
   return (
     <div
-      className={`flex justify-between gap-2.5 rounded-lg border ${checkIsDataExist === hotel?.id ? 'border-primary-500' : 'border-neutral-200'} p-4 max-lg:flex-col`}
+      className={`flex justify-between gap-2.5 rounded-lg border ${checkIsDataExist?.id === hotel?.id ? 'border-primary-500' : 'border-neutral-200'} p-4 max-lg:flex-col`}
     >
       {/* Hotel Image Carousel */}
       <HotelImageCarousel images={hotelGallery || []} />

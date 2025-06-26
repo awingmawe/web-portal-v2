@@ -82,6 +82,7 @@ export const flightInformationSchema = z.object({
         id: z.number(),
         code: z.string(),
         name: z.string(),
+        logo: z.string(),
         countryName: z.string(),
       })
       .refine((airline) => airline.id > 0, {
@@ -131,6 +132,7 @@ export const flightInformationSchema = z.object({
         id: z.number(),
         code: z.string(),
         name: z.string(),
+        logo: z.string(),
         countryName: z.string(),
       })
       .refine((airline) => airline.id > 0, {
@@ -154,16 +156,56 @@ export const flightInformationSchema = z.object({
 
 // Step 3: Hotel Selection Schema (conditional based on activity)
 export const hotelMeccaSchema = z.object({
-  hotelMecca: z.number().optional(),
+  hotelMecca: z.object({
+    id: z.number(),
+    name: z.string(),
+    hotelDestination: z.array(
+      z.object({
+        id: z.number(),
+        distance: z.number(),
+        priority: z.boolean(),
+        destinationName: z.string(),
+      })
+    ),
+    hotelGallery: z.array(
+      z.object({
+        id: z.number(),
+        hotelId: z.number(),
+        imageUrl: z.string(),
+      })
+    ),
+  }),
 })
 
 export const hotelMedinaSchema = z.object({
-  hotelMedina: z.number().optional(),
+  hotelMedina: z.object({
+    id: z.number(),
+    name: z.string(),
+    hotelDestination: z.array(
+      z.object({
+        id: z.number(),
+        distance: z.number(),
+        priority: z.boolean(),
+        destinationName: z.string(),
+      })
+    ),
+    hotelGallery: z.array(
+      z.object({
+        id: z.number(),
+        hotelId: z.number(),
+        imageUrl: z.string(),
+      })
+    ),
+  }),
 })
 
 // Step 4: Transportation Schema (Optional)
 export const transportationSchema = z.object({
-  transportation: z.number().optional(),
+  transportation: z.object({
+    id: z.number(),
+    name: z.string(),
+    code: z.string(),
+  }),
 })
 
 // Combined schema for the entire form
@@ -242,15 +284,29 @@ export const defaultFlightInformation = {
 }
 
 export const defaultHotelMecca = {
-  hotelMecca: 0,
+  hotelMecca: {
+    id: 0,
+    name: '',
+    hotelDestination: [],
+    hotelGallery: [],
+  },
 }
 
 export const defaultHotelMedina = {
-  hotelMedina: 0,
+  hotelMedina: {
+    id: 0,
+    name: '',
+    hotelDestination: [],
+    hotelGallery: [],
+  },
 }
 
 export const defaultTransportation = {
-  transportation: 0,
+  transportation: {
+    id: 0,
+    name: '',
+    code: '',
+  },
 }
 
 export const defaultUmrahPersonalForm = {

@@ -5,6 +5,7 @@ import Step2FlightInfo from '@/components/pages/umrah-personal/form/2-MaskapaiBe
 import Step3MeccaHotel from '@/components/pages/umrah-personal/form/3-PenginapanHotel/Step3Mecca'
 import Step4MadinahHotel from '@/components/pages/umrah-personal/form/3-PenginapanHotel/Step4Madina'
 import Step5Transportation from '@/components/pages/umrah-personal/form/4-Transportasi'
+import Step6Review from '@/components/pages/umrah-personal/form/5-Review'
 import { Form } from '@/components/ui/form'
 import {
   defaultUmrahPersonalForm,
@@ -36,8 +37,6 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
   // Final form submission
   const onSubmit = (data: UmrahPersonalFormType) => {
     console.log('Form submitted:', data)
-    // Handle form submission here
-    // e.g., send to API, show success message, etc.
   }
 
   // it should be implement here
@@ -63,6 +62,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
         <Step5Transportation form={form} dataEnumVehicle={dataEnumVehicle} />
 
         {/* Step 6: Review */}
+        <Step6Review form={form} />
       </form>
     </Form>
   )
