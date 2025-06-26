@@ -13,6 +13,7 @@ import { GenericResponse } from '@/constant/types/GeneralProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { dissolve } from '@/lib/animation-setup'
 import { cn, isEmpty } from '@/lib/utils'
+import Autoplay from 'embla-carousel-autoplay'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -66,6 +67,7 @@ export function CarouselBanner({
           loop: true,
           inViewThreshold: 1,
         }}
+        plugins={[Autoplay({ delay: 4000 })]}
         className="w-full "
       >
         <CarouselContent className="-ml-5 max-lg:ml-0">
