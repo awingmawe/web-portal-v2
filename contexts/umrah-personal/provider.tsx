@@ -60,6 +60,7 @@ export const UmrahPersonalProvider: React.FC<{
       setTimeout(() => {
         scrollToStep(prevStep)
       }, 100)
+    } else if (currentStep === 1) {
     }
   }
 

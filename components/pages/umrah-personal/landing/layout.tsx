@@ -6,14 +6,16 @@ import { ReactNode } from 'react'
 
 interface ScrollContainerWrapperProps {
   children: ReactNode
+  token: string
 }
 
 const ScrollContainerWrapper: React.FC<ScrollContainerWrapperProps> = ({
   children,
+  token,
 }) => {
   return (
     <>
-      <Topbar type="homepage" />
+      <Topbar type="homepage" token={token} />
       <TopbarMobileLandingUmrahPersonal />
       <main>{children}</main>
     </>

@@ -280,7 +280,7 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
                   icon={<PlaneTakeoff />}
                   title="Maskapai Keberangkatan"
                   value={getAirlineText(
-                    departureAirlineLogo,
+                    departureAirlineLogo ?? '/images/no-image-placeholder.png',
                     departureAirlineName
                   )}
                   colspan="col-span-2 max-sm:col-span-12"
@@ -312,7 +312,10 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
                 <ItemsInformation
                   icon={<PlaneLanding />}
                   title="Maskapai Kepulangan"
-                  value={getAirlineText(arrivalAirlineLogo, arrivalAirlineName)}
+                  value={getAirlineText(
+                    arrivalAirlineLogo ?? '/images/no-image-placeholder.png',
+                    arrivalAirlineName
+                  )}
                   colspan="col-span-2 max-sm:col-span-12"
                 />
                 <ItemsInformation

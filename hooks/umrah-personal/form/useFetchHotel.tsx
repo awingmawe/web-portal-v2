@@ -51,6 +51,7 @@ export const useHotelsWithGallery = ({
     if (dataRef.current) return
     fetchHotels()
     dataRef.current = true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return {

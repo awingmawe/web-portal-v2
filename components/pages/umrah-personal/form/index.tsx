@@ -36,7 +36,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
 
   // Final form submission
   const onSubmit = (data: UmrahPersonalFormType) => {
-    console.log('Form submitted:', data)
+    console.log('Form submitted:', form.formState.isSubmitting)
   }
 
   // it should be implement here

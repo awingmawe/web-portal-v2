@@ -58,6 +58,18 @@ const Step4HotelInfo: React.FC<Step4HotelInfoProps> = ({
 }) => {
   const { handleNext } = useUmrahPersonal()
 
+  const handleSelectHotel = (hotel: Hotel) => async () => {
+    form.setValue(`${STEP_4}.hotelMedina`, {
+      id: hotel.id,
+      name: hotel.name,
+      hotelDestination: hotel.hotelDestination,
+      hotelGallery: hotel.hotelGallery ?? [],
+    })
+    if (handleNext) {
+      handleNext(form.trigger, form)
+    }
+  }
+
   // Dynamic content based on typeHotel
   const hotelContent = useMemo(() => {
     return {
@@ -153,17 +165,7 @@ const Step4HotelInfo: React.FC<Step4HotelInfoProps> = ({
                       key={`hotel-${hotel.name}-${index}`}
                       hotel={hotel}
                       form={form}
-                      onSelect={async () => {
-                        form.setValue(`${STEP_4}.hotelMedina`, {
-                          id: hotel.id,
-                          name: hotel.name,
-                          hotelDestination: hotel.hotelDestination,
-                          hotelGallery: hotel.hotelGallery ?? [],
-                        })
-                        if (handleNext) {
-                          handleNext(form.trigger, form)
-                        }
-                      }}
+                      onSelect={handleSelectHotel(hotel)}
                     />
                   ))
                 )}
