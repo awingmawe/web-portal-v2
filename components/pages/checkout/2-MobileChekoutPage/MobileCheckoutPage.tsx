@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { CashReceiptIcon } from '@/components/icons/cash-receipt'
@@ -34,34 +33,21 @@ const MobileCheckoutPage = ({}) => {
   const [selectedPayment, setSelectedPayment] = useState<string>('')
 
   const {
-    token,
     detailVariant,
     selectedVariant,
     preBooking,
     prebookingLoading,
-    setPreBooking,
     paymentDetails,
-    setPaymentDetails,
     referralCode,
     setReferralCode,
-    useMyData,
-    setUseMyData,
-    jamaahList,
-    setJamaahList,
     paymentAmount,
     setPaymentAmount,
     totalPrice,
-    handleAddJamaah,
-    handleJamaahNameChange,
-    handleJamaahPhoneChange,
-    handleRemoveJamaah,
     sliderValue,
     setSliderValue,
-    handleUseMyDataChange,
     handleCheckout,
     termsAccepted,
     setTermsAccepted,
-    isJamaahDataValid,
     isReferralValid,
     isReferralCodeChecked,
     wukalaSetting,
@@ -76,13 +62,6 @@ const MobileCheckoutPage = ({}) => {
     dataSK,
     parsedContent,
     dataRefundPolicy,
-    handleUseMyDataChangeMobile,
-    setNoTlpn,
-    setNama,
-    nama,
-    noTlpn,
-    handleSimpanMobile,
-    handleEditMobile,
     totalQty,
     isEmptyRoomType,
     setSelectedRoomType,

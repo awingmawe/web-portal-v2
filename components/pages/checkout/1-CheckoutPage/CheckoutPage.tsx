@@ -11,7 +11,6 @@ import {
   getLocalReferralCode,
   setLocalReferralCode,
 } from '@/lib/utils'
-import Placeholder from '@/public/images/no-image-placeholder.png'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -19,6 +18,7 @@ import { useEffect, useState } from 'react'
 import renderHTML from 'react-render-html'
 
 const CheckoutPage = () => {
+  const Placeholder = '/images/no-image-placeholder.png'
   const [isOpenModal, setOpenModal] = useState(false)
   const searchParams = useSearchParams()
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
@@ -483,6 +483,9 @@ const CheckoutPage = () => {
                       style={{
                         borderRadius: '20px',
                         objectFit: 'cover',
+                      }}
+                      onError={(e) => {
+                        e.currentTarget.src = String(Placeholder)
                       }}
                     />
                     <div>
