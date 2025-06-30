@@ -289,6 +289,7 @@ const MobileCheckoutPage = ({}) => {
               onChange={(roomType) => {
                 setSelectedRoomType(roomType)
                 setShouldRunCheckPre(true)
+                setPaymentAmount(selectedVariant.netAmount)
                 setRawInputValue(String(paymentAmount * totalQty))
               }}
             />
