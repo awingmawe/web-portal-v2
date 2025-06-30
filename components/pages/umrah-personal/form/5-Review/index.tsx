@@ -521,7 +521,7 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
         </div>
         {/* Action Buttons */}
         <div
-          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 max-lg:sticky max-lg:bottom-0 max-lg:z-99 max-lg:bg-white max-lg:px-4`}
+          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white max-lg:px-4`}
         >
           <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
             Batalkan Pembuatan Paket

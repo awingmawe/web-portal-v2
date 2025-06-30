@@ -16,6 +16,7 @@ export const UmrahPersonalProvider: React.FC<{
 }> = ({ children }) => {
   // Use useState instead of useRef for reactive state
   const [currentStep, setCurrentStep] = useState<number>(INITIAL_STEP)
+  const [openDialogDrawerEndForm, setOpenDialogDrawerEndForm] = useState(false)
   const scrollContainerRef = React.useRef<HTMLDivElement>(null!) // non-null assertion for context type compatibility
 
   const isStepValid = (step: number) => {
@@ -61,6 +62,7 @@ export const UmrahPersonalProvider: React.FC<{
         scrollToStep(prevStep)
       }, 100)
     } else if (currentStep === 1) {
+      setOpenDialogDrawerEndForm(true)
     }
   }
 
@@ -155,6 +157,8 @@ export const UmrahPersonalProvider: React.FC<{
     handlePrevious,
     handleNext,
     scrollContainerRef,
+    openDialogDrawerEndForm,
+    setOpenDialogDrawerEndForm,
   }
 
   return (

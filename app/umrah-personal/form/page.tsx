@@ -2,7 +2,9 @@ import { metadata } from '@/app/shared-metadata'
 import UmrahPersonalFormSection from '@/components/pages/umrah-personal/form'
 import LayoutUmrahPersonalForm from '@/components/pages/umrah-personal/form/layout'
 import { TYPE_FILTER_REFERENCE } from '@/contexts/umrah-personal/constant'
+import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
+import { cookies } from 'next/headers'
 
 export async function generateMetadata() {
   return {
@@ -15,9 +17,11 @@ export async function generateMetadata() {
 
 export default async function UmrahPersonalForm() {
   const dataEnumVehicle = await getFacilityEnum(TYPE_FILTER_REFERENCE)
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
   return (
-    <LayoutUmrahPersonalForm>
+    <LayoutUmrahPersonalForm token={token}>
       <UmrahPersonalFormSection dataEnumVehicle={dataEnumVehicle.results} />
     </LayoutUmrahPersonalForm>
   )

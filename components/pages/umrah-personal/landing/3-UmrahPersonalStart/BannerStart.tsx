@@ -34,7 +34,7 @@ const UmrohPersonalStartSection: React.FC<UmrohPersonalStartSectionProps> = ({
         width={0}
         height={0}
         sizes="100vw"
-        className="absolute top-0 z-0 h-screen w-full object-cover"
+        className="absolute top-0 z-0 h-screen w-full object-cover object-left"
       />
       <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col items-center justify-center gap-3 overflow-hidden p-6 max-lg:max-w-xs max-lg:p-4">
         <p className="heading-4-semibold text-center font-bold lg:text-[60px] lg:leading-[76px]">

@@ -1,27 +1,51 @@
 'use client'
 
+import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import ProgressIndicator from '@/components/pages/umrah-personal/form/6-ProgressIndicator'
+import ExitConfirmationContent from '@/components/pages/umrah-personal/form/dialog/DialogEndForm'
 import TopbarMobileFormUmrahPersonal from '@/components/pages/umrah-personal/form/mobile/Topbar'
 import Topbar from '@/components/shared/Topbar'
+import { ACCOUNT_URL } from '@/constant/env'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { useStepVisibility } from '@/hooks/umrah-personal/form/useVisibilityStepper'
 import { ChevronLeftCircle } from 'lucide-react'
-import { ReactNode, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { ReactNode, useEffect, useRef } from 'react'
 
 interface FormUmrahPersonal {
   children: ReactNode
+  token: string
 }
 
-const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({ children }) => {
-  const { currentStep, totalSteps, handlePrevious, scrollContainerRef } =
-    useUmrahPersonal()
-
+const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
+  children,
+  token,
+}) => {
+  const {
+    currentStep,
+    totalSteps,
+    scrollContainerRef,
+    handlePrevious,
+    setOpenDialogDrawerEndForm,
+    openDialogDrawerEndForm,
+  } = useUmrahPersonal()
+  const router = useRouter()
+  const loginRef = useRef(false)
   // Use the step visibility hook
   const { isTransitioning } = useStepVisibility({
     currentStep,
     totalSteps,
     scrollContainerRef,
   })
+
+  const handleExitConfirmation = () => {
+    setOpenDialogDrawerEndForm?.(false)
+    router.push(`/umrah-personal/landing`)
+  }
+
+  const handleExitConfirmationClose = () => {
+    setOpenDialogDrawerEndForm?.(false)
+  }
 
   // Disable body scroll for better step transitions
   useEffect(() => {
@@ -31,9 +55,30 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({ children }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (loginRef.current) return
+    if (!token) {
+      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      return
+    }
+
+    loginRef.current = true
+  }, [token])
+
+  // Create the back button trigger
+  const BackButtonTrigger = () => (
+    <div
+      className="sticky top-8 inline-flex cursor-pointer items-center gap-1.5 max-lg:hidden"
+      onClick={handlePrevious}
+    >
+      <ChevronLeftCircle color="#30302F" width={14} height={14} />
+      <p className="text-s-semibold">Kembali</p>
+    </div>
+  )
+
   return (
     <>
-      <Topbar scrolled shadow />
+      <Topbar scrolled shadow token={token} />
       <TopbarMobileFormUmrahPersonal handleBack={handlePrevious} />
       <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
 
@@ -42,14 +87,20 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({ children }) => {
         id="umrah-personal-form-container"
         ref={scrollContainerRef}
       >
-        {/* Back button */}
-        <div
-          className="sticky top-8 inline-flex cursor-pointer items-center gap-1.5 max-lg:hidden"
-          onClick={handlePrevious}
-        >
-          <ChevronLeftCircle color="#30302F" width={14} height={14} />
-          <p className="text-s-semibold">Kembali</p>
-        </div>
+        {/* Back button with exit confirmation */}
+        <LayoutDrawerDialog
+          trigger={<BackButtonTrigger />}
+          content={
+            <ExitConfirmationContent
+              dialogConfirm={handleExitConfirmation}
+              dialogCancel={handleExitConfirmationClose}
+            />
+          }
+          isOpen={openDialogDrawerEndForm}
+          setIsOpen={setOpenDialogDrawerEndForm}
+          drawerCancel={handleExitConfirmationClose}
+          drawerConfirm={handleExitConfirmation}
+        />
 
         {/* Form content */}
         {children}
