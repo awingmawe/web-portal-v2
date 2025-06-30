@@ -179,6 +179,7 @@ export const CheckoutProvider = ({
         triple: selectedRoomType?.triple || 0,
         quad: selectedRoomType?.quad || 0,
       })
+      setRawInputValue(String(response.downPayment))
       setPreBookingLoading(false)
       setPaymentDetails(response.paymentDetails)
       setPreBooking(response)
