@@ -1,4 +1,4 @@
-export interface RequestForm {
+export interface RequestFormUmrahPersonal {
   journeyType: string
   activity: string
   createVisa: boolean
