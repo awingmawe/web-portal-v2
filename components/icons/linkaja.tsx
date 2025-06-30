@@ -78,5 +78,3 @@ export const LinkAjaSyariah: React.FC<IconProps> = ({
     </svg>
   )
 }
-
-export default LinkAja

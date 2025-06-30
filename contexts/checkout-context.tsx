@@ -66,6 +66,7 @@ export const CheckoutProvider = ({
   const [shouldCheckPreAfterClear, setShouldCheckPreAfterClear] =
     useState(false)
   const [shouldRunCheckPre, setShouldRunCheckPre] = useState(false)
+  const [selectedPayment, setSelectedPayment] = useState<string>('')
 
   // Flag to prevent excessive API calls
   const checkPreCalled = useRef(false)
@@ -569,6 +570,8 @@ export const CheckoutProvider = ({
     isEmptyRoomType,
     setShouldRunCheckPre,
     totalQty,
+    selectedPayment,
+    setSelectedPayment,
   }
 
   return (
