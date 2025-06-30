@@ -2,7 +2,7 @@
 
 import { CashReceiptIcon } from '@/components/icons/cash-receipt'
 import { InfoIcon } from '@/components/icons/info'
-import LinkAja, { LinkAjaSyariah } from '@/components/icons/linkaja'
+import { LinkAja, LinkAjaSyariah } from '@/components/icons/linkaja'
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
@@ -30,7 +30,6 @@ const MobileCheckoutPage = ({}) => {
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const searchParams = useSearchParams()
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
-  const [selectedPayment, setSelectedPayment] = useState<string>('')
 
   const {
     detailVariant,
@@ -66,6 +65,8 @@ const MobileCheckoutPage = ({}) => {
     isEmptyRoomType,
     setSelectedRoomType,
     setShouldRunCheckPre,
+    selectedPayment,
+    setSelectedPayment,
   } = useCheckout()
   const router = useRouter()
 
@@ -624,7 +625,7 @@ const MobileCheckoutPage = ({}) => {
                         htmlFor="linkaja"
                         className="text-l-medium cursor-pointer"
                       >
-                        LinkAja Syariah
+                        LinkAja
                       </Label>
                     </div>
                   </div>
