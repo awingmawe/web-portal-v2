@@ -170,8 +170,6 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
       }
     })
 
-    console.log(selectedRoomType)
-
     return total
   }, [selectedVariant, selectedRoomType])
 
