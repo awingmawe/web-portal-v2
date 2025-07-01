@@ -1,6 +1,7 @@
 'use client'
 
 import { Calendar3 } from '@/components/icons/calendar'
+import LayoutDrawerPopup from '@/components/pages/umrah-personal/form/LayoutDrawerPopover'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -10,11 +11,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   ACTIVITY_TYPE_LABELS,
@@ -297,16 +293,13 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                       Tanggal Keberangkatan{' '}
                       <span className="text-red-500">*</span>
                     </p>
-                    <Popover>
-                      <PopoverTrigger
-                        asChild
-                        className={cn(
-                          'flex flex-1 cursor-pointer items-center gap-2 rounded-full border-1 px-4 py-2.5',
-                          field.value
-                            ? 'border-primary-500'
-                            : 'border-neutral-200 bg-white hover:border-neutral-300'
-                        )}
-                      >
+                    <LayoutDrawerPopup
+                      classNameContentDrawer="w-full"
+                      field={field}
+                      drawerCancel={() =>
+                        form.setValue(`${STEP_1}.departureDate`, '')
+                      }
+                      triggerPopup={
                         <p
                           className={`text-s-regular ${field.value ? 'text-neutral-800' : 'text-neutral-300'} flex justify-between`}
                         >
@@ -319,8 +312,8 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                             <Calendar3 size={16} color="#8E8E8B" />
                           )}
                         </p>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
+                      }
+                      content={
                         <Calendar
                           mode="single"
                           selected={
@@ -333,9 +326,15 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                           }
                           fromDate={new Date()}
                           initialFocus
+                          cellClassName={{
+                            cell: 'max-lg:w-full',
+                            head_cell: 'max-lg:w-full max-lg:h-full',
+                            month: 'max-lg:p-0 max-lg:flex-1',
+                            day: 'max-lg:w-full',
+                          }}
                         />
-                      </PopoverContent>
-                    </Popover>
+                      }
+                    />
                     <div className="lg:min-h-4">
                       <FormMessage />
                     </div>
@@ -366,16 +365,13 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                         Tanggal Kepulangan{' '}
                         <span className="text-red-500">*</span>
                       </p>
-                      <Popover>
-                        <PopoverTrigger
-                          asChild
-                          className={cn(
-                            'flex flex-1 cursor-pointer items-center gap-2 rounded-full border-1 px-4 py-2.5',
-                            field.value
-                              ? 'border-primary-500'
-                              : 'border-neutral-200 bg-white hover:border-neutral-300'
-                          )}
-                        >
+                      <LayoutDrawerPopup
+                        classNameContentDrawer="w-full"
+                        field={field}
+                        drawerCancel={() =>
+                          form.setValue(`${STEP_1}.arrivalDate`, '')
+                        }
+                        triggerPopup={
                           <p
                             className={`text-s-regular flex justify-between ${field.value ? 'text-neutral-800' : 'text-neutral-300'}`}
                           >
@@ -388,8 +384,8 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                               <Calendar3 size={16} color="#8E8E8B" />
                             )}
                           </p>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        }
+                        content={
                           <Calendar
                             mode="single"
                             selected={
@@ -400,11 +396,17 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                                 date ? format(date, 'yyyy-MM-dd') : ''
                               )
                             }
-                            fromDate={minArrivalDate} // ✅ Set minimum date based on departure date
+                            fromDate={minArrivalDate}
+                            cellClassName={{
+                              cell: 'max-lg:w-full',
+                              head_cell: 'max-lg:w-full max-lg:h-full',
+                              month: 'max-lg:p-0 max-lg:flex-1',
+                              day: 'max-lg:w-full',
+                            }}
                             initialFocus
                           />
-                        </PopoverContent>
-                      </Popover>
+                        }
+                      />
                       <div className="lg:min-h-4">
                         <FormMessage />
                       </div>
@@ -447,7 +449,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
         </div>
         {/* Action Buttons */}
         <div
-          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${isStep1Valid && currentStep === 1 && 'max-lg:sticky max-lg:bottom-0 max-lg:z-99 max-lg:bg-white'}  max-lg:px-4`}
+          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${isStep1Valid && currentStep === 1 && 'max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white'}  max-lg:px-4`}
         >
           <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
             Batalkan Pembuatan Paket

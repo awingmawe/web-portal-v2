@@ -14,7 +14,7 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({
   const progressPercentage = (currentStep / totalSteps) * 100
 
   return (
-    <div className="sticky top-[72px] z-51 max-lg:top-[49px]">
+    <div className="sticky top-[72px] z-48 max-lg:top-[49px]">
       {/* Progress line */}
       <motion.div
         className="bg-primary-500 absolute left-0 h-1.5"

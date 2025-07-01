@@ -82,7 +82,7 @@ export const flightInformationSchema = z.object({
         id: z.number(),
         code: z.string(),
         name: z.string(),
-        logo: z.string(),
+        logo: z.string().optional(),
         countryName: z.string(),
       })
       .refine((airline) => airline.id > 0, {
@@ -132,7 +132,7 @@ export const flightInformationSchema = z.object({
         id: z.number(),
         code: z.string(),
         name: z.string(),
-        logo: z.string(),
+        logo: z.string().optional(),
         countryName: z.string(),
       })
       .refine((airline) => airline.id > 0, {

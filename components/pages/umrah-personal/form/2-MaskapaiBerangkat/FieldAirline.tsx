@@ -13,7 +13,7 @@ export interface AirportOption {
   code: string
   name: string
   countryName: string
-  logo: string
+  logo?: string
 }
 
 interface AirlineSelectionProps {

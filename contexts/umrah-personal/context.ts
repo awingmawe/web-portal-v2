@@ -28,6 +28,12 @@ interface UmrahPersonalContextType {
     form: UseFormReturn<UmrahPersonalFormType>
   ) => Promise<void>
 
+  // Dialog management
+  // openDialogDrawerEndForm: function to open drawer(mobile) or dialog(desktop) if want to back
+  // setOpenDialogDrawerEndForm: function to update openDialogDrawerEndForm
+  openDialogDrawerEndForm: boolean
+  setOpenDialogDrawerEndForm: (open: boolean) => void
+
   // This can be used to reference the scrollable container for smooth scrolling
   scrollContainerRef?: React.RefObject<HTMLDivElement>
 }
@@ -39,6 +45,8 @@ export const UmrahPersonalContext = createContext<UmrahPersonalContextType>({
   isStepValid: () => false,
   scrollToStep: () => {},
   handlePrevious: () => {},
+  openDialogDrawerEndForm: false,
+  setOpenDialogDrawerEndForm: () => {},
   handleNext: async () => {
     return Promise.resolve()
   },

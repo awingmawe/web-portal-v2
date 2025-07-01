@@ -22,12 +22,16 @@ export const metadata = (
     title: title,
     description: description,
     type: 'website',
-    images: image ?? ['/thumbnail.png'],
+    images: image
+      ? [{ url: image, height: 405, width: 720 }]
+      : ['/thumbnail.png'],
   },
   twitter: {
     title: title,
     description: description,
     card: 'summary_large_image',
-    images: image ?? ['/thumbnail.png'],
+    images: image
+      ? [{ url: image, height: 405, width: 720 }]
+      : ['/thumbnail.png'],
   },
 })

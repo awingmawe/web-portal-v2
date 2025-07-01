@@ -76,7 +76,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
   form,
   dataEnumVehicle,
 }) => {
-  const { currentStep, handleNext } = useUmrahPersonal()
+  const { handleNext } = useUmrahPersonal()
 
   const totalJemaah = form.getValues(`${STEP_1}.totalManifest`) || 0
 
@@ -146,7 +146,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                   <FormControl>
                     <div
                       className={
-                        'space-y-4 overflow-y-auto lg:h-[240px] lg:px-2 lg:pt-3'
+                        'space-y-4 overflow-y-auto max-lg:min-h-[450px] lg:h-[240px] lg:px-2 lg:pt-3'
                       }
                     >
                       <RadioGroup
@@ -172,7 +172,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                                 field.value.id === vehicle.id
                                   ? 'border-primary-500 bg-primary-50'
                                   : 'border-neutral-200 bg-white hover:border-neutral-300',
-                                isRecommended && 'max-lg:mt-2'
+                                isRecommended && 'max-lg:mt-3'
                               )}
                             >
                               {isRecommended && (
@@ -207,7 +207,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
         </div>
         {/* Action Buttons */}
         <div
-          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${currentStep === 5 && 'max-lg:sticky max-lg:bottom-0 max-lg:z-50 max-lg:bg-white'} max-lg:px-4`}
+          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white max-lg:px-4`}
         >
           <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
             Batalkan Pembuatan Paket

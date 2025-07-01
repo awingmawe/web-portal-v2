@@ -26,6 +26,7 @@ import {
   ManifestUser,
 } from '@/constant/types/ManifestProps'
 import { AxiosProgressEvent } from 'axios'
+import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
 
 export async function getBanner(
   query: GetListQuery
@@ -513,6 +514,19 @@ export async function getPostReqRefund(payload: any): Promise<any> {
     return response.data
   } catch (error) {
     console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
+
+export async function umrahPersonalRegister(payload: RequestFormUmrahPersonal) {
+  try {
+    const response = await api.post<any>(
+      `/umrah/v2/journey-information`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error post umrah personal register:', error)
     throw error
   }
 }

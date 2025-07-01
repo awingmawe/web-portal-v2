@@ -13,13 +13,10 @@ import {
   UmrahPersonalFormType,
 } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { Facility } from '@/constant/types/FacilityProps'
+import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
+import { umrahPersonalRegister } from '@/services/umrah-service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-// Import other step components here when created
-// import Step2FlightInfo from './Step2FlightInfo'
-// import Step3HotelSelection from './Step3HotelSelection'
-// import Step4Transportation from './Step4Transportation'
-// import Step5Review from './Step5Review'
 
 interface UmrahPersonalFormSectionProps {
   dataEnumVehicle: Facility[]
@@ -35,8 +32,44 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
   })
 
   // Final form submission
-  const onSubmit = (data: UmrahPersonalFormType) => {
-    console.log('Form submitted:', data)
+  const onSubmit = async (data: UmrahPersonalFormType) => {
+    const payload: RequestFormUmrahPersonal = {
+      // Journey Information
+      journeyType: data.journeyInformation.journeyType,
+      activity: data.journeyInformation.activity,
+      createVisa: data.journeyInformation.createVisa,
+      useInsurance: data.journeyInformation.useInsurance,
+      departureDate: data.journeyInformation.departureDate,
+      arrivalDate: data.journeyInformation.arrivalDate,
+      totalManifest: data.journeyInformation.totalManifest,
+      // Flight Information
+      departure: {
+        from: data.flightInformation.departure.from.airport.id,
+        to: data.flightInformation.departure.to.airport.id,
+        airline: data.flightInformation.departure.airline.id,
+        flightClass: data.flightInformation.departure.flightClass,
+        flightRoute: data.flightInformation.departure.flightRoute,
+      },
+      arrival: {
+        from: data.flightInformation.arrival.from.airport.id,
+        to: data.flightInformation.arrival.to.airport.id,
+        airline: data.flightInformation.arrival.airline.id,
+        flightClass: data.flightInformation.arrival.flightClass,
+        flightRoute: data.flightInformation.arrival.flightRoute,
+      },
+      // Hotel and Transportation
+      meccaHotel: data.hotelMecca.hotelMecca.id,
+      medinaHotel: data.hotelMedina?.hotelMedina.id, // Safely access optional field
+      transportation: data.transportation.transportation.id,
+    }
+
+    try {
+      const result = await umrahPersonalRegister(payload)
+
+      console.log('API Success:', result)
+    } catch (error) {
+      console.error('API Error:', error)
+    }
   }
 
   // it should be implement here

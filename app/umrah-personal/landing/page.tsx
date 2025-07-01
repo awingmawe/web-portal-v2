@@ -3,6 +3,8 @@ import UmrohLandingSection from '@/components/pages/umrah-personal/landing/1-Lan
 import LearnMoreSection from '@/components/pages/umrah-personal/landing/2-LearnMore'
 import UmrohPersonalStartSection from '@/components/pages/umrah-personal/landing/3-UmrahPersonalStart/BannerStart'
 import ScrollContainerWrapper from '@/components/pages/umrah-personal/landing/layout'
+import { cookieNames } from '@/services/common/cookie'
+import { cookies } from 'next/headers'
 
 export async function generateMetadata() {
   return {
@@ -11,11 +13,13 @@ export async function generateMetadata() {
 }
 
 export default async function UmrahPersonalLanding() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   return (
-    <ScrollContainerWrapper>
-      <UmrohLandingSection />
+    <ScrollContainerWrapper token={token}>
+      <UmrohLandingSection token={token} />
       <LearnMoreSection />
-      <UmrohPersonalStartSection />
+      <UmrohPersonalStartSection token={token} />
     </ScrollContainerWrapper>
   )
 }

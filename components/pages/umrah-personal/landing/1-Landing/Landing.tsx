@@ -2,12 +2,20 @@
 
 import ChecklistIcon from '@/components/icons/checklist'
 import { Button } from '@/components/ui/button'
+import { ACCOUNT_URL } from '@/constant/env'
 import Frame from '@/public/images/frame-umrah-personal.png'
 import { animate } from 'framer-motion'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const UmrohLandingSection: React.FC = () => {
+interface UmrohPersonalStartSectionProps {
+  token: string
+}
+const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
+  token,
+}) => {
+  const router = useRouter()
   const features: string[] = [
     'Harga paket fleksibel sesuai kebutuhan',
     'Pilih tanggal keberangkatan yang Anda inginkan',
@@ -54,6 +62,15 @@ const UmrohLandingSection: React.FC = () => {
     })
   }
 
+  const handleToForm = () => {
+    if (!token) {
+      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      return
+    }
+
+    router.push('/umrah-personal/form')
+  }
+
   return (
     <section
       className={`relative overflow-hidden bg-white p-6 max-lg:mt-12 max-lg:p-0 lg:h-[100vh]`}
@@ -82,6 +99,7 @@ const UmrohLandingSection: React.FC = () => {
             <Button
               className="bg-primary-500 px-10 py-4 max-lg:w-full"
               type="button"
+              onClick={handleToForm}
             >
               Buat Paket Umroh Sekarang!
             </Button>
