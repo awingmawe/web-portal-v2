@@ -218,10 +218,14 @@ export const CheckoutProvider = ({
 
   // Function to handle checkout button click
   const handleCheckout = async () => {
+    const netAmount = Math.min(
+      paymentAmount * totalQty,
+      preBooking?.downPayment
+    )
     const payload = {
       packageVariantId: selectedVariant?.variantId,
       referralCode,
-      netAmount: paymentAmount * totalQty,
+      netAmount,
       double: selectedRoomType?.double || 0,
       triple: selectedRoomType?.triple || 0,
       quad: selectedRoomType?.quad || 0,

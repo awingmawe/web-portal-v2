@@ -68,12 +68,14 @@ export const SidebarMobileProfile = () => {
   const [loadingLogout, setLoadingLogout] = useState(false)
   const router = useRouter()
   const { lg } = useTailwindBreakpoint()
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    if (!lg) {
+    if (!lg && isLoaded) {
       router.replace('/my/profile')
+      setIsLoaded(false)
     }
-  }, [lg, router])
+  }, [lg, router, isLoaded])
 
   return (
     <div className="w-full max-w-sm">
