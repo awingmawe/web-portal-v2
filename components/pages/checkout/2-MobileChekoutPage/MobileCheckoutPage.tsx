@@ -597,7 +597,10 @@ const MobileCheckoutPage = ({}) => {
                       className="h-4 w-4"
                     />
                     <div className="flex items-center gap-2">
-                      <LinkAjaSyariah className="h-4 w-4" />
+                      <LinkAjaSyariah
+                        className="h-4 w-4"
+                        id="linkajaSyariahIcon"
+                      />
                       <Label
                         htmlFor="linkaja-syariah"
                         className="text-l-medium cursor-pointer"
@@ -620,7 +623,7 @@ const MobileCheckoutPage = ({}) => {
                       className="h-4 w-4"
                     />
                     <div className="flex items-center gap-2">
-                      <LinkAja className="h-4 w-4" />
+                      <LinkAja className="h-4 w-4" id="linkajaIcon" />
                       <Label
                         htmlFor="linkaja"
                         className="text-l-medium cursor-pointer"

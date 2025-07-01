@@ -14,21 +14,25 @@ export const LinkAja: React.FC<IconProps> = ({ className = '', ...props }) => {
       className={cn(className)}
       {...props}
     >
-      <rect width="40" height="40" fill="url(#pattern0_7888_111213)" />
+      <rect
+        width="40"
+        height="40"
+        fill={`url(#pattern0_7888_111213-${props.id})`}
+      />
       <defs>
         <pattern
-          id="pattern0_7888_111213"
+          id={`pattern0_7888_111213-${props.id}`}
           patternContentUnits="objectBoundingBox"
           width="1"
           height="1"
         >
           <use
-            xlinkHref="#image0_7888_111213"
+            xlinkHref={`#image0_7888_111213-${props.id}`}
             transform="matrix(0.000489696 0 0 0.00049112 0 -0.00290698)"
           />
         </pattern>
         <image
-          id="image0_7888_111213"
+          id={`image0_7888_111213-${props.id}`}
           width="2048"
           height="2048"
           preserveAspectRatio="none"
@@ -54,21 +58,25 @@ export const LinkAjaSyariah: React.FC<IconProps> = ({
       className={cn(className)}
       {...props}
     >
-      <rect width="40" height="40" fill="url(#pattern0_7888_111212)" />
+      <rect
+        width="40"
+        height="40"
+        fill={`url(#pattern0_7888_111212-${props.id})`}
+      />
       <defs>
         <pattern
-          id="pattern0_7888_111212"
+          id={`pattern0_7888_111212-${props.id}`}
           patternContentUnits="objectBoundingBox"
           width="1"
           height="1"
         >
           <use
-            xlinkHref="#image0_7888_111212"
+            xlinkHref={`#image0_7888_111212-${props.id}`}
             transform="translate(-0.0754717 -0.0783784) scale(0.00028165)"
           />
         </pattern>
         <image
-          id="image0_7888_111212"
+          id={`image0_7888_111212-${props.id}`}
           width="4096"
           height="4096"
           preserveAspectRatio="none"
