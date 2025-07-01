@@ -184,7 +184,7 @@ export default function SelectHotel({
                   <Fragment>
                     {availableRoomTypes.double && (
                       <Button
-                        onClick={() => handleAddRoom('double')}
+                        onClick={() => !disabled && handleAddRoom('double')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
                         variant="outline"
                         disabled={disabled}
@@ -268,7 +268,7 @@ export default function SelectHotel({
                   <Fragment>
                     {availableRoomTypes.triple && (
                       <Button
-                        onClick={() => handleAddRoom('triple')}
+                        onClick={() => !disabled && handleAddRoom('triple')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
                         variant="outline"
                         disabled={disabled}
@@ -350,10 +350,10 @@ export default function SelectHotel({
                   </div>
                 ) : (
                   <Fragment>
-                    {availableRoomTypes.triple && (
+                    {availableRoomTypes.quad && (
                       <Button
-                        onClick={() => handleAddRoom('quad')}
-                        className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
+                        onClick={() => !disabled && handleAddRoom('quad')}
+                        className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100 disabled:cursor-not-allowed"
                         variant="outline"
                         disabled={disabled}
                       >
