@@ -9,6 +9,7 @@ import {
 import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScrollV2'
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ArtikelSection from '@/components/pages/homepage/7-Artikel/ArtikelSection'
+import UmrahPersonalBanner from '@/components/pages/homepage/8-UmrahPersonalBanner'
 import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
@@ -118,6 +119,7 @@ export default async function Home() {
         <div className="container mx-auto max-xl:px-0">
           <ProgramCards className="absolute -top-19 left-0 z-99 px-4 py-3" />
           <SubmenuCards />
+          <UmrahPersonalBanner />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
             <CarouselBanner
               dataBanner={dataBannerCarousel}
