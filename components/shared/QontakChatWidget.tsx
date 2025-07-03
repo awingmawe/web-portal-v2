@@ -80,6 +80,17 @@ const QontakChatWidget = () => {
           ) as HTMLIFrameElement
           if (iframe) {
             iframe.classList.add('qontak-widget-iframe')
+
+            // Add custom close button
+            const closeButton = document.createElement('button')
+            closeButton.innerText = '⛌'
+            closeButton.className = 'qontak-widget-close-button'
+            closeButton.onclick = () => {
+              iframe.style.display = 'none'
+              closeButton.style.display = 'none'
+            }
+
+            document.body.appendChild(closeButton)
             observer.disconnect()
           }
         })
