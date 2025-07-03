@@ -102,7 +102,7 @@ const MobileCheckoutPage = ({}) => {
           setDisabledButtonCheckout(true)
         }
       } else {
-        setDisabledButtonCheckout(true)
+        setDisabledButtonCheckout(false)
       }
     }
   }, [
