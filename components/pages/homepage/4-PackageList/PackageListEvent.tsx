@@ -93,7 +93,7 @@ const PackageSection = ({
             <CarouselContent className="-ml-4.5 px-2 max-lg:ml-0">
               {isLoading ? renderSkeletonItems(4, true) : packageItems}
               <CarouselItem
-                className="mx-4.5 hidden basis-4/5 flex-col items-center items-center
+                className="mx-4.5 hidden basis-4/5 flex-col items-center
               justify-center rounded-2xl border border-neutral-200 max-lg:flex md:basis-1/2 lg:basis-1/4"
               >
                 <Link href={`/search?page=1&query=&section=${type}`}>
