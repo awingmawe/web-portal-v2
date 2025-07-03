@@ -384,3 +384,30 @@
 .content-description hr:first-child {
   display: none;
 }
+
+.qchat-form__footer q-text-center {
+  display: none;
+}
+
+.qontak-widget-iframe {
+  bottom: 0px !important;
+}
+@media (max-width: 1023px) {
+  .qontak-widget-iframe {
+    bottom: 50px !important;
+  }
+}
+
+.qontak-widget-close-button {
+  position: fixed;
+  right: 20px;
+  bottom: 70px;
+  z-index: 10000000;
+  background: #f0143e;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  color: white;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
