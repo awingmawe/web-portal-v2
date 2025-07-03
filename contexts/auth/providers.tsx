@@ -30,7 +30,11 @@ export default function AuthProvider({
     {},
     typeof window !== 'undefined' && !!getAccessToken() // Pass isReady as true only if token exists
   )
-  const { data: profile, mutate: refetchProfile } = useProfile(
+  const {
+    data: profile,
+    mutate: refetchProfile,
+    isLoading: isLoadingProfile,
+  } = useProfile(
     {},
     typeof window !== 'undefined' && !!getAccessToken() // Pass isReady as true only if token exists
   )
@@ -108,6 +112,7 @@ export default function AuthProvider({
         setState: handleChangeState,
         refetchProfile,
         profile,
+        isLoadingProfile,
         isMobile,
         hasPermission,
         permissions,

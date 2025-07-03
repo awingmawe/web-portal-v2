@@ -3,6 +3,7 @@ import { Profile } from './shared/type'
 
 type AuthContext = {
   profile?: Profile
+  isLoadingProfile: boolean
   refetchProfile: () => void
   isMobile: boolean
   state: any
@@ -18,6 +19,7 @@ type AuthContext = {
 
 export const Context = createContext<AuthContext>({
   profile: undefined,
+  isLoadingProfile: false,
   refetchProfile: () => {
     return
   },
