@@ -386,10 +386,7 @@ const CheckoutPage = () => {
                           className="h-4 w-4"
                         />
                         <div className="flex items-center gap-2">
-                          <LinkAjaSyariah
-                            className="h-4 w-4"
-                            id="linkajaSyariahIcon"
-                          />
+                          <LinkAjaSyariah className="h-4 w-4" />
                           <Label
                             htmlFor="linkAjaSyariah"
                             className="text-l-medium cursor-pointer"
@@ -412,7 +409,7 @@ const CheckoutPage = () => {
                           className="h-4 w-4"
                         />
                         <div className="flex items-center gap-2">
-                          <LinkAja className="h-4 w-4" id="linkajaIcon" />
+                          <LinkAja className="h-4 w-4" />
                           <Label
                             htmlFor="linkaja"
                             className="text-l-medium cursor-pointer"
