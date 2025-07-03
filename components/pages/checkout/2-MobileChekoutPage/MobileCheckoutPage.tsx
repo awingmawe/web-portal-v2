@@ -30,6 +30,7 @@ const MobileCheckoutPage = ({}) => {
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const searchParams = useSearchParams()
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const [disabledButtonCheckout, setDisabledButtonCheckout] = useState(true)
 
   const {
     detailVariant,
@@ -86,6 +87,32 @@ const MobileCheckoutPage = ({}) => {
   useEffect(() => {
     setSelectedRoomType(selectedVariant?.roomType)
   }, [selectedVariant, setSelectedRoomType])
+
+  useEffect(() => {
+    if (loading || isEmptyRoomType || !termsAccepted) {
+      setDisabledButtonCheckout(true)
+    } else {
+      if (isLinkAja) {
+        if (
+          selectedPayment === 'linkAjaSyariah' ||
+          selectedPayment === 'linkAja'
+        ) {
+          setDisabledButtonCheckout(false)
+        } else {
+          setDisabledButtonCheckout(true)
+        }
+      } else {
+        setDisabledButtonCheckout(true)
+      }
+    }
+  }, [
+    selectedVariant,
+    isEmptyRoomType,
+    loading,
+    termsAccepted,
+    isLinkAja,
+    selectedPayment,
+  ])
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -588,12 +615,12 @@ const MobileCheckoutPage = ({}) => {
                 {/* LinkAja Syariah */}
                 <div
                   className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
-                  onClick={() => setSelectedPayment('linkaja-syariah')}
+                  onClick={() => setSelectedPayment('linkAjaSyariah')}
                 >
                   <div className="flex items-center gap-4">
                     <RadioGroupItem
-                      value="linkaja-syariah"
-                      id="linkaja-syariah"
+                      value="linkAjaSyariah"
+                      id="linkAjaSyariah"
                       className="h-4 w-4"
                     />
                     <div className="flex items-center gap-2">
@@ -602,7 +629,7 @@ const MobileCheckoutPage = ({}) => {
                         id="linkajaSyariahIcon"
                       />
                       <Label
-                        htmlFor="linkaja-syariah"
+                        htmlFor="linkAjaSyariah"
                         className="text-l-medium cursor-pointer"
                       >
                         LinkAja Syariah
@@ -614,11 +641,11 @@ const MobileCheckoutPage = ({}) => {
                 {/* LinkAja */}
                 <div
                   className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
-                  onClick={() => setSelectedPayment('linkaja')}
+                  onClick={() => setSelectedPayment('linkAja')}
                 >
                   <div className="flex items-center gap-4">
                     <RadioGroupItem
-                      value="linkaja"
+                      value="linkAja"
                       id="linkaja"
                       className="h-4 w-4"
                     />
@@ -705,10 +732,15 @@ const MobileCheckoutPage = ({}) => {
           ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
           : 'cursor-not-allowed bg-gray-300 text-gray-500'} */}
         <Button
-          onClick={
-            !isEmptyRoomType && termsAccepted ? handleCheckout : undefined
-          }
-          disabled={loading || isEmptyRoomType || !termsAccepted}
+          onClick={() => {
+            if (!isEmptyRoomType && termsAccepted) {
+              handleCheckout({
+                linkAja: true,
+                linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+              })
+            }
+          }}
+          disabled={disabledButtonCheckout}
           className=" px-6 py-3 "
         >
           <span className="text-m-medium text-neutral-900">Pesan Sekarang</span>

@@ -3,6 +3,7 @@
 
 import { toast } from '@/components/ui/sonner'
 import { Package } from '@/constant/types/PackageProps'
+import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { useAuth } from '@/contexts/auth/context'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { getHotelRating, getTripDuration } from '@/lib/utils'
@@ -217,7 +218,7 @@ export const CheckoutProvider = ({
   }, [selectedRoomType])
 
   // Function to handle checkout button click
-  const handleCheckout = async () => {
+  const handleCheckout = async (paymentMethod?: PaymentMethod) => {
     const netAmount = Math.min(
       paymentAmount * totalQty,
       preBooking?.downPayment
@@ -229,7 +230,9 @@ export const CheckoutProvider = ({
       double: selectedRoomType?.double || 0,
       triple: selectedRoomType?.triple || 0,
       quad: selectedRoomType?.quad || 0,
+      paymentMethod,
     }
+    console.log(payload)
 
     setLoading(true)
     try {

@@ -27,6 +27,7 @@ import {
 } from '@/constant/types/ManifestProps'
 import { AxiosProgressEvent } from 'axios'
 import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
+import { PaymentMethod } from '@/constant/types/PaymentMethod'
 
 export async function getBanner(
   query: GetListQuery
@@ -247,6 +248,7 @@ export async function bookingCheckout(payload: {
   referralCode: string
   triple: number
   quad: number
+  paymentMethod?: PaymentMethod
 }) {
   try {
     const response = await apiWithAuth.post<any>(

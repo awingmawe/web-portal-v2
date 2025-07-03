@@ -6,6 +6,7 @@ import { LinkAja, LinkAjaSyariah } from '@/components/icons/linkaja'
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
+import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
@@ -28,6 +29,8 @@ const CheckoutPage = () => {
   const searchParams = useSearchParams()
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
+  const [disabledButtonCheckout, setDisabledButtonCheckout] = useState(true)
+
   const {
     detailVariant,
     selectedVariant,
@@ -83,6 +86,32 @@ const CheckoutPage = () => {
   useEffect(() => {
     setSelectedRoomType(selectedVariant?.roomType)
   }, [selectedVariant, setSelectedRoomType])
+
+  useEffect(() => {
+    if (loading || isEmptyRoomType || !termsAccepted) {
+      setDisabledButtonCheckout(true)
+    } else {
+      if (isLinkAja) {
+        if (
+          selectedPayment === 'linkAjaSyariah' ||
+          selectedPayment === 'linkAja'
+        ) {
+          setDisabledButtonCheckout(false)
+        } else {
+          setDisabledButtonCheckout(true)
+        }
+      } else {
+        setDisabledButtonCheckout(true)
+      }
+    }
+  }, [
+    selectedVariant,
+    isEmptyRoomType,
+    loading,
+    termsAccepted,
+    isLinkAja,
+    selectedPayment,
+  ])
 
   return (
     <div className="mt-5 min-h-screen bg-gray-50 bg-white font-sans">
@@ -348,18 +377,21 @@ const CheckoutPage = () => {
                     {/* LinkAja Syariah */}
                     <div
                       className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
-                      onClick={() => setSelectedPayment('linkaja-syariah')}
+                      onClick={() => setSelectedPayment('linkAjaSyariah')}
                     >
                       <div className="flex items-center gap-4">
                         <RadioGroupItem
-                          value="linkaja-syariah"
-                          id="linkaja-syariah"
+                          value="linkAjaSyariah"
+                          id="linkAjaSyariah"
                           className="h-4 w-4"
                         />
                         <div className="flex items-center gap-2">
-                          <LinkAjaSyariah className="h-4 w-4" />
+                          <LinkAjaSyariah
+                            className="h-4 w-4"
+                            id="linkajaSyariahIcon"
+                          />
                           <Label
-                            htmlFor="linkaja-syariah"
+                            htmlFor="linkAjaSyariah"
                             className="text-l-medium cursor-pointer"
                           >
                             LinkAja Syariah
@@ -371,16 +403,16 @@ const CheckoutPage = () => {
                     {/* LinkAja */}
                     <div
                       className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
-                      onClick={() => setSelectedPayment('linkaja')}
+                      onClick={() => setSelectedPayment('linkAja')}
                     >
                       <div className="flex items-center gap-4">
                         <RadioGroupItem
-                          value="linkaja"
+                          value="linkAja"
                           id="linkaja"
                           className="h-4 w-4"
                         />
                         <div className="flex items-center gap-2">
-                          <LinkAja className="h-4 w-4" />
+                          <LinkAja className="h-4 w-4" id="linkajaIcon" />
                           <Label
                             htmlFor="linkaja"
                             className="text-l-medium cursor-pointer"
@@ -503,19 +535,20 @@ const CheckoutPage = () => {
                 </p>
               )}
 
-              <button
-                className={`w-full rounded-[100px] py-3 font-medium ${
-                  !isEmptyRoomType && termsAccepted && loading === false
-                    ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
-                    : 'cursor-not-allowed bg-gray-300 text-gray-500'
-                }`}
-                disabled={loading}
-                onClick={
-                  !isEmptyRoomType && termsAccepted ? handleCheckout : undefined
-                }
+              <Button
+                disabled={disabledButtonCheckout}
+                className="w-full font-medium text-neutral-900"
+                onClick={() => {
+                  if (!isEmptyRoomType && termsAccepted) {
+                    handleCheckout({
+                      linkAja: true,
+                      linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+                    })
+                  }
+                }}
               >
                 Lanjut Bayar Sekarang!
-              </button>
+              </Button>
             </div>
           </div>
 
