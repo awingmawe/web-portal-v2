@@ -162,12 +162,14 @@ export const CardPackage = memo(function CardPackage({
           },
         })
       }}
-      className="relative"
+      className={`relative ${section === 'search-topbar' ? 'flex flex-row items-center gap-3' : 'flex flex-col'}`}
       id="card-package"
     >
       {/* Image */}
       {showDiscount && <BadgePromo title="PROMO 🎉" />}
-      <div className="relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md">
+      <div
+        className={`relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md ${section === 'search-topbar' ? 'w-[200px]' : ''}`}
+      >
         <Image
           src={!isEmpty(src) && isValidImage(src) ? src : NoImagePlaceholder}
           alt={title}
@@ -195,7 +197,7 @@ export const CardPackage = memo(function CardPackage({
       </div>
 
       {/* Content */}
-      <div className="mt-3 flex flex-col gap-1" ref={elem}>
+      <div className="mt-3 flex flex-1 flex-col gap-1" ref={elem}>
         {differenceInDays(releasedAt, new Date()) <= 10 && (
           <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1">
             <InfoIcon size={20} className="text-primary-700 stroke-0" />
