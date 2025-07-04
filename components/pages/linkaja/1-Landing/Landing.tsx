@@ -17,6 +17,7 @@ import { Muslim101Logo } from '@/components/icons/muslim101'
 import { Button } from '@/components/ui/button'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
+import { setLocalReferralCode } from '@/lib/utils'
 import Image from 'next/image'
 import { useEffect } from 'react'
 
@@ -36,6 +37,7 @@ export default function LandingLinkAja() {
     // Update URL parameters
     updateQueryParams(['prMin', 'prMax', 'page'], [0, 40000000, 1])
     sessionStorage.setItem('isLinkAja', 'true')
+    setLocalReferralCode('LINKAJA')
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
