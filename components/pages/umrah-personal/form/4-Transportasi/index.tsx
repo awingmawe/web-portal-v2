@@ -5,6 +5,7 @@ import { PeopleIcon } from '@/components/icons/people'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { ACTIVITY_TYPES } from '@/constant/schema/umrah-personal-schema/constant'
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { Facility } from '@/constant/types/FacilityProps'
 import { STEP_1, STEP_5 } from '@/contexts/umrah-personal/constant'
@@ -93,7 +94,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
   return (
     <div
       className={`scrollbar-hide mx-auto w-full max-w-5xl max-xl:max-w-3xl lg:grid lg:h-[80vh] lg:place-content-center lg:overflow-y-auto`}
-      id="umrah-personal-step-5"
+      id={`umrah-personal-step-${form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA ? 4 : 5}`}
     >
       <div className="lg:rounded-[24px] lg:border lg:border-neutral-100">
         {/* Form Content */}
