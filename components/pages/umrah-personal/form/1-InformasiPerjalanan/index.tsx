@@ -19,7 +19,7 @@ import {
   JOURNEY_TYPES,
 } from '@/constant/schema/umrah-personal-schema/constant'
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
-import { STEP_1 } from '@/contexts/umrah-personal/constant'
+import { STEP_1, TOTAL_STEPS } from '@/contexts/umrah-personal/constant'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
@@ -32,7 +32,7 @@ interface Step1JourneyInfoProps {
 }
 
 const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
-  const { currentStep, handleNext } = useUmrahPersonal()
+  const { currentStep, handleNext, setTotalSteps } = useUmrahPersonal()
   const checkStep1Validity = () => {
     const values = form.getValues(STEP_1)
     return (
@@ -144,7 +144,14 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                   <FormControl>
                     <RadioGroup
                       className="flex gap-3 max-lg:flex-col"
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value)
+                        if (value === ACTIVITY_TYPES.MECCA) {
+                          setTotalSteps(TOTAL_STEPS)
+                        } else if (value === ACTIVITY_TYPES.MECCA_MEDINA) {
+                          setTotalSteps(6)
+                        }
+                      }}
                       value={field.value}
                     >
                       {/* Use labels instead of FormItems for better radio group behavior */}

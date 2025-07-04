@@ -10,11 +10,13 @@ interface UmrahPersonalContextType {
   // currentStep: number represents the current step in the form
   // setCurrentStep: function to update the current step
   // totalSteps: total number of steps in the form
+  // setTotalSteps: function to update the total number of steps
   // isStepValid: function to check if a step is valid
   // scrollToStep: function to scroll to a specific step
   currentStep: number
   setCurrentStep: (step: number) => void
   totalSteps: number
+  setTotalSteps: (totalSteps: number) => void
   isStepValid: (step: number) => boolean
   scrollToStep?: (stepNumber: number) => void
 
@@ -42,6 +44,7 @@ export const UmrahPersonalContext = createContext<UmrahPersonalContextType>({
   currentStep: INITIAL_STEP,
   setCurrentStep: () => {},
   totalSteps: TOTAL_STEPS,
+  setTotalSteps: () => {},
   isStepValid: () => false,
   scrollToStep: () => {},
   handlePrevious: () => {},
