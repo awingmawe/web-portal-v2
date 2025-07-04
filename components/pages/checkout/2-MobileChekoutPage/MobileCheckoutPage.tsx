@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
+import { LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { useCheckout } from '@/contexts/checkout-context'
 import {
   formatCurrency,
@@ -314,6 +315,9 @@ const MobileCheckoutPage = ({}) => {
               defaultPackageVariant={selectedVariant.variant}
               defaultPackageVariantId={selectedVariant.variantId}
               disabled={prebookingLoading}
+              disabledAddOnly={
+                isLinkAja ? sliderValue >= LINKAJA_MAX_LIMIT : false
+              }
               onChange={(roomType) => {
                 setSelectedRoomType(roomType)
                 setShouldRunCheckPre(true)
@@ -403,7 +407,7 @@ const MobileCheckoutPage = ({}) => {
                       const value = parseInt(rawInputValue) || 0
                       const minAmount = selectedVariant.netAmount * totalQty
                       const maxAmount = isLinkAja
-                        ? 20000000
+                        ? LINKAJA_MAX_LIMIT
                         : preBooking?.totalPrice || totalPrice * totalQty
 
                       if (value >= minAmount && value <= maxAmount) {
@@ -420,8 +424,9 @@ const MobileCheckoutPage = ({}) => {
                         e.preventDefault()
                         const value = parseInt(rawInputValue) || 0
                         const minAmount = selectedVariant.netAmount * totalQty
-                        const maxAmount =
-                          preBooking?.totalPrice || totalPrice * totalQty
+                        const maxAmount = isLinkAja
+                          ? LINKAJA_MAX_LIMIT
+                          : preBooking?.totalPrice || totalPrice * totalQty
 
                         if (value >= minAmount && value <= maxAmount) {
                           setSliderValue(value)
@@ -441,11 +446,13 @@ const MobileCheckoutPage = ({}) => {
                 min={totalQty > 0 ? selectedVariant.netAmount * totalQty : 0}
                 max={
                   totalQty > 0
-                    ? preBooking?.totalPrice || totalPrice * totalQty
+                    ? isLinkAja
+                      ? 500000
+                      : preBooking?.totalPrice || totalPrice * totalQty
                     : 0
                 }
                 disabled={prebookingLoading}
-                step={1000}
+                step={5000000}
                 value={sliderValue}
                 onChange={handleSliderChange}
                 className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
@@ -724,9 +731,7 @@ const MobileCheckoutPage = ({}) => {
           {prebookingLoading ? (
             <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
           ) : (
-            <p className="text-m-semibold">
-              Rp {sliderValue.toLocaleString('id-ID')}
-            </p>
+            <p className="text-m-semibold">{formatCurrency(sliderValue)}</p>
           )}
         </div>
         {/* {isEmptyRoomType && !termsAccepted && loading === false

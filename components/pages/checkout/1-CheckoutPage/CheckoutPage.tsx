@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
+import { LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { useCheckout } from '@/contexts/checkout-context'
 import {
   formatCurrency,
@@ -226,7 +227,13 @@ const CheckoutPage = () => {
                   defaultValue={selectedVariant?.roomType}
                   defaultPackageVariant={selectedVariant.variant}
                   defaultPackageVariantId={selectedVariant.variantId}
-                  disabled={prebookingLoading}
+                  disabled={
+                    prebookingLoading ||
+                    (isLinkAja ? sliderValue >= LINKAJA_MAX_LIMIT : false)
+                  }
+                  disabledAddOnly={
+                    isLinkAja ? sliderValue >= LINKAJA_MAX_LIMIT : false
+                  }
                   onChange={(roomType) => {
                     setSelectedRoomType(roomType)
                     setShouldRunCheckPre(true)
@@ -288,8 +295,9 @@ const CheckoutPage = () => {
                         onBlur={() => {
                           const value = parseInt(rawInputValue) || 0
                           const minAmount = selectedVariant.netAmount * totalQty
-                          const maxAmount =
-                            preBooking?.totalPrice || totalPrice * totalQty
+                          const maxAmount = isLinkAja
+                            ? LINKAJA_MAX_LIMIT
+                            : preBooking?.totalPrice || totalPrice * totalQty
 
                           if (value >= minAmount && value <= maxAmount) {
                             setSliderValue(value)
@@ -306,8 +314,9 @@ const CheckoutPage = () => {
                             const value = parseInt(rawInputValue) || 0
                             const minAmount =
                               selectedVariant.netAmount * totalQty
-                            const maxAmount =
-                              preBooking?.totalPrice || totalPrice * totalQty
+                            const maxAmount = isLinkAja
+                              ? LINKAJA_MAX_LIMIT
+                              : preBooking?.totalPrice || totalPrice * totalQty
 
                             if (value >= minAmount && value <= maxAmount) {
                               setSliderValue(value)
