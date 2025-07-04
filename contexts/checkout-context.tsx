@@ -244,7 +244,7 @@ export const CheckoutProvider = ({
       handlePushEvent('submit_booking')
 
       if (paymentMethod?.linkAja) {
-        // window.location.href = res?.data.order.paymentLink
+        window.location.href = res?.data.order.paymentLink
         return
       } else {
         window.snap.pay(res?.data.order.paymentToken, {
