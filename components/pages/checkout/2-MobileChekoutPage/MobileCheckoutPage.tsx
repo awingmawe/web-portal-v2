@@ -402,8 +402,9 @@ const MobileCheckoutPage = ({}) => {
                     onBlur={() => {
                       const value = parseInt(rawInputValue) || 0
                       const minAmount = selectedVariant.netAmount * totalQty
-                      const maxAmount =
-                        preBooking?.totalPrice || totalPrice * totalQty
+                      const maxAmount = isLinkAja
+                        ? 20000000
+                        : preBooking?.totalPrice || totalPrice * totalQty
 
                       if (value >= minAmount && value <= maxAmount) {
                         setSliderValue(value)

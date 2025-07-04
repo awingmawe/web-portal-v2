@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  QONTAK_WIDGET_CHAT_CODE,
   QONTAK_WIDGET_CHAT_ID,
   QONTAK_WIDGET_CHAT_SCRIPT,
 } from '@/constant/env'
@@ -63,7 +64,7 @@ const QontakChatWidget = () => {
 
         const config = {
           id: String(QONTAK_WIDGET_CHAT_ID),
-          code: 'EMyA2Qcb7p-XqD8XCgc-Hg',
+          code: String(QONTAK_WIDGET_CHAT_CODE),
           user: isLoggedIn
             ? (localStorage.getItem('qchat_user') ?? undefined)
             : undefined,

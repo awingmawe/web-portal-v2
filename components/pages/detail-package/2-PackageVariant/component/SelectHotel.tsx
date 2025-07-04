@@ -16,6 +16,7 @@ export interface SelectHotelProps {
   defaultPackageVariantId?: number | null
   disabled?: boolean
   variant?: 'normal' | 'checkout'
+  maxPayment?: number
   onChange?: (roomType: RoomType, price: number) => void
 }
 
