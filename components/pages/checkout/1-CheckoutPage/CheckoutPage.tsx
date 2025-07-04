@@ -227,10 +227,7 @@ const CheckoutPage = () => {
                   defaultValue={selectedVariant?.roomType}
                   defaultPackageVariant={selectedVariant.variant}
                   defaultPackageVariantId={selectedVariant.variantId}
-                  disabled={
-                    prebookingLoading ||
-                    (isLinkAja ? sliderValue >= LINKAJA_MAX_LIMIT : false)
-                  }
+                  disabled={prebookingLoading}
                   disabledAddOnly={
                     isLinkAja ? sliderValue >= LINKAJA_MAX_LIMIT : false
                   }
