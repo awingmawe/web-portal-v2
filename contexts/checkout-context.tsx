@@ -244,32 +244,32 @@ export const CheckoutProvider = ({
       handlePushEvent('submit_booking')
 
       if (paymentMethod?.linkAja) {
-        window.location.href = res?.data.order.paymentLink
-
+        // window.location.href = res?.data.order.paymentLink
         return
+      } else {
+        window.snap.pay(res?.data.order.paymentToken, {
+          onSuccess: async () => {
+            // console.log(result)
+            router.push(`/my/transaction`)
+          },
+          onPending: async () => {
+            // console.log('Payment pending', result)
+            router.push(`/my/need-payment`)
+            // Add expiration check logic
+          },
+          onError: (error: any) => {
+            console.log('Payment error', error)
+          },
+          onClose: () => {
+            router.push(`/my/need-payment`)
+            // Additional logic on close
+          },
+        })
       }
-
-      window.snap.pay(res?.data.order.paymentToken, {
-        onSuccess: async () => {
-          // console.log(result)
-          router.push(`/my/transaction`)
-        },
-        onPending: async () => {
-          // console.log('Payment pending', result)
-          router.push(`/my/need-payment`)
-          // Add expiration check logic
-        },
-        onError: (error: any) => {
-          console.log('Payment error', error)
-        },
-        onClose: () => {
-          router.push(`/my/need-payment`)
-          // Additional logic on close
-        },
-      })
 
       localStorage.removeItem('referralCode')
     } catch (error) {
+      toast.error('Gagal melakukan checkout [500]')
       console.error(error)
     } finally {
       setLoading(false)
