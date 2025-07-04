@@ -12,7 +12,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { ACCOUNT_URL, CALL_CENTER } from '@/constant/env'
+import { ACCOUNT_URL, CALL_CENTER, LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
@@ -38,6 +38,7 @@ const CheckoutDrawerMobile = React.memo(
     image?: string
     token: string
   }) => {
+    const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
     const { shareViaWhatsApp } = useGallerySharing()
     const {
       selectedVariant,
@@ -178,7 +179,15 @@ const CheckoutDrawerMobile = React.memo(
 
                   {/* Room Type Selection */}
                   <div className="mb-35">
-                    <SelectHotel isMobile />
+                    <SelectHotel
+                      isMobile
+                      disabledAddOnly={
+                        isLinkAja
+                          ? selectedVariant.package.dpAmount * getTotalQty() >=
+                            LINKAJA_MAX_LIMIT
+                          : false
+                      }
+                    />
                   </div>
 
                   {/* Checkout Buttons */}

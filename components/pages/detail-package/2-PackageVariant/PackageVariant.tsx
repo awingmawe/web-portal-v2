@@ -12,7 +12,7 @@ import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/sonner'
-import { ACCOUNT_URL, CALL_CENTER } from '@/constant/env'
+import { ACCOUNT_URL, CALL_CENTER, LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -51,6 +51,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   packageVariantId,
   referralCodeParams,
 }) => {
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
   const {
@@ -67,6 +68,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     formattedArrival,
     formattedDeparture,
     numberOfDays,
+    getTotalQty,
   } = usePackageVariant()
   const router = useRouter()
   const { lg } = useTailwindBreakpoint()
@@ -414,7 +416,16 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
 
       {/* Hotel selection with Popover */}
-      {variants.length > 0 && <SelectHotel />}
+      {variants.length > 0 && (
+        <SelectHotel
+          disabledAddOnly={
+            isLinkAja
+              ? Number(selectedVariant?.package.dpAmount) * getTotalQty() >=
+                LINKAJA_MAX_LIMIT
+              : false
+          }
+        />
+      )}
 
       {/* Action buttons */}
       {variants.length > 0 ? (

@@ -15,6 +15,7 @@ import { MoneyTickIcon } from '@/components/icons/money-tick'
 import { MouseSquareIcon } from '@/components/icons/mouse-square'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { Button } from '@/components/ui/button'
+import { LINKAJA_REFERRAL } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { setLocalReferralCode } from '@/lib/utils'
@@ -37,7 +38,7 @@ export default function LandingLinkAja() {
     // Update URL parameters
     updateQueryParams(['prMin', 'prMax', 'page'], [0, 40000000, 1])
     sessionStorage.setItem('isLinkAja', 'true')
-    setLocalReferralCode('LINKAJA')
+    setLocalReferralCode(LINKAJA_REFERRAL)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
