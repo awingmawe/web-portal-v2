@@ -353,11 +353,23 @@ const CheckoutPage = () => {
                   min={totalQty > 0 ? selectedVariant.netAmount * totalQty : 0}
                   max={
                     totalQty > 0
-                      ? preBooking?.totalPrice || totalPrice * totalQty
+                      ? isLinkAja
+                        ? LINKAJA_MAX_LIMIT
+                        : preBooking?.totalPrice || totalPrice * totalQty
                       : 0
                   }
                   disabled={prebookingLoading}
-                  step={1000}
+                  step={(() => {
+                    const max =
+                      totalQty > 0
+                        ? isLinkAja
+                          ? LINKAJA_MAX_LIMIT
+                          : preBooking?.totalPrice || totalPrice * totalQty
+                        : 0
+                    const distanceToMax = max - sliderValue
+
+                    return Math.min(500000, distanceToMax)
+                  })()}
                   value={sliderValue}
                   onChange={handleSliderChange}
                   className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
