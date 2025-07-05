@@ -447,12 +447,22 @@ const MobileCheckoutPage = ({}) => {
                 max={
                   totalQty > 0
                     ? isLinkAja
-                      ? 500000
+                      ? LINKAJA_MAX_LIMIT
                       : preBooking?.totalPrice || totalPrice * totalQty
                     : 0
                 }
                 disabled={prebookingLoading}
-                step={5000000}
+                step={(() => {
+                  const max =
+                    totalQty > 0
+                      ? isLinkAja
+                        ? LINKAJA_MAX_LIMIT
+                        : preBooking?.totalPrice || totalPrice * totalQty
+                      : 0
+                  const distanceToMax = max - sliderValue
+
+                  return Math.min(500000, distanceToMax)
+                })()}
                 value={sliderValue}
                 onChange={handleSliderChange}
                 className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
