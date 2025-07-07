@@ -39,7 +39,7 @@ export const ArticleCard = ({
     slug: article?.slug,
     description: article?.description,
     publishedAt: article?.published_at,
-    // author: dataArticleDetail?.author?.name,
+    author: article?.created_by,
     tag: article?.hashtags?.map((tag) => tag).join(', '),
     section,
   }
@@ -54,7 +54,7 @@ export const ArticleCard = ({
     if (elem.current) {
       observe(elem.current, () => {
         pushEvent({
-          name: 'impression_package_card',
+          name: 'impression_article_card',
           topic: 'general',
           category: eventCategory,
           data: dataForTracker,
