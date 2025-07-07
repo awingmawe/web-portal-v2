@@ -61,12 +61,14 @@ export default function BottomNavigation({
   dataFacility,
   dataTagPackages,
   dataSection,
+  dpMinMax,
   forceMobile = false,
 }: {
   dataMinMax: any
   dataFacility: any
   dataTagPackages: any
   dataSection: any
+  dpMinMax?: any
   forceMobile?: boolean
 }) {
   const { filters, resetFilter, setFilters } = useFilterProduct()
@@ -123,6 +125,7 @@ export default function BottomNavigation({
       3: 'sort',
       4: 'section',
       5: 'tagSlug',
+      6: 'dpRange',
     }
 
     if (filterKeyMap[id] === 'sort') {
@@ -137,6 +140,19 @@ export default function BottomNavigation({
         priceRange: {
           hargaMin: dataMinMax.min,
           hargaMax: dataMinMax.max,
+        },
+      })
+
+      return
+    }
+
+    // Reset the appropriate filter in context
+    if (filterKeyMap[id] === 'dpRange') {
+      setFilters({
+        ...filters,
+        dpRange: {
+          dpMin: dpMinMax.min,
+          dpMax: dpMinMax.max,
         },
       })
 
@@ -162,6 +178,8 @@ export default function BottomNavigation({
         return !!searchParams.get('section')
       case 5: // Promo
         return !!searchParams.get('tS')
+      case 6: // DP
+        return !!searchParams.get('dpMin') || !!searchParams.get('dpMax')
       default:
         return false
     }
