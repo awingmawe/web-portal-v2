@@ -7,6 +7,7 @@ import Step4MadinahHotel from '@/components/pages/umrah-personal/form/3-Penginap
 import Step5Transportation from '@/components/pages/umrah-personal/form/4-Transportasi'
 import Step6Review from '@/components/pages/umrah-personal/form/5-Review'
 import { Form } from '@/components/ui/form'
+import { ACTIVITY_TYPES } from '@/constant/schema/umrah-personal-schema/constant'
 import {
   defaultUmrahPersonalForm,
   umrahPersonalFormSchema,
@@ -14,6 +15,7 @@ import {
 } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { Facility } from '@/constant/types/FacilityProps'
 import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
+import { STEP_1 } from '@/contexts/umrah-personal/constant'
 import { umrahPersonalRegister } from '@/services/umrah-service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -68,7 +70,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
 
       console.log('API Success:', result)
     } catch (error) {
-      console.error('API Error:', error)
+      console.warn('API Error:', error)
     }
   }
 
@@ -89,7 +91,8 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
         <Step3MeccaHotel form={form} />
 
         {/* Step 4: Hotel Selection Medina*/}
-        <Step4MadinahHotel form={form} />
+        {form.getValues(`${STEP_1}.activity`) ===
+          ACTIVITY_TYPES.MECCA_MEDINA && <Step4MadinahHotel form={form} />}
 
         {/* Step 5: Transportation */}
         <Step5Transportation form={form} dataEnumVehicle={dataEnumVehicle} />

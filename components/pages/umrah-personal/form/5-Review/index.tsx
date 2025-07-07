@@ -12,6 +12,7 @@ import HotelImageCarousel from '@/components/pages/umrah-personal/form/3-Pengina
 import { Button } from '@/components/ui/button'
 import {
   ACTIVITY_TYPE_LABELS,
+  ACTIVITY_TYPES,
   FLIGHT_CLASS_LABELS,
   JOURNEY_TYPE_LABELS,
 } from '@/constant/schema/umrah-personal-schema/constant'
@@ -193,7 +194,7 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
   return (
     <div
       className={`scrollbar-hide mx-auto hidden w-full max-w-5xl max-xl:max-w-3xl`}
-      id="umrah-personal-step-6"
+      id={`umrah-personal-step-${form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA ? 5 : 6}`}
     >
       <div className="lg:rounded-[24px] lg:border lg:border-neutral-100">
         {/* Form Content */}

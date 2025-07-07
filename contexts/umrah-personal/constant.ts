@@ -1,5 +1,5 @@
 // Default for state step management
-export const TOTAL_STEPS = 6
+export const TOTAL_STEPS = 5
 export const INITIAL_STEP = 1
 
 //  Step identifiers for the form and the validation schema

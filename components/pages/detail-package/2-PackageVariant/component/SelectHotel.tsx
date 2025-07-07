@@ -16,6 +16,7 @@ export interface SelectHotelProps {
   defaultPackageVariantId?: number | null
   disabled?: boolean
   variant?: 'normal' | 'checkout'
+  disabledAddOnly?: boolean
   onChange?: (roomType: RoomType, price: number) => void
 }
 
@@ -26,6 +27,7 @@ export default function SelectHotel({
   defaultPackageVariantId,
   variant = 'normal',
   disabled = false,
+  disabledAddOnly = false,
   onChange,
 }: SelectHotelProps) {
   const {
@@ -174,7 +176,7 @@ export default function SelectHotel({
                     <Button
                       onClick={() => handleQuantityChange('double', 1)}
                       variant="ghost"
-                      disabled={disabled}
+                      disabled={disabled || disabledAddOnly}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
@@ -187,7 +189,7 @@ export default function SelectHotel({
                         onClick={() => !disabled && handleAddRoom('double')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
                         variant="outline"
-                        disabled={disabled}
+                        disabled={disabled || disabledAddOnly}
                       >
                         <span className="text-s-regular">Tambah</span>
                       </Button>
@@ -258,7 +260,7 @@ export default function SelectHotel({
                     <Button
                       onClick={() => handleQuantityChange('triple', 1)}
                       variant="ghost"
-                      disabled={disabled}
+                      disabled={disabled || disabledAddOnly}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
@@ -271,7 +273,7 @@ export default function SelectHotel({
                         onClick={() => !disabled && handleAddRoom('triple')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100"
                         variant="outline"
-                        disabled={disabled}
+                        disabled={disabled || disabledAddOnly}
                       >
                         <span className="text-s-regular">Tambah</span>
                       </Button>
@@ -342,7 +344,7 @@ export default function SelectHotel({
                     <Button
                       onClick={() => handleQuantityChange('quad', 1)}
                       variant="ghost"
-                      disabled={disabled}
+                      disabled={disabled || disabledAddOnly}
                       className="h-8 w-8 rounded-full hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
@@ -355,7 +357,7 @@ export default function SelectHotel({
                         onClick={() => !disabled && handleAddRoom('quad')}
                         className="hover:bg-netural-50 h-10 w-full rounded-full border-1 border-neutral-300 bg-white text-lg font-medium text-neutral-700 hover:bg-neutral-100 disabled:cursor-not-allowed"
                         variant="outline"
-                        disabled={disabled}
+                        disabled={disabled || disabledAddOnly}
                       >
                         <span className="text-s-regular">Tambah</span>
                       </Button>

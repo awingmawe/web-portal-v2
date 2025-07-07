@@ -9,20 +9,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { LINKAJA_MAX_LIMIT } from '@/constant/env'
+import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useState } from 'react'
 
-interface CheckQuotaModalProps {
+interface ModalSelectHotelProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSubmit?: (quotaAmount: string) => void
 }
 
-const CheckQuotaModal = ({
+const ModalSelectHotel = ({
   open,
   onOpenChange,
   onSubmit,
-}: CheckQuotaModalProps) => {
+}: ModalSelectHotelProps) => {
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+
   const [quotaAmount, setQuotaAmount] = useState('')
+
+  const { selectedVariant, getTotalQty } = usePackageVariant()
 
   const handleSubmit = () => {
     if (onSubmit) {
@@ -53,7 +59,14 @@ const CheckQuotaModal = ({
             Harap memilih jumlah kamar jemaah terlebih dahulu untuk bisa
             melakukan checkout.
           </p>
-          <SelectHotel />
+          <SelectHotel
+            disabledAddOnly={
+              isLinkAja
+                ? Number(selectedVariant?.package.dpAmount) * getTotalQty() >=
+                  LINKAJA_MAX_LIMIT
+                : false
+            }
+          />
 
           <div className="mt-5 flex items-end justify-end gap-3">
             <Button
@@ -73,4 +86,4 @@ const CheckQuotaModal = ({
   )
 }
 
-export default CheckQuotaModal
+export default ModalSelectHotel

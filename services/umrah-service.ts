@@ -272,6 +272,7 @@ export async function bookingCheckout(payload: {
     return response
   } catch (error) {
     console.error('Error fetching payment transaction:', error)
+    throw error
   }
 }
 
