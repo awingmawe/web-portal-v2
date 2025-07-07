@@ -25,12 +25,13 @@ export default async function LinkAja() {
   //   const cookieStore = await cookies()
   //   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
-  const [dataMinMax, dataTagPackages, dataFacility, dataSection] =
+  const [dataMinMax, dataTagPackages, dataFacility, dataSection, dpMinMax] =
     await Promise.all([
       { min: '1000000', max: '40000000' },
       getTagPackagesEnum(),
       getFacilityEnum('umrah-facility'),
       getSectionEnum(),
+      { minDpAmount: '0', maxDpAmount: '20000000' },
     ])
 
   return (
@@ -57,6 +58,7 @@ export default async function LinkAja() {
           dataFacility={dataFacility}
           dataTagPackages={dataTagPackages}
           dataSection={dataSection}
+          dpMinMax={dpMinMax}
           forceMobile
         />
       </div>

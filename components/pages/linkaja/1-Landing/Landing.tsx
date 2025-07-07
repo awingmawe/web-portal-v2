@@ -36,7 +36,10 @@ export default function LandingLinkAja() {
     })
 
     // Update URL parameters
-    updateQueryParams(['prMin', 'prMax', 'page'], [0, 40000000, 1])
+    updateQueryParams(
+      ['prMin', 'prMax', 'dpMin', 'dpMax', 'page'],
+      [0, 40000000, 0, 20000000, 1]
+    )
     sessionStorage.setItem('isLinkAja', 'true')
     setLocalReferralCode(LINKAJA_REFERRAL)
 
