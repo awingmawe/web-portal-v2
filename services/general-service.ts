@@ -1,7 +1,7 @@
 import { api } from '@/services/common/http'
 import { Airline, GetAirlinesParams } from '@/constant/types/AirlineProps'
 
-import { Airport } from '@/constant/types/AirportProps'
+import { Airport, GetAirportsParams } from '@/constant/types/AirportProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import { Facility } from '@/constant/types/FacilityProps'
 import {
