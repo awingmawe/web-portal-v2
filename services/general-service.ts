@@ -1,7 +1,7 @@
 import { api } from '@/services/common/http'
 import { Airline, GetAirlinesParams } from '@/constant/types/AirlineProps'
 
-import { Airport, GetAirportsParams } from '@/constant/types/AirportProps'
+import { Airport } from '@/constant/types/AirportProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import { Facility } from '@/constant/types/FacilityProps'
 import {
@@ -13,19 +13,13 @@ import { GetLegalParams, Legal } from '@/constant/types/LegalProps'
 import { Hotel } from '@/constant/types/HotelProps'
 import { AxiosResponse } from 'axios'
 
-export async function getAirports({
-  page = 1,
-  size = 10,
-  search,
-}: GetAirportsParams): Promise<GenericResponse<Airport>> {
+export async function getAirports(
+  query: GetListQuery
+): Promise<GenericResponse<Airport>> {
   try {
-    const response = await api.get(`/public/umrah/v2/package/airport-package`, {
-      params: {
-        page,
-        size,
-        search,
-      },
-    })
+    const response = await api.get(
+      `/public/umrah/v2/package/airport-package?${qs.stringify(query)}`
+    )
     return response.data
   } catch (error) {
     console.error('Error fetching airports:', error)

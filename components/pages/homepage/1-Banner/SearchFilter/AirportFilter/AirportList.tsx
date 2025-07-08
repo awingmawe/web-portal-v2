@@ -31,7 +31,7 @@ const AirportSearch: React.FC<AirportSearchProps> = ({
     searchQuery: departureSearchQuery,
     handleSearchChange: handleDepartureSearchChange,
     loadMore: loadMoreDepartureAirports,
-  } = useAirportSearch()
+  } = useAirportSearch({ typeairport: 'departure' })
 
   // Use the custom hook for arrival airports
   const {
@@ -41,7 +41,7 @@ const AirportSearch: React.FC<AirportSearchProps> = ({
     searchQuery: arrivalSearchQuery,
     handleSearchChange: handleArrivalSearchChange,
     loadMore: loadMoreArrivalAirports,
-  } = useAirportSearch()
+  } = useAirportSearch({ typeairport: 'arrival' })
 
   // Render skeleton if initial loading
   if (initialLoading) {

@@ -1,6 +1,7 @@
 export interface UseSearchParams {
   initialQuery?: string
   pageSize?: number
+  typeairport?: string
 }
 
 export interface UseSearchResult<T> {

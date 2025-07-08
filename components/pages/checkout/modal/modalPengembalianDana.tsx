@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/dialog'
 import { X } from 'lucide-react'
 import renderHTML from 'react-render-html'
-
 interface CheckQuotaModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -33,9 +32,12 @@ const ModalPengembalianDana = ({
 
     return `H-${remainingDays} hari` // Jika tidak ada minggu, tampilkan dalam format "h-X hari"
   }
+
+  console.log(dataRefundPolicy?.content)
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="scrollbar-thin scrollbar-thumb-gray-300 max-h-[90vh] w-full !max-w-[947px] overflow-y-auto rounded-xl px-6 py-4 shadow-lg">
+      <DialogContent className="scrollbar-thin scrollbar-thumb-gray-300 max-h-[90vh] w-full !max-w-[1000px] overflow-y-auto rounded-xl px-6 py-4 shadow-lg">
         <DialogHeader className="p-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -54,11 +56,39 @@ const ModalPengembalianDana = ({
           </div>
         </DialogHeader>
         <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
-        <div className="mt-4 text-sm text-neutral-700">
+
+        {/* <div className="mt-4 text-sm text-neutral-700"> */}
+        {/* {renderHTML(dataRefundPolicy?.content || '')} */}
+        {/* </div> */}
+        {/* 
+        <div className="prose prose-img:inline prose-ul:[list-style:inherit] prose-ol:[list-style:inherit] prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs prose-li:[:marker:initial]  min-w-full break-all marker:text-inherit">
+          {renderHTML(dataRefundPolicy?.content || '')}
+        </div> */}
+        <div
+          className="
+          prose
+          prose-img:inline
+          prose-ul:list-disc
+          prose-ol:list-decimal
+          prose-li>p:!inline
+          prose-li>p:!m-0
+          prose-li>p:!font-semibold
+          prose-h1:text-2xl
+          prose-h2:text-xl
+          prose-h3:text-lg
+          prose-h4:text-base
+          prose-h5:text-sm
+          prose-h6:text-xs
+          min-w-full
+          break-words
+          marker:text-inherit
+        "
+        >
           {renderHTML(dataRefundPolicy?.content || '')}
         </div>
+
         {parsedContent && parsedContent.length > 0 ? (
-          <div className="mt-6 overflow-x-auto">
+          <div className="mt-4 overflow-x-auto">
             <table className="w-full table-auto border border-gray-300 text-sm text-neutral-800">
               <thead className="bg-gray-100">
                 <tr>
