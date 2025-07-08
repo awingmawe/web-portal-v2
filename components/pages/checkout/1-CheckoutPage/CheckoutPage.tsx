@@ -263,10 +263,20 @@ const CheckoutPage = () => {
                   Gak perlu bayar full dulu, cukup uang muka aja dulu kamu yang
                   atur!
                 </p>
-                <span className="text-s-regular whitespace-nowrap text-neutral-500">
-                  *uang muka minimal {formatCurrency(selectedVariant.netAmount)}
-                  /orang
-                </span>
+                {isLinkAja ? (
+                  <span className="text-s-regular text-right whitespace-nowrap text-neutral-500">
+                    Uang muka minimal{' '}
+                    {formatCurrency(selectedVariant.netAmount)} dan limit
+                    <br />
+                    transaksi bulanan kamu di LinkAja adalah Rp40.000.000
+                  </span>
+                ) : (
+                  <span className="text-s-regular whitespace-nowrap text-neutral-500">
+                    *uang muka minimal{' '}
+                    {formatCurrency(selectedVariant.netAmount)}
+                    /orang
+                  </span>
+                )}
               </div>
 
               {/* Input & slider */}
