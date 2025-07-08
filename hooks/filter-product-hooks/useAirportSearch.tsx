@@ -8,8 +8,10 @@ import { useDebouncedCallback } from 'use-debounce'
 export function useAirportSearch({
   initialQuery = '',
   pageSize = 15,
+  typeairport,
 }: UseSearchParams = {}): UseSearchResult<Airport> {
   const [searchQuery, setSearchQuery] = useState(initialQuery)
+
   const [airports, setAirports] = useState<Airport[]>([])
   const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
@@ -25,6 +27,7 @@ export function useAirportSearch({
           page: pageNum,
           size: pageSize,
           search: query,
+          typeairport,
         })
         return response
       } catch (err) {
