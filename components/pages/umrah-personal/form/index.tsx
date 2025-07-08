@@ -62,7 +62,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
       // Hotel and Transportation
       meccaHotel: data.hotelMecca.hotelMecca.id,
       medinaHotel: data.hotelMedina?.hotelMedina.id, // Safely access optional field
-      transportation: data.transportation.transportation.id,
+      transportation: data.transportation?.transportation.id, // Safely access optional field
     }
 
     try {

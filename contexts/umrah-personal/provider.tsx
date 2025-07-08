@@ -131,10 +131,20 @@ export const UmrahPersonalProvider: React.FC<{
 
         if (firstErrorPath) {
           const errorElement = document.getElementById(firstErrorPath)
-          if (errorElement) {
-            errorElement.scrollIntoView({
+          if (errorElement && scrollContainerRef.current) {
+            const containerRect =
+              scrollContainerRef.current.getBoundingClientRect()
+            const errorRect = errorElement.getBoundingClientRect()
+
+            const scrollTop =
+              errorRect.top -
+              containerRect.top +
+              scrollContainerRef.current.scrollTop
+
+            // Smooth scroll within the container
+            scrollContainerRef.current.scrollTo({
+              top: scrollTop,
               behavior: 'smooth',
-              block: 'end',
             })
           }
         }

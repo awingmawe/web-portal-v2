@@ -5,6 +5,7 @@ export interface Facility {
   type: string
   level: number
   image: string
+  customValue?: { value: string; label: string }[]
 }
 
 export interface OthersFacilities {

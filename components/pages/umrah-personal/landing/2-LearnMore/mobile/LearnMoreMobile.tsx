@@ -10,7 +10,7 @@ import Image from 'next/image'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 const LearnMoreSectionMobile: React.FC = () => {
-  const [currentSection, setCurrentSection] = useState(0)
+  const [currentSection, setCurrentSection] = useState(-1)
   const [isScrolling, setIsScrolling] = useState(false)
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
 

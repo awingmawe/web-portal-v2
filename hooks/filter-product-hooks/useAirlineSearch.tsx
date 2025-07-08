@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Airline } from '@/constant/types/AirlineProps'
 import { UseSearchParams, UseSearchResult } from '@/hooks/types-props'
 import { getAirline } from '@/services/general-service'
@@ -51,7 +50,7 @@ export function useAirlineSearch({
     }
 
     loadInitialData()
-  }, [searchQuery])
+  }, [fetchAirlines, searchQuery])
 
   // Load more airlines
   const loadMoreAirlines = useCallback(async () => {
@@ -68,7 +67,7 @@ export function useAirlineSearch({
 
     setHasMore(airlines.length + data.results.length < data.total)
     setLoading(false)
-  }, [page])
+  }, [airlines.length, fetchAirlines, loading, page, searchQuery])
 
   // Debounced search handler
   const handleSearchChange = useDebouncedCallback(

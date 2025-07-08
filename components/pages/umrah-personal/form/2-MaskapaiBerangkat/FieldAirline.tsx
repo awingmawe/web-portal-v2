@@ -23,15 +23,12 @@ interface AirlineSelectionProps {
   }
   showSearch?: boolean
   pageSize?: number
-  initialQuery?: string
-  className?: string
 }
 
 const AirlineSelection: React.FC<AirlineSelectionProps> = ({
   field,
   showSearch = true,
   pageSize = 6,
-  initialQuery = '',
 }) => {
   const {
     data: airlines,
@@ -42,7 +39,7 @@ const AirlineSelection: React.FC<AirlineSelectionProps> = ({
     searchQuery,
     handleSearchChange,
     loadMore: handleLoadMore,
-  } = useAirlineSearch({ initialQuery, pageSize })
+  } = useAirlineSearch({ pageSize })
 
   const handleValueChange = (value: string) => {
     const selectedAirline = airlines.find(
