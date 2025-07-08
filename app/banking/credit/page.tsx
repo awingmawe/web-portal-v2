@@ -8,10 +8,9 @@ import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim 101 | Talangan Umroh', `Talangan Umroh`),
+    ...metadata('Muslim101 | Talangan Umroh', `Talangan Umroh`),
   }
 }
-
 export default async function SearchGeneral() {
   const cookieStore = cookies()
   const token = (await cookieStore).get(cookieNames.USER_ACCESS_TOKEN)
@@ -24,30 +23,15 @@ export default async function SearchGeneral() {
       {/* Mobile (tanpa wrapper) */}
       <MobileTopbar variant="plainBank" showBackButton title="Talangan Umroh" />
       <div className="mx-auto block lg:container lg:hidden">
-        <div className="container mx-auto block lg:hidden">
-          <MobileTopbar
-            variant="plainBank"
-            showBackButton
-            title="Talangan Umroh"
-          />
-          <PembiayaanPage />
-        </div>
-
-        {/* Desktop (dengan wrapper) */}
-        <div className="container mx-auto hidden lg:block">
-          <PembiayaanPage />
-        </div>
-
-        <Footer type="compact" className="hidden lg:block" />
-        <MobileTopbar
-          variant="plainBank"
-          showBackButton
-          title="Talangan Umroh"
-        />
         <PembiayaanPage />
       </div>
 
-      <Footer type="compact" className="hidden md:block" />
+      {/* Desktop (dengan wrapper) */}
+      <div className="container mx-auto hidden lg:block">
+        <PembiayaanPage />
+      </div>
+
+      <Footer type="compact" className="hidden lg:block" />
     </Fragment>
   )
 }
