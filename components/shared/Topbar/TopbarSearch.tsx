@@ -12,7 +12,7 @@ import { Package } from '@/constant/types/PackageProps'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { mapProductsToCardData } from '@/lib/utils'
 import { getPackageList } from '@/services/umrah-service'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeIn, easeOut, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -185,7 +185,7 @@ export const TopbarSearch: React.FC = () => {
       y: 0,
       transition: {
         duration: 0.3,
-        ease: 'easeOut',
+        ease: easeOut,
       },
     },
     hidden: {
@@ -193,7 +193,7 @@ export const TopbarSearch: React.FC = () => {
       y: -10,
       transition: {
         duration: 0.3,
-        ease: 'easeIn',
+        ease: easeIn,
       },
     },
   }
@@ -204,7 +204,7 @@ export const TopbarSearch: React.FC = () => {
       y: 0,
       transition: {
         duration: 0.3,
-        ease: 'easeOut',
+        ease: easeOut,
         delay: 0.1,
       },
     },
@@ -213,7 +213,7 @@ export const TopbarSearch: React.FC = () => {
       y: -10,
       transition: {
         duration: 0.3,
-        ease: 'easeIn',
+        ease: easeIn,
       },
     },
   }

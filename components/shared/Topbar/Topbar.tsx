@@ -17,7 +17,7 @@ import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
 import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn, ellipsis, isEmpty } from '@/lib/utils'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeInOut, easeOut, motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -44,7 +44,7 @@ const dotVariants = {
     scale: 0,
     transition: {
       duration: 0.3,
-      ease: 'easeOut',
+      ease: easeOut,
     },
   },
   visible: {
@@ -52,7 +52,7 @@ const dotVariants = {
     scale: 1,
     transition: {
       duration: 0.3,
-      ease: 'easeOut',
+      ease: easeOut,
     },
   },
 }
@@ -64,7 +64,7 @@ const fixedTopbarVariants = {
     opacity: 0,
     transition: {
       duration: 0.3,
-      ease: 'easeInOut',
+      ease: easeInOut,
     },
   },
   visible: {
@@ -72,7 +72,7 @@ const fixedTopbarVariants = {
     opacity: 1,
     transition: {
       duration: 0.3,
-      ease: 'easeInOut',
+      ease: easeInOut,
     },
   },
 }
