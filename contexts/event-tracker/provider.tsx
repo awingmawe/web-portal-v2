@@ -180,11 +180,20 @@ export function EventTrackerProvider({
       const url = `${API_URL}/public/event/v1`
 
       if (backgroundProcess) {
-        const blob = new Blob([JSON.stringify(payload)], headers)
-        navigator.sendBeacon(url, blob)
-      } else await axios.post(url, payload, { headers })
+        await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+          },
+          body: JSON.stringify(payload),
+          keepalive: true,
+        })
+      } else {
+        await axios.post(url, payload, { headers })
+      }
     } catch (error) {
-      console.warn(error)
+      console.warn(backgroundProcess, error)
     }
   }
 

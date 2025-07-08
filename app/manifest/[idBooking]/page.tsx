@@ -6,7 +6,7 @@ import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
-import { getManifestDetail } from '@/services/umrah-service'
+import { getBookingId, getManifestDetail } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
 import { Fragment } from 'react'
@@ -26,6 +26,7 @@ export default async function FormManifest({ params }: { params: any }) {
     token
   )
 
+  const getDetailBooking = await getBookingId(idBooking, token)
   return (
     <Fragment>
       <Topbar type="plain" shadow />
@@ -43,13 +44,23 @@ export default async function FormManifest({ params }: { params: any }) {
         <section className="scrollbar-hide container mx-auto grid grid-cols-12 gap-5 max-lg:absolute max-lg:top-[55px] max-lg:bottom-0 max-lg:z-11 max-lg:h-full max-lg:w-full max-lg:max-w-full max-lg:gap-3 max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:py-7.5 max-lg:pb-[130px] max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
           <BackButton className="col-span-12 text-left text-neutral-900 max-lg:hidden" />
           <div className="relative z-2 col-span-4 max-lg:col-span-12">
-            <DaftarJemaah dataJemaah={dataDetailManifest.results} />
+            <DaftarJemaah
+              dataJemaah={dataDetailManifest.results}
+              getDetailBooking={getDetailBooking}
+            />
 
             {/* For Mobile View */}
-            <DrawerDaftarJemaah dataJemaah={dataDetailManifest.results} />
+            <DrawerDaftarJemaah
+              dataJemaah={dataDetailManifest.results}
+              getDetailBooking={getDetailBooking}
+            />
           </div>
           <div className="relative z-2 col-span-8 max-lg:col-span-12">
-            <BiodataForm idBooking={idBooking} />
+            <BiodataForm
+              idBooking={idBooking}
+              getDetailBooking={getDetailBooking}
+              dataJemaah={dataDetailManifest.results}
+            />
           </div>
         </section>
       </main>

@@ -1,3 +1,5 @@
+import { HotelGalleryImage } from '@/constant/types/GalleryProps'
+
 export interface Hotel {
   id: number
   logo: string
@@ -9,6 +11,7 @@ export interface Hotel {
   latitude: string
   longitude: string
   hotelDestination: HotelDestination[]
+  hotelGallery?: HotelGalleryImage[]
 }
 
 export interface HotelDestination {

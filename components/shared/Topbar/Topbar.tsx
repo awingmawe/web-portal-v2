@@ -5,11 +5,9 @@ import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { ReceiptItemIcon } from '@/components/icons/receipt-item'
-import { SearchIcon } from '@/components/icons/search'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
+import { TopbarSearch } from '@/components/shared/Topbar/TopbarSearch'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
@@ -17,7 +15,6 @@ import {
 } from '@/components/ui/popover'
 import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
-import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn, ellipsis, isEmpty } from '@/lib/utils'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -146,7 +143,7 @@ const Topbar: React.FC<TopbarProps> = ({
           href={href}
           onMouseEnter={() => handleMouseEnter(href)}
           onMouseLeave={handleMouseLeave}
-          className={`relative ${
+          className={`relative text-nowrap ${
             isActive
               ? 'text-m-medium text-neutral-900'
               : 'text-m-regular text-neutral-600'
@@ -202,8 +199,6 @@ const Topbar: React.FC<TopbarProps> = ({
 
   // Extract topbar content to its own component to prevent unnecessary rerenders
   const TopbarContent = React.memo(() => {
-    const { searchQuery, handleSearchChange, handleSearchDesktop } =
-      useSearchQuery({ redirectUri: 'search' })
     return (
       <Fragment>
         {/* Logo */}
@@ -225,45 +220,7 @@ const Topbar: React.FC<TopbarProps> = ({
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
               {/* Search */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <div className="flex cursor-pointer items-center gap-1">
-                    <SearchIcon size={20} className="text-neutral-500" />
-                    <span className="text-s-regular text-neutral-500">
-                      Cari
-                    </span>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent
-                  align="center"
-                  sideOffset={25}
-                  sticky="always"
-                  className="rounded-xl p-2.5 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-                >
-                  <div
-                    id="search-from-topbar"
-                    className="text-m-regular flex items-center gap-2.5 p-0 hover:bg-transparent"
-                  >
-                    <Input
-                      placeholder="Cari paket, travel, hotel atau airlines"
-                      endIcon={<SearchIcon className="text-primary-900" />}
-                      className="w-[310px]"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                    />
-                    <Link href={handleSearchDesktop} passHref>
-                      <Button
-                        type="submit"
-                        size="sm"
-                        className="max-h-[40px] px-[40px]"
-                        id="button-search-topbar"
-                      >
-                        Cari
-                      </Button>
-                    </Link>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <TopbarSearch />
 
               {/* Login and Profile */}
               {isEmpty(token) ? (
@@ -291,7 +248,7 @@ const Topbar: React.FC<TopbarProps> = ({
                   <Popover>
                     <PopoverTrigger asChild>
                       <button className="bg-primary-500 flex cursor-pointer items-center gap-1 rounded-[100px] py-2 pr-3 pl-3.5 transition-colors duration-200 focus-within:outline-0">
-                        <span className="text-m-regular text-neutral-900">
+                        <span className="text-m-regular text-nowrap text-neutral-900">
                           Untuk Mitra/Wukala
                         </span>
                         <ChevronIcon size={16} />
@@ -459,7 +416,7 @@ const Topbar: React.FC<TopbarProps> = ({
       {(type === 'normal' || type === 'plain') && (
         <header
           className={cn(
-            `h-[80px] w-full bg-white px-4 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
+            `h-[72px] w-full bg-white px-4 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
             className
           )}
         >

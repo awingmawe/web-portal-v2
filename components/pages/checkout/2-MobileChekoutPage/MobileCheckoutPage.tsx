@@ -1,55 +1,54 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import { CashReceiptIcon } from '@/components/icons/cash-receipt'
+import { InfoIcon } from '@/components/icons/info'
+import { LinkAja, LinkAjaSyariah } from '@/components/icons/linkaja'
 import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
-import CheckoutDrawerAddJamaah from '@/components/pages/detail-package/mobile/DrawerAddJamaah'
-import CheckoutDrawerFormJamaah from '@/components/pages/detail-package/mobile/DrawerFormAddJamaah'
+import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
 import DrawerPengembalianDana from '@/components/pages/detail-package/mobile/DrawerPengemalianDana'
 import DrawerSK from '@/components/pages/detail-package/mobile/DrawerSK'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Separator } from '@/components/ui/separator'
+import { LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { useCheckout } from '@/contexts/checkout-context'
-import { getLocalReferralCode, setLocalReferralCode } from '@/lib/utils'
+import {
+  formatCurrency,
+  getLocalReferralCode,
+  setLocalReferralCode,
+} from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
-import { Plus, Trash2, User } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import renderHTML from 'react-render-html'
 
 const MobileCheckoutPage = ({}) => {
   const [isOpenModal, setOpenModal] = useState(false)
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const searchParams = useSearchParams()
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const [disabledButtonCheckout, setDisabledButtonCheckout] = useState(true)
 
   const {
-    token,
     detailVariant,
     selectedVariant,
     preBooking,
     prebookingLoading,
-    setPreBooking,
     paymentDetails,
-    setPaymentDetails,
     referralCode,
     setReferralCode,
-    useMyData,
-    setUseMyData,
-    jamaahList,
-    setJamaahList,
     paymentAmount,
     setPaymentAmount,
     totalPrice,
-    handleAddJamaah,
-    handleJamaahNameChange,
-    handleJamaahPhoneChange,
-    handleRemoveJamaah,
     sliderValue,
     setSliderValue,
-    handleUseMyDataChange,
     handleCheckout,
     termsAccepted,
     setTermsAccepted,
-    isJamaahDataValid,
     isReferralValid,
     isReferralCodeChecked,
     wukalaSetting,
@@ -64,13 +63,12 @@ const MobileCheckoutPage = ({}) => {
     dataSK,
     parsedContent,
     dataRefundPolicy,
-    handleUseMyDataChangeMobile,
-    setNoTlpn,
-    setNama,
-    nama,
-    noTlpn,
-    handleSimpanMobile,
-    handleEditMobile,
+    totalQty,
+    isEmptyRoomType,
+    setSelectedRoomType,
+    setShouldRunCheckPre,
+    selectedPayment,
+    setSelectedPayment,
   } = useCheckout()
   const router = useRouter()
 
@@ -86,6 +84,36 @@ const MobileCheckoutPage = ({}) => {
       setIsHaveReferralCode(true)
     }
   }, [searchParams, setReferralCode])
+
+  useEffect(() => {
+    setSelectedRoomType(selectedVariant?.roomType)
+  }, [selectedVariant, setSelectedRoomType])
+
+  useEffect(() => {
+    if (loading || isEmptyRoomType || !termsAccepted) {
+      setDisabledButtonCheckout(true)
+    } else {
+      if (isLinkAja) {
+        if (
+          selectedPayment === 'linkAjaSyariah' ||
+          selectedPayment === 'linkAja'
+        ) {
+          setDisabledButtonCheckout(false)
+        } else {
+          setDisabledButtonCheckout(true)
+        }
+      } else {
+        setDisabledButtonCheckout(false)
+      }
+    }
+  }, [
+    selectedVariant,
+    isEmptyRoomType,
+    loading,
+    termsAccepted,
+    isLinkAja,
+    selectedPayment,
+  ])
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -105,20 +133,20 @@ const MobileCheckoutPage = ({}) => {
             alt="arrow"
           />
         </a>
-        <h1 className="absolute left-1/2 -translate-x-1/2 text-base font-medium">
+        <h1 className="text-l-semibold absolute left-1/2 -translate-x-1/2">
           Checkout
         </h1>
       </header>
 
       {/* Main content */}
-      <main className="pb-36">
+      <main className="bg-white pt-5 pb-36">
         {/* Package Info */}
-        <div className="m-[20px] rounded-[20px] bg-white p-2 shadow-sm">
-          <h2 className="mb-4 text-[14px] font-medium text-gray-800">
+        <div className="m-[20px] mt-0 rounded-[20px]  border border-neutral-100 p-3">
+          <h2 className="text-m-semibold mb-4 text-neutral-900">
             Detail Pembelian
           </h2>
 
-          <div className="mb-4 flex">
+          <div className="mb-4 flex items-center">
             <div className="mr-2">
               <Image
                 src={detailVariant?.package?.thumbnail || Placeholder}
@@ -133,48 +161,49 @@ const MobileCheckoutPage = ({}) => {
               />
             </div>
             <div className="w-2/3">
-              <h3 className="text-[12px] font-medium text-gray-800">
+              <h3 className="text-s-semibold text-neutral-900">
                 {detailVariant?.package?.title}
               </h3>
 
-              <div className="mt-1 flex items-center">
-                <p className="text-[14px] font-bold">
-                  {' '}
-                  Rp
-                  {Number(selectedVariant?.price).toLocaleString('id-ID')}
-                </p>
-                <span className="ml-1 text-[10px] text-gray-500">/orang</span>
+              <div className="mt-1 flex items-start gap-2">
+                <Image
+                  src={
+                    detailVariant?.package?.organizationInstance?.thumbnail ||
+                    Placeholder
+                  }
+                  alt="Organization"
+                  width={30}
+                  height={30}
+                  className="mt-[5px] rounded-lg"
+                  style={{
+                    borderRadius: '20px',
+                    objectFit: 'cover',
+                  }}
+                />
+                <div>
+                  <span className="text-s-medium">
+                    {detailVariant?.package?.organizationInstanceName}
+                  </span>
+                  <p className="text-xs-regular text-neutral-500">
+                    {detailVariant?.package?.organizationInstance?.city?.name}
+                  </p>
+                </div>
               </div>
-
-              {/* <div className="mt-1 flex items-center">
-                <p className="text-sm text-gray-500 line-through">
-                  Rp56.000.000
-                </p>
-                <span className="ml-2 rounded bg-red-500 px-2 py-0.5 text-xs text-white">
-                  -5%
-                </span>
-              </div> */}
             </div>
           </div>
 
-          <div className="flex border-b border-gray-200 py-2">
-            <div className="w-1/2 text-center">
-              <p className="mb-1 text-[10px] text-gray-500">Varian</p>
-              <p className="text-[12px] font-medium">
-                {' '}
-                {selectedVariant?.name}
-              </p>
-            </div>
-            <div className="w-1/2 text-center">
-              <p className="mb-1 text-[10px] text-gray-500">Tipe Kamar</p>
-              <p className="text-[12px] font-medium capitalize">
-                {' '}
-                {selectedVariant?.roomType}
-              </p>
-            </div>
+          <div className="my-2 w-full  text-left">
+            <p className="text-xs-medium mb-1 text-neutral-500">Varian</p>
+            <p className="text-s-regular">{selectedVariant?.name}</p>
+            {/* <div>
+                  <p className="text-[12px] text-gray-400">Tipe Kamar</p>
+                  <p className="text-[14px] font-semibold capitalize">
+                    {JSON.stringify(selectedVariant?.roomType)}
+                  </p>
+                </div> */}
           </div>
 
-          <div className="flex items-center justify-between border-b border-gray-200 py-3">
+          <div className="flex items-center justify-between border-t border-b border-neutral-200 py-3">
             <div>
               <p className="mb-1 text-sm text-[10px] text-gray-500">
                 Tanggal Berangkat
@@ -233,7 +262,7 @@ const MobileCheckoutPage = ({}) => {
             </div>
           </div>
 
-          <div className="ml-[4px] flex justify-between py-3">
+          <div className="mx-5 flex justify-between py-3">
             <div className="flex items-center">
               <div className="mr-5">
                 <Image
@@ -244,8 +273,10 @@ const MobileCheckoutPage = ({}) => {
                 />
               </div>
               <div>
-                <p className="mb-1 text-[12px] text-gray-500">Keberangkatan</p>
-                <p className="text-[14px] font-medium">
+                <p className="text-xs-medium mb-1 text-neutral-500">
+                  Keberangkatan
+                </p>
+                <p className="text-s-regular text-neutral-900">
                   {detailVariant?.package?.departure?.from?.airport?.code} →
                   {detailVariant?.package?.departure?.to?.airport?.code}
                 </p>
@@ -262,8 +293,10 @@ const MobileCheckoutPage = ({}) => {
                 />
               </div>
               <div>
-                <p className="mb-1 text-[12px] text-gray-500">Kedatangan</p>
-                <p className="text-[14px] font-medium">
+                <p className="text-xs-medium mb-1 text-neutral-500">
+                  Kedatangan
+                </p>
+                <p className="text-s-regular text-neutral-900">
                   {detailVariant?.package?.arrival?.from?.airport?.code} →
                   {detailVariant?.package?.arrival?.to?.airport?.code}
                 </p>
@@ -271,96 +304,39 @@ const MobileCheckoutPage = ({}) => {
             </div>
           </div>
         </div>
-        <div className="h-[4px] w-full bg-[#D2D2D1]" />
+        <div className="h-[4px] w-full bg-neutral-100" />
         {/* Jamaah Section */}
         <div className="bg-white p-4">
-          {jamaahList.map((jamaah: any, index: any) => (
-            <div
-              className="mt-4 h-[121px] space-y-3 rounded-[20px] border border-gray-200"
-              key={index}
-            >
-              <div key={jamaah.id} className="mb-4 overflow-hidden rounded-xl ">
-                <div className="flex h-[52px] w-full overflow-hidden rounded-xl border border-gray-200">
-                  {/* Bagian kiri - ditimpa ke bagian kanan */}
-                  <div className="z-10 -mr-[15px] flex flex-1 items-center justify-between rounded-tr-[20px] rounded-br-[20px] bg-white px-3">
-                    <div className="flex items-center gap-2">
-                      <User className="h-5 w-5 text-green-500" />
-                      <span className="text-sm font-medium">
-                        Data Jemaah {index + 1}
-                      </span>
-                    </div>
-                    <CheckoutDrawerFormJamaah
-                      setNoTlpn={setNoTlpn}
-                      text={'Edit'}
-                      setNama={setNama}
-                      data={jamaah}
-                      nama={nama}
-                      noTlpn={noTlpn}
-                      handleSimpanMobile={() => {
-                        handleEditMobile(jamaah)
-                        setNama('')
-                        setNoTlpn('')
-                      }}
-                    >
-                      <Image
-                        src={'/images/edit.svg'}
-                        width={20}
-                        height={20}
-                        alt="arrow"
-                      />
-                    </CheckoutDrawerFormJamaah>
-                  </div>
-
-                  {/* Tombol hapus */}
-                  <div
-                    className="relative z-0 flex w-[60px] items-center justify-center rounded-tr-xl rounded-br-xl bg-red-500 text-white"
-                    onClick={() => handleRemoveJamaah(jamaah.id)}
-                  >
-                    <Trash2 size={24} className="ml-4" />
-                  </div>
-                </div>
-
-                <div className="mt-2 bg-gray-50 p-2">
-                  <div className="grid grid-cols-2 gap-y-3">
-                    <div className="text-sm text-gray-500">Nama Jemaah</div>
-                    <div className="text-right text-sm font-medium">
-                      {jamaah.name}
-                    </div>
-                    <div className="text-sm text-gray-500">Nomor Telepon</div>
-                    <div className="text-right text-sm font-medium">
-                      {jamaah.phone}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          <div className="mt-4 rounded-[16px] border border-gray-200 bg-white p-3">
-            <CheckoutDrawerAddJamaah
-              handleUseMyDataChangeMobile={handleUseMyDataChangeMobile}
-              setNoTlpn={setNoTlpn}
-              setNama={setNama}
-              nama={nama}
-              noTlpn={noTlpn}
-              handleSimpanMobile={handleSimpanMobile}
-            >
-              {/* <button
-              // onClick={handleAddJamaah}
-              > */}
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-medium">Tambah Jamaah</h2>
-                <Plus size={16} />
-              </div>
-              {/* </button> */}
-            </CheckoutDrawerAddJamaah>
+          <div className="rounded-2xl border border-neutral-100 p-3">
+            <SelectHotel
+              isMobile
+              variant="normal"
+              defaultValue={selectedVariant?.roomType}
+              defaultPackageVariant={selectedVariant.variant}
+              defaultPackageVariantId={selectedVariant.variantId}
+              disabled={prebookingLoading}
+              disabledAddOnly={
+                isLinkAja ? sliderValue >= LINKAJA_MAX_LIMIT : false
+              }
+              onChange={(roomType) => {
+                setSelectedRoomType(roomType)
+                setShouldRunCheckPre(true)
+                setPaymentAmount(selectedVariant.netAmount)
+                setRawInputValue(String(paymentAmount * totalQty))
+              }}
+            />
+            {isEmptyRoomType && (
+              <p className="text-error-500 text-s-regular mt-2">
+                Harap pilih minimal 1 jemaah{' '}
+              </p>
+            )}
           </div>
         </div>
-        <div className="h-[4px] w-full bg-[#D2D2D1]" />
+        <div className="h-[4px] w-full bg-neutral-100" />
         {/* Payment section */}
         <div className=" bg-white p-4">
           {/* Payment method */}
-          <div className="mb-4 rounded-[16px] border border-gray-200 bg-white p-3">
+          <div className="mb-4 rounded-[16px] border border-neutral-200 bg-white p-3">
             {/* <div className="mb-3 rounded-lg bg-yellow-50 p-3">
               <p className="text-xs font-medium text-yellow-800">
                 Minimal pembayaran untuk saat ini: Rp{' '}
@@ -369,9 +345,9 @@ const MobileCheckoutPage = ({}) => {
                 )}
               </p>
             </div> */}
-            <div className="mb-4 rounded-[12px] border border-yellow-100 bg-yellow-50 p-3">
+            <div className="border-primary-500 bg-primary-100 mb-4 rounded-[12px] border p-2.5">
               <div className="flex items-center">
-                <div className="flex-shrink-0 text-yellow-500">
+                <div className="text-primary-500 flex-shrink-0">
                   <svg
                     width="20"
                     height="20"
@@ -386,11 +362,9 @@ const MobileCheckoutPage = ({}) => {
                     />
                   </svg>
                 </div>
-                <p className="ml-2 text-sm font-medium text-yellow-800">
-                  Minimal pembayaran uang muka adalah Rp
-                  {(
-                    selectedVariant.netAmount * jamaahList.length
-                  ).toLocaleString('id-ID')}
+                <p className="text-xs-regular ml-2 text-neutral-900">
+                  Minimal pembayaran uang muka adalah{' '}
+                  {formatCurrency(selectedVariant.netAmount)}/orang
                 </p>
               </div>
             </div>
@@ -404,20 +378,20 @@ const MobileCheckoutPage = ({}) => {
                     alt="arrow"
                   />
                 </div>
-                <p className="ml-2 font-medium">Jumlah Bayar</p>
+                <p className="text-m-semibold ml-2 text-neutral-900">
+                  Jumlah Bayar
+                </p>
               </div>
             </div>
 
-            <p className="mt-2 text-[12px] text-[#30302F]">
+            <p className="text-s-regular mt-2 text-neutral-900">
               Gak perlu bayar full dulu, cukup uang muka aja dulu kamu yang
               atur!
             </p>
 
             <div className="mt-3">
               <div className="flex items-center space-x-4">
-                <label className="text-sm font-medium whitespace-nowrap text-gray-700">
-                  Jumlah Bayar
-                </label>
+                <label className="text-xs-medium">Jumlah Bayar</label>
                 <div className="relative">
                   <span className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
                     Rp
@@ -431,16 +405,14 @@ const MobileCheckoutPage = ({}) => {
                     disabled={prebookingLoading}
                     onBlur={() => {
                       const value = parseInt(rawInputValue) || 0
-                      const minAmount =
-                        selectedVariant.netAmount * jamaahList.length
-                      const maxAmount =
-                        preBooking?.totalPrice || totalPrice * jamaahList.length
+                      const minAmount = selectedVariant.netAmount * totalQty
+                      const maxAmount = isLinkAja
+                        ? LINKAJA_MAX_LIMIT
+                        : preBooking?.totalPrice || totalPrice * totalQty
 
                       if (value >= minAmount && value <= maxAmount) {
                         setSliderValue(value)
-                        const perJamaahAmount = Math.ceil(
-                          value / jamaahList.length
-                        )
+                        const perJamaahAmount = Math.ceil(value / totalQty)
                         setPaymentAmount(perJamaahAmount)
                         setRawInputValue(value.toString())
                       } else {
@@ -451,17 +423,14 @@ const MobileCheckoutPage = ({}) => {
                       if (e.key === 'Enter') {
                         e.preventDefault()
                         const value = parseInt(rawInputValue) || 0
-                        const minAmount =
-                          selectedVariant.netAmount * jamaahList.length
-                        const maxAmount =
-                          preBooking?.totalPrice ||
-                          totalPrice * jamaahList.length
+                        const minAmount = selectedVariant.netAmount * totalQty
+                        const maxAmount = isLinkAja
+                          ? LINKAJA_MAX_LIMIT
+                          : preBooking?.totalPrice || totalPrice * totalQty
 
                         if (value >= minAmount && value <= maxAmount) {
                           setSliderValue(value)
-                          const perJamaahAmount = Math.ceil(
-                            value / jamaahList.length
-                          )
+                          const perJamaahAmount = Math.ceil(value / totalQty)
                           setPaymentAmount(perJamaahAmount)
                           setRawInputValue(value.toString())
                         } else {
@@ -474,26 +443,41 @@ const MobileCheckoutPage = ({}) => {
               </div>
               <input
                 type="range"
-                min={selectedVariant.netAmount * jamaahList.length} // Min is net amount × number of jamaah
-                max={preBooking?.totalPrice || totalPrice * jamaahList.length}
-                step={1000}
-                value={sliderValue} // Use the dedicated slider state
-                onChange={handleSliderChange}
+                min={totalQty > 0 ? selectedVariant.netAmount * totalQty : 0}
+                max={
+                  totalQty > 0
+                    ? isLinkAja
+                      ? LINKAJA_MAX_LIMIT
+                      : preBooking?.totalPrice || totalPrice * totalQty
+                    : 0
+                }
                 disabled={prebookingLoading}
-                className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
+                step={(() => {
+                  const max =
+                    totalQty > 0
+                      ? isLinkAja
+                        ? LINKAJA_MAX_LIMIT
+                        : preBooking?.totalPrice || totalPrice * totalQty
+                      : 0
+                  const distanceToMax = max - sliderValue
+
+                  return Math.min(500000, distanceToMax)
+                })()}
+                value={sliderValue}
+                onChange={handleSliderChange}
+                className="mt-4 h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500"
               />
 
               <div className="mt-3">
-                <div className="mt-1 flex justify-between text-sm">
-                  <span>Sisa Pelunasan</span>
+                <div className="mt-1 flex items-center gap-3 text-sm">
+                  <span className="text-xs-medium text-neutral-900">
+                    Sisa Pelunasan
+                  </span>
                   {prebookingLoading ? (
                     <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
                   ) : (
-                    <span className="font-medium">
-                      Rp
-                      {Number(preBooking?.remainingPayment || 0).toLocaleString(
-                        'id-ID'
-                      )}
+                    <span className="text-s-medium text-neutral-900">
+                      {formatCurrency(preBooking?.remainingPayment || 0)}
                     </span>
                   )}
                 </div>
@@ -502,7 +486,7 @@ const MobileCheckoutPage = ({}) => {
           </div>
 
           {/* Points & Referral */}
-          {/* <div className="mb-4 rounded-lg border border-gray-200 p-3">
+          {/* <div className="mb-4 rounded-lg border border-neutral-200 p-3">
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -517,8 +501,8 @@ const MobileCheckoutPage = ({}) => {
             </p>
           </div> */}
 
-          {isHaveRefferalCode && (
-            <div className="mb-4 rounded-[16px] border border-gray-200 p-3">
+          {!isHaveRefferalCode && (
+            <div className="mb-4 rounded-[16px] border border-neutral-100 p-3">
               <div className="flex items-center">
                 <Image
                   src="/images/discount-shape.svg"
@@ -526,9 +510,9 @@ const MobileCheckoutPage = ({}) => {
                   height={24}
                   alt="arrow"
                 />
-                <p className="ml-2 font-medium">Kode Referral</p>
+                <p className="text-m-semibold ml-2">Kode Referral</p>
               </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="text-s-regular mt-2 mb-3 text-neutral-900">
                 Apakah kamu punya kode referral? pakai kode untuk dapatkan
                 diskon!
               </p>
@@ -566,7 +550,7 @@ const MobileCheckoutPage = ({}) => {
             </div>
           )}
           {/* 
-          <div className="mb-4 flex items-center justify-between rounded-lg border border-gray-200 p-3">
+          <div className="mb-4 flex items-center justify-between rounded-lg border border-neutral-200 p-3">
             <div className="flex items-center">
               <div className="mr-3 text-yellow-500">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -586,56 +570,127 @@ const MobileCheckoutPage = ({}) => {
         </div>
         <div className="h-[4px] w-full bg-[#D2D2D1]" />
         {/* Payment Summary */}
-        <div className="bg-white p-4">
-          <div className="rounded-[16px] border border-gray-200 p-3">
-            <h2 className="mb-3 text-sm font-medium">Ringkasan Pembayaran</h2>
+        <div className="bg-white px-4 pt-4">
+          <div className="rounded-[16px] border border-neutral-200 p-3">
+            <h2 className="text-m-semibold mb-3">Rincian Pembayaran</h2>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">
-                  Total Harga Paket ({jamaahList.length} Jamaah)
-                </span>
-                <span className="flex">
-                  Rp{' '}
-                  {prebookingLoading ? (
-                    <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
-                  ) : Number(preBooking?.subtotalPrice) ? (
-                    Number(preBooking.subtotalPrice).toLocaleString('id-ID')
-                  ) : (
-                    '0'
-                  )}
-                </span>
-              </div>
               {paymentDetails?.map((detail: any, index: any) => (
-                <div key={index} className="flex justify-between">
-                  <span className="text-gray-500">{detail.label}</span>
-                  <span className="text-red-500">
-                    Rp{Number(detail?.amount).toLocaleString('id-ID')}
-                  </span>
+                <div key={index}>
+                  {detail.label === 'divider' ? (
+                    <Separator />
+                  ) : (
+                    <div className="flex justify-between">
+                      <span className="text-s-regular text-neutral-500">
+                        {renderHTML(detail.label.replace(/\n/g, '<br/>'))}
+                      </span>
+                      <div className="flex flex-col items-end">
+                        {detail.amount.map((item: any, index2: any) => (
+                          <span
+                            style={{
+                              color: item.color,
+                              fontSize:
+                                item.style == 'small'
+                                  ? '12px'
+                                  : item.style == 'medium'
+                                    ? '14px'
+                                    : '16px',
+                              fontWeight: item.style == 'small' ? 400 : 600,
+                            }}
+                            key={'amount-' + index2}
+                          >
+                            {item.amountLabel}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
-
-              <div className="my-2 h-px bg-gray-200" />
-              <div className="flex justify-between font-medium">
-                <span>Total Pelunasan</span>
-                <span>
-                  Rp{' '}
-                  {Number(preBooking?.remainingPayment || 0).toLocaleString(
-                    'id-ID'
-                  )}
-                </span>
-              </div>
+              <p
+                className={`text-s-regular bg-info-100 text-info-800 mt-3 flex items-center rounded-lg px-3 py-2`}
+              >
+                <InfoIcon className="text-info-800 mr-2" size={20} />
+                Jumlah yang dibayar setelah melakukan pembayaran uang muka.
+              </p>
             </div>
           </div>
         </div>
+        {/* Payment Method */}
+        {isLinkAja && (
+          <div className="bg-white px-4 pt-4">
+            <div className="rounded-[16px] border border-b border-neutral-200">
+              <div className="flex items-center border-b border-neutral-200 p-4">
+                <CashReceiptIcon className="text-neutral-900" size={20} />
+                <h2 className="text-m-semibold ml-2.5 text-neutral-900">
+                  Metode Pembayaran
+                </h2>
+              </div>
+              <RadioGroup
+                value={selectedPayment}
+                onValueChange={setSelectedPayment}
+                className="p-4"
+              >
+                {/* LinkAja Syariah */}
+                <div
+                  className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
+                  onClick={() => setSelectedPayment('linkAjaSyariah')}
+                >
+                  <div className="flex items-center gap-4">
+                    <RadioGroupItem
+                      value="linkAjaSyariah"
+                      id="linkAjaSyariah"
+                      className="h-4 w-4"
+                    />
+                    <div className="flex items-center gap-2">
+                      <LinkAjaSyariah
+                        className="h-4 w-4"
+                        id="linkajaSyariahIcon"
+                      />
+                      <Label
+                        htmlFor="linkAjaSyariah"
+                        className="text-l-medium cursor-pointer"
+                      >
+                        LinkAja Syariah
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LinkAja */}
+                <div
+                  className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
+                  onClick={() => setSelectedPayment('linkAja')}
+                >
+                  <div className="flex items-center gap-4">
+                    <RadioGroupItem
+                      value="linkAja"
+                      id="linkaja"
+                      className="h-4 w-4"
+                    />
+                    <div className="flex items-center gap-2">
+                      <LinkAja className="h-4 w-4" id="linkajaIcon" />
+                      <Label
+                        htmlFor="linkaja"
+                        className="text-l-medium cursor-pointer"
+                      >
+                        LinkAja
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+          </div>
+        )}
         <div className="bg-white p-4">
-          <div className="mb-4 rounded-[16px] border border-gray-200 bg-white p-2">
+          <div className="mb-2 flex rounded-[16px] border border-neutral-200 bg-white p-3">
             <input
               type="checkbox"
               className="mr-2 h-4 w-4 accent-yellow-500"
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
-            <span className="text-sm text-gray-600">
+            <span className="text-s-regular text-neutral-500">
               Dengan memesan, anda menyetujui{' '}
               {/* <Link
                     href="/legal/syarat-ketentuan"
@@ -643,7 +698,7 @@ const MobileCheckoutPage = ({}) => {
                   > */}{' '}
               <DrawerSK dataSk={dataSK}>
                 <span
-                  className="cursor-pointer text-black underline"
+                  className="cursor-pointer text-black"
                   // onClick={() => {
                   //   setOpenModal(true)
                   // }}
@@ -651,65 +706,61 @@ const MobileCheckoutPage = ({}) => {
                   Syarat & Ketentuan
                 </span>
               </DrawerSK>
-              , {/* </Link> */}
+              , dan{' '}
               <DrawerPengembalianDana
                 parsedContent={parsedContent}
                 dataRefundPolicy={dataRefundPolicy}
               >
                 <span
-                  className="cursor-pointer text-black underline"
+                  className="cursor-pointer text-black"
                   // onClick={() => {
                   //   setOpenModalPengembalian(true)
                   // }}
                 >
                   Pengembalian Dana
                 </span>
-              </DrawerPengembalianDana>
-              , dan{' '}
-              <span className="cursor-pointer text-black underline">
-                Persetujuan Pengguna
-              </span>{' '}
+              </DrawerPengembalianDana>{' '}
               yang berlaku.
             </span>
           </div>
-        </div>
-      </main>
-      {!isJamaahDataValid() && (
-        <p className="mb-2 text-sm text-red-500">
-          *Harap lengkapi data Jamaah terlebih dahulu
-        </p>
-      )}
-
-      {isJamaahDataValid() && !termsAccepted && (
-        <p className="mb-2 text-sm text-red-500">
-          *Harap setujui syarat & ketentuan
-        </p>
-      )}
-      {/* Bottom Bar */}
-      <div className="fixed right-0 bottom-0 left-0 z-10 flex items-center justify-between border border-t border-neutral-200 bg-white p-4">
-        <div>
-          <p className="text-xs text-gray-500">Total</p>
-          {prebookingLoading ? (
-            <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
-          ) : (
-            <p className="text-lg font-bold">
-              Rp {sliderValue.toLocaleString('id-ID')}
+          {!termsAccepted && (
+            <p className="text-error-500 text-s-regular">
+              *Harap setujui syarat & ketentuan
             </p>
           )}
         </div>
-        <button
-          className={`${
-            isJamaahDataValid() && termsAccepted && loading === false
-              ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
-              : 'cursor-not-allowed bg-gray-300 text-gray-500'
-          } rounded-[100px]  px-6 py-3 text-sm font-semibold text-white shadow`}
-          disabled={loading || !isJamaahDataValid() || !termsAccepted}
-          onClick={
-            isJamaahDataValid() && termsAccepted ? handleCheckout : undefined
-          }
+      </main>
+
+      {/* Bottom Bar */}
+      <div
+        className="fixed right-0 bottom-0 left-0 z-10 flex items-center justify-between bg-white p-4"
+        style={{ boxShadow: '0px -4px 24px 0px rgba(0, 0, 0, 0.1)' }}
+      >
+        <div>
+          <p className="text-xs-medium text-neutral-500">Total</p>
+          {prebookingLoading ? (
+            <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+          ) : (
+            <p className="text-m-semibold">{formatCurrency(sliderValue)}</p>
+          )}
+        </div>
+        {/* {isEmptyRoomType && !termsAccepted && loading === false
+          ? 'cursor-pointer bg-yellow-500 text-[#30302F]'
+          : 'cursor-not-allowed bg-gray-300 text-gray-500'} */}
+        <Button
+          onClick={() => {
+            if (!isEmptyRoomType && termsAccepted) {
+              handleCheckout({
+                linkAja: true,
+                linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+              })
+            }
+          }}
+          disabled={disabledButtonCheckout}
+          className=" px-6 py-3 "
         >
-          Pesan Sekarang
-        </button>
+          <span className="text-m-medium text-neutral-900">Pesan Sekarang</span>
+        </Button>
       </div>
       <ModalCheckout
         open={isOpenModal}

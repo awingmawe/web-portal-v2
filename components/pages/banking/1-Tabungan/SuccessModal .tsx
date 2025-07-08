@@ -146,7 +146,7 @@ const SuccessModal = ({
           {/* <div className="flex h-20 w-20 items-center justify-center rounded-full bg-yellow-100"> */}
           <div className="relative">
             <Image
-              src="/images/icon-sukses.svg"
+              src="/images/Icon-sukses.svg"
               width={106}
               height={106}
               alt="check icon"

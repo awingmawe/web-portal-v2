@@ -15,7 +15,7 @@ import { cookies } from 'next/headers'
 
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim 101 | Article', `Muslim 101 Article`),
+    ...metadata('Muslim101 | Article', `Muslim101 Article`),
   }
 }
 

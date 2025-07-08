@@ -1,4 +1,7 @@
 import { ArrowLongIcon } from '@/components/icons/arrow'
+import WhatsappIcon from '@/components/icons/whatsapp'
+import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
+import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
 import BadgePromo from '@/components/shared/Badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,15 +12,17 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { ACCOUNT_URL } from '@/constant/env'
+import { ACCOUNT_URL, CALL_CENTER, LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
+import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import { formatCurrency, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { X } from 'lucide-react'
 import Image from 'next/image'
-import React, { Fragment, useEffect, useMemo } from 'react'
+import Link from 'next/link'
+import React, { Fragment } from 'react'
 
 const CheckoutDrawerMobile = React.memo(
   ({
@@ -33,6 +38,8 @@ const CheckoutDrawerMobile = React.memo(
     image?: string
     token: string
   }) => {
+    const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+    const { shareViaWhatsApp } = useGallerySharing()
     const {
       selectedVariant,
       getPrice,
@@ -41,52 +48,26 @@ const CheckoutDrawerMobile = React.memo(
       setSelectedVariantId,
       selectedVariantId,
       selectedRoomType,
-      setSelectedRoomType,
+      isEmptyRoomType,
       handleBadgePromo,
       numberOfDays,
       formattedArrival,
       formattedDeparture,
+      getTotalQty,
     } = usePackageVariant()
 
     const variantName =
       selectedVariant?.name ||
       (selectedVariant ? `Varian ${selectedVariant.id}` : '')
 
-    // Check room type availability based on price
-    const availableRoomTypes = useMemo(() => {
-      if (!selectedVariant) return { double: false, triple: false, quad: false }
+    const handleWhatsAppShare = () => {
+      // Include selected package variant information in the message if available
+      const variantInfo = selectedVariant
+        ? `\nVarian: ${selectedVariant.name || `Varian ${selectedVariant.id}`}`
+        : ''
 
-      return {
-        double:
-          selectedVariant.priceDouble !== null &&
-          selectedVariant.priceDouble > 0,
-        triple:
-          selectedVariant.priceTriple !== null &&
-          selectedVariant.priceTriple > 0,
-        quad:
-          selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
-      }
-    }, [selectedVariant])
-
-    // Check if any room type is available
-    const hasAvailableRoomTypes = useMemo(() => {
-      return Object.values(availableRoomTypes).some((available) => available)
-    }, [availableRoomTypes])
-
-    // Set initial room type if current selection is not available
-    useEffect(() => {
-      if (selectedVariant && selectedRoomType) {
-        // If the current room type is not available, clear the selection
-        if (!availableRoomTypes[selectedRoomType]) {
-          setSelectedRoomType(null)
-        }
-      }
-    }, [
-      selectedVariant,
-      selectedRoomType,
-      availableRoomTypes,
-      setSelectedRoomType,
-    ])
+      shareViaWhatsApp(`${title}${variantInfo}`, CALL_CENTER)
+    }
 
     const handleLocalStorage = () => {
       if (!token && isEmpty(token)) {
@@ -102,6 +83,7 @@ const CheckoutDrawerMobile = React.memo(
           price: getPrice(),
           roomType: selectedRoomType,
           variantId: selectedVariant?.id,
+          variant: selectedVariant,
           name: selectedVariant?.name,
         })
       )
@@ -138,20 +120,36 @@ const CheckoutDrawerMobile = React.memo(
                       <p className="text-s-semibold text-neutral-900">
                         {title}
                       </p>
-                      <span className="text-l-semibold text-neutral-900">
-                        {formatCurrency(getPrice())}
-                        <span className="text-s-regular text-neutral-500">
-                          /orang
-                        </span>
-                      </span>
-                      {hasDiscount() && (
-                        <span className="text-s-regular text-neutral-500 line-through">
-                          {formatCurrency(getOriginalPrice())}
-                        </span>
-                      )}
                     </div>
                   </div>
-                  <div className="flex items-center justify-between gap-2 max-lg:my-2">
+                  <div className="text-s-semibold text-neutral-900">Varian</div>
+                  <div className="no-scrollbar flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-2.5 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2">
+                    {variants.map((variant) => (
+                      <div
+                        key={variant.id}
+                        id={`variant-btn-${variant.id}`}
+                        onClick={() => setSelectedVariantId(variant.id)}
+                        className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 text-nowrap max-lg:flex-shrink-0 ${
+                          selectedVariantId === variant.id
+                            ? 'border-primary-500 bg-primary-100 border-2'
+                            : 'border-2 border-neutral-200 bg-transparent'
+                        }`}
+                      >
+                        <p className="text-m-regular text-center text-neutral-900">
+                          {variant.name || `Varian ${variant.id}`}
+                        </p>
+                        {variant.discountAmount &&
+                          Number(variant.discountAmount) > 0 && (
+                            <BadgePromo
+                              className="!text-s-semibold -top-[25px]"
+                              title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
+                            />
+                          )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2  max-lg:px-2">
                     <div className="flex flex-col items-center justify-center gap-1">
                       <div className="text-s-medium text-nowrap text-neutral-500">
                         Tanggal Berangkat
@@ -177,121 +175,82 @@ const CheckoutDrawerMobile = React.memo(
                       </span>
                     </div>
                   </div>
-                  <div className="text-s-semibold text-neutral-900">Varian</div>
-                  <div className="no-scrollbar flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-2.5 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
-                    {variants.map((variant) => (
-                      <div
-                        key={variant.id}
-                        id={`variant-btn-${variant.id}`}
-                        onClick={() => setSelectedVariantId(variant.id)}
-                        className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 text-nowrap max-lg:flex-shrink-0 ${
-                          selectedVariantId === variant.id
-                            ? 'border-primary-500 bg-primary-100 border-2'
-                            : 'border-2 border-neutral-200 bg-transparent'
-                        }`}
-                      >
-                        <p className="text-m-regular text-center text-neutral-900">
-                          {variant.name || `Varian ${variant.id}`}
-                        </p>
-                        {variant.discountAmount &&
-                          Number(variant.discountAmount) > 0 && (
-                            <BadgePromo
-                              className="!text-s-semibold -top-[20px]"
-                              title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
-                            />
-                          )}
-                      </div>
-                    ))}
-                  </div>
+                  <CheckAvailibility token={token || ''} />
 
                   {/* Room Type Selection */}
-                  <div className="-mt-[25px]">
-                    <div className="text-s-semibold mb-2 text-neutral-900">
-                      Kamar Hotel:
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
-                      {/* Double Room Option */}
-                      <div
-                        className={`flex flex-col justify-center rounded-lg border p-2 ${
-                          availableRoomTypes.double
-                            ? selectedRoomType === 'double'
-                              ? 'border-primary-500 bg-primary-100'
-                              : 'border-neutral-200 bg-white'
-                            : 'border-neutral-200 bg-neutral-50 opacity-50'
-                        } cursor-pointer`}
-                        onClick={() =>
-                          availableRoomTypes.double &&
-                          setSelectedRoomType('double')
-                        }
-                      >
-                        <p className="text-sm font-medium text-neutral-900">
-                          Double
-                        </p>
-                        <p className="text-xs text-neutral-500">Berdua</p>
-                      </div>
-
-                      {/* Triple Room Option */}
-                      <div
-                        className={`flex flex-col justify-center rounded-lg border p-2 ${
-                          availableRoomTypes.triple
-                            ? selectedRoomType === 'triple'
-                              ? 'border-primary-500 bg-primary-100'
-                              : 'border-neutral-200 bg-white'
-                            : 'border-neutral-200 bg-neutral-50 opacity-50'
-                        } cursor-pointer`}
-                        onClick={() =>
-                          availableRoomTypes.triple &&
-                          setSelectedRoomType('triple')
-                        }
-                      >
-                        <p className="text-sm font-medium text-neutral-900">
-                          Triple
-                        </p>
-                        <p className="text-xs text-neutral-500">Bertiga</p>
-                      </div>
-
-                      {/* Quad Room Option */}
-                      <div
-                        className={`flex flex-col justify-center rounded-lg border p-2 ${
-                          availableRoomTypes.quad
-                            ? selectedRoomType === 'quad'
-                              ? 'border-primary-500 bg-primary-100'
-                              : 'border-neutral-200 bg-white'
-                            : 'border-neutral-200 bg-neutral-50 opacity-50'
-                        } cursor-pointer`}
-                        onClick={() =>
-                          availableRoomTypes.quad && setSelectedRoomType('quad')
-                        }
-                      >
-                        <p className="text-sm font-medium text-neutral-900">
-                          Quad
-                        </p>
-                        <p className="text-xs text-neutral-500">
-                          {availableRoomTypes.quad
-                            ? 'Berempat'
-                            : 'Tidak tersedia'}
-                        </p>
-                      </div>
-                    </div>
-
-                    {!hasAvailableRoomTypes && (
-                      <div className="bg-error-100 text-error-700 mt-2 rounded-lg p-3 text-xs">
-                        Mohon maaf, semua tipe kamar untuk varian ini sudah
-                        habis terjual.
-                      </div>
-                    )}
+                  <div className="mb-35">
+                    <SelectHotel
+                      isMobile
+                      disabledAddOnly={
+                        isLinkAja
+                          ? selectedVariant.package.dpAmount * getTotalQty() >=
+                            LINKAJA_MAX_LIMIT
+                          : false
+                      }
+                    />
                   </div>
 
                   {/* Checkout Buttons */}
-                  <div className="mt-4 flex flex-col gap-2">
-                    <Button
-                      className="w-full py-3"
-                      variant="default"
-                      disabled={!selectedRoomType || !hasAvailableRoomTypes}
-                      onClick={handleLocalStorage}
-                    >
-                      Checkout Sekarang
-                    </Button>
+                  <div
+                    className={`bg-neutral-0 fixed bottom-0 left-0 z-10  w-full items-center px-4 py-3 lg:hidden ${dissolve}`}
+                  >
+                    <div className="flex items-center justify-between py-3">
+                      <div className="text-m-regular text-neutral-500">
+                        Total Harga
+                      </div>
+                      <div className="flex flex-col items-start">
+                        <span className="text-l-semibold text-neutral-900">
+                          {isEmpty(getPrice())
+                            ? '-'
+                            : formatCurrency(getPrice())}
+                        </span>
+                        {hasDiscount() && getOriginalPrice() > 0 && (
+                          <div className="flex items-center">
+                            <span className="text-s-regular mr-1 text-neutral-500 line-through">
+                              {formatCurrency(getOriginalPrice())}
+                            </span>
+                            <span className="text-s-regular bg-error-500 rounded-md p-1 text-white">
+                              {handleBadgePromo(
+                                String(selectedVariant?.discountType),
+                                selectedVariant?.discountType === 'percentage'
+                                  ? String(selectedVariant?.discountAmount || 0)
+                                  : String(
+                                      Number(
+                                        selectedVariant?.discountAmount || 0
+                                      ) * getTotalQty()
+                                    )
+                              )}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <div
+                        onClick={handleWhatsAppShare}
+                        className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                      >
+                        <WhatsappIcon size={48} />
+                      </div>
+                      <Link href={`/banking/credit`} className="w-full">
+                        <Button
+                          variant="outline"
+                          className="border-primary-500 w-full rounded-full"
+                          size="md"
+                          id="btn-pay-later-mobile"
+                        >
+                          <p className="text-xs-semibold">Bayar Nanti</p>
+                        </Button>
+                      </Link>
+                      <Button
+                        className="w-full py-3"
+                        variant="default"
+                        disabled={isEmptyRoomType}
+                        onClick={handleLocalStorage}
+                      >
+                        Checkout Sekarang
+                      </Button>
+                    </div>
                   </div>
                 </Fragment>
               )}

@@ -31,6 +31,10 @@ const initialFilterState: FilterState = {
     hargaMax: '',
     hargaMin: '',
   },
+  dpRange: {
+    dpMax: '',
+    dpMin: '',
+  },
   facilityCode: '',
   section: '',
   tagSlug: '',
@@ -150,6 +154,10 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, filterName }))
   }, [])
 
+  const setDpRange = useCallback((filterName: string) => {
+    setFilters((prev) => ({ ...prev, filterName }))
+  }, [])
+
   // Reset all filters
   const resetFilters = useCallback((filters = initialFilterState) => {
     setFilters(filters)
@@ -177,6 +185,7 @@ export const FilterProductProvider: React.FC<{
           tagSlug: 'tS',
           filterName: null,
           priceRange: null,
+          dpRange: null,
         }
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
@@ -295,10 +304,9 @@ export const FilterProductProvider: React.FC<{
         // Update the previous page value for next comparison
         if (pageHasChanged && page !== null) {
           setPreviousPage(page)
-
           // Scroll to top only when page has actually changed
           window.scrollTo({
-            top: 0,
+            top: window.scrollY,
             behavior: 'smooth',
           })
         }
@@ -379,6 +387,13 @@ export const FilterProductProvider: React.FC<{
       // Extract tag slug
       if (params.has('tS')) {
         queryObject.tagSlug = params.get('tS')
+      }
+
+      if (params.has('dpMin')) {
+        queryObject.minDp = params.get('dpMin')
+      }
+      if (params.has('dpMax')) {
+        queryObject.maxDp = params.get('dpMax')
       }
 
       return queryObject
@@ -504,10 +519,11 @@ export const FilterProductProvider: React.FC<{
         },
       })
       // Only update the query parameters if we have keys/values to update
+      const pathName = window.location.pathname
       if (isEmpty(keys) || isEmpty(values)) {
-        window.history.pushState({ path: '/search' }, '', '/search')
+        window.history.pushState({ path: pathName }, '', pathName)
       } else {
-        updateQueryParams(keys, values, '/search')
+        updateQueryParams(keys, values, pathName)
       }
     } catch (err) {
       // Handle errors
@@ -542,7 +558,7 @@ export const FilterProductProvider: React.FC<{
     setSection,
     setTagSlug,
     setFilterName,
-
+    setDpRange,
     // Reset filter state - full and individual
     resetFilters,
     resetFilter,

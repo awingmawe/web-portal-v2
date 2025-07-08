@@ -3,17 +3,28 @@
 
 import { toast } from '@/components/ui/sonner'
 import { Package } from '@/constant/types/PackageProps'
+import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { useAuth } from '@/contexts/auth/context'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { getHotelRating, getTripDuration } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getLegalSyarat } from '@/services/general-service'
 import { checkRefundPolicy } from '@/services/identity-service'
-import { bookingCheckout, preBookingCheckout } from '@/services/umrah-service'
+import {
+  bookingCheckout,
+  preBookingCreateCheckout,
+} from '@/services/umrah-service'
 import { checkReferralCode } from '@/services/wukala-service'
 import cookie from 'cookie-cutter'
 import { useRouter } from 'next/navigation'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 export const CheckoutContext = createContext<any>(null)
 
@@ -48,11 +59,15 @@ export const CheckoutProvider = ({
   const [dataRefundPolicy, setDataRefundPolicy] = useState<any>()
   const [nama, setNama] = useState('')
   const [noTlpn, setNoTlpn] = useState('')
+  const [selectedRoomType, setSelectedRoomType] = useState<{
+    [key: string]: number
+  } | null>(null)
 
   const [parsedContent, setParsedContent] = useState<any>(null)
   const [shouldCheckPreAfterClear, setShouldCheckPreAfterClear] =
     useState(false)
   const [shouldRunCheckPre, setShouldRunCheckPre] = useState(false)
+  const [selectedPayment, setSelectedPayment] = useState<string>('')
 
   // Flag to prevent excessive API calls
   const checkPreCalled = useRef(false)
@@ -77,6 +92,14 @@ export const CheckoutProvider = ({
     }
   }, [])
 
+  const totalQty = useMemo(() => {
+    return (
+      (selectedRoomType?.double || 0) +
+      (selectedRoomType?.triple || 0) +
+      (selectedRoomType?.quad || 0)
+    )
+  }, [selectedRoomType])
+
   // Fix: Separate the side effect from the dependency change
   useEffect(() => {
     if (isInitialRender.current) {
@@ -84,10 +107,10 @@ export const CheckoutProvider = ({
       return
     }
 
-    if (jamaahList.length !== 0) {
+    if (totalQty !== 0) {
       // Update slider value based on payment amount and jamaah count
       // without triggering additional state updates
-      const newSliderValue = paymentAmount * jamaahList.length
+      const newSliderValue = paymentAmount * totalQty
       if (newSliderValue !== sliderValue) {
         setSliderValue(newSliderValue)
       }
@@ -95,7 +118,7 @@ export const CheckoutProvider = ({
       // Mark that we should run checkPre, but don't run it directly here
       setShouldRunCheckPre(true)
     }
-  }, [jamaahList.length, paymentAmount])
+  }, [totalQty, paymentAmount])
 
   // Separate effect to handle checkPre calls
   useEffect(() => {
@@ -108,8 +131,12 @@ export const CheckoutProvider = ({
     }
   }, [shouldRunCheckPre])
 
+  useEffect(() => {
+    setRawInputValue(String(paymentAmount * totalQty))
+  }, [selectedRoomType])
+
   const handleAddJamaah = () => {
-    const newId = jamaahList.length + 1
+    const newId = totalQty + 1
     setJamaahList([...jamaahList, { id: newId, name: '', phone: '' }])
   }
 
@@ -128,7 +155,7 @@ export const CheckoutProvider = ({
   }
 
   const handleRemoveJamaah = (id: number) => {
-    if (jamaahList.length === 1) {
+    if (totalQty === 1) {
       toast.error('Minimal 1 jamaah')
       return
     }
@@ -146,19 +173,20 @@ export const CheckoutProvider = ({
     if (!selectedVariant || !token) return
     setPreBookingLoading(true)
     try {
-      const perJamaahAmount = paymentAmount
-      const response = await preBookingCheckout({
-        roomType: selectedVariant?.roomType,
+      const response = await preBookingCreateCheckout({
         packageVariantId: selectedVariant?.variantId,
-        netAmount: perJamaahAmount * jamaahList.length,
         referralCode,
-        quantity: jamaahList.length,
-        manifest: jamaahList,
+        netAmount: paymentAmount * totalQty,
+        double: selectedRoomType?.double || 0,
+        triple: selectedRoomType?.triple || 0,
+        quad: selectedRoomType?.quad || 0,
       })
+      setRawInputValue(String(response.downPayment))
       setPreBookingLoading(false)
       setPaymentDetails(response.paymentDetails)
       setPreBooking(response)
     } catch (error) {
+      setPreBookingLoading(false)
       console.error(error)
     }
   }
@@ -167,7 +195,7 @@ export const CheckoutProvider = ({
 
   // Validation function to check if all jamaah fields are filled
   const isJamaahDataValid = () => {
-    if (jamaahList.length === 0) return false
+    if (totalQty === 0) return false
 
     return jamaahList.every(
       (jamaah: any) =>
@@ -178,21 +206,34 @@ export const CheckoutProvider = ({
     )
   }
 
-  // Function to handle checkout button click
-  const handleCheckout = async () => {
-    const perJamaahAmount = paymentAmount
+  // Validation function to check if the room type is empty
+  const isEmptyRoomType = useMemo(() => {
+    return (
+      (selectedRoomType?.double === 0 ||
+        selectedRoomType?.double === undefined) &&
+      (selectedRoomType?.triple === 0 ||
+        selectedRoomType?.triple === undefined) &&
+      (selectedRoomType?.quad === 0 || selectedRoomType?.quad === undefined)
+    )
+  }, [selectedRoomType])
 
+  // Function to handle checkout button click
+  const handleCheckout = async (paymentMethod?: PaymentMethod) => {
+    const netAmount = Math.min(
+      paymentAmount * totalQty,
+      preBooking?.downPayment
+    )
     const payload = {
-      roomType: selectedVariant?.roomType,
       packageVariantId: selectedVariant?.variantId,
-      netAmount: perJamaahAmount * jamaahList.length,
       referralCode,
-      quantity: jamaahList.length,
-      manifest: jamaahList.map((item: { name: string; phone: string }) => ({
-        name: item.name,
-        phoneNumber: item.phone,
-      })),
+      netAmount,
+      double: selectedRoomType?.double || 0,
+      triple: selectedRoomType?.triple || 0,
+      quad: selectedRoomType?.quad || 0,
+      paymentMethod,
     }
+    console.log(payload)
+
     setLoading(true)
     try {
       const res = await bookingCheckout(payload)
@@ -202,27 +243,33 @@ export const CheckoutProvider = ({
 
       handlePushEvent('submit_booking')
 
-      window.snap.pay(res?.data.order.paymentToken, {
-        onSuccess: async () => {
-          // console.log(result)
-          router.push(`/my/transaction`)
-        },
-        onPending: async () => {
-          // console.log('Payment pending', result)
-          router.push(`/my/need-payment`)
-          // Add expiration check logic
-        },
-        onError: (error: any) => {
-          console.log('Payment error', error)
-        },
-        onClose: () => {
-          router.push(`/my/need-payment`)
-          // Additional logic on close
-        },
-      })
+      if (paymentMethod?.linkAja) {
+        window.location.href = res?.data.order.paymentLink
+        return
+      } else {
+        window.snap.pay(res?.data.order.paymentToken, {
+          onSuccess: async () => {
+            // console.log(result)
+            router.push(`/my/transaction`)
+          },
+          onPending: async () => {
+            // console.log('Payment pending', result)
+            router.push(`/my/need-payment`)
+            // Add expiration check logic
+          },
+          onError: (error: any) => {
+            console.log('Payment error', error)
+          },
+          onClose: () => {
+            router.push(`/my/need-payment`)
+            // Additional logic on close
+          },
+        })
+      }
 
       localStorage.removeItem('referralCode')
     } catch (error) {
+      toast.error('Gagal melakukan checkout [500]')
       console.error(error)
     } finally {
       setLoading(false)
@@ -253,7 +300,7 @@ export const CheckoutProvider = ({
   const handleUseMyDataChange = (checked: any) => {
     setUseMyData(checked)
 
-    if (jamaahList.length > 0) {
+    if (totalQty > 0) {
       if (checked && profile) {
         const name = profile.name || ''
         const phone = profile.persona?.phoneNumber || ''
@@ -283,7 +330,7 @@ export const CheckoutProvider = ({
       const newId = Date.now().toString()
 
       // Check if the list is empty first
-      if (jamaahList.length === 0) {
+      if (totalQty === 0) {
         // If list is empty, add the profile data as the first jamaah
         setJamaahList([{ id: newId, name, phone }])
       } else {
@@ -298,7 +345,7 @@ export const CheckoutProvider = ({
     const newId = Date.now().toString()
 
     // Check if the list is empty first
-    if (jamaahList.length === 0) {
+    if (totalQty === 0) {
       // If list is empty, add the profile data as the first jamaah
       setJamaahList([{ id: newId, name: nama, phone: noTlpn }])
     } else {
@@ -353,7 +400,7 @@ export const CheckoutProvider = ({
         variantId: selectedVariant?.id,
         variantName: selectedVariant?.name,
         departureDate: selectedVariant?.departureDate,
-        quantity: jamaahList.length,
+        quantity: totalQty,
         referralCode,
         netAmount: sliderValue,
       },
@@ -369,8 +416,7 @@ export const CheckoutProvider = ({
     }
   }, [referralCode, shouldCheckPreAfterClear])
 
-  const totalMinimumDownPayment =
-    jamaahList.length === 0 ? 0 : paymentAmount * jamaahList.length
+  const totalMinimumDownPayment = totalQty === 0 ? 0 : paymentAmount * totalQty
   const [rawInputValue, setRawInputValue] = useState('')
 
   // Fixed: Only update the raw input when the slider value changes significantly
@@ -416,8 +462,8 @@ export const CheckoutProvider = ({
     // Set new timer only for expensive operations (API calls, etc)
     debounceTimerRef.current = setTimeout(() => {
       // Update payment amount if we have jamaah
-      if (jamaahList.length > 0) {
-        const perJamaahAmount = Math.ceil(value / jamaahList.length)
+      if (totalQty > 0) {
+        const perJamaahAmount = Math.ceil(value / totalQty)
         if (perJamaahAmount !== paymentAmount) {
           setPaymentAmount(perJamaahAmount)
           setShouldRunCheckPre(true)
@@ -532,6 +578,13 @@ export const CheckoutProvider = ({
     noTlpn,
     handleSimpanMobile,
     handleEditMobile,
+    selectedRoomType,
+    setSelectedRoomType,
+    isEmptyRoomType,
+    setShouldRunCheckPre,
+    totalQty,
+    selectedPayment,
+    setSelectedPayment,
   }
 
   return (

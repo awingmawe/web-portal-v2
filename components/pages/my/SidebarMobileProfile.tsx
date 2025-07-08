@@ -3,12 +3,14 @@ import { ChevronRightIcon } from '@/components/icons/chevron'
 import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { MoneysIcon } from '@/components/icons/moneys'
+import { PilotSeatIcon } from '@/components/icons/pilot-seat'
 import { SettingIcon } from '@/components/icons/setting'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/contexts/auth/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { cn } from '@/lib/utils'
+import { Separator } from '@radix-ui/react-separator'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useEffect, useState } from 'react'
@@ -66,12 +68,14 @@ export const SidebarMobileProfile = () => {
   const [loadingLogout, setLoadingLogout] = useState(false)
   const router = useRouter()
   const { lg } = useTailwindBreakpoint()
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
-    if (!lg) {
+    if (!lg && isLoaded) {
       router.replace('/my/profile')
+      setIsLoaded(false)
     }
-  }, [lg, router])
+  }, [lg, router, isLoaded])
 
   return (
     <div className="w-full max-w-sm">
@@ -127,18 +131,19 @@ export const SidebarMobileProfile = () => {
           loading={profile ? false : true}
           href="/my/saving"
         />
-        {/* <Separator className="mx-auto !w-[90%] bg-neutral-100" /> */}
-        {/* 
-          <MenuItem
+        <Separator className="mx-auto !w-[90%] bg-neutral-100" />
+
+        {/* <MenuItem
             icon={<PilotSeatIcon />}
             label="Permintaan Paket Custom"
             loading={profile ? false : true}
-          />
-          <MenuItem
-            icon={<PilotSeatIcon />}
-            label="Cek Ketersediaan Kursi"
-            loading={profile ? false : true}
           /> */}
+        <MenuItem
+          icon={<PilotSeatIcon />}
+          label="Cek Ketersediaan Kursi"
+          loading={profile ? false : true}
+          href="/my/check-availability"
+        />
         {/* <Separator className="mx-auto !w-[90%] bg-neutral-100" /> */}
 
         <MenuItem

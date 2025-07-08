@@ -9,6 +9,7 @@ export default function RemoveLocalReferralCode() {
   useEffect(() => {
     if (pathname === '/') {
       localStorage.removeItem('app_navigation_history')
+      sessionStorage.removeItem('isLinkAja')
     }
     removeLocalReferralCode()
   }, [pathname])

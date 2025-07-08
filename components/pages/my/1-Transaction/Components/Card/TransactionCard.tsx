@@ -33,6 +33,7 @@ export interface TransactionCardProps {
   createdDate: string
   jemaah: number
   isCompletedManifest: boolean
+  isManifestCommitted: boolean
   isPaidOff: boolean
   statusTahapan: string
   statusTahapanDetail: string
@@ -112,6 +113,7 @@ export default function TransactionCard({
   createdDate,
   jemaah,
   isCompletedManifest,
+  isManifestCommitted,
   isPaidOff,
   statusTahapan,
   statusTahapanDetail,
@@ -369,6 +371,7 @@ export default function TransactionCard({
                     detailOnly={detailOnly}
                     isPaidOff={isPaidOff}
                     isCompletedManifest={isCompletedManifest}
+                    isManifestCommitted={isManifestCommitted}
                     showDpButton={showDpButton}
                     bookingId={bookingId}
                     id={id}

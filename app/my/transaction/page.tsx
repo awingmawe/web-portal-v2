@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim 101 | Daftar List Transaksi', `Daftar List Transaksi`),
+    ...metadata('Muslim101 | Daftar List Transaksi', `Daftar List Transaksi`),
   }
 }
 
