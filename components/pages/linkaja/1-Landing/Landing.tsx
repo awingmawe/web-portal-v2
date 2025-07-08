@@ -115,7 +115,7 @@ export default function LandingLinkAja() {
               <LinkAjaAccent5 className="absolute top-1/2 right-[-17px] -z-1" />
               <MouseSquareIcon className="text-primary-500" size={32} />
               <p className="text-m-regular mt-2">
-                Pilih paket, bayar dengan Permata Bank.
+                Pilih paket, bayar dengan LinkAja.
               </p>
             </div>
           </div>
