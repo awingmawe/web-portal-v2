@@ -205,6 +205,12 @@ export const transportationSchema = z.object({
     id: z.number(),
     name: z.string(),
     code: z.string(),
+    customValue: z.array(
+      z.object({
+        name: z.string(),
+        value: z.string(),
+      })
+    ),
   }),
 })
 
@@ -306,6 +312,7 @@ export const defaultTransportation = {
     id: 0,
     name: '',
     code: '',
+    customValue: [],
   },
 }
 

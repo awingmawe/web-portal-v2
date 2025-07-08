@@ -1,6 +1,7 @@
 'use client'
 
 import { ChevronIcon } from '@/components/icons/chevron'
+import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { HotelCard } from '@/components/pages/umrah-personal/form/3-PenginapanHotel/HotelCard'
 import { FormControl, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -94,6 +95,15 @@ const Step4HotelInfo: React.FC<Step4HotelInfoProps> = ({
             </p>
             <p className="text-m-regular text-neutral-500">
               {hotelContent.description}
+            </p>
+          </div>
+
+          {/* Warning Message */}
+          <div className="bg-warning-100 mb-6 flex items-center gap-2 rounded-lg px-2 py-1 max-lg:items-start max-lg:py-2">
+            <InfoCircleIcon className="text-warning-700" size={24} />
+            <p className="text-m-regular text-warning-700">
+              Harga hotel yang tertera dapat berubah mengikuti tarif umum yang
+              tersedia
             </p>
           </div>
 

@@ -7,6 +7,7 @@ import { ContextProviders } from '@/contexts/providers'
 import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
+import { SWRConfig } from 'swr'
 import './globals.css'
 export const metadata: Metadata = {
   title: 'Muslim 101 | Semua Ada Semua Berkah',
@@ -26,7 +27,7 @@ export default function RootLayout({
           <GoogleTagManager gtmId={GTM_ID as string} />
 
           <ContextProviders>
-            {children}
+            <SWRConfig>{children}</SWRConfig>
             <Toaster />
             <RemoveLocalReferralCode />
             <QontakChatWidget />

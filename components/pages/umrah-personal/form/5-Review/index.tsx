@@ -109,19 +109,22 @@ const ItemsInformation = ({
   value,
   colspan,
   align,
+  order,
 }: {
   icon?: React.ReactNode
   title: string
   value: string | React.ReactNode
   colspan?: string
   align?: string
+  order?: string
 }) => {
   return (
     <div
       className={cn(
         'm-0 flex items-center gap-3 max-sm:col-span-12',
         colspan,
-        align
+        align,
+        order
       )}
     >
       {icon}
@@ -139,20 +142,35 @@ const ItemsInformation = ({
 const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
   const { currentStep, setCurrentStep } = useUmrahPersonal()
 
-  if (currentStep !== 6) {
+  if (
+    currentStep !==
+    (form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA ? 5 : 6)
+  ) {
     return null
   }
 
-  const departureAirport = form.getValues(
+  const departureFromAirport = form.getValues(
     `${STEP_2}.departure.from.airport.code`
   )
-  const arrivalAirport = form.getValues(`${STEP_2}.departure.to.airport.code`)
-  const getDepartureArrivalText = () => {
-    return (
+  const departureToAirport = form.getValues(
+    `${STEP_2}.departure.from.airport.code`
+  )
+  const arrivalFromAirport = form.getValues(
+    `${STEP_2}.arrival.from.airport.code`
+  )
+  const arrivalToAirport = form.getValues(`${STEP_2}.arrival.to.airport.code`)
+  const getDepartureArrivalText = (type: string | 'departure' | 'arrival') => {
+    return type === 'departure' ? (
       <div className="flex items-center gap-1">
-        <p className="text-l-regular">{departureAirport}</p>
+        <p className="text-l-regular">{departureFromAirport}</p>
         <ArrowIcon size={18} className="inline-flex" />
-        <p className="text-l-regular">{arrivalAirport}</p>
+        <p className="text-l-regular">{departureToAirport}</p>
+      </div>
+    ) : (
+      <div className="flex items-center gap-1">
+        <p className="text-l-regular">{arrivalFromAirport}</p>
+        <ArrowIcon size={18} className="inline-flex" />
+        <p className="text-l-regular">{arrivalToAirport}</p>
       </div>
     )
   }
@@ -189,6 +207,7 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
     to: new Date(form.getValues(`${STEP_1}.arrivalDate`)),
   }
 
+  const hotelMedinaData = form.getValues(`${STEP_4}.hotelMedina`)
   const transportation = form.getValues(`${STEP_5}.transportation`)
 
   return (
@@ -237,26 +256,31 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
                   value={
                     ACTIVITY_TYPE_LABELS[form.getValues(`${STEP_1}.activity`)]
                   }
+                  order="max-lg:order-4"
                 />
                 <ItemsInformation
                   icon={<PeopleIcon />}
                   title="Jumlah Jemaah"
                   value={`${form.getValues(`${STEP_1}.totalManifest`)} Jemaah`}
+                  order="max-lg:order-2"
                 />
                 <ItemsInformation
                   icon={<Calendar2 size={24} />}
                   title="Tanggal Keberangkatan dan Kepulangan"
                   value={formatDateRangeShort(dateRange)}
+                  order="max-lg:order-5"
                 />
                 <ItemsInformation
                   icon={<PlaneTakeoff size={24} />}
                   title="Keberangkatan"
-                  value={getDepartureArrivalText()}
+                  value={getDepartureArrivalText('departure')}
+                  order="max-lg:order-3"
                 />
                 <ItemsInformation
                   icon={<PlaneLanding size={24} />}
                   title="Kepulangan"
-                  value={getDepartureArrivalText()}
+                  value={getDepartureArrivalText('arrival')}
+                  order="max-lg:order-6"
                 />
               </div>
             </div>
@@ -468,31 +492,36 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
               <div className="h-px w-full bg-neutral-200" />
               <HotelCardReview hotel={form.getValues(`${STEP_3}.hotelMecca`)} />
             </div>
+
             {/* Penginapan Madinah */}
-            <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 px-3 py-4">
-              <div className="flex items-center justify-between">
-                <p className="text-l-medium">D. Penginapan Madinah</p>
-                <div
-                  className="flex cursor-pointer items-center gap-1.5"
-                  onClick={() => setCurrentStep(4)}
-                >
-                  <Edit2Icon />
-                  <p className="text-s-regular text-nowrap">Ubah Pilihan</p>
+            {hotelMedinaData.id !== 0 && (
+              <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 px-3 py-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-l-medium">D. Penginapan Madinah</p>
+                  <div
+                    className="flex cursor-pointer items-center gap-1.5"
+                    onClick={() => setCurrentStep(4)}
+                  >
+                    <Edit2Icon />
+                    <p className="text-s-regular text-nowrap">Ubah Pilihan</p>
+                  </div>
                 </div>
+                <div className="h-px w-full bg-neutral-200" />
+                <HotelCardReview hotel={hotelMedinaData} />
               </div>
-              <div className="h-px w-full bg-neutral-200" />
-              <HotelCardReview
-                hotel={form.getValues(`${STEP_4}.hotelMedina`)}
-              />
-            </div>
+            )}
 
             {/* Kendaraan */}
             <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 px-3 py-4">
               <div className="flex items-center justify-between">
-                <p className="text-l-medium">E. Kendaraan</p>
+                <p className="text-l-medium">
+                  {hotelMedinaData.id !== 0 ? 'E.' : 'D.'} Kendaraan
+                </p>
                 <div
                   className="flex cursor-pointer items-center gap-1.5"
-                  onClick={() => setCurrentStep(5)}
+                  onClick={() =>
+                    setCurrentStep(hotelMedinaData.id !== 0 ? 5 : 4)
+                  }
                 >
                   <Edit2Icon />
                   <p className="text-s-regular text-nowrap">Ubah Pilihan</p>
@@ -512,8 +541,8 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
                   />
                   <ItemsInformation
                     icon={<PeopleIcon />}
-                    title="Kapasitas Maksimal Kendaraan "
-                    value={`${transportation.code.split('-').pop()} Orang`}
+                    title="Kapasitas Maksimal Kendaraan"
+                    value={`${transportation.customValue[0].value} Orang`}
                   />
                 </div>
               )}
