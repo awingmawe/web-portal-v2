@@ -528,7 +528,7 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
                 </div>
               </div>
               <div className="h-px w-full bg-neutral-200" />
-              {isEmpty(transportation) ? (
+              {isEmpty(transportation?.customValue) ? (
                 <p className="text-s-regular text-neutral-500">
                   Tidak ada kendaraan yang dipilih
                 </p>

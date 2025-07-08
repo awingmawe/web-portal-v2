@@ -34,8 +34,7 @@ export const journeyInformationSchema = z
       .min(1, { message: 'Tanggal kepulangan harus diisi!' }),
     totalManifest: z
       .number()
-      .min(1, { message: 'Jumlah jamaah minimal 1 orang!' })
-      .max(50, { message: 'Jumlah jamaah maksimal 50 orang!' }),
+      .min(1, { message: 'Jumlah jamaah minimal 1 orang!' }),
   })
   .refine(
     (data) => {

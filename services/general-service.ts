@@ -1,7 +1,7 @@
 import { api } from '@/services/common/http'
 import { Airline, GetAirlinesParams } from '@/constant/types/AirlineProps'
 
-import { Airport } from '@/constant/types/AirportProps'
+import { Airport, GetAirportsParams } from '@/constant/types/AirportProps'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import { Facility } from '@/constant/types/FacilityProps'
 import {
@@ -13,7 +13,7 @@ import { GetLegalParams, Legal } from '@/constant/types/LegalProps'
 import { Hotel } from '@/constant/types/HotelProps'
 import { AxiosResponse } from 'axios'
 
-export async function getAirports(
+export async function getAirportsV2(
   query: GetListQuery
 ): Promise<GenericResponse<Airport>> {
   try {
@@ -27,7 +27,27 @@ export async function getAirports(
   }
 }
 
-export async function getAirline({
+export async function getAirports({
+  page = 1,
+  size = 10,
+  search,
+}: GetAirportsParams): Promise<GenericResponse<Airport>> {
+  try {
+    const response = await api.get(`/public/general/v1/airport`, {
+      params: {
+        page,
+        size,
+        [`cityName|code|name:likeLower`]: search ? `%${search}%` : undefined,
+      },
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching airports:', error)
+    throw error
+  }
+}
+
+export async function getAirlineV2({
   page = 1,
   size = 10,
   search,
@@ -38,6 +58,26 @@ export async function getAirline({
         page,
         size,
         search,
+      },
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching airline:', error)
+    throw error
+  }
+}
+
+export async function getAirline({
+  page = 1,
+  size = 10,
+  search,
+}: GetAirlinesParams): Promise<GenericResponse<Airline>> {
+  try {
+    const response = await api.get(`/public/general/v1/airline`, {
+      params: {
+        page,
+        size,
+        [`code|countryName|name:likeLower`]: search ? `%${search}%` : undefined,
       },
     })
     return response.data
