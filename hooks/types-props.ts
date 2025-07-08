@@ -2,6 +2,7 @@ export interface UseSearchParams {
   initialQuery?: string
   pageSize?: number
   typeairport?: string
+  version?: 'v1' | 'v2'
 }
 
 export interface UseSearchResult<T> {

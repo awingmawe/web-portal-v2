@@ -1,12 +1,13 @@
 import { Airline } from '@/constant/types/AirlineProps'
 import { UseSearchParams, UseSearchResult } from '@/hooks/types-props'
-import { getAirline } from '@/services/general-service'
+import { getAirline, getAirlineV2 } from '@/services/general-service'
 import { useCallback, useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 export function useAirlineSearch({
   initialQuery = '',
   pageSize = 15,
+  version = 'v2',
 }: UseSearchParams = {}): UseSearchResult<Airline> {
   const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [airlines, setAirlines] = useState<Airline[]>([])
@@ -20,11 +21,11 @@ export function useAirlineSearch({
   const fetchAirlines = useCallback(
     async (pageNum: number, query: string = '') => {
       try {
-        const response = await getAirline({
-          page: pageNum,
-          size: pageSize,
-          search: query,
-        })
+        const params = { page: pageNum, size: pageSize, search: query }
+        const response =
+          version === 'v1'
+            ? await getAirline(params)
+            : await getAirlineV2(params)
         return response
       } catch (err) {
         setError(
@@ -33,7 +34,7 @@ export function useAirlineSearch({
         return { results: [], total: 0 }
       }
     },
-    [pageSize]
+    [pageSize, version]
   )
 
   // Initial data load

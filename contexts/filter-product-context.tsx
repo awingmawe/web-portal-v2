@@ -15,7 +15,7 @@ import {
   isEmpty,
   mapProductsToCardData,
 } from '@/lib/utils'
-import { getAirline, getAirports } from '@/services/general-service'
+import { getAirlineV2, getAirportsV2 } from '@/services/general-service'
 import React, { createContext, useCallback, useContext, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
@@ -425,7 +425,7 @@ export const FilterProductProvider: React.FC<{
 
   const fetchAirportByCode = async (code: string): Promise<Airport | null> => {
     try {
-      const data = await getAirports({
+      const data = await getAirportsV2({
         page: 1,
         size: 1,
         search: code,
@@ -439,7 +439,7 @@ export const FilterProductProvider: React.FC<{
 
   const fetchAirlineByName = async (name: string): Promise<Airline | null> => {
     try {
-      const data = await getAirline({
+      const data = await getAirlineV2({
         page: 1,
         size: 1,
         search: name,

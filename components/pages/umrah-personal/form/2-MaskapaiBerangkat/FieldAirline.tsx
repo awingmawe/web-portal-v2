@@ -39,7 +39,7 @@ const AirlineSelection: React.FC<AirlineSelectionProps> = ({
     searchQuery,
     handleSearchChange,
     loadMore: handleLoadMore,
-  } = useAirlineSearch({ pageSize })
+  } = useAirlineSearch({ pageSize, version: 'v1' })
 
   const handleValueChange = (value: string) => {
     const selectedAirline = airlines.find(

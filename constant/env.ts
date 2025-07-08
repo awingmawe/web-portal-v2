@@ -17,3 +17,4 @@ export const LINKAJA_REFERRAL = String(process.env.NEXT_PUBLIC_LINKAJA_REFERRAL)
 export const LINKAJA_MAX_LIMIT = Number(
   process.env.NEXT_PUBLIC_LINKAJA_MAX_LIMIT
 )
+export const IS_NOT_TRANSIT = ['GA', 'SV', 'JT']
