@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/drawer'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { formatDateRangeShort, isEmpty } from '@/lib/utils'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeInOut, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import React, { useState } from 'react'
 
@@ -190,7 +190,7 @@ const FilterDrawer: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.3,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
     exit: {
@@ -198,7 +198,7 @@ const FilterDrawer: React.FC = () => {
       opacity: 1,
       transition: {
         duration: 0.3,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
   }

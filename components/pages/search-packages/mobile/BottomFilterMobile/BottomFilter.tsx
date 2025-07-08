@@ -17,7 +17,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useFilterProduct } from '@/contexts/filter-product-context'
-import { motion } from 'framer-motion'
+import { easeInOut, motion } from 'framer-motion'
 import { useSearchParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
@@ -246,7 +246,7 @@ export default function BottomNavigation({
       transition: {
         duration: 1,
         repeat: Infinity,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     },
   }

@@ -27,7 +27,7 @@ import {
 } from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { differenceInDays } from 'date-fns'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeOut, motion } from 'framer-motion'
 import { Heart } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -503,7 +503,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
                   whileTap={{ scale: 0.9 }}
-                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  transition={{ duration: 0.2, ease: easeOut }}
                 >
                   <Heart
                     size={16}

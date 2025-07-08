@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/drawer'
 import { Agenda } from '@/constant/types/PackageProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeInOut, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -93,7 +93,7 @@ export default function Itinerary({ itinerary }: { itinerary: Agenda[] }) {
       },
       transition: {
         duration: 0.5,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     }),
     [expanded, isOverflowing, maxHeight]
