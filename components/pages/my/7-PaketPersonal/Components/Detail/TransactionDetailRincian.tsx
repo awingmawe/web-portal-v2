@@ -228,24 +228,50 @@ export default function TransactionDetailRincian({
                     </div>
                   </div>
                 </div>
-                <div className="relative flex items-end">
-                  <div className="absolute top-0 bottom-0 left-0 w-[3px] bg-gray-200"></div>
+                <div className="relative">
+                  <div className="absolute top-0 bottom-0 left-0 hidden w-[3px] bg-gray-200 sm:block"></div>
 
-                  <PlaneLanding className="mr-3 mb-2 ml-5 h-[20px] w-[20px] text-neutral-900" />
-                  <div>
-                    <div className="text-centertext-neutral-500  text-[12px]">
-                      Maskapai Kepulangan
+                  {/* Desktop Layout - Horizontal */}
+                  <div className="hidden items-end sm:flex">
+                    <PlaneLanding className="mr-3 mb-2 ml-5 h-[20px] w-[20px] text-neutral-900" />
+                    <div>
+                      <div className="text-center text-[12px] text-neutral-500">
+                        Maskapai Kepulangan
+                      </div>
+                      <div className="text-center text-[12px] text-neutral-900">
+                        {data?.arrival?.airline?.name}
+                      </div>
                     </div>
-                    <div className="text-center text-[12px] text-neutral-900">
-                      {data?.arrival?.airline?.name}
+                    <div className="ml-8">
+                      <div className="text-center text-[12px] text-neutral-500">
+                        Kelas
+                      </div>
+                      <div className="text-center text-[12px] text-neutral-900 capitalize">
+                        {data?.arrival?.flightClass}
+                      </div>
                     </div>
                   </div>
-                  <div className="ml-8">
-                    <div className="text-center text-[12px] text-neutral-500">
-                      Kelas
-                    </div>
-                    <div className="text-center text-[12px] text-neutral-900 capitalize">
-                      {data?.arrival?.flightClass}
+
+                  {/* Mobile Layout - Vertical Stack */}
+                  <div className="block sm:hidden">
+                    <div className="mb-3 flex items-start">
+                      <PlaneLanding className="mt-1 mr-3 h-[20px] w-[20px] text-neutral-900" />
+                      <div>
+                        <div className="text-center text-[12px] text-neutral-500">
+                          Maskapai Keberangkatan
+                        </div>
+                        <div className="text-center text-[12px] text-neutral-900">
+                          {data?.departure?.airline?.name}
+                        </div>
+                      </div>
+                      <div className="ml-8">
+                        <div className="text-center text-[12px] text-neutral-500">
+                          Kelas
+                        </div>
+                        <div className="text-center text-[12px] text-neutral-900 capitalize">
+                          {data?.departure?.flightClass}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

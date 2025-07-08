@@ -91,6 +91,7 @@ export default function TransactionDetailContent({
       }
     }
   }, [transaction])
+  console.log(transaction)
 
   return (
     <div>
@@ -138,6 +139,7 @@ export default function TransactionDetailContent({
                 useInsurance={transaction?.useInsurance}
                 arrival={transaction?.arrival}
                 departure={transaction?.departure}
+                transportation={transaction?.transportation?.vehicle}
               />
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
 
