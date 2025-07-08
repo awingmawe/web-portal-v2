@@ -16,6 +16,12 @@ export interface FilterState {
         hargaMax: string
       }
     | undefined
+  dpRange:
+    | {
+        dpMin: string
+        dpMax: string
+      }
+    | undefined
   facilityCode: string
   section: string
   tagSlug: string
@@ -29,6 +35,7 @@ export const initialFilterState: FilterState = {
   arrivalAirport: null,
   airline: null,
   priceRange: undefined,
+  dpRange: undefined,
   facilityCode: '',
   section: '',
   tagSlug: '',

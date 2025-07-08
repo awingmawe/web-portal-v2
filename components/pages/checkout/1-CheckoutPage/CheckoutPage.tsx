@@ -102,7 +102,7 @@ const CheckoutPage = () => {
           setDisabledButtonCheckout(true)
         }
       } else {
-        setDisabledButtonCheckout(true)
+        setDisabledButtonCheckout(false)
       }
     }
   }, [

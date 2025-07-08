@@ -31,6 +31,10 @@ const initialFilterState: FilterState = {
     hargaMax: '',
     hargaMin: '',
   },
+  dpRange: {
+    dpMax: '',
+    dpMin: '',
+  },
   facilityCode: '',
   section: '',
   tagSlug: '',
@@ -150,6 +154,10 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, filterName }))
   }, [])
 
+  const setDpRange = useCallback((filterName: string) => {
+    setFilters((prev) => ({ ...prev, filterName }))
+  }, [])
+
   // Reset all filters
   const resetFilters = useCallback((filters = initialFilterState) => {
     setFilters(filters)
@@ -177,6 +185,7 @@ export const FilterProductProvider: React.FC<{
           tagSlug: 'tS',
           filterName: null,
           priceRange: null,
+          dpRange: null,
         }
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
@@ -380,6 +389,13 @@ export const FilterProductProvider: React.FC<{
         queryObject.tagSlug = params.get('tS')
       }
 
+      if (params.has('dpMin')) {
+        queryObject.minDp = params.get('dpMin')
+      }
+      if (params.has('dpMax')) {
+        queryObject.maxDp = params.get('dpMax')
+      }
+
       return queryObject
     },
     []
@@ -542,7 +558,7 @@ export const FilterProductProvider: React.FC<{
     setSection,
     setTagSlug,
     setFilterName,
-
+    setDpRange,
     // Reset filter state - full and individual
     resetFilters,
     resetFilter,
