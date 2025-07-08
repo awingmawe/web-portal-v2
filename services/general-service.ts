@@ -11,6 +11,7 @@ import {
 import qs from 'query-string'
 import { GetLegalParams, Legal } from '@/constant/types/LegalProps'
 import { Hotel } from '@/constant/types/HotelProps'
+import { AxiosResponse } from 'axios'
 
 export async function getAirports({
   page = 1,
@@ -177,4 +178,10 @@ export async function getLegalList(
     console.error('Error fetching airline:', error)
     throw error
   }
+}
+
+export async function getGalleryHotelByHotelId(
+  hotelId: number
+): Promise<AxiosResponse<GenericResponse<HotelGalleryImage>>> {
+  return api.get(`/public/general/v1/hotel-gallery/hotel/${hotelId}`)
 }

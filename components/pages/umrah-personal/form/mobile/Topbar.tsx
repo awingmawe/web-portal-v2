@@ -10,7 +10,7 @@ const TopbarMobileFormUmrahPersonal = ({
   return (
     <div className="bg-neutral-0 absolute top-0 z-99 flex w-full items-center justify-between border-b border-neutral-100 px-4 py-3 lg:hidden">
       <ArrowIcon size={20} className="rotate-180" onClick={handleBack} />
-      <p className="text-l-semibold">Umrah Personal</p>
+      <p className="text-l-semibold">Umroh Personal</p>
       <div />
     </div>
   )

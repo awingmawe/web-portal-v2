@@ -25,8 +25,12 @@ import {
   ManifestResult,
   ManifestUser,
 } from '@/constant/types/ManifestProps'
-import { AxiosProgressEvent } from 'axios'
-import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
+import { AxiosProgressEvent, AxiosResponse } from 'axios'
+import {
+  PackagePersonalData,
+  PackagePersonalDataResponse,
+  RequestFormUmrahPersonal,
+} from '@/constant/types/UmrahPersonalProps'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
 
 export async function getBanner(
@@ -551,7 +555,7 @@ export async function getPostReqRefund(payload: any): Promise<any> {
 
 export async function umrahPersonalRegister(payload: RequestFormUmrahPersonal) {
   try {
-    const response = await api.post<any>(
+    const response = await apiWithAuth.post<any>(
       `/umrah/v2/journey-information`,
       payload
     )
@@ -560,4 +564,29 @@ export async function umrahPersonalRegister(payload: RequestFormUmrahPersonal) {
     console.error('Error post umrah personal register:', error)
     throw error
   }
+}
+
+export async function getOfferUmrahPersonal(
+  id: number,
+  token: string
+): Promise<PackagePersonalDataResponse> {
+  try {
+    const response = await api.get(
+      `/umrah/v2/personal-package/package-by-journey/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Error get offer umrah personal:', error)
+    throw error
+  }
+}
+
+export async function getOfferUmrahPersonalById(
+  id: number
+): Promise<AxiosResponse<PackagePersonalData>> {
+  return apiWithAuth.get(`/umrah/v2/personal-package/${id}`)
 }

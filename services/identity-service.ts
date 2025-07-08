@@ -1,7 +1,7 @@
 import { api, apiWithAuth } from '@/services/common/http'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import qs from 'query-string'
-import { Travel } from '@/constant/types/TravelProps'
+import { Organization, Travel } from '@/constant/types/TravelProps'
 import { City } from '@/constant/types/LocationProps'
 import { Profile } from '@/contexts/auth/shared/type'
 
@@ -15,6 +15,18 @@ export async function getTravels(
     return response.data
   } catch (error) {
     console.error('Error fetching travel:', error)
+    throw error
+  }
+}
+
+export async function getTravelById(id: number): Promise<Organization> {
+  try {
+    const response = await api.get(
+      `/public/identity/v1/organization-instance/${id}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching travel by id:', error)
     throw error
   }
 }

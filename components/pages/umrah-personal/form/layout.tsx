@@ -5,6 +5,7 @@ import ProgressIndicator from '@/components/pages/umrah-personal/form/6-Progress
 import ExitConfirmationContent from '@/components/pages/umrah-personal/form/dialog/DialogEndForm'
 import TopbarMobileFormUmrahPersonal from '@/components/pages/umrah-personal/form/mobile/Topbar'
 import Topbar from '@/components/shared/Topbar'
+import { Button } from '@/components/ui/button'
 import { ACCOUNT_URL } from '@/constant/env'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { useStepVisibility } from '@/hooks/umrah-personal/form/useVisibilityStepper'
@@ -90,16 +91,28 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
         {/* Back button with exit confirmation */}
         <LayoutDrawerDialog
           trigger={<BackButtonTrigger />}
-          content={
-            <ExitConfirmationContent
-              dialogConfirm={handleExitConfirmation}
-              dialogCancel={handleExitConfirmationClose}
-            />
-          }
+          content={<ExitConfirmationContent />}
           isOpen={openDialogDrawerEndForm}
           setIsOpen={setOpenDialogDrawerEndForm}
-          drawerCancel={handleExitConfirmationClose}
-          drawerConfirm={handleExitConfirmation}
+          footerContent={
+            <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
+              <Button
+                variant="outline"
+                intent="none"
+                className="border-primary-500 flex-1 border-2 px-10 py-3"
+                onClick={handleExitConfirmationClose}
+              >
+                Tidak
+              </Button>
+              <Button
+                variant="default"
+                onClick={handleExitConfirmation}
+                className="flex-1 px-10 py-3"
+              >
+                Ya
+              </Button>
+            </div>
+          }
         />
 
         {/* Form content */}

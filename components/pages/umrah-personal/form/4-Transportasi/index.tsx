@@ -29,7 +29,11 @@ const getRecommendedVehicle = (
   const vehiclesWithCapacity = vehicles
     .map((vehicle) => ({
       ...vehicle,
-      capacity: parseInt(vehicle.code.split('-').pop() || '0'),
+      capacity: parseInt(
+        vehicle?.customValue && vehicle.customValue.length > 0
+          ? vehicle.customValue[0]?.value
+          : '0'
+      ),
     }))
     .filter((vehicle) => vehicle.capacity > 0)
 
@@ -105,7 +109,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
               Transportasi (opsional)
             </p>
             <p className="text-m-regular text-neutral-500">
-              Pilih transportasi yang ingin Anda gunakan dalam perjalanan Umorh
+              Pilih transportasi yang ingin Anda gunakan dalam perjalanan Umroh
               Anda.
             </p>
           </div>
@@ -152,14 +156,18 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                     >
                       <RadioGroup
                         onValueChange={(value: string) => {
-                          const selectedVehicle = dataEnumVehicle.find(
-                            (vehicle) => vehicle.id.toString() === value
-                          )
-                          if (selectedVehicle) {
-                            field.onChange(selectedVehicle)
+                          if (value === '') {
+                            field.onChange(undefined)
+                          } else {
+                            const selectedVehicle = dataEnumVehicle.find(
+                              (vehicle) => vehicle.id.toString() === value
+                            )
+                            if (selectedVehicle) {
+                              field.onChange(selectedVehicle)
+                            }
                           }
                         }}
-                        value={field.value?.id?.toString()}
+                        value={field.value?.id?.toString() || ''}
                         className="grid grid-cols-3 gap-5 max-lg:grid-cols-2 max-lg:gap-3 max-sm:grid-cols-1"
                       >
                         {dataEnumVehicle.map((vehicle: Facility) => {
@@ -170,7 +178,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                               key={vehicle.id}
                               className={cn(
                                 'relative flex cursor-pointer flex-col rounded-lg border-1 px-8 py-2 transition-colors max-lg:p-2 lg:h-[120px] lg:items-center lg:justify-center lg:gap-2',
-                                field.value.id === vehicle.id
+                                field.value?.id === vehicle.id
                                   ? 'border-primary-500 bg-primary-50'
                                   : 'border-neutral-200 bg-white hover:border-neutral-300',
                                 isRecommended && 'max-lg:mt-3'
@@ -193,7 +201,11 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                               </p>
                               <p className="text-m-regular text-neutral-500 max-lg:pl-7 lg:text-center">
                                 Kapasitas Maksimal{' '}
-                                {vehicle?.code.split('-').pop()} Orang
+                                {vehicle?.customValue &&
+                                vehicle.customValue.length > 0
+                                  ? vehicle.customValue[0].value
+                                  : '-'}{' '}
+                                Orang
                               </p>
                             </label>
                           )
