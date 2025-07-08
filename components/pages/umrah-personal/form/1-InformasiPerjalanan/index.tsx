@@ -32,7 +32,8 @@ interface Step1JourneyInfoProps {
 }
 
 const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
-  const { currentStep, handleNext, setTotalSteps } = useUmrahPersonal()
+  const { currentStep, handleNext, setTotalSteps, setOpenDialogDrawerEndForm } =
+    useUmrahPersonal()
   const checkStep1Validity = () => {
     const values = form.getValues(STEP_1)
     return (
@@ -464,7 +465,10 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
         <div
           className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${isStep1Valid && currentStep === 1 && 'max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white'}  max-lg:px-4`}
         >
-          <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
+          <p
+            className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden"
+            onClick={() => setOpenDialogDrawerEndForm(true)}
+          >
             Batalkan Pembuatan Paket
           </p>
           <Button

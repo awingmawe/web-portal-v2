@@ -15,7 +15,7 @@ interface Step2FlightInfoProps {
 }
 
 const Step2FlightInfo: React.FC<Step2FlightInfoProps> = ({ form }) => {
-  const { handleNext } = useUmrahPersonal()
+  const { handleNext, setOpenDialogDrawerEndForm } = useUmrahPersonal()
 
   const checkStep2Validity = () => {
     const values = form.getValues(STEP_2)
@@ -55,7 +55,10 @@ const Step2FlightInfo: React.FC<Step2FlightInfoProps> = ({ form }) => {
       <div
         className={`flex items-center justify-between px-8 py-3 ${isStep2Valid && 'max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white'} border-1 border-t-0 border-neutral-100 max-lg:px-4 lg:rounded-b-[24px]`}
       >
-        <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
+        <p
+          className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden"
+          onClick={() => setOpenDialogDrawerEndForm(true)}
+        >
           Batalkan Pembuatan Paket
         </p>
         <Button

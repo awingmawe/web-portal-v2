@@ -81,7 +81,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
   form,
   dataEnumVehicle,
 }) => {
-  const { handleNext } = useUmrahPersonal()
+  const { handleNext, setOpenDialogDrawerEndForm } = useUmrahPersonal()
 
   const totalJemaah = form.getValues(`${STEP_1}.totalManifest`) || 0
 
@@ -222,7 +222,10 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
         <div
           className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white max-lg:px-4`}
         >
-          <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
+          <p
+            className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden"
+            onClick={() => setOpenDialogDrawerEndForm(true)}
+          >
             Batalkan Pembuatan Paket
           </p>
           <Button
