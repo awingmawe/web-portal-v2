@@ -37,37 +37,48 @@ export default function TransactionCardFooter({
           Lihat Detail Permintaan
         </Button>
         {status === 'offers-available' ? (
-          <Button
-            className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
-            variant="default"
+          <Link
+            href={`/umrah-personal/offer/${idJourney}`}
+            className=" w-[100%]"
           >
-            Lihat Penawaran
-          </Button>
+            <Button
+              className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
+              variant="default"
+            >
+              Lihat Penawaran
+            </Button>
+          </Link>
         ) : status === 'no-offers' ||
           status === 'offer-expired' ||
           status === 'canceled' ? (
-          <Button
-            className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-            variant="ghost"
-            onClick={() => setOpen(true)}
-          >
-            Buat Paket Baru
-          </Button>
+          <Link href={`/umrah-personal/landing`} className=" w-[100%]">
+            <Button
+              className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+              variant="ghost"
+            >
+              Buat Paket Baru
+            </Button>
+          </Link>
         ) : status === 'offer-selected' ? (
-          <Button
-            className="text-s-regular mr-1 px-3 font-medium text-nowrap text-gray-900"
-            variant="ghost"
-            onClick={() => setOpen(true)}
-          >
-            Lihat Detail Pilihan
-          </Button>
+          <Link href={`/my`} className=" w-[100%]">
+            <Button
+              className="text-s-regular mr-1 px-3 font-medium text-nowrap text-gray-900"
+              variant="ghost"
+              onClick={() => setOpen(true)}
+            >
+              Lihat Detail Pilihan
+            </Button>
+          </Link>
         ) : null}
       </div>
       <div className="hidden max-lg:block">
         {status === 'offers-available' ? (
           <div className="flex items-center justify-between">
             {lg ? (
-              <Link href={`/my`} className=" w-[100%]">
+              <Link
+                href={`/umrah-personal/offer/${idJourney}`}
+                className=" w-[100%]"
+              >
                 <Button
                   className="text-s-regular mr-1 h-[40px] w-full px-3 font-medium text-nowrap text-gray-900"
                   variant="default"
@@ -82,7 +93,7 @@ export default function TransactionCardFooter({
           status === 'canceled' ? (
           <div className="flex items-center justify-between">
             {lg ? (
-              <Link href={`/my`} className=" w-[100%]">
+              <Link href={`/umrah-personal/landing`} className=" w-[100%]">
                 <Button
                   className="border-primary-500 h-[40px] w-full rounded-full border-2 px-8 py-3 text-nowrap"
                   variant="ghost"

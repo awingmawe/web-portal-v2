@@ -12,6 +12,7 @@ import {
   getTransactionPersonalDetail,
 } from '@/services/umrah-service'
 import 'dayjs/locale/id'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
@@ -90,7 +91,6 @@ export default function TransactionDetailContent({
       }
     }
   }, [transaction])
-  console.log(transaction)
 
   return (
     <div>
@@ -153,21 +153,28 @@ export default function TransactionDetailContent({
             {/* Right Sidebar */}
             <div className="flex flex-col gap-3 p-4 max-lg:hidden">
               {transaction.status === 'offers-available' ? (
-                <Button
-                  className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
-                  variant="default"
+                <Link
+                  href={`/umrah-personal/offer/${transaction.id}`}
+                  className=" w-[100%]"
                 >
-                  Lihat Penawaran
-                </Button>
+                  <Button
+                    className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
+                    variant="default"
+                  >
+                    Lihat Penawaran
+                  </Button>
+                </Link>
               ) : transaction.status === 'no-offers' ||
                 transaction.status === 'offer-expired' ||
                 transaction.status === 'canceled' ? (
-                <Button
-                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-                  variant="default"
-                >
-                  Buat Paket Baru
-                </Button>
+                <Link href={`/umrah-personal/landing`} className=" w-[100%]">
+                  <Button
+                    className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                    variant="default"
+                  >
+                    Buat Paket Baru
+                  </Button>
+                </Link>
               ) : transaction.status === 'offer-selected' ? (
                 <Button variant="default">Lihat Detail Pilihan</Button>
               ) : null}
