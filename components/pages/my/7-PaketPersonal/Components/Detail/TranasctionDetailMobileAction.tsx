@@ -142,7 +142,6 @@ export const TransactionDetailMobileAction = ({
         return null
     }
   }
-  console.log(transaction)
 
   return (
     <div className="hidden max-lg:block">

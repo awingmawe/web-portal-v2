@@ -12,7 +12,7 @@ import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
-import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
+import { Hotel, PlaneLanding, PlaneTakeoff } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
@@ -36,6 +36,7 @@ export interface TransactionCardProps {
   totalOffers?: any
   approvedAt?: any
   modifiedAt?: any
+  idJourney?: any
 }
 
 const RenderLinkToDetail = ({
@@ -49,7 +50,7 @@ const RenderLinkToDetail = ({
   children: React.ReactNode
 }) => {
   if (lg) {
-    return <Link href={`/my/transaction/${bookingId}`}>{children}</Link>
+    return <Link href={`/my/paket-personal/${bookingId}`}>{children}</Link>
   }
 
   return <div>{children}</div>
@@ -74,6 +75,7 @@ export default function TransactionCard({
   transaction,
   approvedAt,
   modifiedAt,
+  idJourney,
 }: TransactionCardProps) {
   const { lg } = useTailwindBreakpoint()
   const [orderPayment, setOrderPayment] = useState<any>(null)
@@ -113,13 +115,12 @@ export default function TransactionCard({
       return 'Dibatalkan Sistem'
     }
   }
-  console.log(noHeader)
 
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200 ">
       <RenderLinkToDetail
         lg={lg}
-        bookingId={'1'}
+        bookingId={idJourney}
         statusTahapan={'statusTahapan'}
       >
         {!noHeader && (
@@ -154,7 +155,7 @@ export default function TransactionCard({
         </div>
         <RenderLinkToDetail
           lg={lg}
-          bookingId={'1'}
+          bookingId={idJourney}
           statusTahapan={'statusTahapan'}
         >
           <div className="grid grid-cols-1 gap-2 p-4 md:grid-cols-8 lg:gap-4">
@@ -182,7 +183,7 @@ export default function TransactionCard({
                     </p>
                   </div>
                   <div className="mt-4 flex items-center gap-2 max-lg:hidden">
-                    <UsersIcon className="h-5 w-5 text-neutral-500" />
+                    <Hotel className="h-5 w-5 text-neutral-500" />
                     <p className="text-m-regular text-neutral-500">
                       {meccaHotel && medinaHotel
                         ? `${meccaHotel.selectedHotel.name} & ${medinaHotel.selectedHotel.name}`
@@ -258,7 +259,7 @@ export default function TransactionCard({
 
             {/* Mobile: Hotel info */}
             <div className="mt-1 hidden items-center gap-2 max-lg:flex">
-              <UsersIcon className="h-4 w-4 text-neutral-500" />
+              <Hotel className="h-4 w-4 text-neutral-500" />
               <p className="text-xs text-neutral-500">
                 {meccaHotel && medinaHotel
                   ? `${meccaHotel.selectedHotel.name} & ${medinaHotel.selectedHotel.name}`
@@ -318,6 +319,7 @@ export default function TransactionCard({
                 <CanceledProvider>
                   <TransactionCardFooter
                     status={status}
+                    idJourney={idJourney}
                     fetchTransactions={fetchTransactions}
                     transaction={transaction}
                   />

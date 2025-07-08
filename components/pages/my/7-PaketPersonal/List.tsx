@@ -2,7 +2,6 @@ import TransactionCard from '@/components/pages/my/7-PaketPersonal/Components/Ca
 import EmptyState from '@/components/pages/my/7-PaketPersonal/Components/EmptyState'
 import TransactionSkeletonLoading from '@/components/pages/my/7-PaketPersonal/Components/TransactionSkeletonLoading'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
-import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { Fragment } from 'react'
 
 interface ListProps {
@@ -48,37 +47,33 @@ export default function List({
                       key={`${transaction.id}-${new Date().getTime()}-${Math.random()}`}
                       className="max-lg:px-5"
                     >
-                      <CanceledProvider>
-                        <TransactionCard
-                          status={transaction.status}
-                          id={transaction.journeyCode}
-                          packageName={transaction?.name}
-                          startDate={transaction?.departureDate}
-                          endDate={transaction?.arrivalDate}
-                          arival={transaction?.arrival}
-                          departure={transaction?.departure}
-                          createdDate={transaction?.createdAt}
-                          meccaHotel={transaction?.meccaHotel}
-                          medinaHotel={transaction?.medinaHotel}
-                          approvedAt={transaction.approvedAt}
-                          modifiedAt={transaction.modifiedAt}
-                          totalOffers={transaction?.totalOffers}
-                          jemaah={Number.parseInt(
-                            transaction.totalManifest,
-                            10
-                          )}
-                          // noFooter={false}
-                          noHeader={
-                            (transaction.status === 'waiting-offers' &&
-                              transaction.approvedAt !== null) ||
-                            transaction.status === 'offers-available'
-                              ? false
-                              : true
-                          }
-                          transaction={transaction}
-                          fetchTransactions={fetchTransactions}
-                        />
-                      </CanceledProvider>
+                      <TransactionCard
+                        status={transaction.status}
+                        idJourney={transaction.id}
+                        id={transaction.journeyCode}
+                        packageName={transaction?.name}
+                        startDate={transaction?.departureDate}
+                        endDate={transaction?.arrivalDate}
+                        arival={transaction?.arrival}
+                        departure={transaction?.departure}
+                        createdDate={transaction?.createdAt}
+                        meccaHotel={transaction?.meccaHotel}
+                        medinaHotel={transaction?.medinaHotel}
+                        approvedAt={transaction.approvedAt}
+                        modifiedAt={transaction.modifiedAt}
+                        totalOffers={transaction?.totalOffers}
+                        jemaah={Number.parseInt(transaction.totalManifest, 10)}
+                        noFooter={false}
+                        noHeader={
+                          (transaction.status === 'waiting-offers' &&
+                            transaction.approvedAt !== null) ||
+                          transaction.status === 'offers-available'
+                            ? false
+                            : true
+                        }
+                        transaction={transaction}
+                        fetchTransactions={fetchTransactions}
+                      />
                     </div>
                   ))
                 ) : (
@@ -106,33 +101,32 @@ export default function List({
                   key={transaction.id + '-' + new Date()}
                   className="max-lg:px-5"
                 >
-                  <CanceledProvider>
-                    <TransactionCard
-                      status={transaction.status}
-                      id={transaction.journeyCode}
-                      packageName={transaction?.name}
-                      startDate={transaction?.departureDate}
-                      endDate={transaction?.arrivalDate}
-                      arival={transaction?.arrival}
-                      departure={transaction?.departure}
-                      createdDate={transaction.createdAt}
-                      approvedAt={transaction.approvedAt}
-                      modifiedAt={transaction.modifiedAt}
-                      meccaHotel={transaction?.meccaHotel}
-                      medinaHotel={transaction?.medinaHotel}
-                      totalOffers={transaction?.totalOffers}
-                      noHeader={
-                        (transaction.status === 'waiting-offers' &&
-                          transaction.approvedAt !== null) ||
-                        transaction.status === 'offers-available'
-                          ? false
-                          : true
-                      }
-                      jemaah={Number.parseInt(transaction.totalManifest, 10)}
-                      transaction={transaction}
-                      fetchTransactions={fetchTransactions}
-                    />
-                  </CanceledProvider>
+                  <TransactionCard
+                    status={transaction.status}
+                    idJourney={transaction.id}
+                    id={transaction.journeyCode}
+                    packageName={transaction?.name}
+                    startDate={transaction?.departureDate}
+                    endDate={transaction?.arrivalDate}
+                    arival={transaction?.arrival}
+                    departure={transaction?.departure}
+                    createdDate={transaction.createdAt}
+                    approvedAt={transaction.approvedAt}
+                    modifiedAt={transaction.modifiedAt}
+                    meccaHotel={transaction?.meccaHotel}
+                    medinaHotel={transaction?.medinaHotel}
+                    totalOffers={transaction?.totalOffers}
+                    noHeader={
+                      (transaction.status === 'waiting-offers' &&
+                        transaction.approvedAt !== null) ||
+                      transaction.status === 'offers-available'
+                        ? false
+                        : true
+                    }
+                    jemaah={Number.parseInt(transaction.totalManifest, 10)}
+                    transaction={transaction}
+                    fetchTransactions={fetchTransactions}
+                  />
                 </div>
               ))}
             </Fragment>

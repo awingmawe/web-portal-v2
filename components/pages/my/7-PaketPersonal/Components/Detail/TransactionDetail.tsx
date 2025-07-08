@@ -1,4 +1,4 @@
-import TransactionDetailContent from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailContent'
+import TransactionDetailContent from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetailContent'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
@@ -25,7 +25,7 @@ export function TransactionDetail({
           asChild
         >
           <div className="flex items-center justify-between">
-            <span>Detail Transaksi</span>
+            <span>Detail Paket Personal</span>
             <DialogClose>
               <X />
             </DialogClose>

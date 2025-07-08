@@ -179,6 +179,20 @@ export async function getTransactionDetail(
   }
 }
 
+export async function getTransactionPersonalDetail(
+  bookingId: string
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v2/journey-information/${bookingId}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction Personal:', error)
+    throw error
+  }
+}
+
 export async function getPaymentStatement(
   bookingId: string
 ): Promise<PaymentStatement> {

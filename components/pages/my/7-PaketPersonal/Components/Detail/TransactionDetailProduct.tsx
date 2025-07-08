@@ -1,104 +1,265 @@
-import { ArrowIcon } from '@/components/icons/arrow'
-import { BedIcon } from '@/components/icons/bed'
-import { BriefCaseIcon } from '@/components/icons/briefcase'
 import { Calendar2 } from '@/components/icons/calendar'
+import { PeopleWalk } from '@/components/icons/people-walk'
 import { UsersIcon } from '@/components/icons/user'
-import dayjs from 'dayjs'
-import 'dayjs/locale/id'
-import { ChevronRight } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
+import {
+  ArrowRight,
+  CalendarFold,
+  IdCard,
+  PlaneLanding,
+  PlaneTakeoff,
+  ShieldCheck,
+} from 'lucide-react'
 
 interface TransactionDetailProductProps {
-  travelName: string
-  traveSlug: string
-  packageName: string
-  packageSlug: string
-  packageCover: string
-  arrivalDate: string
-  departureDate: string
-  totalJemaah: string
-  roomType: string
+  packageName?: string
+  arrivalDate?: string
+  departureDate?: string
+  totalJemaah?: string
+  aktifitas?: any
+  createVisa?: any
+  journeyType?: any
+  useInsurance?: any
+  arrival?: any
+  departure?: any
 }
 
 export default function TransactionDetailProduct({
-  travelName,
-  traveSlug,
   packageName,
-  packageSlug,
-  packageCover,
   arrivalDate,
   departureDate,
   totalJemaah,
-  roomType,
+  aktifitas,
+  createVisa,
+  journeyType,
+  useInsurance,
+  arrival,
+  departure,
 }: TransactionDetailProductProps) {
-  return (
-    <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="max-lg:text-regular text-sm font-semibold max-lg:text-xs max-lg:font-medium">
-          Detail Produk
-        </h3>
-        <Link
-          href={`/umrah/${traveSlug}/${packageSlug}`}
-          className="flex items-center"
-        >
-          <div
-            className="mr-2 rounded-md p-1"
-            style={{
-              background:
-                'linear-gradient(134.15deg, #FFC100 17.72%, #FFA500 104.07%, #9D7A42 128.84%, #4D2B17 195.91%, #785214 236.89%)',
-            }}
-          >
-            <BriefCaseIcon className="text-white" />
-          </div>
-          <span className="max-lg:text-regular text-sm font-semibold max-lg:text-xs max-lg:font-medium">
-            {travelName}
-          </span>
-          <ChevronRight className="ml-1 h-5 w-5" />
-        </Link>
-      </div>
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    })
+  }
 
-      <div className="mb-4 flex w-11/12 gap-4 max-lg:flex-col max-lg:gap-1">
-        <div className="flex items-center gap-3 max-lg:items-start">
-          <div className="h-34 w-34 overflow-hidden rounded-lg max-lg:h-20 max-lg:w-20">
-            <Image
-              src={packageCover || '/thumbnail.png'}
-              alt={packageName}
-              width={120}
-              height={120}
-              className="h-full w-full object-cover"
-            />
+  return (
+    <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm">
+      <h3 className="mb-4 text-sm font-semibold text-gray-800">
+        Detail Produk
+      </h3>
+
+      <h4 className="mb-4 text-base font-semibold text-gray-900">
+        {packageName}
+      </h4>
+
+      {/* Desktop Layout */}
+      <div className="hidden grid-cols-2 gap-2 lg:grid">
+        {/* Kolom Kiri */}
+        <div className="space-y-3">
+          <div className="flex items-start">
+            <PeopleWalk className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+            <div>
+              <div className="text-[12px] text-neutral-500">
+                Jenis Perjalanan
+              </div>
+              <div className="text-[12px] text-neutral-900">
+                {journeyType
+                  .replace(/-/g, ' ')
+                  .split(' ')
+                  .map(
+                    (word: any) => word.charAt(0).toUpperCase() + word.slice(1)
+                  )
+                  .join(' ')}
+              </div>
+            </div>
           </div>
-          <h4 className="max-lg:text-regular hidden flex-1 text-sm font-semibold max-lg:block max-lg:text-xs max-lg:font-medium">
-            {packageName}
-          </h4>
+
+          <div className="flex items-start">
+            <PlaneTakeoff className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+            <div>
+              <div className="text-[12px] text-neutral-500">Keberangkatan</div>
+              <div className="text-[12px] text-neutral-900">
+                {arrival?.from?.code} → {arrival?.to?.code}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-start">
+            <UsersIcon className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+            <div>
+              <div className="text-[12px] text-neutral-500">Jumlah Jemaah</div>
+              <div className="text-[12px] text-neutral-900">
+                {totalJemaah} Jemaah
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-start">
+            <ShieldCheck className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+            <div>
+              <div className="text-[12px] text-neutral-500">
+                Asuransi Perjalanan
+              </div>
+              <div className="text-[12px] text-neutral-900">
+                {useInsurance === true
+                  ? 'Dengan Asuransi Perjalanan'
+                  : 'Tidak Dengan Asuransi Perjalanan'}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex-1">
-          <h4 className="font-medium max-lg:hidden">{packageName}</h4>
-          <div className="mt-2 flex items-center">
-            <Calendar2 className="h-5 w-5 text-neutral-500" />
-            <p className="ml-2 flex items-center text-sm text-neutral-500 max-lg:text-xs">
-              {dayjs(departureDate).locale('id').format('DD MMMM YYYY')}
-              <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
-              {dayjs(arrivalDate).locale('id').format('DD MMMM YYYY')}{' '}
-            </p>
+        {/* Separator Vertikal */}
+        <div className="relative">
+          <div className="absolute top-0 bottom-0 left-0 w-px bg-gray-200"></div>
+
+          {/* Kolom Kanan */}
+          <div className="space-y-3 pl-8">
+            <div className="flex items-start">
+              <CalendarFold className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+              <div>
+                <div className="text-[12px] text-neutral-500">
+                  Kegiatan Umroh
+                </div>
+                <div className="text-[12px] text-neutral-900 capitalize">
+                  {aktifitas}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <PlaneLanding className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+              <div>
+                <div className="text-[12px] text-neutral-500">Kepulangan</div>
+                <div className="text-[12px] text-neutral-900">
+                  {departure?.from?.code} → {departure?.to?.code}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <IdCard className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+              <div>
+                <div className="text-[12px] text-neutral-500">Visa</div>
+                <div className="text-[12px] text-neutral-900">
+                  {createVisa === false ? 'Dengan Visa' : 'Tidak Dengan Visa'}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <Calendar2 className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+              <div>
+                <div className="text-[12px] text-neutral-500">
+                  Tanggal Keberangkatan dan Kepulangan
+                </div>
+                <div className="flex items-center text-[12px] text-neutral-900">
+                  {departureDate ? formatDate(departureDate) : ''}
+                  <ArrowRight className="mx-2 h-[20px] w-[20px] text-neutral-900" />
+                  {arrivalDate ? formatDate(arrivalDate) : ''}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="mt-2 flex items-center">
-            <UsersIcon className="h-5 w-5 text-neutral-500" />
-            <p className="ml-2 text-sm text-neutral-500 max-lg:text-xs">
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="space-y-3 lg:hidden">
+        <div className="flex items-start">
+          <PeopleWalk className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">Jenis Perjalanan</div>
+            <div className="text-[12px] text-neutral-900">
+              {journeyType
+                .replace(/-/g, ' ')
+                .split(' ')
+                .map(
+                  (word: any) => word.charAt(0).toUpperCase() + word.slice(1)
+                )
+                .join(' ')}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start">
+          <CalendarFold className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">Kegiatan Umroh</div>
+            <div className="text-[12px] text-neutral-900 capitalize">
+              {aktifitas}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start">
+          <IdCard className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">Visa</div>
+            <div className="text-[12px] text-neutral-900">
+              {' '}
+              {createVisa === false ? 'Dengan Visa' : 'Tidak Dengan Visa'}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start">
+          <UsersIcon className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">Jumlah Jemaah</div>
+            <div className="text-[12px] text-neutral-900">
               {totalJemaah} Jemaah
-            </p>
+            </div>
           </div>
-          <div className="mt-2 flex items-center">
-            <BedIcon className="h-5 w-5 text-neutral-500" />
-            <p className="ml-3 text-sm text-neutral-500 max-lg:text-xs">
-              {roomType === 'quad'
-                ? 'Quad - 1 Kamar Berempat'
-                : roomType === 'triple'
-                  ? 'Triple - 1 Kamar Bertiga'
-                  : 'Double - 1 Kamar Berdua'}
-            </p>
+        </div>
+
+        <div className="flex items-start">
+          <PlaneTakeoff className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">Keberangkatan</div>
+            <div className="text-[12px] text-neutral-900">
+              {arrival?.from?.code} → {arrival?.to?.code}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start">
+          <PlaneLanding className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">Kepulangan</div>
+            <div className="text-[12px] text-neutral-900">
+              {departure?.from?.code} → {departure?.to?.code}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start">
+          <ShieldCheck className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">
+              Asuransi Perjalanan
+            </div>
+            <div className="text-[12px] text-neutral-900">
+              {useInsurance === true
+                ? 'Dengan Asuransi Perjalanan'
+                : 'Tidak Dengan Asuransi Perjalanan'}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-start">
+          <Calendar2 className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+          <div>
+            <div className="text-[12px] text-neutral-500">
+              Tanggal Keberangkatan dan Kepulangan
+            </div>
+            <div className="flex items-center text-[12px] text-neutral-900">
+              {departureDate ? formatDate(departureDate) : ''}
+              <ArrowRight className="mx-2 h-[16px] w-[16px] text-neutral-900" />
+              {arrivalDate ? formatDate(arrivalDate) : ''}
+            </div>
           </div>
         </div>
       </div>

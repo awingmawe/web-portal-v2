@@ -70,8 +70,6 @@ export default function TransactionUpcoming() {
 
       // Fetch data
       const response = await getTransactionListUmrahPersonal(queryParams)
-      console.log(response.results)
-
       // Update state with response data
 
       if (lg && currentPage > 1) {

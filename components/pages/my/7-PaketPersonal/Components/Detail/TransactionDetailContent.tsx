@@ -1,31 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
-import { ChecklistCircleActive } from '@/components/icons/checkbox'
-import { InfoCircleIcon } from '@/components/icons/info-circle'
-import { TransactionDetailMobileAction } from '@/components/pages/my/1-Transaction/Components/Detail/TranasctionDetailMobileAction'
-import { TransactionDetailHeader } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetaiHeader'
-import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailManifest'
-import TransactionDetailPayment from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailPayment'
-import TransactionDetailProduct from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailProduct'
-import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailSkeleton'
+import { TransactionDetailHeader } from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetaiHeader'
+import TransactionDetailProduct from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetailProduct'
+import TransactionDetailRincian from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetailRincian'
+import TransactionDetailSkeleton from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetailSkeleton'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { CALL_CENTER, MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
-import { CanceledProvider } from '@/contexts/canceled-package-context'
 import {
   getManifestDetail,
-  getPaymentStatement,
-  getPaymentTransaction,
-  getTransactionDetail,
-  postNextPayment,
+  getTransactionPersonalDetail,
 } from '@/services/umrah-service'
-import dayjs from 'dayjs'
 import 'dayjs/locale/id'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import Script from 'next/script'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
 interface TransactionDetailContentProps {
@@ -58,40 +45,12 @@ export default function TransactionDetailContent({
   const router = useRouter()
   const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
 
-  // Initialize Snap
-  useEffect(() => {
-    // Check if Snap is already available
-    if (window.snap) {
-      setIsSnapInitialized(true)
-      return
-    }
-
-    // Load Snap.js
-    const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js'
-    const myMidtransClientKey = 'your-client-key' // Replace with your actual client key
-
-    const scriptTag = document.createElement('script')
-    scriptTag.src = midtransScriptUrl
-    scriptTag.setAttribute('data-client-key', myMidtransClientKey)
-    scriptTag.onload = () => {
-      setIsSnapInitialized(true)
-    }
-
-    document.body.appendChild(scriptTag)
-
-    return () => {
-      // Clean up script tag on unmount if needed
-      document.body.removeChild(scriptTag)
-    }
-  }, [])
-
   const fetchTransactions = useCallback(async () => {
     setLoading(true)
 
     try {
       // Fetch data
-      const transactionDetail = await getTransactionDetail(bookingId)
-      const paymentTransaction = await getPaymentTransaction(bookingId)
+      const transactionDetail = await getTransactionPersonalDetail(bookingId)
       const manifest = await getManifestDetail({
         bookingId,
         page: 1,
@@ -100,7 +59,7 @@ export default function TransactionDetailContent({
 
       // Update state with response data
       setTransaction(transactionDetail)
-      setPaymentTransaction(paymentTransaction)
+
       setManifest(manifest)
 
       setLoading(false)
@@ -131,81 +90,7 @@ export default function TransactionDetailContent({
       }
     }
   }, [transaction])
-
-  const handleSnapPayment = useCallback(
-    (token: string) => {
-      if (!isSnapInitialized || !window.snap) {
-        console.error('Snap is not initialized yet')
-        return
-      }
-
-      window.snap.pay(token, {
-        onSuccess: async (result: any) => {
-          console.log(result)
-          window.location.reload()
-        },
-        onPending: async (result: any) => {
-          console.log('Payment pending', result)
-          window.location.reload()
-        },
-        onError: (error: any) => {
-          console.log(error)
-          setLoading(false)
-        },
-        onClose: () => {
-          setLoading(false)
-        },
-      })
-    },
-    [router, isSnapInitialized]
-  )
-
-  const fetchPaymentStatement = useCallback(
-    async (id: any) => {
-      if (!isSnapInitialized) {
-        console.error('Snap is not initialized yet')
-        return
-      }
-
-      setLoading(true)
-      try {
-        // Build query parameters
-        const response = await getPaymentStatement(id)
-        const payload = {
-          amount: response.remainingPayment,
-        }
-        const responseNext = await postNextPayment(id, payload)
-
-        if (responseNext?.paymentToken) {
-          onOpenChange()
-          handleSnapPayment(responseNext.paymentToken)
-        } else {
-          console.error('No payment token received')
-          setLoading(false)
-        }
-      } catch (err) {
-        console.error('Error processing payment:', err)
-        setLoading(false)
-      }
-    },
-    [handleSnapPayment, isSnapInitialized]
-  )
-
-  const handleDirectPayment = useCallback(() => {
-    if (!isSnapInitialized) {
-      console.error('Snap is not initialized yet')
-      return
-    }
-
-    setLoading(true)
-    onOpenChange()
-    if (paymentTransaction?.paymentToken) {
-      handleSnapPayment(paymentTransaction.paymentToken)
-    } else {
-      console.error('No payment token available')
-      setLoading(false)
-    }
-  }, [paymentTransaction, handleSnapPayment, isSnapInitialized])
+  console.log(transaction)
 
   return (
     <div>
@@ -234,332 +119,68 @@ export default function TransactionDetailContent({
             <div className="scrollbar-hide max-h-[80vh] overflow-y-auto border-r border-neutral-100 py-4 max-lg:max-h-full">
               {/* Header */}
               <TransactionDetailHeader
-                createdDate={transaction?.createdAt}
-                statusTahapan={statusTahapan}
-                status={transaction?.status.slug}
-                isPaidOff={transaction?.isPaidOff}
-                isCompletedManifest={transaction?.isCompletedManifest}
+                status={transaction?.status}
+                totalOffers={transaction?.totalOffers}
+                createdDate={transaction?.approvedAt}
               />
-
-              {/* Transaction Info */}
-              <div className="mb-6 px-6 max-lg:px-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-s-regular text-neutral-500">
-                    Kategori Produk
-                  </p>
-                  <p className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
-                    Umroh
-                  </p>
-                </div>
-                <div className="mt-1 flex items-center justify-between">
-                  <p className="text-s-regular text-neutral-500">
-                    ID Transaksi
-                  </p>
-                  <p className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
-                    {transaction?.bookingCode}
-                  </p>
-                </div>
-                <div className="mt-1 flex items-center justify-between">
-                  <p className="text-s-regular text-neutral-500">
-                    Tanggal Pembelian
-                  </p>
-                  <p className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
-                    {dayjs(transaction?.createdAt)
-                      .locale('id')
-                      .format('DD MMMM YYYY, HH:mm')}
-                  </p>
-                </div>
-              </div>
 
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
 
               {/* Product Details */}
               <TransactionDetailProduct
-                travelName={
-                  transaction?.packageSnapshot?.snapshot.package
-                    .organizationInstance.name || ''
-                }
-                traveSlug={
-                  transaction?.packageSnapshot?.snapshot.package
-                    .organizationInstance.slug || ''
-                }
-                packageName={
-                  transaction?.packageSnapshot?.snapshot.package.title || ''
-                }
-                packageSlug={
-                  transaction?.packageSnapshot?.snapshot.package.slug || ''
-                }
-                packageCover={
-                  transaction?.packageSnapshot?.snapshot.package.thumbnail || ''
-                }
-                arrivalDate={
-                  transaction?.packageSnapshot?.snapshot.arrivalDate || ''
-                }
-                departureDate={
-                  transaction?.packageSnapshot?.snapshot.departureDate || ''
-                }
-                totalJemaah={transaction?.quantity || ''}
-                roomType={transaction?.roomType || ''}
-              />
-              <Separator className="mb-4 !h-2 !bg-neutral-100" />
-
-              {/* Payment Details */}
-              <TransactionDetailPayment
-                bookingCode={transaction?.bookingCode || ''}
-                paymentDetails={transaction?.paymentDetails || ''}
-                statusTahapan={statusTahapan}
-                createdAt={transaction?.createdAt || ''}
-                startDate={
-                  transaction?.packageSnapshot?.snapshot?.departureDate
-                }
-                isPaidOff={transaction?.isPaidOff}
+                packageName={transaction?.name}
+                arrivalDate={transaction?.arrivalDate}
+                departureDate={transaction?.departureDate}
+                totalJemaah={transaction?.totalManifest}
+                aktifitas={transaction?.activity}
+                createVisa={transaction?.createVisa}
+                journeyType={transaction?.journeyType}
+                useInsurance={transaction?.useInsurance}
+                arrival={transaction?.arrival}
+                departure={transaction?.departure}
               />
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
 
               {/* Manifest Data */}
               <div className="mb-6 px-6 max-lg:px-3">
                 <h3 className="mb-4 text-lg font-medium max-lg:text-xs">
-                  Data Jemaah
+                  Rincian Permintaan
                 </h3>
 
-                {transaction.isCompletedManifest ? (
-                  <div className="bg-success-100 mb-3 hidden rounded-full px-3 py-2 max-lg:block">
-                    <div className="flex items-center gap-1">
-                      <ChecklistCircleActive />
-                      <p className="text-s-regular text-success-700 ">
-                        Data Lengkap
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    {statusTahapan !== 'Waiting' && (
-                      <div
-                        className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
-                      >
-                        <div
-                          className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
-                        >
-                          <InfoCircleIcon />
-                          <p className="text-s-regular text-current">
-                            {dayjs(transaction.createdAt).add(3, 'day') >
-                            dayjs() ? (
-                              <span className="text-current">
-                                Lengkapi sebelum{' '}
-                                {dayjs(transaction.createdAt)
-                                  .add(3, 'day')
-                                  .locale('id')
-                                  .format('DD MMM YYYY')}
-                              </span>
-                            ) : (
-                              <span className="text-current">
-                                Segera lengkapi manifest
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <TransactionDetailManifest members={manifest?.results} />
+                <TransactionDetailRincian data={transaction} />
               </div>
             </div>
             {/* Right Sidebar */}
-            {statusTahapan !== 'Selesai' && (
-              <div className="flex flex-col gap-3 p-4 max-lg:hidden">
-                {transaction?.status.slug !== 'waiting-approval' &&
-                  transaction?.status.slug !== 'waiting-down-payment' &&
-                  transaction?.status.slug !== 'canceled-by-user' &&
-                  transaction?.status.slug !== 'canceled-by-travel' &&
-                  transaction?.status.slug !== 'expired' && (
-                    <div className="flex flex-col gap-3">
-                      {transaction?.isPaidOff ? (
-                        <div className="flex flex-col gap-2">
-                          <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
-                            <ChecklistCircleActive />
-                            <span className="text-success-700 text-s-regular ml-1">
-                              Pembayaran Lunas
-                            </span>
-                          </div>
-                          <Button
-                            className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
-                            disabled
-                          >
-                            <span className="text-primary-900 font-medium opacity-50">
-                              Bayar Pelunasan
-                            </span>
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col gap-2">
-                          <div
-                            className={`${dayjs(transaction?.packageSnapshot?.snapshot?.departureDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} flex items-center justify-center rounded-3xl px-3 py-2 pb-13`}
-                          >
-                            {dayjs(
-                              transaction?.packageSnapshot?.snapshot
-                                ?.departureDate
-                            ).subtract(21, 'day') > dayjs() ? (
-                              <span className="text-warning-700 text-s-regular">
-                                Lunasi sebelum{' '}
-                                {dayjs(
-                                  transaction?.packageSnapshot?.snapshot
-                                    ?.departureDate
-                                )
-                                  .subtract(21, 'day')
-                                  .locale('id')
-                                  .format('DD MMM YYYY')}
-                              </span>
-                            ) : (
-                              <span className="text-error-700 text-s-regular">
-                                {' '}
-                                Segera lunasi pembayaran paket!
-                              </span>
-                            )}
-                          </div>
-                          <Button
-                            className="-mt-13 shadow-[0px_-2px_4.8px_0px_#A4883033]"
-                            onClick={() => fetchPaymentStatement(bookingId)}
-                            disabled={!isSnapInitialized || loading}
-                          >
-                            <span className="font-medium">Bayar Pelunasan</span>
-                          </Button>
-                        </div>
-                      )}
-
-                      {transaction?.isCompletedManifest ? (
-                        <div className="flex flex-col gap-2">
-                          <div className="bg-success-100 flex items-center justify-center rounded-3xl px-3 py-2 pb-13">
-                            <ChecklistCircleActive />
-                            <span className="text-success-700 text-s-regular ml-1">
-                              Data Lengkap
-                            </span>
-                          </div>
-                          <Button
-                            className="-mt-13 !opacity-100 shadow-[0px_-2px_4.8px_0px_#A4883033]"
-                            disabled
-                          >
-                            <span className="text-primary-900 font-medium opacity-50">
-                              Lengkapi Data Jemaah
-                            </span>
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col gap-2">
-                          <div
-                            className={`flex items-center justify-center rounded-3xl px-3 py-2 pb-13 ${dayjs(transaction?.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}`}
-                          >
-                            {dayjs(transaction?.createdAt).add(3, 'day') >
-                            dayjs() ? (
-                              <span className="text-s-regular text-warning-700">
-                                Lengkapi sebelum{' '}
-                                {dayjs(transaction?.createdAt)
-                                  .add(3, 'day')
-                                  .locale('id')
-                                  .format('DD MMM YYYY')}
-                              </span>
-                            ) : (
-                              <span className="text-s-regular text-error-700">
-                                Segera lengkapi manifest
-                              </span>
-                            )}
-                          </div>
-                          <Link
-                            href={`/manifest/${bookingId}`}
-                            className="inline-flex h-full w-full"
-                          >
-                            <Button className="-mt-13 w-full shadow-[0px_-2px_4.8px_0px_#A4883033]">
-                              <span className="font-medium">
-                                Lengkapi Data Jemaah
-                              </span>
-                            </Button>
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                {statusTahapan === 'Waiting' && (
-                  <Button
-                    className="border-primary-500 w-full border-2"
-                    disabled={!isSnapInitialized || loading}
-                    onClick={handleDirectPayment}
-                  >
-                    <span className="font-medium">Bayar</span>
-                  </Button>
-                )}
-                <Link
-                  href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                  target="_blank"
-                  className="w-full"
+            <div className="flex flex-col gap-3 p-4 max-lg:hidden">
+              {transaction.status === 'offers-available' ? (
+                <Button
+                  className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
+                  variant="default"
                 >
-                  <Button
-                    variant="outline"
-                    className="border-primary-500 w-full border-2"
-                  >
-                    <span className="font-medium">Bantuan</span>
-                  </Button>
-                </Link>
-
-                {transaction?.status.slug !== 'canceled-by-user' &&
-                  transaction?.status.slug !== 'canceled-by-travel' &&
-                  transaction?.status.slug !== 'expired' &&
-                  transaction?.status.slug !== 'waiting-cancellation' && (
-                    <Link
-                      href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                      target="_blank"
-                      className="w-full"
-                    >
-                      <Button
-                        variant="outline"
-                        className="border-error-500  block w-full border-2"
-                        //    onClick={() => {
-                        //     if (typeof setOpenBatalkan === 'function') {
-                        //      setOpenBatalkan(true)
-                        //   }
-                        // }}
-                      >
-                        <span className="text-error-500 font-medium">
-                          Batalkan Pesanan
-                        </span>
-                      </Button>
-                    </Link>
-                  )}
-                <div className="relative mt-auto">
-                  <Image
-                    src="/images/kabbah.svg"
-                    alt="Kaaba illustration"
-                    width={200}
-                    height={200}
-                    className="absolute -right-5 bottom-0"
-                  />
-                </div>
-              </div>
-            )}
+                  Lihat Penawaran
+                </Button>
+              ) : transaction.status === 'no-offers' ||
+                transaction.status === 'offer-expired' ||
+                transaction.status === 'canceled' ? (
+                <Button
+                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                  variant="default"
+                >
+                  Buat Paket Baru
+                </Button>
+              ) : transaction.status === 'offer-selected' ? (
+                <Button variant="default">Lihat Detail Pilihan</Button>
+              ) : null}
+              <Button
+                className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                variant="ghost"
+              >
+                Bantuan
+              </Button>
+            </div>
           </div>
         </Fragment>
       )}
-      <CanceledProvider>
-        <TransactionDetailMobileAction
-          bookingCode={transaction?.bookingCode}
-          bookingId={bookingId}
-          statusTahapan={statusTahapan}
-          idOrganisasi={
-            transaction?.packageSnapshot?.snapshot.package.organizationInstance
-              .id
-          }
-          transaction={transaction}
-          // status={transaction.status.slug}
-        />
-      </CanceledProvider>
-      <Script
-        src={SNAP_URL}
-        data-client-key={MIDTRANS_CLIENT_KEY}
-        strategy="lazyOnload"
-        onLoad={() => {}}
-        onError={() => {}}
-      />
     </div>
   )
 }
