@@ -362,10 +362,22 @@ const MobileCheckoutPage = ({}) => {
                     />
                   </svg>
                 </div>
-                <p className="text-xs-regular ml-2 text-neutral-900">
-                  Minimal pembayaran uang muka adalah{' '}
-                  {formatCurrency(selectedVariant.netAmount)}/orang
-                </p>
+                {isLinkAja ? (
+                  <p className="text-xs-regular ml-2 text-neutral-900">
+                    Uang muka minimal{' '}
+                    <b className="font-bold">
+                      {formatCurrency(selectedVariant.netAmount)}
+                    </b>{' '}
+                    dan limit transaksi bulanan kamu di{' '}
+                    <b className="font-bold">LinkAja</b> adalah{' '}
+                    <b className="font-bold">Rp40.000.000</b>
+                  </p>
+                ) : (
+                  <p className="text-xs-regular ml-2 text-neutral-900">
+                    Minimal pembayaran uang muka adalah{' '}
+                    {formatCurrency(selectedVariant.netAmount)}/orang
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex items-center">
