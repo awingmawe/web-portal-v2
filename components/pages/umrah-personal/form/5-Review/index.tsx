@@ -140,7 +140,8 @@ const ItemsInformation = ({
   )
 }
 const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
-  const { currentStep, setCurrentStep } = useUmrahPersonal()
+  const { currentStep, setCurrentStep, setOpenDialogDrawerEndForm } =
+    useUmrahPersonal()
 
   if (
     currentStep !==
@@ -153,7 +154,7 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
     `${STEP_2}.departure.from.airport.code`
   )
   const departureToAirport = form.getValues(
-    `${STEP_2}.departure.from.airport.code`
+    `${STEP_2}.departure.to.airport.code`
   )
   const arrivalFromAirport = form.getValues(
     `${STEP_2}.arrival.from.airport.code`
@@ -553,7 +554,10 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
         <div
           className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white max-lg:px-4`}
         >
-          <p className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden">
+          <p
+            className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden"
+            onClick={() => setOpenDialogDrawerEndForm(true)}
+          >
             Batalkan Pembuatan Paket
           </p>
           <Button

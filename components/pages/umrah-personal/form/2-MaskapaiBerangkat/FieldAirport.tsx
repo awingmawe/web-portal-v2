@@ -62,7 +62,7 @@ export const FieldAirport = ({
     searchQuery: airportSearchQuery,
     handleSearchChange: handleAirportSearchChange,
     loadMore: loadMoreAirports,
-  } = useAirportSearch()
+  } = useAirportSearch({ version: 'v1' })
 
   // Convert Airport to AirportOption
   const convertAirportToOption = (airport: Airport): AirportOption => ({
@@ -135,7 +135,6 @@ export const FieldAirport = ({
         placeholder="Cari Bandara"
         endIcon={<SearchIcon size={18} className="text-neutral-900" />}
         onChange={handleAirportSearchChange}
-        value={airportSearchQuery}
       />
 
       {/* Results container */}
