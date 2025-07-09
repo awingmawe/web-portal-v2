@@ -56,26 +56,41 @@ export const CardPackage = memo(function CardPackage({
     () => !isEmpty(discount) && Number(discount) > 0,
     [discount]
   )
+  const formattedDepartureDate = useMemo(() => {
+    try {
+      return format(departureDate, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting departureDate:', error)
+      return ''
+    }
+  }, [departureDate])
 
-  const formattedDepartureDate = useMemo(
-    () => format(departureDate, 'dd MMM yyyy', { locale: id }),
-    [departureDate]
-  )
+  const formattedArrivalDate = useMemo(() => {
+    try {
+      return format(arrivalDate, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting arrivalDate:', error)
+      return ''
+    }
+  }, [arrivalDate])
 
-  const formattedArrivalDate = useMemo(
-    () => format(arrivalDate, 'dd MMM yyyy', { locale: id }),
-    [arrivalDate]
-  )
+  const formattedReleasedAt = useMemo(() => {
+    try {
+      return format(releasedAt, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting releasedAt:', error)
+      return ''
+    }
+  }, [releasedAt])
 
-  const formattedReleasedAt = useMemo(
-    () => format(releasedAt, 'dd MMM yyyy', { locale: id }),
-    [releasedAt]
-  )
-
-  const numberOfDays = useMemo(
-    () => differenceInDays(arrivalDate, departureDate) + 1,
-    [arrivalDate, departureDate]
-  )
+  const numberOfDays = useMemo(() => {
+    try {
+      return differenceInDays(arrivalDate, departureDate) + 1
+    } catch (error) {
+      console.error('Error calculating numberOfDays:', error)
+      return 0
+    }
+  }, [arrivalDate, departureDate])
 
   // Memoize the stars rendering
   const ratingStars = useMemo(
