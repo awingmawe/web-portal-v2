@@ -59,10 +59,12 @@ const ModalSelectHotel = ({
             Harap memilih jumlah kamar jemaah terlebih dahulu untuk bisa
             melakukan checkout.
           </p>
+
           <SelectHotel
             disabledAddOnly={
               isLinkAja
-                ? Number(selectedVariant?.package.dpAmount) * getTotalQty() >=
+                ? Number(selectedVariant?.package.dpAmount) * getTotalQty() +
+                    1 >=
                   LINKAJA_MAX_LIMIT
                 : false
             }
