@@ -19,9 +19,21 @@ export function TransactionDetailHeader({
   const renderStatusText = (status: string) => {
     if (status === 'offers-available') {
       return `${totalOffers} Penawaran akan hangus dalam 12 jam`
-    } else {
+    } else if (status === 'waiting-offers' && createdDate !== null) {
       const expiredAt = dayjs(createdDate).add(24, 'hour')
       return `Otomatis batal pada ${expiredAt.format('DD MMM YYYY, HH:mm')}`
+    } else if (status === 'waiting-offers' && createdDate === null) {
+      return `Menunggu Penawaran`
+    } else if (status === 'no-offers') {
+      return 'Penawaran Tidak Tersedia'
+    } else if (status === 'offer-expired') {
+      return 'Penawaran Hangus'
+    } else if (status === 'waiting-payment') {
+      return 'Menunggu Pembayaran'
+    } else if (status === 'offer-selected') {
+      return 'Penawaran Telah Dipilih'
+    } else {
+      return 'Dibatalkan Sistem'
     }
   }
 
