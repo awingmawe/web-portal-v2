@@ -206,7 +206,7 @@ const FilterDrawer: React.FC = () => {
   return (
     <Drawer direction="top">
       <DrawerTrigger asChild>
-        <span className="bg-neutral-0 text-s-medium rounded-[100px] px-3 py-2 text-neutral-900">
+        <span className="bg-neutral-0 text-s-medium cursor-pointer rounded-[100px] px-3 py-2 text-neutral-900">
           {hasFilters ? 'Ubah' : 'Filter'}
         </span>
       </DrawerTrigger>

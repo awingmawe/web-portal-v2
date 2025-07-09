@@ -162,13 +162,6 @@ const OfferButton: React.FC<{
                   >
                     Batal
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="border-error-500 flex-1 px-10 py-3 max-lg:w-full"
-                    onClick={handleConfirmBatalkan}
-                  >
-                    Ya, batalkan
-                  </Button>
                 </div>
               }
             />

@@ -18,6 +18,7 @@ import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
 import { STEP_1 } from '@/contexts/umrah-personal/constant'
 import { umrahPersonalRegister } from '@/services/umrah-service'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
 interface UmrahPersonalFormSectionProps {
@@ -27,6 +28,7 @@ interface UmrahPersonalFormSectionProps {
 const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
   dataEnumVehicle,
 }) => {
+  const router = useRouter()
   const form = useForm<UmrahPersonalFormType>({
     resolver: zodResolver(umrahPersonalFormSchema),
     defaultValues: defaultUmrahPersonalForm,
@@ -68,7 +70,9 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
     try {
       const result = await umrahPersonalRegister(payload)
 
-      console.log('API Success:', result)
+      if (result) {
+        router.push(`/umrah-personal/success-offering`)
+      }
     } catch (error) {
       console.warn('API Error:', error)
     }

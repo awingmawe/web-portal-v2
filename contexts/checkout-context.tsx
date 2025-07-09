@@ -2,6 +2,7 @@
 'use client'
 
 import { toast } from '@/components/ui/sonner'
+import { LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { Package } from '@/constant/types/PackageProps'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { useAuth } from '@/contexts/auth/context'
@@ -91,6 +92,9 @@ export const CheckoutProvider = ({
       setTotalPrice(Number(parsed.price))
     }
   }, [])
+  const isLinkAja =
+    typeof window !== 'undefined' &&
+    sessionStorage?.getItem('isLinkAja') === 'true'
 
   const totalQty = useMemo(() => {
     return (
@@ -478,7 +482,7 @@ export const CheckoutProvider = ({
       }
 
       pendingValueRef.current = null
-    }, 100) // Reduced to 100ms for better responsiveness
+    }, 500) // Reduced to 100ms for better responsiveness
   }
 
   // Cleanup timer on component unmount
@@ -522,6 +526,21 @@ export const CheckoutProvider = ({
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const sliderStep = () => {
+    const max =
+      totalQty > 0
+        ? isLinkAja
+          ? preBooking?.totalPrice > LINKAJA_MAX_LIMIT
+            ? LINKAJA_MAX_LIMIT
+            : preBooking?.totalPrice
+          : preBooking?.totalPrice || totalPrice * totalQty
+        : 0
+    const distanceToMax = max - sliderValue
+
+    if (distanceToMax <= 0) return 1 // fallback to make slider always responsive
+    return distanceToMax < 500_000 ? distanceToMax : 500_000
   }
 
   const value = {
@@ -585,6 +604,7 @@ export const CheckoutProvider = ({
     totalQty,
     selectedPayment,
     setSelectedPayment,
+    sliderStep,
   }
 
   return (

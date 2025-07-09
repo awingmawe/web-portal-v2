@@ -157,7 +157,17 @@ export const CardPackageCompact = memo(function CardPackageCompact({
           <p className="text-s-regular mt-3 text-neutral-500">
             Harga Mulai Dari
           </p>
-          <div className="flex flex-col flex-wrap items-start justify-start gap-1">
+          <div
+            className="flex flex-col flex-wrap items-start justify-start gap-1"
+            style={{
+              height:
+                !isEmpty(codeCountry) &&
+                isPlus &&
+                Number(codeCountry?.length) > 3
+                  ? `${Number(codeCountry?.length) * 35}px`
+                  : 'auto',
+            }}
+          >
             {showDiscount && (
               <span className="text-s-regular -tracking-[0.32px] text-neutral-500 line-through">
                 {originalPrice}
@@ -234,8 +244,8 @@ export const CardPackageCompact = memo(function CardPackageCompact({
               <p className="text-m-regular">
                 {departure.airline.name}
                 {departure.airline.name == arrival.airline.name
-                  ? ', ' + arrival.airline.name
-                  : ''}
+                  ? ''
+                  : ', ' + arrival.airline.name}
               </p>
             </div>
           </div>

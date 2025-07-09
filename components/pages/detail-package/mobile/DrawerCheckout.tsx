@@ -183,7 +183,8 @@ const CheckoutDrawerMobile = React.memo(
                       isMobile
                       disabledAddOnly={
                         isLinkAja
-                          ? selectedVariant.package.dpAmount * getTotalQty() >=
+                          ? Number(selectedVariant?.package.dpAmount) *
+                              getTotalQty() >=
                             LINKAJA_MAX_LIMIT
                           : false
                       }
