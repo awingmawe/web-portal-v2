@@ -91,7 +91,6 @@ export default function TransactionDetailContent({
       }
     }
   }, [transaction])
-  console.log(transaction)
 
   return (
     <div>

@@ -3,6 +3,7 @@ import { ChevronRightIcon } from '@/components/icons/chevron'
 import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { MoneysIcon } from '@/components/icons/moneys'
+import { PersonalPaket } from '@/components/icons/personal-paket'
 import { PilotSeatIcon } from '@/components/icons/pilot-seat'
 import { SettingIcon } from '@/components/icons/setting'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
@@ -138,6 +139,12 @@ export const SidebarMobileProfile = () => {
             label="Permintaan Paket Custom"
             loading={profile ? false : true}
           /> */}
+        <MenuItem
+          icon={<PersonalPaket />}
+          label="Paket Personal"
+          href="/my/paket-personal"
+          loading={profile ? false : true}
+        />
         <MenuItem
           icon={<PilotSeatIcon />}
           label="Cek Ketersediaan Kursi"
