@@ -15,11 +15,10 @@ export async function generateMetadata() {
 export default async function PersonalPaketPage() {
   return (
     <LayoutMy>
-      <div className="mx-auto max-w-7xl lg:px-4">
+      <div className="mx-auto mb-17 max-w-7xl lg:px-4">
         <TransactionPaketPersonal />
-
-        <BottomNavigation />
       </div>
+      <BottomNavigation />
     </LayoutMy>
   )
 }
