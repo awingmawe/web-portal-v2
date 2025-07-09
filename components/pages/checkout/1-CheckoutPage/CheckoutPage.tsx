@@ -68,6 +68,7 @@ const CheckoutPage = () => {
     totalQty,
     selectedPayment,
     setSelectedPayment,
+    sliderStep,
   } = useCheckout()
   const router = useRouter()
 
@@ -229,7 +230,11 @@ const CheckoutPage = () => {
                   defaultPackageVariantId={selectedVariant.variantId}
                   disabled={prebookingLoading}
                   disabledAddOnly={
-                    isLinkAja ? sliderValue >= LINKAJA_MAX_LIMIT : false
+                    isLinkAja
+                      ? sliderValue >= LINKAJA_MAX_LIMIT ||
+                        selectedVariant.netAmount * (totalQty + 1) >
+                          LINKAJA_MAX_LIMIT
+                      : false
                   }
                   onChange={(roomType) => {
                     setSelectedRoomType(roomType)
@@ -364,22 +369,14 @@ const CheckoutPage = () => {
                   max={
                     totalQty > 0
                       ? isLinkAja
-                        ? LINKAJA_MAX_LIMIT
+                        ? preBooking?.totalPrice > LINKAJA_MAX_LIMIT
+                          ? LINKAJA_MAX_LIMIT
+                          : preBooking?.totalPrice
                         : preBooking?.totalPrice || totalPrice * totalQty
                       : 0
                   }
                   disabled={prebookingLoading}
-                  step={(() => {
-                    const max =
-                      totalQty > 0
-                        ? isLinkAja
-                          ? LINKAJA_MAX_LIMIT
-                          : preBooking?.totalPrice || totalPrice * totalQty
-                        : 0
-                    const distanceToMax = max - sliderValue
-
-                    return Math.min(500000, distanceToMax)
-                  })()}
+                  step={sliderStep()}
                   value={sliderValue}
                   onChange={handleSliderChange}
                   className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
