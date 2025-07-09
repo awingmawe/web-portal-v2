@@ -564,6 +564,7 @@ const Step6Review: React.FC<Step6ReviewProps> = ({ form }) => {
             type="submit"
             className="flex items-center gap-1.5 px-8 py-4 max-lg:w-full"
             id="submit-form"
+            disabled={form.formState.isSubmitting}
           >
             Kirim Pengajuan Paket Umroh
             <ChevronRightCircle size={14} />

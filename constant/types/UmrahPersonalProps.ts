@@ -1,5 +1,4 @@
 import { Airline } from '@/constant/types/AirlineProps'
-import { AirportReference } from '@/constant/types/AirportProps'
 import { HotelDestination } from '@/constant/types/HotelProps'
 
 type FlightClass = 'economic' | 'business' | 'first-class'
@@ -33,6 +32,19 @@ export interface ExtendedHotel {
   latitude: string
   longitude: string
   hotelDestination: HotelDestination[]
+}
+
+export interface ExtendedFlight {
+  id: number
+  code: string
+  logo: string
+  name: string
+  countryId: number
+  createdAt: string
+  createdBy: string
+  modifiedAt: string
+  modifiedBy: string
+  countryName: string
 }
 
 export interface HotelSelection {
@@ -79,8 +91,8 @@ export interface RequestFormUmrahPersonal {
 }
 
 export interface FlightInfo {
-  to: AirportReference
-  from: AirportReference
+  to: ExtendedFlight
+  from: ExtendedFlight
   airline: Airline
   flightClass: FlightClass
   flightRoute: FlightRoute
