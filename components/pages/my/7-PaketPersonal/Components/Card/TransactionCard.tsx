@@ -115,7 +115,6 @@ export default function TransactionCard({
       return 'Dibatalkan Sistem'
     }
   }
-
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200 ">
       <RenderLinkToDetail
@@ -185,10 +184,12 @@ export default function TransactionCard({
                   <div className="mt-4 flex items-center gap-2 max-lg:hidden">
                     <Hotel className="h-5 w-5 text-neutral-500" />
                     <p className="text-m-regular text-neutral-500">
-                      {meccaHotel && medinaHotel
+                      {meccaHotel?.selectedHotel?.name &&
+                      medinaHotel?.selectedHotel?.name
                         ? `${meccaHotel.selectedHotel.name} & ${medinaHotel.selectedHotel.name}`
                         : meccaHotel?.selectedHotel?.name ||
-                          medinaHotel?.selectedHotel?.name}
+                          medinaHotel?.selectedHotel?.name ||
+                          'Hotel belum tersedia'}
                     </p>
                   </div>
                 </div>
@@ -261,10 +262,12 @@ export default function TransactionCard({
             <div className="mt-1 hidden items-center gap-2 max-lg:flex">
               <Hotel className="h-4 w-4 text-neutral-500" />
               <p className="text-xs text-neutral-500">
-                {meccaHotel && medinaHotel
+                {meccaHotel?.selectedHotel?.name &&
+                medinaHotel?.selectedHotel?.name
                   ? `${meccaHotel.selectedHotel.name} & ${medinaHotel.selectedHotel.name}`
                   : meccaHotel?.selectedHotel?.name ||
-                    medinaHotel?.selectedHotel?.name}
+                    medinaHotel?.selectedHotel?.name ||
+                    'Hotel belum tersedia'}
               </p>
             </div>
 
