@@ -26,6 +26,7 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
     currentStep,
     totalSteps,
     scrollContainerRef,
+    setCurrentStep,
     handlePrevious,
     setOpenDialogDrawerEndForm,
     openDialogDrawerEndForm,
@@ -41,6 +42,7 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
 
   const handleExitConfirmation = () => {
     setOpenDialogDrawerEndForm?.(false)
+    setCurrentStep(1)
     router.push(`/umrah-personal/landing`)
   }
 
