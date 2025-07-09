@@ -234,8 +234,8 @@ export const CardPackageCompact = memo(function CardPackageCompact({
               <p className="text-m-regular">
                 {departure.airline.name}
                 {departure.airline.name == arrival.airline.name
-                  ? ', ' + arrival.airline.name
-                  : ''}
+                  ? ''
+                  : ', ' + arrival.airline.name}
               </p>
             </div>
           </div>

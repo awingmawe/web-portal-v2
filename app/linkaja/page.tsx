@@ -27,7 +27,7 @@ export default async function LinkAja() {
 
   const [dataMinMax, dataTagPackages, dataFacility, dataSection, dpMinMax] =
     await Promise.all([
-      { min: '1000000', max: '40000000' },
+      { min: '0', max: '40000000' },
       getTagPackagesEnum(),
       getFacilityEnum('umrah-facility'),
       getSectionEnum(),
@@ -43,7 +43,7 @@ export default async function LinkAja() {
           id="packageList"
         >
           <MobileTopbar
-            variant="filterPermata"
+            variant="filterLinkAja"
             showBackButton={false}
             forceMobile
           />
