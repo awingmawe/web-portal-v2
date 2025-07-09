@@ -91,6 +91,7 @@ export default function TransactionDetailContent({
       }
     }
   }, [transaction])
+  console.log(transaction)
 
   return (
     <div>
@@ -139,6 +140,8 @@ export default function TransactionDetailContent({
                 arrival={transaction?.arrival}
                 departure={transaction?.departure}
                 transportation={transaction?.transportation?.vehicle}
+                hotelMakkah={transaction?.meccaHotel?.selectedHotel?.name}
+                hotelMadinah={transaction?.medinaHotel?.selectedHotel?.name}
               />
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
 

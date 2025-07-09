@@ -39,8 +39,8 @@ export default function TransactionDetailProduct({
   useInsurance,
   arrival,
   departure,
-  hotelMakkah = 'Dar Al Ghufran',
-  hotelMadinah = 'Sofitel Shad',
+  hotelMakkah,
+  hotelMadinah,
   transportation,
 }: TransactionDetailProductProps) {
   const formatDate = (dateString: string) => {
@@ -174,18 +174,20 @@ export default function TransactionDetailProduct({
                 </div>
               </div>
             </div>
-
-            <div className="flex items-start">
-              <Building2 className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
-              <div>
-                <div className="text-[12px] text-neutral-500">
-                  Hotel Madinah
+            {hotelMadinah !== null ||
+              (hotelMadinah !== undefined && (
+                <div className="flex items-start">
+                  <Building2 className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
+                  <div>
+                    <div className="text-[12px] text-neutral-500">
+                      Hotel Madinah
+                    </div>
+                    <div className="text-[12px] text-neutral-900">
+                      {hotelMadinah}
+                    </div>
+                  </div>
                 </div>
-                <div className="text-[12px] text-neutral-900">
-                  {hotelMadinah}
-                </div>
-              </div>
-            </div>
+              ))}
 
             <div className="flex items-start">
               <Calendar2 className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
@@ -299,14 +301,20 @@ export default function TransactionDetailProduct({
               <div className="text-[12px] text-neutral-900">{hotelMakkah}</div>
             </div>
           </div>
-
-          <div className="flex items-start">
-            <Building2 className="mt-1 mr-2 h-[16px] w-[16px] text-neutral-900" />
-            <div>
-              <div className="text-[12px] text-neutral-500">Hotel Madinah</div>
-              <div className="text-[12px] text-neutral-900">{hotelMadinah}</div>
-            </div>
-          </div>
+          {hotelMadinah !== null ||
+            (hotelMadinah !== undefined && (
+              <div className="flex items-start">
+                <Building2 className="mt-1 mr-2 h-[16px] w-[16px] text-neutral-900" />
+                <div>
+                  <div className="text-[12px] text-neutral-500">
+                    Hotel Madinah
+                  </div>
+                  <div className="text-[12px] text-neutral-900">
+                    {hotelMadinah}
+                  </div>
+                </div>
+              </div>
+            ))}
         </div>
 
         {/* 6. Transportasi - Full Width */}
