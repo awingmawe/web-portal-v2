@@ -1,5 +1,6 @@
 import { Airline } from '@/constant/types/AirlineProps'
 import { HotelDestination } from '@/constant/types/HotelProps'
+import { City } from '@/constant/types/LocationProps'
 
 type FlightClass = 'economic' | 'business' | 'first-class'
 
@@ -45,6 +46,7 @@ export interface ExtendedFlight {
   modifiedAt: string
   modifiedBy: string
   countryName: string
+  cityName: string
 }
 
 export interface HotelSelection {
@@ -155,7 +157,9 @@ export interface PackagePersonalData {
   isExpired: boolean
   orgThumbnail: string | null
   orgName: string
-  isBook?: boolean
+  orgCity: City
+  image: string
+  isBooked?: boolean
 }
 
 // Main response interface

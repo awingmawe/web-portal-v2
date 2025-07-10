@@ -272,6 +272,25 @@ export async function preBookingCreateCheckout(payload: {
     throw error
   }
 }
+export async function preBookingCreateCheckoutUmrahPersonal(payload: {
+  packagePersonalId: number
+  netAmount: number
+  double: number
+  referralCode: string
+  triple: number
+  quad: number
+}) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/personal-pre`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching pre booking checkout umrah personal:', error)
+    throw error
+  }
+}
 
 export async function bookingCheckout(payload: {
   packageVariantId: number
@@ -290,6 +309,25 @@ export async function bookingCheckout(payload: {
     return response
   } catch (error) {
     console.error('Error fetching payment transaction:', error)
+    throw error
+  }
+}
+export async function bookingCheckoutUmrahPersonal(payload: {
+  packagePersonalId: number
+  netAmount: number
+  double: number
+  referralCode: string
+  triple: number
+  quad: number
+}) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/personal-create`,
+      payload
+    )
+    return response
+  } catch (error) {
+    console.error('Error fetching booking umrah personal checkout:', error)
     throw error
   }
 }
