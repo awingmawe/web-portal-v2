@@ -59,7 +59,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
     priceQuad,
     orgName,
     orgThumbnail,
-    isBook,
+    isBooked,
   } = dataOffer
 
   const timeLeft = useCountdown(expiredDate)
@@ -372,7 +372,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
       {/* Action Button */}
       <OfferButton
         isExpired={isExpired}
-        isBook={isBook}
+        isBook={isBooked}
         offerId={offerId}
         dataOffer={dataOffer}
         index={index}

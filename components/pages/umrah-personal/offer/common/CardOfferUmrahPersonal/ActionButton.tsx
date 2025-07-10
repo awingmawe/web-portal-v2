@@ -3,9 +3,14 @@ import BatalkanDialogContent from '@/components/pages/umrah-personal/offer/dialo
 import OfferDetailDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogDetailOffer'
 import SuccessBatalkanDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogSuccessBatalkan'
 import { Button } from '@/components/ui/button'
+import {
+  LOCAL_STORAGE_DETAIL_VARIANT,
+  LOCAL_STORAGE_SELECTED_VARIANT,
+} from '@/constant/env'
 import { PackagePersonalData } from '@/constant/types/UmrahPersonalProps'
 import { useOfferUmrahPersonalById } from '@/hooks/umrah-personal/offer/useGetDetailOffer'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 const OfferButton: React.FC<{
@@ -15,6 +20,8 @@ const OfferButton: React.FC<{
   dataOffer?: PackagePersonalData
   isBook?: boolean
 }> = ({ isExpired, isBook, offerId, dataOffer, index }) => {
+  const router = useRouter()
+
   // --------------------------- Modal state for booking -----------------------------
   const [openBatalkan, setOpenBatalkan] = useState(false)
   const [openSuccessBatalkan, setOpenSuccessBatalkan] = useState(false)
@@ -45,6 +52,82 @@ const OfferButton: React.FC<{
       dedupingInterval: Infinity,
     }
   )
+  const handleCheckout = () => {
+    if (dataOffer) {
+      const dataDetailVariant = {
+        isUmrahPersonal: true,
+        totalManifest: dataOffer.JourneyInformation.totalManifest,
+        package: {
+          departure: {
+            from: {
+              airport: {
+                cityName: dataOffer.departure.from.cityName,
+                code: dataOffer.departure.from.code,
+              },
+            },
+            to: {
+              airport: {
+                cityName: dataOffer.departure.to.cityName,
+                code: dataOffer.departure.to.code,
+              },
+            },
+          },
+          arrival: {
+            from: {
+              airport: {
+                cityName: dataOffer.departure.from.cityName,
+                code: dataOffer.departure.from.code,
+              },
+            },
+            to: {
+              airport: {
+                cityName: dataOffer.departure.to.cityName,
+                code: dataOffer.departure.to.code,
+              },
+            },
+          },
+          thumbnail: dataOffer.image,
+          title: dataOffer.JourneyInformation.name,
+          organizationInstance: {
+            thumbnail: dataOffer.orgThumbnail,
+            city: {
+              name: dataOffer.orgCity.name,
+            },
+          },
+          organizationInstanceName: dataOffer.orgName,
+        },
+      }
+
+      const dataSelectedVariant = {
+        roomType: dataOffer.marketingFee,
+        variantId: dataOffer.id,
+        netAmount: dataOffer.dpAmount,
+        name: dataOffer.JourneyInformation.name,
+        variant: {
+          priceDouble: dataOffer.priceDouble,
+          priceTriple: dataOffer.priceTriple,
+          priceQuad: dataOffer.priceQuad,
+          originalPriceDouble: dataOffer.originalPriceDouble,
+          originalPriceTriple: dataOffer.originalPriceTriple,
+          originalPriceQuad: dataOffer.originalPriceQuad,
+          discountType: 'fixed',
+          discountAmount: 0,
+        },
+      }
+
+      localStorage.setItem(
+        LOCAL_STORAGE_DETAIL_VARIANT,
+        JSON.stringify(dataDetailVariant)
+      )
+
+      localStorage.setItem(
+        LOCAL_STORAGE_SELECTED_VARIANT,
+        JSON.stringify(dataSelectedVariant)
+      )
+
+      router.push(`/checkout`)
+    }
+  }
   const handleExitDetailOffer = () => {
     setOpenDetailOffer(false)
   }
@@ -153,16 +236,18 @@ const OfferButton: React.FC<{
               isOpen={openDetailOffer}
               setIsOpen={setOpenDetailOffer}
               footerContent={
-                <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
-                  <Button
-                    variant="outline"
-                    intent="none"
-                    className="border-primary-500 flex-1 border-2 px-10 py-3 max-lg:w-full"
-                    onClick={handleExitBatalkan}
-                  >
-                    Batal
-                  </Button>
-                </div>
+                <Button
+                  className="w-full flex-1 px-10 py-3"
+                  onClick={handleCheckout}
+                >
+                  Checkout{' '}
+                  <Image
+                    src="/images/arrow-circle-right.svg"
+                    width={14}
+                    height={14}
+                    alt="arrow"
+                  />
+                </Button>
               }
             />
           </>
@@ -183,23 +268,18 @@ const OfferButton: React.FC<{
             isOpen={openDetailOffer}
             setIsOpen={setOpenDetailOffer}
             footerContent={
-              <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
-                <Button
-                  variant="outline"
-                  intent="none"
-                  className="border-primary-500 flex-1 border-2 px-10 py-3 max-lg:w-full"
-                  onClick={handleExitBatalkan}
-                >
-                  Batal
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-error-500 flex-1 px-10 py-3 max-lg:w-full"
-                  onClick={handleConfirmBatalkan}
-                >
-                  Ya, batalkan
-                </Button>
-              </div>
+              <Button
+                className="w-full flex-1 px-10 py-3"
+                onClick={handleCheckout}
+              >
+                Checkout{' '}
+                <Image
+                  src="/images/arrow-circle-right.svg"
+                  width={14}
+                  height={14}
+                  alt="arrow"
+                />
+              </Button>
             }
           />
         )}

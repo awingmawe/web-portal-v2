@@ -2,7 +2,11 @@
 'use client'
 
 import { toast } from '@/components/ui/sonner'
-import { LINKAJA_MAX_LIMIT } from '@/constant/env'
+import {
+  LINKAJA_MAX_LIMIT,
+  LOCAL_STORAGE_DETAIL_VARIANT,
+  LOCAL_STORAGE_SELECTED_VARIANT,
+} from '@/constant/env'
 import { Package } from '@/constant/types/PackageProps'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { useAuth } from '@/contexts/auth/context'
@@ -13,7 +17,9 @@ import { getLegalSyarat } from '@/services/general-service'
 import { checkRefundPolicy } from '@/services/identity-service'
 import {
   bookingCheckout,
+  bookingCheckoutUmrahPersonal,
   preBookingCreateCheckout,
+  preBookingCreateCheckoutUmrahPersonal,
 } from '@/services/umrah-service'
 import { checkReferralCode } from '@/services/wukala-service'
 import cookie from 'cookie-cutter'
@@ -69,6 +75,7 @@ export const CheckoutProvider = ({
     useState(false)
   const [shouldRunCheckPre, setShouldRunCheckPre] = useState(false)
   const [selectedPayment, setSelectedPayment] = useState<string>('')
+  const [isUmrahPersonal, setIsUmrahPersonal] = useState(false)
 
   // Flag to prevent excessive API calls
   const checkPreCalled = useRef(false)
@@ -78,8 +85,12 @@ export const CheckoutProvider = ({
     const storedToken = cookie.get(cookieNames.USER_ACCESS_TOKEN)
     setToken(storedToken || null)
 
-    const detailVariantString = localStorage.getItem('detailVariant')
-    const selectedVariantString = localStorage.getItem('selectedVariant')
+    const detailVariantString = localStorage.getItem(
+      LOCAL_STORAGE_DETAIL_VARIANT
+    )
+    const selectedVariantString = localStorage.getItem(
+      LOCAL_STORAGE_SELECTED_VARIANT
+    )
 
     if (detailVariantString) {
       setDetailVariant(JSON.parse(detailVariantString))
@@ -177,14 +188,26 @@ export const CheckoutProvider = ({
     if (!selectedVariant || !token) return
     setPreBookingLoading(true)
     try {
-      const response = await preBookingCreateCheckout({
-        packageVariantId: selectedVariant?.variantId,
-        referralCode,
-        netAmount: paymentAmount * totalQty,
-        double: selectedRoomType?.double || 0,
-        triple: selectedRoomType?.triple || 0,
-        quad: selectedRoomType?.quad || 0,
-      })
+      let response: any
+      if (detailVariant?.isUmrahPersonal) {
+        response = await preBookingCreateCheckoutUmrahPersonal({
+          packagePersonalId: selectedVariant?.variantId,
+          referralCode,
+          netAmount: paymentAmount * totalQty,
+          double: selectedRoomType?.double || 0,
+          triple: selectedRoomType?.triple || 0,
+          quad: selectedRoomType?.quad || 0,
+        })
+      } else {
+        response = await preBookingCreateCheckout({
+          packageVariantId: selectedVariant?.variantId,
+          referralCode,
+          netAmount: paymentAmount * totalQty,
+          double: selectedRoomType?.double || 0,
+          triple: selectedRoomType?.triple || 0,
+          quad: selectedRoomType?.quad || 0,
+        })
+      }
       setRawInputValue(String(response.downPayment))
       setPreBookingLoading(false)
       setPaymentDetails(response.paymentDetails)
@@ -236,11 +259,20 @@ export const CheckoutProvider = ({
       quad: selectedRoomType?.quad || 0,
       paymentMethod,
     }
-    console.log(payload)
+    const payloadUmrahPersonal = {
+      packagePersonalId: selectedVariant?.variantId,
+      referralCode,
+      netAmount,
+      double: selectedRoomType?.double || 0,
+      triple: selectedRoomType?.triple || 0,
+      quad: selectedRoomType?.quad || 0,
+    }
 
     setLoading(true)
     try {
-      const res = await bookingCheckout(payload)
+      const res = detailVariant?.isUmrahPersonal
+        ? await bookingCheckoutUmrahPersonal(payloadUmrahPersonal)
+        : await bookingCheckout(payload)
       setBooking(res?.data)
       setPaymentToken(res?.data.order.paymentToken)
       setLoading(false)
@@ -393,13 +425,13 @@ export const CheckoutProvider = ({
         travelCity: detailVariant?.package.organizationInstance.city.name,
         travelCityId: detailVariant?.package.organizationInstance.cityId,
         travelProvinceName:
-          detailVariant?.package.organizationInstance.province.name,
+          detailVariant?.package.organizationInstance?.province?.name,
         travelProvinceId:
-          detailVariant?.package.organizationInstance.provinceId,
+          detailVariant?.package.organizationInstance?.provinceId,
         lastCall: selectedVariant?.isLastCall,
         price: preBooking?.subtotalPrice,
-        organizationId: detailVariant?.package.organizationId,
-        organizationInstanceId: detailVariant?.package.organizationInstanceId,
+        organizationId: detailVariant?.package?.organizationId,
+        organizationInstanceId: detailVariant?.package?.organizationInstanceId,
         roomType: selectedVariant?.roomType,
         variantId: selectedVariant?.id,
         variantName: selectedVariant?.name,
@@ -605,6 +637,8 @@ export const CheckoutProvider = ({
     selectedPayment,
     setSelectedPayment,
     sliderStep,
+    setIsUmrahPersonal,
+    isUmrahPersonal,
   }
 
   return (

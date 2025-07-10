@@ -33,8 +33,6 @@ const ModalPengembalianDana = ({
     return `H-${remainingDays} hari` // Jika tidak ada minggu, tampilkan dalam format "h-X hari"
   }
 
-  console.log(dataRefundPolicy?.content)
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="scrollbar-thin scrollbar-thumb-gray-300 max-h-[90vh] w-full !max-w-[1000px] overflow-y-auto rounded-xl px-6 py-4 shadow-lg">

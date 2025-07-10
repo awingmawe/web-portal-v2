@@ -12,7 +12,13 @@ import BadgePromo from '@/components/shared/Badge'
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/sonner'
-import { ACCOUNT_URL, CALL_CENTER, LINKAJA_MAX_LIMIT } from '@/constant/env'
+import {
+  ACCOUNT_URL,
+  CALL_CENTER,
+  LINKAJA_MAX_LIMIT,
+  LOCAL_STORAGE_DETAIL_VARIANT,
+  LOCAL_STORAGE_SELECTED_VARIANT,
+} from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -193,9 +199,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
       return
     }
-    localStorage.setItem('detailVariant', JSON.stringify(selectedVariant))
     localStorage.setItem(
-      'selectedVariant',
+      LOCAL_STORAGE_DETAIL_VARIANT,
+      JSON.stringify(selectedVariant)
+    )
+    localStorage.setItem(
+      LOCAL_STORAGE_SELECTED_VARIANT,
       JSON.stringify({
         netAmount: selectedVariant?.package?.dpAmount,
         packageId: selectedVariant?.packageId,

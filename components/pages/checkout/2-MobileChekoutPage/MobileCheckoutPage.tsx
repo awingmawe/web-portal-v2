@@ -323,6 +323,7 @@ const MobileCheckoutPage = ({}) => {
                       LINKAJA_MAX_LIMIT
                   : false
               }
+              totalManifest={detailVariant?.totalManifest}
               onChange={(roomType) => {
                 setSelectedRoomType(roomType)
                 setShouldRunCheckPre(true)
@@ -341,8 +342,9 @@ const MobileCheckoutPage = ({}) => {
         {/* Payment section */}
         <div className=" bg-white p-4">
           {/* Payment method */}
-          <div className="mb-4 rounded-[16px] border border-neutral-200 bg-white p-3">
-            {/* <div className="mb-3 rounded-lg bg-yellow-50 p-3">
+          {!detailVariant?.isUmrahPersonal && (
+            <div className="mb-4 rounded-[16px] border border-neutral-200 bg-white p-3">
+              {/* <div className="mb-3 rounded-lg bg-yellow-50 p-3">
               <p className="text-xs font-medium text-yellow-800">
                 Minimal pembayaran untuk saat ini: Rp{' '}
                 {(selectedVariant.netAmount * jamaahList.length).toLocaleString(
@@ -350,95 +352,77 @@ const MobileCheckoutPage = ({}) => {
                 )}
               </p>
             </div> */}
-            <div className="border-primary-500 bg-primary-100 mb-4 rounded-[12px] border p-2.5">
+              <div className="border-primary-500 bg-primary-100 mb-4 rounded-[12px] border p-2.5">
+                <div className="flex items-center">
+                  <div className="text-primary-500 flex-shrink-0">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 6C11 6.55228 10.5523 7 10 7C9.44772 7 9 6.55228 9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6ZM10 9C9.44772 9 9 9.44772 9 10V14C9 14.5523 9.44772 15 10 15C10.5523 15 11 14.5523 11 14V10C11 9.44772 10.5523 9 10 9Z"
+                      />
+                    </svg>
+                  </div>
+                  {isLinkAja ? (
+                    <p className="text-xs-regular ml-2 text-neutral-900">
+                      Uang muka minimal{' '}
+                      <b className="font-bold">
+                        {formatCurrency(selectedVariant.netAmount)}
+                      </b>{' '}
+                      dan limit transaksi bulanan kamu di{' '}
+                      <b className="font-bold">LinkAja</b> adalah{' '}
+                      <b className="font-bold">Rp40.000.000</b>
+                    </p>
+                  ) : (
+                    <p className="text-xs-regular ml-2 text-neutral-900">
+                      Minimal pembayaran uang muka adalah{' '}
+                      {formatCurrency(selectedVariant.netAmount)}/orang
+                    </p>
+                  )}
+                </div>
+              </div>
               <div className="flex items-center">
-                <div className="text-primary-500 flex-shrink-0">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 6C11 6.55228 10.5523 7 10 7C9.44772 7 9 6.55228 9 6C9 5.44772 9.44772 5 10 5C10.5523 5 11 5.44772 11 6ZM10 9C9.44772 9 9 9.44772 9 10V14C9 14.5523 9.44772 15 10 15C10.5523 15 11 14.5523 11 14V10C11 9.44772 10.5523 9 10 9Z"
+                <div className="mr-3 flex items-center">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full">
+                    <Image
+                      src="/images/money-3.svg"
+                      width={24}
+                      height={24}
+                      alt="arrow"
                     />
-                  </svg>
-                </div>
-                {isLinkAja ? (
-                  <p className="text-xs-regular ml-2 text-neutral-900">
-                    Uang muka minimal{' '}
-                    <b className="font-bold">
-                      {formatCurrency(selectedVariant.netAmount)}
-                    </b>{' '}
-                    dan limit transaksi bulanan kamu di{' '}
-                    <b className="font-bold">LinkAja</b> adalah{' '}
-                    <b className="font-bold">Rp40.000.000</b>
+                  </div>
+                  <p className="text-m-semibold ml-2 text-neutral-900">
+                    Jumlah Bayar
                   </p>
-                ) : (
-                  <p className="text-xs-regular ml-2 text-neutral-900">
-                    Minimal pembayaran uang muka adalah{' '}
-                    {formatCurrency(selectedVariant.netAmount)}/orang
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center">
-              <div className="mr-3 flex items-center">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full">
-                  <Image
-                    src="/images/money-3.svg"
-                    width={24}
-                    height={24}
-                    alt="arrow"
-                  />
                 </div>
-                <p className="text-m-semibold ml-2 text-neutral-900">
-                  Jumlah Bayar
-                </p>
               </div>
-            </div>
 
-            <p className="text-s-regular mt-2 text-neutral-900">
-              Gak perlu bayar full dulu, cukup uang muka aja dulu kamu yang
-              atur!
-            </p>
+              <p className="text-s-regular mt-2 text-neutral-900">
+                Gak perlu bayar full dulu, cukup uang muka aja dulu kamu yang
+                atur!
+              </p>
 
-            <div className="mt-3">
-              <div className="flex items-center space-x-4">
-                <label className="text-xs-medium">Jumlah Bayar</label>
-                <div className="relative">
-                  <span className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
-                    Rp
-                  </span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-left font-medium text-gray-800 shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
-                    value={formatNumber(rawInputValue)}
-                    onChange={handleInputChange}
-                    disabled={prebookingLoading}
-                    onBlur={() => {
-                      const value = parseInt(rawInputValue) || 0
-                      const minAmount = selectedVariant.netAmount * totalQty
-                      const maxAmount = isLinkAja
-                        ? LINKAJA_MAX_LIMIT
-                        : preBooking?.totalPrice || totalPrice * totalQty
-
-                      if (value >= minAmount && value <= maxAmount) {
-                        setSliderValue(value)
-                        const perJamaahAmount = Math.ceil(value / totalQty)
-                        setPaymentAmount(perJamaahAmount)
-                        setRawInputValue(value.toString())
-                      } else {
-                        setRawInputValue(sliderValue.toString())
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
+              <div className="mt-3">
+                <div className="flex items-center space-x-4">
+                  <label className="text-xs-medium">Jumlah Bayar</label>
+                  <div className="relative">
+                    <span className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500">
+                      Rp
+                    </span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      className="w-44 rounded-full border border-gray-300 bg-white py-2 pr-4 pl-10 text-left font-medium text-gray-800 shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                      value={formatNumber(rawInputValue)}
+                      onChange={handleInputChange}
+                      disabled={prebookingLoading}
+                      onBlur={() => {
                         const value = parseInt(rawInputValue) || 0
                         const minAmount = selectedVariant.netAmount * totalQty
                         const maxAmount = isLinkAja
@@ -453,62 +437,65 @@ const MobileCheckoutPage = ({}) => {
                         } else {
                           setRawInputValue(sliderValue.toString())
                         }
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-              <input
-                type="range"
-                min={totalQty > 0 ? selectedVariant.netAmount * totalQty : 0}
-                max={
-                  totalQty > 0
-                    ? isLinkAja
-                      ? preBooking?.totalPrice > LINKAJA_MAX_LIMIT
-                        ? LINKAJA_MAX_LIMIT
-                        : preBooking?.totalPrice
-                      : preBooking?.totalPrice || totalPrice * totalQty
-                    : 0
-                }
-                disabled={prebookingLoading}
-                step={sliderStep()}
-                value={sliderValue}
-                onChange={handleSliderChange}
-                className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
-              />
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          const value = parseInt(rawInputValue) || 0
+                          const minAmount = selectedVariant.netAmount * totalQty
+                          const maxAmount = isLinkAja
+                            ? LINKAJA_MAX_LIMIT
+                            : preBooking?.totalPrice || totalPrice * totalQty
 
-              <div className="mt-3">
-                <div className="mt-1 flex items-center gap-3 text-sm">
-                  <span className="text-xs-medium text-neutral-900">
-                    Sisa Pelunasan
-                  </span>
-                  {prebookingLoading ? (
-                    <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
-                  ) : (
-                    <span className="text-s-medium text-neutral-900">
-                      {formatCurrency(preBooking?.remainingPayment || 0)}
+                          if (value >= minAmount && value <= maxAmount) {
+                            setSliderValue(value)
+                            const perJamaahAmount = Math.ceil(value / totalQty)
+                            setPaymentAmount(perJamaahAmount)
+                            setRawInputValue(value.toString())
+                          } else {
+                            setRawInputValue(sliderValue.toString())
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <input
+                  type="range"
+                  min={totalQty > 0 ? selectedVariant.netAmount * totalQty : 0}
+                  max={
+                    totalQty > 0
+                      ? isLinkAja
+                        ? preBooking?.totalPrice > LINKAJA_MAX_LIMIT
+                          ? LINKAJA_MAX_LIMIT
+                          : preBooking?.totalPrice
+                        : preBooking?.totalPrice || totalPrice * totalQty
+                      : 0
+                  }
+                  disabled={prebookingLoading}
+                  step={sliderStep()}
+                  value={sliderValue}
+                  onChange={handleSliderChange}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
+                />
+
+                <div className="mt-3">
+                  <div className="mt-1 flex items-center gap-3 text-sm">
+                    <span className="text-xs-medium text-neutral-900">
+                      Sisa Pelunasan
                     </span>
-                  )}
+                    {prebookingLoading ? (
+                      <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+                    ) : (
+                      <span className="text-s-medium text-neutral-900">
+                        {formatCurrency(preBooking?.remainingPayment || 0)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Points & Referral */}
-          {/* <div className="mb-4 rounded-lg border border-neutral-200 p-3">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="mr-2 h-4 w-4 accent-yellow-400"
-                checked={usePoints}
-                onChange={(e) => setUsePoints(e.target.checked)}
-              />
-              <p className="font-medium">Poin Muslim</p>
-            </div>
-            <p className="mt-1 text-xs text-gray-500">
-              Gunakan 1.200.000 poin Muslim
-            </p>
-          </div> */}
+          )}
 
           {!isHaveRefferalCode && (
             <div className="mb-4 rounded-[16px] border border-neutral-100 p-3">
@@ -558,24 +545,6 @@ const MobileCheckoutPage = ({}) => {
               )}
             </div>
           )}
-          {/* 
-          <div className="mb-4 flex items-center justify-between rounded-lg border border-neutral-200 p-3">
-            <div className="flex items-center">
-              <div className="mr-3 text-yellow-500">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M15 5v2M15 11v2M15 17v2M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 1 2-2z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <p className="text-sm">Kamu memiliki 2 kupon promo</p>
-            </div>
-            <ChevronRight size={20} className="text-gray-400" />
-          </div> */}
         </div>
         <div className="h-[4px] w-full bg-[#D2D2D1]" />
         {/* Payment Summary */}
