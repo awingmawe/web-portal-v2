@@ -76,7 +76,7 @@ export default function TransactionCard({
   const renderStatusTahapanColor = (status: string) => {
     if (status === 'Kursi Tersedia') {
       return 'bg-success-100 text-success-700'
-    } else if (status == 'Kursi Tidak Tersedia') {
+    } else if (status == 'Kursi Tidak Tersedia' || status === 'Expired') {
       return 'bg-error-100 text-error-700'
     } else {
       return 'bg-[#C8E4F8] text-[#0D4269]'
