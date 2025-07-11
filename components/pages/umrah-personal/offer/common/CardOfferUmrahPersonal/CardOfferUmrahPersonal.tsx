@@ -340,25 +340,28 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
       </div>
 
       {/* Transportation */}
-      <div className="flex flex-col gap-0.5">
-        <div className="flex items-center gap-1">
-          <CarIcon size={16} />
-          <p className="text-s-regular text-neutral-500">Transportasi</p>
-        </div>
-        <div className="flex items-center gap-3">
-          {transportation.vehicle.code !== vehicleCode ? (
-            <>
-              <p className="text-m-regular line-through">
-                1x {transportation.vehicle.name}
-              </p>
-              <RefreshCw size={16} color="#30302F" />
+      {!isEmpty(transportation) && (
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-1">
+            <CarIcon size={16} />
+            <p className="text-s-regular text-neutral-500">Transportasi</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {transportation.vehicle.code !== vehicleCode ? (
+              <>
+                <p className="text-m-regular line-through">
+                  1x {transportation.vehicle.name}
+                </p>
+                <RefreshCw size={16} color="#30302F" />
+                <p className="text-m-regular">1x {vehicleName}</p>
+              </>
+            ) : (
               <p className="text-m-regular">1x {vehicleName}</p>
-            </>
-          ) : (
-            <p className="text-m-regular">1x {vehicleName}</p>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Divider */}
       <div className="border-b border-neutral-200" />

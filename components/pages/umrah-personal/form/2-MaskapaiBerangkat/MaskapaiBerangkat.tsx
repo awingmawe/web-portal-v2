@@ -25,6 +25,7 @@ interface DepartureFlightFormProps {
 }
 
 const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
+  const flightRoute = form.watch(`${STEP_2}.departure.flightRoute`)
   return (
     <div className="mb-6 lg:rounded-[24px] lg:border lg:border-neutral-100">
       {/* Form Content */}
@@ -57,6 +58,7 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
                   <FormControl>
                     <FieldAirport
                       placeholder="Pilih bandara keberangkatan"
+                      type="arrival"
                       field={field}
                     />
                   </FormControl>
@@ -82,6 +84,7 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
                     <FieldAirport
                       placeholder="Pilih bandara kedatangan"
                       field={field}
+                      type="departure"
                     />
                   </FormControl>
                   <div className="lg:min-h-4">
@@ -224,7 +227,11 @@ const DepartureFlightForm: React.FC<DepartureFlightFormProps> = ({ form }) => {
                   </div>
                 )}
                 <FormControl>
-                  <AirlineSelection field={field} showSearch={false} />
+                  <AirlineSelection
+                    field={field}
+                    showSearch={false}
+                    flightRoute={flightRoute}
+                  />
                 </FormControl>
               </FormItem>
             )}

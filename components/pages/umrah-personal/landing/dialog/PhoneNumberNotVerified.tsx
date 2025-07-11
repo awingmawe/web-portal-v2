@@ -1,7 +1,15 @@
 import { Warning2Icon } from '@/components/icons/warning'
 import { Input } from '@/components/ui/input'
 
-const PhoneNumberNotVerified = ({ name }: { name: string }) => {
+const PhoneNumberNotVerified = ({
+  name,
+  phoneNumber,
+  setPhoneNumber,
+}: {
+  name: string
+  phoneNumber: string
+  setPhoneNumber: (phoneNumber: string) => void
+}) => {
   return (
     <div className="flex flex-col gap-5 max-lg:gap-3">
       {/* Warning Icon */}
@@ -23,10 +31,12 @@ const PhoneNumberNotVerified = ({ name }: { name: string }) => {
       <Input
         placeholder="Masukkan nomor telepon"
         type="tel"
+        defaultValue={phoneNumber}
         inputMode="numeric"
         onChange={(e) => {
           const value = e.target.value.replace(/\D/g, '')
           e.target.value = value
+          setPhoneNumber(value)
         }}
       />
     </div>

@@ -67,19 +67,13 @@ export async function getAirlineV2({
   }
 }
 
-export async function getAirline({
-  page = 1,
-  size = 10,
-  search,
-}: GetAirlinesParams): Promise<GenericResponse<Airline>> {
+export async function getAirline(
+  query: GetListQuery
+): Promise<GenericResponse<Airline>> {
   try {
-    const response = await api.get(`/public/general/v1/airline`, {
-      params: {
-        page,
-        size,
-        [`code|countryName|name:likeLower`]: search ? `%${search}%` : undefined,
-      },
-    })
+    const response = await api.get(
+      `/public/general/v1/airline?${qs.stringify(query)}`
+    )
     return response.data
   } catch (error) {
     console.error('Error fetching airline:', error)

@@ -23,11 +23,13 @@ interface AirlineSelectionProps {
   }
   showSearch?: boolean
   pageSize?: number
+  flightRoute?: string
 }
 
 const AirlineSelection: React.FC<AirlineSelectionProps> = ({
   field,
   showSearch = true,
+  flightRoute,
   pageSize = 6,
 }) => {
   const {
@@ -39,7 +41,11 @@ const AirlineSelection: React.FC<AirlineSelectionProps> = ({
     searchQuery,
     handleSearchChange,
     loadMore: handleLoadMore,
-  } = useAirlineSearch({ pageSize, version: 'v1' })
+  } = useAirlineSearch({
+    pageSize,
+    version: 'v1',
+    isTransit: flightRoute === 'transit',
+  })
 
   const handleValueChange = (value: string) => {
     const selectedAirline = airlines.find(
@@ -63,9 +69,8 @@ const AirlineSelection: React.FC<AirlineSelectionProps> = ({
       </div>
     )
   }
-
   return (
-    <div className={'h-[280px] space-y-4 overflow-y-auto px-2'}>
+    <div className={'space-y-4 overflow-y-auto px-2'}>
       {/* Search Input */}
       {showSearch && (
         <div className="relative">
