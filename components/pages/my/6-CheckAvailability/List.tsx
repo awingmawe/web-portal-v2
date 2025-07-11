@@ -50,12 +50,15 @@ export default function List({
                       <CanceledProvider>
                         <TransactionCard
                           status={
-                            transaction.responseTravel === null
-                              ? 'Permintaan Diproses'
-                              : Number(transaction.responseTravel) <
-                                  Number(transaction.valuePeople)
-                                ? 'Kursi Tidak Tersedia'
-                                : 'Kursi Tersedia'
+                            transaction.responseTravel === null &&
+                            new Date(transaction.expirationTime) < new Date()
+                              ? 'Expired'
+                              : transaction.responseTravel === null
+                                ? 'Permintaan Diproses'
+                                : Number(transaction.responseTravel) <
+                                    Number(transaction.valuePeople)
+                                  ? 'Kursi Tidak Tersedia'
+                                  : 'Kursi Tersedia'
                           }
                           id={transaction.idPengajuan}
                           packageName={
@@ -108,12 +111,15 @@ export default function List({
                   <CanceledProvider>
                     <TransactionCard
                       status={
-                        transaction.responseTravel === null
-                          ? 'Permintaan Diproses'
-                          : Number(transaction.responseTravel) <
-                              Number(transaction.valuePeople)
-                            ? 'Kursi Tidak Tersedia'
-                            : 'Kursi Tersedia'
+                        transaction.responseTravel === null &&
+                        new Date(transaction.expirationTime) < new Date()
+                          ? 'Expired'
+                          : transaction.responseTravel === null
+                            ? 'Permintaan Diproses'
+                            : Number(transaction.responseTravel) <
+                                Number(transaction.valuePeople)
+                              ? 'Kursi Tidak Tersedia'
+                              : 'Kursi Tersedia'
                       }
                       id={transaction.idPengajuan}
                       packageName={transaction?.packageVariants?.package?.title}
