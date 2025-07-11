@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion'
 import { getGalleryHotel } from '@/services/general-service'
 import { PlaneLanding, PlaneTakeoff, Star } from 'lucide-react'
+import Image from 'next/image'
 import { useEffect, useMemo, useState } from 'react'
 
 interface TransactionDetailManifestProps {
@@ -179,7 +180,6 @@ export default function TransactionDetailRincian({
   useEffect(() => {
     fetchHotelDestinations()
   }, [])
-  console.log(data)
 
   return (
     <div className="mx-auto space-y-4">
@@ -215,8 +215,17 @@ export default function TransactionDetailRincian({
                     <div className="text-center text-[12px] text-neutral-500">
                       Maskapai Keberangkatan
                     </div>
-                    <div className="text-center text-[12px] text-neutral-900">
-                      {data?.departure?.airline?.name}
+
+                    <div className="flex items-center justify-center gap-2 text-[12px] text-neutral-900">
+                      {data?.departure?.airline?.logo && (
+                        <Image
+                          src={data.departure.airline.logo}
+                          alt="Airline Logo"
+                          width={20}
+                          height={20}
+                        />
+                      )}
+                      <span>{data?.departure?.airline?.name}</span>
                     </div>
                   </div>
                   <div className="ml-8">
@@ -238,9 +247,20 @@ export default function TransactionDetailRincian({
                       <div className="text-center text-[12px] text-neutral-500">
                         Maskapai Kepulangan
                       </div>
-                      <div className="text-center text-[12px] text-neutral-900">
-                        {data?.arrival?.airline?.name}
+                      <div className="flex items-center justify-center gap-2 text-[12px] text-neutral-900">
+                        {data?.arrival?.airline?.logo && (
+                          <Image
+                            src={data.arrival.airline.logo}
+                            alt="Airline Logo"
+                            width={20}
+                            height={20}
+                          />
+                        )}
+                        <span> {data?.arrival?.airline?.name}</span>
                       </div>
+                      {/* <div className="text-center text-[12px] text-neutral-900">
+                        {data?.arrival?.airline?.name}
+                      </div> */}
                     </div>
                     <div className="ml-8">
                       <div className="text-center text-[12px] text-neutral-500">
@@ -258,18 +278,29 @@ export default function TransactionDetailRincian({
                       <PlaneLanding className="mt-1 mr-3 h-[20px] w-[20px] text-neutral-900" />
                       <div>
                         <div className="text-center text-[12px] text-neutral-500">
-                          Maskapai Keberangkatan
+                          Maskapai Kepulangan
                         </div>
-                        <div className="text-center text-[12px] text-neutral-900">
-                          {data?.departure?.airline?.name}
+                        <div className="flex items-center justify-center gap-2 text-[12px] text-neutral-900">
+                          {data?.arrival?.airline?.logo && (
+                            <Image
+                              src={data.arrival.airline.logo}
+                              alt="Airline Logo"
+                              width={20}
+                              height={20}
+                            />
+                          )}
+                          <span> {data?.arrival?.airline?.name}</span>
                         </div>
+                        {/* <div className="text-center text-[12px] text-neutral-900">
+                          {data?.arrival?.airline?.name}
+                        </div> */}
                       </div>
-                      <div className="ml-8">
+                      <div className="ml-13">
                         <div className="text-center text-[12px] text-neutral-500">
                           Kelas
                         </div>
                         <div className="text-center text-[12px] text-neutral-900 capitalize">
-                          {data?.departure?.flightClass}
+                          {data?.arrival?.flightClass}
                         </div>
                       </div>
                     </div>
