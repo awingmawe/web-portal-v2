@@ -729,10 +729,14 @@ const MobileCheckoutPage = ({}) => {
         <Button
           onClick={() => {
             if (!isEmptyRoomType && termsAccepted) {
-              handleCheckout({
-                linkAja: true,
-                linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
-              })
+              handleCheckout(
+                isLinkAja
+                  ? {
+                      linkAja: true,
+                      linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+                    }
+                  : {}
+              )
             }
           }}
           disabled={disabledButtonCheckout}

@@ -573,10 +573,15 @@ const CheckoutPage = () => {
                 className="w-full font-medium text-neutral-900"
                 onClick={() => {
                   if (!isEmptyRoomType && termsAccepted) {
-                    handleCheckout({
-                      linkAja: true,
-                      linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
-                    })
+                    handleCheckout(
+                      isLinkAja
+                        ? {
+                            linkAja: true,
+                            linkAjaSyariah:
+                              selectedPayment === 'linkAjaSyariah',
+                          }
+                        : {}
+                    )
                   }
                 }}
               >
