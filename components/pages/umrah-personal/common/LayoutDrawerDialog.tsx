@@ -35,7 +35,7 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
   return !isMobile ? (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="rounded-[20px] p-8 py-4">
+      <DialogContent className="rounded-[20px] p-8">
         <DialogTitle className="hidden"></DialogTitle>
         {content}
         <DialogFooter className="pt-3">{footerContent}</DialogFooter>

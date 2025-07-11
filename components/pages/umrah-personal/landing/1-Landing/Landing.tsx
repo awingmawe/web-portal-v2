@@ -1,8 +1,11 @@
 'use client'
 
 import ChecklistIcon from '@/components/icons/checklist'
+import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
+import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/dialog/PhoneNumberNotVerified'
 import { Button } from '@/components/ui/button'
 import { ACCOUNT_URL } from '@/constant/env'
+import { useAuth } from '@/contexts/auth/context'
 import Frame from '@/public/images/frame-umrah-personal.png'
 import { animate } from 'framer-motion'
 import Image from 'next/image'
@@ -16,6 +19,9 @@ const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
   token,
 }) => {
   const router = useRouter()
+  const { profile } = useAuth()
+
+  const [open, setOpen] = React.useState(false)
   const features: string[] = [
     'Harga paket fleksibel sesuai kebutuhan',
     'Pilih tanggal keberangkatan yang Anda inginkan',
@@ -64,11 +70,18 @@ const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
 
   const handleToForm = () => {
     if (!token) {
-      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      router.push(
+        `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      )
       return
     }
+    if (token && !profile?.phonenumberVerified) {
+      setOpen(true)
 
-    router.push('/umrah-personal/form')
+      return
+    } else {
+      router.push('/umrah-personal/form')
+    }
   }
 
   return (
@@ -96,13 +109,27 @@ const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
             ))}
           </div>
           <div className="mt-6 flex items-center gap-3 max-lg:flex-col">
-            <Button
-              className="bg-primary-500 px-10 py-4 max-lg:w-full"
-              type="button"
-              onClick={handleToForm}
-            >
-              Buat Paket Umroh Sekarang!
-            </Button>
+            <LayoutDrawerDialog
+              isOpen={open}
+              setIsOpen={setOpen}
+              trigger={
+                <Button
+                  className="bg-primary-500 px-10 py-4 max-lg:w-full"
+                  type="button"
+                  onClick={handleToForm}
+                >
+                  Buat Paket Umroh Sekarang!
+                </Button>
+              }
+              content={<PhoneNumberNotVerified name={profile?.name || ''} />}
+              footerContent={
+                <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
+                  <Button variant="default" className="px-10 py-3">
+                    Simpan Nomor Telepon
+                  </Button>
+                </div>
+              }
+            />
             <Button
               className="bg-transparent px-10 py-4 max-lg:w-full"
               type="button"

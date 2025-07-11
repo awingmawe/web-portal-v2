@@ -1,8 +1,11 @@
 'use client'
 
 import { ArrowCircleRight } from '@/components/icons/arrow-circle-right'
+import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
+import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/dialog/PhoneNumberNotVerified'
 import { Button } from '@/components/ui/button'
 import { ACCOUNT_URL } from '@/constant/env'
+import { useAuth } from '@/contexts/auth/context'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -15,17 +18,27 @@ const UmrohPersonalStartSection: React.FC<UmrohPersonalStartSectionProps> = ({
   token,
 }) => {
   const router = useRouter()
+  const { profile } = useAuth()
+
+  const [open, setOpen] = React.useState(false)
   const handleToForm = () => {
     if (!token) {
-      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      router.push(
+        `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      )
       return
     }
+    if (token && !profile?.phonenumberVerified) {
+      setOpen(true)
 
-    router.push('/umrah-personal/form')
+      return
+    } else {
+      router.push('/umrah-personal/form')
+    }
   }
   return (
     <section
-      className={`relative h-[100dvh] snap-center overflow-hidden bg-white max-lg:mt-12  lg:h-[100vh]`}
+      className={`relative h-[100dvh] overflow-hidden bg-white max-lg:mt-12 lg:h-[100vh]`}
       id="umrah-personal-start"
     >
       <Image
@@ -40,33 +53,28 @@ const UmrohPersonalStartSection: React.FC<UmrohPersonalStartSectionProps> = ({
         <p className="heading-4-semibold text-center font-bold lg:text-[60px] lg:leading-[76px]">
           Sudah Lebih Tertarik Untuk Membuat Paket Umroh Sendiri?
         </p>
-        <Button
-          className="bg-primary-500 flex items-center gap-1.5 px-10 py-5 max-lg:w-full max-lg:py-3"
-          type="button"
-          onClick={handleToForm}
-        >
-          Mulai Buat Paket Umroh Mandiri
-          <ArrowCircleRight size={14} />
-        </Button>
-        {/* <div className="relative col-span-1 h-full w-full max-lg:col-span-2 max-lg:mt-8">
-          <Image
-            src="https://storage.googleapis.com/m101-prods/umroh-personal/image-landing-personal.png"
-            alt="kaabah-umroh-personal"
-            width={700}
-            height={500}
-            sizes="(max-width: 768px) 100vw, 700px"
-            className="right-0 bottom-0 ml-auto h-auto max-h-[600px] w-full max-w-[600px] lg:absolute"
-            priority
-          />
-        </div>
-        <Image
-          src={Frame}
-          alt="frame-image"
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="absolute top-0 left-0"
-        /> */}
+        <LayoutDrawerDialog
+          isOpen={open}
+          setIsOpen={setOpen}
+          trigger={
+            <Button
+              className="bg-primary-500 flex items-center gap-1.5 px-10 py-5 max-lg:w-full max-lg:py-3"
+              type="button"
+              onClick={handleToForm}
+            >
+              Mulai Buat Paket Umroh Mandiri
+              <ArrowCircleRight size={14} />
+            </Button>
+          }
+          content={<PhoneNumberNotVerified name={profile?.name || ''} />}
+          footerContent={
+            <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
+              <Button variant="default" className="px-10 py-3">
+                Simpan Nomor Telepon
+              </Button>
+            </div>
+          }
+        />
       </div>
     </section>
   )
