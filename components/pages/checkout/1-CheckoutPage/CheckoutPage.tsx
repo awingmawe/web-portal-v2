@@ -225,6 +225,7 @@ const CheckoutPage = () => {
               <div className="px-4 pb-4">
                 <SelectHotel
                   variant="checkout"
+                  totalQty={totalQty}
                   isMobile
                   defaultValue={selectedVariant?.roomType}
                   defaultPackageVariant={selectedVariant.variant}
