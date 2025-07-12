@@ -10,6 +10,7 @@ import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { TabunganForm, TabunganFormRef } from './TabunganForm'
 
@@ -33,6 +34,7 @@ const TabunganPage = () => {
   const [screenSize, setScreenSize] = useState<'mobile' | 'desktop' | 'tab'>()
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [submissionData, setSubmissionData] = useState<any>()
+  const searchParams = useSearchParams()
   // Debug: Monitor screen size
   useEffect(() => {
     const checkScreenSize = () => {
@@ -63,6 +65,12 @@ const TabunganPage = () => {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    if (searchParams.get('open') === 'true') {
+      openForm()
+    }
+  }, [searchParams])
 
   const closeForm = () => {
     setShowForm(false)
