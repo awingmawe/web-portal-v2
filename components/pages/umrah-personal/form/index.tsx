@@ -16,6 +16,7 @@ import {
 import { Facility } from '@/constant/types/FacilityProps'
 import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
 import { STEP_1 } from '@/contexts/umrah-personal/constant'
+import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { umrahPersonalRegister } from '@/services/umrah-service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -28,6 +29,7 @@ interface UmrahPersonalFormSectionProps {
 const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
   dataEnumVehicle,
 }) => {
+  const { currentStep } = useUmrahPersonal()
   const router = useRouter()
   const form = useForm<UmrahPersonalFormType>({
     resolver: zodResolver(umrahPersonalFormSchema),
@@ -89,14 +91,14 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
         <Step1JourneyInfo form={form} />
 
         {/* Step 2: Flight Information */}
-        <Step2FlightInfo form={form} />
+        {currentStep === 2 && <Step2FlightInfo form={form} />}
 
         {/* Step 3: Hotel Selection Mecca*/}
-        <Step3MeccaHotel form={form} />
+        {currentStep === 3 && <Step3MeccaHotel form={form} />}
 
         {/* Step 4: Hotel Selection Medina*/}
-        {form.getValues(`${STEP_1}.activity`) ===
-          ACTIVITY_TYPES.MECCA_MEDINA && <Step4MadinahHotel form={form} />}
+        {form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA_MEDINA &&
+          currentStep === 4 && <Step4MadinahHotel form={form} />}
 
         {/* Step 5: Transportation */}
         <Step5Transportation form={form} dataEnumVehicle={dataEnumVehicle} />

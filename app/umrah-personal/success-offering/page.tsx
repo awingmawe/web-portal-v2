@@ -14,7 +14,7 @@ export default async function SuccessOffering() {
         sizes="100vw"
         className="absolute top-0 z-0 h-screen w-full object-cover object-left"
       />
-      <div className="relative z-1 flex max-w-[360px] flex-col items-center justify-center gap-6 bg-white px-4 max-lg:gap-4">
+      <div className="relative z-1 flex max-w-[360px] flex-col items-center justify-center gap-6 px-4 max-lg:gap-4">
         <div className="bg-primary-100 rounded-full p-1">
           <Image src={IconSukses} alt="icon-sukses" width={60} height={60} />
         </div>

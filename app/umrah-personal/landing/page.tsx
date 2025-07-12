@@ -17,9 +17,9 @@ export default async function UmrahPersonalLanding() {
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   return (
     <ScrollContainerWrapper token={token}>
-      <UmrohLandingSection token={token} />
+      <UmrohLandingSection />
       <LearnMoreSection />
-      <UmrohPersonalStartSection token={token} />
+      <UmrohPersonalStartSection />
     </ScrollContainerWrapper>
   )
 }
