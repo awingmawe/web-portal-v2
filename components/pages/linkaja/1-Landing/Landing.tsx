@@ -14,12 +14,14 @@ import {
 import { MoneyTickIcon } from '@/components/icons/money-tick'
 import { MouseSquareIcon } from '@/components/icons/mouse-square'
 import { Muslim101Logo } from '@/components/icons/muslim101'
+import { TimerIcon2 } from '@/components/icons/timer'
 import { Button } from '@/components/ui/button'
 import { LINKAJA_REFERRAL } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { setLocalReferralCode } from '@/lib/utils'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect } from 'react'
 
 export default function LandingLinkAja() {
@@ -47,102 +49,118 @@ export default function LandingLinkAja() {
   }, [])
 
   return (
-    <div
-      className="bg-primary-500 relative z-10 overflow-hidden px-4 pt-6 pb-30"
-      style={{
-        background:
-          'linear-gradient(180deg, #FFCE34 0%, rgba(255, 206, 52, 0) 100%)',
-      }}
-    >
-      <LinkAjaAccent className="absolute -top-18 -left-17 -z-1" />
-      <LinkAjaAccent2 className="absolute -top-12 -right-10 -z-1" />
-      <div className="mt-10 flex gap-5">
-        <LinkAjaSyariah />
-        <LinkAja />
-      </div>
-      <h1 className="heading-2-bold mt-5">
-        Umrah jadi lebih <br /> mudah dan aman <br />
-        bareng LinkAja & <br />
-        LinkAja Syariah
-      </h1>
-      <p className="text-l-regular mt-2">
-        Nikmati pengalaman ibadah yang damai <br /> dan nyaman dengan harga
-        terjangkau!
-      </p>
-      <div className="mt-5 w-full">
-        <Button
-          className="w-full"
-          onClick={() => {
-            document
-              .getElementById('packageList')
-              ?.scrollIntoView({ behavior: 'smooth' })
-          }}
-        >
-          Cari Paket
-          <ArrowCircleDown2 size={18} />
-        </Button>
-      </div>
-
-      <p className="text-s-regular mt-5 mb-3">Powered By</p>
-      <Muslim101Logo />
-      <p className="text-xs-regular mt-3 mb-3 text-neutral-600">
-        PT. Muslim Seratus Satu - All-in-One Digital Islamic Platform
-      </p>
-
-      <Image
-        src="https://storage.googleapis.com/m101-prods/general/Frame%201000007465.png"
-        alt=""
-        width={100}
-        height={500}
-        className="my-10 w-full object-contain"
-      ></Image>
-
+    <div className="relative">
       <div
-        className="relative z-10 w-full overflow-x-hidden rounded-3xl p-5 text-center"
+        className="flex justify-between bg-white p-3"
         style={{
-          background: 'linear-gradient(90.11deg, #FFCE35 0.09%, #FFD03C 50.5%)',
+          boxShadow:
+            '0px 5.44px 11.79px 0px rgba(0, 0, 0, 0.06), 0px 21.77px 21.77px 0px rgba(0, 0, 0, 0.05), 0px 49.89px 29.93px 0px rgba(0, 0, 0, 0.03), 0px 87.98px 35.37px 0px rgba(0, 0, 0, 0.01), 0px 137.86px 39px 0px rgba(0, 0, 0, 0)',
         }}
       >
-        <LinkAjaAccent3 className="absolute -top-25 -left-60 -z-1" />
-        <LinkAjaAccent4 className="absolute -top-0 -right-0 -z-1" />
-        <p className="text-l-semibold">
-          4 Langkah Mudah Umroh <br /> Permata x Muslim101
+        <Muslim101Logo />
+        <Link href="/my/transaction" className="flex items-center gap-2">
+          <TimerIcon2 />
+          <span className="text-xs-regular">Riwayat</span>
+        </Link>
+      </div>
+      <div
+        className="bg-primary-500 relative z-10 overflow-hidden px-4 pt-6 pb-30"
+        style={{
+          background:
+            'linear-gradient(180deg, #FFCE34 0%, rgba(255, 206, 52, 0) 100%)',
+        }}
+      >
+        <LinkAjaAccent className="absolute -top-18 -left-17 -z-1" />
+        <LinkAjaAccent2 className="absolute -top-12 -right-10 -z-1" />
+        <div className="mt-10 flex gap-5">
+          <LinkAjaSyariah />
+          <LinkAja />
+        </div>
+        <h1 className="heading-2-bold mt-5">
+          Umrah jadi lebih <br /> mudah dan aman <br />
+          bareng LinkAja & <br />
+          LinkAja Syariah
+        </h1>
+        <p className="text-l-regular mt-2">
+          Nikmati pengalaman ibadah yang damai <br /> dan nyaman dengan harga
+          terjangkau!
+        </p>
+        <div className="mt-5 w-full">
+          <Button
+            className="w-full"
+            onClick={() => {
+              document
+                .getElementById('packageList')
+                ?.scrollIntoView({ behavior: 'smooth' })
+            }}
+          >
+            Cari Paket
+            <ArrowCircleDown2 size={18} />
+          </Button>
+        </div>
+
+        <p className="text-s-regular mt-5 mb-3">Powered By</p>
+        <Muslim101Logo />
+        <p className="text-xs-regular mt-3 mb-3 text-neutral-600">
+          PT. Muslim Seratus Satu - All-in-One Digital Islamic Platform
         </p>
 
-        <div className="mt-5 grid grid-cols-2 gap-5">
-          <div className="border-primary-500 relative z-10 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
-            <div className="flex flex-col items-center justify-center">
+        <Image
+          src="https://storage.googleapis.com/m101-prods/general/Frame%201000007465.png"
+          alt=""
+          width={100}
+          height={500}
+          className="my-10 w-full object-contain"
+        ></Image>
+
+        <div
+          className="relative z-10 w-full overflow-x-hidden rounded-3xl p-5 text-center"
+          style={{
+            background:
+              'linear-gradient(90.11deg, #FFCE35 0.09%, #FFD03C 50.5%)',
+          }}
+        >
+          <LinkAjaAccent3 className="absolute -top-25 -left-60 -z-1" />
+          <LinkAjaAccent4 className="absolute -top-0 -right-0 -z-1" />
+          <p className="text-l-semibold">
+            4 Langkah Mudah Umroh <br /> Permata x Muslim101
+          </p>
+
+          <div className="mt-5 grid grid-cols-2 gap-5">
+            <div className="border-primary-500 relative z-10 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
+              <div className="flex flex-col items-center justify-center">
+                <LinkAjaAccent5 className="absolute top-1/2 right-[-17px] -z-1" />
+                <MouseSquareIcon className="text-primary-500" size={32} />
+                <p className="text-m-regular mt-2">
+                  Pilih paket, bayar dengan LinkAja.
+                </p>
+              </div>
+            </div>
+            <div className="border-primary-500 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
+              <div className="flex flex-col items-center justify-center">
+                <ClipboardTextIcon className="text-primary-500" size={32} />
+                <p className="text-m-regular mt-2">
+                  Buat akun & lengkapi data di Muslim101.
+                </p>
+              </div>
+            </div>
+            <div className="border-primary-500 relative z-10 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
+              <LinkAjaAccent6 className="absolute top-[-23px] right-[-30px] -z-1" />
               <LinkAjaAccent5 className="absolute top-1/2 right-[-17px] -z-1" />
-              <MouseSquareIcon className="text-primary-500" size={32} />
-              <p className="text-m-regular mt-2">
-                Pilih paket, bayar dengan LinkAja.
-              </p>
+              <div className="flex flex-col items-center justify-center">
+                <MoneyTickIcon className="text-primary-500" size={32} />
+                <p className="text-m-regular mt-2">
+                  Lakukan pelunasan paket di Muslim101.
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="border-primary-500 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
-            <div className="flex flex-col items-center justify-center">
-              <ClipboardTextIcon className="text-primary-500" size={32} />
-              <p className="text-m-regular mt-2">
-                Buat akun & lengkapi data di Muslim101.
-              </p>
-            </div>
-          </div>
-          <div className="border-primary-500 relative z-10 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
-            <LinkAjaAccent6 className="absolute top-[-23px] right-[-30px] -z-1" />
-            <LinkAjaAccent5 className="absolute top-1/2 right-[-17px] -z-1" />
-            <div className="flex flex-col items-center justify-center">
-              <MoneyTickIcon className="text-primary-500" size={32} />
-              <p className="text-m-regular mt-2">
-                Lakukan pelunasan paket di Muslim101.
-              </p>
-            </div>
-          </div>
-          <div className="border-primary-500 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
-            <div className="flex flex-col items-center justify-center">
-              <Airplane className="text-primary-500" size={32} />
-              <p className="text-m-regular mt-2">
-                Administrasi selesai, berangkat!
-              </p>
+            <div className="border-primary-500 rounded-3xl border border-2 bg-white px-2 py-4 text-center">
+              <div className="flex flex-col items-center justify-center">
+                <Airplane className="text-primary-500" size={32} />
+                <p className="text-m-regular mt-2">
+                  Administrasi selesai, berangkat!
+                </p>
+              </div>
             </div>
           </div>
         </div>
