@@ -142,10 +142,15 @@ export const TransactionDetailMobileAction = ({
         return null
     }
   }
+  console.log(transaction?.status.slug)
 
   return (
     <div className="hidden max-lg:block">
-      {transaction?.status.slug !== 'waiting-approval' && (
+      {transaction?.status.slug !== 'waiting-approval' ||
+      transaction?.status.slug !== 'waiting-down-payment' ||
+      transaction?.status.slug !== 'canceled-by-user' ||
+      transaction?.status.slug !== 'canceled-by-travel' ||
+      transaction?.status.slug !== 'expired' ? (
         <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
           <DrawerBatalkan
             bookingId={bookingId}
@@ -172,7 +177,7 @@ export const TransactionDetailMobileAction = ({
             <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
           </Link>
         </div>
-      )}
+      ) : null}
       {statusTahapan == 'Waiting' && (
         <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
           <Button className="w-full py-2">Bayar</Button>
