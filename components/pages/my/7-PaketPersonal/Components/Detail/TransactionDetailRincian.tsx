@@ -11,6 +11,7 @@ import {
 import { getGalleryHotel } from '@/services/general-service'
 import { PlaneLanding, PlaneTakeoff, Star } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 
 interface TransactionDetailManifestProps {
@@ -28,7 +29,14 @@ export default function TransactionDetailRincian({
   )
 
   const HotelCardReview = (hotel: any) => {
-    const { name, hotelDestination, hotelGallery, rating } = hotel.hotel || {}
+    const {
+      name,
+      hotelDestination,
+      hotelGallery,
+      rating,
+      latitude,
+      longitude,
+    } = hotel.hotel || {}
 
     const priorityDestinations = useMemo(
       () => hotelDestination?.filter((x: any) => x.priority === true) || [],
@@ -92,22 +100,29 @@ export default function TransactionDetailRincian({
               </div>
 
               {/* Lihat Maps Button */}
-              <button className="flex items-center gap-1 text-sm text-blue-600 ">
-                <span className=" text-blue-600">Lihat Maps</span>
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              {latitude && longitude && (
+                <Link
+                  href={`https://www.google.com/maps?q=${latitude},${longitude}`}
+                  target="_blank"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
-              </button>
+                  <button className="flex items-center gap-1 text-sm text-blue-600 ">
+                    <span className=" text-blue-600">Lihat Maps</span>
+                    <svg
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -187,9 +202,8 @@ export default function TransactionDetailRincian({
       <Accordion type="single" defaultValue="1" collapsible={false}>
         <AccordionItem value={'1'} className="bg-white" noBorder>
           <AccordionTrigger
-            className="relative z-50 cursor-default rounded-3xl border border-neutral-100 bg-white px-6 py-4 hover:no-underline max-lg:px-3 [&>svg]:hidden"
+            className="relative z-50 cursor-default rounded-3xl border border-neutral-100 bg-white px-6 py-4 before:hidden after:hidden hover:no-underline max-lg:px-3 [&_svg]:!hidden [&>*:last-child]:!hidden [&>svg]:!hidden"
             noSeparator
-            // disabled
           >
             <div className="flex items-center gap-3 text-left">
               <span className="text-semibold text-sm text-neutral-500 max-lg:text-xs">
@@ -221,14 +235,14 @@ export default function TransactionDetailRincian({
                         <Image
                           src={data.departure.airline.logo}
                           alt="Airline Logo"
-                          width={20}
-                          height={20}
+                          width={15}
+                          height={15}
                         />
                       )}
                       <span>{data?.departure?.airline?.name}</span>
                     </div>
                   </div>
-                  <div className="ml-8">
+                  <div className="mt=2 ml-8">
                     <div className="text-center text-[12px] text-neutral-500">
                       Kelas
                     </div>
@@ -252,15 +266,12 @@ export default function TransactionDetailRincian({
                           <Image
                             src={data.arrival.airline.logo}
                             alt="Airline Logo"
-                            width={20}
-                            height={20}
+                            width={15}
+                            height={15}
                           />
                         )}
                         <span> {data?.arrival?.airline?.name}</span>
                       </div>
-                      {/* <div className="text-center text-[12px] text-neutral-900">
-                        {data?.arrival?.airline?.name}
-                      </div> */}
                     </div>
                     <div className="ml-8">
                       <div className="text-center text-[12px] text-neutral-500">
@@ -285,8 +296,8 @@ export default function TransactionDetailRincian({
                             <Image
                               src={data.arrival.airline.logo}
                               alt="Airline Logo"
-                              width={20}
-                              height={20}
+                              width={15}
+                              height={15}
                             />
                           )}
                           <span> {data?.arrival?.airline?.name}</span>
@@ -317,9 +328,8 @@ export default function TransactionDetailRincian({
         <Accordion type="single" defaultValue="1" collapsible={false}>
           <AccordionItem value={'1'} className="bg-white" noBorder>
             <AccordionTrigger
-              className="relative z-50 cursor-default rounded-3xl border border-neutral-100 bg-white px-6 py-4 hover:no-underline max-lg:px-3 [&>svg]:hidden"
+              className="relative z-50 cursor-default rounded-3xl border border-neutral-100 bg-white px-6 py-4 before:hidden after:hidden hover:no-underline max-lg:px-3 [&_svg]:!hidden [&>*:last-child]:!hidden [&>svg]:!hidden"
               noSeparator
-              // disabled
             >
               <div className="flex items-center gap-3 text-left">
                 <span className="text-semibold text-sm text-neutral-500 max-lg:text-xs">
@@ -352,9 +362,8 @@ export default function TransactionDetailRincian({
         <Accordion type="single" defaultValue="1" collapsible={false}>
           <AccordionItem value={'1'} className="bg-white" noBorder>
             <AccordionTrigger
-              className="relative z-50 cursor-default rounded-3xl border border-neutral-100 bg-white px-6 py-4 hover:no-underline max-lg:px-3 [&>svg]:hidden"
+              className="relative z-50 cursor-default rounded-3xl border border-neutral-100 bg-white px-6 py-4 before:hidden after:hidden hover:no-underline max-lg:px-3 [&_svg]:!hidden [&>*:last-child]:!hidden [&>svg]:!hidden"
               noSeparator
-              // disabled
             >
               <div className="flex items-center gap-3 text-left">
                 <span className="text-semibold text-sm text-neutral-500 max-lg:text-xs">
@@ -375,6 +384,55 @@ export default function TransactionDetailRincian({
                 {/* Basic Information */}
                 <div className="grid grid-cols-1 gap-2 max-lg:grid-cols-1">
                   <HotelCardReview hotel={selectedMedinaHotel} />
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
+      {/* Transportasi */}
+
+      {data?.transportation && Object.keys(data.transportation).length > 0 && (
+        <Accordion type="single" defaultValue="1" collapsible={false}>
+          <AccordionItem value={'1'} className="bg-white" noBorder>
+            <AccordionTrigger
+              className="relative z-50 cursor-default rounded-3xl border border-neutral-100 bg-white px-6 py-4 before:hidden after:hidden hover:no-underline max-lg:px-3 [&_svg]:!hidden [&>*:last-child]:!hidden [&>svg]:!hidden"
+              noSeparator
+            >
+              <div className="flex items-center gap-3 text-left">
+                <span className="text-semibold text-sm text-neutral-500 max-lg:text-xs">
+                  Transportasi
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent
+              className="px-0 pt-0 pb-0"
+              style={{
+                marginTop: '-40px',
+                paddingTop: '110px',
+                borderRadius: '1.5rem',
+                border: '1px solid #E8E8E8',
+              }}
+            >
+              <div className="relative z-20 -mt-20 space-y-2 bg-neutral-50 p-6 max-lg:px-3">
+                {/* Basic Information */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="text-[12px] text-neutral-500">
+                      Tipe Kendaraan
+                    </div>
+                    <div className="text-[12px] text-neutral-900">
+                      {data?.transportation?.vehicle?.name}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[12px] text-neutral-500">
+                      Kapasitas Maksimal Kendaraan
+                    </div>
+                    <div className="text-[12px] text-neutral-900">
+                      {data?.transportation?.vehicle?.seats} orang
+                    </div>
+                  </div>
                 </div>
               </div>
             </AccordionContent>
