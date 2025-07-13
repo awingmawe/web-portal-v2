@@ -223,7 +223,7 @@ export const CardPackage = memo(function CardPackage({
         )}
 
         {/* Title */}
-        <h3 className="text-l-regular line-clamp-2 break-all text-neutral-900 uppercase max-sm:text-sm max-sm:leading-5">
+        <h3 className="text-l-regular line-clamp-2 break-words text-neutral-900 uppercase max-sm:text-sm max-sm:leading-5">
           {title}
         </h3>
 
