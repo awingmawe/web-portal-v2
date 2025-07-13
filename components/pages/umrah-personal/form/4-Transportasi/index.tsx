@@ -151,7 +151,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
                   <FormControl>
                     <div
                       className={
-                        'space-y-4 overflow-y-auto max-lg:min-h-[450px] lg:h-[240px] lg:px-2 lg:pt-3'
+                        'space-y-4 overflow-y-auto max-lg:min-h-[450px] lg:px-2 lg:pt-3'
                       }
                     >
                       <RadioGroup

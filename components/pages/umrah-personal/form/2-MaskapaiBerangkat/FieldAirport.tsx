@@ -36,6 +36,7 @@ interface FieldAirportProps {
     onChange: (value: AirportOption) => void
   }
   placeholder: string
+  type: 'departure' | 'arrival'
   classNameTrigger?: string
   classNameContentPopover?: string
   classNameContentDrawer?: string
@@ -44,6 +45,7 @@ interface FieldAirportProps {
 export const FieldAirport = ({
   field,
   placeholder,
+  type,
   classNameTrigger,
   classNameContentPopover,
   classNameContentDrawer,
@@ -101,6 +103,12 @@ export const FieldAirport = ({
 
   const hasValue = (field.value?.id ?? 0) > 0
 
+  const dataFiltered =
+    type === 'departure'
+      ? airports.filter((airport) => ['MED', 'JED'].includes(airport.code))
+      : (airports.filter((airport) => !['MED', 'JED'].includes(airport.code)) ??
+        [])
+
   // Common trigger component
   const triggerComponent = (
     <div className="flex w-full items-center justify-between">
@@ -156,7 +164,7 @@ export const FieldAirport = ({
             next={loadMoreAirports}
             threshold={0.8}
           >
-            {airports.map((airport: Airport) => {
+            {dataFiltered.map((airport: Airport) => {
               const isSelected = isMobile
                 ? tempSelection?.id === airport.id
                 : field.value?.id === airport.id

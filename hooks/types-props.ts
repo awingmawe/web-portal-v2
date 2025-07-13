@@ -3,6 +3,7 @@ export interface UseSearchParams {
   pageSize?: number
   typeairport?: string
   version?: 'v1' | 'v2'
+  isTransit?: boolean
 }
 
 export interface UseSearchResult<T> {

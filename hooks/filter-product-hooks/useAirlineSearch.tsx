@@ -8,6 +8,7 @@ export function useAirlineSearch({
   initialQuery = '',
   pageSize = 15,
   version = 'v2',
+  isTransit = false,
 }: UseSearchParams = {}): UseSearchResult<Airline> {
   const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [airlines, setAirlines] = useState<Airline[]>([])
@@ -21,7 +22,12 @@ export function useAirlineSearch({
   const fetchAirlines = useCallback(
     async (pageNum: number, query: string = '') => {
       try {
-        const params = { page: pageNum, size: pageSize, search: query }
+        const params = {
+          page: pageNum,
+          size: pageSize,
+          [`code|countryName|name:likeLower`]: query ? `%${query}%` : undefined,
+          [`code:in`]: isTransit ? undefined : 'GA,SV,JT',
+        }
         const response =
           version === 'v1'
             ? await getAirline(params)
@@ -34,7 +40,7 @@ export function useAirlineSearch({
         return { results: [], total: 0 }
       }
     },
-    [pageSize, version]
+    [isTransit, pageSize, version]
   )
 
   // Initial data load

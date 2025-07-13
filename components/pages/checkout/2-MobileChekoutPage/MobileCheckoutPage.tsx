@@ -311,6 +311,7 @@ const MobileCheckoutPage = ({}) => {
           <div className="rounded-2xl border border-neutral-100 p-3">
             <SelectHotel
               isMobile
+              totalQty={totalQty}
               variant="normal"
               defaultValue={selectedVariant?.roomType}
               defaultPackageVariant={selectedVariant.variant}
@@ -728,10 +729,14 @@ const MobileCheckoutPage = ({}) => {
         <Button
           onClick={() => {
             if (!isEmptyRoomType && termsAccepted) {
-              handleCheckout({
-                linkAja: true,
-                linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
-              })
+              handleCheckout(
+                isLinkAja
+                  ? {
+                      linkAja: true,
+                      linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+                    }
+                  : {}
+              )
             }
           }}
           disabled={disabledButtonCheckout}

@@ -150,7 +150,7 @@ const Step3HotelInfo: React.FC<Step3HotelInfoProps> = ({
               </div>
 
               {/* Hotel List */}
-              <div className="max-h-[400px] space-y-3 overflow-y-auto pr-3">
+              <div className="space-y-3 pr-3">
                 {isLoadingHotels ? (
                   <div className="flex h-[180px] w-full items-center justify-center">
                     <div className="border-primary-500 h-5 w-5 animate-spin rounded-full border-b-2"></div>

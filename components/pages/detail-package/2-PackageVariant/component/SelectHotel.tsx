@@ -4,7 +4,6 @@ import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { PackageVariant } from '@/constant/types/PackageProps'
-import { useCheckout } from '@/contexts/checkout-context'
 import { RoomType, usePackageVariant } from '@/contexts/package-variant-context'
 import { formatCurrency, isEmpty } from '@/lib/utils'
 import { Minus, Plus } from 'lucide-react'
@@ -19,6 +18,7 @@ export interface SelectHotelProps {
   disabled?: boolean
   variant?: 'normal' | 'checkout'
   disabledAddOnly?: boolean
+  totalQty?: number
   onChange?: (roomType: RoomType, price: number) => void
 }
 
@@ -31,6 +31,7 @@ export default function SelectHotel({
   disabled = false,
   disabledAddOnly = false,
   totalManifest,
+  totalQty,
   onChange,
 }: SelectHotelProps) {
   const {
@@ -48,8 +49,6 @@ export default function SelectHotel({
     getVariantsPrice,
     getTotalQty,
   } = usePackageVariant()
-
-  const { totalQty } = useCheckout()
 
   useEffect(() => {
     if (!selectedRoomType && defaultValue) {

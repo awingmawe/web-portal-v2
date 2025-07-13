@@ -1,21 +1,23 @@
 'use client'
 
 import ChecklistIcon from '@/components/icons/checklist'
+import { EmailIcon } from '@/components/icons/email'
+import VerificationDialog from '@/components/pages/my/4-Profile/Card/VerificationDialog'
+import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
+import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/dialog/PhoneNumberNotVerified'
 import { Button } from '@/components/ui/button'
-import { ACCOUNT_URL } from '@/constant/env'
+import { useAuth } from '@/contexts/auth/context'
+import { useAuthNavigation } from '@/hooks/umrah-personal/landing/useAuthNavigation'
+import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNumberVerification'
 import Frame from '@/public/images/frame-umrah-personal.png'
 import { animate } from 'framer-motion'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import React from 'react'
 
-interface UmrohPersonalStartSectionProps {
-  token: string
-}
-const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
-  token,
-}) => {
-  const router = useRouter()
+const UmrohLandingSection: React.FC = () => {
+  const { profile } = useAuth()
+
+  const [open, setOpen] = React.useState(false)
   const features: string[] = [
     'Harga paket fleksibel sesuai kebutuhan',
     'Pilih tanggal keberangkatan yang Anda inginkan',
@@ -61,16 +63,37 @@ const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
       },
     })
   }
+  // Use phone verification hook
+  const {
+    setPhoneNumber,
+    isLoading,
+    openOtp,
+    setOpenOtp,
+    verificationPurpose,
+    handleSendOtp,
+    handleVerifyOtp,
+    handleResendOtp,
+  } = usePhoneVerification({
+    initialPhoneNumber: profile?.persona?.phoneNumber,
+  })
+
+  // Use auth navigation hook
+  const { handleNavigateWithAuth } = useAuthNavigation({
+    redirectPath: '/umrah-personal/form',
+    requirePhoneVerification: true,
+  })
 
   const handleToForm = () => {
-    if (!token) {
-      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
-      return
-    }
-
-    router.push('/umrah-personal/form')
+    handleNavigateWithAuth(() => {
+      // This callback is called when phone verification is required
+      setOpen(true)
+    })
   }
 
+  const handleSavePhoneNumber = async () => {
+    await handleSendOtp()
+    setOpen(false)
+  }
   return (
     <section
       className={`relative overflow-hidden bg-white p-6 max-lg:mt-12 max-lg:p-0 lg:h-[100vh]`}
@@ -96,13 +119,48 @@ const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
             ))}
           </div>
           <div className="mt-6 flex items-center gap-3 max-lg:flex-col">
-            <Button
-              className="bg-primary-500 px-10 py-4 max-lg:w-full"
-              type="button"
-              onClick={handleToForm}
-            >
-              Buat Paket Umroh Sekarang!
-            </Button>
+            {profile?.phonenumberVerified ? (
+              <Button
+                className="bg-primary-500 px-10 py-4 max-lg:w-full"
+                type="button"
+                onClick={handleToForm}
+              >
+                Buat Paket Umroh Sekarang!
+              </Button>
+            ) : (
+              <LayoutDrawerDialog
+                isOpen={open}
+                setIsOpen={setOpen}
+                trigger={
+                  <Button
+                    className="bg-primary-500 px-10 py-4 max-lg:w-full"
+                    type="button"
+                    onClick={handleToForm}
+                  >
+                    Buat Paket Umroh Sekarang!
+                  </Button>
+                }
+                content={
+                  <PhoneNumberNotVerified
+                    name={profile?.name || ''}
+                    phoneNumber={profile?.persona?.phoneNumber || ''}
+                    setPhoneNumber={setPhoneNumber}
+                  />
+                }
+                footerContent={
+                  <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
+                    <Button
+                      variant="default"
+                      className="px-10 py-3"
+                      onClick={handleSavePhoneNumber}
+                      isLoading={isLoading}
+                    >
+                      Simpan Nomor Telepon
+                    </Button>
+                  </div>
+                }
+              />
+            )}
             <Button
               className="bg-transparent px-10 py-4 max-lg:w-full"
               type="button"
@@ -133,6 +191,15 @@ const UmrohLandingSection: React.FC<UmrohPersonalStartSectionProps> = ({
           className="absolute top-0 left-0"
         />
       </div>
+      <VerificationDialog
+        open={openOtp}
+        onOpenChange={setOpenOtp}
+        onVerify={handleVerifyOtp}
+        onResendOtp={handleResendOtp}
+        icon={<EmailIcon className="text-primary-500 h-7 w-7" />}
+        purpose={verificationPurpose}
+        isLoading={isLoading}
+      />
     </section>
   )
 }

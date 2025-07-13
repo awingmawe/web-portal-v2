@@ -225,6 +225,7 @@ const CheckoutPage = () => {
               <div className="px-4 pb-4">
                 <SelectHotel
                   variant="checkout"
+                  totalQty={totalQty}
                   isMobile
                   defaultValue={selectedVariant?.roomType}
                   defaultPackageVariant={selectedVariant.variant}
@@ -572,10 +573,15 @@ const CheckoutPage = () => {
                 className="w-full font-medium text-neutral-900"
                 onClick={() => {
                   if (!isEmptyRoomType && termsAccepted) {
-                    handleCheckout({
-                      linkAja: true,
-                      linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
-                    })
+                    handleCheckout(
+                      isLinkAja
+                        ? {
+                            linkAja: true,
+                            linkAjaSyariah:
+                              selectedPayment === 'linkAjaSyariah',
+                          }
+                        : {}
+                    )
                   }
                 }}
               >

@@ -19,6 +19,7 @@ import { updateProfile } from '@/services/identity-service'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
 type PembiayaanFormValues = {
@@ -47,6 +48,7 @@ const PembiayaanPage: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [submissionData, setSubmissionData] = useState<any>()
   const [showFormCurrent, setShowFormCurrent] = useState(false)
+  const searchParams = useSearchParams()
   // Monitor screen size
   useEffect(() => {
     const checkScreenSize = () => {
@@ -63,6 +65,7 @@ const PembiayaanPage: React.FC = () => {
 
     checkScreenSize()
     window.addEventListener('resize', checkScreenSize)
+
     return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
 
@@ -81,6 +84,12 @@ const PembiayaanPage: React.FC = () => {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    if (searchParams.get('open') === 'true') {
+      openForm()
+    }
+  }, [searchParams])
 
   const closeForm = () => {
     setShowForm(false)

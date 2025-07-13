@@ -77,7 +77,7 @@ export const useStepVisibility = ({
         const targetScrollTop = scrollTop + elementRect.top - containerRect.top
 
         container.scrollTo({
-          top: targetScrollTop - 72,
+          top: targetScrollTop - 200000,
           behavior: 'smooth',
         })
 
