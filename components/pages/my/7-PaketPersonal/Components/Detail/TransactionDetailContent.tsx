@@ -7,11 +7,13 @@ import TransactionDetailSkeleton from '@/components/pages/my/7-PaketPersonal/Com
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { CALL_CENTER } from '@/constant/env'
 import {
   getManifestDetail,
   getTransactionPersonalDetail,
 } from '@/services/umrah-service'
 import 'dayjs/locale/id'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useState } from 'react'
@@ -91,8 +93,17 @@ export default function TransactionDetailContent({
       }
     }
   }, [transaction])
-  console.log(transaction)
+  const phoneNumberUsed = CALL_CENTER
+  const shareViaWhatsApp = useCallback(
+    (providedTitle: string, phoneNumber?: string) => {
+      const currentUrl = window.location.href
+      const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=Assalamualaikum warahmatullahi wabarakatuh! Saya ingin bertanya tentang paket ini.%0A%0APaket ${providedTitle}%0A%0A${currentUrl}%0A%0A`
 
+      const whatsappUrl = url
+      window.open(whatsappUrl, '_blank')
+    },
+    []
+  )
   return (
     <div>
       <div className={`${loading ? 'block' : 'hidden'} h-[700px]`}></div>
@@ -185,9 +196,20 @@ export default function TransactionDetailContent({
               <Button
                 className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
                 variant="ghost"
+                onClick={() => {
+                  shareViaWhatsApp(transaction?.name, phoneNumberUsed)
+                }}
               >
                 Bantuan
               </Button>
+              <div className="absolute bottom-0 ml-10 hidden lg:block">
+                <Image
+                  src="/images/image-bangking.svg"
+                  alt="Banking Illustration"
+                  width={242}
+                  height={190}
+                />
+              </div>
             </div>
           </div>
         </Fragment>
