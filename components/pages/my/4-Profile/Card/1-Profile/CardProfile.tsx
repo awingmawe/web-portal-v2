@@ -42,7 +42,9 @@ export default function CardProfile(props: { profile: Profile | undefined }) {
       name: profile?.name ?? '',
       gender: profile?.persona?.gender ?? Gender.MALE,
       address: profile?.persona?.address ?? '',
-      born: dayjs(profile?.persona?.born).format('YYYY-MM-DD'),
+      born: profile?.persona?.born
+        ? dayjs(profile.persona.born).format('YYYY-MM-DD')
+        : '',
     }),
     [profile]
   )
