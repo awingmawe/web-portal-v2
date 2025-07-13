@@ -28,10 +28,15 @@ export function useAirlineSearch({
           [`code|countryName|name:likeLower`]: query ? `%${query}%` : undefined,
           [`code:in`]: isTransit ? undefined : 'GA,SV,JT',
         }
+        const paramsv2 = {
+          page: pageNum,
+          size: pageSize,
+          search: query ? `${query}` : undefined,
+        }
         const response =
           version === 'v1'
             ? await getAirline(params)
-            : await getAirlineV2(params)
+            : await getAirlineV2(paramsv2)
         return response
       } catch (err) {
         setError(

@@ -142,7 +142,6 @@ export const TransactionDetailMobileAction = ({
         return null
     }
   }
-  console.log(transaction?.status.slug)
 
   return (
     <div className="hidden max-lg:block">
