@@ -22,10 +22,12 @@ import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { setLocalReferralCode } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function LandingLinkAja() {
   const { filters, setFilters } = useFilterProduct()
+  const searchParams = useSearchParams()
   const updateQueryParams = useUpdateQueryParams()
 
   useEffect(() => {
@@ -47,6 +49,21 @@ export default function LandingLinkAja() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!searchParams.get('prMin')) {
+      updateQueryParams(['prMin'], ['0'])
+    }
+    if (!searchParams.get('prMax')) {
+      updateQueryParams(['prMax'], ['40000000'])
+    }
+    if (!searchParams.get('dpMin')) {
+      updateQueryParams(['dpMin'], ['0'])
+    }
+    if (!searchParams.get('dpMax')) {
+      updateQueryParams(['dpMax'], ['20000000'])
+    }
+  }, [searchParams, updateQueryParams])
 
   return (
     <div className="relative">
