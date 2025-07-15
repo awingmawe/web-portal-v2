@@ -159,9 +159,9 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
     if (externalLoading !== undefined) return
 
     // Simulate staggered loading for different sections
-    const promoTimer = setTimeout(() => setIsPromoLoading(false), 1200)
-    const regularTimer = setTimeout(() => setIsRegularLoading(false), 1800)
-    const plusTimer = setTimeout(() => setIsPlusLoading(false), 2400)
+    const promoTimer = setTimeout(() => setIsPromoLoading(false), 1)
+    const regularTimer = setTimeout(() => setIsRegularLoading(false), 1)
+    const plusTimer = setTimeout(() => setIsPlusLoading(false), 1)
 
     return () => {
       clearTimeout(promoTimer)
