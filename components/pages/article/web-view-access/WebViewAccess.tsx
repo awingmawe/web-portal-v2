@@ -8,8 +8,8 @@ export default function WebViewAccess() {
   useEffect(() => {
     setTimeout(() => {
       window.location.href = searchParams.get('redirect')
-        ? '/article'
-        : String(searchParams.get('redirect'))
+        ? String(searchParams.get('redirect'))
+        : '/article'
     }, 1000)
   }, [searchParams])
   return (
