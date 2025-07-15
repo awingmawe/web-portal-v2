@@ -430,7 +430,7 @@ export default function TransactionDetailRincian({
                       Kapasitas Maksimal Kendaraan
                     </div>
                     <div className="text-[12px] text-neutral-900">
-                      {data?.transportation?.vehicle?.seats} orang
+                      {data?.transportation?.vehicle?.seat} orang
                     </div>
                   </div>
                 </div>
