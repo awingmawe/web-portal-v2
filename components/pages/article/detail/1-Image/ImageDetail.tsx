@@ -26,22 +26,22 @@ const ImageDetail = ({
   const { shareViaCopyLink } = useGallerySharing()
   const router = useRouter()
   const [disabledWa, setDisabledWa] = useState(true)
-  const shareLinkWa = `Baca Artikel ini ${title} - ${window.location.origin}/article/detail/${slug}`
+  const shareLinkWa = `Baca Artikel ini ${title} - ${window?.location?.origin}/article/detail/${slug}`
   const handleShareWebview = () => {
-    window.flutter_inappwebview.callHandler('wa-share', shareLinkWa)
+    window?.flutter_inappwebview?.callHandler('wa-share', shareLinkWa)
   }
 
   useEffect(() => {
     setTimeout(() => {
-      window.addEventListener(
+      window?.addEventListener(
         'flutterInAppWebViewPlatformReady',
         function () {}
       )
       document
-        .getElementById('sendToFlutter')
+        ?.getElementById('sendToFlutter')
         ?.addEventListener('click', function () {
           if (isWebview === 'true') {
-            if (window.flutter_inappwebview) {
+            if (window?.flutter_inappwebview) {
               handleShareWebview()
             } else {
             }

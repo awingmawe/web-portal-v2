@@ -1,12 +1,17 @@
 'use client'
+import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function WebViewAccess() {
+  const searchParams = useSearchParams()
+
   useEffect(() => {
     setTimeout(() => {
-      window.location.href = '/article'
+      window.location.href = searchParams.get('redirect')
+        ? '/article'
+        : String(searchParams.get('redirect'))
     }, 1000)
-  }, [])
+  }, [searchParams])
   return (
     <div className="flex h-screen w-full items-center justify-center bg-white">
       <div className="flex flex-col items-center">

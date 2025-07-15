@@ -4,8 +4,10 @@ import RemoveLocalReferralCode from '@/components/shared/RemoveLocalReferralCode
 import { Toaster } from '@/components/ui/sonner'
 import { GTM_ID } from '@/constant/env'
 import { ContextProviders } from '@/contexts/providers'
+import { cookieNames } from '@/services/common/cookie'
 import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { Suspense } from 'react'
 import './globals.css'
 export const metadata: Metadata = {
@@ -13,11 +15,14 @@ export const metadata: Metadata = {
   description: 'Muslim 101 | Semua Ada Semua Berkah',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string
+
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
       <body>
@@ -29,7 +34,7 @@ export default function RootLayout({
             {children}
             <Toaster />
             <RemoveLocalReferralCode />
-            <QontakChatWidget />
+            <QontakChatWidget hide={isWebview ? true : false} />
           </ContextProviders>
         </Suspense>
       </body>
