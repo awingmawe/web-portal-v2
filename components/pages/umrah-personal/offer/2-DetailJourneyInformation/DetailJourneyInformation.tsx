@@ -229,13 +229,15 @@ const UmrahPersonalDetailCard = ({
           >
             <p className="text-m-regular">{meccaHotel.selectedHotel.name}</p>
           </LayoutPerItem>
-          <LayoutPerItem
-            icon={<BuildingIcon size={20} color="neutral-900" />}
-            titleItem="Hotel Madinah"
-            colSpan="max-lg:col-span-1"
-          >
-            <p className="text-m-regular">{medinaHotel.selectedHotel.name}</p>
-          </LayoutPerItem>
+          {!isEmpty(medinaHotel) && (
+            <LayoutPerItem
+              icon={<BuildingIcon size={20} color="neutral-900" />}
+              titleItem="Hotel Madinah"
+              colSpan="max-lg:col-span-1"
+            >
+              <p className="text-m-regular">{medinaHotel.selectedHotel.name}</p>
+            </LayoutPerItem>
+          )}
           <LayoutPerItem
             icon={<CarIcon size={20} />}
             titleItem="Transportasi"

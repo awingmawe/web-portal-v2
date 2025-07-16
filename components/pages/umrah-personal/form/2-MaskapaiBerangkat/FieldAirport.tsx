@@ -64,7 +64,7 @@ export const FieldAirport = ({
     searchQuery: airportSearchQuery,
     handleSearchChange: handleAirportSearchChange,
     loadMore: loadMoreAirports,
-  } = useAirportSearch({ version: 'v1' })
+  } = useAirportSearch({ version: 'v1', typeairport: type })
 
   // Convert Airport to AirportOption
   const convertAirportToOption = (airport: Airport): AirportOption => ({
@@ -102,12 +102,6 @@ export const FieldAirport = ({
   }
 
   const hasValue = (field.value?.id ?? 0) > 0
-
-  const dataFiltered =
-    type === 'departure'
-      ? airports.filter((airport) => ['MED', 'JED'].includes(airport.code))
-      : (airports.filter((airport) => !['MED', 'JED'].includes(airport.code)) ??
-        [])
 
   // Common trigger component
   const triggerComponent = (
@@ -164,7 +158,7 @@ export const FieldAirport = ({
             next={loadMoreAirports}
             threshold={0.8}
           >
-            {dataFiltered.map((airport: Airport) => {
+            {airports.map((airport: Airport) => {
               const isSelected = isMobile
                 ? tempSelection?.id === airport.id
                 : field.value?.id === airport.id

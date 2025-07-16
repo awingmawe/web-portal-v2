@@ -27,8 +27,9 @@ export function useAirportSearch({
         const params = {
           page: pageNum,
           size: pageSize,
-          search: query,
-          typeairport,
+          [`cityName|code|name:likeLower`]: query ? `%${query}%` : undefined,
+          ['countryId:eq']:
+            typeairport && typeairport === 'departure' ? 682 : undefined,
         }
         const response =
           version === 'v1'
