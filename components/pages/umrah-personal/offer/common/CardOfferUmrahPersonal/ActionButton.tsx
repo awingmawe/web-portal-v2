@@ -99,7 +99,11 @@ const OfferButton: React.FC<{
       }
 
       const dataSelectedVariant = {
-        roomType: dataOffer.marketingFee,
+        roomType: {
+          double: 0,
+          triple: 0,
+          quad: 0,
+        },
         variantId: dataOffer.id,
         netAmount: dataOffer.dpAmount,
         name: dataOffer.JourneyInformation.name,
