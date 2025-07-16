@@ -13,7 +13,7 @@ import {
 } from '@/constant/schema/umrah-personal-schema/constant'
 import { JourneyInformation } from '@/constant/types/UmrahPersonalProps'
 import { cn, formatDateRangeShort, isEmpty } from '@/lib/utils'
-import { format, isAfter, subHours } from 'date-fns'
+import { add, format, isAfter } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { PlaneLanding, PlaneTakeoff, ShieldCheck } from 'lucide-react'
 import Image from 'next/image'
@@ -42,11 +42,12 @@ const UmrahPersonalDetailCard = ({
     medinaHotel,
     transportation,
   } = dataOffer
-  const countDownDate = subHours(new Date(approvedAt), 24)
+  const countDownDate = add(approvedAt, { hours: 24 })
   const countDownString = format(countDownDate, 'dd MMM yyyy, HH:mm', {
     locale: id,
   })
-  const isExpired = isAfter(new Date(), countDownDate)
+
+  const isExpired = isAfter(approvedAt, countDownDate)
 
   const dateRange = {
     from: new Date(departureDate),
