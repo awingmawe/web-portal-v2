@@ -217,7 +217,7 @@ export default function TransactionDetailProduct({
         {/* 1. Jenis Perjalanan dan Kegiatan Umroh - Side by Side */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-start">
-            <PeopleWalk className="mt-1 mr-2 h-[16px] w-[16px] text-neutral-900" />
+            <PeopleWalk className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
             <div>
               <div className="text-[12px] text-neutral-500">
                 Jenis Perjalanan
@@ -248,7 +248,7 @@ export default function TransactionDetailProduct({
         {/* 2. Jumlah Jemaah dan Visa - Side by Side */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-start">
-            <UsersIcon className="mt-1 mr-2 h-[16px] w-[16px] text-neutral-900" />
+            <UsersIcon className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
             <div>
               <div className="text-[12px] text-neutral-500">Jumlah Jemaah</div>
               <div className="text-[12px] text-neutral-900">
@@ -258,7 +258,7 @@ export default function TransactionDetailProduct({
           </div>
 
           <div className="flex items-start">
-            <IdCard className="mt-1 mr-2 h-[16px] w-[16px] text-neutral-900" />
+            <IdCard className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
             <div>
               <div className="text-[12px] text-neutral-500">Visa</div>
               <div className="text-[12px] text-neutral-900">
@@ -270,7 +270,7 @@ export default function TransactionDetailProduct({
         {/* 3. Keberangkatan dan Kepulangan - Side by Side */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-start">
-            <PlaneLanding className="mt-1 mr-2 h-[16px] w-[16px] text-neutral-900" />
+            <PlaneLanding className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
             <div>
               <div className="text-[12px] text-neutral-500">Kepulangan</div>
               <div className="text-[12px] text-neutral-900">

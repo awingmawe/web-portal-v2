@@ -226,7 +226,7 @@ export default function TransactionDetailRincian({
                 <div className="flex items-start">
                   <PlaneTakeoff className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
                   <div>
-                    <div className="text-center text-[12px] text-neutral-500">
+                    <div className="text-start text-[12px] text-neutral-500">
                       Maskapai Keberangkatan
                     </div>
 
@@ -242,7 +242,7 @@ export default function TransactionDetailRincian({
                       <span>{data?.departure?.airline?.name}</span>
                     </div>
                   </div>
-                  <div className="mt=2 ml-8">
+                  <div className=" ml-8">
                     <div className="text-center text-[12px] text-neutral-500">
                       Kelas
                     </div>
@@ -288,7 +288,7 @@ export default function TransactionDetailRincian({
                     <div className="mb-3 flex items-start">
                       <PlaneLanding className="mt-1 mr-3 h-[20px] w-[20px] text-neutral-900" />
                       <div>
-                        <div className="text-center text-[12px] text-neutral-500">
+                        <div className="w-37 text-start text-[12px] text-neutral-500">
                           Maskapai Kepulangan
                         </div>
                         <div className="flex items-center justify-center gap-2 text-[12px] text-neutral-900">
@@ -306,7 +306,7 @@ export default function TransactionDetailRincian({
                           {data?.arrival?.airline?.name}
                         </div> */}
                       </div>
-                      <div className="ml-13">
+                      <div className="ml-8">
                         <div className="text-center text-[12px] text-neutral-500">
                           Kelas
                         </div>
