@@ -39,9 +39,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
     }, // umrah personal existing
     meccaHotel: { rating: ratingMecca, selectedHotel: selectedMeccaHotel },
     medinaHotel: { rating: ratingMedina, selectedHotel: selectedMedinaHotel },
-    transportation: {
-      vehicle: { code: vehicleCode, name: vehicleName },
-    },
+    transportation: offerTransportation,
     departure: {
       airline: {
         logo: logoAirlineDeparture,
@@ -211,7 +209,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
             {medinaHotel.selectedHotel.id !== selectedMedinaHotel.id ? (
               <>
                 <p className="text-m-regular text-neutral-500 line-through">
-                  {selectedMedinaHotel.name}
+                  {selectedMedinaHotel?.name}
                 </p>
                 <RefreshCw size={16} color="#30302F" />
                 <p className="text-m-regular">
@@ -340,7 +338,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
       </div>
 
       {/* Transportation */}
-      {!isEmpty(transportation) && (
+      {!isEmpty(transportation) && !isEmpty(offerTransportation) && (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1">
             <CarIcon size={16} />
@@ -348,16 +346,21 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
           </div>
 
           <div className="flex items-center gap-3">
-            {transportation.vehicle.code !== vehicleCode ? (
+            {transportation.vehicle.code !==
+            offerTransportation.vehicle.code ? (
               <>
                 <p className="text-m-regular line-through">
                   1x {transportation.vehicle.name}
                 </p>
                 <RefreshCw size={16} color="#30302F" />
-                <p className="text-m-regular">1x {vehicleName}</p>
+                <p className="text-m-regular">
+                  1x {offerTransportation.vehicle.name}
+                </p>
               </>
             ) : (
-              <p className="text-m-regular">1x {vehicleName}</p>
+              <p className="text-m-regular">
+                1x {offerTransportation.vehicle.name}
+              </p>
             )}
           </div>
         </div>

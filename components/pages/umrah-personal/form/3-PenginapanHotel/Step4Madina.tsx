@@ -222,7 +222,7 @@ const Step4MadinahHotel = ({
       page: 1,
       size: 10,
       cityName: 'MADINAH',
-      name: isEmpty(searchQuery) ? undefined : searchQuery,
+      ['name:likeLower']: isEmpty(searchQuery) ? undefined : `%${searchQuery}%`,
       rating: Number(rating),
     },
   })
