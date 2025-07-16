@@ -205,12 +205,14 @@ const HotelPersonalDisplay: React.FC<HotelPersonalDisplayProps> = ({
               Area Wisata Terdekat:
             </p>
             <div className="grid grid-cols-12 gap-4">
-              {nonPriorityDestinations.map((dest: HotelDestination) => (
-                <DestinationItem
-                  key={`${dest.destinationName}`}
-                  destination={dest}
-                />
-              ))}
+              {nonPriorityDestinations.map(
+                (dest: HotelDestination, index: number) => (
+                  <DestinationItem
+                    key={`${dest.destinationName}-${index}`}
+                    destination={dest}
+                  />
+                )
+              )}
             </div>
           </Fragment>
         )}

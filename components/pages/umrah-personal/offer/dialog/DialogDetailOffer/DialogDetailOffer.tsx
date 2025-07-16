@@ -71,32 +71,32 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
   const {
     data: hotelGalleryMedinaNew,
     isLoading: hotelGalleryMedinaNewLoading,
-  } = useGetHotelGalleryByHotelId(newMedinaHotel.selectedHotel.id, isOpen, {
+  } = useGetHotelGalleryByHotelId(newMedinaHotel?.selectedHotel?.id, isOpen, {
     revalidateOnFocus: false,
     revalidateIfStale: false,
     dedupingInterval: Infinity,
-    isPaused: () => !newMedinaHotel.selectedHotel.id, // dont hit if there's no id medina
+    isPaused: () => !newMedinaHotel?.selectedHotel?.id, // dont hit if there's no id medina
   })
   const {
     data: hotelGalleryMedinaExisting,
     isLoading: hotelGalleryMedinaExistingLoading,
   } = useGetHotelGalleryByHotelId(
-    existingMedinaHotel.selectedHotel.id,
+    existingMedinaHotel?.selectedHotel?.id,
     isOpen,
     {
       revalidateOnFocus: false,
       revalidateIfStale: false,
       dedupingInterval: Infinity,
-      isPaused: () => !existingMedinaHotel.selectedHotel.id, // dont hit if there's no id medina
+      isPaused: () => !existingMedinaHotel?.selectedHotel?.id, // dont hit if there's no id medina
     }
   )
 
   const IS_AVAILABLE_TRANSPORTATION =
-    existingTransportation.vehicle.code === newTransportation.vehicle.code
+    existingTransportation?.vehicle?.code === newTransportation?.vehicle?.code
   const IS_AVAILABLE_HOTEL_MECCA =
     existingMeccaHotel.selectedHotel.id === newMeccaHotel.selectedHotel.id
   const IS_AVAILABLE_HOTEL_MEDINA =
-    existingMedinaHotel.selectedHotel.id === newMedinaHotel.selectedHotel.id
+    existingMedinaHotel?.selectedHotel?.id === newMedinaHotel?.selectedHotel?.id
   const IS_AVAILABLE_DEPARTURE =
     existingDeparture.airline.id === newDeparture.airline.id
   const IS_AVAILABLE_ARRIVAL =
@@ -150,7 +150,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
         </LayoutPerItem>
 
         {/* Transportasi */}
-        {!isEmpty(existingTransportation) && (
+        {!isEmpty(existingTransportation) && !isEmpty(newTransportation) && (
           <LayoutPerItem
             icon={<CarIcon size={24} color="#8E8E8B" />}
             titleItem="Transportasi"
@@ -225,7 +225,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
           {IS_AVAILABLE_DEPARTURE ? (
             <div className="flex items-center gap-2">
               <Image
-                src={existingDeparture.airline.logo || ''}
+                src={existingDeparture.airline.logo || Placeholder}
                 width={23}
                 height={23}
                 alt={`logo-${existingDeparture.airline.name}`}
@@ -243,7 +243,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 opacity-50">
                 <Image
-                  src={existingDeparture.airline.logo || ''}
+                  src={existingDeparture.airline.logo || Placeholder}
                   width={23}
                   height={23}
                   alt={`logo-${existingDeparture.airline.name}`}
@@ -265,7 +265,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <Image
-                  src={newDeparture.airline.logo || ''}
+                  src={newDeparture.airline.logo || Placeholder}
                   width={23}
                   height={23}
                   alt={`logo-${newDeparture.airline.name}`}
@@ -291,7 +291,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
           {IS_AVAILABLE_ARRIVAL ? (
             <div className="flex items-center gap-2">
               <Image
-                src={existingArrival.airline.logo || ''}
+                src={existingArrival.airline.logo || Placeholder}
                 width={23}
                 height={23}
                 alt={`logo-${existingArrival.airline.name}`}
@@ -308,7 +308,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 opacity-50">
                 <Image
-                  src={existingArrival.airline.logo || ''}
+                  src={existingArrival.airline.logo || Placeholder}
                   width={23}
                   height={23}
                   alt={`logo-${existingArrival.airline.name}`}
@@ -329,7 +329,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <Image
-                  src={newArrival.airline.logo || ''}
+                  src={newArrival.airline.logo || Placeholder}
                   width={23}
                   height={23}
                   alt={`logo-${newArrival.airline.name}`}
@@ -383,40 +383,42 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
         </LayoutPerItem>
 
         {/* Penginapan Madinah */}
-        <LayoutPerItem
-          icon={<BuildingIcon size={24} color="text-neutral-500" />}
-          titleItem="Penginapan Madinah"
-          isAvailable={IS_AVAILABLE_HOTEL_MEDINA}
-        >
-          {IS_AVAILABLE_HOTEL_MEDINA ? (
-            <HotelPersonalDisplay
-              hotelGallery={hotelGalleryMedinaExisting || []}
-              hotelData={existingMedinaHotel}
-              loading={hotelGalleryMedinaExistingLoading}
-            />
-          ) : (
-            <div className="flex flex-col gap-3">
-              <div className="relative">
-                <div className="pointer-events-none opacity-50 blur-xs">
-                  <HotelPersonalDisplay
-                    hotelGallery={hotelGalleryMedinaExisting || []}
-                    loading={hotelGalleryMedinaExistingLoading}
-                    hotelData={existingMedinaHotel}
-                  />
-                </div>
-                <p className="text-m-medium absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  Hotel yang dipilih tidak tersedia
-                </p>
-              </div>
-              <div className="h-[1px] w-full bg-neutral-200" />
+        {!isEmpty(newMedinaHotel) && !isEmpty(existingMedinaHotel) && (
+          <LayoutPerItem
+            icon={<BuildingIcon size={24} color="text-neutral-500" />}
+            titleItem="Penginapan Madinah"
+            isAvailable={IS_AVAILABLE_HOTEL_MEDINA}
+          >
+            {IS_AVAILABLE_HOTEL_MEDINA ? (
               <HotelPersonalDisplay
-                hotelGallery={hotelGalleryMedinaNew || []}
-                loading={hotelGalleryMedinaNewLoading}
-                hotelData={newMedinaHotel}
+                hotelGallery={hotelGalleryMedinaExisting || []}
+                hotelData={existingMedinaHotel}
+                loading={hotelGalleryMedinaExistingLoading}
               />
-            </div>
-          )}
-        </LayoutPerItem>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <div className="relative">
+                  <div className="pointer-events-none opacity-50 blur-xs">
+                    <HotelPersonalDisplay
+                      hotelGallery={hotelGalleryMedinaExisting || []}
+                      loading={hotelGalleryMedinaExistingLoading}
+                      hotelData={existingMedinaHotel}
+                    />
+                  </div>
+                  <p className="text-m-medium absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    Hotel yang dipilih tidak tersedia
+                  </p>
+                </div>
+                <div className="h-[1px] w-full bg-neutral-200" />
+                <HotelPersonalDisplay
+                  hotelGallery={hotelGalleryMedinaNew || []}
+                  loading={hotelGalleryMedinaNewLoading}
+                  hotelData={newMedinaHotel}
+                />
+              </div>
+            )}
+          </LayoutPerItem>
+        )}
 
         {/* Catatan */}
         {note && (
