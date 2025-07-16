@@ -234,7 +234,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
             <>
               <div className="flex items-center gap-2">
                 <Image
-                  src={departure.airline.logo || ''}
+                  src={departure.airline.logo || Placeholder}
                   width={20}
                   height={20}
                   alt={`logo-${departure.airline.name}`}
@@ -250,7 +250,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
               <RefreshCw size={16} color="#30302F" />
               <div className="flex items-center gap-2">
                 <Image
-                  src={logoAirlineDeparture || ''}
+                  src={logoAirlineDeparture || Placeholder}
                   width={20}
                   height={20}
                   alt={`logo-${nameAirlineDeparture}`}
@@ -265,7 +265,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
           ) : (
             <div className="flex items-center gap-2">
               <Image
-                src={logoAirlineDeparture || ''}
+                src={logoAirlineDeparture || Placeholder}
                 width={20}
                 height={20}
                 alt={`logo-${nameAirlineDeparture}`}
@@ -291,7 +291,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
             <>
               <div className="flex items-center gap-2">
                 <Image
-                  src={arrival.airline.logo || ''}
+                  src={arrival.airline.logo || Placeholder}
                   width={20}
                   height={20}
                   alt={`logo-${arrival.airline.name}`}
@@ -307,7 +307,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
               <RefreshCw size={16} color="#30302F" />
               <div className="flex items-center gap-2">
                 <Image
-                  src={logoAirlineArrival || ''}
+                  src={logoAirlineArrival || Placeholder}
                   width={20}
                   height={20}
                   alt={`logo-${nameAirlineArrival}`}
@@ -322,7 +322,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
           ) : (
             <div className="flex items-center gap-2">
               <Image
-                src={logoAirlineArrival || ''}
+                src={logoAirlineArrival || Placeholder}
                 width={20}
                 height={20}
                 alt={`logo-${nameAirlineArrival}`}

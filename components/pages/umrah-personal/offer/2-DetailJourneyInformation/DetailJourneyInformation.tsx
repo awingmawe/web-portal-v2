@@ -13,6 +13,7 @@ import {
 } from '@/constant/schema/umrah-personal-schema/constant'
 import { JourneyInformation } from '@/constant/types/UmrahPersonalProps'
 import { cn, formatDateRangeShort, isEmpty } from '@/lib/utils'
+import Placeholder from '@/public/images/no-image-placeholder.png'
 import { add, format, isAfter } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { PlaneLanding, PlaneTakeoff, ShieldCheck } from 'lucide-react'
@@ -87,7 +88,7 @@ const UmrahPersonalDetailCard = ({
         <p className="text-m-regular text-neutral-500">•</p>
         {!isEmpty(departure.airline.logo) && (
           <Image
-            src={departure.airline.logo || ''}
+            src={departure.airline.logo || Placeholder}
             width={20}
             height={20}
             alt={`logo-airline-departure`}
@@ -107,7 +108,7 @@ const UmrahPersonalDetailCard = ({
         <p className="text-m-regular text-neutral-500">•</p>
         {!isEmpty(arrival.airline.logo) && (
           <Image
-            src={arrival.airline.logo || ''}
+            src={arrival.airline.logo || Placeholder}
             width={20}
             height={20}
             alt={`logo-airline-arrival`}
