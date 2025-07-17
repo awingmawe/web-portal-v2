@@ -32,8 +32,10 @@ interface SearchAndFilterProps {
   searchQuery: string
   handleSearchChange: (event: ChangeEvent<HTMLInputElement>) => void
   statusFilter: string
+  statusFilterType: string
   handleStatusFilterChange: (value: string) => void
   handleDateRangeChange: (date: SetStateAction<DateRange | undefined>) => void
+  handleStatusFilterTypeChange: (value: string) => void
 }
 
 export const SearchAndFilter = ({
@@ -42,6 +44,8 @@ export const SearchAndFilter = ({
   statusFilter,
   handleStatusFilterChange,
   handleDateRangeChange,
+  handleStatusFilterTypeChange,
+  statusFilterType,
 }: SearchAndFilterProps) => {
   return (
     <div className="grid grid-cols-1 gap-4 max-lg:hidden md:grid-cols-4">
@@ -54,8 +58,31 @@ export const SearchAndFilter = ({
           onChange={handleSearchChange}
           endIcon={<Search className="h-5 w-5 text-gray-400" />}
         />
+      </div>{' '}
+      <div className="relative">
+        <Select
+          defaultValue="all"
+          value={statusFilterType}
+          onValueChange={handleStatusFilterTypeChange}
+        >
+          <SelectTrigger className="h-10 w-full rounded-3xl border-neutral-200 shadow-none">
+            <SelectValue placeholder="Semua Produk" />
+          </SelectTrigger>
+          <SelectContent className="rounded-2xl border-neutral-200">
+            <SelectGroup>
+              <SelectItem className="rounded-2xl" value="all">
+                Semua Produk
+              </SelectItem>
+              <SelectItem className="rounded-2xl" value="umrah">
+                Umroh
+              </SelectItem>
+              <SelectItem className="rounded-2xl" value="umrah-personal">
+                Umroh Personal
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
-
       <div className="relative">
         <Select
           defaultValue="all"
@@ -83,7 +110,6 @@ export const SearchAndFilter = ({
           </SelectContent>
         </Select>
       </div>
-
       <div className="relative">
         {/* <DateRangePicker onChange={handleDateRangeChange} /> */}
         <DateRangePicker onChange={handleDateRangeChange} />

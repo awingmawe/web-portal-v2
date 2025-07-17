@@ -16,7 +16,7 @@ import React from 'react'
 
 interface OfferDetailDialogContentProps {
   data: PackagePersonalData
-  index: number
+  index?: number
   isOpen: boolean
   onCancel?: () => void
 }
@@ -106,7 +106,10 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
     <div id={`dialog-detail-offer-${id}`}>
       {/* Header */}
       <div className="flex items-center justify-between pb-4">
-        <p className="text-m-semibold">Detail Penawaran {index + 1}</p>
+        <p className="text-m-semibold">
+          {' '}
+          {index ? `Detail Penawaran ` + index + 1 : 'Detail Pilihan Paket'}
+        </p>
         <X size={24} onClick={onCancel} className="cursor-pointer" />
       </div>
       {/* Content */}
