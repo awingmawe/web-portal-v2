@@ -71,6 +71,7 @@ export default function List({
                           isCompletedManifest={transaction.isCompletedManifest}
                           isManifestCommitted={transaction.isManifestCommitted}
                           isPaidOff={transaction.isPaidOff}
+                          packagePersonalId={transaction.packagePersonalId}
                           statusTahapan="Selesai"
                           statusTahapanDetail={'Selesai'}
                           noHeader
@@ -127,6 +128,7 @@ export default function List({
                       createdDate={transaction.createdAt}
                       jemaah={Number.parseInt(transaction.quantity)}
                       bookingId={String(transaction.id)}
+                      packagePersonalId={transaction.packagePersonalId}
                       isCompletedManifest={transaction.isCompletedManifest}
                       isManifestCommitted={transaction.isManifestCommitted}
                       isPaidOff={transaction.isPaidOff}

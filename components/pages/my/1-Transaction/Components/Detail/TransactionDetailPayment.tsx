@@ -3,12 +3,10 @@ import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { DocumentTextIcon } from '@/components/icons/document'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { Separator } from '@/components/ui/separator'
-import { formatCurrency } from '@/lib/utils'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { Fragment } from 'react'
 
 interface TransactionDetailPaymentProps {
   bookingCode: string
@@ -16,11 +14,7 @@ interface TransactionDetailPaymentProps {
   createdAt: string
   startDate: string
   isPaidOff: boolean
-  paymentDetails: {
-    label: string
-    amount: number | string
-    isBank: boolean
-  }[]
+  paymentDetails: any
 }
 
 export default function TransactionDetailPayment({
@@ -31,6 +25,8 @@ export default function TransactionDetailPayment({
   startDate,
   isPaidOff,
 }: TransactionDetailPaymentProps) {
+  console.log(paymentDetails)
+
   return (
     <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
       <div className="mb-4 flex items-center justify-between">
@@ -103,36 +99,32 @@ export default function TransactionDetailPayment({
 
       {paymentDetails && paymentDetails.length > 0 && (
         <div className="space-y-2">
-          {paymentDetails?.map((item, index) => (
+          {paymentDetails.map((item: any, index: any) => (
             <div key={index}>
               {item.label === 'divider' ? (
                 <Separator />
               ) : (
-                <Fragment>
-                  {item.isBank ? (
-                    <div className="flex justify-between">
-                      <span className="text-sm text-neutral-500 max-lg:text-xs">
-                        {item.label}
-                      </span>
-                      <span className="text-sm font-semibold max-lg:text-xs max-lg:font-normal">
-                        {item.amount === 'bank_transfer'
-                          ? 'Bank Transfer'
-                          : item.amount}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-neutral-500 max-lg:text-xs">
-                        {item.label}
-                      </span>
+                <div className="flex items-start justify-between">
+                  <span className="text-sm whitespace-pre-line text-neutral-500 max-lg:text-xs">
+                    {item.label}
+                  </span>
+                  <div className="flex flex-col items-end space-y-1">
+                    {item.amount?.map((amt: any, amtIndex: any) => (
                       <span
-                        className={`text-sm font-semibold max-lg:text-xs max-lg:font-medium ${item.label === 'Uang Muka' ? 'text-error-500' : Number(item.amount) < 0 ? 'text-error-500' : ''} ${index === paymentDetails.length - 1 ? '!text-base' : ''}`}
+                        key={amtIndex}
+                        className={`
+                    ${amt.style === 'heavy' ? 'text-[16px] font-[800]' : ''}
+                    ${amt.style === 'medium' ? 'text-[14px] font-[600]' : ''}
+                    ${amt.style === 'small' ? 'text-[12px] font-[400]' : ''}
+                    max-lg:text-xs
+                  `}
+                        style={{ color: amt.color }}
                       >
-                        {formatCurrency(item.amount)}
+                        {amt.amountLabel}
                       </span>
-                    </div>
-                  )}
-                </Fragment>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           ))}

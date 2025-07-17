@@ -77,6 +77,7 @@ export default function List({
                           isCompletedManifest={transaction.isCompletedManifest}
                           isManifestCommitted={transaction.isManifestCommitted}
                           isPaidOff={transaction.isPaidOff}
+                          packagePersonalId={transaction.packagePersonalId}
                           statusTahapan="Akan Datang"
                           statusTahapanDetail={'Akan Datang'}
                           noFooter={
@@ -138,6 +139,7 @@ export default function List({
                       isCompletedManifest={transaction.isCompletedManifest}
                       isManifestCommitted={transaction.isManifestCommitted}
                       isPaidOff={transaction.isPaidOff}
+                      packagePersonalId={transaction.packagePersonalId}
                       statusTahapan="Akan Datang"
                       statusTahapanDetail={'Akan Datang'}
                       organizationInstanceId={
