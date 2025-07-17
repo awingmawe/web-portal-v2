@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation'
 export default function TopbarMobileArticle({
   href,
   applyRouter,
+  isWebview,
 }: {
   href: string
   applyRouter?: boolean
+  isWebview?: boolean
 }) {
   const router = useRouter()
   const { goBack } = useCustomNavigation()
@@ -19,7 +21,7 @@ export default function TopbarMobileArticle({
       showBackButton={true}
       onBackClick={() => {
         if (href == 'back') {
-          goBack('/article/web-view-access')
+          goBack(isWebview ? '/article/web-view-access' : '/')
           return
         }
 
