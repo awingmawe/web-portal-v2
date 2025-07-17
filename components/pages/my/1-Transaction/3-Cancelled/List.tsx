@@ -71,6 +71,7 @@ export default function List({
                           bookingId={String(transaction.id)}
                           isCompletedManifest={transaction.isCompletedManifest}
                           isManifestCommitted={transaction.isManifestCommitted}
+                          packagePersonalId={transaction.packagePersonalId}
                           isPaidOff={transaction.isPaidOff}
                           statusTahapan={
                             transaction.status.slug == 'waiting-cancellation'
@@ -140,6 +141,7 @@ export default function List({
                       bookingId={String(transaction.id)}
                       isCompletedManifest={transaction.isCompletedManifest}
                       isManifestCommitted={transaction.isManifestCommitted}
+                      packagePersonalId={transaction.packagePersonalId}
                       isPaidOff={transaction.isPaidOff}
                       statusTahapan={
                         transaction.status.slug == 'waiting-cancellation'

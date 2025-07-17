@@ -4,19 +4,21 @@ export interface TransactionCardHeader {
   status: string
   totalOffers?: any
   createdDate?: any
+  offersAboutToExpire?: any
 }
 
 export default function TransactionCardHeader({
   status,
   totalOffers,
   createdDate,
+  offersAboutToExpire,
 }: TransactionCardHeader) {
   const renderStatusColor = () => {
     return 'bg-[#FCF2CF] text-[#CAA10C]'
   }
 
   const renderStatusText = (status: string) => {
-    if (status === 'offers-available') {
+    if (status === 'offers-available' && offersAboutToExpire > 0) {
       return `${totalOffers} Penawaran akan hangus dalam 12 jam`
     } else {
       const expiredAt = dayjs(createdDate).add(24, 'hour')

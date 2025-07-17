@@ -62,6 +62,7 @@ export default function List({
                         approvedAt={transaction.approvedAt}
                         modifiedAt={transaction.modifiedAt}
                         totalOffers={transaction?.totalOffers}
+                        offersAboutToExpire={transaction?.offersAboutToExpire}
                         jemaah={Number.parseInt(transaction.totalManifest, 10)}
                         noFooter={false}
                         noHeader={
@@ -116,6 +117,7 @@ export default function List({
                     meccaHotel={transaction?.meccaHotel}
                     medinaHotel={transaction?.medinaHotel}
                     totalOffers={transaction?.totalOffers}
+                    offersAboutToExpire={transaction?.offersAboutToExpire}
                     noHeader={
                       (transaction.status === 'waiting-offers' &&
                         transaction.approvedAt !== null) ||

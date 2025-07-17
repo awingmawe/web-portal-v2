@@ -37,6 +37,7 @@ export interface TransactionCardProps {
   approvedAt?: any
   modifiedAt?: any
   idJourney?: any
+  offersAboutToExpire?: any
 }
 
 const RenderLinkToDetail = ({
@@ -76,6 +77,7 @@ export default function TransactionCard({
   approvedAt,
   modifiedAt,
   idJourney,
+  offersAboutToExpire,
 }: TransactionCardProps) {
   const { lg } = useTailwindBreakpoint()
   const [orderPayment, setOrderPayment] = useState<any>(null)
@@ -115,6 +117,7 @@ export default function TransactionCard({
       return 'Dibatalkan Sistem'
     }
   }
+
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200 ">
       <RenderLinkToDetail
@@ -122,11 +125,12 @@ export default function TransactionCard({
         bookingId={idJourney}
         statusTahapan={'statusTahapan'}
       >
-        {!noHeader && (
+        {!noHeader && offersAboutToExpire > 0 && approvedAt !== null && (
           <TransactionCardHeader
             status={status}
             totalOffers={totalOffers}
             createdDate={approvedAt}
+            offersAboutToExpire={offersAboutToExpire}
           />
         )}
       </RenderLinkToDetail>
