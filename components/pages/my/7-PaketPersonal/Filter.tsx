@@ -22,7 +22,7 @@ export const SearchAndFilter = ({
       <div className="relative">
         <Input
           type="text"
-          placeholder="Cari berdasarkan ID"
+          placeholder="Cari berdasarkan Journey Code"
           className="w-full rounded-full"
           value={searchQuery}
           onChange={handleSearchChange}
