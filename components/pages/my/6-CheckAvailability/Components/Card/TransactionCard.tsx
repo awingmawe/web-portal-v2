@@ -104,7 +104,7 @@ export default function TransactionCard({
           </div>
           <div className="flex items-center">
             <p
-              className={`text-m-medium ${renderStatusTahapanColor(status)} rounded-full px-6 py-2 max-lg:py-1 max-lg:text-xs `}
+              className={`text-center ${renderStatusTahapanColor(status)} rounded-full px-3 py-1 text-[11px] max-lg:text-[11px]`}
             >
               {renderStatusTahapanText(status)}
             </p>

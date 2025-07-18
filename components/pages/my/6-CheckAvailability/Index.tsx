@@ -103,8 +103,8 @@ export default function CheckAvailability() {
       <MobileTopbar
         showBackButton
         variant="transactionTopbar"
-        title="Menunggu Pembayaran"
-        onBackClick={() => router.push('/my/transaction')}
+        title="Cek Ketersedian Kursi"
+        onBackClick={() => router.push('/my')}
       />
 
       {/* Search and Filters */}
