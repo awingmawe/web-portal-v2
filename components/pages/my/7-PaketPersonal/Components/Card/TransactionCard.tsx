@@ -126,14 +126,16 @@ export default function TransactionCard({
         bookingId={idJourney}
         statusTahapan={'statusTahapan'}
       >
-        {!noHeader && (offersAboutToExpire > 0 || approvedAt !== null) && (
-          <TransactionCardHeader
-            status={status}
-            totalOffers={totalOffers}
-            createdDate={approvedAt}
-            offersAboutToExpire={offersAboutToExpire}
-          />
-        )}
+        {!noHeader &&
+          ((offersAboutToExpire > 0 && approvedAt !== null) ||
+            (status === 'waiting-offers' && approvedAt !== null)) && (
+            <TransactionCardHeader
+              status={status}
+              totalOffers={totalOffers}
+              createdDate={approvedAt}
+              offersAboutToExpire={offersAboutToExpire}
+            />
+          )}
       </RenderLinkToDetail>
 
       <div

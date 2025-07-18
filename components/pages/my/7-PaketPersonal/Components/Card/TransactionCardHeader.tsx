@@ -28,7 +28,7 @@ export default function TransactionCardHeader({
 
   return (
     <div
-      className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor()}`}
+      className={`rounded-t-3xl px-4 pt-4 pb-2 max-lg:px-3  ${renderStatusColor()}`}
     >
       <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
         {renderStatusText(status)}
