@@ -85,6 +85,7 @@ export default function TransactionCard({
     lg ? true : false
   )
   const renderStatusTahapanColor = (status: string) => {
+    console.log(status)
     if (status === 'offer-selected') {
       return 'bg-success-100 text-success-700'
     } else if (
@@ -93,7 +94,7 @@ export default function TransactionCard({
       status == 'no-offers'
     ) {
       return 'bg-error-100 text-error-700'
-    } else if (status == 'waiting-offers') {
+    } else if (status == 'waiting-offers' || status == 'waiting-payment') {
       return 'bg-warning-100 text-warning-700'
     } else {
       return 'bg-info-100 text-info-700'
@@ -125,7 +126,7 @@ export default function TransactionCard({
         bookingId={idJourney}
         statusTahapan={'statusTahapan'}
       >
-        {!noHeader && offersAboutToExpire > 0 && approvedAt !== null && (
+        {!noHeader && (offersAboutToExpire > 0 || approvedAt !== null) && (
           <TransactionCardHeader
             status={status}
             totalOffers={totalOffers}
