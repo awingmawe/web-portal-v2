@@ -40,7 +40,7 @@ export default async function UmrahPersonalOffer({ params }: { params: any }) {
           showCallCenter
           showBackButton
         />
-        <section className="scrollbar-hide container mx-auto max-lg:absolute max-lg:top-[55px] max-lg:bottom-0 max-lg:z-11 max-lg:mt-0 max-lg:h-full max-lg:w-full max-lg:max-w-full max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:px-4 max-lg:pb-[130px] max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
+        <section className="scrollbar-hide container mx-auto max-lg:absolute max-lg:top-[55px] max-lg:bottom-0 max-lg:z-11 max-lg:mt-0 max-lg:h-full max-lg:w-full max-lg:max-w-full max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:px-4 max-lg:pb-[75px] max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
           <TopbarUmrahPersonalOfferHeader
             journeyCode={
               getDataOffer.packagePersonalData[0].JourneyInformation.journeyCode

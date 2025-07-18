@@ -10,7 +10,7 @@ import { PackagePersonalData } from '@/constant/types/UmrahPersonalProps'
 import { useGetHotelGalleryByHotelId } from '@/hooks/umrah-personal/offer/useGetHotelGalleryByHotelId'
 import { isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
-import { PlaneLanding, PlaneTakeoff, RefreshCw, X } from 'lucide-react'
+import { PlaneLanding, PlaneTakeoff, RefreshCw } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -23,9 +23,7 @@ interface OfferDetailDialogContentProps {
 
 const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
   data,
-  index,
   isOpen,
-  onCancel,
 }) => {
   const {
     id,
@@ -103,70 +101,103 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
     existingArrival.airline.id === newArrival.airline.id
 
   return (
-    <div id={`dialog-detail-offer-${id}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4">
-        <p className="text-m-semibold">
-          {' '}
-          {index ? `Detail Penawaran ` + index + 1 : 'Detail Pilihan Paket'}
-        </p>
-        <X size={24} onClick={onCancel} className="cursor-pointer" />
+    <div
+      id={`dialog-detail-offer-${id}`}
+      className="scrollbar-hide flex max-h-[70vh] flex-col gap-3 max-lg:gap-2 lg:overflow-y-auto"
+    >
+      {/* Travel */}
+      <div className="flex items-center justify-center gap-1 rounded-[20px] border-1 border-neutral-200 p-4">
+        <Image
+          src={orgThumbnail ?? Placeholder?.src}
+          alt={`Travel-${orgName}`}
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="aspect-square h-8 w-8"
+        />
+        <p className="text-l-medium capitalize">{orgName}</p>
       </div>
-      {/* Content */}
-      <div className="scrollbar-hide flex max-h-[80vh] flex-col gap-3 overflow-y-auto max-lg:gap-2">
-        {/* Travel */}
-        <div className="flex items-center justify-center gap-1 rounded-[20px] border-1 border-neutral-200 p-4">
-          <Image
-            src={orgThumbnail ?? Placeholder?.src}
-            alt={`Travel-${orgName}`}
-            width={0}
-            height={0}
-            sizes="100vw"
-            className="aspect-square h-8 w-8"
+
+      {/* Harga Paket */}
+      <LayoutPerItem icon={<Tag2Icon />} titleItem="Harga Paket">
+        {!isEmpty(priceDouble) && (
+          <PriceDisplay
+            price={priceDouble}
+            originalPrice={originalPriceDouble}
+            roomType="double"
           />
-          <p className="text-l-medium capitalize">{orgName}</p>
-        </div>
+        )}
+        {!isEmpty(priceTriple) && (
+          <PriceDisplay
+            price={priceTriple}
+            originalPrice={originalPriceTriple}
+            roomType="triple"
+          />
+        )}
+        {!isEmpty(priceQuad) && (
+          <PriceDisplay
+            price={priceQuad}
+            originalPrice={originalPriceQuad}
+            roomType="quad"
+          />
+        )}
+      </LayoutPerItem>
 
-        {/* Harga Paket */}
-        <LayoutPerItem icon={<Tag2Icon />} titleItem="Harga Paket">
-          {!isEmpty(priceDouble) && (
-            <PriceDisplay
-              price={priceDouble}
-              originalPrice={originalPriceDouble}
-              roomType="double"
-            />
-          )}
-          {!isEmpty(priceTriple) && (
-            <PriceDisplay
-              price={priceTriple}
-              originalPrice={originalPriceTriple}
-              roomType="triple"
-            />
-          )}
-          {!isEmpty(priceQuad) && (
-            <PriceDisplay
-              price={priceQuad}
-              originalPrice={originalPriceQuad}
-              roomType="quad"
-            />
-          )}
-        </LayoutPerItem>
-
-        {/* Transportasi */}
-        {!isEmpty(existingTransportation) && !isEmpty(newTransportation) && (
-          <LayoutPerItem
-            icon={<CarIcon size={24} color="#8E8E8B" />}
-            titleItem="Transportasi"
-            isAvailable={IS_AVAILABLE_TRANSPORTATION}
-          >
-            {IS_AVAILABLE_TRANSPORTATION ? (
+      {/* Transportasi */}
+      {!isEmpty(existingTransportation) && !isEmpty(newTransportation) && (
+        <LayoutPerItem
+          icon={<CarIcon size={24} color="#8E8E8B" />}
+          titleItem="Transportasi"
+          isAvailable={IS_AVAILABLE_TRANSPORTATION}
+        >
+          {IS_AVAILABLE_TRANSPORTATION ? (
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <p className="text-xs-regular text-neutral-500">
+                  Tipe Kendaraan
+                </p>
+                <p className="text-m-regular capitalize">
+                  {existingTransportation.vehicle.name}
+                </p>
+              </div>
+              <div className="flex flex-col items-end">
+                <p className="text-xs-regular text-neutral-500">Jumlah</p>
+                <p className="text-m-regular">1 Kendaraan</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <p className="text-xs-regular text-neutral-500 line-through">
+                    Tipe Kendaraan
+                  </p>
+                  <p className="text-m-regular text-neutral-500 capitalize line-through">
+                    {existingTransportation.vehicle.name}
+                  </p>
+                </div>
+                <div className="flex flex-col items-end">
+                  <p className="text-xs-regular text-neutral-500 line-through">
+                    Jumlah
+                  </p>
+                  <p className="text-m-regular text-neutral-500 line-through">
+                    1 Kendaraan
+                  </p>
+                </div>
+              </div>
+              <div className="mx-auto flex items-center gap-2">
+                <RefreshCw size={12} color="#777774" />
+                <p className="text-xs-regular text-neutral-600">
+                  Digantikan dengan
+                </p>
+              </div>
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <p className="text-xs-regular text-neutral-500">
                     Tipe Kendaraan
                   </p>
                   <p className="text-m-regular capitalize">
-                    {existingTransportation.vehicle.name}
+                    {newTransportation.vehicle.name}
                   </p>
                 </div>
                 <div className="flex flex-col items-end">
@@ -174,59 +205,36 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
                   <p className="text-m-regular">1 Kendaraan</p>
                 </div>
               </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <p className="text-xs-regular text-neutral-500 line-through">
-                      Tipe Kendaraan
-                    </p>
-                    <p className="text-m-regular text-neutral-500 capitalize line-through">
-                      {existingTransportation.vehicle.name}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <p className="text-xs-regular text-neutral-500 line-through">
-                      Jumlah
-                    </p>
-                    <p className="text-m-regular text-neutral-500 line-through">
-                      1 Kendaraan
-                    </p>
-                  </div>
-                </div>
-                <div className="mx-auto flex items-center gap-2">
-                  <RefreshCw size={12} color="#777774" />
-                  <p className="text-xs-regular text-neutral-600">
-                    Digantikan dengan
-                  </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <p className="text-xs-regular text-neutral-500">
-                      Tipe Kendaraan
-                    </p>
-                    <p className="text-m-regular capitalize">
-                      {newTransportation.vehicle.name}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <p className="text-xs-regular text-neutral-500">Jumlah</p>
-                    <p className="text-m-regular">1 Kendaraan</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </LayoutPerItem>
-        )}
+            </div>
+          )}
+        </LayoutPerItem>
+      )}
 
-        {/* Maskapai Keberangkatan */}
-        <LayoutPerItem
-          icon={<PlaneTakeoff size={24} color="#8E8E8B" />}
-          titleItem="Maskapai Keberangkatan"
-          isAvailable={IS_AVAILABLE_DEPARTURE}
-        >
-          {IS_AVAILABLE_DEPARTURE ? (
-            <div className="flex items-center gap-2">
+      {/* Maskapai Keberangkatan */}
+      <LayoutPerItem
+        icon={<PlaneTakeoff size={24} color="#8E8E8B" />}
+        titleItem="Maskapai Keberangkatan"
+        isAvailable={IS_AVAILABLE_DEPARTURE}
+      >
+        {IS_AVAILABLE_DEPARTURE ? (
+          <div className="flex items-center gap-2">
+            <Image
+              src={existingDeparture.airline.logo || Placeholder}
+              width={23}
+              height={23}
+              alt={`logo-${existingDeparture.airline.name}`}
+              style={{
+                aspectRatio: '1/1',
+                objectFit: 'contain',
+              }}
+            />
+            <p className="text-m-regular capitalize">
+              {existingDeparture.airline.name} • {existingDeparture.flightClass}
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 opacity-50">
               <Image
                 src={existingDeparture.airline.logo || Placeholder}
                 width={23}
@@ -237,62 +245,61 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
                   objectFit: 'contain',
                 }}
               />
-              <p className="text-m-regular capitalize">
+              <p className="text-m-regular capitalize line-through">
                 {existingDeparture.airline.name} •{' '}
                 {existingDeparture.flightClass}
               </p>
             </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2 opacity-50">
-                <Image
-                  src={existingDeparture.airline.logo || Placeholder}
-                  width={23}
-                  height={23}
-                  alt={`logo-${existingDeparture.airline.name}`}
-                  style={{
-                    aspectRatio: '1/1',
-                    objectFit: 'contain',
-                  }}
-                />
-                <p className="text-m-regular capitalize line-through">
-                  {existingDeparture.airline.name} •{' '}
-                  {existingDeparture.flightClass}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <RefreshCw size={12} color="#777774" />
-                <p className="text-xs-regular text-neutral-600">
-                  Digantikan dengan
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Image
-                  src={newDeparture.airline.logo || Placeholder}
-                  width={23}
-                  height={23}
-                  alt={`logo-${newDeparture.airline.name}`}
-                  style={{
-                    aspectRatio: '1/1',
-                    objectFit: 'contain',
-                  }}
-                />
-                <p className="text-m-regular capitalize">
-                  {newDeparture.airline.name} • {newDeparture.flightClass}
-                </p>
-              </div>
-            </div>
-          )}
-        </LayoutPerItem>
-
-        {/* Maskapai Kepulangan */}
-        <LayoutPerItem
-          icon={<PlaneLanding size={24} color="#8E8E8B" />}
-          titleItem="Maskapai Kepulangan"
-          isAvailable={IS_AVAILABLE_ARRIVAL}
-        >
-          {IS_AVAILABLE_ARRIVAL ? (
             <div className="flex items-center gap-2">
+              <RefreshCw size={12} color="#777774" />
+              <p className="text-xs-regular text-neutral-600">
+                Digantikan dengan
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Image
+                src={newDeparture.airline.logo || Placeholder}
+                width={23}
+                height={23}
+                alt={`logo-${newDeparture.airline.name}`}
+                style={{
+                  aspectRatio: '1/1',
+                  objectFit: 'contain',
+                }}
+              />
+              <p className="text-m-regular capitalize">
+                {newDeparture.airline.name} • {newDeparture.flightClass}
+              </p>
+            </div>
+          </div>
+        )}
+      </LayoutPerItem>
+
+      {/* Maskapai Kepulangan */}
+      <LayoutPerItem
+        icon={<PlaneLanding size={24} color="#8E8E8B" />}
+        titleItem="Maskapai Kepulangan"
+        isAvailable={IS_AVAILABLE_ARRIVAL}
+      >
+        {IS_AVAILABLE_ARRIVAL ? (
+          <div className="flex items-center gap-2">
+            <Image
+              src={existingArrival.airline.logo || Placeholder}
+              width={23}
+              height={23}
+              alt={`logo-${existingArrival.airline.name}`}
+              style={{
+                aspectRatio: '1/1',
+                objectFit: 'contain',
+              }}
+            />
+            <p className="text-m-regular capitalize">
+              {existingArrival.airline.name} • {existingArrival.flightClass}
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 opacity-50">
               <Image
                 src={existingArrival.airline.logo || Placeholder}
                 width={23}
@@ -303,72 +310,92 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
                   objectFit: 'contain',
                 }}
               />
-              <p className="text-m-regular capitalize">
+              <p className="text-m-regular capitalize line-through">
                 {existingArrival.airline.name} • {existingArrival.flightClass}
               </p>
             </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2 opacity-50">
-                <Image
-                  src={existingArrival.airline.logo || Placeholder}
-                  width={23}
-                  height={23}
-                  alt={`logo-${existingArrival.airline.name}`}
-                  style={{
-                    aspectRatio: '1/1',
-                    objectFit: 'contain',
-                  }}
-                />
-                <p className="text-m-regular capitalize line-through">
-                  {existingArrival.airline.name} • {existingArrival.flightClass}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <RefreshCw size={12} color="#777774" />
-                <p className="text-xs-regular text-neutral-600">
-                  Digantikan dengan
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Image
-                  src={newArrival.airline.logo || Placeholder}
-                  width={23}
-                  height={23}
-                  alt={`logo-${newArrival.airline.name}`}
-                  style={{
-                    aspectRatio: '1/1',
-                    objectFit: 'contain',
-                  }}
-                />
-                <p className="text-m-regular capitalize">
-                  {newArrival.airline.name} • {newArrival.flightClass}
-                </p>
-              </div>
+            <div className="flex items-center gap-2">
+              <RefreshCw size={12} color="#777774" />
+              <p className="text-xs-regular text-neutral-600">
+                Digantikan dengan
+              </p>
             </div>
-          )}
-        </LayoutPerItem>
+            <div className="flex items-center gap-2">
+              <Image
+                src={newArrival.airline.logo || Placeholder}
+                width={23}
+                height={23}
+                alt={`logo-${newArrival.airline.name}`}
+                style={{
+                  aspectRatio: '1/1',
+                  objectFit: 'contain',
+                }}
+              />
+              <p className="text-m-regular capitalize">
+                {newArrival.airline.name} • {newArrival.flightClass}
+              </p>
+            </div>
+          </div>
+        )}
+      </LayoutPerItem>
 
-        {/* Penginapan Makkah */}
+      {/* Penginapan Makkah */}
+      <LayoutPerItem
+        icon={<BuildingIcon size={24} color="text-neutral-500" />}
+        titleItem="Penginapan Makkah"
+        isAvailable={IS_AVAILABLE_HOTEL_MECCA}
+      >
+        {IS_AVAILABLE_HOTEL_MECCA ? (
+          <HotelPersonalDisplay
+            hotelGallery={hotelGalleryMeccaExisting || []}
+            hotelData={existingMeccaHotel}
+            loading={hotelGalleryMeccaExistingLoading}
+          />
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div className="relative">
+              <div className="pointer-events-none opacity-50 blur-xs">
+                <HotelPersonalDisplay
+                  hotelGallery={hotelGalleryMeccaExisting || []}
+                  loading={hotelGalleryMeccaExistingLoading}
+                  hotelData={existingMeccaHotel}
+                />
+              </div>
+              <p className="text-m-medium absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                Hotel yang dipilih tidak tersedia
+              </p>
+            </div>
+            <div className="h-[1px] w-full bg-neutral-200" />
+            <HotelPersonalDisplay
+              hotelGallery={hotelGalleryMeccaNew || []}
+              loading={hotelGalleryMeccaNewLoading}
+              hotelData={newMeccaHotel}
+            />
+          </div>
+        )}
+      </LayoutPerItem>
+
+      {/* Penginapan Madinah */}
+      {!isEmpty(newMedinaHotel) && !isEmpty(existingMedinaHotel) && (
         <LayoutPerItem
           icon={<BuildingIcon size={24} color="text-neutral-500" />}
-          titleItem="Penginapan Makkah"
-          isAvailable={IS_AVAILABLE_HOTEL_MECCA}
+          titleItem="Penginapan Madinah"
+          isAvailable={IS_AVAILABLE_HOTEL_MEDINA}
         >
-          {IS_AVAILABLE_HOTEL_MECCA ? (
+          {IS_AVAILABLE_HOTEL_MEDINA ? (
             <HotelPersonalDisplay
-              hotelGallery={hotelGalleryMeccaExisting || []}
-              hotelData={existingMeccaHotel}
-              loading={hotelGalleryMeccaExistingLoading}
+              hotelGallery={hotelGalleryMedinaExisting || []}
+              hotelData={existingMedinaHotel}
+              loading={hotelGalleryMedinaExistingLoading}
             />
           ) : (
             <div className="flex flex-col gap-3">
               <div className="relative">
                 <div className="pointer-events-none opacity-50 blur-xs">
                   <HotelPersonalDisplay
-                    hotelGallery={hotelGalleryMeccaExisting || []}
-                    loading={hotelGalleryMeccaExistingLoading}
-                    hotelData={existingMeccaHotel}
+                    hotelGallery={hotelGalleryMedinaExisting || []}
+                    loading={hotelGalleryMedinaExistingLoading}
+                    hotelData={existingMedinaHotel}
                   />
                 </div>
                 <p className="text-m-medium absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -377,59 +404,21 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
               </div>
               <div className="h-[1px] w-full bg-neutral-200" />
               <HotelPersonalDisplay
-                hotelGallery={hotelGalleryMeccaNew || []}
-                loading={hotelGalleryMeccaNewLoading}
-                hotelData={newMeccaHotel}
+                hotelGallery={hotelGalleryMedinaNew || []}
+                loading={hotelGalleryMedinaNewLoading}
+                hotelData={newMedinaHotel}
               />
             </div>
           )}
         </LayoutPerItem>
+      )}
 
-        {/* Penginapan Madinah */}
-        {!isEmpty(newMedinaHotel) && !isEmpty(existingMedinaHotel) && (
-          <LayoutPerItem
-            icon={<BuildingIcon size={24} color="text-neutral-500" />}
-            titleItem="Penginapan Madinah"
-            isAvailable={IS_AVAILABLE_HOTEL_MEDINA}
-          >
-            {IS_AVAILABLE_HOTEL_MEDINA ? (
-              <HotelPersonalDisplay
-                hotelGallery={hotelGalleryMedinaExisting || []}
-                hotelData={existingMedinaHotel}
-                loading={hotelGalleryMedinaExistingLoading}
-              />
-            ) : (
-              <div className="flex flex-col gap-3">
-                <div className="relative">
-                  <div className="pointer-events-none opacity-50 blur-xs">
-                    <HotelPersonalDisplay
-                      hotelGallery={hotelGalleryMedinaExisting || []}
-                      loading={hotelGalleryMedinaExistingLoading}
-                      hotelData={existingMedinaHotel}
-                    />
-                  </div>
-                  <p className="text-m-medium absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    Hotel yang dipilih tidak tersedia
-                  </p>
-                </div>
-                <div className="h-[1px] w-full bg-neutral-200" />
-                <HotelPersonalDisplay
-                  hotelGallery={hotelGalleryMedinaNew || []}
-                  loading={hotelGalleryMedinaNewLoading}
-                  hotelData={newMedinaHotel}
-                />
-              </div>
-            )}
-          </LayoutPerItem>
-        )}
-
-        {/* Catatan */}
-        {note && (
-          <LayoutPerItem titleItem="Catatan">
-            <p className="text-m-regular">{note}</p>
-          </LayoutPerItem>
-        )}
-      </div>
+      {/* Catatan */}
+      {note && (
+        <LayoutPerItem titleItem="Catatan">
+          <p className="text-m-regular">{note}</p>
+        </LayoutPerItem>
+      )}
     </div>
   )
 }
