@@ -119,6 +119,7 @@ export interface JourneyInformation {
   status: JourneyStatus
   approved: boolean
   approvedAt: string
+  expiresAt: string | null
   note: string | null
   createdAt: string
   createdBy: string
