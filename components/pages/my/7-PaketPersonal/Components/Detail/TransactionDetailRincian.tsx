@@ -230,7 +230,7 @@ export default function TransactionDetailRincian({
                       Maskapai Keberangkatan
                     </div>
 
-                    <div className="flex items-center justify-center gap-2 text-[12px] text-neutral-900">
+                    <div className="flex items-start justify-center gap-2 text-[12px] text-neutral-900">
                       {data?.departure?.airline?.logo && (
                         <Image
                           src={data.departure.airline.logo}
@@ -243,10 +243,10 @@ export default function TransactionDetailRincian({
                     </div>
                   </div>
                   <div className=" ml-8">
-                    <div className="text-center text-[12px] text-neutral-500">
+                    <div className="text-start text-[12px] text-neutral-500">
                       Kelas
                     </div>
-                    <div className="text-center text-[12px] text-neutral-900 capitalize">
+                    <div className="text-start text-[12px] text-neutral-900 capitalize">
                       {data?.departure?.flightClass}
                     </div>
                   </div>
@@ -258,10 +258,10 @@ export default function TransactionDetailRincian({
                   <div className="hidden items-end sm:flex">
                     <PlaneLanding className="mr-3 mb-2 ml-5 h-[20px] w-[20px] text-neutral-900" />
                     <div>
-                      <div className="text-center text-[12px] text-neutral-500">
+                      <div className="text-start text-[12px] text-neutral-500">
                         Maskapai Kepulangan
                       </div>
-                      <div className="flex items-center justify-center gap-2 text-[12px] text-neutral-900">
+                      <div className="flex items-start justify-center gap-2 text-[12px] text-neutral-900">
                         {data?.arrival?.airline?.logo && (
                           <Image
                             src={data.arrival.airline.logo}
@@ -274,10 +274,10 @@ export default function TransactionDetailRincian({
                       </div>
                     </div>
                     <div className="ml-8">
-                      <div className="text-center text-[12px] text-neutral-500">
+                      <div className="text-start text-[12px] text-neutral-500">
                         Kelas
                       </div>
-                      <div className="text-center text-[12px] text-neutral-900 capitalize">
+                      <div className="text-start text-[12px] text-neutral-900 capitalize">
                         {data?.arrival?.flightClass}
                       </div>
                     </div>
@@ -291,7 +291,7 @@ export default function TransactionDetailRincian({
                         <div className="w-37 text-start text-[12px] text-neutral-500">
                           Maskapai Kepulangan
                         </div>
-                        <div className="flex items-center justify-center gap-2 text-[12px] text-neutral-900">
+                        <div className="flex items-start justify-center gap-2 text-[12px] text-neutral-900">
                           {data?.arrival?.airline?.logo && (
                             <Image
                               src={data.arrival.airline.logo}
@@ -307,10 +307,10 @@ export default function TransactionDetailRincian({
                         </div> */}
                       </div>
                       <div className="ml-8">
-                        <div className="text-center text-[12px] text-neutral-500">
+                        <div className="text-start text-[12px] text-neutral-500">
                           Kelas
                         </div>
-                        <div className="text-center text-[12px] text-neutral-900 capitalize">
+                        <div className="text-start text-[12px] text-neutral-900 capitalize">
                           {data?.arrival?.flightClass}
                         </div>
                       </div>
