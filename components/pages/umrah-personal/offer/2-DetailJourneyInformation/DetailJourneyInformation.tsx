@@ -18,7 +18,7 @@ import { add, format, isAfter } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { PlaneLanding, PlaneTakeoff, ShieldCheck } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 const UmrahPersonalDetailCard = ({
   dataOffer,
@@ -29,6 +29,7 @@ const UmrahPersonalDetailCard = ({
 }) => {
   const {
     approvedAt,
+    expiresAt,
     name,
     departureDate,
     arrivalDate,
@@ -44,9 +45,12 @@ const UmrahPersonalDetailCard = ({
     transportation,
   } = dataOffer
   const countDownDate = add(approvedAt, { hours: 24 })
-  const countDownString = format(countDownDate, 'dd MMM yyyy, HH:mm', {
-    locale: id,
-  })
+  const countDownString = useMemo(() => {
+    if (!expiresAt) return ''
+    return format(expiresAt, 'dd MMM yyyy, HH:mm', {
+      locale: id,
+    })
+  }, [expiresAt])
 
   const isExpired = isAfter(approvedAt, countDownDate)
 

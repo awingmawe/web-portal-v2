@@ -167,7 +167,7 @@ export default function SelectHotel({
                 className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
               >
                 {selectedRoomType?.double ? (
-                  <div className="flex h-10 w-full items-center justify-center rounded-full border-1 border-neutral-300 bg-white">
+                  <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
                     <Button
                       onClick={() => handleQuantityChange('double', -1)}
                       variant="ghost"
@@ -176,7 +176,7 @@ export default function SelectHotel({
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="text-s-regular mx-8 font-medium text-neutral-900 max-xl:mx-2">
+                    <span className="text-s-regular font-medium text-neutral-900 max-xl:mx-2">
                       {selectedRoomType?.double}
                     </span>
                     <Button
@@ -251,7 +251,7 @@ export default function SelectHotel({
                 className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
               >
                 {selectedRoomType?.triple ? (
-                  <div className="flex h-10 w-full items-center justify-center rounded-full border-1 border-neutral-300 bg-white">
+                  <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
                     <Button
                       onClick={() => handleQuantityChange('triple', -1)}
                       variant="ghost"
@@ -260,7 +260,7 @@ export default function SelectHotel({
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="text-s-regular mx-8 font-medium text-neutral-900 max-xl:mx-2">
+                    <span className="text-s-regular font-medium text-neutral-900 max-xl:mx-2">
                       {selectedRoomType?.triple}
                     </span>
                     <Button
@@ -335,7 +335,7 @@ export default function SelectHotel({
                 className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
               >
                 {selectedRoomType?.quad ? (
-                  <div className="flex h-10 w-full items-center justify-center rounded-full border-1 border-neutral-300 bg-white">
+                  <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
                     <Button
                       onClick={() => handleQuantityChange('quad', -1)}
                       variant="ghost"
@@ -344,7 +344,7 @@ export default function SelectHotel({
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="text-s-regular mx-8 font-medium text-neutral-900 max-xl:mx-2">
+                    <span className="text-s-regular font-medium text-neutral-900 max-xl:mx-2">
                       {selectedRoomType?.quad}
                     </span>
                     <Button
