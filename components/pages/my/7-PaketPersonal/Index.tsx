@@ -65,7 +65,7 @@ export default function TransactionUpcoming() {
         size: 10,
         order: 'desc',
         orderBy: 'createdAt',
-        'name:likeLower': `%${searchQuery}%`,
+        'journeyCode:likeLower': `%${searchQuery}%`,
       }
 
       // Fetch data
