@@ -136,21 +136,21 @@ export default function TransactionCard({
       </RenderLinkToDetail>
 
       <div
-        className={`${!noHeader ? '-mt-5' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
+        className={`${!noHeader ? '-mt-0' : ''} overflow-hidden rounded-3xl bg-white shadow-[0px_-5px_4px_0px_#ACACAC1A]`}
       >
         <div className="flex items-center justify-between border-b border-neutral-200 p-4">
           <div className="flex items-center gap-2 max-lg:block">
-            <p className="font-medium max-lg:text-xs">Umroh Personal</p>
+            <p className="font-medium max-lg:text-[11px]">Umroh Personal</p>
             <p className="font-medium max-lg:hidden">/ </p>
             <p className="text-neutral-500 max-lg:hidden">ID : {id}</p>
-            <p className="hidden text-neutral-500 max-lg:block max-lg:text-xs">
+            <p className="hidden text-neutral-500 max-lg:block max-lg:text-[11px]">
               Diperbarui pada:{' '}
               {dayjs(modifiedAt).locale(id).format('DD MMM YYYY')}
             </p>
           </div>
           <div className="flex items-center">
             <p
-              className={`text-m-medium ${renderStatusTahapanColor(status)} rounded-full px-6 py-2 max-lg:px-2 max-lg:py-1 max-lg:text-xs`}
+              className={` text-m-medium text-center ${renderStatusTahapanColor(status)} rounded-full px-6 py-2 max-lg:px-2 max-lg:py-1 max-lg:text-[11px]`}
             >
               {renderStatusTahapanText(status, totalOffers)}
             </p>
