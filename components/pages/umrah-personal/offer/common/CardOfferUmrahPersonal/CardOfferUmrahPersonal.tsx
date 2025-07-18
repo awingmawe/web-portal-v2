@@ -206,18 +206,18 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
             )}
           </div>
           <div className="flex items-center gap-3">
-            {medinaHotel.selectedHotel.id !== selectedMedinaHotel.id ? (
+            {medinaHotel?.selectedHotel?.id !== selectedMedinaHotel?.id ? (
               <>
                 <p className="text-m-regular text-neutral-500 line-through">
                   {selectedMedinaHotel?.name}
                 </p>
                 <RefreshCw size={16} color="#30302F" />
                 <p className="text-m-regular">
-                  {medinaHotel.selectedHotel.name}
+                  {medinaHotel?.selectedHotel?.name}
                 </p>
               </>
             ) : (
-              <p className="text-m-regular">{selectedMedinaHotel.name}</p>
+              <p className="text-m-regular">{selectedMedinaHotel?.name}</p>
             )}
           </div>
         </div>

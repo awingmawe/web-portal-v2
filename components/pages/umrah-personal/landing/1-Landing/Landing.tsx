@@ -140,6 +140,7 @@ const UmrohLandingSection: React.FC = () => {
                     Buat Paket Umroh Sekarang!
                   </Button>
                 }
+                title={<></>}
                 content={
                   <PhoneNumberNotVerified
                     name={profile?.name || ''}

@@ -93,6 +93,7 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
         {/* Back button with exit confirmation */}
         <LayoutDrawerDialog
           trigger={<BackButtonTrigger />}
+          title={<></>}
           content={<ExitConfirmationContent />}
           isOpen={openDialogDrawerEndForm}
           setIsOpen={setOpenDialogDrawerEndForm}

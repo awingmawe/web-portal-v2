@@ -184,24 +184,38 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   const variantsPrice = useMemo(
     () =>
       selectedVariant
-        ? ['double', 'triple', 'quad'].map((type) => ({
-            type: type as 'double' | 'triple' | 'quad',
-            price:
-              type === 'double'
-                ? selectedVariant.priceDouble
-                : type === 'triple'
-                  ? selectedVariant.priceTriple
-                  : selectedVariant.priceQuad,
-            originalPrice:
-              type === 'double'
-                ? selectedVariant.originalPriceDouble
-                : type === 'triple'
-                  ? selectedVariant.originalPriceTriple
-                  : selectedVariant.originalPriceQuad,
-            hasDiscount: selectedVariant.discountAmount
-              ? Number(selectedVariant.discountAmount) > 0
-              : false,
-          }))
+        ? ['double', 'triple', 'quad'].map((type) => {
+            console.log('masuk')
+
+            let price = 0
+            let originalPrice = 0
+            let hasDiscount = false
+            switch (type) {
+              case 'double':
+                price = selectedVariant.priceDouble
+                originalPrice = selectedVariant.originalPriceDouble
+                break
+              case 'triple':
+                price = selectedVariant.priceTriple
+                originalPrice = selectedVariant.originalPriceTriple
+                break
+              case 'quad':
+                price = selectedVariant.priceQuad
+                originalPrice = selectedVariant.originalPriceQuad
+                break
+              default:
+                break
+            }
+            if (selectedVariant.discountAmount) {
+              hasDiscount = Number(selectedVariant.discountAmount) > 0
+            }
+            return {
+              type: type as 'double' | 'triple' | 'quad',
+              price,
+              originalPrice,
+              hasDiscount,
+            }
+          })
         : [],
     [selectedVariant]
   )

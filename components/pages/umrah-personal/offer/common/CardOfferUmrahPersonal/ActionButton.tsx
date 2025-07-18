@@ -9,6 +9,7 @@ import {
 } from '@/constant/env'
 import { PackagePersonalData } from '@/constant/types/UmrahPersonalProps'
 import { useOfferUmrahPersonalById } from '@/hooks/umrah-personal/offer/useGetDetailOffer'
+import { X } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -191,13 +192,14 @@ const OfferButton: React.FC<{
             <LayoutDrawerDialog
               trigger={
                 <Button
-                  className="border-error-500 w-full flex-1 px-10 py-4"
+                  className="border-error-500 w-full flex-1 py-4 max-lg:px-5 lg:px-10"
                   variant="outline"
                   disabled={isExpired}
                 >
                   <p className="text-error-500">Batalkan Pembayaran</p>
                 </Button>
               }
+              title={<></>}
               content={<BatalkanDialogContent />}
               isOpen={openBatalkan}
               setIsOpen={setOpenBatalkan}
@@ -224,7 +226,7 @@ const OfferButton: React.FC<{
             <LayoutDrawerDialog
               trigger={
                 <Button
-                  className="w-full flex-1 px-10 py-4"
+                  className="w-full flex-1 py-4 max-lg:px-5 lg:px-10"
                   disabled={isExpired}
                 >
                   Lanjut Bayar{' '}
@@ -235,6 +237,18 @@ const OfferButton: React.FC<{
                     alt="arrow"
                   />
                 </Button>
+              }
+              title={
+                <div className="flex items-center justify-between max-lg:p-4">
+                  <p className="text-m-semibold">
+                    Detail Penawaran {index + 1}
+                  </p>
+                  <X
+                    size={24}
+                    onClick={handleExitDetailOffer}
+                    className="cursor-pointer"
+                  />
+                </div>
               }
               content={renderDetailContent()}
               isOpen={openDetailOffer}
@@ -268,6 +282,16 @@ const OfferButton: React.FC<{
                 />
               </Button>
             }
+            title={
+              <div className="flex items-center justify-between max-lg:p-4">
+                <p className="text-m-semibold">Detail Penawaran {index + 1}</p>
+                <X
+                  size={24}
+                  onClick={handleExitDetailOffer}
+                  className="cursor-pointer"
+                />
+              </div>
+            }
             content={renderDetailContent()}
             isOpen={openDetailOffer}
             setIsOpen={setOpenDetailOffer}
@@ -294,6 +318,7 @@ const OfferButton: React.FC<{
         trigger={<div style={{ display: 'none' }} />}
         content={<SuccessBatalkanDialogContent />}
         isOpen={openSuccessBatalkan}
+        title={<></>}
         setIsOpen={setOpenSuccessBatalkan}
         footerContent={
           <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">

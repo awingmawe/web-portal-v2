@@ -17,6 +17,7 @@ import React from 'react'
 
 interface LayoutDrawerDialogProps {
   trigger: React.ReactNode
+  title: React.ReactNode
   content: React.ReactNode
   footerContent: React.ReactNode
   isOpen: boolean
@@ -25,6 +26,7 @@ interface LayoutDrawerDialogProps {
 
 const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
   trigger,
+  title,
   content,
   isOpen,
   footerContent,
@@ -35,8 +37,8 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
   return !isMobile ? (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="rounded-[20px] p-8">
-        <DialogTitle className="hidden"></DialogTitle>
+      <DialogContent className="rounded-[20px] px-8 py-4">
+        <DialogTitle>{title}</DialogTitle>
         {content}
         <DialogFooter className="pt-3">{footerContent}</DialogFooter>
       </DialogContent>
@@ -45,8 +47,10 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
-        <DrawerTitle className="hidden"></DrawerTitle>
-        <div className="w-full px-4 pt-2.5">{content}</div>
+        <DrawerTitle>{title}</DrawerTitle>
+        <div className="w-full px-4 pt-2.5 max-lg:overflow-y-auto">
+          {content}
+        </div>
         <DrawerFooter className="pt-3">{footerContent}</DrawerFooter>
       </DrawerContent>
     </Drawer>

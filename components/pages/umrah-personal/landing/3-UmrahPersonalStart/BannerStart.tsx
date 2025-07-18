@@ -79,6 +79,7 @@ const UmrohPersonalStartSection = () => {
           <LayoutDrawerDialog
             isOpen={open}
             setIsOpen={setOpen}
+            title={<></>}
             trigger={
               <Button
                 className="bg-primary-500 flex items-center gap-1.5 px-10 py-5 max-lg:w-full max-lg:py-3"

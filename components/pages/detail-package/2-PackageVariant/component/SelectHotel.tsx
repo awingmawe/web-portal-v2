@@ -172,7 +172,7 @@ export default function SelectHotel({
                       onClick={() => handleQuantityChange('double', -1)}
                       variant="ghost"
                       disabled={disabled}
-                      className="h-8 w-8 rounded-full hover:bg-neutral-100"
+                      className="h-8 w-8 rounded-full pl-2 hover:bg-neutral-100"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -183,7 +183,7 @@ export default function SelectHotel({
                       onClick={() => handleQuantityChange('double', 1)}
                       variant="ghost"
                       disabled={disabled || disabledAddOnly || isLimitReached}
-                      className="h-8 w-8 rounded-full hover:bg-neutral-100"
+                      className="h-8 w-8 rounded-full pr-2 hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -256,7 +256,7 @@ export default function SelectHotel({
                       onClick={() => handleQuantityChange('triple', -1)}
                       variant="ghost"
                       disabled={disabled}
-                      className="h-8 w-8 rounded-full hover:bg-neutral-100"
+                      className="h-8 w-8 rounded-full pl-2 hover:bg-neutral-100"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -267,7 +267,7 @@ export default function SelectHotel({
                       onClick={() => handleQuantityChange('triple', 1)}
                       variant="ghost"
                       disabled={disabled || disabledAddOnly || isLimitReached}
-                      className="h-8 w-8 rounded-full hover:bg-neutral-100"
+                      className="h-8 w-8 rounded-full pr-2 hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -340,7 +340,7 @@ export default function SelectHotel({
                       onClick={() => handleQuantityChange('quad', -1)}
                       variant="ghost"
                       disabled={disabled}
-                      className="h-8 w-8 rounded-full hover:bg-neutral-100"
+                      className="h-8 w-8 rounded-full pl-2 hover:bg-neutral-100"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -351,7 +351,7 @@ export default function SelectHotel({
                       onClick={() => handleQuantityChange('quad', 1)}
                       variant="ghost"
                       disabled={disabled || disabledAddOnly || isLimitReached}
-                      className="h-8 w-8 rounded-full hover:bg-neutral-100"
+                      className="h-8 w-8 rounded-full pr-2 hover:bg-neutral-100"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
