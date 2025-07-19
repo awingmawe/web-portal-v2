@@ -84,6 +84,7 @@ export default function TransactionCardFooter({
                 Lihat Detail Pilihan
               </Button>
             }
+            title={<></>}
             content={
               <OfferDetailDialogContent
                 data={dataAll}
@@ -153,6 +154,7 @@ export default function TransactionCardFooter({
                 Lihat Detail Pilihan
               </Button>
             }
+            title={<></>}
             content={
               <OfferDetailDialogContent
                 data={dataAll}
