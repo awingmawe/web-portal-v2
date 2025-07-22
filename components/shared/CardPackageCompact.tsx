@@ -62,25 +62,41 @@ export const CardPackageCompact = memo(function CardPackageCompact({
     [discount]
   )
 
-  const formattedDepartureDate = useMemo(
-    () => format(departureDate, 'dd MMM yyyy', { locale: id }),
-    [departureDate]
-  )
+  const formattedDepartureDate = useMemo(() => {
+    try {
+      return format(departureDate, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting departureDate:', error)
+      return ''
+    }
+  }, [departureDate])
 
-  const formattedArrivalDate = useMemo(
-    () => format(arrivalDate, 'dd MMM yyyy', { locale: id }),
-    [arrivalDate]
-  )
+  const formattedArrivalDate = useMemo(() => {
+    try {
+      return format(arrivalDate, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting arrivalDate:', error)
+      return ''
+    }
+  }, [arrivalDate])
 
-  const formattedReleasedAt = useMemo(
-    () => format(releasedAt, 'dd MMM yyyy', { locale: id }),
-    [releasedAt]
-  )
+  const formattedReleasedAt = useMemo(() => {
+    try {
+      return format(releasedAt, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting releasedAt:', error)
+      return ''
+    }
+  }, [releasedAt])
 
-  const tripDuration = useMemo(
-    () => differenceInDays(arrivalDate, departureDate) + 1,
-    [arrivalDate, departureDate]
-  )
+  const tripDuration = useMemo(() => {
+    try {
+      return differenceInDays(arrivalDate, departureDate) + 1
+    } catch (error) {
+      console.error('Error calculating tripDuration:', error)
+      return 0
+    }
+  }, [arrivalDate, departureDate])
 
   // Memoize country flags rendering if needed
   const countryFlags = useMemo(() => {
@@ -95,7 +111,7 @@ export const CardPackageCompact = memo(function CardPackageCompact({
             ? 'z-2 mt-0 h-12 w-12 rounded-tr-[18px]'
             : 'z-1 -mt-4 h-16 w-12 object-cover'
         } rounded-bl-[18px] shadow-[1px_2px_2px_0px_rgba(0,0,0,0.40)]`}
-        key={`flag-${value.country.alpha2Code}`}
+        key={`flag-${value.country.alpha2Code}-${Math.floor(Math.random() * 1000000)}`}
         alt="flag-icon"
         src={`https://kapowaz.github.io/square-flags/flags/${value.country.alpha2Code}.svg`}
       />

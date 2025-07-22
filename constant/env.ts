@@ -17,6 +17,9 @@ export const LINKAJA_REFERRAL = String(process.env.NEXT_PUBLIC_LINKAJA_REFERRAL)
 export const LINKAJA_MAX_LIMIT = Number(
   process.env.NEXT_PUBLIC_LINKAJA_MAX_LIMIT
 )
+export const LINKAJA_ADMIN_FEE = Number(
+  process.env.NEXT_PUBLIC_LINKAJA_ADMIN_FEE
+)
 export const IS_NOT_TRANSIT = ['GA', 'SV', 'JT']
 export const LOCAL_STORAGE_DETAIL_VARIANT = 'detailVariant'
 export const LOCAL_STORAGE_SELECTED_VARIANT = 'selectedVariant'
