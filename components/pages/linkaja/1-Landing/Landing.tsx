@@ -33,17 +33,10 @@ export default function LandingLinkAja() {
   useEffect(() => {
     setFilters({
       ...filters,
-      priceRange: {
-        hargaMin: '0',
-        hargaMax: '40000000',
-      },
     })
 
     // Update URL parameters
-    updateQueryParams(
-      ['prMin', 'prMax', 'dpMin', 'dpMax', 'page'],
-      [0, 40000000, 0, 20000000, 1]
-    )
+    updateQueryParams(['dpMin', 'dpMax', 'page'], [0, 18000000, 1])
     sessionStorage.setItem('isLinkAja', 'true')
     setLocalReferralCode(LINKAJA_REFERRAL)
 
@@ -51,17 +44,11 @@ export default function LandingLinkAja() {
   }, [])
 
   useEffect(() => {
-    if (!searchParams.get('prMin')) {
-      updateQueryParams(['prMin'], ['0'])
-    }
-    if (!searchParams.get('prMax')) {
-      updateQueryParams(['prMax'], ['40000000'])
-    }
     if (!searchParams.get('dpMin')) {
       updateQueryParams(['dpMin'], ['0'])
     }
     if (!searchParams.get('dpMax')) {
-      updateQueryParams(['dpMax'], ['20000000'])
+      updateQueryParams(['dpMax'], ['18000000'])
     }
   }, [searchParams, updateQueryParams])
 

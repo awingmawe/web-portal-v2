@@ -15,6 +15,7 @@ import { toast } from '@/components/ui/sonner'
 import {
   ACCOUNT_URL,
   CALL_CENTER,
+  LINKAJA_ADMIN_FEE,
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
   LOCAL_STORAGE_SELECTED_VARIANT,
@@ -306,7 +307,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           Varian Paket
         </p>
       </div>
-
       {/* Variants selection */}
       {selectedVariant &&
         differenceInDays(selectedVariant?.releasedAt as string, new Date()) <=
@@ -378,7 +378,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           </div>
         </div>
       )}
-
       {/* Variants not available */}
       {variants.length === 0 && (
         <Fragment>
@@ -392,7 +391,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           </div>
         </Fragment>
       )}
-
       {/* Travel dates */}
       {variants.length > 0 && selectedVariant && (
         <div className="flex items-center justify-between max-lg:my-2">
@@ -420,22 +418,21 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           </div>
         </div>
       )}
-
       {/* Divider */}
       <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
-
       {/* Hotel selection with Popover */}
       {variants.length > 0 && (
         <SelectHotel
           disabledAddOnly={
             isLinkAja
-              ? Number(selectedVariant?.package.dpAmount) * getTotalQty() >=
+              ? Number(selectedVariant?.package.dpAmount) *
+                  (getTotalQty() + 1) +
+                  getTotalQty() * LINKAJA_ADMIN_FEE >=
                 LINKAJA_MAX_LIMIT
               : false
           }
         />
       )}
-
       {/* Action buttons */}
       {variants.length > 0 ? (
         <div>
@@ -491,7 +488,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           />
         </div>
       )}
-
       {/* Bottom actions */}
       <div className="flex items-center justify-between max-lg:hidden">
         {variants.length > 0 && (
