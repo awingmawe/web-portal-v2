@@ -9,7 +9,6 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   if (pathname.startsWith('/article')) {
-    console.log('hereww')
     const tokenFromHeader = (await headers()).get('single-use-token') || ''
     const sessionId = (await headers()).get('session-id') || ''
     const isWebView = (await headers()).get('is-web-view') || ''
