@@ -8,6 +8,7 @@ import {
   LOCAL_STORAGE_SELECTED_VARIANT,
 } from '@/constant/env'
 import { PackagePersonalData } from '@/constant/types/UmrahPersonalProps'
+import { useBookingCancel } from '@/hooks/umrah-personal/offer/useCancelBooking'
 import { useOfferUmrahPersonalById } from '@/hooks/umrah-personal/offer/useGetDetailOffer'
 import { X } from 'lucide-react'
 import Image from 'next/image'
@@ -23,16 +24,27 @@ const OfferButton: React.FC<{
   // --------------------------- Modal state for booking -----------------------------
   const [openBatalkan, setOpenBatalkan] = useState(false)
   const [openSuccessBatalkan, setOpenSuccessBatalkan] = useState(false)
-
+  const { cancelBooking } = useBookingCancel()
   const handleExitBatalkan = () => {
     setOpenBatalkan(false)
   }
 
-  const handleConfirmBatalkan = () => {
-    setOpenBatalkan(false)
-    setTimeout(() => {
-      setOpenSuccessBatalkan(true)
-    }, 100)
+  const handleConfirmBatalkan = async () => {
+    if (!dataOffer) return
+
+    const cancelPayload = {
+      packagePersonalId: dataOffer.id,
+    }
+
+    try {
+      await cancelBooking(cancelPayload)
+      setOpenBatalkan(false)
+      setTimeout(() => {
+        setOpenSuccessBatalkan(true)
+      }, 100)
+    } catch (error) {
+      console.error('Error cancel booking:', error)
+    }
   }
 
   const handleExitSuccessBatalkan = () => {
@@ -54,6 +66,8 @@ const OfferButton: React.FC<{
     if (dataOffer) {
       const dataDetailVariant = {
         isUmrahPersonal: true,
+        arrivalDate: dataOffer.JourneyInformation.arrivalDate,
+        departureDate: dataOffer.JourneyInformation.departureDate,
         totalManifest: dataOffer.JourneyInformation.totalManifest,
         package: {
           departure: {

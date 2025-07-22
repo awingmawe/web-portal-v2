@@ -14,7 +14,7 @@ import {
 import { JourneyInformation } from '@/constant/types/UmrahPersonalProps'
 import { cn, formatDateRangeShort, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
-import { add, format, isAfter } from 'date-fns'
+import { format, isAfter } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { PlaneLanding, PlaneTakeoff, ShieldCheck } from 'lucide-react'
 import Image from 'next/image'
@@ -44,7 +44,6 @@ const UmrahPersonalDetailCard = ({
     medinaHotel,
     transportation,
   } = dataOffer
-  const countDownDate = add(approvedAt, { hours: 24 })
   const countDownString = useMemo(() => {
     if (!expiresAt) return ''
     return format(expiresAt, 'dd MMM yyyy, HH:mm', {
@@ -52,7 +51,10 @@ const UmrahPersonalDetailCard = ({
     })
   }, [expiresAt])
 
-  const isExpired = isAfter(approvedAt, countDownDate)
+  const isExpired =
+    approvedAt && expiresAt
+      ? isAfter(new Date(approvedAt), new Date(expiresAt))
+      : false
 
   const dateRange = {
     from: new Date(departureDate),
