@@ -230,7 +230,7 @@ export default function TransactionDetailRincian({
                       Maskapai Keberangkatan
                     </div>
 
-                    <div className="flex items-start justify-center gap-2 text-[12px] text-neutral-900">
+                    <div className="flex items-start gap-2 text-[12px] text-neutral-900">
                       {data?.departure?.airline?.logo && (
                         <Image
                           src={data.departure.airline.logo}
@@ -306,7 +306,7 @@ export default function TransactionDetailRincian({
                           {data?.arrival?.airline?.name}
                         </div> */}
                       </div>
-                      <div className="ml-14">
+                      <div className="ml-13">
                         <div className="text-start text-[12px] text-neutral-500">
                           Kelas
                         </div>
