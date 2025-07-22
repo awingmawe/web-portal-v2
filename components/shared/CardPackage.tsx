@@ -115,7 +115,7 @@ export const CardPackage = memo(function CardPackage({
             ? 'z-2 mt-0 h-12 w-12'
             : 'z-1 -mt-4 h-16 w-12 object-cover'
         } rounded-bl-[18px] shadow-[1px_2px_2px_0px_rgba(0,0,0,0.40)]`}
-        key={`flag-${value.country.alpha2Code}`}
+        key={`flag-${value.country.alpha2Code}-${index}`}
         alt="flag-icon"
         src={`https://kapowaz.github.io/square-flags/flags/${value.country.alpha2Code}.svg`}
       />

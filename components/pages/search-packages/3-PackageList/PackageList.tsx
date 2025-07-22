@@ -149,7 +149,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
           resultsCount={totalDisplayCount}
           totalCount={totalCSR}
           currentSort={currentSort}
-          createSortUrl={createSortUrl}
+          createSortUrlAction={createSortUrl}
         />
       )}
 

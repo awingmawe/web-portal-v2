@@ -2,14 +2,11 @@ import { formatCurrency } from '@/lib/utils'
 
 const PriceDisplay = ({
   price,
-  originalPrice,
   roomType,
 }: {
   price: string
-  originalPrice: string | null
   roomType: string
 }) => {
-  const hasDiscount = originalPrice && originalPrice !== price
   const notes =
     roomType === 'double'
       ? '1 Kamar Berdua'
@@ -27,11 +24,6 @@ const PriceDisplay = ({
       </div>
       <div className="flex flex-col items-end">
         <p className="text-xs-regular text-neutral-500">Harga/jemaah</p>
-        {hasDiscount && (
-          <p className="text-s-regular text-neutral-400 line-through">
-            {formatCurrency(originalPrice)}
-          </p>
-        )}
         <p className="text-m-regular text-neutral-900">
           {formatCurrency(price)}
         </p>

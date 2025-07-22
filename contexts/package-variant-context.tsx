@@ -185,8 +185,6 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     () =>
       selectedVariant
         ? ['double', 'triple', 'quad'].map((type) => {
-            console.log('masuk')
-
             let price = 0
             let originalPrice = 0
             let hasDiscount = false

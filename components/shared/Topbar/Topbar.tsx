@@ -37,6 +37,30 @@ interface TopbarProps {
   type?: 'normal' | 'homepage' | 'plain'
 }
 
+interface NavLinkProps {
+  href: string
+  title: string
+  pathname: string
+  hoveredLink: string | null
+  onMouseEnter: (href: string) => void
+  onMouseLeave: () => void
+}
+
+interface TopbarContentProps {
+  navLinks: Array<{ title: string; href: string }>
+  type: string
+  token?: string
+  redirectUri: string | null
+  profile: any
+  logout: () => void
+  loadingLogout: boolean
+  setLoadingLogout: (loading: boolean) => void
+  pathname: string
+  hoveredLink: string | null
+  onMouseEnter: (href: string) => void
+  onMouseLeave: () => void
+}
+
 // Animation variants defined outside component to prevent recreation on each render
 const dotVariants = {
   hidden: {
@@ -77,58 +101,9 @@ const fixedTopbarVariants = {
   },
 }
 
-const Topbar: React.FC<TopbarProps> = ({
-  className = '',
-  token,
-  type = 'normal',
-  shadow = false,
-  scrolled = false,
-}) => {
-  const pathname = usePathname()
-  const [hoveredLink, setHoveredLink] = useState<string | null>(null)
-  const [showFixedHeader, setShowFixedHeader] = useState(false)
-  const [redirectUri, setRedirectUri] = useState<string | null>(null)
-  const { profile, logout } = useAuth()
-  const [loadingLogout, setLoadingLogout] = useState(false)
-
-  // Memoize navigation links to prevent recreating on each render
-  const navLinks = useMemo(
-    () => [
-      { title: 'Home', href: '/' },
-      { title: 'Mitra', href: '/travel/list' },
-      { title: 'About Us', href: '/about-us' },
-    ],
-    []
-  )
-
-  // Use callback for scroll handler to prevent recreating on each render
-  const updateFixedHeader = useCallback(() => {
-    setShowFixedHeader(window.scrollY > 100)
-  }, [])
-
-  // Setup scroll listener
-  useEffect(() => {
-    window.addEventListener('scroll', updateFixedHeader)
-    // Initial check
-    updateFixedHeader()
-    setRedirectUri(window.location.href)
-
-    return () => {
-      window.removeEventListener('scroll', updateFixedHeader)
-    }
-  }, [updateFixedHeader])
-
-  // Memoized handler for hover events
-  const handleMouseEnter = useCallback((href: string) => {
-    setHoveredLink(href)
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    setHoveredLink(null)
-  }, [])
-
-  // Extract NavLink to optimize rendering
-  const NavLink = ({ href, title }: { href: string; title: string }) => {
+// NavLink component moved outside and memoized
+const NavLink = React.memo<NavLinkProps>(
+  ({ href, title, pathname, hoveredLink, onMouseEnter, onMouseLeave }) => {
     const isActive = pathname === href
     const isHovered = hoveredLink === href
 
@@ -141,8 +116,8 @@ const Topbar: React.FC<TopbarProps> = ({
       <div className="flex flex-col items-center gap-1">
         <Link
           href={href}
-          onMouseEnter={() => handleMouseEnter(href)}
-          onMouseLeave={handleMouseLeave}
+          onMouseEnter={() => onMouseEnter(href)}
+          onMouseLeave={onMouseLeave}
           className={`relative text-nowrap ${
             isActive
               ? 'text-m-medium text-neutral-900'
@@ -196,9 +171,26 @@ const Topbar: React.FC<TopbarProps> = ({
       </div>
     )
   }
+)
 
-  // Extract topbar content to its own component to prevent unnecessary rerenders
-  const TopbarContent = React.memo(() => {
+NavLink.displayName = 'NavLink'
+
+// TopbarContent component moved outside and properly memoized
+const TopbarContent = React.memo<TopbarContentProps>(
+  ({
+    navLinks,
+    type,
+    token,
+    redirectUri,
+    profile,
+    logout,
+    loadingLogout,
+    setLoadingLogout,
+    pathname,
+    hoveredLink,
+    onMouseEnter,
+    onMouseLeave,
+  }) => {
     return (
       <Fragment>
         {/* Logo */}
@@ -213,7 +205,15 @@ const Topbar: React.FC<TopbarProps> = ({
             {/* Navigation Links */}
             <nav className="flex h-[18px] shrink grow basis-0 items-center gap-[60px]">
               {navLinks.map((link) => (
-                <NavLink key={link.href} href={link.href} title={link.title} />
+                <NavLink
+                  key={link.href}
+                  href={link.href}
+                  title={link.title}
+                  pathname={pathname}
+                  hoveredLink={hoveredLink}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                />
               ))}
             </nav>
 
@@ -366,14 +366,93 @@ const Topbar: React.FC<TopbarProps> = ({
             </div>
           </Fragment>
         )}
-
-        {/* Dialog Logout */}
       </Fragment>
     )
-  })
+  }
+)
 
-  // Add display name for React DevTools
-  TopbarContent.displayName = 'TopbarContent'
+TopbarContent.displayName = 'TopbarContent'
+
+const Topbar: React.FC<TopbarProps> = ({
+  className = '',
+  token,
+  type = 'normal',
+  shadow = false,
+  scrolled = false,
+}) => {
+  const pathname = usePathname()
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null)
+  const [showFixedHeader, setShowFixedHeader] = useState(false)
+  const [redirectUri, setRedirectUri] = useState<string | null>(null)
+  const { profile, logout } = useAuth()
+  const [loadingLogout, setLoadingLogout] = useState(false)
+
+  // Memoize navigation links to prevent recreating on each render
+  const navLinks = useMemo(
+    () => [
+      { title: 'Home', href: '/' },
+      { title: 'Mitra', href: '/travel/list' },
+      { title: 'About Us', href: '/about-us' },
+    ],
+    []
+  )
+
+  // Use callback for scroll handler to prevent recreating on each render
+  const updateFixedHeader = useCallback(() => {
+    setShowFixedHeader(window.scrollY > 100)
+  }, [])
+
+  // Setup scroll listener
+  useEffect(() => {
+    window.addEventListener('scroll', updateFixedHeader)
+    // Initial check
+    updateFixedHeader()
+    setRedirectUri(window.location.href)
+
+    return () => {
+      window.removeEventListener('scroll', updateFixedHeader)
+    }
+  }, [updateFixedHeader])
+
+  // Memoized handler for hover events
+  const handleMouseEnter = useCallback((href: string) => {
+    setHoveredLink(href)
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setHoveredLink(null)
+  }, [])
+
+  // Memoize the topbar content props to prevent unnecessary re-renders
+  const topbarContentProps = useMemo(
+    () => ({
+      navLinks,
+      type,
+      token,
+      redirectUri,
+      profile,
+      logout,
+      loadingLogout,
+      setLoadingLogout,
+      pathname,
+      hoveredLink,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+    }),
+    [
+      navLinks,
+      type,
+      token,
+      redirectUri,
+      profile,
+      logout,
+      loadingLogout,
+      pathname,
+      hoveredLink,
+      handleMouseEnter,
+      handleMouseLeave,
+    ]
+  )
 
   return (
     <Fragment>
@@ -389,7 +468,7 @@ const Topbar: React.FC<TopbarProps> = ({
               className
             )}
           >
-            <TopbarContent />
+            <TopbarContent {...topbarContentProps} />
           </motion.header>
 
           {/* Fixed header that appears on scroll */}
@@ -406,7 +485,7 @@ const Topbar: React.FC<TopbarProps> = ({
                 )}
               >
                 <section className="container m-auto flex h-full w-full items-center gap-[60px]">
-                  <TopbarContent />
+                  <TopbarContent {...topbarContentProps} />
                 </section>
               </motion.header>
             )}
@@ -421,7 +500,7 @@ const Topbar: React.FC<TopbarProps> = ({
           )}
         >
           <section className="container m-auto flex h-full w-full items-center gap-[60px]">
-            <TopbarContent />
+            <TopbarContent {...topbarContentProps} />
           </section>
         </header>
       )}
