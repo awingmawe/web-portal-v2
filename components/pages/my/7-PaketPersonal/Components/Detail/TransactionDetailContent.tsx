@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
+import { TransactionDetailMobileAction } from '@/components/pages/my/7-PaketPersonal/Components/Detail/TranasctionDetailMobileAction'
 import { TransactionDetailHeader } from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetaiHeader'
 import TransactionDetailProduct from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetailProduct'
 import TransactionDetailRincian from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetailRincian'
 import TransactionDetailSkeleton from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetailSkeleton'
+import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
+import OfferDetailDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogDetailOffer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -46,8 +49,11 @@ export default function TransactionDetailContent({
   const [manifest, setManifest] = useState<any>(null)
   const [isSnapInitialized, setIsSnapInitialized] = useState(false)
   const router = useRouter()
+  const [openDetailOffer, setOpenDetailOffer] = useState(false)
   const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
-
+  const handleExitDetailOffer = () => {
+    setOpenDetailOffer(false)
+  }
   const fetchTransactions = useCallback(async () => {
     setLoading(true)
 
@@ -104,6 +110,14 @@ export default function TransactionDetailContent({
     },
     []
   )
+  const { PackagePersonal, ...restTransaction } = transaction || {}
+  const transactionData = transaction?.PackagePersonal?.find(
+    (item: any) => item.isBooked
+  )
+  const dataAll = {
+    ...transactionData,
+    JourneyInformation: restTransaction,
+  }
 
   return (
     <div>
@@ -194,8 +208,47 @@ export default function TransactionDetailContent({
                 </Link>
               ) : transaction.status === 'offer-selected' ||
                 transaction.status === 'waiting-payment' ? (
-                <Button variant="default">Lihat Detail Pilihan</Button>
-              ) : null}
+                <LayoutDrawerDialog
+                  trigger={
+                    <Button
+                      className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                      variant="default"
+                    >
+                      Lihat Detail Pilihan
+                    </Button>
+                  }
+                  title={<></>}
+                  content={
+                    <OfferDetailDialogContent
+                      data={dataAll}
+                      isOpen={openDetailOffer}
+                      onCancel={handleExitDetailOffer}
+                    />
+                  }
+                  isOpen={openDetailOffer}
+                  setIsOpen={setOpenDetailOffer}
+                  footerContent={
+                    <Link
+                      href={`/my/transaction/${dataAll.bookingId}`}
+                      className="w-[100%]"
+                    >
+                      <Button
+                        className="w-full flex-1 px-10 py-3"
+                        // onClick={handleCheckout}
+                      >
+                        Lihat Transaksi
+                        <Image
+                          src="/images/arrow-circle-right.svg"
+                          width={14}
+                          height={14}
+                          alt="arrow"
+                        />
+                      </Button>
+                    </Link>
+                  }
+                />
+              ) : // <Button variant="default">Lihat Detail Pilihan</Button>
+              null}
               <Button
                 className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
                 variant="ghost"
@@ -216,6 +269,9 @@ export default function TransactionDetailContent({
             </div>
           </div>
         </Fragment>
+      )}
+      {transaction && (
+        <TransactionDetailMobileAction transaction={transaction} />
       )}
     </div>
   )
