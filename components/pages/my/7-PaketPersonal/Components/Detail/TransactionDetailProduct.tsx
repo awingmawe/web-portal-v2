@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Calendar2 } from '@/components/icons/calendar'
 import { PeopleWalk } from '@/components/icons/people-walk'
 import { UsersIcon } from '@/components/icons/user'
@@ -258,11 +259,11 @@ export default function TransactionDetailProduct({
           </div>
 
           <div className="flex items-start">
-            <IdCard className="mt-1 mr-3 h-[16px] w-[16px] text-neutral-900" />
+            <IdCard className="mt-1 mr-2 h-[16px] w-[16px] text-neutral-900" />
             <div>
               <div className="text-[12px] text-neutral-500">Visa</div>
               <div className="text-[12px] text-neutral-900">
-                {createVisa === false ? 'Dengan Visa' : 'Tidak Dengan Visa'}
+                {'Dengan Visa'}
               </div>
             </div>
           </div>

@@ -40,6 +40,7 @@ export default function TransactionCardFooter({
     ...transactionData,
     JourneyInformation: restTransaction,
   }
+  console.log(dataAll)
 
   return (
     <Fragment>
@@ -96,9 +97,7 @@ export default function TransactionCardFooter({
             setIsOpen={setOpenDetailOffer}
             footerContent={
               <Link
-                href={
-                  '/my/transaction?type=upcoming&page=1&query=&status=all&date='
-                }
+                href={`/my/transaction/${dataAll.bookingId}`}
                 className="w-[100%]"
               >
                 <Button
@@ -166,9 +165,7 @@ export default function TransactionCardFooter({
             setIsOpen={setOpenDetailOffer}
             footerContent={
               <Link
-                href={
-                  '/my/transaction?type=upcoming&page=1&query=&status=all&date='
-                }
+                href={`/my/transaction/${dataAll.bookingId}`}
                 className="w-[100%]"
               >
                 <Button

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import dayjs from 'dayjs'
 
 export interface TransactionCardHeader {
@@ -19,7 +20,7 @@ export default function TransactionCardHeader({
 
   const renderStatusText = (status: string) => {
     if (status === 'offers-available' && offersAboutToExpire > 0) {
-      return `${totalOffers} Penawaran akan hangus dalam 12 jam`
+      return `${offersAboutToExpire} Penawaran akan hangus dalam 12 jam`
     } else {
       const expiredAt = dayjs(createdDate).add(24, 'hour')
       return `Otomatis batal pada ${expiredAt.format('DD MMM YYYY, HH:mm')}`

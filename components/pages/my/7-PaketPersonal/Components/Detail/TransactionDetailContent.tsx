@@ -104,6 +104,7 @@ export default function TransactionDetailContent({
     },
     []
   )
+
   return (
     <div>
       <div className={`${loading ? 'block' : 'hidden'} h-[700px]`}></div>
@@ -134,6 +135,7 @@ export default function TransactionDetailContent({
                 status={transaction?.status}
                 totalOffers={transaction?.totalOffers}
                 createdDate={transaction?.approvedAt}
+                offersAboutToExpire={transaction?.offersAboutToExpire}
               />
 
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
