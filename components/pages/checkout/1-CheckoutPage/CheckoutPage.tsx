@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
-import { LINKAJA_MAX_LIMIT } from '@/constant/env'
+import { LINKAJA_ADMIN_FEE, LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { useCheckout } from '@/contexts/checkout-context'
 import {
   formatCurrency,
@@ -235,7 +235,8 @@ const CheckoutPage = () => {
                   disabledAddOnly={
                     isLinkAja
                       ? sliderValue >= LINKAJA_MAX_LIMIT ||
-                        selectedVariant.netAmount * (totalQty + 1) >
+                        selectedVariant.netAmount * (totalQty + 1) +
+                          totalQty * LINKAJA_ADMIN_FEE >
                           LINKAJA_MAX_LIMIT
                       : false
                   }
@@ -313,7 +314,7 @@ const CheckoutPage = () => {
                             const minAmount =
                               selectedVariant.netAmount * totalQty
                             const maxAmount = isLinkAja
-                              ? LINKAJA_MAX_LIMIT
+                              ? LINKAJA_MAX_LIMIT - totalQty * LINKAJA_ADMIN_FEE
                               : preBooking?.totalPrice || totalPrice * totalQty
 
                             if (value >= minAmount && value <= maxAmount) {
@@ -334,7 +335,8 @@ const CheckoutPage = () => {
                               const minAmount =
                                 selectedVariant.netAmount * totalQty
                               const maxAmount = isLinkAja
-                                ? LINKAJA_MAX_LIMIT
+                                ? LINKAJA_MAX_LIMIT -
+                                  totalQty * LINKAJA_ADMIN_FEE
                                 : preBooking?.totalPrice ||
                                   totalPrice * totalQty
 
@@ -379,8 +381,9 @@ const CheckoutPage = () => {
                     max={
                       totalQty > 0
                         ? isLinkAja
-                          ? preBooking?.totalPrice > LINKAJA_MAX_LIMIT
-                            ? LINKAJA_MAX_LIMIT
+                          ? preBooking?.totalPrice >
+                            LINKAJA_MAX_LIMIT - totalQty * LINKAJA_ADMIN_FEE
+                            ? LINKAJA_MAX_LIMIT - totalQty * LINKAJA_ADMIN_FEE
                             : preBooking?.totalPrice
                           : preBooking?.totalPrice || totalPrice * totalQty
                         : 0

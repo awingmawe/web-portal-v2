@@ -32,9 +32,6 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
     priceDouble,
     priceTriple,
     priceQuad,
-    originalPriceDouble,
-    originalPriceTriple,
-    originalPriceQuad,
     meccaHotel: newMeccaHotel,
     medinaHotel: newMedinaHotel,
     transportation: newTransportation,
@@ -121,30 +118,18 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
       {/* Harga Paket */}
       <LayoutPerItem icon={<Tag2Icon />} titleItem="Harga Paket">
         {!isEmpty(priceDouble) && (
-          <PriceDisplay
-            price={priceDouble}
-            originalPrice={originalPriceDouble}
-            roomType="double"
-          />
+          <PriceDisplay price={priceDouble} roomType="double" />
         )}
         {!isEmpty(priceTriple) && (
-          <PriceDisplay
-            price={priceTriple}
-            originalPrice={originalPriceTriple}
-            roomType="triple"
-          />
+          <PriceDisplay price={priceTriple} roomType="triple" />
         )}
         {!isEmpty(priceQuad) && (
-          <PriceDisplay
-            price={priceQuad}
-            originalPrice={originalPriceQuad}
-            roomType="quad"
-          />
+          <PriceDisplay price={priceQuad} roomType="quad" />
         )}
       </LayoutPerItem>
 
       {/* Transportasi */}
-      {!isEmpty(existingTransportation) && !isEmpty(newTransportation) && (
+      {(!isEmpty(existingTransportation) || !isEmpty(newTransportation)) && (
         <LayoutPerItem
           icon={<CarIcon size={24} color="#8E8E8B" />}
           titleItem="Transportasi"
@@ -197,7 +182,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
                     Tipe Kendaraan
                   </p>
                   <p className="text-m-regular capitalize">
-                    {newTransportation.vehicle.name}
+                    {newTransportation?.vehicle?.name}
                   </p>
                 </div>
                 <div className="flex flex-col items-end">
@@ -376,7 +361,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
       </LayoutPerItem>
 
       {/* Penginapan Madinah */}
-      {!isEmpty(newMedinaHotel) && !isEmpty(existingMedinaHotel) && (
+      {(!isEmpty(existingMedinaHotel) || !isEmpty(newMedinaHotel)) && (
         <LayoutPerItem
           icon={<BuildingIcon size={24} color="text-neutral-500" />}
           titleItem="Penginapan Madinah"

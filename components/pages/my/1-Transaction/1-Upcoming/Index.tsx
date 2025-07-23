@@ -180,7 +180,6 @@ export default function TransactionUpcoming() {
   if (!isMounted) {
     return <TransactionSkeletonLoading noTabs noFilter noPagination />
   }
-  console.log(transactions)
 
   return (
     <Fragment>

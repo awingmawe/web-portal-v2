@@ -6,14 +6,14 @@ interface ResultsSummaryProps {
   resultsCount: number
   totalCount: number
   currentSort: string
-  createSortUrl: (sortValue: string) => string
+  createSortUrlAction: (sortValue: string) => string
 }
 
 export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
   resultsCount,
   totalCount,
   currentSort,
-  createSortUrl,
+  createSortUrlAction,
 }) => {
   return (
     <div className="flex items-center justify-between max-lg:hidden">
@@ -24,7 +24,7 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
         <p className="text-m-regular text-neutral-900">Urutkan Berdasarkan</p>
         <SortingDropdown
           currentSort={currentSort}
-          createSortUrl={createSortUrl}
+          createSortUrl={createSortUrlAction}
         />
       </div>
     </div>

@@ -15,6 +15,7 @@ import {
 import {
   ACCOUNT_URL,
   CALL_CENTER,
+  LINKAJA_ADMIN_FEE,
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
   LOCAL_STORAGE_SELECTED_VARIANT,
@@ -193,7 +194,8 @@ const CheckoutDrawerMobile = React.memo(
                       disabledAddOnly={
                         isLinkAja
                           ? Number(selectedVariant?.package.dpAmount) *
-                              getTotalQty() >=
+                              (getTotalQty() + 1) +
+                              getTotalQty() * LINKAJA_ADMIN_FEE >=
                             LINKAJA_MAX_LIMIT
                           : false
                       }

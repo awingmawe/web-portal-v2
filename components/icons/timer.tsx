@@ -42,7 +42,7 @@ export const TimerIcon2: React.FC<IconProps> = ({ size = 20, ...props }) => {
         d="M7.5 1.6665H12.5"
         stroke="black"
         strokeWidth="1.25"
-        stroke-miterlimit="10"
+        strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

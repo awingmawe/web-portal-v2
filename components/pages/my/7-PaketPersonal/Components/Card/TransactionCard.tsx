@@ -85,7 +85,6 @@ export default function TransactionCard({
     lg ? true : false
   )
   const renderStatusTahapanColor = (status: string) => {
-    console.log(status)
     if (status === 'offer-selected') {
       return 'bg-success-100 text-success-700'
     } else if (

@@ -8,15 +8,15 @@
         ],
        "components": [
           {
-            "/": "/*"
-          },
-          {
             "/": "/check-availability/*",
             "exclude": true
           },
           {
             "/": "/banking/*",
             "exclude": true
+          },
+          {
+            "/": "/*"
           }
         ]
       }

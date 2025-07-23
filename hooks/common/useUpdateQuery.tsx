@@ -13,36 +13,39 @@ export const useUpdateQueryParams = () => {
       const query = parsedUrl.query
 
       // Update query parameters
-      if (values && values.length > 0) {
-        keys.forEach((key, index) => {
-          // Convert the value to string if it's not already
-          const valueStr = values[index]?.toString() || ''
+      keys.forEach((key, index) => {
+        const valueStr = values[index]?.toString() || ''
 
-          // If value exists, add/update the key, otherwise remove it
-          if (valueStr) {
-            query[key] = valueStr
-          } else {
-            delete query[key]
-          }
-        })
-      } else {
-        // If no values provided, remove all specified keys
-        keys.forEach((key) => {
+        // If value exists and is not empty, add/update the key, otherwise remove it
+        if (valueStr && valueStr !== '0' && valueStr.trim() !== '') {
+          query[key] = valueStr
+        } else {
           delete query[key]
-        })
-      }
+        }
+      })
 
       // Use the redirectPath if provided, otherwise use the current pathname
-      const path = redirectPath || pathname
+      const targetPath = redirectPath || pathname
 
       // Create the new URL with updated query parameters
-      const newUrl = `${path}?${queryString.stringify(query)}`
+      const queryStr = queryString.stringify(query)
+      const newUrl = queryStr ? `${targetPath}?${queryStr}` : targetPath
 
-      // Update the browser history without reloading the page
-      window.history.pushState({ path: newUrl }, '', newUrl)
+      // Check if we're navigating to a different page or updating the current page
+      if (redirectPath && redirectPath !== pathname) {
+        // Navigate to a different page (full page navigation)
+        window.location.href = newUrl
+      } else {
+        // Update current page URL without reloading (for in-page filter updates)
+        window.history.pushState({ path: newUrl }, '', newUrl)
 
-      // Dispatch a custom event so components can react to the URL change if needed
-      window.dispatchEvent(new Event('popstate'))
+        // If you're using Next.js App Router and want to trigger a re-render
+        // you might want to use router.push instead:
+        // router.push(newUrl, { scroll: false })
+
+        // Dispatch a custom event so components can react to the URL change if needed
+        window.dispatchEvent(new Event('popstate'))
+      }
     },
     [pathname]
   )

@@ -7,7 +7,7 @@ import { StarIconPrimary } from '@/components/icons/star'
 import OfferButton from '@/components/pages/umrah-personal/offer/common/CardOfferUmrahPersonal/ActionButton'
 import { PackagePersonalData } from '@/constant/types/UmrahPersonalProps'
 import useCountdown from '@/hooks/umrah-personal/offer/useCountdown'
-import { formatCurrency, isEmpty } from '@/lib/utils'
+import { formatCurrency, getMinimumNonZeroPrice, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
@@ -55,6 +55,8 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
       },
     }, // new custom umrah personal
     priceQuad,
+    priceDouble,
+    priceTriple,
     orgName,
     orgThumbnail,
     isBooked,
@@ -84,7 +86,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
 
   return (
     <div
-      className={`${isExpired ? 'opacity-50' : ''} from-primary-100 to-neutral-0 col-span-1 flex flex-col gap-3 rounded-[20px] border-1 border-neutral-100 bg-gradient-to-br px-4 py-5`}
+      className={`${isExpired ? 'opacity-50' : ''} from-primary-100 to-neutral-0 col-span-1 flex flex-col justify-between gap-3 rounded-[20px] border-1 border-neutral-100 bg-gradient-to-br px-4 py-5`}
     >
       {/* Penawaran and Countdown */}
       <div className="flex items-center justify-between">
@@ -189,7 +191,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
       </div>
 
       {/* Hotel Medina*/}
-      {!isEmpty(selectedMedinaHotel) && (
+      {(!isEmpty(selectedMedinaHotel) || !isEmpty(medinaHotel)) && (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-1">
@@ -338,7 +340,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
       </div>
 
       {/* Transportation */}
-      {!isEmpty(transportation) && !isEmpty(offerTransportation) && (
+      {(!isEmpty(transportation) || !isEmpty(offerTransportation)) && (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1">
             <CarIcon size={16} />
@@ -346,20 +348,20 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
           </div>
 
           <div className="flex items-center gap-3">
-            {transportation.vehicle.code !==
-            offerTransportation.vehicle.code ? (
+            {transportation?.vehicle?.code !==
+            offerTransportation?.vehicle?.code ? (
               <>
-                <p className="text-m-regular line-through">
-                  1x {transportation.vehicle.name}
+                <p className="text-m-regular capitalize line-through">
+                  1x {transportation?.vehicle?.name}
                 </p>
                 <RefreshCw size={16} color="#30302F" />
-                <p className="text-m-regular">
-                  1x {offerTransportation.vehicle.name}
+                <p className="text-m-regular capitalize">
+                  1x {offerTransportation?.vehicle?.name}
                 </p>
               </>
             ) : (
-              <p className="text-m-regular">
-                1x {offerTransportation.vehicle.name}
+              <p className="text-m-regular capitalize">
+                1x {offerTransportation?.vehicle?.name}
               </p>
             )}
           </div>
@@ -372,7 +374,15 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
       {/* Price */}
       <div>
         <p className="text-s-medium text-neutral-500">Harga Mulai</p>
-        <p className="heading-4-semibold">{formatCurrency(priceQuad)}</p>
+        <p className="heading-4-semibold">
+          {formatCurrency(
+            getMinimumNonZeroPrice(
+              Number(priceDouble),
+              Number(priceTriple),
+              Number(priceQuad)
+            )
+          )}
+        </p>
       </div>
 
       {/* Action Button */}
