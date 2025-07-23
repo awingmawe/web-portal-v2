@@ -192,7 +192,8 @@ export default function TransactionDetailContent({
                     Buat Paket Baru
                   </Button>
                 </Link>
-              ) : transaction.status === 'offer-selected' ? (
+              ) : transaction.status === 'offer-selected' ||
+                transaction.status === 'waiting-payment' ? (
                 <Button variant="default">Lihat Detail Pilihan</Button>
               ) : null}
               <Button

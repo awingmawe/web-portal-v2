@@ -40,7 +40,6 @@ export default function TransactionCardFooter({
     ...transactionData,
     JourneyInformation: restTransaction,
   }
-  console.log(dataAll)
 
   return (
     <Fragment>
@@ -75,7 +74,7 @@ export default function TransactionCardFooter({
               Buat Paket Baru
             </Button>
           </Link>
-        ) : status === 'offer-selected' ? (
+        ) : status === 'offer-selected' || status === 'waiting-payment' ? (
           <LayoutDrawerDialog
             trigger={
               <Button
@@ -143,7 +142,7 @@ export default function TransactionCardFooter({
               </Link>
             ) : null}
           </div>
-        ) : status === 'offer-selected' ? (
+        ) : status === 'offer-selected' || status === 'waiting-payment' ? (
           <LayoutDrawerDialog
             trigger={
               <Button
