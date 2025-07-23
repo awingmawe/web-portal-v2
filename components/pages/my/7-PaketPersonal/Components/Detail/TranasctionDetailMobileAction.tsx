@@ -27,7 +27,8 @@ export const TransactionDetailMobileAction = ({
 
   return (
     <div className="hidden max-lg:block">
-      {transaction.status === 'offers-available' ? (
+      {transaction.status === 'offers-available' ||
+      transaction.status === 'waiting-payment' ? (
         <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
           <Link
             href={`/umrah-personal/offer/${transaction.id}`}
@@ -54,8 +55,7 @@ export const TransactionDetailMobileAction = ({
             </Button>
           </Link>
         </div>
-      ) : transaction.status === 'offer-selected' ||
-        transaction.status === 'waiting-payment' ? (
+      ) : transaction.status === 'offer-selected' ? (
         <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
           <LayoutDrawerDialog
             trigger={

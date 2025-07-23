@@ -206,8 +206,7 @@ export default function TransactionDetailContent({
                     Buat Paket Baru
                   </Button>
                 </Link>
-              ) : transaction.status === 'offer-selected' ||
-                transaction.status === 'waiting-payment' ? (
+              ) : transaction.status === 'offer-selected' ? (
                 <LayoutDrawerDialog
                   trigger={
                     <Button
@@ -247,6 +246,20 @@ export default function TransactionDetailContent({
                     </Link>
                   }
                 />
+              ) : transaction.status === 'waiting-payment' ? (
+                <>
+                  <Link
+                    href={`/umrah-personal/offer/${transaction.id}`}
+                    className=" w-[100%]"
+                  >
+                    <Button
+                      className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
+                      variant="default"
+                    >
+                      Lihat Penawaran
+                    </Button>
+                  </Link>
+                </>
               ) : // <Button variant="default">Lihat Detail Pilihan</Button>
               null}
               <Button
