@@ -223,13 +223,13 @@ export default function TransactionDetailRincian({
             <div className="relative z-20 -mt-20 space-y-2 bg-neutral-50 p-6 max-lg:px-3">
               {/* Basic Information */}
               <div className="grid grid-cols-2 gap-2 max-lg:grid-cols-1">
+                {/* Departure Flight */}
                 <div className="flex items-start">
-                  <PlaneTakeoff className="mt-2 mr-3 h-[20px] w-[20px] text-neutral-900" />
-                  <div>
+                  <PlaneTakeoff className="mt-2 mr-3 h-[20px] w-[20px] flex-shrink-0 text-neutral-900" />
+                  <div className="min-w-0 flex-1">
                     <div className="text-start text-[12px] text-neutral-500">
                       Maskapai Keberangkatan
                     </div>
-
                     <div className="flex items-start gap-2 text-[12px] text-neutral-900">
                       {data?.departure?.airline?.logo && (
                         <Image
@@ -237,12 +237,15 @@ export default function TransactionDetailRincian({
                           alt="Airline Logo"
                           width={15}
                           height={15}
+                          className="flex-shrink-0"
                         />
                       )}
-                      <span>{data?.departure?.airline?.name}</span>
+                      <span className="min-w-0 flex-1 break-words">
+                        {data?.departure?.airline?.name}
+                      </span>
                     </div>
                   </div>
-                  <div className=" ml-8">
+                  <div className="mr-4 ml-4 flex-shrink-0">
                     <div className="text-start text-[12px] text-neutral-500">
                       Kelas
                     </div>
@@ -251,13 +254,15 @@ export default function TransactionDetailRincian({
                     </div>
                   </div>
                 </div>
+
+                {/* Return Flight */}
                 <div className="relative">
                   <div className="absolute top-0 bottom-0 left-0 hidden w-[3px] bg-gray-200 sm:block"></div>
 
                   {/* Desktop Layout - Horizontal */}
                   <div className="hidden items-end sm:flex">
-                    <PlaneLanding className="mr-3 mb-2 ml-5 h-[20px] w-[20px] text-neutral-900" />
-                    <div>
+                    <PlaneLanding className="mr-3 mb-2 ml-5 h-[20px] w-[20px] flex-shrink-0 text-neutral-900" />
+                    <div className="min-w-0 flex-1">
                       <div className="text-start text-[12px] text-neutral-500">
                         Maskapai Kepulangan
                       </div>
@@ -268,12 +273,15 @@ export default function TransactionDetailRincian({
                             alt="Airline Logo"
                             width={15}
                             height={15}
+                            className="flex-shrink-0"
                           />
                         )}
-                        <span> {data?.arrival?.airline?.name}</span>
+                        <span className="min-w-0 flex-1 break-words">
+                          {data?.arrival?.airline?.name}
+                        </span>
                       </div>
                     </div>
-                    <div className="ml-8">
+                    <div className="mr-4 ml-4 flex-shrink-0">
                       <div className="text-start text-[12px] text-neutral-500">
                         Kelas
                       </div>
@@ -285,28 +293,28 @@ export default function TransactionDetailRincian({
 
                   {/* Mobile Layout - Vertical Stack */}
                   <div className="block sm:hidden">
-                    <div className="mb-3 flex items-start">
-                      <PlaneLanding className="mt-1 mr-3 h-[20px] w-[20px] text-neutral-900" />
-                      <div>
+                    <div className="flex items-start">
+                      <PlaneLanding className="mt-2 mr-3 h-[20px] w-[20px] flex-shrink-0 text-neutral-900" />
+                      <div className="min-w-0 flex-1">
                         <div className="text-start text-[12px] text-neutral-500">
                           Maskapai Kepulangan
                         </div>
-                        <div className="flex items-start justify-center gap-2 text-[12px] text-neutral-900">
+                        <div className="flex items-start gap-2 text-[12px] text-neutral-900">
                           {data?.arrival?.airline?.logo && (
                             <Image
                               src={data.arrival.airline.logo}
                               alt="Airline Logo"
                               width={15}
                               height={15}
+                              className="flex-shrink-0"
                             />
                           )}
-                          <span> {data?.arrival?.airline?.name}</span>
+                          <span className="min-w-0 flex-1 break-words">
+                            {data?.arrival?.airline?.name}
+                          </span>
                         </div>
-                        {/* <div className="text-center text-[12px] text-neutral-900">
-                          {data?.arrival?.airline?.name}
-                        </div> */}
                       </div>
-                      <div className="ml-13">
+                      <div className="mr-4 ml-4 flex-shrink-0">
                         <div className="text-start text-[12px] text-neutral-500">
                           Kelas
                         </div>
