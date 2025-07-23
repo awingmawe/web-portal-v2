@@ -114,20 +114,6 @@ export default function TransactionCardFooter({
               </Link>
             }
           />
-        ) : status === 'waiting-payment' ? (
-          <>
-            <Link
-              href={`/umrah-personal/offer/${idJourney}`}
-              className=" w-[100%]"
-            >
-              <Button
-                className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
-                variant="default"
-              >
-                Lihat Penawaran
-              </Button>
-            </Link>
-          </>
         ) : null}
       </div>
       <div className="hidden max-lg:block">
@@ -187,20 +173,6 @@ export default function TransactionCardFooter({
               </Link>
             }
           />
-        ) : status === 'waiting-payment' ? (
-          <>
-            <Link
-              href={`/umrah-personal/offer/${idJourney}`}
-              className=" w-[100%]"
-            >
-              <Button
-                className="text-s-regular mr-1 h-[40px] w-full px-3 font-medium text-nowrap text-gray-900"
-                variant="default"
-              >
-                Lihat Penawaran
-              </Button>
-            </Link>
-          </>
         ) : status === 'no-offers' ||
           status === 'offer-expired' ||
           status === 'canceled' ? (
