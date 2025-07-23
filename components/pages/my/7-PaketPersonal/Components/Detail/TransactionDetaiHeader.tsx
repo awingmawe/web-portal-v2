@@ -20,7 +20,7 @@ export function TransactionDetailHeader({
 
   const renderStatusText = (status: string) => {
     if (status === 'offers-available' && offersAboutToExpire > 0) {
-      return `${totalOffers} Penawaran akan hangus dalam 12 jam`
+      return `${offersAboutToExpire} Penawaran akan hangus dalam 12 jam`
     } else if (status === 'offers-available' && offersAboutToExpire === 0) {
       return `${totalOffers} Penawaran Tersedia`
     } else if (status === 'waiting-offers' && createdDate !== null) {
