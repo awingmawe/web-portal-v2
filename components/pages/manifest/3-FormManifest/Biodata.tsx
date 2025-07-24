@@ -31,6 +31,7 @@ import {
   useSubmissionDrawer,
 } from '@/components/pages/manifest/mobile/DrawerStatus'
 import { Calendar } from '@/components/ui/calendar'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Drawer,
   DrawerClose,
@@ -85,6 +86,7 @@ export default function BiodataForm({
   const [loading, setLoading] = useState(false)
   const [formSubmitting, setFormSubmitting] = useState(false)
   const [isDesktopConfirmOpen, setIsDesktopConfirmOpen] = useState(false)
+  const [noKTP, setNoKTP] = useState(false) // State untuk checkbox "Belum memiliki KTP"
   const router = useRouter()
   const { lg } = useTailwindBreakpoint()
   const [selectedRoomtypeMobile, setSelectedRoomtypeMobile] = useState<
@@ -345,10 +347,6 @@ export default function BiodataForm({
       setManifestActive(response.updated)
       await Promise.all(uploadPromises)
 
-      // After successful submission, check if all jemaah are completed
-      // You might need to refetch the latest data here to get updated submitted status
-      // await getDetailBooking() // Refresh the data
-      // Check if this is the last jemaah and all are completed
       const shouldShowCompletionDialog = checkAllJemaahReadyToComplete(
         dataJemaah,
         manifestActive.id
@@ -364,14 +362,6 @@ export default function BiodataForm({
       } else {
         toast.success('Data berhasil diperbarui!')
         setLoading(false)
-        // Normal success flow
-        // if (lg) {
-        //   setSubmissionOpen(true)
-        //   setSubmissionState('success')
-        // } else {
-        //   toast.success('Data berhasil diperbarui!')
-        //   setLoading(false)
-        // }
       }
     } catch (error: any) {
       const errorMsg =
@@ -462,7 +452,14 @@ export default function BiodataForm({
   }
 
   const roomTypeWatch = form.watch('roomtype')
-
+  // Handle checkbox change for "Belum memiliki KTP"
+  const handleNoKTPChange = (checked: boolean) => {
+    setNoKTP(checked)
+    if (checked) {
+      // Clear KTP file when checkbox is checked
+      setUploadedFiles((prev) => ({ ...prev, ktp: null }))
+    }
+  }
   return (
     <>
       <ConfirmationModal
@@ -579,12 +576,6 @@ export default function BiodataForm({
             <h2 className="text-l-semibold mb-6 ">Pilih Kamar</h2>
             <Drawer>
               <DrawerTrigger asChild>
-                {/* <div className="flex w-full items-center justify-between gap-2 rounded-full border border-neutral-200 px-3 py-2.5 text-left">
-              <span className="text-m-medium flex items-center gap-2">
-
-               
-              </span>
-              </div> */}
                 <button
                   onClick={handleOpenDrawer}
                   className="flex w-full items-center justify-between gap-2 rounded-full border border-neutral-200 px-3 py-2.5 text-left"
@@ -677,15 +668,34 @@ export default function BiodataForm({
           </div>
 
           <div className="bg-neutral-0 space-y-6 rounded-xl border border-neutral-100 p-8 max-lg:mb-4  max-lg:px-5">
-            <h2 className="text-l-semibold mb-6">KTP</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-l-semibold mb-0">KTP</h2>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="no-ktp"
+                  checked={noKTP}
+                  onCheckedChange={handleNoKTPChange}
+                  className="mt-2 h-4 w-4"
+                />
+                <label
+                  htmlFor="no-ktp"
+                  className="cursor-pointer text-sm font-medium text-neutral-700"
+                >
+                  Belum memiliki KTP
+                </label>
+              </div>
+            </div>
+
             {/* Pas Foto Upload */}
             <FileUpload
               label="Foto KTP"
-              required
+              required={!noKTP}
               onChange={handleKTPChange}
               value={uploadedFiles.ktp}
+              disabled={noKTP}
             />
           </div>
+
           <div className="bg-neutral-0 space-y-6 rounded-xl border border-neutral-100 p-8 max-lg:px-5">
             <h2 className="text-l-semibold mb-6">Biodata</h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -755,6 +765,7 @@ export default function BiodataForm({
                           className="pl-11"
                           placeholder="85867467367"
                           type="tel"
+                          maxLength={17}
                           inputMode="numeric"
                           pattern="[0-9]*"
                           onChange={(e) => {

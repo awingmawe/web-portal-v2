@@ -110,7 +110,10 @@ export default function DaftarJemaah({
       <ol className="space-y-1">
         {dataJemaah?.map((item, index) => {
           const isActive = manifestActive.id === item.id
-
+          const displayName =
+            item.name && item.name.trim() !== ''
+              ? item.name
+              : `Jemaah ${index + 1}`
           return (
             <li
               id={`jemaah-${item.name}-${item.id}`}
@@ -123,7 +126,7 @@ export default function DaftarJemaah({
               {/* Left: Index + Name + Room Type */}
               <div className="flex flex-col">
                 <span className="font-semibold text-neutral-900">
-                  {index + 1}. {item.name}
+                  {index + 1}. {displayName}
                 </span>
                 <span className="text-sm text-neutral-500">
                   {item.roomType
