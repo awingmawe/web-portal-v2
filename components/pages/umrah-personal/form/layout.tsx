@@ -1,17 +1,22 @@
 'use client'
 
+import { EmailIcon } from '@/components/icons/email'
+import VerificationDialog from '@/components/pages/my/4-Profile/Card/VerificationDialog'
 import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import ProgressIndicator from '@/components/pages/umrah-personal/form/6-ProgressIndicator'
 import ExitConfirmationContent from '@/components/pages/umrah-personal/form/dialog/DialogEndForm'
 import TopbarMobileFormUmrahPersonal from '@/components/pages/umrah-personal/form/mobile/Topbar'
+import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/dialog/PhoneNumberNotVerified'
 import Topbar from '@/components/shared/Topbar'
 import { Button } from '@/components/ui/button'
 import { ACCOUNT_URL } from '@/constant/env'
+import { useAuth } from '@/contexts/auth/context'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { useStepVisibility } from '@/hooks/umrah-personal/form/useVisibilityStepper'
+import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNumberVerification'
 import { ChevronLeftCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 
 interface FormUmrahPersonal {
   children: ReactNode
@@ -22,6 +27,13 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
   children,
   token,
 }) => {
+  if (!token) {
+    window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+  }
+
+  const { profile } = useAuth()
+  const [open, setOpen] = React.useState(false)
+
   const {
     currentStep,
     totalSteps,
@@ -31,6 +43,7 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
     setOpenDialogDrawerEndForm,
     openDialogDrawerEndForm,
   } = useUmrahPersonal()
+
   const router = useRouter()
   const loginRef = useRef(false)
   // Use the step visibility hook
@@ -79,12 +92,71 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
     </div>
   )
 
+  const {
+    setPhoneNumber,
+    isLoading,
+    openOtp,
+    setOpenOtp,
+    verificationPurpose,
+    handleSendOtp,
+    handleVerifyOtp,
+    handleResendOtp,
+  } = usePhoneVerification({
+    initialPhoneNumber: profile?.persona?.phoneNumber,
+  })
+
+  useEffect(() => {
+    if (!profile?.persona?.phoneNumber) {
+      // This callback is called when phone verification is required
+      setOpen(true)
+    }
+  }, [profile?.persona?.phoneNumber])
+
+  const handleSavePhoneNumber = async () => {
+    await handleSendOtp()
+    setOpen(false)
+  }
+
   return (
     <>
       <Topbar scrolled shadow token={token} />
       <TopbarMobileFormUmrahPersonal handleBack={handlePrevious} />
       <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
+      <LayoutDrawerDialog
+        isOpen={!profile?.persona?.phoneNumber ? true : open}
+        setIsOpen={setOpen}
+        trigger={<div className="hidden" />}
+        title={<></>}
+        content={
+          <PhoneNumberNotVerified
+            name={profile?.name || ''}
+            phoneNumber={profile?.persona?.phoneNumber || ''}
+            setPhoneNumber={setPhoneNumber}
+          />
+        }
+        footerContent={
+          <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
+            <Button
+              variant="default"
+              className="px-10 py-3"
+              onClick={handleSavePhoneNumber}
+              isLoading={isLoading}
+            >
+              Simpan Nomor Telepon
+            </Button>
+          </div>
+        }
+      />
 
+      <VerificationDialog
+        open={openOtp}
+        onOpenChange={setOpenOtp}
+        onVerify={handleVerifyOtp}
+        onResendOtp={handleResendOtp}
+        icon={<EmailIcon className="text-primary-500 h-7 w-7" />}
+        purpose={verificationPurpose}
+        isLoading={isLoading}
+      />
       <main
         className="scrollbar-hide container mx-auto h-screen overflow-y-auto"
         id="umrah-personal-form-container"
