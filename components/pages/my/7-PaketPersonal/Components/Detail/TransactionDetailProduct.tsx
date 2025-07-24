@@ -240,7 +240,7 @@ export default function TransactionDetailProduct({
             <div>
               <div className="text-[12px] text-neutral-500">Kegiatan Umroh</div>
               <div className="text-[12px] text-neutral-900 capitalize">
-                {aktifitas}
+                {formatActivity(aktifitas)}
               </div>
             </div>
           </div>
