@@ -10,12 +10,8 @@ import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { useFetchPackage } from '@/hooks/filter-product-hooks/useFetchPackage'
-import {
-  formatDateToYYYYMMDD,
-  isEmpty,
-  mapProductsToCardData,
-} from '@/lib/utils'
-import { getAirline, getAirports } from '@/services/general-service'
+import { formatDateToYYYYMMDD, mapProductsToCardData } from '@/lib/utils'
+import { getAirlineV2, getAirportsV2 } from '@/services/general-service'
 import React, { createContext, useCallback, useContext, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
@@ -30,6 +26,10 @@ const initialFilterState: FilterState = {
   priceRange: {
     hargaMax: '',
     hargaMin: '',
+  },
+  dpRange: {
+    dpMax: '',
+    dpMin: '',
   },
   facilityCode: '',
   section: '',
@@ -150,6 +150,10 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, filterName }))
   }, [])
 
+  const setDpRange = useCallback((filterName: string) => {
+    setFilters((prev) => ({ ...prev, filterName }))
+  }, [])
+
   // Reset all filters
   const resetFilters = useCallback((filters = initialFilterState) => {
     setFilters(filters)
@@ -177,6 +181,7 @@ export const FilterProductProvider: React.FC<{
           tagSlug: 'tS',
           filterName: null,
           priceRange: null,
+          dpRange: null,
         }
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
@@ -295,10 +300,9 @@ export const FilterProductProvider: React.FC<{
         // Update the previous page value for next comparison
         if (pageHasChanged && page !== null) {
           setPreviousPage(page)
-
           // Scroll to top only when page has actually changed
           window.scrollTo({
-            top: 0,
+            top: window.scrollY,
             behavior: 'smooth',
           })
         }
@@ -381,6 +385,13 @@ export const FilterProductProvider: React.FC<{
         queryObject.tagSlug = params.get('tS')
       }
 
+      if (params.has('dpMin')) {
+        queryObject.minDp = params.get('dpMin')
+      }
+      if (params.has('dpMax')) {
+        queryObject.maxDp = params.get('dpMax')
+      }
+
       return queryObject
     },
     []
@@ -410,7 +421,7 @@ export const FilterProductProvider: React.FC<{
 
   const fetchAirportByCode = async (code: string): Promise<Airport | null> => {
     try {
-      const data = await getAirports({
+      const data = await getAirportsV2({
         page: 1,
         size: 1,
         search: code,
@@ -424,7 +435,7 @@ export const FilterProductProvider: React.FC<{
 
   const fetchAirlineByName = async (name: string): Promise<Airline | null> => {
     try {
-      const data = await getAirline({
+      const data = await getAirlineV2({
         page: 1,
         size: 1,
         search: name,
@@ -437,6 +448,7 @@ export const FilterProductProvider: React.FC<{
   }
 
   // Submit handler
+  // Submit handler
   const handleSubmit = useCallback(() => {
     try {
       const {
@@ -447,68 +459,47 @@ export const FilterProductProvider: React.FC<{
         airline,
       } = filters
 
-      // Set loading state
       setIsLoading(true)
 
-      // Collect all filter values as keys and values arrays for updateQueryParams
-      const keys: string[] = []
-      const values: string[] = []
+      // Define all possible filter keys that we want to manage
+      const filterKeys = ['hR', 'sD', 'eD', 'dptArpt', 'arrArpt', 'trvl']
+      const filterValues: string[] = []
 
-      // Add all parameters that need to be included in the URL
-      if (hotelStars) {
-        keys.push('hR')
-        values.push(hotelStars.toString())
-      }
+      // Always include all filter keys, use empty string to remove parameters
+      filterValues.push(hotelStars ? hotelStars.toString() : '') // hR
+      filterValues.push(
+        dateRange?.from ? formatDateToYYYYMMDD(dateRange.from) : ''
+      ) // sD
+      filterValues.push(dateRange?.to ? formatDateToYYYYMMDD(dateRange.to) : '') // eD
+      filterValues.push(departureAirport?.code || '') // dptArpt
+      filterValues.push(arrivalAirport?.code || '') // arrArpt
+      filterValues.push(airline?.name || '') // trvl
 
-      if (dateRange?.from) {
-        keys.push('sD')
-        values.push(formatDateToYYYYMMDD(dateRange.from)) // Format as YYYY-MM-DD
-      }
+      // Always reset page to 1 when filters are applied
+      filterKeys.push('page')
+      filterValues.push('1')
 
-      if (dateRange?.to) {
-        keys.push('eD')
-        values.push(formatDateToYYYYMMDD(dateRange.to)) // Format as YYYY-MM-DD
-      }
-
-      if (departureAirport?.code) {
-        keys.push('dptArpt')
-        values.push(departureAirport.code)
-      }
-
-      if (arrivalAirport?.code) {
-        keys.push('arrArpt')
-        values.push(arrivalAirport.code)
-      }
-
-      if (airline?.name) {
-        keys.push('trvl')
-        values.push(airline.name)
-      }
-
-      // Always set page to 1 when new filter is applied
-      keys.push('page')
-      values.push('1')
-
+      // Optional: Add analytics tracking
       pushEvent({
         name: 'submit_filter',
         category: 'umrah',
         data: {
-          filterName: filters.filterName,
-          hotelRating: hotelStars && hotelStars,
-          dateRangeFrom:
-            dateRange?.from && formatDateToYYYYMMDD(dateRange?.from as Date),
-          dateRangeTo:
-            dateRange?.to && formatDateToYYYYMMDD(dateRange?.to as Date),
-          airport: departureAirport?.name && departureAirport,
-          airline: airline?.name && airline?.name,
+          hotelRating: hotelStars || null,
+          dateRangeFrom: dateRange?.from
+            ? formatDateToYYYYMMDD(dateRange.from)
+            : null,
+          dateRangeTo: dateRange?.to
+            ? formatDateToYYYYMMDD(dateRange.to)
+            : null,
+          departureAirport: departureAirport?.name || null,
+          arrivalAirport: arrivalAirport?.name || null,
+          airline: airline?.name || null,
         },
       })
-      // Only update the query parameters if we have keys/values to update
-      if (isEmpty(keys) || isEmpty(values)) {
-        window.history.pushState({ path: '/search' }, '', '/search')
-      } else {
-        updateQueryParams(keys, values, '/search')
-      }
+
+      const pathName = window.location.pathname
+
+      updateQueryParams(filterKeys, filterValues, pathName)
     } catch (err) {
       // Handle errors
       toast.error(
@@ -516,10 +507,11 @@ export const FilterProductProvider: React.FC<{
           ? (err as string)
           : 'Terjadi kesalahan pada server. Mohon ulangi beberapa saat lagi.'
       )
+      setIsLoading(false)
     } finally {
       setIsLoading(false)
     }
-  }, [filters])
+  }, [filters, updateQueryParams])
 
   const value = {
     // Combined filter state
@@ -542,7 +534,7 @@ export const FilterProductProvider: React.FC<{
     setSection,
     setTagSlug,
     setFilterName,
-
+    setDpRange,
     // Reset filter state - full and individual
     resetFilters,
     resetFilter,

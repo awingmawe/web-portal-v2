@@ -34,13 +34,13 @@ export const pembiayaanFormSchema = z.object({
   gender: z.enum(['male', 'female'], {
     required_error: 'Jenis kelamin wajib dipilih',
   }),
-  job: z.string().optional(),
+  job: z.string().min(1, 'Pekerjaan wajib diisi'),
   born: z.string().min(1, 'Tanggal lahir wajib diisi'),
-  provinceId: z.string().optional(),
-  cityId: z.string().optional(),
-  provinceName: z.string().optional(),
-  cityName: z.string().optional(),
-  address: z.string().optional(),
+  provinceId: z.string().min(1, 'Provinsi wajib diisi'),
+  cityId: z.string().min(1, 'Kota wajib diisi'),
+  provinceName: z.string().min(1, 'Provinsi wajib diisi'),
+  cityName: z.string().min(1, 'Kota wajib diisi'),
+  address: z.string().min(1, 'Alamat wajib diisi'),
 })
 
 type PembiayaanFormValues = z.infer<typeof pembiayaanFormSchema>

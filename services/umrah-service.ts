@@ -25,7 +25,13 @@ import {
   ManifestResult,
   ManifestUser,
 } from '@/constant/types/ManifestProps'
-import { AxiosProgressEvent } from 'axios'
+import { AxiosProgressEvent, AxiosResponse } from 'axios'
+import {
+  PackagePersonalData,
+  PackagePersonalDataResponse,
+  RequestFormUmrahPersonal,
+} from '@/constant/types/UmrahPersonalProps'
+import { PaymentMethod } from '@/constant/types/PaymentMethod'
 
 export async function getBanner(
   query: GetListQuery
@@ -137,6 +143,34 @@ export async function getTransactionListUmrah(
   }
 }
 
+export async function getTransactionListUmrahPersonal(
+  query: GetListQuery
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v2/journey-information?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction umrah:', error)
+    throw error
+  }
+}
+
+export async function getCheckListUmrah(
+  query: GetListQuery
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v1/check-availability/data/list?${qs.stringify(query)}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction umrah:', error)
+    throw error
+  }
+}
+
 export async function getTransactionDetail(
   bookingId: string
 ): Promise<GenericResponse<Transaction>> {
@@ -145,6 +179,20 @@ export async function getTransactionDetail(
     return response.data
   } catch (error) {
     console.error('Error fetching transaction umrah:', error)
+    throw error
+  }
+}
+
+export async function getTransactionPersonalDetail(
+  bookingId: string
+): Promise<GenericResponse<Transaction>> {
+  try {
+    const response = await apiWithAuth.get(
+      `/umrah/v2/journey-information/${bookingId}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching transaction Personal:', error)
     throw error
   }
 }
@@ -159,6 +207,20 @@ export async function getPaymentStatement(
     return response.data
   } catch (error) {
     console.error('Error fetching payment statement:', error)
+    throw error
+  }
+}
+
+export async function getBookingId(
+  bookingId: string,
+  token: string
+): Promise<any> {
+  try {
+    const client = token ? createServerApiClient(token) : apiWithAuth
+    const response = await client.get(`/umrah/v1/booking/${bookingId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching booking detail:', error)
     throw error
   }
 }
@@ -191,10 +253,17 @@ export async function getOrderPayment(
   }
 }
 
-export async function preBookingCheckout(payload: any) {
+export async function preBookingCreateCheckout(payload: {
+  packageVariantId: number
+  netAmount: number
+  double: number
+  referralCode: string
+  triple: number
+  quad: number
+}) {
   try {
     const response = await apiWithAuth.post<any>(
-      `/umrah/v2/booking/pre`,
+      `/umrah/v2/booking/pre-create`,
       payload
     )
     return response.data
@@ -203,13 +272,63 @@ export async function preBookingCheckout(payload: any) {
     throw error
   }
 }
-
-export async function bookingCheckout(payload: any) {
+export async function preBookingCreateCheckoutUmrahPersonal(payload: {
+  packagePersonalId: number
+  netAmount: number
+  double: number
+  referralCode: string
+  triple: number
+  quad: number
+}) {
   try {
-    const response = await apiWithAuth.post<any>(`/umrah/v2/booking`, payload)
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/personal-pre`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching pre booking checkout umrah personal:', error)
+    throw error
+  }
+}
+
+export async function bookingCheckout(payload: {
+  packageVariantId: number
+  netAmount: number
+  double: number
+  referralCode: string
+  triple: number
+  quad: number
+  paymentMethod?: PaymentMethod
+}) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/create`,
+      payload
+    )
     return response
   } catch (error) {
     console.error('Error fetching payment transaction:', error)
+    throw error
+  }
+}
+export async function bookingCheckoutUmrahPersonal(payload: {
+  packagePersonalId: number
+  netAmount: number
+  double: number
+  referralCode: string
+  triple: number
+  quad: number
+}) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/personal-create`,
+      payload
+    )
+    return response
+  } catch (error) {
+    console.error('Error fetching booking umrah personal checkout:', error)
+    throw error
   }
 }
 
@@ -375,6 +494,18 @@ export async function getInvoiceTranasction(
   }
 }
 
+export async function postManfestCommited(bookingCode: any): Promise<string> {
+  try {
+    const response = await apiWithAuth.post(
+      `/umrah/v2/booking/commit-manifest/${bookingCode}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching invoice:', error)
+    throw error
+  }
+}
+
 export async function getPreCanceled(bookingCode: any): Promise<any> {
   try {
     const response = await apiWithAuth.get(
@@ -458,4 +589,42 @@ export async function getPostReqRefund(payload: any): Promise<any> {
     console.error('Error fetching invoice:', error)
     throw error
   }
+}
+
+export async function umrahPersonalRegister(payload: RequestFormUmrahPersonal) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/journey-information`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error post umrah personal register:', error)
+    throw error
+  }
+}
+
+export async function getOfferUmrahPersonal(
+  id: number,
+  token: string
+): Promise<PackagePersonalDataResponse> {
+  try {
+    const response = await api.get(
+      `/umrah/v2/personal-package/package-by-journey/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Error get offer umrah personal:', error)
+    throw error
+  }
+}
+
+export async function getOfferUmrahPersonalById(
+  id: number
+): Promise<AxiosResponse<PackagePersonalData>> {
+  return apiWithAuth.get(`/umrah/v2/personal-package/${id}`)
 }

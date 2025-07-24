@@ -9,7 +9,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeInOut, motion } from 'framer-motion'
 import { ChevronRight, X } from 'lucide-react'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import renderHTML from 'react-render-html'
@@ -64,7 +64,7 @@ const TermsConditionTemplate = ({
       },
       transition: {
         duration: 0.5,
-        ease: 'easeInOut',
+        ease: easeInOut,
       },
     }),
     [expanded, isOverflowing, maxHeight]

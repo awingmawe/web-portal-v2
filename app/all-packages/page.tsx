@@ -25,7 +25,7 @@ export async function generateMetadata({
   const resolvedSearchParams = await searchParams
   return {
     ...metadata(
-      'Muslim 101 | Daftar Paket Muslim101',
+      'Muslim101 | Daftar Paket Muslim101',
       `Daftar pencarian paket ${resolvedSearchParams.query || ''}`
     ),
   }
@@ -62,6 +62,8 @@ export default async function SearchGeneral({
   const facilityCode = awaitedParams.fC || undefined
   const section = awaitedParams.section || undefined
   const tagSlug = awaitedParams.tS || undefined
+  const minDpAmount = awaitedParams.dpMin || undefined
+  const maxDpAmount = awaitedParams.dpMax || undefined
 
   // Order Filter
   // Handle sorting options
@@ -102,6 +104,8 @@ export default async function SearchGeneral({
     facilityCode,
     section,
     tagSlug,
+    minDpAmount,
+    maxDpAmount,
   })
 
   return (

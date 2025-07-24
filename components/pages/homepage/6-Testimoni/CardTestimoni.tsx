@@ -26,7 +26,7 @@ export const CardTestimoni = memo(function CardTestimoni({
           className="aspect-video h-full w-full object-cover object-center"
         />
       </div>
-      <CardContent className="h-[240px] lg:h-[220px]">
+      <CardContent className="h-[270px] lg:h-[220px]">
         <p className="text-l-semibold mb-2">{name}</p>
         <div className="mb-3 flex text-white">
           {[1, 2, 3, 4, 5].map((_, i) => (

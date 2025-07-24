@@ -111,13 +111,13 @@ export default function BankAccountResponsive({
               <FormLabel className="mb-0 text-sm !font-normal text-neutral-800">
                 Pilih Bank <span className="text-red-500">*</span>
               </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className="w-full rounded-full border border-neutral-200 py-5 shadow-none">
                     <SelectValue placeholder="Pilih bank rekening kamu" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent className="border border-neutral-200">
+                <SelectContent className="z-[9999] border border-neutral-200">
                   {banks.map((bank) => (
                     <SelectItem key={bank.name} value={bank.name}>
                       {bank.name}

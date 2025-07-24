@@ -1,11 +1,13 @@
-export const springTransition = {
+import { Transition } from 'framer-motion'
+
+export const springTransition: Transition = {
   type: 'spring',
   delay: 0.2,
   mass: 1,
   stiffness: 80,
   damping: 20,
 }
-export const springTransitionMobile = {
+export const springTransitionMobile: Transition = {
   type: 'spring',
   delay: 0.2,
   mass: 1,

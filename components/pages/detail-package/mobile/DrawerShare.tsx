@@ -16,7 +16,7 @@ import { ACCOUNT_URL } from '@/constant/env'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { toggleLike } from '@/services/umrah-service'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeOut, motion } from 'framer-motion'
 import { Heart, X } from 'lucide-react'
 import React, { useState } from 'react'
 
@@ -84,7 +84,7 @@ const ShareDrawer = React.memo(
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
+                transition={{ duration: 0.2, ease: easeOut }}
               >
                 <Heart
                   size={20}

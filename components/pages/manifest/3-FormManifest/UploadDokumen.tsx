@@ -17,6 +17,7 @@ interface FileUploadProps {
   onChange?: (file: File | null) => void
   className?: string
   value?: File | string | null
+  disabled?: boolean
 }
 
 export function FileUpload({
@@ -27,6 +28,7 @@ export function FileUpload({
   onChange,
   className,
   value,
+  disabled = false,
 }: FileUploadProps) {
   const [file, setFile] = useState<File | string | null>(value ?? null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -37,6 +39,8 @@ export function FileUpload({
   }, [value])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return // Prevent file change when disabled
+
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0]
       setFile(selectedFile)
@@ -53,6 +57,8 @@ export function FileUpload({
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    if (disabled) return // Prevent drop when disabled
+
     e.preventDefault()
     e.stopPropagation()
 
@@ -81,16 +87,21 @@ export function FileUpload({
   }
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    if (disabled) return // Prevent drag over when disabled
     e.preventDefault()
   }
 
   const handleRemoveFile = () => {
+    if (disabled) return // Prevent remove when disabled
+
     setFile(null)
     if (inputRef.current) inputRef.current.value = ''
     if (onChange) onChange(null)
   }
 
   const handleUploadClick = () => {
+    if (disabled) return // Prevent upload click when disabled
+
     if (inputRef.current) {
       inputRef.current.click()
     }
@@ -98,17 +109,26 @@ export function FileUpload({
 
   return (
     <div className={cn('space-y-2', className)}>
-      <FormLabel className="text-s-medium text-neutral-900">
+      <FormLabel
+        className={cn(
+          'text-s-medium',
+          disabled ? 'text-neutral-400' : 'text-neutral-900'
+        )}
+      >
         {label} {required && <span className="text-error-500">*</span>}
       </FormLabel>
 
       <div
         className={cn(
-          'group bg-neutral-0 relative flex items-center justify-between gap-2 rounded-xl border border-neutral-300  px-2.5 py-3 transition-colors',
-          file ? 'border-primary-500' : 'border-dashed hover:bg-neutral-100'
+          'group bg-neutral-0 relative flex items-center justify-between gap-2 rounded-xl border px-2.5 py-3 transition-colors',
+          disabled
+            ? 'cursor-not-allowed border-neutral-200 bg-neutral-50'
+            : file
+              ? 'border-primary-500 border-neutral-300'
+              : 'border-dashed border-neutral-300 hover:bg-neutral-100'
         )}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
+        onDrop={!disabled ? handleDrop : undefined}
+        onDragOver={!disabled ? handleDragOver : undefined}
       >
         <input
           type="file"
@@ -116,24 +136,43 @@ export function FileUpload({
           onChange={handleFileChange}
           accept={accept}
           className="hidden"
+          disabled={disabled}
         />
 
         {file ? (
           <div className="flex w-full items-center justify-start gap-1">
-            <UploadIconPrimary />
-            <p className="text-m-medium text-center text-neutral-900">
+            <UploadIconPrimary className={disabled ? 'opacity-50' : ''} />
+            <p
+              className={cn(
+                'text-center text-[12px]',
+                disabled ? 'text-neutral-400' : 'text-neutral-900'
+              )}
+            >
               {file instanceof File ? file.name : label}
             </p>
           </div>
         ) : (
           <div className="flex flex-col items-start justify-start gap-1">
             <div className="flex items-center gap-1 max-lg:gap-2">
-              <UploadDokumenIcon size={24} />
-              <p className="text-m-regular text-center text-neutral-900 max-lg:text-left">
+              <UploadDokumenIcon
+                size={24}
+                className={disabled ? 'opacity-50' : ''}
+              />
+              <p
+                className={cn(
+                  'text-center text-[12px] max-lg:text-left',
+                  disabled ? 'text-neutral-400' : 'text-neutral-900'
+                )}
+              >
                 {isMobile ? 'Unggah dokumen disini' : description}
               </p>
             </div>
-            <p className="text-s-regular text-center text-neutral-900 max-lg:text-left">
+            <p
+              className={cn(
+                'text-center text-[12px] max-lg:text-left',
+                disabled ? 'text-neutral-400' : 'text-neutral-900'
+              )}
+            >
               mendukung tipe file: Jpeg, Jpg, PNG, PDF
             </p>
           </div>
@@ -143,19 +182,39 @@ export function FileUpload({
           <Button
             type="button"
             onClick={handleUploadClick}
-            className="border-primary-500 border-[2px] px-5 py-3"
+            className={cn(
+              'border-[2px] px-5 py-3',
+              disabled
+                ? 'cursor-not-allowed border-neutral-200 text-neutral-400 hover:bg-transparent'
+                : 'border-primary-500'
+            )}
             variant="outline"
+            disabled={disabled}
           >
             Upload
           </Button>
         )}
         {file && (
           <div className="flex items-center gap-1">
-            <div onClick={handleUploadClick}>
-              <EditIcon className="text-neutral-200" />
+            <div
+              onClick={!disabled ? handleUploadClick : undefined}
+              className={disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+            >
+              <EditIcon
+                className={cn(
+                  disabled ? 'text-neutral-300' : 'text-neutral-200'
+                )}
+              />
             </div>
-            <div onClick={handleRemoveFile}>
-              <TrashIcon className="text-neutral-200" />
+            <div
+              onClick={!disabled ? handleRemoveFile : undefined}
+              className={disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+            >
+              <TrashIcon
+                className={cn(
+                  disabled ? 'text-neutral-300' : 'text-neutral-200'
+                )}
+              />
             </div>
           </div>
         )}

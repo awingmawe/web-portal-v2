@@ -13,7 +13,7 @@ import { Fragment } from 'react'
 
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim 101 | About Us', `Muslim 101 About Us`),
+    ...metadata('Muslim101 | About Us', `Muslim101 About Us`),
   }
 }
 

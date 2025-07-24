@@ -1,15 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Airport } from '@/constant/types/AirportProps'
 import { UseSearchParams, UseSearchResult } from '@/hooks/types-props'
-import { getAirports } from '@/services/general-service'
+import { getAirports, getAirportsV2 } from '@/services/general-service'
 import { useCallback, useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 export function useAirportSearch({
   initialQuery = '',
   pageSize = 15,
+  typeairport,
+  version = 'v2',
 }: UseSearchParams = {}): UseSearchResult<Airport> {
   const [searchQuery, setSearchQuery] = useState(initialQuery)
+
   const [airports, setAirports] = useState<Airport[]>([])
   const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
@@ -21,11 +24,17 @@ export function useAirportSearch({
   const fetchAirports = useCallback(
     async (pageNum: number, query: string = '') => {
       try {
-        const response = await getAirports({
+        const params = {
           page: pageNum,
           size: pageSize,
-          search: query,
-        })
+          [`cityName|code|name:likeLower`]: query ? `%${query}%` : undefined,
+          ['countryId:eq']:
+            typeairport && typeairport === 'departure' ? 682 : undefined,
+        }
+        const response =
+          version === 'v1'
+            ? await getAirports(params)
+            : await getAirportsV2(params)
         return response
       } catch (err) {
         setError(

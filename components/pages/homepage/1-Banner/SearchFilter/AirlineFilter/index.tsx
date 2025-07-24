@@ -8,13 +8,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { IS_NOT_TRANSIT } from '@/constant/env'
 import { OtherProps } from '@/constant/types/GeneralProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { capitalizeText } from '@/lib/utils'
 import React, { Fragment } from 'react'
 import AirlineList from './AirlineList'
-
-const IS_NOT_TRANSIT = ['GA', 'SV', 'JT']
 
 const AirlineFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
   const { filters, setAirline, isDisabled, isLoadingSkeleton } =

@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/carousel'
 import { PackageTagSlug } from '@/constant/types/ArticleProps'
 import { CardData } from '@/constant/types/PackageProps'
+import { ChevronRightCircle } from 'lucide-react'
+import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 
 interface PackageListEventProps {
@@ -90,6 +92,19 @@ const PackageSection = ({
           >
             <CarouselContent className="-ml-4.5 px-2 max-lg:ml-0">
               {isLoading ? renderSkeletonItems(4, true) : packageItems}
+              <CarouselItem
+                className="mx-4.5 hidden basis-4/5 flex-col items-center
+              justify-center rounded-2xl border border-neutral-200 max-lg:flex md:basis-1/2 lg:basis-1/4"
+              >
+                <Link href={`/search?page=1&query=&section=${type}`}>
+                  <div className="flex flex-col items-center gap-2">
+                    <ChevronRightCircle className="h-10 w-10" />
+                    <p className="text-m-regular text-center text-neutral-900">
+                      Lihat Paket Lainnya
+                    </p>
+                  </div>
+                </Link>
+              </CarouselItem>
             </CarouselContent>
             <CarouselPrevious className="top-[35%] max-lg:hidden" />
             <CarouselNext className="top-[35%] max-lg:hidden" />

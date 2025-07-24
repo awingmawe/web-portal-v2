@@ -40,6 +40,10 @@ export default function TransactionUpcoming() {
   const [statusFilter, setStatusFilter] = useState<string>(
     searchParams.get('status') || 'all'
   )
+
+  const [statusFilterType, setStatusFilterType] = useState<string>(
+    searchParams.get('status') || 'all'
+  )
   const [statusFilterMobile, setStatusFilterMobile] = useState<string>(
     searchParams.get('status') || 'all'
   )
@@ -90,7 +94,11 @@ export default function TransactionUpcoming() {
         queryParams['isCompletedManifest'] = true
         queryParams['isPaidOff'] = true
       }
-
+      if (statusFilterType === 'umrah') {
+        queryParams['packageType'] = 'umrah'
+      } else if (statusFilterType === 'umrah-personal') {
+        queryParams['packageType'] = 'umrah-personal'
+      }
       if (dateRange?.from) {
         queryParams['createdAt:gte'] = dateRange.from.toISOString()
       }
@@ -121,7 +129,15 @@ export default function TransactionUpcoming() {
       setError('Failed to load transactions. Please try again.')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, searchQuery, statusFilter, dateRange, lg, router])
+  }, [
+    currentPage,
+    searchQuery,
+    statusFilter,
+    statusFilterType,
+    dateRange,
+    lg,
+    router,
+  ])
 
   // Handle page change
   const goToPage = useCallback((page: number) => {
@@ -136,6 +152,11 @@ export default function TransactionUpcoming() {
   // Handle status filter change
   const handleStatusFilterChange = (value: string) => {
     setStatusFilter(value)
+    setCurrentPage(1) // Reset to first page when filter changes
+  }
+
+  const handleStatusFilterTypeChange = (value: string) => {
+    setStatusFilterType(value)
     setCurrentPage(1) // Reset to first page when filter changes
   }
 
@@ -167,8 +188,10 @@ export default function TransactionUpcoming() {
         searchQuery={searchQuery}
         handleSearchChange={handleSearchChange}
         statusFilter={statusFilter}
+        statusFilterType={statusFilterType}
         handleStatusFilterChange={handleStatusFilterChange}
         handleDateRangeChange={handleDateRangeChange}
+        handleStatusFilterTypeChange={handleStatusFilterTypeChange}
       />
 
       {/* Search and Filter Mobile */}

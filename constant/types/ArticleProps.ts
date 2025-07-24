@@ -22,6 +22,7 @@ export interface Article {
   hashtags: string[]
   otherArticles: Article[]
   promo_tag: string
+  created_by: string
 }
 
 export interface Category {

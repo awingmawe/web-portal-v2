@@ -149,6 +149,17 @@ export default function VerificationDialog({
     }
   }
 
+  const getTextDilog = () => {
+    switch (purpose) {
+      case 'post-add-phone':
+        return 'Masukkan OTP yang dikirimkan ke whatsapp kamu'
+      case 'post-edit-phone':
+        return 'Masukkan OTP yang dikirimkan ke whatsapp kamu'
+      default:
+        return 'Masukkan OTP yang dikirimkan ke alamat email kamu'
+    }
+  }
+
   const formContent = (
     <div>
       <div className="mb-6 flex justify-between gap-0 max-lg:gap-2">
@@ -218,7 +229,7 @@ export default function VerificationDialog({
         <DrawerTitle>
           <div className="text-m-semibold mb-2">{getDialogTitle()}</div>
           <p className="text-m-regular mt-1 text-neutral-500">
-            Masukkan OTP yang dikirimkan ke alamat email kamu
+            {getTextDilog()}
           </p>
         </DrawerTitle>
       ) : (
@@ -233,7 +244,7 @@ export default function VerificationDialog({
               {getDialogTitle()}
             </DialogTitle>
             <p className="text-m-regular mt-1 text-neutral-500">
-              Masukkan OTP yang dikirimkan ke alamat email kamu
+              {getTextDilog()}
             </p>
           </div>
           <DialogClose asChild>

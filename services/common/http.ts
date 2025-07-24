@@ -185,5 +185,5 @@ export function createServerApiClient(token: string): AxiosInstance {
 }
 
 // Export API instances
-export const api = createApiClient(API_URL as string) // public
-export const apiWithAuth = createApiClient(API_URL as string, true)
+export const api = createApiClient(API_URL as string) // public, when call in server side need to pass the TOKEN
+export const apiWithAuth = createApiClient(API_URL as string, true) // ONLY USE IN CLIENT-SIDE

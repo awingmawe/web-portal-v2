@@ -33,6 +33,7 @@ export interface TransactionCardProps {
   createdDate: string
   jemaah: number
   isCompletedManifest: boolean
+  isManifestCommitted: boolean
   isPaidOff: boolean
   statusTahapan: string
   statusTahapanDetail: string
@@ -45,6 +46,7 @@ export interface TransactionCardProps {
   noFooter?: boolean
   fetchTransactions?: any
   transaction?: any
+  packagePersonalId?: number
 }
 
 function renderManifestComplete(
@@ -112,6 +114,7 @@ export default function TransactionCard({
   createdDate,
   jemaah,
   isCompletedManifest,
+  isManifestCommitted,
   isPaidOff,
   statusTahapan,
   statusTahapanDetail,
@@ -124,6 +127,7 @@ export default function TransactionCard({
   organizationInstanceId,
   fetchTransactions,
   transaction,
+  packagePersonalId,
 }: TransactionCardProps) {
   const { lg } = useTailwindBreakpoint()
   const [orderPayment, setOrderPayment] = useState<any>(null)
@@ -280,7 +284,13 @@ export default function TransactionCard({
                     className="block h-full w-full rounded-md object-cover max-lg:hidden"
                   />
                 ) : (
-                  <div className="block h-full w-full rounded-md bg-neutral-100 max-lg:hidden" />
+                  <Image
+                    src={'/thumbnail.png'}
+                    alt="Umroh Package"
+                    width={60}
+                    height={60}
+                    className="block h-full w-full rounded-md object-cover max-lg:hidden"
+                  />
                 )}
                 {thumbnail ? (
                   <Image
@@ -291,7 +301,13 @@ export default function TransactionCard({
                     className="hidden h-full w-full rounded-md object-cover max-lg:block"
                   />
                 ) : (
-                  <div className="hidden h-full w-full rounded-md bg-neutral-100 max-lg:block" />
+                  <Image
+                    src={'/thumbnail.png'}
+                    alt="Umroh Package"
+                    width={60}
+                    height={60}
+                    className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                  />
                 )}
               </div>
               <div className="flex flex-col justify-between">
@@ -369,6 +385,7 @@ export default function TransactionCard({
                     detailOnly={detailOnly}
                     isPaidOff={isPaidOff}
                     isCompletedManifest={isCompletedManifest}
+                    isManifestCommitted={isManifestCommitted}
                     showDpButton={showDpButton}
                     bookingId={bookingId}
                     id={id}

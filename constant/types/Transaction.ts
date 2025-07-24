@@ -21,7 +21,9 @@ export interface Transaction {
   totalPrice: string
   subtotalPrice: string
   isPaidOff: boolean
+  packagePersonalId: number
   isCompletedManifest: boolean
+  isManifestCommitted: boolean
   feeWukalaPosted: boolean
   feeWukalaDisbursed: boolean
   roomType: string

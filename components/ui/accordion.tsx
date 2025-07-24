@@ -42,13 +42,15 @@ function AccordionTrigger({
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          'flex flex-1 cursor-pointer items-start justify-between gap-4 rounded-md py-3 text-left text-sm font-medium transition-all outline-none focus-visible:outline-0 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180',
+          'flex w-full flex-1 cursor-pointer items-start justify-between gap-4 rounded-md py-3 text-left text-sm font-medium transition-all outline-none focus-visible:outline-0 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180',
           className
         )}
         {...props}
       >
-        {children}
-        <ChevronIcon size={24} />
+        <div className="w-11/12">{children}</div>
+        <div className="w-1/12">
+          <ChevronIcon size={24} />
+        </div>
       </AccordionPrimitive.Trigger>
       {!noSeparator && <Separator color="#B5B5B5" className="h-[0.5px]" />}
     </AccordionPrimitive.Header>

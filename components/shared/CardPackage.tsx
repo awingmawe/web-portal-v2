@@ -56,26 +56,41 @@ export const CardPackage = memo(function CardPackage({
     () => !isEmpty(discount) && Number(discount) > 0,
     [discount]
   )
+  const formattedDepartureDate = useMemo(() => {
+    try {
+      return format(departureDate, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting departureDate:', error)
+      return ''
+    }
+  }, [departureDate])
 
-  const formattedDepartureDate = useMemo(
-    () => format(departureDate, 'dd MMM yyyy', { locale: id }),
-    [departureDate]
-  )
+  const formattedArrivalDate = useMemo(() => {
+    try {
+      return format(arrivalDate, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting arrivalDate:', error)
+      return ''
+    }
+  }, [arrivalDate])
 
-  const formattedArrivalDate = useMemo(
-    () => format(arrivalDate, 'dd MMM yyyy', { locale: id }),
-    [arrivalDate]
-  )
+  const formattedReleasedAt = useMemo(() => {
+    try {
+      return format(releasedAt, 'dd MMM yyyy', { locale: id })
+    } catch (error) {
+      console.error('Error formatting releasedAt:', error)
+      return ''
+    }
+  }, [releasedAt])
 
-  const formattedReleasedAt = useMemo(
-    () => format(releasedAt, 'dd MMM yyyy', { locale: id }),
-    [releasedAt]
-  )
-
-  const numberOfDays = useMemo(
-    () => differenceInDays(arrivalDate, departureDate) + 1,
-    [arrivalDate, departureDate]
-  )
+  const numberOfDays = useMemo(() => {
+    try {
+      return differenceInDays(arrivalDate, departureDate) + 1
+    } catch (error) {
+      console.error('Error calculating numberOfDays:', error)
+      return 0
+    }
+  }, [arrivalDate, departureDate])
 
   // Memoize the stars rendering
   const ratingStars = useMemo(
@@ -100,7 +115,7 @@ export const CardPackage = memo(function CardPackage({
             ? 'z-2 mt-0 h-12 w-12'
             : 'z-1 -mt-4 h-16 w-12 object-cover'
         } rounded-bl-[18px] shadow-[1px_2px_2px_0px_rgba(0,0,0,0.40)]`}
-        key={`flag-${value.country.alpha2Code}`}
+        key={`flag-${value.country.alpha2Code}-${index}`}
         alt="flag-icon"
         src={`https://kapowaz.github.io/square-flags/flags/${value.country.alpha2Code}.svg`}
       />
@@ -162,12 +177,14 @@ export const CardPackage = memo(function CardPackage({
           },
         })
       }}
-      className="relative"
+      className={`relative ${section === 'search-topbar' ? 'flex flex-row items-center gap-3' : 'flex flex-col'}`}
       id="card-package"
     >
       {/* Image */}
       {showDiscount && <BadgePromo title="PROMO 🎉" />}
-      <div className="relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md">
+      <div
+        className={`relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md ${section === 'search-topbar' ? 'w-[200px]' : ''}`}
+      >
         <Image
           src={!isEmpty(src) && isValidImage(src) ? src : NoImagePlaceholder}
           alt={title}
@@ -195,7 +212,7 @@ export const CardPackage = memo(function CardPackage({
       </div>
 
       {/* Content */}
-      <div className="mt-3 flex flex-col gap-1" ref={elem}>
+      <div className="mt-3 flex flex-1 flex-col gap-1" ref={elem}>
         {differenceInDays(releasedAt, new Date()) <= 10 && (
           <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1">
             <InfoIcon size={20} className="text-primary-700 stroke-0" />
@@ -206,7 +223,7 @@ export const CardPackage = memo(function CardPackage({
         )}
 
         {/* Title */}
-        <h3 className="text-l-regular line-clamp-2 break-all text-neutral-900 uppercase max-sm:text-sm max-sm:leading-5">
+        <h3 className="text-l-regular line-clamp-2 break-words text-neutral-900 uppercase max-sm:text-sm max-sm:leading-5">
           {title}
         </h3>
 

@@ -1,8 +1,9 @@
 import { EditIcon } from '@/components/icons/edit'
-import { EmailIcon } from '@/components/icons/email'
+import { PhoneIcon } from '@/components/icons/phone'
 import { PlusIcon } from '@/components/icons/plus'
 import CardPhoneNumberDialog from '@/components/pages/my/4-Profile/Card/5-Phone/CardPhoneDialog'
 import VerificationDialog from '@/components/pages/my/4-Profile/Card/VerificationDialog'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/components/ui/sonner'
@@ -11,13 +12,18 @@ import { useState } from 'react'
 interface CardPhoneProps {
   phoneNumber: string
   onUpdated: () => void
+  phonenumberVerified: boolean
 }
 
 interface PhoneNumberFormValue {
   phoneNumber: string
 }
 
-export default function CardPhone({ phoneNumber, onUpdated }: CardPhoneProps) {
+export default function CardPhone({
+  phoneNumber,
+  onUpdated,
+  phonenumberVerified,
+}: CardPhoneProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isVerificationDialogOpen, setIsVerificationDialogOpen] =
@@ -100,7 +106,24 @@ export default function CardPhone({ phoneNumber, onUpdated }: CardPhoneProps) {
   return (
     <Card className="mb-6 !gap-[0px] rounded-3xl border border-neutral-200 !pt-3 shadow-none">
       <CardHeader className="pt border-b border-neutral-200 px-5 !pb-2">
-        <CardTitle className="text-m-semibold">Nomor Telepon</CardTitle>
+        <CardTitle className="text-m-semibold flex items-center justify-between">
+          <span>Nomor Telepon</span>
+          {phonenumberVerified ? (
+            <Badge
+              variant="outline"
+              className="bg-success-100 !text-success-600 text-m-medium rounded-full border-0 px-3 py-1.5"
+            >
+              Sudah Diverifikasi
+            </Badge>
+          ) : (
+            <Badge
+              variant="outline"
+              className="bg-error-100 !text-error-600 text-m-medium rounded-full border-0 px-3 py-1.5"
+            >
+              Belum Diverifikasi
+            </Badge>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent className="gap-0 space-y-4 px-4 pt-5">
         {!phoneNumber ? (
@@ -148,7 +171,7 @@ export default function CardPhone({ phoneNumber, onUpdated }: CardPhoneProps) {
         onOpenChange={setIsVerificationDialogOpen}
         onVerify={handleVerify}
         onResendOtp={handleResendOtp}
-        icon={<EmailIcon className="h-7 w-7 text-yellow-600" />}
+        icon={<PhoneIcon className="h-7 w-7 text-yellow-600" />}
         purpose={verificationPurpose}
         isLoading={isLoading}
       />

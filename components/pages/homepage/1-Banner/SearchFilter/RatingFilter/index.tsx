@@ -93,11 +93,11 @@ const HotelStarFilter: React.FC = () => {
           </div>
         </div>
       </PopoverTrigger>
-      <PopoverContent align="start" sideOffset={8}>
+      <PopoverContent align="start" sideOffset={8} className="z-10">
         {hotelStarOptions.map((option) => (
           <React.Fragment key={option.value}>
             <div
-              className={`${dissolve} flex cursor-pointer flex-col gap-1 px-3 py-2.5 hover:bg-gray-200`}
+              className={`${dissolve} z-10 flex cursor-pointer flex-col gap-1 px-3 py-2.5 hover:bg-gray-200`}
               onClick={option.handler}
             >
               <span className="text-s-regular text-neutral-500">

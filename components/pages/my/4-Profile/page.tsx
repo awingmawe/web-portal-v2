@@ -59,6 +59,7 @@ export default function MyProfilePage() {
       <CardPhone
         phoneNumber={profile.persona?.phoneNumber || ''}
         onUpdated={refetchProfile}
+        phonenumberVerified={profile?.phonenumberVerified || false}
       />
     </div>
   )

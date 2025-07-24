@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useMediaQuery as useResponsiveMediaQuery } from 'react-responsive'
 
 /**
@@ -8,6 +9,7 @@ import { useMediaQuery as useResponsiveMediaQuery } from 'react-responsive'
  * @returns An object with boolean values for each Tailwind breakpoint.
  */
 export function useTailwindBreakpoint() {
+  const [mounted, setMounted] = useState(false)
   // Define breakpoints according to Tailwind's default theme
   const xs = useResponsiveMediaQuery({ query: '(max-width: 639px)' })
   const sm = useResponsiveMediaQuery({ query: '(min-width: 640px)' })
@@ -15,6 +17,22 @@ export function useTailwindBreakpoint() {
   const lg = useResponsiveMediaQuery({ query: '(max-width: 1024px)' })
   const xl = useResponsiveMediaQuery({ query: '(min-width: 1280px)' })
   const xxl = useResponsiveMediaQuery({ query: '(min-width: 1536px)' }) // 2xl in Tailwind
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Return default values during SSR
+  if (!mounted) {
+    return {
+      xs: false,
+      sm: false,
+      md: false,
+      lg: false,
+      xl: false,
+      xxl: false,
+    }
+  }
 
   return { xs, sm, md, lg, xl, xxl }
 }

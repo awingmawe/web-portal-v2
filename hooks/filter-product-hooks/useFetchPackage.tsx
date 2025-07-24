@@ -45,6 +45,8 @@ export function useFetchPackage() {
         facilityCode: queryParams.facilityCode,
         section: queryParams.section,
         tagSlug: queryParams.tagSlug,
+        minDpAmount: queryParams.minDp,
+        maxDpAmount: queryParams.maxDp,
       }
 
       const response = await getPackageList(apiParams)

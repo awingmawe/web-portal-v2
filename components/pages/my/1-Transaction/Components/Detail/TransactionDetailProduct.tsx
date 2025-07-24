@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ArrowIcon } from '@/components/icons/arrow'
-import { BedIcon } from '@/components/icons/bed'
 import { BriefCaseIcon } from '@/components/icons/briefcase'
 import { Calendar2 } from '@/components/icons/calendar'
 import { UsersIcon } from '@/components/icons/user'
@@ -90,7 +90,7 @@ export default function TransactionDetailProduct({
               {totalJemaah} Jemaah
             </p>
           </div>
-          <div className="mt-2 flex items-center">
+          {/* <div className="mt-2 flex items-center">
             <BedIcon className="h-5 w-5 text-neutral-500" />
             <p className="ml-3 text-sm text-neutral-500 max-lg:text-xs">
               {roomType === 'quad'
@@ -99,7 +99,7 @@ export default function TransactionDetailProduct({
                   ? 'Triple - 1 Kamar Bertiga'
                   : 'Double - 1 Kamar Berdua'}
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

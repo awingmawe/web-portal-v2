@@ -1,13 +1,14 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Airline } from '@/constant/types/AirlineProps'
 import { UseSearchParams, UseSearchResult } from '@/hooks/types-props'
-import { getAirline } from '@/services/general-service'
+import { getAirline, getAirlineV2 } from '@/services/general-service'
 import { useCallback, useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 export function useAirlineSearch({
   initialQuery = '',
   pageSize = 15,
+  version = 'v2',
+  isTransit = false,
 }: UseSearchParams = {}): UseSearchResult<Airline> {
   const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [airlines, setAirlines] = useState<Airline[]>([])
@@ -21,11 +22,21 @@ export function useAirlineSearch({
   const fetchAirlines = useCallback(
     async (pageNum: number, query: string = '') => {
       try {
-        const response = await getAirline({
+        const params = {
           page: pageNum,
           size: pageSize,
-          search: query,
-        })
+          [`code|countryName|name:likeLower`]: query ? `%${query}%` : undefined,
+          [`code:in`]: isTransit ? undefined : 'GA,SV,JT',
+        }
+        const paramsv2 = {
+          page: pageNum,
+          size: pageSize,
+          search: query ? `${query}` : undefined,
+        }
+        const response =
+          version === 'v1'
+            ? await getAirline(params)
+            : await getAirlineV2(paramsv2)
         return response
       } catch (err) {
         setError(
@@ -34,7 +45,7 @@ export function useAirlineSearch({
         return { results: [], total: 0 }
       }
     },
-    [pageSize]
+    [isTransit, pageSize, version]
   )
 
   // Initial data load
@@ -47,11 +58,11 @@ export function useAirlineSearch({
       setHasMore(data.results.length < data.total)
       setPage(1)
 
-      setTimeout(() => setInitialLoading(false), 500)
+      setInitialLoading(false)
     }
 
     loadInitialData()
-  }, [searchQuery])
+  }, [fetchAirlines, searchQuery])
 
   // Load more airlines
   const loadMoreAirlines = useCallback(async () => {
@@ -68,7 +79,7 @@ export function useAirlineSearch({
 
     setHasMore(airlines.length + data.results.length < data.total)
     setLoading(false)
-  }, [page])
+  }, [airlines.length, fetchAirlines, loading, page, searchQuery])
 
   // Debounced search handler
   const handleSearchChange = useDebouncedCallback(

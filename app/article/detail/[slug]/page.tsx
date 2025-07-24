@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: any) {
 
   return {
     ...metadata(
-      `Muslim 101 | ${dataDetail?.title}`,
+      `Muslim101 | ${dataDetail?.title}`,
       dataDetail?.description,
       dataDetail?.thumbnail,
       dataDetail?.hashtags

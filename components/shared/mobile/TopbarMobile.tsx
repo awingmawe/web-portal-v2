@@ -5,6 +5,7 @@ import { ArrowIcon } from '@/components/icons/arrow'
 import { CallCenterIcon } from '@/components/icons/call-center'
 import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
 import FilterDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/FilterDrawerMobile'
+import QuestionDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/QuestionDrawer'
 import { Input } from '@/components/ui/input'
 import { CALL_CENTER } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
@@ -16,7 +17,13 @@ import { Bell, Search } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 // Define the props interface with all possible options
 interface MobileTopbarProps {
@@ -24,6 +31,8 @@ interface MobileTopbarProps {
     | 'search'
     | 'title'
     | 'filter'
+    | 'filterPermata'
+    | 'filterLinkAja'
     | 'plain'
     | 'transparent'
     | 'transactionTopbar'
@@ -32,6 +41,7 @@ interface MobileTopbarProps {
     | 'pendanaanSyariah'
     | 'plainBank'
     | 'suksesBanking'
+  forceMobile?: boolean
   titleLink?: string
   title?: string
   token?: string
@@ -60,6 +70,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     showBackButton = true,
     showCallCenter = false,
     onBackClick,
+    forceMobile = false,
     titleLink = '',
     token,
     packageId,
@@ -156,6 +167,29 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               )}
             </div>
           )
+        case 'filterPermata':
+        case 'filterLinkAja':
+          return (
+            <div className="flex w-full flex-col items-start">
+              {isEmpty(formattedDateRange) &&
+                isEmpty(arrivalAirport) &&
+                isEmpty(departureAirport) && (
+                  <div className="text-s-medium text-left text-neutral-900">
+                    Umroh
+                  </div>
+                )}
+              {formattedDateRange && (
+                <div className="text-m-medium text-left">
+                  {formattedDateRange}
+                </div>
+              )}
+              {(arrivalAirport || departureAirport) && (
+                <div className="text-s-regular mt-1 text-left">
+                  {getDisplayText}
+                </div>
+              )}
+            </div>
+          )
 
         case 'profileTopbar':
         case 'pendanaanSyariah':
@@ -226,6 +260,8 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'search':
         case 'suksesBanking':
         case 'filter':
+        case 'filterPermata':
+        case 'filterLinkAja':
           return ''
         case 'transparent':
           return `bg-neutral-0 rounded-[20px] p-1 ${
@@ -246,7 +282,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
       // Base classes that apply to all variants
       const baseClasses = [
         dissolve,
-        'z-10 flex w-full items-center justify-between px-4 py-3 lg:hidden',
+        `z-10 flex w-full items-center justify-between px-4 py-3 ${forceMobile ? '' : 'lg:hidden'}`,
       ]
 
       // Position classes based on variant
@@ -272,8 +308,9 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'search':
         case 'suksesBanking':
         case 'filter':
-          positionClasses =
-            'max-lg:bg-primary-500 absolute h-[100px] -top-[22px]'
+        case 'filterPermata':
+        case 'filterLinkAja':
+          positionClasses = `${forceMobile ? 'max-w-xl w-full bg-primary-500' : 'max-lg:bg-primary-500'} absolute h-[100px] -top-[22px]`
           backgroundClasses = ''
           break
         case 'transactionTopbar':
@@ -315,6 +352,13 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         )
       } else if (variant === 'filter') {
         return <FilterDrawer />
+      } else if (variant === 'filterPermata' || variant === 'filterLinkAja') {
+        return (
+          <Fragment>
+            <FilterDrawer />
+            <QuestionDrawer />
+          </Fragment>
+        )
       }
 
       return null
@@ -323,6 +367,8 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     return (
       <div className={containerClasses}>
         {(variant === 'filter' ||
+          variant === 'filterPermata' ||
+          variant === 'filterLinkAja' ||
           variant === 'title' ||
           variant === 'search' ||
           variant === 'suksesBanking') && (
@@ -334,7 +380,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               width={0}
               height={0}
               sizes="100vw"
-              className="absolute right-0 bottom-0 -z-1 h-auto w-1/4 lg:hidden"
+              className={`absolute right-0 bottom-0 -z-1 h-auto w-1/4 ${forceMobile ? '' : 'lg:hidden'}`}
             />
             <Image
               src="/images/circle-2.svg"
@@ -342,7 +388,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
               width={0}
               height={0}
               sizes="100vw"
-              className="absolute top-0 left-0 -z-1 h-auto w-1/2 lg:hidden"
+              className={`absolute top-0 left-0 -z-1 h-auto w-1/2 ${forceMobile ? '' : 'lg:hidden'}`}
             />
             {/* End of Circle Background for Mobile */}
           </>

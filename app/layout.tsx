@@ -9,6 +9,7 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { Suspense } from 'react'
+import { SWRConfig } from 'swr'
 import './globals.css'
 export const metadata: Metadata = {
   title: 'Muslim 101 | Semua Ada Semua Berkah',
@@ -31,7 +32,7 @@ export default async function RootLayout({
           <GoogleTagManager gtmId={GTM_ID as string} />
 
           <ContextProviders>
-            {children}
+            <SWRConfig>{children}</SWRConfig>
             <Toaster />
             <RemoveLocalReferralCode />
             <QontakChatWidget hide={isWebview ? true : false} />

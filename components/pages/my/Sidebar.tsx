@@ -5,6 +5,8 @@ import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { MoneyTimeIcon } from '@/components/icons/money-time'
 import { MoneysIcon } from '@/components/icons/moneys'
+import { PersonalPaket } from '@/components/icons/personal-paket'
+import { PilotSeatIcon } from '@/components/icons/pilot-seat'
 import { ReceiptIcon } from '@/components/icons/receipt'
 import { SettingIcon } from '@/components/icons/setting'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
@@ -153,17 +155,26 @@ export const Sidebar = () => {
             href="/my/saving"
           />
           <Separator className="mx-auto !w-[90%] bg-neutral-100" />
-          {/* 
-          <MenuItem
+
+          {/* <MenuItem
             icon={<PilotSeatIcon />}
             label="Permintaan Paket Custom"
+            loading={profile ? false : true}
+          /> */}
+          <MenuItem
+            icon={<PersonalPaket />}
+            label="Paket Personal"
+            href="/my/paket-personal"
+            isActive={pathname === '/my/paket-personal'}
             loading={profile ? false : true}
           />
           <MenuItem
             icon={<PilotSeatIcon />}
             label="Cek Ketersediaan Kursi"
+            href="/my/check-availability"
+            isActive={pathname === '/my/check-availability'}
             loading={profile ? false : true}
-          /> */}
+          />
           <MenuItem
             icon={<HeartIcon />}
             label="Wishlist"

@@ -3,11 +3,18 @@ import DealIcon from '@/components/icons/deal'
 import MoneySavingIcon from '@/components/icons/money-saving'
 import MoonIcon from '@/components/icons/moon'
 import { SavingIcon } from '@/components/icons/saving'
+import { UmrahPersonalIcon } from '@/components/icons/umrah-personal'
 import WukalaIcon from '@/components/icons/wukala'
 import Link from 'next/link'
 
 const SubmenuCards = () => {
   const menuItems = [
+    {
+      icon: <UmrahPersonalIcon size={25} />,
+      label: 'Umrah Personal',
+      href: '/umrah-personal/landing',
+      background: 'bg-primary-500',
+    },
     {
       icon: <WukalaIcon width={25} height={25} />,
       label: 'Program Wukala',
@@ -42,7 +49,7 @@ const SubmenuCards = () => {
 
   return (
     <div
-      className="mt-[30px] hidden justify-between gap-2 rounded-xl border-[0.5px] border-[#e1e1e1] px-3 py-[10px] backdrop-blur-[6px] max-lg:mx-4 max-lg:flex"
+      className="scrollbar-hide mt-[30px] hidden justify-between gap-2 overflow-hidden overflow-x-auto rounded-xl border-[0.5px] border-[#e1e1e1] px-3 py-[10px] backdrop-blur-[6px] max-lg:mx-4 max-lg:flex"
       style={{
         background:
           'linear-gradient(94deg, rgba(255, 255, 255, 0.30) 0.15%, rgba(255, 192, 18, 0.30) 47.01%, rgba(255, 255, 255, 0.30) 99.85%)',

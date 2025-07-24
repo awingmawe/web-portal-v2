@@ -53,6 +53,7 @@ export type Profile = {
   modifiedBy?: string
   avatarProvider?: string
   emailVerified?: boolean
+  phonenumberVerified?: boolean
   havePassword?: boolean
   persona?: Persona
 }
