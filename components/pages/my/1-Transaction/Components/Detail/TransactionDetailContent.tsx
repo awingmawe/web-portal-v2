@@ -35,6 +35,7 @@ interface TransactionDetailContentProps {
   setOpenBatalkan?: (open: boolean) => void
 }
 
+type RoomType = 'double' | 'triple' | 'quad'
 // Declare window with Snap interface
 declare global {
   interface Window {
@@ -206,6 +207,45 @@ export default function TransactionDetailContent({
       setLoading(false)
     }
   }, [paymentTransaction, handleSnapPayment, isSnapInitialized])
+  const formatCurrency = (amount: any) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+      .format(amount)
+      .replace('IDR', 'Rp')
+  }
+  const roomTypeMapping: Record<
+    RoomType,
+    { label: string; type: string; subLabel: string }
+  > = {
+    double: {
+      label: 'Double',
+      subLabel: '(1 Kamar Berdua)',
+      type: 'Double',
+    },
+    triple: {
+      label: 'Triple ',
+      subLabel: '(1 Kamar Bertiga)',
+      type: 'Triple',
+    },
+    quad: {
+      label: 'Quad ',
+      subLabel: '(1 Kamar Berempat)',
+      type: 'Quad',
+    },
+  }
+  const isValidRoomInfo = (roomInfo: any): roomInfo is any => {
+    return (
+      roomInfo &&
+      typeof roomInfo === 'object' &&
+      (typeof roomInfo.quantity === 'number' ||
+        typeof roomInfo.quantity === 'string') &&
+      typeof roomInfo.price === 'string'
+    )
+  }
 
   return (
     <div>
@@ -301,6 +341,58 @@ export default function TransactionDetailContent({
                 totalJemaah={transaction?.quantity || ''}
                 roomType={transaction?.roomType || ''}
               />
+              <Separator className="mb-4 !h-2 !bg-neutral-100" />
+
+              <div className="mb-6 px-6 max-lg:px-3">
+                <h3 className="max-lg:text-regular text-sm font-semibold max-lg:text-xs max-lg:font-medium">
+                  Rincian Kamar Hotel
+                </h3>
+
+                {Object.entries(transaction?.roomInfo).map(
+                  ([roomType, roomInfo]) => {
+                    if (!isValidRoomInfo(roomInfo)) return null // Skip if room is null or invalid
+
+                    const roomConfig = roomTypeMapping[roomType as RoomType]
+
+                    if (!roomConfig) return null
+
+                    return (
+                      <div key={roomType} className="mt-3">
+                        {/* Tipe Kamar dengan Label */}
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-[10px] text-neutral-500">
+                              Tipe Kamar
+                            </p>
+                            <p className="mt-0.5 text-[14px] font-medium text-neutral-900 max-lg:text-xs">
+                              {roomConfig.label}{' '}
+                              <span className="text-[14px] text-neutral-500 max-lg:block max-lg:text-xs">
+                                {roomConfig.subLabel}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[10px] text-neutral-500">
+                              Jumlah Jemaah
+                            </p>
+                            <p className="mt-0.5 text-[14px] font-medium text-neutral-900 max-lg:text-xs max-lg:font-medium">
+                              {roomInfo.quantity} Jemaah
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[10px] text-neutral-500">
+                              Harga/Jemaah
+                            </p>
+                            <p className="mt-0.5 text-sm font-medium text-neutral-900 max-lg:text-xs max-lg:font-medium">
+                              {formatCurrency(parseInt(roomInfo.price))}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
+                )}
+              </div>
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
 
               {/* Payment Details */}
