@@ -57,10 +57,8 @@ const HotelPersonalDisplay: React.FC<HotelPersonalDisplayProps> = ({
   loading,
   hotelData,
 }) => {
-  const {
-    selectedHotel: { hotelDestination, name, latitude, longitude },
-    rating,
-  } = hotelData
+  const { selectedHotel, rating } = hotelData
+  const { name, longitude, latitude, hotelDestination } = selectedHotel || {}
   const googleMapsUrl = useMemo(
     () => `https://www.google.com/maps?q=${latitude},${longitude}`,
     [latitude, longitude]

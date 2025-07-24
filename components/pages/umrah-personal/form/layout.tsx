@@ -13,7 +13,6 @@ import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { useStepVisibility } from '@/hooks/umrah-personal/form/useVisibilityStepper'
-import { useAuthNavigation } from '@/hooks/umrah-personal/landing/useAuthNavigation'
 import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNumberVerification'
 import { ChevronLeftCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -106,20 +105,12 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
     initialPhoneNumber: profile?.persona?.phoneNumber,
   })
 
-  // Use auth navigation hook
-  const { handleNavigateWithAuth } = useAuthNavigation({
-    redirectPath: '/umrah-personal/form',
-    requirePhoneVerification: true,
-  })
-
   useEffect(() => {
     if (!profile?.persona?.phoneNumber) {
-      handleNavigateWithAuth(() => {
-        // This callback is called when phone verification is required
-        setOpen(true)
-      })
+      // This callback is called when phone verification is required
+      setOpen(true)
     }
-  }, [handleNavigateWithAuth, profile?.persona?.phoneNumber])
+  }, [profile?.persona?.phoneNumber])
 
   const handleSavePhoneNumber = async () => {
     await handleSendOtp()
@@ -132,9 +123,9 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
       <TopbarMobileFormUmrahPersonal handleBack={handlePrevious} />
       <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
       <LayoutDrawerDialog
-        isOpen={open}
+        isOpen={!profile?.persona?.phoneNumber ? true : open}
         setIsOpen={setOpen}
-        trigger={<></>}
+        trigger={<div className="hidden" />}
         title={<></>}
         content={
           <PhoneNumberNotVerified
