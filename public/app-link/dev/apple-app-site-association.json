@@ -12,10 +12,6 @@
             "exclude": true
           },
           {
-            "/": "/banking/*",
-            "exclude": true
-          },
-          {
             "/": "/*"
           }
         ]
