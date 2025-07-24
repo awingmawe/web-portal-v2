@@ -14,7 +14,8 @@ import {
 import { JourneyInformation } from '@/constant/types/UmrahPersonalProps'
 import { cn, formatDateRangeShort, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
-import { format, isAfter } from 'date-fns'
+import { isAfter } from 'date-fns'
+import { formatInTimeZone } from 'date-fns-tz'
 import { id } from 'date-fns/locale'
 import { PlaneLanding, PlaneTakeoff, ShieldCheck } from 'lucide-react'
 import Image from 'next/image'
@@ -46,7 +47,7 @@ const UmrahPersonalDetailCard = ({
   } = dataOffer
   const countDownString = useMemo(() => {
     if (!expiresAt) return ''
-    return format(expiresAt, 'dd MMM yyyy, HH:mm', {
+    return formatInTimeZone(expiresAt, 'Asia/Jakarta', 'dd MMM yyyy, HH:mm', {
       locale: id,
     })
   }, [expiresAt])

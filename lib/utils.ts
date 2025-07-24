@@ -1,7 +1,8 @@
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { CardData, Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
-import { differenceInDays, format } from 'date-fns'
+import { differenceInDays } from 'date-fns'
+import { formatInTimeZone } from 'date-fns-tz'
 import { id } from 'date-fns/locale'
 import dayjs from 'dayjs'
 import { DateRange } from 'react-day-picker'
@@ -13,11 +14,11 @@ export function cn(...inputs: ClassValue[]) {
 
 // Add this utility function at the top or in a separate utils file
 export const formatDateToYYYYMMDD = (date: Date): any => {
-  return format(date, 'yyyy-MM-dd') // This converts to YYYY-MM-DD format
+  return formatInTimeZone(date, 'Asia/Jakarta', 'yyyy-MM-dd') // This converts to YYYY-MM-DD format
 }
 
 export const formatDateToDDMMYYYY = (date: Date): any => {
-  return format(date, 'dd MMMM yyyy', { locale: id }) // This converts to YYYY-MM-DD format
+  return formatInTimeZone(date, 'Asia/Jakarta', 'dd MMMM yyyy', { locale: id }) // This converts to YYYY-MM-DD format
 }
 
 export const formatReadTime = (time: number) => {
@@ -113,15 +114,11 @@ export const formatPhoneNumber = (phone: string): string => {
 }
 
 export function formatJoinedDate(dateString: string) {
-  // Parse the given date
   const joinedDate = new Date(dateString)
   const currentDate = new Date()
 
-  // Calculate difference in milliseconds
-  const diffTime = currentDate.getTime() - joinedDate.getTime()
-
-  // Convert to days, months, years
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  // Calculate difference in days, months, years
+  const diffDays = differenceInDays(currentDate, joinedDate)
   const diffMonths = Math.floor(diffDays / 30)
   const diffYears = Math.floor(diffDays / 365)
 
@@ -383,16 +380,18 @@ export const formatDateRangeShort = (dateRange: DateRange): string => {
     if (dateRange.from.getFullYear() === dateRange.to.getFullYear()) {
       // Same month - only show month once
       if (dateRange.from.getMonth() === dateRange.to.getMonth()) {
-        return `${format(dateRange.from, 'd ', { locale: id })}-${format(dateRange.to, 'd LLL y', { locale: id })}`
+        return `${formatInTimeZone(dateRange.from, 'Asia/Jakarta', 'd ', { locale: id })}-${formatInTimeZone(dateRange.to, 'Asia/Jakarta', 'd LLL y', { locale: id })}`
       }
-      return `${format(dateRange.from, 'd LLL', { locale: id })} - ${format(dateRange.to, 'd LLL y', { locale: id })}`
+      return `${formatInTimeZone(dateRange.from, 'Asia/Jakarta', 'd LLL', { locale: id })} - ${formatInTimeZone(dateRange.to, 'Asia/Jakarta', 'd LLL y', { locale: id })}`
     } else {
       // Different year - show full format for both
-      return `${format(dateRange.from, 'd LLL y', { locale: id })} - ${format(dateRange.to, 'd LLL y', { locale: id })}`
+      return `${formatInTimeZone(dateRange.from, 'Asia/Jakarta', 'd LLL y', { locale: id })} - ${formatInTimeZone(dateRange.to, 'Asia/Jakarta', 'd LLL y', { locale: id })}`
     }
   }
 
-  return format(dateRange.from, 'd LLL y', { locale: id })
+  return formatInTimeZone(dateRange.from, 'Asia/Jakarta', 'd LLL y', {
+    locale: id,
+  })
 }
 
 export const getHotelRating = (product: Package) => {
