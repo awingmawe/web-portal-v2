@@ -299,10 +299,10 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
             : 'border-b-transparent bg-transparent'
           break
         case 'plainBank':
-          positionClasses = 'absolute top-0'
+          positionClasses = 'absolute top-0 '
           backgroundClasses = showFixedHeader
-            ? 'bg-neutral-0 border-b border-b-neutral-100'
-            : 'border-b-transparent bg-transparent'
+            ? 'fixed bg-neutral-0 border-b border-b-neutral-100'
+            : 'border-b border-b-neutral-100 bg-transparent'
           break
         case 'title':
         case 'search':
