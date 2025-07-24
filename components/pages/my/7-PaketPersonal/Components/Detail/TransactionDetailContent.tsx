@@ -125,13 +125,9 @@ export default function TransactionDetailContent({
       <MobileTopbar
         showBackButton
         variant="transactionTopbar"
-        title="Detail Transaction"
+        title="Detail Paket Personal"
         onBackClick={() => {
-          if (window.history.length > 1) {
-            window.history.back()
-          } else {
-            router.push('/my/transaction')
-          }
+          router.push('/my/paket-personal')
         }}
         showCallCenter
       />
