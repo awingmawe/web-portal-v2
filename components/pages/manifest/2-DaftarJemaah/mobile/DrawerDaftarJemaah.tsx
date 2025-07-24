@@ -101,6 +101,17 @@ const dummyDataJemaah: ManifestUsers = [
   },
 ]
 
+// Helper function to get display name
+const getDisplayName = (item: any, dataJemaah: ManifestUsers): string => {
+  if (item?.name && item.name.trim() !== '') {
+    return item.name
+  }
+
+  // Find index of the item in dataJemaah array
+  const index = dataJemaah.findIndex((jemaah) => jemaah.id === item?.id)
+  return index !== -1 ? `Jamaah ${index + 1}` : 'Pilih Jemaah'
+}
+
 // Jemaah list component used in both mobile and desktop views
 const JemaahList = ({
   dataJemaah,
@@ -114,8 +125,10 @@ const JemaahList = ({
   onSelect?: () => void
 }) => (
   <ol className="space-y-1 px-2">
-    {dataJemaah.map((item) => {
+    {dataJemaah.map((item, index) => {
       const isActive = manifestActive?.id === item.id
+      const displayName =
+        item.name && item.name.trim() !== '' ? item.name : `Jemaah ${index + 1}`
       return (
         <DrawerClose
           key={`jemaah-${item.name}-${item.id}`}
@@ -136,7 +149,7 @@ const JemaahList = ({
           >
             <div className="flex items-center gap-2">
               <span className={isActive ? 'text-m-medium' : 'text-m-regular'}>
-                {item.name}
+                {displayName}
               </span>
             </div>
             {item.completed && (
@@ -168,6 +181,7 @@ export default function DrawerDaftarJemaah({
 
     dataRef.current = true
   }, [])
+
   // Function to close the drawer (for mobile)
   const closeDrawer = () => {
     const drawerClose = document.querySelector('[data-drawer-close]')
@@ -175,6 +189,7 @@ export default function DrawerDaftarJemaah({
       drawerClose.click()
     }
   }
+
   const roomTypeQuantity = getDetailBooking?.roomTypeQuantity || {
     quad: 0,
     double: 0,
@@ -204,13 +219,19 @@ export default function DrawerDaftarJemaah({
     }
     return labels[type] || type
   }
+
   const getSelectedRoomTypeCount = (roomType: string): number => {
     if (!dataJemaah) return 0
     return dataJemaah.filter((jemaah: any) => jemaah.roomType === roomType)
       .length
   }
+
   // Define room type order
   const roomTypeOrder = ['double', 'triple', 'quad']
+
+  // Get display name for the trigger button
+  const triggerDisplayName = getDisplayName(manifestActive, dataJemaah)
+
   return (
     <div className="mx-3.5 lg:hidden">
       <Drawer direction="bottom">
@@ -248,7 +269,7 @@ export default function DrawerDaftarJemaah({
             </div>
             <div className="flex w-full items-center justify-between gap-2 rounded-full border border-neutral-200 px-3 py-2.5 text-left">
               <span className="text-m-medium flex items-center gap-2">
-                {manifestActive?.name || 'Pilih Jemaah'}
+                {triggerDisplayName}
                 {manifestActive?.completed && (
                   <ChecklistIcon size={20} className="text-success-500" />
                 )}
