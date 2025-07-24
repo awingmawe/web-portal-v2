@@ -3,8 +3,10 @@
 import { ArrowCircleRight } from '@/components/icons/arrow-circle-right'
 import ChecklistIcon from '@/components/icons/checklist'
 import { Button } from '@/components/ui/button'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 interface UmrahPersonalBannerProps {
@@ -14,6 +16,8 @@ interface UmrahPersonalBannerProps {
 const UmrahPersonalBanner: React.FC<UmrahPersonalBannerProps> = ({
   className = '',
 }) => {
+  const { lg } = useTailwindBreakpoint()
+  const router = useRouter()
   const features = [
     'Harga paket fleksibel sesuai kebutuhan',
     'Pilih tanggal keberangkatan yang Anda inginkan',
@@ -27,7 +31,10 @@ const UmrahPersonalBanner: React.FC<UmrahPersonalBannerProps> = ({
       >
         Fitur Eksklusif Muslim101
       </p>
-      <div className="from-primary-100 to-primary-500 relative overflow-hidden rounded-[12px] bg-gradient-to-r px-10 pt-7 pb-0 max-lg:px-4 max-lg:pt-4">
+      <div
+        onClick={!lg ? () => {} : () => router.push('/umrah-personal/landing')}
+        className="from-primary-100 to-primary-500 relative overflow-hidden rounded-[12px] bg-gradient-to-r px-10 pt-7 pb-0 max-lg:px-4 max-lg:pt-4"
+      >
         <Image
           src={'/images/frame-bg-umrah-personal.png'}
           alt="umrah-personal"

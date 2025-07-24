@@ -284,32 +284,21 @@ const PembiayaanPage: React.FC = () => {
     <div className=" flex min-h-screen flex-col p-4 pb-20 md:mt-8 md:p-4 md:pb-0">
       {/* Mobile Header - Only visible on mobile */}
       {screenSize === 'mobile' && (
-        <div className="mt-10">
-          <div className="relative mb-5 h-64 w-full">
+        <div className="mt-14">
+          <div className="relative h-70 w-full">
             <Image
               src="/images/icon-pembiayaan-mobile.svg"
-              alt="Permata Bank"
-              fill
-              className="object-cover"
+              alt="Banner Talangan"
+              width={100}
+              height={100}
+              className="w-full rounded-lg object-contain"
             />
           </div>
 
           <div className="mb-4">
-            <h1 className="text-[14px] font-[600] text-neutral-900">
+            <h1 className="text-l-semibold text-neutral-900">
               Program Talangan Umroh
             </h1>
-            <div className="mt-4 flex items-center text-xs text-gray-500">
-              <span className="text-[12px] font-[400] text-neutral-500">
-                Didukung oleh
-              </span>
-              <Image
-                src="/images/logo-permata.svg"
-                width={129}
-                height={32}
-                alt="Permata Bank"
-                className="ml-6"
-              />
-            </div>
           </div>
         </div>
       )}
@@ -331,12 +320,13 @@ const PembiayaanPage: React.FC = () => {
       {/* Desktop Banner - Only visible on desktop */}
       {screenSize === 'desktop' && (
         <div className="mb-6">
-          <div className="relative  mb-5 h-64 w-full">
+          <div className="relative mb-5 h-64 w-full px-6">
             <Image
               src="/images/image-landing.svg"
-              alt="Permata Bank"
-              fill
-              className="object-cover"
+              alt="Banner Talangan"
+              width={100}
+              height={100}
+              className="w-full rounded-lg object-contain"
             />
           </div>
         </div>
@@ -344,13 +334,14 @@ const PembiayaanPage: React.FC = () => {
 
       {/* Tab Banner - Only visible on desktop */}
       {screenSize === 'tab' && (
-        <div className="mb-6">
-          <div className="relative mt-10 mb-5 h-64 w-full">
+        <div className="mb-0">
+          <div className="relative mt-10 mb-3 h-50 w-full">
             <Image
               src="/images/icon-pembiayan-tab.svg"
-              alt="Permata Bank"
-              fill
-              className="object-cover"
+              alt="Banner Talangan"
+              width={100}
+              height={100}
+              className="w-full rounded-lg object-contain"
             />
           </div>
         </div>
@@ -360,19 +351,14 @@ const PembiayaanPage: React.FC = () => {
       {screenSize === 'desktop' && (
         <div className="p-6">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-semibold text-gray-800">
-              Program Talangan Umroh
-            </h1>
-            <div className="flex items-center">
-              <span className="mr-2 text-xs text-gray-500">Didukung oleh</span>
-              <Image
-                src="/images/logo-permata.svg"
-                width={129}
-                height={32}
-                alt="Permata Bank"
-                className="ml-4"
-              />
-            </div>
+            <h1 className="heading-2-semibold">Program Talangan Umroh</h1>
+          </div>
+        </div>
+      )}
+      {screenSize === 'tab' && (
+        <div className="px-0 pb-6">
+          <div className="flex items-center justify-between">
+            <h1 className="heading-2-semibold">Program Talangan Umroh</h1>
           </div>
         </div>
       )}
@@ -380,64 +366,85 @@ const PembiayaanPage: React.FC = () => {
       {/* Content area */}
       <div className={screenSize === 'desktop' ? 'px-6' : ''}>
         <div className="mb-3 md:mb-6">
-          <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            Mau ibadah ke Tanah Suci, tapi kantong lagi tipis?
+          <p className="text-m-semibold">
+            Ingin Umroh, tapi tabungan belum cukup?
           </p>
-          <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            Tenang aja! Solusi manis lewat Talangan Umroh
+          <p className="text-m-regular">
+            Bayangkan Anda berdiri di depan Ka’bah...
           </p>
-          <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            InsyaAllah jadi langkah mudah sampai ke Baitullah
+          <p className="text-m-regular">
+            Udara sejuk menyapa wajah, dan doa-doa yang selama ini Anda
+            panjatkan terasa begitu dekat.
           </p>
         </div>
 
         <div className="mb-3 md:mb-6">
-          <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            Bersama KTA iB Multiguna PermataBank, kami hadir untuk mempermudah
-            umat Muslim mewujudkan impiannya dalam melaksanakan ibadah ke Tanah
-            Suci. Kamu bisa mengajukan Talangan Umroh untuk ibadah Umroh dan
-            Haji dengan paket apa pun melalui akad Ijarah Multijasa.
+          <p className="text-m-regular">Tapi niat itu…</p>
+          <p className="text-m-regular">
+            Masih tertahan karena biaya yang belum terkumpul.
           </p>
         </div>
         <div className="mb-3 md:mb-6">
-          <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            Berikut rincian proses pengajuan yang dapat dilakukan:
+          <p className="text-m-regular">
+            Kini, Anda bisa berangkat lebih cepat.
           </p>
-          <ol className="list-decimal  text-[12px] font-[400] text-black md:text-sm">
-            <li>
-              Pilih paket Umroh atau Haji yang diinginkan, check out dengan
-              pilihan pembayaran <strong>Bayar Nanti</strong>.
-            </li>
-            <li>Masukkan data diri secara lengkap.</li>
-            <li>
-              Cek kembali paket yang dipilih, kamar hotel, jumlah jemaah, serta
-              nominal angsuran pembayaran sesuai tenor yang kamu pilih.
-            </li>
-            <li>Klik ajukan pendanaan.</li>
-          </ol>
+          <p className="text-m-regular">
+            Dengan{' '}
+            <b className="font-semibold">program Talangan Umroh Muslim101, </b>
+            kami hadir membawa solusi syariah yang aman dan terpercaya.
+          </p>
+        </div>
+        <div className="mb-3 md:mb-6">
+          <p className="text-m-regular">Program ini cocok untuk:</p>
+          <p className="text-m-regular">👨‍💼 Karyawan tetap</p>
+          <p className="text-m-regular">🛍️ Pelaku usaha atau UMKM</p>
         </div>
 
-        <p className="text-[12px] font-[400] text-[black] md:text-sm">
-          Perlu diingat bahwa jumlah jemaah memengaruhi besarnya biaya angsuran
-          dan seluruhnya akan ditanggung oleh pemohon. Masa pengajuan pendanaan
-          akan berlangsung selama maksimal 14 hari kerja. Harap untuk selalu
-          memantau notifikasi secara berkala untuk melihat hasil status
-          pengajuan.
-        </p>
+        <div className="mb-3 md:mb-6">
+          <p className="text-m-regular">Bayangkan...</p>
+          <p className="text-m-regular">
+            Ibadah umroh yang selama ini hanya sebatas rencana, kini bisa
+            menjadi nyata.
+          </p>
+          <p className="text-m-regular">Tanpa harus menggadaikan barang.</p>
+          <p className="text-m-regular">
+            Tanpa harus menunggu bertahun-tahun menabung.
+          </p>
+        </div>
+        <div className="mb-3 md:mb-6">
+          <p className="text-m-regular">
+            📖 Semua proses dilakukan secara syariah dan transparan, bekerjasama
+            dengan mitra pembiayaan resmi dan tersertifikasi.
+          </p>
+        </div>
+        <div className="mb-3 md:mb-6">
+          <p className="text-m-regular">
+            📲 Klik tombol di bawah untuk mengajukan sekarang.
+          </p>
+          <p className="text-m-regular">
+            Tim kami siap membantu Anda langkah demi langkah.
+          </p>
+        </div>
+        <div className="mb-3 md:mb-6">
+          <p className="text-m-regular italic">
+            🕋 Karena ibadah tidak harus ditunda, jika ada jalan yang halal dan
+            mudah.
+          </p>
+        </div>
 
         {/* Action button */}
         <div
           className={
             screenSize === 'mobile'
               ? 'fixed right-0 bottom-0 left-0 mt-4 mb-4 flex justify-center px-4'
-              : 'mt-4 mb-4 flex justify-center'
+              : 'mt-32 mb-12 flex justify-center'
           }
         >
           <Button
             className="w-full rounded-full bg-yellow-500 px-6 py-3 font-medium text-gray-800 hover:bg-yellow-600 md:w-auto md:max-w-xs"
             onClick={openForm}
           >
-            Ikuti Program Pendanaan Sekarang
+            Ikuti Program Talangan Sekarang
           </Button>
         </div>
       </div>
