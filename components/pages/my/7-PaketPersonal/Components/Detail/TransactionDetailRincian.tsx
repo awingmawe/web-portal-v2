@@ -245,12 +245,26 @@ export default function TransactionDetailRincian({
                       </span>
                     </div>
                   </div>
-                  <div className="mr-4 ml-4 flex-shrink-0">
+                  <div className="ml-4 w-30 flex-shrink-0 sm:mr-4 sm:w-auto">
                     <div className="text-start text-[12px] text-neutral-500">
                       Kelas
                     </div>
                     <div className="text-start text-[12px] text-neutral-900 capitalize">
-                      {data?.departure?.flightClass}
+                      {(() => {
+                        const raw = data?.departure?.flightClass?.toLowerCase()
+
+                        if (!raw) return null
+
+                        if (raw.includes('first')) return 'First Class'
+                        if (raw.includes('economic')) return 'Ekonomi'
+                        if (raw.includes('bisnis') || raw.includes('business'))
+                          return 'Bisnis'
+
+                        // Fallback: hilangkan strip dan kapitalisasi tiap kata
+                        return raw
+                          .replace(/-/g, ' ')
+                          .replace(/\b\w/g, (c: any) => c.toUpperCase())
+                      })()}
                     </div>
                   </div>
                 </div>
@@ -286,7 +300,24 @@ export default function TransactionDetailRincian({
                         Kelas
                       </div>
                       <div className="text-start text-[12px] text-neutral-900 capitalize">
-                        {data?.arrival?.flightClass}
+                        {(() => {
+                          const raw = data?.arrival?.flightClass?.toLowerCase()
+
+                          if (!raw) return null
+
+                          if (raw.includes('first')) return 'First Class'
+                          if (raw.includes('economic')) return 'Ekonomi'
+                          if (
+                            raw.includes('bisnis') ||
+                            raw.includes('business')
+                          )
+                            return 'Bisnis'
+
+                          // Fallback: hilangkan strip dan kapitalisasi tiap kata
+                          return raw
+                            .replace(/-/g, ' ')
+                            .replace(/\b\w/g, (c: any) => c.toUpperCase())
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -314,12 +345,30 @@ export default function TransactionDetailRincian({
                           </span>
                         </div>
                       </div>
-                      <div className="mr-4 ml-4 flex-shrink-0">
+                      <div className="ml-4 w-30 flex-shrink-0">
                         <div className="text-start text-[12px] text-neutral-500">
                           Kelas
                         </div>
                         <div className="text-start text-[12px] text-neutral-900 capitalize">
-                          {data?.arrival?.flightClass}
+                          {(() => {
+                            const raw =
+                              data?.arrival?.flightClass?.toLowerCase()
+
+                            if (!raw) return null
+
+                            if (raw.includes('first')) return 'First Class'
+                            if (raw.includes('economic')) return 'Ekonomi'
+                            if (
+                              raw.includes('bisnis') ||
+                              raw.includes('business')
+                            )
+                              return 'Bisnis'
+
+                            // Fallback: hilangkan strip dan kapitalisasi tiap kata
+                            return raw
+                              .replace(/-/g, ' ')
+                              .replace(/\b\w/g, (c: any) => c.toUpperCase())
+                          })()}
                         </div>
                       </div>
                     </div>
