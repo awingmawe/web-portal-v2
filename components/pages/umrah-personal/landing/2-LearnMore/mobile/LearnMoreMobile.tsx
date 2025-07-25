@@ -4,136 +4,48 @@ import ChecklistIcon from '@/components/icons/checklist'
 import { ChevronCircleDown } from '@/components/icons/chevron'
 import { STEP_LEARN } from '@/components/pages/umrah-personal/landing/constant'
 import { Button } from '@/components/ui/button'
-import { animate, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import Image from 'next/image'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback } from 'react'
 
 const LearnMoreSectionMobile: React.FC = () => {
-  const [currentSection, setCurrentSection] = useState(-1)
-  const [isScrolling, setIsScrolling] = useState(false)
-  const sectionRefs = useRef<(HTMLElement | null)[]>([])
+  // Simple scroll to section using native behavior
+  const scrollToSection = useCallback((sectionId: string) => {
+    const scrollContainer = document.getElementById('scroll-container')
+    const targetElement = document.getElementById(sectionId)
 
-  // Smooth scroll to specific section
-  const scrollToSection = useCallback((sectionIndex: number) => {
-    const targetElement = sectionRefs.current[sectionIndex]
-    if (!targetElement) return
+    if (!targetElement || !scrollContainer) return
 
-    const currentScroll = window.scrollY
-    const targetScroll = targetElement.offsetTop
-    const distance = Math.abs(targetScroll - currentScroll)
-
-    if (distance < 50) return
-
-    setIsScrolling(true)
-
-    animate(currentScroll, targetScroll, {
-      duration: Math.min(1.2 + distance / 4000, 2.0),
-      ease: [0.25, 0.46, 0.45, 0.94],
-      onUpdate: (value) => {
-        window.scrollTo({ top: value, behavior: 'auto' })
-      },
-      onComplete: () => {
-        setIsScrolling(false)
-        setCurrentSection(sectionIndex)
-      },
+    // Use native scrollIntoView with the scroll container
+    targetElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
     })
   }, [])
 
-  // Handle wheel scroll events
-  useEffect(() => {
-    // Handle touch scroll for mobile
-    let touchStartY = 0
-    let touchEndY = 0
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.changedTouches[0].screenY
-    }
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (isScrolling) return
-
-      touchEndY = e.changedTouches[0].screenY
-      const deltaY = touchStartY - touchEndY
-      const threshold = 50 // Minimum swipe distance
-
-      if (Math.abs(deltaY) > threshold) {
-        if (deltaY > 0 && currentSection < STEP_LEARN.length - 1) {
-          // Swipe up - go to next section
-          scrollToSection(currentSection + 1)
-        } else if (deltaY < 0 && currentSection > 0) {
-          // Swipe down - go to previous section
-          scrollToSection(currentSection - 1)
-        }
-      }
-    }
-
-    // Add event listeners
-    window.addEventListener('touchstart', handleTouchStart, { passive: true })
-    window.addEventListener('touchend', handleTouchEnd, { passive: true })
-
-    return () => {
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchend', handleTouchEnd)
-    }
-  }, [currentSection, isScrolling, scrollToSection])
-
-  // Button click handler
   const onClickNextSection = (index: number) => {
     const nextIndex = index + 1
-    const element = document.getElementById('umrah-personal-start')
 
     if (nextIndex >= STEP_LEARN.length) {
-      // Go to top or next major section
-      if (!element) {
-        console.warn('Target section not found')
-        return
-      }
-
-      const currentScroll = window.scrollY
-      const targetScroll = element.offsetTop
-      const distance = Math.abs(targetScroll - currentScroll)
-
-      // Skip animation if already close to target
-      if (distance < 50) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        return
-      }
-
-      const duration = Math.min(1.8 + distance / 5000, 3.0)
-
-      animate(currentScroll, targetScroll, {
-        duration,
-        ease: [0.25, 0.46, 0.45, 0.94],
-        onUpdate: (value) => {
-          window.scrollTo({
-            top: value,
-            behavior: 'auto',
-          })
-        },
-        onComplete: () => {
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'auto',
-          })
-        },
-      })
+      // Go to next major section
+      scrollToSection('umrah-personal-start')
       return
     }
 
-    scrollToSection(nextIndex)
+    scrollToSection(`section-learn-more-${nextIndex + 1}`)
   }
 
   const onClickPreviousSection = (index: number) => {
-    const nextIndex = index - 1
+    const prevIndex = index - 1
 
-    if (nextIndex < 0) {
-      // Go to top or next major section
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (prevIndex < 0) {
+      // Go to landing section
+      scrollToSection('umrah-landing')
       return
     }
 
-    scrollToSection(nextIndex)
+    scrollToSection(`section-learn-more-${prevIndex + 1}`)
   }
 
   return (
@@ -141,11 +53,8 @@ const LearnMoreSectionMobile: React.FC = () => {
       {STEP_LEARN.map((step, index) => (
         <section
           key={index}
-          ref={(el) => {
-            sectionRefs.current[index] = el
-          }}
           id={`section-learn-more-${index + 1}`}
-          className={`relative h-screen ${index === 0 && 'min-h-[850px]'} overflow-hidden bg-white`}
+          className={`relative h-screen ${index === 0 && 'min-h-[850px]'} snap-end overflow-hidden bg-white`}
         >
           {/* Background Images with Overlays */}
           <div className="absolute inset-0 h-full w-full">

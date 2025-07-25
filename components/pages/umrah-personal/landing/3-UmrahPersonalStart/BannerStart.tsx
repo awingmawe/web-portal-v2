@@ -50,7 +50,7 @@ const UmrohPersonalStartSection = () => {
 
   return (
     <section
-      className={`relative h-[100dvh] overflow-hidden bg-white max-lg:mt-12 lg:h-[100vh]`}
+      className={`relative h-[100dvh] overflow-hidden bg-white max-lg:mt-12 max-lg:snap-center lg:h-[100vh]`}
       id="umrah-personal-start"
     >
       <Image
