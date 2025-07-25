@@ -9,6 +9,7 @@ import {
 } from '@/components/pages/my/7-PaketPersonal/Filter'
 import List from '@/components/pages/my/7-PaketPersonal/List'
 import { CustomPagination } from '@/components/shared/CustomPagination'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -127,6 +128,11 @@ export default function TransactionUpcoming() {
 
   return (
     <Fragment>
+      <MobileTopbar
+        showBackButton
+        variant="plainPaketPersonal"
+        onBackClick={() => router.push('/my')}
+      />
       {/* Search and Filters */}
       <SearchAndFilter
         searchQuery={searchQuery}
@@ -135,7 +141,6 @@ export default function TransactionUpcoming() {
         handleStatusFilterChange={handleStatusFilterChange}
         handleDateRangeChange={handleDateRangeChange}
       />
-
       {/* Search and Filter Mobile */}
       {lg && (
         <SearchAndFilterMobile
@@ -149,16 +154,13 @@ export default function TransactionUpcoming() {
           setIsLoadingMobile={setIsLoadingMobileFilter}
         />
       )}
-
       {/* <NeedPaymentLink /> */}
-
       {/* Error state */}
       {error && (
         <div className="bg-error-100 text-error-700 mt-6 rounded-md p-4">
           {error}
         </div>
       )}
-
       {/* List state */}
       <List
         isLoading={isLoading}
@@ -170,7 +172,6 @@ export default function TransactionUpcoming() {
         transactions={transactions}
         fetchTransactions={fetchTransactions}
       />
-
       {/* Pagination */}
       {totalPages > 1 && (
         <CustomPagination

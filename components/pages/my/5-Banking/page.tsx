@@ -9,7 +9,7 @@ import { BedDouble, CalendarDays, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
 const BankingPageDetail: React.FC = () => {
   const router = useRouter()
@@ -186,21 +186,33 @@ const BankingPageDetail: React.FC = () => {
   // Show error state if data is null
   if (!data) {
     return (
-      <div className="flex !h-[500px]  items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Image
-            src="/images/tidak-adadata.svg"
-            alt="Package Thumbnail"
-            width={242}
-            height={190}
+      <Fragment>
+        <div className="md:hidden">
+          <MobileTopbar
+            variant="pendanaanSyariah"
+            title="Detail Talangan Umroh"
+            showBackButton
+            onBackClick={() => {
+              router.push('/my')
+            }}
           />
-          <Link href={'/banking/credit'}>
-            <button className="w-[191px] rounded-[100px] bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-[12px]">
-              Ajukan Pendanaan
-            </button>
-          </Link>
         </div>
-      </div>
+        <div className="flex !h-[500px]  items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <Image
+              src="/images/tidak-adadata.svg"
+              alt="Package Thumbnail"
+              width={242}
+              height={190}
+            />
+            <Link href={'/banking/credit'}>
+              <button className="w-[191px] rounded-[100px] bg-yellow-400 px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-[12px]">
+                Ajukan Pendanaan
+              </button>
+            </Link>
+          </div>
+        </div>
+      </Fragment>
     )
   }
 
