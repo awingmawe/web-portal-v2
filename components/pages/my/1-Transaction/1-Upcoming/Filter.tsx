@@ -122,11 +122,14 @@ interface SearchAndFilterMobileProps {
   statusFilterMobile: string
   searchQuery: string
   dateFilterMobile: DateRange | undefined
+  statusFilterType: string
   handleSearchChange: (event: ChangeEvent<HTMLInputElement>) => void
   handleStatusFilterChange: (value: string) => void
   setStatusFilterMobile: (value: string) => void
   setIsLoadingMobile: (value: boolean) => void
+  setStatusFilterType: (value: string) => void
   handleDateRangeChange: (dateRange: DateRange | undefined) => void
+  handleStatusFilterTypeChange: (value: string) => void
 }
 
 export const SearchAndFilterMobile = ({
@@ -138,6 +141,9 @@ export const SearchAndFilterMobile = ({
   setStatusFilterMobile,
   setIsLoadingMobile,
   handleDateRangeChange,
+  statusFilterType,
+  handleStatusFilterTypeChange,
+  setStatusFilterType,
 }: SearchAndFilterMobileProps) => {
   const [resetCounter, setResetCounter] = useState(0)
   const [dateRange, setDateRange] = useState<DateRange | undefined>(
@@ -160,6 +166,20 @@ export const SearchAndFilterMobile = ({
         return 'Menunggu Pelunasan & Data Jemaah'
       case 'siap-berangkat':
         return 'Siap Berangkat'
+
+      default:
+        break
+    }
+  }
+
+  const renderStatusFilterTypeText = (value: string) => {
+    switch (value) {
+      case 'all':
+        return 'Semua Produk'
+      case 'umrah':
+        return 'Umroh'
+      case 'umrah-personal':
+        return 'Umroh Personal'
 
       default:
         break
@@ -291,6 +311,93 @@ export const SearchAndFilterMobile = ({
                 onClick={() => {
                   handleStatusFilterChange(statusFilterMobile)
                   setIsLoadingMobile(true)
+                }}
+              >
+                Simpan
+              </Button>
+            </DrawerClose>
+          </div>
+        </DrawerContent>
+      </Drawer>
+      <Drawer>
+        <DrawerTrigger asChild>
+          <button
+            className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700
+"
+          >
+            {renderStatusFilterTypeText(statusFilterType)}
+            <ChevronIcon />
+          </button>
+        </DrawerTrigger>
+        <DrawerContent className="z-100 border-0 outline-0">
+          <DrawerHeader className="p-3">
+            <DrawerTitle className="flex items-center">
+              <FilterSquare className="" />
+              <p className="text-m-semibold ml-2 font-semibold">Tahapan</p>
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="space-y-2 overflow-y-auto px-4 pb-4 text-sm">
+            <RadioGroup
+              value={statusFilterType}
+              onValueChange={setStatusFilterType}
+            >
+              <div className="flex items-center space-x-2 pt-2">
+                <RadioGroupItem
+                  value="all"
+                  id="status-produk-all"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-produk-all"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Semua Produk
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value="umrah"
+                  id="status-umrah"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-umrah"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Umroh
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value="umrah-personal"
+                  id="status-umrah-personal"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-umrah-personal"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Umroh Personal
+                </label>
+              </div>
+            </RadioGroup>
+          </div>
+          <div className="flex w-full px-3 pt-3 pb-5">
+            <DrawerClose className="mr-3 w-full" asChild>
+              <Button
+                variant="outline"
+                type="button"
+                className="border-primary-500 w-full border-2 py-3"
+              >
+                Batal
+              </Button>
+            </DrawerClose>
+            <DrawerClose className="w-full" asChild>
+              <Button
+                className="w-full py-3"
+                type="button"
+                onClick={() => {
+                  handleStatusFilterTypeChange(statusFilterType)
                 }}
               >
                 Simpan

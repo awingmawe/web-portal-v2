@@ -42,7 +42,7 @@ export default function TransactionUpcoming() {
   )
 
   const [statusFilterType, setStatusFilterType] = useState<string>(
-    searchParams.get('status') || 'all'
+    searchParams.get('packageType') || 'all'
   )
   const [statusFilterMobile, setStatusFilterMobile] = useState<string>(
     searchParams.get('status') || 'all'
@@ -94,6 +94,7 @@ export default function TransactionUpcoming() {
         queryParams['isCompletedManifest'] = true
         queryParams['isPaidOff'] = true
       }
+
       if (statusFilterType === 'umrah') {
         queryParams['packageType'] = 'umrah'
       } else if (statusFilterType === 'umrah-personal') {
@@ -201,10 +202,13 @@ export default function TransactionUpcoming() {
           dateFilterMobile={dateRange}
           handleSearchChange={handleSearchChange}
           searchQuery={searchQuery}
+          statusFilterType={statusFilterType}
           handleStatusFilterChange={handleStatusFilterChange}
           handleDateRangeChange={handleDateRangeChange}
           setStatusFilterMobile={setStatusFilterMobile}
           setIsLoadingMobile={setIsLoadingMobileFilter}
+          setStatusFilterType={setStatusFilterType}
+          handleStatusFilterTypeChange={handleStatusFilterTypeChange}
         />
       )}
 
