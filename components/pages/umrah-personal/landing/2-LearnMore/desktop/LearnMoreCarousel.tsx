@@ -43,7 +43,7 @@ const LearnMoreSectionDesktop: React.FC = () => {
 
   return (
     <section
-      className="relative h-screen overflow-hidden bg-white pt-20 max-lg:hidden"
+      className="relative overflow-hidden bg-white py-10 max-lg:hidden"
       id="section-learn-more-1"
     >
       {/* Background Images with Fade Animation */}

@@ -12,6 +12,7 @@ import { useBookingCancel } from '@/hooks/umrah-personal/offer/useCancelBooking'
 import { useOfferUmrahPersonalById } from '@/hooks/umrah-personal/offer/useGetDetailOffer'
 import { X } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 const OfferButton: React.FC<{
@@ -21,6 +22,7 @@ const OfferButton: React.FC<{
   dataOffer?: PackagePersonalData
   isBook?: boolean
 }> = ({ isExpired, isBook, offerId, dataOffer, index }) => {
+  const router = useRouter()
   // --------------------------- Modal state for booking -----------------------------
   const [openBatalkan, setOpenBatalkan] = useState(false)
   const [openSuccessBatalkan, setOpenSuccessBatalkan] = useState(false)
@@ -49,6 +51,7 @@ const OfferButton: React.FC<{
 
   const handleExitSuccessBatalkan = () => {
     setOpenSuccessBatalkan(false)
+    router.refresh()
   }
 
   // --------------------- Modal state for detail offer ----------------------------
@@ -197,7 +200,7 @@ const OfferButton: React.FC<{
 
   return (
     <>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 max-lg:flex-col">
         {isBook ? (
           <>
             <LayoutDrawerDialog

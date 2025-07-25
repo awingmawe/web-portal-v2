@@ -9,7 +9,7 @@ const TopbarMobileLandingUmrahPersonal = () => {
     router.back()
   }
   return (
-    <div className="bg-neutral-0 absolute top-0 z-99 flex w-full items-center justify-between px-4 py-3 lg:hidden">
+    <div className="bg-neutral-0 flex w-full snap-start items-center justify-between px-4 py-3 lg:hidden">
       <ArrowIcon size={20} className="rotate-180" onClick={handleBack} />
       <p className="text-l-semibold">Umrah Personal</p>
       <div />

@@ -1,6 +1,5 @@
 'use client'
 
-import TopbarMobileLandingUmrahPersonal from '@/components/pages/umrah-personal/landing/mobile/Topbar'
 import Topbar from '@/components/shared/Topbar'
 import { ReactNode } from 'react'
 
@@ -16,8 +15,13 @@ const ScrollContainerWrapper: React.FC<ScrollContainerWrapperProps> = ({
   return (
     <>
       <Topbar type="homepage" token={token} />
-      <TopbarMobileLandingUmrahPersonal />
-      <main>{children}</main>
+      <main
+        className="max-lg:h-[100dvh] max-lg:snap-y max-lg:snap-mandatory max-lg:overflow-y-auto"
+        style={{ scrollBehavior: 'smooth' }}
+        id="scroll-container"
+      >
+        {children}
+      </main>
     </>
   )
 }
