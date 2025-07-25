@@ -64,6 +64,7 @@ export default function List({
                           packageName={
                             transaction?.packageVariants?.package?.title
                           }
+                          transaction={transaction}
                           thumbnail={
                             transaction?.packageVariants?.package?.thumbnail
                           }
@@ -133,6 +134,7 @@ export default function List({
                       responTravel={transaction.responseTravel}
                       travelName={transaction?.travelName}
                       slug={transaction?.packageVariants?.package?.slug}
+                      transaction={transaction}
                       noHeader
                       detailOnly
                       noLabelNotif
