@@ -53,7 +53,7 @@ export const SearchAndFilterMobile = ({
 }: SearchAndFilterMobileProps) => {
   return (
     <div className="scrollbar-hide flex gap-2 overflow-x-hidden pl-5">
-      <div className={`pr-t absolute -top-13.5 left-3.5 w-11/12 md:w-10/12`}>
+      <div className={`pr-t absolute -top-11 left-12 w-10/12 md:w-10/12`}>
         <Input
           model="compact"
           startIcon={<Search size={16} className="text-neutral-300" />}

@@ -41,6 +41,7 @@ interface MobileTopbarProps {
     | 'pendanaanSyariah'
     | 'plainBank'
     | 'suksesBanking'
+    | 'plainPaketPersonal'
   forceMobile?: boolean
   titleLink?: string
   title?: string
@@ -274,6 +275,8 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
           return `bg-neutral-0 rounded-[20px] p-1 ${
             !showFixedHeader ? 'shadow-[0px_0px_4px_0px_rgba(0,0,0,0.15)]' : ''
           }`
+        case 'plainPaketPersonal':
+          return `bg-neutral-0 rounded-[20px] p-1`
       }
     }, [variant, showFixedHeader])
 
@@ -291,7 +294,6 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
 
       switch (variant) {
         case 'plain':
-
         case 'transparent':
           positionClasses = 'fixed top-0'
           backgroundClasses = showFixedHeader
@@ -329,6 +331,10 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'logo':
           positionClasses = 'fixed top-0'
           backgroundClasses = 'bg-neutral-0 border-b border-b-neutral-100'
+          break
+        case 'plainPaketPersonal':
+          positionClasses = 'absolute -top-13.5'
+          backgroundClasses = 'border-b-transparent bg-transparent'
           break
         default:
           positionClasses = 'fixed top-3.5'
