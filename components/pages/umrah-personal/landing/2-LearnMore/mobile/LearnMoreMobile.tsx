@@ -20,7 +20,7 @@ const LearnMoreSectionMobile: React.FC = () => {
     // Use native scrollIntoView with the scroll container
     targetElement.scrollIntoView({
       behavior: 'smooth',
-      block: 'start',
+      block: 'end',
     })
   }, [])
 

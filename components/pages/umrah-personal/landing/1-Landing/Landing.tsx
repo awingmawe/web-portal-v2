@@ -13,7 +13,11 @@ import Frame from '@/public/images/frame-umrah-personal.png'
 import Image from 'next/image'
 import React from 'react'
 
-const UmrohLandingSection: React.FC = () => {
+interface UmrohLandingSectionProps {
+  token: string
+}
+
+const UmrohLandingSection: React.FC<UmrohLandingSectionProps> = ({ token }) => {
   const { profile } = useAuth()
 
   const [open, setOpen] = React.useState(false)
@@ -33,7 +37,7 @@ const UmrohLandingSection: React.FC = () => {
       return
     }
 
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    element.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }
   // Use phone verification hook
   const {
@@ -45,6 +49,7 @@ const UmrohLandingSection: React.FC = () => {
     handleSendOtp,
     handleVerifyOtp,
     handleResendOtp,
+    phoneNumber,
   } = usePhoneVerification({
     initialPhoneNumber: profile?.persona?.phoneNumber,
   })
@@ -63,8 +68,7 @@ const UmrohLandingSection: React.FC = () => {
   }
 
   const handleSavePhoneNumber = async () => {
-    await handleSendOtp()
-    setOpen(false)
+    await handleSendOtp(setOpen)
   }
   return (
     <section
@@ -91,7 +95,7 @@ const UmrohLandingSection: React.FC = () => {
             ))}
           </div>
           <div className="mt-6 flex items-center gap-3 max-lg:flex-col">
-            {profile?.phonenumberVerified ? (
+            {profile?.phonenumberVerified || !token ? (
               <Button
                 className="bg-primary-500 px-10 py-4 max-lg:w-full"
                 type="button"
@@ -116,7 +120,7 @@ const UmrohLandingSection: React.FC = () => {
                 content={
                   <PhoneNumberNotVerified
                     name={profile?.name || ''}
-                    phoneNumber={profile?.persona?.phoneNumber || ''}
+                    phoneNumber={phoneNumber || ''}
                     setPhoneNumber={setPhoneNumber}
                   />
                 }
