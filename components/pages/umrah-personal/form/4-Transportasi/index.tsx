@@ -97,7 +97,7 @@ const Step5Transportation: React.FC<Step5TransportationProps> = ({
 
   return (
     <div
-      className={`scrollbar-hide mx-auto w-full max-w-5xl max-xl:max-w-3xl lg:grid lg:h-[80vh] lg:place-content-center lg:overflow-y-auto`}
+      className={`scrollbar-hide mx-auto hidden w-full max-w-5xl max-xl:max-w-3xl lg:grid lg:h-[80vh] lg:place-content-center lg:overflow-y-auto`}
       id={`umrah-personal-step-${form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA ? 4 : 5}`}
     >
       <div className="lg:rounded-[24px] lg:border lg:border-neutral-100">

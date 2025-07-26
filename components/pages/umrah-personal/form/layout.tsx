@@ -81,19 +81,13 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
     loginRef.current = true
   }, [token])
 
-  const hasPhoneNumber = Boolean(
-    profile?.persona?.phoneNumber && profile?.phonenumberVerified
-  )
-
-  const shouldAllowClose = hasPhoneNumber
-
   useEffect(() => {
-    if (!shouldAllowClose) {
+    if (profile && !profile?.phonenumberVerified) {
       setOpen(true)
     } else {
       setOpen(false)
     }
-  }, [shouldAllowClose])
+  }, [profile, profile?.phonenumberVerified])
 
   // Create the back button trigger
   const BackButtonTrigger = () => (
@@ -153,8 +147,8 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
             </Button>
           </div>
         }
-        preventClose={!shouldAllowClose}
-        hideCloseButton={!shouldAllowClose}
+        preventClose={!profile?.phonenumberVerified}
+        hideCloseButton={!profile?.phonenumberVerified}
       />
 
       <VerificationDialog
