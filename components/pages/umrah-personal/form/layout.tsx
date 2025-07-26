@@ -81,6 +81,20 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
     loginRef.current = true
   }, [token])
 
+  const hasPhoneNumber = Boolean(
+    profile?.persona?.phoneNumber && profile?.phonenumberVerified
+  )
+
+  const shouldAllowClose = hasPhoneNumber
+
+  useEffect(() => {
+    if (!shouldAllowClose) {
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
+  }, [shouldAllowClose])
+
   // Create the back button trigger
   const BackButtonTrigger = () => (
     <div
@@ -101,20 +115,13 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
     handleSendOtp,
     handleVerifyOtp,
     handleResendOtp,
+    phoneNumber,
   } = usePhoneVerification({
     initialPhoneNumber: profile?.persona?.phoneNumber,
   })
 
-  useEffect(() => {
-    if (!profile?.persona?.phoneNumber) {
-      // This callback is called when phone verification is required
-      setOpen(true)
-    }
-  }, [profile?.persona?.phoneNumber])
-
   const handleSavePhoneNumber = async () => {
     await handleSendOtp()
-    setOpen(false)
   }
 
   return (
@@ -123,14 +130,14 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
       <TopbarMobileFormUmrahPersonal handleBack={handlePrevious} />
       <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
       <LayoutDrawerDialog
-        isOpen={!profile?.persona?.phoneNumber ? true : open}
+        isOpen={open}
         setIsOpen={setOpen}
         trigger={<div className="hidden" />}
         title={<></>}
         content={
           <PhoneNumberNotVerified
             name={profile?.name || ''}
-            phoneNumber={profile?.persona?.phoneNumber || ''}
+            phoneNumber={phoneNumber || ''}
             setPhoneNumber={setPhoneNumber}
           />
         }
@@ -146,6 +153,8 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
             </Button>
           </div>
         }
+        preventClose={!shouldAllowClose}
+        hideCloseButton={!shouldAllowClose}
       />
 
       <VerificationDialog

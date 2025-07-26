@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 const TopbarMobileLandingUmrahPersonal = () => {
   const router = useRouter()
   const handleBack = () => {
-    router.back()
+    router.push('/')
   }
   return (
     <div className="bg-neutral-0 flex w-full snap-start items-center justify-between px-4 py-3 lg:hidden">

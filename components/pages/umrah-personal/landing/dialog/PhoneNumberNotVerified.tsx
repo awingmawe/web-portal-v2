@@ -31,7 +31,7 @@ const PhoneNumberNotVerified = ({
       <Input
         placeholder="Masukkan nomor telepon"
         type="tel"
-        defaultValue={phoneNumber}
+        value={phoneNumber}
         inputMode="numeric"
         onChange={(e) => {
           const value = e.target.value.replace(/\D/g, '')

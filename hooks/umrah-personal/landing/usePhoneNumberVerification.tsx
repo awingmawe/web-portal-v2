@@ -19,7 +19,7 @@ interface UsePhoneVerificationReturn {
   verificationPurpose: 'post-edit-phone' | 'post-add-phone'
 
   // Actions
-  handleSendOtp: () => Promise<void>
+  handleSendOtp: (setOpen?: (open: boolean) => void) => Promise<void>
   handleVerifyOtp: (otp: string) => Promise<void>
   handleResendOtp: () => Promise<void>
 }
@@ -39,7 +39,7 @@ export const usePhoneVerification = ({
     ? 'post-edit-phone'
     : 'post-add-phone'
 
-  const handleSendOtp = async () => {
+  const handleSendOtp = async (setOpen?: (open: boolean) => void) => {
     if (!phoneNumber) {
       toast.error('Nomor telepon wajib diisi')
       return
@@ -55,6 +55,7 @@ export const usePhoneVerification = ({
       setOpenOtp(true)
       toast.success(response)
       refetchProfile()
+      setOpen?.(false)
     } catch (error: any) {
       setIsLoading(false)
       const message = error?.response?.data?.errorMessage || error?.message

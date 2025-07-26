@@ -22,6 +22,9 @@ interface LayoutDrawerDialogProps {
   footerContent: React.ReactNode
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
+  preventClose?: boolean
+  hideCloseButton?: boolean
+  onCloseAttempt?: () => void
 }
 
 const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
@@ -31,22 +34,58 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
   isOpen,
   footerContent,
   setIsOpen,
+  preventClose = false,
+  hideCloseButton = false,
+  onCloseAttempt,
 }) => {
   const { lg: isMobile } = useTailwindBreakpoint()
 
+  const handleOpenChange = (newOpen: boolean) => {
+    if (preventClose && !newOpen) {
+      onCloseAttempt?.()
+      return
+    }
+    setIsOpen(newOpen)
+  }
+
+  const preventCloseEvents = preventClose
+    ? {
+        onPointerDownOutside: (e: Event) => {
+          e.preventDefault()
+          onCloseAttempt?.()
+        },
+        onEscapeKeyDown: (e: KeyboardEvent) => {
+          e.preventDefault()
+          onCloseAttempt?.()
+        },
+        onInteractOutside: (e: Event) => {
+          e.preventDefault()
+          onCloseAttempt?.()
+        },
+      }
+    : {}
+
   return !isMobile ? (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="rounded-[20px] px-8 py-4">
+      <DialogContent
+        className={`rounded-[20px] px-8 py-4 ${
+          hideCloseButton ? '[&>button]:hidden' : ''
+        }`}
+        {...preventCloseEvents}
+      >
         <DialogTitle>{title}</DialogTitle>
         {content}
         <DialogFooter className="pt-3">{footerContent}</DialogFooter>
       </DialogContent>
     </Dialog>
   ) : (
-    <Drawer open={isOpen} onOpenChange={setIsOpen}>
+    <Drawer open={isOpen} onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent
+        {...preventCloseEvents}
+        className={hideCloseButton ? '[&>button]:hidden' : ''}
+      >
         <DrawerTitle>{title}</DrawerTitle>
         <div className="w-full px-4 pt-2.5 max-lg:overflow-y-auto">
           {content}

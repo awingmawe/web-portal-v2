@@ -19,7 +19,7 @@ export default async function UmrahPersonalLanding() {
   return (
     <ScrollContainerWrapper token={token}>
       <TopbarMobileLandingUmrahPersonal />
-      <UmrohLandingSection />
+      <UmrohLandingSection token={token} />
       <LearnMoreSection />
       <UmrohPersonalStartSection />
     </ScrollContainerWrapper>
