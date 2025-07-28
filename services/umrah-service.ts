@@ -260,6 +260,7 @@ export async function preBookingCreateCheckout(payload: {
   referralCode: string
   triple: number
   quad: number
+  paymentMethod?: PaymentMethod
 }) {
   try {
     const response = await apiWithAuth.post<any>(

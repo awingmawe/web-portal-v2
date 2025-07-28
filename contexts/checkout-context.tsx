@@ -199,6 +199,15 @@ export const CheckoutProvider = ({
           quad: selectedRoomType?.quad || 0,
         })
       } else {
+        let paymentMethod = {} as PaymentMethod
+
+        if (isLinkAja) {
+          paymentMethod = {
+            linkAja: true,
+            linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+          }
+        }
+
         response = await preBookingCreateCheckout({
           packageVariantId: selectedVariant?.variantId,
           referralCode,
@@ -206,6 +215,7 @@ export const CheckoutProvider = ({
           double: selectedRoomType?.double || 0,
           triple: selectedRoomType?.triple || 0,
           quad: selectedRoomType?.quad || 0,
+          paymentMethod,
         })
       }
       setRawInputValue(String(response.downPayment))
