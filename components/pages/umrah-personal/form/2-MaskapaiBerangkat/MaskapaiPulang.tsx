@@ -22,12 +22,18 @@ import { UseFormReturn } from 'react-hook-form'
 
 interface ArrivalFlightFormProps {
   form: UseFormReturn<UmrahPersonalFormType>
+  isStep2Valid: any
 }
 
-const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({ form }) => {
+const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
+  form,
+  isStep2Valid,
+}) => {
   const flightRoute = form.watch(`${STEP_2}.arrival.flightRoute`)
   return (
-    <div className="lg:rounded-t-[24px] lg:border lg:border-neutral-100">
+    <div
+      className={`lg:rounded-t-[24px] lg:border lg:border-neutral-100 ${isStep2Valid && 'max-lg:mb-20'}`}
+    >
       {/* Form Content */}
       <div className="p-8 pb-6 max-lg:p-4">
         {/* Title and Description */}
