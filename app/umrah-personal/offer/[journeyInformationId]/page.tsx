@@ -33,7 +33,7 @@ export default async function UmrahPersonalOffer({ params }: { params: any }) {
   return (
     <Fragment>
       <Topbar token={token} shadow scrolled type="normal" />
-      <main className="my-7.5 max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-[100vh] max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
+      <main className="my-7.5 max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-[100dvh] max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
         <MobileTopbar
           variant="title"
           title="Detail Paket Personal"
