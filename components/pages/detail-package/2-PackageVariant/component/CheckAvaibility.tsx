@@ -1,12 +1,18 @@
 import { ArrowIcon } from '@/components/icons/arrow'
+import { EmailIcon } from '@/components/icons/email'
 import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
 import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
 import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
 import DrawerCheckAvailibility from '@/components/pages/detail-package/mobile/DrawerCheckavailibility'
+import VerificationDialog from '@/components/pages/my/4-Profile/Card/VerificationDialog'
+import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
+import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/dialog/PhoneNumberNotVerified'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/sonner'
 import { ACCOUNT_URL } from '@/constant/env'
+import { useAuth } from '@/contexts/auth/context'
 import { usePackageVariant } from '@/contexts/package-variant-context'
+import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNumberVerification'
 import { isNullOrEmpty } from '@/lib/utils'
 import { checkAvailibility, getStatusStock } from '@/services/umrah-service'
 import { usePathname } from 'next/navigation'
@@ -24,12 +30,29 @@ export default function CheckAvailibility({
   handlePushEvent,
 }: CheckAvailibilityProps) {
   const path = usePathname()
+  const { profile } = useAuth()
+
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
+  const [isPhoneNumberModal, setIsPhoneNumberModal] = useState(false)
   const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
   const [isQuotaModalWating, setIsQuotaModalWaiting] = useState(false)
   const [statusStock, setStatusStock] = useState<boolean>(false)
 
   const { selectedVariant } = usePackageVariant()
+
+  const {
+    setPhoneNumber,
+    isLoading,
+    openOtp,
+    setOpenOtp,
+    verificationPurpose,
+    handleSendOtp,
+    handleVerifyOtp,
+    handleResendOtp,
+    phoneNumber,
+  } = usePhoneVerification({
+    initialPhoneNumber: profile?.persona?.phoneNumber,
+  })
 
   const handleQuotaCheck = async (quotaAmount: string) => {
     // Handle the quota check logic here
@@ -77,6 +100,10 @@ export default function CheckAvailibility({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariant, token])
+
+  const handleSavePhoneNumber = async () => {
+    await handleSendOtp(setIsPhoneNumberModal)
+  }
   return (
     <div>
       {token ? (
@@ -124,11 +151,50 @@ export default function CheckAvailibility({
         onOpenChange={setIsQuotaModalWaiting}
         // onSubmit={handleQuotaCheck}
       />
+      <VerificationDialog
+        open={openOtp}
+        onOpenChange={setOpenOtp}
+        onVerify={handleVerifyOtp}
+        onResendOtp={handleResendOtp}
+        icon={<EmailIcon className="text-primary-500 h-7 w-7" />}
+        purpose={verificationPurpose}
+        isLoading={isLoading}
+      />
+      <LayoutDrawerDialog
+        isOpen={isPhoneNumberModal}
+        setIsOpen={setIsPhoneNumberModal}
+        trigger={<div className="hidden" />}
+        title={<></>}
+        content={
+          <PhoneNumberNotVerified
+            name={profile?.name || ''}
+            phoneNumber={phoneNumber || ''}
+            setPhoneNumber={setPhoneNumber}
+          />
+        }
+        footerContent={
+          <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
+            <Button
+              variant="default"
+              className="px-10 py-3"
+              onClick={handleSavePhoneNumber}
+              isLoading={isLoading}
+            >
+              Simpan Nomor Telepon
+            </Button>
+          </div>
+        }
+      />
+
       {type === 'footer' && (
         <div
           className="flex cursor-pointer items-center gap-1 text-neutral-200 transition-colors"
           onClick={() => {
             if (token) {
+              if (!profile?.phonenumberVerified) {
+                setIsPhoneNumberModal(true)
+                return
+              }
               if (statusStock === false) {
                 setIsQuotaModalOpen(true)
               } else {
