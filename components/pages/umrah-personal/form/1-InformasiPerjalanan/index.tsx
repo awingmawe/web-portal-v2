@@ -62,7 +62,9 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
     >
       <div className="lg:rounded-[24px] lg:border lg:border-neutral-100">
         {/* Form Content */}
-        <div className="p-8 pb-6 max-lg:p-4">
+        <div
+          className={`p-8 pb-6 max-lg:p-4 ${isStep1Valid && currentStep === 1 && 'max-lg:pb-20'}`}
+        >
           {/* Title and Description Journey Information Form */}
           <div className="space-y-2 pb-6">
             <p className="text-l-medium text-neutral-900">
@@ -463,7 +465,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
         </div>
         {/* Action Buttons */}
         <div
-          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${isStep1Valid && currentStep === 1 && 'max-lg:sticky max-lg:bottom-0 max-lg:z-49 max-lg:bg-white'}  max-lg:px-4`}
+          className={`flex items-center justify-between border-t border-neutral-100 px-8 py-3 ${isStep1Valid && currentStep === 1 && 'max-lg:fixed max-lg:bottom-0 max-lg:z-49 max-lg:w-full max-lg:bg-white'}  max-lg:px-4`}
         >
           <p
             className="text-s-regular cursor-pointer text-neutral-900 max-lg:hidden"
