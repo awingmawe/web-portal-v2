@@ -16,6 +16,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
 import { CardPackage2 } from '@/components/shared/CardPackage2'
 import { Button } from '@/components/ui/button'
 import {
@@ -35,15 +36,23 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from '@/components/ui/sonner'
+import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { getPackageVariantList } from '@/services/umrah-service'
 import { ChevronLeft, Edit3, Loader2, Search } from 'lucide-react'
 
 // Form schema for step 2
 export const pembiayaanStep2Schema = z.object({
-  kamarHotel: z.string().min(1, 'Pilih kamar hotel'),
+  kamarHotel: z
+    .object({
+      double: z.number().min(0),
+      triple: z.number().min(0),
+      quad: z.number().min(0),
+    })
+    .refine((obj) => Object.values(obj).some((val) => val > 0), {
+      message: 'Pilih kamar hotel',
+    }),
   varian: z.string().min(1, 'Pilih varian paket'),
-  jumlahJamaah: z.coerce.number().min(1, 'Jumlah jamaah wajib diisi'),
   selectedPackage: z.string().min(1, 'Paket umrah wajib dipilih'),
   tenor: z.string().min(1, 'Tenor wajib dipilih'),
 })
@@ -68,7 +77,7 @@ export const PembiayaanFormStep2 = forwardRef<
 >(({ onSubmit, onBack, isLoading = false, screenSize, onCancel }, ref) => {
   const [selectedPackage, setSelectedPackage] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
-
+  const { getPrice, getTotalQty } = usePackageVariant()
   const [dataVariant, setDataVariant] = useState<any>([])
   const [showPackageSelection, setShowPackageSelection] = useState(false)
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
@@ -81,9 +90,12 @@ export const PembiayaanFormStep2 = forwardRef<
   const form = useForm<PembiayaanStep2Values>({
     resolver: zodResolver(pembiayaanStep2Schema),
     defaultValues: {
-      kamarHotel: '',
+      kamarHotel: {
+        double: 0,
+        triple: 0,
+        quad: 0,
+      },
       varian: '',
-      jumlahJamaah: 0,
       selectedPackage: '',
       tenor: '24',
     },
@@ -98,13 +110,6 @@ export const PembiayaanFormStep2 = forwardRef<
     return !price || Number(price) === 0
   }
 
-  // Function to get available room options
-  const getAvailableRoomOptions = () => {
-    if (!selectedVariantDetails) return []
-
-    const roomTypes = ['double', 'triple', 'quad']
-    return roomTypes.filter((roomType) => !isRoomDisabled(roomType))
-  }
   // Use the infinite scroll hook
   const {
     packages: dataPaket,
@@ -122,6 +127,7 @@ export const PembiayaanFormStep2 = forwardRef<
   // Form submit handler - PERBAIKAN UTAMA
   const handleSubmit = useCallback(
     async (values: PembiayaanStep2Values) => {
+      console.log('here')
       try {
         // Pastikan data ada sebelum submit
         if (!dataPaket || dataPaket.length === 0) {
@@ -155,22 +161,8 @@ export const PembiayaanFormStep2 = forwardRef<
         }
 
         // Calculate pricing
-        let roomPrice = 0
-        switch (values.kamarHotel) {
-          case 'double':
-            roomPrice = Number(selectedVariantDetails.originalPriceDouble) || 0
-            break
-          case 'triple':
-            roomPrice = Number(selectedVariantDetails.originalPriceTriple) || 0
-            break
-          case 'quad':
-            roomPrice = Number(selectedVariantDetails.originalPriceQuad) || 0
-            break
-          default:
-            roomPrice = 0
-        }
 
-        const totalPrice = roomPrice * Number(values.jumlahJamaah)
+        const totalPrice = getPrice()
         const totalFunding = totalPrice * 0.0139
         const tenorMonths = Number(values.tenor)
         const monthlyInstallment = totalPrice / tenorMonths + totalFunding
@@ -179,6 +171,7 @@ export const PembiayaanFormStep2 = forwardRef<
           ...values,
           packageDetails: selectedPkg,
           selectedVariantDetails,
+          jumlahJemaah: getTotalQty(),
           totalPrice,
           totalFunding,
           monthlyInstallment,
@@ -226,37 +219,19 @@ export const PembiayaanFormStep2 = forwardRef<
     if (
       !selectedVariantDetails ||
       !watchedValues.kamarHotel ||
-      !watchedValues.jumlahJamaah ||
       !watchedValues.tenor
     ) {
       return {
-        roomPrice: 0,
         totalPrice: 0,
         totalFunding: 0,
         monthlyInstallment: 0,
       }
     }
 
-    // Get room price based on selected room type
-    let roomPrice = 0
-    switch (watchedValues.kamarHotel) {
-      case 'double':
-        roomPrice = Number(selectedVariantDetails.originalPriceDouble) || 0
-        break
-      case 'triple':
-        roomPrice = Number(selectedVariantDetails.originalPriceTriple) || 0
-        break
-      case 'quad':
-        roomPrice = Number(selectedVariantDetails.originalPriceQuad) || 0
-        break
-      default:
-        roomPrice = 0
-    }
-
     // Calculate total price = room price * number of pilgrims
-    const totalPrice = roomPrice * Number(watchedValues.jumlahJamaah)
-
-    // Calculate total funding = total price * 1.0139
+    const totalPrice = getPrice()
+    console.log(totalPrice)
+    // Calculate total funding = total price * 0.0139
     const totalFunding = totalPrice * 0.0139
 
     // Calculate monthly installment = total funding / tenor (in months)
@@ -265,17 +240,11 @@ export const PembiayaanFormStep2 = forwardRef<
     const monthlyInstallment = totalPrice / tenorMonths + totalFunding
 
     return {
-      roomPrice,
       totalPrice,
       totalFunding,
       monthlyInstallment,
     }
-  }, [
-    selectedVariantDetails,
-    watchedValues.kamarHotel,
-    watchedValues.jumlahJamaah,
-    watchedValues.tenor,
-  ])
+  }, [selectedVariantDetails, watchedValues.kamarHotel, watchedValues.tenor])
 
   // Create search parameters
   const createSearchParams = useCallback(() => {
@@ -331,6 +300,7 @@ export const PembiayaanFormStep2 = forwardRef<
   // Handle package selection
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackage(packageId)
+    setSelectedVariantDetails(null) // Reset
     form.setValue('selectedPackage', packageId)
     setShowPackageSelection(false)
   }
@@ -377,7 +347,6 @@ export const PembiayaanFormStep2 = forwardRef<
   useEffect(() => {
     if (dataVariant.length > 0) {
       const firstVariant = dataVariant[0]
-
       setSelectedVariantDetails(firstVariant)
       form.setValue('varian', firstVariant.name)
     }
@@ -533,7 +502,7 @@ export const PembiayaanFormStep2 = forwardRef<
           )}
 
           {/* Main Form - Always Visible */}
-          <div className="h-[600px] flex-1 space-y-4 overflow-y-auto px-4 pb-4">
+          <div className="h-[700px] flex-1 space-y-4 overflow-y-auto px-4 pb-4">
             {/* Package Selection Button */}
             <div className="space-y-2">
               {!selectedPackage && (
@@ -646,6 +615,7 @@ export const PembiayaanFormStep2 = forwardRef<
                           <Select
                             onValueChange={handleVariantChange}
                             defaultValue={field.value}
+                            value={field.value}
                           >
                             <FormControl className="w-full">
                               <SelectTrigger className=" w-full rounded-2xl border-gray-300">
@@ -694,93 +664,25 @@ export const PembiayaanFormStep2 = forwardRef<
                       name="kamarHotel"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-xs text-gray-600">
-                            Kamar Hotel *
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl className="w-full">
-                              <SelectTrigger className="w-full rounded-2xl border-gray-300">
-                                <SelectValue placeholder="Pilih Kamar Hotel" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className=" w-full rounded-2xl border-gray-300">
-                              <SelectItem
-                                value="double"
-                                disabled={isRoomDisabled('double')}
-                                className={
-                                  isRoomDisabled('double')
-                                    ? 'cursor-not-allowed opacity-50'
-                                    : ''
-                                }
-                              >
-                                Double - Rp
-                                {Number(
-                                  selectedVariantDetails?.originalPriceDouble ||
-                                    0
-                                ).toLocaleString('id-ID')}
-                                {isRoomDisabled('double') &&
-                                  ' (Tidak Tersedia)'}
-                              </SelectItem>
-                              <SelectItem
-                                value="triple"
-                                disabled={isRoomDisabled('triple')}
-                                className={
-                                  isRoomDisabled('triple')
-                                    ? 'cursor-not-allowed opacity-50'
-                                    : ''
-                                }
-                              >
-                                Triple - Rp
-                                {Number(
-                                  selectedVariantDetails?.originalPriceTriple ||
-                                    0
-                                ).toLocaleString('id-ID')}
-                                {isRoomDisabled('triple') &&
-                                  ' (Tidak Tersedia)'}
-                              </SelectItem>
-                              <SelectItem
-                                value="quad"
-                                disabled={isRoomDisabled('quad')}
-                                className={
-                                  isRoomDisabled('quad')
-                                    ? 'cursor-not-allowed opacity-50'
-                                    : ''
-                                }
-                              >
-                                Quad - Rp
-                                {Number(
-                                  selectedVariantDetails?.originalPriceQuad || 0
-                                ).toLocaleString('id-ID')}
-                                {isRoomDisabled('quad') && ' (Tidak Tersedia)'}
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <SelectHotel
+                            defaultPackageVariant={selectedVariantDetails}
+                            variant="normal"
+                            hideTotalPrice
+                            isMobile
+                            onChange={(roomType) => {
+                              form.setValue(
+                                'kamarHotel',
+                                roomType
+                                  ? {
+                                      double: roomType.double || 0,
+                                      triple: roomType.triple || 0,
+                                      quad: roomType.quad || 0,
+                                    }
+                                  : { double: 0, triple: 0, quad: 0 }
+                              )
+                            }}
+                          />
 
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* Jumlah Jamaah */}
-                    <FormField
-                      control={form.control}
-                      name="jumlahJamaah"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs text-gray-600">
-                            Jumlah Jamaah *
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              min="1"
-                              placeholder="2"
-                              className="rounded-2xl border-gray-300"
-                              {...field}
-                            />
-                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}

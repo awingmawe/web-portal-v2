@@ -1,11 +1,17 @@
 'use client'
 
+import { ArrowIcon } from '@/components/icons/arrow'
+import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
+import { Calendar2 } from '@/components/icons/calendar'
+import { UsersIcon } from '@/components/icons/user'
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { CALL_CENTER } from '@/constant/env'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
-import { BedDouble, CalendarDays, Users } from 'lucide-react'
+import dayjs from 'dayjs'
+import 'dayjs/locale/id'
+import { BedDouble } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -33,6 +39,7 @@ const BankingPageDetail: React.FC = () => {
           departureDate: resVariant.departureDate,
           arrivalDate: resVariant.arrivalDate,
           roomType: res.roomType,
+          roomTypeQuantity: res.roomTypeQuantity,
           status: res.status,
           submissionCreditHistory: res.submissionCreditHistory || [], // Added fallback
           jumlahJamaah: res.jumlahJemaah,
@@ -157,14 +164,7 @@ const BankingPageDetail: React.FC = () => {
       minute: '2-digit',
     })
   }
-  const formatTanggal2 = (tanggal: string) => {
-    const date = new Date(tanggal)
-    return date.toLocaleString('id-ID', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    })
-  }
+
   const formatTanggal3 = (tanggal: string) => {
     const date = new Date(tanggal)
     return date.toLocaleString('id-ID', {
@@ -313,19 +313,21 @@ const BankingPageDetail: React.FC = () => {
                 <div className="mb-3 md:mb-4">
                   {/* Mobile Layout */}
                   <div className="flex items-center justify-between md:hidden">
-                    <span className="text-sm text-gray-600">Detail Produk</span>
-                    <div className="flex items-center gap-1 rounded-full bg-orange-100 px-2 py-1">
+                    <span className="text-s-medium text-neutral-900">
+                      Detail Produk
+                    </span>
+                    <div className="flex items-center gap-1 rounded-full px-2 py-1">
                       <Image
                         src="/images/logo-koper.svg"
                         alt="Package Thumbnail"
                         width={16}
                         height={16}
                       />
-                      <span className="text-xs font-medium text-orange-600">
+                      <span className="text-s-medium">
                         {data.organizationInstanceName}
                       </span>
                       <svg
-                        className="h-4 w-4 text-orange-600"
+                        className="h-4 w-4"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -342,7 +344,7 @@ const BankingPageDetail: React.FC = () => {
 
                   {/* Desktop Layout */}
                   <div className="hidden items-center justify-between md:flex">
-                    <span className="text-[12px] font-[500] text-neutral-900">
+                    <span className="text-m-semibold text-neutral-900">
                       Detail Produk
                     </span>
                     <div className="flex items-center gap-2">
@@ -352,7 +354,7 @@ const BankingPageDetail: React.FC = () => {
                         width={20}
                         height={20}
                       />
-                      <h2 className="text-base font-semibold text-gray-800">
+                      <h2 className="text-m-semibold text-neutral-900">
                         {data.organizationInstanceName}
                       </h2>
                       <svg
@@ -372,46 +374,172 @@ const BankingPageDetail: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3 md:gap-4">
-                  {/* Image Container */}
-                  <div className="flex !flex-row items-center gap-3 md:gap-4">
-                    <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 md:h-24 md:w-32">
+                <div className="flex gap-4 max-lg:items-center md:col-span-2">
+                  <div className="h-32 w-32 flex-shrink-0 max-lg:h-20 max-lg:w-20">
+                    {data.thumbnail ? (
                       <Image
                         src={data.thumbnail}
-                        alt="Package Thumbnail"
-                        width={242}
-                        height={190}
-                        className="h-full w-full object-cover"
+                        alt="Umroh Package"
+                        width={128}
+                        height={128}
+                        className="block h-full w-full rounded-md object-cover max-lg:hidden"
                       />
-                    </div>
-                    <div className=" flex h-full min-w-0 flex-1 items-center">
-                      <h3 className="line-clamp-2 text-[12px] leading-tight font-semibold text-neutral-900 md:text-lg md:leading-normal">
-                        {data.title}
-                      </h3>
-                    </div>
+                    ) : (
+                      <Image
+                        src={'/thumbnail.png'}
+                        alt="Umroh Package"
+                        width={60}
+                        height={60}
+                        className="block h-full w-full rounded-md object-cover max-lg:hidden"
+                      />
+                    )}
+                    {data.thumbnail ? (
+                      <Image
+                        src={data.thumbnail}
+                        alt="Umroh Package"
+                        width={60}
+                        height={60}
+                        className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                      />
+                    ) : (
+                      <Image
+                        src={'/thumbnail.png'}
+                        alt="Umroh Package"
+                        width={60}
+                        height={60}
+                        className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                      />
+                    )}
                   </div>
-
-                  {/* Content Container */}
-                  <div className="min-w-0 flex-1">
-                    <div className="space-y-2 text-gray-600 md:space-y-2">
-                      <div className="flex items-center gap-2">
-                        <CalendarDays className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
-                        <span className="text-xs leading-relaxed text-neutral-500 md:text-sm">
-                          {formatTanggal2(data.departureDate)} →{' '}
-                          {formatTanggal2(data.arrivalDate)}
-                        </span>
+                  <div className="mb-5 flex flex-col justify-between">
+                    <h2 className="text-l-semibold leading-[16px] uppercase max-lg:text-xs">
+                      {data.title}
+                    </h2>
+                    <div className="mt-4 flex items-center gap-2 max-lg:hidden">
+                      <Calendar2 className="h-5 w-5 text-neutral-500" />
+                      <p className="text-m-regular flex items-center text-neutral-500">
+                        {dayjs(data.departureDate)
+                          .locale('id')
+                          .format('DD MMMM YYYY')}{' '}
+                        <ArrowIcon
+                          size={20}
+                          className="mx-2 text-neutral-500"
+                        />{' '}
+                        {dayjs(data.arrivalDate)
+                          .locale('id')
+                          .format('DD MMMM YYYY')}
+                      </p>
+                    </div>
+                    <div className="mt-4 flex items-center gap-2 max-lg:hidden">
+                      <UsersIcon className="h-5 w-5 text-neutral-500" />
+                      <p className="text-m-regular text-neutral-500">
+                        {data.jumlahJamaah} Jemaah
+                      </p>
+                    </div>
+                    {data.roomType !== null ? (
+                      <div className="flex flex-col gap-3 md:gap-4">
+                        {/* Content Container */}
+                        <div className="mt-3 min-w-0 flex-1">
+                          <div className="space-y-2 text-gray-600 md:space-y-2">
+                            <div className="flex items-center gap-2">
+                              <BedDouble className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4 " />
+                              <span className="text-xs text-neutral-500 md:text-sm">
+                                {data.roomType}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Users className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4" />
-                        <span className="text-xs text-neutral-500 md:text-sm">
-                          {data.jumlahJamaah} Jemaah
-                        </span>
+                    ) : (
+                      <div className="mt-4 max-lg:hidden">
+                        <div className="flex w-full justify-between">
+                          <div className="flex items-center gap-2">
+                            <BedIcon3 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
+                            <div className="flex flex-col">
+                              <p className="text-s-regular text-neutral-500">
+                                Double
+                              </p>
+                              <p className="text-s-regular text-neutral-500">
+                                {data.roomTypeQuantity?.double} Jemaah
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <BedIcon2 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
+                            <div className="flex flex-col">
+                              <p className="text-s-regular text-neutral-500">
+                                Triple
+                              </p>
+                              <p className="text-s-regular text-neutral-500">
+                                {data.roomTypeQuantity?.triple} Jemaah
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <BedIcon3 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
+                            <div className="flex flex-col">
+                              <p className="text-s-regular text-neutral-500">
+                                Quad
+                              </p>
+                              <p className="text-s-regular text-neutral-500">
+                                {data.roomTypeQuantity?.quad} Jemaah
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <BedDouble className="h-3 w-3 flex-shrink-0 text-neutral-500 md:h-4 md:w-4 " />
-                        <span className="text-xs text-neutral-500 md:text-sm">
-                          {data.roomType}
-                        </span>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4  hidden items-center gap-2 max-lg:flex">
+                  <Calendar2 className="h-5 w-5 text-neutral-500" />
+                  <p className="text-s-regular flex items-center text-neutral-500">
+                    {dayjs(data.departureDate)
+                      .locale('id')
+                      .format('DD MMMM YYYY')}{' '}
+                    <ArrowIcon size={20} className="mx-2 text-neutral-500" />{' '}
+                    {dayjs(data.arrivalDate)
+                      .locale('id')
+                      .format('DD MMMM YYYY')}
+                  </p>
+                </div>
+                <div className="mt-4 hidden items-center gap-2 max-lg:flex">
+                  <UsersIcon className="h-5 w-5 text-neutral-500" />
+                  <p className="text-m-regular text-neutral-500">
+                    {data.jumlahJamaah} Jemaah
+                  </p>
+                </div>
+                <div className="mt-4 hidden max-lg:flex">
+                  <div className="flex w-full justify-between gap-5">
+                    <div className="flex items-center gap-2">
+                      <BedIcon3 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
+                      <div className="flex flex-col">
+                        <p className="text-s-regular text-neutral-500">
+                          Double
+                        </p>
+                        <p className="text-s-regular text-neutral-500">
+                          {data.roomTypeQuantity?.double} Jemaah
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <BedIcon2 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
+                      <div className="flex flex-col">
+                        <p className="text-s-regular text-neutral-500">
+                          Triple
+                        </p>
+                        <p className="text-s-regular text-neutral-500">
+                          {data.roomTypeQuantity?.triple} Jemaah
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <BedIcon2 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
+                      <div className="flex flex-col">
+                        <p className="text-s-regular text-neutral-500">Quad</p>
+                        <p className="text-s-regular text-neutral-500">
+                          {data.roomTypeQuantity?.quad} Jemaah
+                        </p>
                       </div>
                     </div>
                   </div>
