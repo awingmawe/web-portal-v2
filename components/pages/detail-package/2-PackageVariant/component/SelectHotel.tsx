@@ -19,6 +19,7 @@ export interface SelectHotelProps {
   variant?: 'normal' | 'checkout'
   disabledAddOnly?: boolean
   totalQty?: number
+  hideTotalPrice?: boolean
   onChange?: (roomType: RoomType, price: number) => void
 }
 
@@ -30,6 +31,7 @@ export default function SelectHotel({
   variant = 'normal',
   disabled = false,
   disabledAddOnly = false,
+  hideTotalPrice = false,
   totalManifest,
   totalQty,
   onChange,
@@ -55,7 +57,7 @@ export default function SelectHotel({
       setSelectedRoomType(defaultValue)
     }
 
-    if (!selectedVariant && defaultPackageVariant) {
+    if (defaultPackageVariant) {
       setSelectedVariant(defaultPackageVariant)
     }
 
@@ -173,6 +175,7 @@ export default function SelectHotel({
                       variant="ghost"
                       disabled={disabled}
                       className="h-8 w-8 rounded-full pl-2 hover:bg-neutral-100"
+                      type="button"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -184,6 +187,7 @@ export default function SelectHotel({
                       variant="ghost"
                       disabled={disabled || disabledAddOnly || isLimitReached}
                       className="h-8 w-8 rounded-full pr-2 hover:bg-neutral-100"
+                      type="button"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -257,6 +261,7 @@ export default function SelectHotel({
                       variant="ghost"
                       disabled={disabled}
                       className="h-8 w-8 rounded-full pl-2 hover:bg-neutral-100"
+                      type="button"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -268,6 +273,7 @@ export default function SelectHotel({
                       variant="ghost"
                       disabled={disabled || disabledAddOnly || isLimitReached}
                       className="h-8 w-8 rounded-full pr-2 hover:bg-neutral-100"
+                      type="button"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -341,6 +347,7 @@ export default function SelectHotel({
                       variant="ghost"
                       disabled={disabled}
                       className="h-8 w-8 rounded-full pl-2 hover:bg-neutral-100"
+                      type="button"
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
@@ -352,6 +359,7 @@ export default function SelectHotel({
                       variant="ghost"
                       disabled={disabled || disabledAddOnly || isLimitReached}
                       className="h-8 w-8 rounded-full pr-2 hover:bg-neutral-100"
+                      type="button"
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
@@ -381,7 +389,7 @@ export default function SelectHotel({
         )}
       </div>
       {/* Total price */}
-      {variant == 'normal' && (
+      {variant == 'normal' && !hideTotalPrice && (
         <div className="mt-3 flex items-center justify-between max-lg:hidden">
           <div className="text-m-regular text-neutral-500">Total Harga</div>
           <div className="flex flex-col items-start">

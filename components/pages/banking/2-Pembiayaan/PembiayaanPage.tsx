@@ -138,8 +138,10 @@ const PembiayaanPage: React.FC = () => {
         packageName: values.packageDetails.title,
         packageVariantName: values.varian,
         packageVariantId: values.selectedVariantDetails.id.toString(),
-        jumlahJemaah: values.jumlahJamaah,
-        roomType: values.kamarHotel,
+        jumlahJemaah: values.jumlahJemaah,
+        double: values.kamarHotel.double,
+        triple: values.kamarHotel.triple,
+        quad: values.kamarHotel.quad,
         totalPrice: values.totalPrice,
         memilikiTagihanLain: false,
         memilikiAngunanLain: false,
@@ -148,6 +150,8 @@ const PembiayaanPage: React.FC = () => {
         status: 'Diajukan',
         providerId: 1,
       }
+
+      console.log('dataKirim', dataKirim)
 
       await updateProfile(dataProfile)
       // // // Here you would normally submit to your API
