@@ -5,7 +5,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
 import Image from 'next/image'
@@ -13,11 +12,13 @@ import React, { useRef, useState } from 'react'
 
 const DrawerCheckAvailibility = React.memo(
   ({
-    children,
+    open,
+    setOpen,
     statusStock,
     onSubmit,
   }: {
-    children: React.ReactNode
+    open: boolean
+    setOpen: (open: boolean) => void
     statusStock: any
     onSubmit: any
   }) => {
@@ -39,8 +40,7 @@ const DrawerCheckAvailibility = React.memo(
       closeRef.current?.click() // Tutup drawer
     }
     return (
-      <Drawer>
-        <DrawerTrigger asChild>{children}</DrawerTrigger>
+      <Drawer open={open} onOpenChange={setOpen}>
         <DrawerContent className="bg-white p-1">
           <div className="mx-auto w-full max-w-md">
             <DrawerHeader className="border-gray-200 px-4 py-3">
