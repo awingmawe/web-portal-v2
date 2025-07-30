@@ -127,7 +127,6 @@ export const PembiayaanFormStep2 = forwardRef<
   // Form submit handler - PERBAIKAN UTAMA
   const handleSubmit = useCallback(
     async (values: PembiayaanStep2Values) => {
-      console.log('here')
       try {
         // Pastikan data ada sebelum submit
         if (!dataPaket || dataPaket.length === 0) {
@@ -171,7 +170,10 @@ export const PembiayaanFormStep2 = forwardRef<
           ...values,
           packageDetails: selectedPkg,
           selectedVariantDetails,
-          jumlahJemaah: getTotalQty(),
+          jumlahJemaah:
+            watchedValues.kamarHotel.double +
+            watchedValues.kamarHotel.triple +
+            watchedValues.kamarHotel.quad,
           totalPrice,
           totalFunding,
           monthlyInstallment,
@@ -230,7 +232,6 @@ export const PembiayaanFormStep2 = forwardRef<
 
     // Calculate total price = room price * number of pilgrims
     const totalPrice = getPrice()
-    console.log(totalPrice)
     // Calculate total funding = total price * 0.0139
     const totalFunding = totalPrice * 0.0139
 
