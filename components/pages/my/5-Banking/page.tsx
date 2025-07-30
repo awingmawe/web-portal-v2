@@ -382,7 +382,7 @@ const BankingPageDetail: React.FC = () => {
                         alt="Umroh Package"
                         width={128}
                         height={128}
-                        className="block h-full w-full rounded-md object-cover max-lg:hidden"
+                        className="block h-full w-full rounded-md object-cover max-xl:hidden"
                       />
                     ) : (
                       <Image
@@ -390,7 +390,7 @@ const BankingPageDetail: React.FC = () => {
                         alt="Umroh Package"
                         width={60}
                         height={60}
-                        className="block h-full w-full rounded-md object-cover max-lg:hidden"
+                        className="block h-full w-full rounded-md object-cover max-xl:hidden"
                       />
                     )}
                     {data.thumbnail ? (
@@ -399,7 +399,7 @@ const BankingPageDetail: React.FC = () => {
                         alt="Umroh Package"
                         width={60}
                         height={60}
-                        className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                        className="hidden h-full w-full rounded-md object-cover max-xl:block"
                       />
                     ) : (
                       <Image
@@ -407,15 +407,15 @@ const BankingPageDetail: React.FC = () => {
                         alt="Umroh Package"
                         width={60}
                         height={60}
-                        className="hidden h-full w-full rounded-md object-cover max-lg:block"
+                        className="hidden h-full w-full rounded-md object-cover max-xl:block"
                       />
                     )}
                   </div>
-                  <div className="mb-5 flex flex-col justify-between">
-                    <h2 className="text-l-semibold leading-[16px] uppercase max-lg:text-xs">
+                  <div className="mb-5 flex w-1/2 flex-col justify-between">
+                    <h2 className="text-l-semibold leading-[16px] uppercase max-xl:text-xs">
                       {data.title}
                     </h2>
-                    <div className="mt-4 flex items-center gap-2 max-lg:hidden">
+                    <div className="mt-4 flex items-center gap-2 max-xl:hidden">
                       <Calendar2 className="h-5 w-5 text-neutral-500" />
                       <p className="text-m-regular flex items-center text-neutral-500">
                         {dayjs(data.departureDate)
@@ -430,7 +430,7 @@ const BankingPageDetail: React.FC = () => {
                           .format('DD MMMM YYYY')}
                       </p>
                     </div>
-                    <div className="mt-4 flex items-center gap-2 max-lg:hidden">
+                    <div className="mt-4 flex items-center gap-2 max-xl:hidden">
                       <UsersIcon className="h-5 w-5 text-neutral-500" />
                       <p className="text-m-regular text-neutral-500">
                         {data.jumlahJamaah} Jemaah
@@ -451,7 +451,7 @@ const BankingPageDetail: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="mt-4 max-lg:hidden">
+                      <div className="mt-4 max-xl:hidden">
                         <div className="flex w-full justify-between">
                           <div className="flex items-center gap-2">
                             <BedIcon3 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
@@ -491,7 +491,7 @@ const BankingPageDetail: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <div className="mt-4  hidden items-center gap-2 max-lg:flex">
+                <div className="mt-4  hidden items-center gap-2 max-xl:flex">
                   <Calendar2 className="h-5 w-5 text-neutral-500" />
                   <p className="text-s-regular flex items-center text-neutral-500">
                     {dayjs(data.departureDate)
@@ -503,13 +503,13 @@ const BankingPageDetail: React.FC = () => {
                       .format('DD MMMM YYYY')}
                   </p>
                 </div>
-                <div className="mt-4 hidden items-center gap-2 max-lg:flex">
+                <div className="mt-4 hidden items-center gap-2 max-xl:flex">
                   <UsersIcon className="h-5 w-5 text-neutral-500" />
                   <p className="text-m-regular text-neutral-500">
                     {data.jumlahJamaah} Jemaah
                   </p>
                 </div>
-                <div className="mt-4 hidden max-lg:flex">
+                <div className="mt-4 hidden max-xl:flex">
                   <div className="flex w-full justify-between gap-5">
                     <div className="flex items-center gap-2">
                       <BedIcon3 className="h-6 w-6 flex-shrink-0 text-center text-neutral-500" />
