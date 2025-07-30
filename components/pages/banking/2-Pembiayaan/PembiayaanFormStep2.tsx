@@ -166,14 +166,20 @@ export const PembiayaanFormStep2 = forwardRef<
         const tenorMonths = Number(values.tenor)
         const monthlyInstallment = totalPrice / tenorMonths + totalFunding
 
+        console.log(
+          form.getValues('kamarHotel').double +
+            form.getValues('kamarHotel').triple +
+            form.getValues('kamarHotel').quad
+        )
+
         const submitData = {
           ...values,
           packageDetails: selectedPkg,
           selectedVariantDetails,
           jumlahJemaah:
-            watchedValues.kamarHotel.double +
-            watchedValues.kamarHotel.triple +
-            watchedValues.kamarHotel.quad,
+            form.getValues('kamarHotel').double +
+            form.getValues('kamarHotel').triple +
+            form.getValues('kamarHotel').quad,
           totalPrice,
           totalFunding,
           monthlyInstallment,
