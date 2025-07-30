@@ -33,6 +33,7 @@ export default function CheckAvailibility({
   const { profile } = useAuth()
 
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState(false)
+  const [isQuotaDrawerOpen, setIsQuotaDrawerOpen] = useState(false)
   const [isPhoneNumberModal, setIsPhoneNumberModal] = useState(false)
   const [isQuotaModalSuccess, setIsQuotaModalSuccess] = useState(false)
   const [isQuotaModalWating, setIsQuotaModalWaiting] = useState(false)
@@ -107,20 +108,32 @@ export default function CheckAvailibility({
   return (
     <div>
       {token ? (
-        <DrawerCheckAvailibility
-          statusStock={statusStock}
-          onSubmit={handleQuotaCheckDrawer}
-        >
+        <>
+          <DrawerCheckAvailibility
+            open={isQuotaDrawerOpen}
+            setOpen={setIsQuotaDrawerOpen}
+            statusStock={statusStock}
+            onSubmit={handleQuotaCheckDrawer}
+          />
           <Button
             className="w-full rounded-full py-2 lg:hidden"
             variant="outline"
             size="lg"
             id="btn-check-quota"
+            onClick={() => {
+              if (!profile?.phonenumberVerified) {
+                setIsPhoneNumberModal(true)
+                return
+              }
+              if (statusStock === false) {
+                setIsQuotaDrawerOpen(true)
+              }
+            }}
           >
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
           </Button>
-        </DrawerCheckAvailibility>
+        </>
       ) : (
         <Button
           className="w-full rounded-full py-2 lg:hidden"
@@ -135,6 +148,7 @@ export default function CheckAvailibility({
           <ArrowIcon size={12} className="-rotate-45" />
         </Button>
       )}
+
       <CheckQuotaModal
         open={isQuotaModalOpen}
         onOpenChange={setIsQuotaModalOpen}
