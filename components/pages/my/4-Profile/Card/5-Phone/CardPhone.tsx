@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/components/ui/sonner'
 import { changePhoneOtp, updatePhoneNumber } from '@/services/identity-service'
+import dayjs from 'dayjs'
 import { useState } from 'react'
 interface CardPhoneProps {
   phoneNumber: string
@@ -26,14 +27,26 @@ export default function CardPhone({
 }: CardPhoneProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isEditOpened, setIsEditOpened] = useState(() => {
+    const isExpired = sessionStorage.getItem('isEditPhoneExpired')
+    return isExpired ? isExpired >= dayjs().format() : false
+  })
   const [isVerificationDialogOpen, setIsVerificationDialogOpen] =
     useState(false)
   const [phoneNumberEdited, setPhoneNumberEdited] = useState(phoneNumber)
   const verificationPurpose = phoneNumber ? 'post-edit-phone' : 'post-add-phone'
 
   const handleEditPasswordClick = () => {
-    setIsEditDialogOpen(true)
-    // setIsVerificationDialogOpen(true)
+    if (isEditOpened) {
+      setIsVerificationDialogOpen(true)
+    } else {
+      setIsEditDialogOpen(true)
+      setIsEditOpened(true)
+      sessionStorage.setItem(
+        'isEditPhoneExpired',
+        dayjs().add(5, 'minutes').format()
+      )
+    }
   }
 
   const handleVerify = async (otp: string) => {
