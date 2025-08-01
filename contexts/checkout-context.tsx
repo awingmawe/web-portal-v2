@@ -199,14 +199,14 @@ export const CheckoutProvider = ({
           quad: selectedRoomType?.quad || 0,
         })
       } else {
-        let paymentMethod = {} as PaymentMethod
+        // let paymentMethod = {} as PaymentMethod
 
-        if (isLinkAja) {
-          paymentMethod = {
-            linkAja: true,
-            linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
-          }
-        }
+        // if (isLinkAja) {
+        //   paymentMethod = {
+        //     linkAja: true,
+        //     linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+        //   }
+        // }
 
         response = await preBookingCreateCheckout({
           packageVariantId: selectedVariant?.variantId,
@@ -215,7 +215,7 @@ export const CheckoutProvider = ({
           double: selectedRoomType?.double || 0,
           triple: selectedRoomType?.triple || 0,
           quad: selectedRoomType?.quad || 0,
-          paymentMethod,
+          // paymentMethod,
         })
       }
       setRawInputValue(String(response.downPayment))

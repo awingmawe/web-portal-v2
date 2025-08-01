@@ -27,7 +27,7 @@ export default async function LinkAja() {
 
   const [dataMinMax, dataTagPackages, dataFacility, dataSection, dpMinMax] =
     await Promise.all([
-      { min: '0', max: '40000000' },
+      { min: '0', max: '400000000' },
       getTagPackagesEnum(),
       getFacilityEnum('umrah-facility'),
       getSectionEnum(),
