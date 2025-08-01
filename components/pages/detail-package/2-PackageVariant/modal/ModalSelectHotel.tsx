@@ -9,7 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { LINKAJA_ADMIN_FEE, LINKAJA_MAX_LIMIT } from '@/constant/env'
+import { LINKAJA_MAX_LIMIT } from '@/constant/env'
+import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useState } from 'react'
 
@@ -64,9 +65,12 @@ const ModalSelectHotel = ({
             disabledAddOnly={
               isLinkAja
                 ? Number(selectedVariant?.package.dpAmount) *
-                    (getTotalQty() + 1) +
-                    getTotalQty() * LINKAJA_ADMIN_FEE >=
-                  LINKAJA_MAX_LIMIT
+                    (getTotalQty() + 1) >=
+                  LINKAJA_MAX_LIMIT -
+                    getLinkAjaTiering(
+                      Number(selectedVariant?.package.dpAmount) *
+                        (getTotalQty() + 1)
+                    )
                 : false
             }
           />

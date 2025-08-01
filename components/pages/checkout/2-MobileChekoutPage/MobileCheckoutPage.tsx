@@ -12,7 +12,8 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
-import { LINKAJA_ADMIN_FEE, LINKAJA_MAX_LIMIT } from '@/constant/env'
+import { LINKAJA_MAX_LIMIT } from '@/constant/env'
+import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { useCheckout } from '@/contexts/checkout-context'
 import {
   formatCurrency,
@@ -319,10 +320,16 @@ const MobileCheckoutPage = ({}) => {
               disabled={prebookingLoading}
               disabledAddOnly={
                 isLinkAja
-                  ? sliderValue >= LINKAJA_MAX_LIMIT ||
-                    selectedVariant.netAmount * (totalQty + 1) +
-                      totalQty * LINKAJA_ADMIN_FEE >
-                      LINKAJA_MAX_LIMIT
+                  ? sliderValue >=
+                      LINKAJA_MAX_LIMIT -
+                        getLinkAjaTiering(
+                          selectedVariant.netAmount * (totalQty + 1)
+                        ) ||
+                    selectedVariant.netAmount * (totalQty + 1) >
+                      LINKAJA_MAX_LIMIT -
+                        getLinkAjaTiering(
+                          selectedVariant.netAmount * (totalQty + 1)
+                        )
                   : false
               }
               totalManifest={detailVariant?.totalManifest}
@@ -428,7 +435,10 @@ const MobileCheckoutPage = ({}) => {
                         const value = parseInt(rawInputValue) || 0
                         const minAmount = selectedVariant.netAmount * totalQty
                         const maxAmount = isLinkAja
-                          ? LINKAJA_MAX_LIMIT - totalQty * LINKAJA_ADMIN_FEE
+                          ? LINKAJA_MAX_LIMIT -
+                            getLinkAjaTiering(
+                              preBooking?.totalPrice || totalPrice * totalQty
+                            )
                           : preBooking?.totalPrice || totalPrice * totalQty
 
                         if (value >= minAmount && value <= maxAmount) {
@@ -446,7 +456,10 @@ const MobileCheckoutPage = ({}) => {
                           const value = parseInt(rawInputValue) || 0
                           const minAmount = selectedVariant.netAmount * totalQty
                           const maxAmount = isLinkAja
-                            ? LINKAJA_MAX_LIMIT - totalQty * LINKAJA_ADMIN_FEE
+                            ? LINKAJA_MAX_LIMIT -
+                              getLinkAjaTiering(
+                                preBooking?.totalPrice || totalPrice * totalQty
+                              )
                             : preBooking?.totalPrice || totalPrice * totalQty
 
                           if (value >= minAmount && value <= maxAmount) {
@@ -469,8 +482,14 @@ const MobileCheckoutPage = ({}) => {
                     totalQty > 0
                       ? isLinkAja
                         ? preBooking?.totalPrice >
-                          LINKAJA_MAX_LIMIT - totalQty * LINKAJA_ADMIN_FEE
-                          ? LINKAJA_MAX_LIMIT - totalQty * LINKAJA_ADMIN_FEE
+                          LINKAJA_MAX_LIMIT -
+                            getLinkAjaTiering(
+                              preBooking?.totalPrice || totalPrice * totalQty
+                            )
+                          ? LINKAJA_MAX_LIMIT -
+                            getLinkAjaTiering(
+                              preBooking?.totalPrice || totalPrice * totalQty
+                            )
                           : preBooking?.totalPrice
                         : preBooking?.totalPrice || totalPrice * totalQty
                       : 0
