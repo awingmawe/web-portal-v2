@@ -3,6 +3,7 @@
 
 import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
 import { TransactionDetail } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetail'
+import DrawerPaymentLinkAja from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerPaymentLinkAja'
 import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
 import { BatalkanPesanan } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesanan'
 
@@ -63,12 +64,15 @@ export default function TransactionCardFooter({
   fetchTransactions,
   transaction,
 }: TransactionCardFooter) {
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const { lg } = useTailwindBreakpoint()
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
   const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
   const [snapReady, setSnapReady] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
+    useState(false)
   const router = useRouter()
   const fetcPaymentTransaction = useCallback(async () => {
     setLoadingPaymentTransaction(true)
@@ -227,13 +231,25 @@ export default function TransactionCardFooter({
         !isPaidOff:
         return (
           <>
-            <Button
-              className="border-primary-500 w-full border-2 px-8 py-3 text-nowrap"
-              disabled={loadingPaymentTransaction}
-              onClick={() => fetchPaymentStatement(bookingId)}
-            >
-              Bayar Pelunasan
-            </Button>
+            {isLinkAja ? (
+              <Button
+                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                variant="outline"
+                disabled={loadingPaymentTransaction}
+                onClick={() => setOpenDrawerPaymentLinkAja(true)}
+              >
+                Bayar Pelunasan
+              </Button>
+            ) : (
+              <Button
+                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                variant="outline"
+                disabled={loadingPaymentTransaction}
+                onClick={() => fetchPaymentStatement(bookingId)}
+              >
+                Bayar Pelunasan
+              </Button>
+            )}
             <Button
               className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
               variant="outline"
@@ -278,14 +294,25 @@ export default function TransactionCardFooter({
                 Lengkapi Data Jemaah
               </Button>
             </Link>
-            <Button
-              className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
-              variant="outline"
-              disabled={loadingPaymentTransaction}
-              onClick={() => fetchPaymentStatement(bookingId)}
-            >
-              Bayar Pelunasan
-            </Button>
+            {isLinkAja ? (
+              <Button
+                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                variant="outline"
+                disabled={loadingPaymentTransaction}
+                onClick={() => setOpenDrawerPaymentLinkAja(true)}
+              >
+                Bayar Pelunasan
+              </Button>
+            ) : (
+              <Button
+                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                variant="outline"
+                disabled={loadingPaymentTransaction}
+                onClick={() => fetchPaymentStatement(bookingId)}
+              >
+                Bayar Pelunasan
+              </Button>
+            )}
           </>
         )
 
@@ -330,15 +357,27 @@ export default function TransactionCardFooter({
               </Button>
             ) : (
               status !== 'waiting-approval' && (
-                <Button
-                  variant="outline"
-                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-                  onClick={() => {
-                    fetchPaymentStatement(bookingId)
-                  }}
-                >
-                  Bayar Pelunasan
-                </Button>
+                <div>
+                  {isLinkAja ? (
+                    <Button
+                      className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                      variant="outline"
+                      disabled={loadingPaymentTransaction}
+                      onClick={() => setOpenDrawerPaymentLinkAja(true)}
+                    >
+                      Bayar Pelunasan
+                    </Button>
+                  ) : (
+                    <Button
+                      className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                      variant="outline"
+                      disabled={loadingPaymentTransaction}
+                      onClick={() => fetchPaymentStatement(bookingId)}
+                    >
+                      Bayar Pelunasan
+                    </Button>
+                  )}
+                </div>
               )
             )}
 
@@ -605,6 +644,11 @@ export default function TransactionCardFooter({
           onOpenChange={setOpenSuksesRefund}
         />
       )}
+      <DrawerPaymentLinkAja
+        open={openDrawerPaymentLinkAja}
+        onOpenChange={setOpenDrawerPaymentLinkAja}
+        bookingId={bookingId}
+      />
     </Fragment>
   )
 }

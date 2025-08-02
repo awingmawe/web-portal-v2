@@ -1,7 +1,6 @@
 import { metadata } from '@/app/shared-metadata'
 import LandingLinkAja from '@/components/pages/linkaja/1-Landing/Landing'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
-import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilterMobile/BottomFilter'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { getFacilityEnum } from '@/services/general-service'
 import { getSectionEnum, getTagPackagesEnum } from '@/services/umrah-service'
@@ -37,7 +36,13 @@ export default async function LinkAja() {
   return (
     <Fragment>
       <div className="mx-auto w-full max-w-lg ">
-        <LandingLinkAja />
+        <LandingLinkAja
+          dataMinMax={dataMinMax}
+          dataTagPackages={dataTagPackages}
+          dataFacility={dataFacility}
+          dataSection={dataSection}
+          dpMinMax={dpMinMax}
+        />
         <main
           className="relative mt-auto mb-0 h-[100vh] w-full max-w-lg overflow-hidden bg-transparent"
           id="packageList"
@@ -53,14 +58,6 @@ export default async function LinkAja() {
             </div>
           </section>
         </main>
-        <BottomNavigation
-          dataMinMax={dataMinMax}
-          dataFacility={dataFacility}
-          dataTagPackages={dataTagPackages}
-          dataSection={dataSection}
-          dpMinMax={dpMinMax}
-          forceMobile
-        />
       </div>
     </Fragment>
   )
