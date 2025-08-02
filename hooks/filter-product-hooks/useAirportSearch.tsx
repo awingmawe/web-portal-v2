@@ -19,6 +19,20 @@ export function useAirportSearch({
   const [hasMore, setHasMore] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const [page, setPage] = useState(1)
+  const getCountryId = useCallback(() => {
+    switch (typeairport) {
+      case 'departure-departure':
+      case 'arrival-return':
+        return undefined
+      case 'arrival-departure':
+        return 682
+      case 'departure-return':
+        if (searchQuery) {
+          return undefined
+        }
+        return 682
+    }
+  }, [typeairport, searchQuery])
 
   // Function to fetch airports
   const fetchAirports = useCallback(
@@ -28,8 +42,7 @@ export function useAirportSearch({
           page: pageNum,
           size: pageSize,
           [`cityName|code|name:likeLower`]: query ? `%${query}%` : undefined,
-          ['countryId:eq']:
-            typeairport && typeairport === 'departure' ? 682 : undefined,
+          ['countryId:eq']: getCountryId(),
         }
         const response =
           version === 'v1'
@@ -43,7 +56,7 @@ export function useAirportSearch({
         return { results: [], total: 0 }
       }
     },
-    [pageSize]
+    [pageSize, getCountryId]
   )
 
   // Initial data load

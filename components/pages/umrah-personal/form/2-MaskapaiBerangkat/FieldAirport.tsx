@@ -36,7 +36,11 @@ interface FieldAirportProps {
     onChange: (value: AirportOption) => void
   }
   placeholder: string
-  type: 'departure' | 'arrival'
+  type:
+    | 'departure-departure'
+    | 'arrival-return'
+    | 'departure-return'
+    | 'arrival-departure'
   classNameTrigger?: string
   classNameContentPopover?: string
   classNameContentDrawer?: string

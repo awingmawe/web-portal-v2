@@ -64,7 +64,7 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
                   <FormControl>
                     <FieldAirport
                       placeholder="Pilih bandara keberangkatan"
-                      type="arrival"
+                      type="departure-return"
                       field={field}
                     />
                   </FormControl>
@@ -86,7 +86,7 @@ const ArrivalFlightForm: React.FC<ArrivalFlightFormProps> = ({
                   <FormControl>
                     <FieldAirport
                       placeholder="Pilih bandara kedatangan"
-                      type="arrival"
+                      type="arrival-return"
                       field={field}
                     />
                   </FormControl>
