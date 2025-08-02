@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function BottomNavigation() {
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const pathname = usePathname()
 
   // Define our navigation items with their paths and icons
@@ -34,7 +35,9 @@ export default function BottomNavigation() {
   ]
 
   return (
-    <div className="fixed bottom-0 left-1/2 z-100 flex w-[90%] -translate-x-1/2 items-center justify-center px-4 pb-4">
+    <div
+      className={`fixed bottom-0 left-1/2 z-100 flex w-[90%] -translate-x-1/2 items-center justify-center px-4 pb-4 ${isLinkAja ? 'hidden' : ''}`}
+    >
       <div className="border-opacity-50 hidden h-16 w-full max-w-[375px]  min-w-[300px] rounded-[40px] border-[0.5px] border-white bg-gradient-to-b from-[rgba(49,37,0,0.4)] to-[rgba(174,174,174,0.4)] px-4 py-2 backdrop-blur-lg max-lg:block">
         <nav className="flex items-center justify-between">
           {navItems.map((item) => {

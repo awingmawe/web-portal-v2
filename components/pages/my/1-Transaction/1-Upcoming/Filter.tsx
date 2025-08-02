@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowIcon } from '@/components/icons/arrow'
 import { ChevronIcon } from '@/components/icons/chevron'
 import { FilterSquare } from '@/components/icons/filter'
 import DateRangePicker from '@/components/pages/my/1-Transaction/Components/DateRangeFilter'
@@ -25,6 +26,7 @@ import {
 } from '@/components/ui/select'
 import { format } from 'date-fns/format'
 import { Search } from 'lucide-react'
+import Link from 'next/link'
 import { ChangeEvent, SetStateAction, useState } from 'react'
 import { DateRange } from 'react-day-picker'
 
@@ -139,6 +141,7 @@ export const SearchAndFilterMobile = ({
   setIsLoadingMobile,
   handleDateRangeChange,
 }: SearchAndFilterMobileProps) => {
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const [resetCounter, setResetCounter] = useState(0)
   const [dateRange, setDateRange] = useState<DateRange | undefined>(
     dateFilterMobile
@@ -184,9 +187,16 @@ export const SearchAndFilterMobile = ({
 
   return (
     <div className="scrollbar-hide flex gap-2 overflow-x-hidden pl-5">
-      <div className={`pr-t absolute -top-13.5 left-3.5 w-11/12 md:w-10/12`}>
+      <div
+        className={`pr-t absolute -top-13.5 left-3.5 w-11/12 md:w-10/12 ${isLinkAja ? 'flex items-center' : ''}`}
+      >
+        {isLinkAja && (
+          <Link href={'/linkaja'} className="mr-2">
+            <ArrowIcon size={24} className="rotate-180" />
+          </Link>
+        )}
         <Input
-          model="compact"
+          model="expended"
           startIcon={<Search size={16} className="text-neutral-300" />}
           placeholder="Cari ID Transaksi"
           className="w-full py-1.5"

@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import DrawerBatalkan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerBatalkan'
+import DrawerPaymentLinkAja from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerPaymentLinkAja'
 import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
 import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
 import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
@@ -9,9 +9,8 @@ import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
-import { useCallback, useRef } from 'react'
+import { useCallback, useState } from 'react'
 export const TransactionDetailMobileAction = ({
-  bookingCode,
   statusTahapan,
   bookingId,
   idOrganisasi,
@@ -23,6 +22,10 @@ export const TransactionDetailMobileAction = ({
   idOrganisasi: any
   transaction?: any
 }) => {
+  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
+    useState(false)
+
   const fetchPaymentStatement = useCallback(async (id: any) => {
     try {
       // Build query parameters
@@ -56,7 +59,7 @@ export const TransactionDetailMobileAction = ({
     } finally {
     }
   }, [])
-  const closeRef = useRef<HTMLButtonElement>(null)
+
   const {
     openFormRefund,
     setOpenFormRefund,
@@ -142,10 +145,10 @@ export const TransactionDetailMobileAction = ({
         return null
     }
   }
-  console.log(transaction?.status.slug)
 
   return (
     <div className="hidden max-lg:block">
+      {JSON.stringify(isLinkAja)}
       {![
         'waiting-approval',
         'waiting-down-payment',
@@ -167,14 +170,23 @@ export const TransactionDetailMobileAction = ({
             </Button>
           </DrawerBatalkan>
 
-          <Button
-            className="w-full py-2"
-            onClick={() => {
-              fetchPaymentStatement(bookingId)
-            }}
-          >
-            Bayar Pelunasan
-          </Button>
+          {isLinkAja ? (
+            <Button
+              className="w-full py-2"
+              onClick={() => setOpenDrawerPaymentLinkAja(true)}
+            >
+              Bayar Pelunasan
+            </Button>
+          ) : (
+            <Button
+              className="w-full py-2"
+              onClick={() => {
+                fetchPaymentStatement(bookingId)
+              }}
+            >
+              Bayar Pelunasan
+            </Button>
+          )}
           <Link href={`/manifest/${bookingId}`} className="w-full">
             <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
           </Link>
@@ -221,6 +233,11 @@ export const TransactionDetailMobileAction = ({
           onOpenChange={setOpenSuksesRefund}
         />
       )}
+      <DrawerPaymentLinkAja
+        open={openDrawerPaymentLinkAja}
+        onOpenChange={setOpenDrawerPaymentLinkAja}
+        bookingId={bookingId}
+      />
     </div>
   )
 }
