@@ -1,6 +1,7 @@
 import { toast } from '@/components/ui/sonner'
 import { useAuth } from '@/contexts/auth/context'
 import { changePhoneOtp, updatePhoneNumber } from '@/services/identity-service'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 interface UsePhoneVerificationProps {
@@ -27,6 +28,7 @@ interface UsePhoneVerificationReturn {
 export const usePhoneVerification = ({
   initialPhoneNumber,
 }: UsePhoneVerificationProps = {}): UsePhoneVerificationReturn => {
+  const router = useRouter()
   const { profile, refetchProfile } = useAuth()
 
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>(
@@ -94,6 +96,8 @@ export const usePhoneVerification = ({
       setOpenOtp(false)
       const message = error?.response?.data?.errorMessage || error?.message
       toast.error(message)
+    } finally {
+      router.push('/umrah-personal/form')
     }
   }
 

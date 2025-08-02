@@ -415,3 +415,10 @@
     bottom: 120px !important;
   }
 }
+
+/* This style is prevent the input zoomed in safari browser */
+@media not all and (min-resolution: 0.001dpcm) {
+  input {
+    font-size: 16px !important;
+  }
+}
