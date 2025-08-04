@@ -28,7 +28,7 @@ export default function CardPhone({
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isEditOpened, setIsEditOpened] = useState(() => {
-    const isExpired = sessionStorage.getItem('isEditPhoneExpired')
+    const isExpired = localStorage.getItem('isEditPhoneExpired')
     return isExpired ? isExpired >= dayjs().format() : false
   })
   const [isVerificationDialogOpen, setIsVerificationDialogOpen] =
@@ -41,11 +41,6 @@ export default function CardPhone({
       setIsVerificationDialogOpen(true)
     } else {
       setIsEditDialogOpen(true)
-      setIsEditOpened(true)
-      sessionStorage.setItem(
-        'isEditPhoneExpired',
-        dayjs().add(5, 'minutes').format()
-      )
     }
   }
 
@@ -72,6 +67,7 @@ export default function CardPhone({
   const handleEditPassword = async (data: Omit<PhoneNumberFormValue, 'id'>) => {
     // Store the pending changes and open verification dialog for final confirmation
     setIsLoading(true)
+
     try {
       const response = await changePhoneOtp({ phoneNumber: data.phoneNumber })
       setPhoneNumberEdited(data.phoneNumber)
@@ -79,6 +75,11 @@ export default function CardPhone({
       setIsEditDialogOpen(false)
       setIsLoading(false)
       toast.success(response)
+      setIsEditOpened(true)
+      localStorage.setItem(
+        'isEditPhoneExpired',
+        dayjs().add(5, 'minutes').format()
+      )
     } catch (error: any) {
       setIsLoading(false)
       const message = error?.response?.data?.errorMessage || error?.message
