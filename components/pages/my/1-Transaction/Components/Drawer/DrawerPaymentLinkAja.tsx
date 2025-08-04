@@ -38,7 +38,7 @@ const DrawerPaymentLinkAja = memo(
           const response = await getPaymentStatement(id)
           const payload = {
             amount: response.remainingPayment,
-            // paymentPath: selectedPayment,
+            paymentPath: selectedPayment || 'payment-gateway',
           }
           const responseNext = await postNextPayment(id, payload)
           if (
@@ -99,11 +99,11 @@ const DrawerPaymentLinkAja = memo(
                 {/* LinkAja Syariah */}
                 <div
                   className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
-                  onClick={() => handlePaymentSelection('linkaja-syariah')}
+                  onClick={() => handlePaymentSelection('link-aja-syariah')}
                 >
                   <div className="flex items-center gap-4">
                     <RadioGroupItem
-                      value="linkaja-syariah"
+                      value="link-aja-syariah"
                       id="linkAjaSyariah"
                       className="h-4 w-4"
                     />
