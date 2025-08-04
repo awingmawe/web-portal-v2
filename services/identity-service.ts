@@ -247,3 +247,28 @@ export async function verifyEmailOtpBookingCanceled(): Promise<string> {
     throw error
   }
 }
+
+export async function otpLogin(payload: {
+  phoneNumber: string
+}): Promise<string> {
+  try {
+    const response = await api.post(`/auth/v2/otp/otp-login`, payload)
+    return response.data
+  } catch (error) {
+    console.error('Error get otp verify login:', error)
+    throw error
+  }
+}
+
+export async function authWithOtp(payload: {
+  otp: string
+  identifier: string
+}): Promise<{ accessToken: string; exp: number }> {
+  try {
+    const response = await api.post(`/auth/v2/authorize-with-otp`, payload)
+    return response.data
+  } catch (error) {
+    console.error('Error post otp verify login:', error)
+    throw error
+  }
+}

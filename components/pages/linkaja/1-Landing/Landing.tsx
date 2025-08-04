@@ -15,6 +15,7 @@ import { MoneyTickIcon } from '@/components/icons/money-tick'
 import { MouseSquareIcon } from '@/components/icons/mouse-square'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { TimerIcon2 } from '@/components/icons/timer'
+import NeedLoginLinkAja from '@/components/pages/linkaja/1-Landing/NeedLoginLinkAja'
 import NeedPaymentLinkAja from '@/components/pages/linkaja/1-Landing/NeedPaymentLinkAja'
 import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilterMobile/BottomFilter'
 import { Button } from '@/components/ui/button'
@@ -35,17 +36,20 @@ export default function LandingLinkAja({
   dataFacility,
   dataSection,
   dpMinMax,
+  token,
 }: {
   dataMinMax: { min: string; max: string }
   dataTagPackages: { id: number; name: string }[]
   dataFacility: GenericResponse<Facility>
   dataSection: { id: number; name: string }[]
   dpMinMax: { minDpAmount: string; maxDpAmount: string }
+  token: string
 }) {
   const { filters, setFilters } = useFilterProduct()
   const searchParams = useSearchParams()
   const updateQueryParams = useUpdateQueryParams()
   const [showBottomBar, setShowBottomBar] = useState(false)
+  const [tokenFromLogin, setTokenFromLogin] = useState(token)
 
   useEffect(() => {
     setFilters({
@@ -215,7 +219,18 @@ export default function LandingLinkAja({
           </div>
         </div>
       </div>
-      <NeedPaymentLinkAja showBottomBar={showBottomBar} />
+      {(token || tokenFromLogin) && (
+        <NeedPaymentLinkAja showBottomBar={showBottomBar} />
+      )}
+      {!token && (
+        <NeedLoginLinkAja
+          phoneNumber={String(searchParams.get('phoneNumber'))}
+          onLoginAction={(data) => {
+            setTokenFromLogin(data.accessToken)
+          }}
+          // name={String(searchParams.get('name'))}
+        />
+      )}
       {showBottomBar && (
         <BottomNavigation
           dataMinMax={dataMinMax}

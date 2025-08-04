@@ -391,13 +391,14 @@
 
 .qontak-widget-iframe {
   bottom: 0px !important;
+  z-index: 100 !important;
 }
 
 .qontak-widget-close-button {
   position: fixed;
   right: 20px;
   bottom: 70px;
-  z-index: 10000000;
+  z-index: 100;
   background: #f0143e;
   border-radius: 50%;
   height: 30px;
