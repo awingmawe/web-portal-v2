@@ -116,9 +116,11 @@ export default function NeedLoginLinkAja({
     <Drawer open={open} dismissible={false}>
       <DrawerContent className="px-4 pb-6">
         <DrawerTitle className="heading-4-regular mt-2">
-          {phoneNumber == '' ? 'Gagal Login' : 'Masukkan Kode OTP'}
+          {phoneNumber == '' || phoneNumber == 'null'
+            ? 'Gagal Login'
+            : 'Masukkan Kode OTP'}
         </DrawerTitle>
-        {phoneNumber == '' ? (
+        {phoneNumber == '' || phoneNumber == 'null' ? (
           <div className="pb-10">
             <DrawerHeader className=" gap-3 px-0 pt-1 pb-4 ">
               <span className="text-m-regular text-neutral-500">
@@ -181,7 +183,7 @@ export default function NeedLoginLinkAja({
             </div>
             <Button
               type="button"
-              className="flex-1 rounded-full bg-yellow-400 text-black hover:bg-yellow-500"
+              className="w-full flex-1 rounded-full bg-yellow-400 text-black hover:bg-yellow-500"
               onClick={handleVerify}
               disabled={otp.some((digit) => !digit)}
               isLoading={loading}
