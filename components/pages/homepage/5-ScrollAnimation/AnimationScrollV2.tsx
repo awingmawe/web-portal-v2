@@ -6,6 +6,7 @@ import PreparationSection from '@/components/pages/homepage/5-ScrollAnimation/Pr
 import TravelImageSection from '@/components/pages/homepage/5-ScrollAnimation/TravelImageSection'
 import { GalleryHomepage } from '@/constant/types/GalleryProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import Lenis from '@studio-freight/lenis'
 import Image from 'next/image'
 import { Fragment, useEffect, useRef, useState } from 'react'
 
@@ -23,6 +24,7 @@ function AnimationScrollV2({
   const jemaah = useRef<HTMLDivElement>(null)
   const overlay = useRef<HTMLDivElement>(null)
   const notJustAService = useRef<HTMLDivElement>(null)
+  const lenisRef = useRef<Lenis | null>(null)
 
   const { lg: isMobile } = useTailwindBreakpoint()
   const [showKabah, setShowKabah] = useState(false)
@@ -37,57 +39,114 @@ function AnimationScrollV2({
     const nj = notJustAService.current
 
     if (!gf || !ec || !tr || !ex || !je || !ov || !nj) return
+
+    // Initialize Lenis
+    const lenis = new Lenis({
+      duration: 1.2,
+      syncTouch: true,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 2,
+      infinite: false,
+    })
+
+    lenisRef.current = lenis
+
+    // Set initial position
     nj.style.left = `${Number(exp.current?.getBoundingClientRect().left)}px`
     nj.style.display = 'inline'
 
-    const handleScroll = () => {
-      const gfRectY = gf.getBoundingClientRect().top + window.scrollY
-      setShowKabah(window.scrollY > gfRectY + gf.clientHeight / 2.8)
+    const handleScroll = (lenis: Lenis) => {
+      const scrollY = lenis.scroll
 
-      const trRectY = tr.getBoundingClientRect().top
-      if (window.scrollY > trRectY + window.scrollY) {
+      // Kabah visibility
+      const gfRectY = gf.getBoundingClientRect().top + scrollY
+      setShowKabah(scrollY > gfRectY + gf.clientHeight / 2.8)
+
+      const trRect = tr.getBoundingClientRect()
+      const trRectY = trRect.top
+
+      // 1. Experience container scaling - Enhanced for mobile
+      if (scrollY > trRectY + scrollY) {
         ec.style.position = 'fixed'
         ec.style.top = '0'
         ec.style.left = '0'
-        const val = (trRectY * -1) / (isMobile ? 20 : 100)
-        ex.style.transform = `scale(${val > 1 ? val : 1})`
+
+        // Improved scaling calculation for smoother mobile experience
+        const scrollProgress = trRectY * -1
+        let scaleFactor: number
+
+        if (isMobile) {
+          // Faster and smoother scaling for mobile
+          scaleFactor = scrollProgress / 5 // Reduced from 60 to 35 for faster scaling
+          // Add ease-out effect for smoother animation
+          scaleFactor = 1 + Math.pow(Math.max(0, scaleFactor - 1), 0.8)
+        } else {
+          scaleFactor = scrollProgress / 100 // Slightly adjusted for desktop
+        }
+
+        const finalScale = Math.max(1, scaleFactor)
+        ex.style.transform = `scale(${finalScale})`
+        ex.style.transformOrigin = '54.75% 27%'
+
+        // Add smooth transition
+        ex.style.transition = 'transform 0.1s ease-out'
       } else {
         ec.style.position = 'relative'
         ec.style.top = 'unset'
         ec.style.left = 'unset'
-        ex.style.transform = `scale(1)`
+        ex.style.transform = 'scale(1)'
+        ex.style.transition = 'transform 0.3s ease-out'
       }
 
-      const targetJeShow =
-        trRectY * (isMobile ? 1.2 : 1) +
-        window.innerHeight * (isMobile ? 0.5 : 2) +
-        window.scrollY
-      if (window.scrollY > targetJeShow) {
-        const targetJeY =
-          ((targetJeShow + trRectY) / window.innerHeight) *
-          (window.innerHeight / (isMobile ? 5 : 7))
-        je.style.display = 'inline'
-        je.style.transform = `translate(0, ${targetJeY > 0 ? targetJeY : 0}px)`
+      // 2. Jemaah and overlay animations - Enhanced smoothness
+      const baseMultiplier = isMobile ? 1.8 : 1
+      const heightMultiplier = isMobile ? 1 : 2
 
-        const targetOvOpacity =
-          (10 - (targetJeShow + trRectY) / window.innerHeight) / 10
+      const targetJeShow =
+        trRectY * baseMultiplier +
+        window.innerHeight * heightMultiplier +
+        scrollY
+
+      if (scrollY > targetJeShow) {
+        // Smoother translation calculation
+        const progress = (targetJeShow + trRectY) / window.innerHeight
+        const translateY = progress * (window.innerHeight / (isMobile ? 5 : 7))
+
+        je.style.display = 'inline'
+        je.style.transform = `translate3d(0, ${Math.max(0, translateY)}px, 0)`
+        je.style.transition = 'transform 0.1s ease-out'
+
+        // Smoother opacity transition
+        const opacityProgress = Math.max(0, Math.min(1, (10 - progress) / 10))
+        const finalOpacity = Math.max(0, opacityProgress - 0.6)
+
         ov.style.display = 'inline'
-        ov.style.opacity = String(targetOvOpacity - 0.6)
+        ov.style.opacity = String(finalOpacity)
+        ov.style.transition = 'opacity 0.1s ease-out'
       } else {
         je.style.display = 'none'
         ov.style.display = 'none'
       }
     }
 
-    // Initial position
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    // Use Lenis scroll event
+    lenis.on('scroll', handleScroll)
+
+    // Animation frame loop for Lenis
+    function raf(time: number) {
+      lenis.raf(time)
+      requestAnimationFrame(raf)
+    }
+    requestAnimationFrame(raf)
+
+    // Initial call
+    handleScroll(lenis)
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
+      lenis.destroy()
+      lenisRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isMobile])
 
   return (
     <Fragment>
