@@ -45,7 +45,7 @@ function AnimationScrollV2({
       duration: 1.2,
       syncTouch: true,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 2,
+      touchMultiplier: showKabah ? 1 : 0,
       infinite: false,
     })
 
@@ -146,7 +146,7 @@ function AnimationScrollV2({
       lenis.destroy()
       lenisRef.current = null
     }
-  }, [isMobile])
+  }, [isMobile, showKabah])
 
   return (
     <Fragment>
