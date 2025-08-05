@@ -15,6 +15,11 @@ export interface InputProps
   model?: 'compact' | 'normal' | 'expended'
 }
 
+const isSafari =
+  typeof navigator !== 'undefined' &&
+  navigator.userAgent.indexOf('Safari') !== -1 &&
+  navigator.userAgent.indexOf('Chrome') === -1
+
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {
@@ -27,7 +32,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       endIcon,
       disabled,
       align,
-      model = 'compact',
+      model = isSafari ? 'expended' : 'compact',
       ...props
     },
     ref
