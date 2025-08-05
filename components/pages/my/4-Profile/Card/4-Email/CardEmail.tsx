@@ -95,7 +95,12 @@ export default function CardEmail({
     } catch (error: any) {
       setIsLoading(false)
       const message = error?.response?.data?.errorMessage || error?.message
-      toast.error(message)
+      if (message == 'Tidak dapat mengirim kembali OTP yang masih berlaku.') {
+        setIsEditDialogOpen(false)
+        setIsVerificationDialogOpen(true)
+      } else {
+        toast.error(message)
+      }
     }
   }
 
@@ -112,10 +117,7 @@ export default function CardEmail({
     } catch (error: any) {
       setIsLoading(false)
       const message = error?.response?.data?.errorMessage || error?.message
-      if (
-        message ==
-        'Tidak dapat mengirim kembali OTP yang masih berlaku. Pastikan Anda memasukan alamat email yang sesuai.'
-      ) {
+      if (message == 'Tidak dapat mengirim kembali OTP yang masih berlaku.') {
         setIsEditDialogOpen(false)
         setIsVerificationDialogOpen(true)
       } else {

@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from '@/components/ui/sonner'
 import { changePhoneOtp, updatePhoneNumber } from '@/services/identity-service'
-import dayjs from 'dayjs'
 import { useState } from 'react'
 interface CardPhoneProps {
   phoneNumber: string
@@ -27,21 +26,13 @@ export default function CardPhone({
 }: CardPhoneProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isEditOpened, setIsEditOpened] = useState(() => {
-    const isExpired = localStorage.getItem('isEditPhoneExpired')
-    return isExpired ? isExpired >= dayjs().format() : false
-  })
   const [isVerificationDialogOpen, setIsVerificationDialogOpen] =
     useState(false)
   const [phoneNumberEdited, setPhoneNumberEdited] = useState(phoneNumber)
   const verificationPurpose = phoneNumber ? 'post-edit-phone' : 'post-add-phone'
 
   const handleEditPasswordClick = () => {
-    if (isEditOpened) {
-      setIsVerificationDialogOpen(true)
-    } else {
-      setIsEditDialogOpen(true)
-    }
+    setIsEditDialogOpen(true)
   }
 
   const handleVerify = async (otp: string) => {
@@ -67,7 +58,6 @@ export default function CardPhone({
   const handleEditPassword = async (data: Omit<PhoneNumberFormValue, 'id'>) => {
     // Store the pending changes and open verification dialog for final confirmation
     setIsLoading(true)
-
     try {
       const response = await changePhoneOtp({ phoneNumber: data.phoneNumber })
       setPhoneNumberEdited(data.phoneNumber)
@@ -75,18 +65,10 @@ export default function CardPhone({
       setIsEditDialogOpen(false)
       setIsLoading(false)
       toast.success(response)
-      setIsEditOpened(true)
-      localStorage.setItem(
-        'isEditPhoneExpired',
-        dayjs().add(5, 'minutes').format()
-      )
     } catch (error: any) {
       setIsLoading(false)
       const message = error?.response?.data?.errorMessage || error?.message
-      if (
-        message ==
-        'Tidak dapat mengirim kembali OTP yang masih berlaku. Pastikan Anda memasukan alamat email yang sesuai.'
-      ) {
+      if (message == 'Tidak dapat mengirim kembali OTP yang masih berlaku.') {
         setIsEditDialogOpen(false)
         setIsVerificationDialogOpen(true)
       } else {
