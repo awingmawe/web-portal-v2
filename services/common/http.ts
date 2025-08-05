@@ -82,6 +82,10 @@ function handleApiError(error: AxiosError<ApiErrorResponse>): never {
 
       errorMessage = `${errorMessage}\n\nValidation errors:\n${validationMessages}`
     }
+
+    if (response.status == 429) {
+      errorMessage = 'Terlalu banyak permintaan, silakan coba lagi nanti.'
+    }
   } else {
     errorMessage = error.message || 'Network error. Please try again.'
   }

@@ -61,6 +61,7 @@ export const usePhoneVerification = ({
     } catch (error: any) {
       setIsLoading(false)
       const message = error?.response?.data?.errorMessage || error?.message
+      console.log(error)
 
       // Handle specific case where OTP is still valid
       if (message == 'Tidak dapat mengirim kembali OTP yang masih berlaku.') {
