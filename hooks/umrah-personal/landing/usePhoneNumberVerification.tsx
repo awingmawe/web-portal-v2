@@ -63,11 +63,9 @@ export const usePhoneVerification = ({
       const message = error?.response?.data?.errorMessage || error?.message
 
       // Handle specific case where OTP is still valid
-      if (
-        message ===
-        'Tidak dapat mengirim kembali OTP yang masih berlaku. Pastikan Anda memasukan nomor telepon yang sesuai.'
-      ) {
+      if (message == 'Tidak dapat mengirim kembali OTP yang masih berlaku.') {
         setOpenOtp(true)
+        setOpen?.(false)
       } else {
         toast.error(message)
       }
