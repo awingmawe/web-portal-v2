@@ -277,14 +277,14 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                       </label>
                       <label
                         className={cn(
-                          'flex flex-1 cursor-pointer items-center gap-2 rounded-full border-1 px-2 py-2.5',
+                          'flex flex-1 cursor-not-allowed items-center gap-2 rounded-full border-1 px-2 py-2.5',
                           !field.value
                             ? 'border-primary-500'
-                            : 'border-neutral-200 bg-white hover:border-neutral-300'
+                            : 'border-[#D2D2D150] bg-white'
                         )}
                       >
-                        <RadioGroupItem value="false" />
-                        <p className="text-s-regular">
+                        <RadioGroupItem value="false" disabled={true} />
+                        <p className="text-s-regular text-[#30302F50]">
                           Tidak perlu menggunakan proteksi asuransi perjalanan
                         </p>
                       </label>
