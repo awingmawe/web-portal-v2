@@ -52,7 +52,7 @@ export default function List({
                           status={
                             transaction.responseTravel === null &&
                             new Date(transaction.expirationTime) < new Date()
-                              ? 'Expired'
+                              ? 'Kursi Tidak Tersedia'
                               : transaction.responseTravel === null
                                 ? 'Permintaan Diproses'
                                 : Number(transaction.responseTravel) <
@@ -114,7 +114,7 @@ export default function List({
                       status={
                         transaction.responseTravel === null &&
                         new Date(transaction.expirationTime) < new Date()
-                          ? 'Expired'
+                          ? 'Kursi Tidak Tersedia'
                           : transaction.responseTravel === null
                             ? 'Permintaan Diproses'
                             : Number(transaction.responseTravel) <
