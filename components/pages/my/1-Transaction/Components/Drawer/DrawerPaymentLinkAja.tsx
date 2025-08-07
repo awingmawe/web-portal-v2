@@ -158,7 +158,10 @@ const DrawerPaymentLinkAja = memo(
             variant={'outline'}
             disabled={loadingPayment}
             onClick={() => {
-              fetchPaymentStatement(bookingId)
+              setSelectedPayment('payment-gateway')
+              setTimeout(() => {
+                fetchPaymentStatement(bookingId)
+              }, 100)
             }}
           >
             Metode Pembayaran Lain
