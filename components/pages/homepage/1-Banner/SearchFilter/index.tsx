@@ -5,13 +5,17 @@ import { Button } from '@/components/ui/button'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { formatDateToYYYYMMDD } from '@/lib/utils'
 import Link from 'next/link'
-import React, { useEffect, useMemo } from 'react'
+import React, { Fragment, useEffect, useMemo } from 'react'
 import AirlineFilter from './AirlineFilter'
 import AirportFilter from './AirportFilter'
 import DateFilter from './DateFilter'
 import RatingFilter from './RatingFilter'
 
-const SearchFilters: React.FC = () => {
+interface SearchFiltersProps {
+  type: string
+}
+
+const SearchFilters: React.FC<SearchFiltersProps> = ({ type }) => {
   const { resetFilters, isDisabled, isLoading, filters } = useFilterProduct()
 
   // Reset filter when first load and when back to homepage
@@ -52,10 +56,14 @@ const SearchFilters: React.FC = () => {
       params.set('trvl', filters.airline.name)
     }
 
+    // Add type package if it exists
+    if (type) {
+      params.set('type', type)
+    }
     // Generate the URL string
     const queryString = params.toString()
     return queryString ? `/search?${queryString}` : '/search'
-  }, [filters])
+  }, [filters, type])
 
   return (
     <div className="flex w-full items-center justify-between">
@@ -64,8 +72,12 @@ const SearchFilters: React.FC = () => {
       <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
 
       {/* Departure Date Filter */}
-      <DateFilter whatPage="homepage" />
-      <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+      {type === 'umrah' && (
+        <Fragment>
+          <DateFilter whatPage="homepage" />
+          <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+        </Fragment>
+      )}
 
       {/* Airport Filter */}
       <AirportFilter whatPage="homepage" />

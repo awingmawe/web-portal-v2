@@ -49,6 +49,7 @@ export const CardPackage = memo(function CardPackage({
     id: packageId,
     tripDuration,
     isLastCall,
+    variantType,
   } = data
 
   // Memoize complex calculations
@@ -67,7 +68,7 @@ export const CardPackage = memo(function CardPackage({
 
   const formattedArrivalDate = useMemo(() => {
     try {
-      return format(arrivalDate, 'dd MMM yyyy', { locale: id })
+      return arrivalDate && format(arrivalDate, 'dd MMM yyyy', { locale: id })
     } catch (error) {
       console.error('Error formatting arrivalDate:', error)
       return ''
@@ -85,7 +86,7 @@ export const CardPackage = memo(function CardPackage({
 
   const numberOfDays = useMemo(() => {
     try {
-      return differenceInDays(arrivalDate, departureDate) + 1
+      return arrivalDate && differenceInDays(arrivalDate, departureDate) + 1
     } catch (error) {
       console.error('Error calculating numberOfDays:', error)
       return 0
@@ -180,8 +181,12 @@ export const CardPackage = memo(function CardPackage({
       className={`relative ${section === 'search-topbar' ? 'flex flex-row items-center gap-3' : 'flex flex-col'}`}
       id="card-package"
     >
+      {/* Badge Promo */}
+      {(showDiscount || variantType) && (
+        <BadgePromo variantType={variantType} showDiscount={showDiscount} />
+      )}
+
       {/* Image */}
-      {showDiscount && <BadgePromo title="PROMO 🎉" />}
       <div
         className={`relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md ${section === 'search-topbar' ? 'w-[200px]' : ''}`}
       >

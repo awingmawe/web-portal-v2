@@ -68,6 +68,7 @@ export default async function Home() {
       section: 'promo',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getPackageList({
       page: 1,
@@ -75,6 +76,7 @@ export default async function Home() {
       section: 'plus',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getPackageList({
       page: 1,
@@ -82,6 +84,7 @@ export default async function Home() {
       section: 'regular',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getGalleryHomepage({
       page: 1,

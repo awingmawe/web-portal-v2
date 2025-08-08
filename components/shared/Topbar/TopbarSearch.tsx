@@ -25,6 +25,7 @@ export const TopbarSearch: React.FC = () => {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [searchResults, setSearchResults] = useState<Package[]>([])
   const [isLoadingResults, setIsLoadingResults] = useState(false)
+  const [activeSlug, setActiveSlug] = useState<string>('umrah')
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -74,6 +75,7 @@ export const TopbarSearch: React.FC = () => {
           page: 1,
           size: 5,
           search: `%${query}%`,
+          packageType: activeSlug,
         })
         setSearchResults(response.results)
         setShowSuggestions(true)
@@ -88,6 +90,13 @@ export const TopbarSearch: React.FC = () => {
       setSearchResults([])
     }
   }, 300)
+
+  // Re-trigger search when activeSlug changes and there's a valid search query
+  useEffect(() => {
+    if (searchQuery.length >= 3) {
+      debouncedSearch(searchQuery)
+    }
+  }, [activeSlug, searchQuery, debouncedSearch])
 
   // Handle search icon click
   const handleSearchIconClick = useCallback(() => {
@@ -149,6 +158,12 @@ export const TopbarSearch: React.FC = () => {
   // Handle package click
   const handlePackageClick = useCallback(() => {
     setShowSuggestions(false)
+  }, [])
+
+  // Handle category/activeSlug change
+  const handleCategoryClick = useCallback((slug: string) => {
+    setActiveSlug(slug)
+    // No need to manually trigger search here as the useEffect will handle it
   }, [])
 
   // Prevent popover from stealing focus and handle interactions
@@ -218,6 +233,11 @@ export const TopbarSearch: React.FC = () => {
     },
   }
 
+  const categories = [
+    { name: 'Umroh', slug: 'umrah' },
+    { name: 'Haji', slug: 'hajj' },
+  ]
+
   // Map packages to card data
   const cardData = mapProductsToCardData({
     results: searchResults,
@@ -279,21 +299,36 @@ export const TopbarSearch: React.FC = () => {
                 // Prevent popover from stealing focus
                 onOpenAutoFocus={handleOpenAutoFocus}
                 onInteractOutside={handleInteractOutside}
+                // Prevent Lenis from controlling scroll within popover
+                data-lenis-prevent
               >
-                {isLoadingResults ? (
-                  <div className="flex h-full w-full items-center justify-center py-4">
-                    <div className="border-primary-500 h-6 w-6 animate-spin rounded-full border-b-2"></div>
-                    <span className="ml-2 text-sm text-neutral-500">
-                      Mencari paket...
-                    </span>
+                <div className="space-y-2.5 p-6">
+                  <p className="text-m-regular">
+                    Hasil untuk &quot;
+                    {searchQuery}&quot;
+                  </p>
+                  <div className="flex gap-2">
+                    {categories?.map((category, index) => (
+                      <button
+                        key={`category-paket-${index}`}
+                        onClick={() => handleCategoryClick(category.slug)}
+                        className={`
+                rounded-full px-3 py-1 whitespace-nowrap text-neutral-900 transition-all duration-500 ease-in-out ${activeSlug === category.slug ? 'bg-primary-300 ' : 'bg-primary-100 hover:bg-primary-200'} text-m-semibold cursor-pointer outline-0 focus-within:outline-0 focus:outline-0 focus-visible:outline-0
+              `}
+                      >
+                        {category.name}
+                      </button>
+                    ))}
                   </div>
-                ) : cardData.length > 0 ? (
-                  <>
-                    <div className="space-y-3 p-6">
-                      <p className="text-m-regular">
-                        Hasil untuk &quot;
-                        {searchQuery}&quot;
-                      </p>
+                  {isLoadingResults ? (
+                    <div className="m-auto flex items-center justify-center p-6">
+                      <div className="border-primary-500 h-6 w-6 animate-spin rounded-full border-b-2"></div>
+                      <span className="ml-2 text-sm text-neutral-500">
+                        Mencari paket...
+                      </span>
+                    </div>
+                  ) : cardData.length > 0 ? (
+                    <div className="space-y-3" data-lenis-prevent>
                       {cardData.map((packageData, index) => (
                         <div
                           key={`search-result-${index}`}
@@ -309,23 +344,28 @@ export const TopbarSearch: React.FC = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="bg-neutral-0 sticky bottom-0 z-11 flex p-4">
-                      <Link
-                        href={handleSearchDesktop}
-                        className="bg-primary-500 hover:bg-primary-700 text-s-regular w-full rounded-full px-10 py-4 text-center text-neutral-900 transition-all"
-                        // Prevent mouse down from affecting input focus
-                        onMouseDown={(e) => e.preventDefault()}
-                      >
-                        Lihat semua hasil untuk &quot;{searchQuery}&quot;
-                      </Link>
+                  ) : searchQuery.length >= 3 ? (
+                    <div className="p-6 text-center text-sm text-neutral-500">
+                      Tidak ada paket ditemukan untuk &quot;{searchQuery}
+                      &quot;
                     </div>
-                  </>
-                ) : searchQuery.length >= 3 ? (
-                  <div className="p-6 text-center text-sm text-neutral-500">
-                    Tidak ada paket ditemukan untuk &quot;{searchQuery}
-                    &quot;
+                  ) : null}
+                </div>
+                {cardData.length > 0 && !isLoadingResults && (
+                  <div
+                    className="bg-neutral-0 sticky bottom-0 z-11 flex p-4"
+                    data-lenis-prevent
+                  >
+                    <Link
+                      href={handleSearchDesktop}
+                      className="bg-primary-500 hover:bg-primary-700 text-s-regular w-full rounded-full px-10 py-4 text-center text-neutral-900 transition-all"
+                      // Prevent mouse down from affecting input focus
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      Lihat semua hasil untuk &quot;{searchQuery}&quot;
+                    </Link>
                   </div>
-                ) : null}
+                )}
               </PopoverContent>
             </Popover>
           </motion.div>
