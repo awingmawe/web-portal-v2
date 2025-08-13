@@ -36,7 +36,6 @@ export const useCustomInfiniteScroll = (pageSize = 9) => {
           ...params,
           page: 1,
         }
-
         const result = await fetchPackage(initialPageParams, pageSize)
         const mappedData = mapProductsToCardData(result)
 

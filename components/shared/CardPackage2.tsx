@@ -50,6 +50,7 @@ export const CardPackage2 = memo(function CardPackage({
     id: packageId,
     isLastCall,
   } = data
+  console.log(rating)
 
   // Memoize complex calculations
   const showDiscount = useMemo(
