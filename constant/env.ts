@@ -20,3 +20,15 @@ export const LINKAJA_MAX_LIMIT = Number(
 export const IS_NOT_TRANSIT = ['GA', 'SV', 'JT']
 export const LOCAL_STORAGE_DETAIL_VARIANT = 'detailVariant'
 export const LOCAL_STORAGE_SELECTED_VARIANT = 'selectedVariant'
+
+export const PACKAGE_TYPE = {
+  HAJJ_SPECIAL: 'hajj-special',
+  HAJJ_FURODA: 'hajj-furoda',
+  HAJJ_DAKHILI: 'hajj-dakhili',
+  UMRAH: 'umrah',
+}
+
+export const CATEGORIES_FILTER_SEARCH = [
+  { name: 'Umroh', slug: 'umrah' },
+  { name: 'Haji', slug: 'hajj' },
+]

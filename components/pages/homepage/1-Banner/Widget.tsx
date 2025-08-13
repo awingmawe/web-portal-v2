@@ -16,7 +16,7 @@ import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 
 // Tab option types
-type TripType = 'umrah' | 'haji' | 'halal-trip'
+type TripType = 'umrah' | 'hajj' | 'halal-trip'
 
 interface SearchWidgetProps {
   className?: string
@@ -98,7 +98,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
             <TabsWithAnimation
               tabs={[
                 { id: 'umrah', label: 'Umrah', icon: <MapPin size={20} /> },
-                { id: 'haji', label: 'Haji', icon: <MapPin size={20} /> },
+                { id: 'hajj', label: 'Haji', icon: <MapPin size={20} /> },
                 {
                   id: 'halal-trip',
                   label: 'Muslim Trip',

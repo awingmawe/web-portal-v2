@@ -19,9 +19,7 @@ export function useBookingCancel() {
       return await getPostCanceled(arg)
     },
     {
-      onSuccess: (data) => {
-        console.log('Booking canceled successfully:', data)
-
+      onSuccess: () => {
         // Refresh all related cache keys
         mutate((key: unknown) => {
           if (Array.isArray(key)) {

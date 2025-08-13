@@ -6,7 +6,7 @@ import { Calendar2 } from '@/components/icons/calendar'
 import { UsersIcon } from '@/components/icons/user'
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
-import { CALL_CENTER } from '@/constant/env'
+import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -286,7 +286,7 @@ const BankingPageDetail: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <span className="text-gray-600">Kategori Produk</span>
                   <p className="text-right font-medium text-gray-800">
-                    {data.packageType === 'umrah' ? 'Umroh' : 'Haji'}
+                    {data.packageType === PACKAGE_TYPE.UMRAH ? 'Umroh' : 'Haji'}
                   </p>
                 </div>
                 <div className="flex items-start justify-between">

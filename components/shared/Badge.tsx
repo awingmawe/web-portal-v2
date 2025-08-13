@@ -1,4 +1,5 @@
 import { CornerIcon } from '@/components/icons/corner'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { cn } from '@/lib/utils'
 
 const BadgePromo = ({
@@ -22,7 +23,7 @@ const BadgePromo = ({
           <CornerIcon className="absolute -bottom-[7px] left-0" />
         </div>
       )}
-      {variantType === 'hajj-furoda' && (
+      {variantType === PACKAGE_TYPE.HAJJ_FURODA && (
         <div
           className={cn(
             ' bg-info-500 flex h-8 items-center rounded-full rounded-bl-none py-1 pr-3 pl-2.5 text-nowrap'

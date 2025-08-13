@@ -66,7 +66,6 @@ export default function TransactionCardFooter({
       name: transaction.packageVariants.name,
       variant: transaction.packageVariants,
     }
-    // console.log(dataSelectedVariant)
 
     localStorage.setItem(
       LOCAL_STORAGE_DETAIL_VARIANT,

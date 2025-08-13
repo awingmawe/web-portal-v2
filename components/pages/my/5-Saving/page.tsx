@@ -31,7 +31,6 @@ const SavingPageDetail: React.FC = () => {
           createdAt: res.createdAt,
           packageType: 'Tabungan Umroh',
         }
-        // console.log(saveData)
 
         setData(saveData)
       }

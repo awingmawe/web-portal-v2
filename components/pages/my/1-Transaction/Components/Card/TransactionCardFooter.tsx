@@ -100,7 +100,6 @@ export default function TransactionCardFooter({
       const responseNext = await postNextPayment(id, payload)
       window.snap.pay(responseNext?.paymentToken, {
         onSuccess: async (result: any) => {
-          // console.log(result)
           // router.replace('/my/transaction') // replace & refresh
           window.location.reload()
         },
@@ -117,7 +116,6 @@ export default function TransactionCardFooter({
           // Additional logic on close
         },
       })
-      // console.log(responseNext)
     } catch (err) {
       console.error('Error fetching transactions:', err)
     } finally {

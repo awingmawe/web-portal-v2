@@ -33,7 +33,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-const SearchMobileUmroh: React.FC = () => {
+interface SearchMobileUmrohProps {
+  packageType?: 'umrah' | 'hajj'
+}
+
+const SearchMobileUmroh: React.FC<SearchMobileUmrohProps> = ({
+  packageType = 'umrah',
+}) => {
   const router = useRouter()
   const {
     filters,
@@ -66,23 +72,35 @@ const SearchMobileUmroh: React.FC = () => {
 
   // Handle search with history saving
   const handleSearchWithHistory = () => {
+    // Create filters object with packageType
+    const filtersWithPackageType = {
+      ...filters,
+      packageType,
+    }
+
     // Add current filters to history before searching
-    addToHistory(filters)
+    addToHistory(filtersWithPackageType)
 
     // Build query parameters for the URL
     const queryParams = new URLSearchParams()
+
+    // Add package type to query params
+    queryParams.append('packageType', packageType)
 
     // Add all relevant filters to query params
     if (hotelStars) {
       queryParams.append('hR', hotelStars.toString())
     }
 
-    if (dateRange?.from) {
-      queryParams.append('sD', formatDateToYYYYMMDD(dateRange.from))
-    }
+    // Only add date range for umrah packages
+    if (packageType === 'umrah') {
+      if (dateRange?.from) {
+        queryParams.append('sD', formatDateToYYYYMMDD(dateRange.from))
+      }
 
-    if (dateRange?.to) {
-      queryParams.append('eD', formatDateToYYYYMMDD(dateRange.to))
+      if (dateRange?.to) {
+        queryParams.append('eD', formatDateToYYYYMMDD(dateRange.to))
+      }
     }
 
     if (departureAirport?.code) {
@@ -106,7 +124,9 @@ const SearchMobileUmroh: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <SearchIcon size={24} />
-          <p className="text-m-semibold w-full">Cari Paket</p>
+          <p className="text-m-semibold w-full">
+            Cari Paket {packageType === 'hajj' ? 'Haji' : 'Umrah'}
+          </p>
         </div>
         <p
           className="text-s-regular text-error-500"
@@ -188,63 +208,68 @@ const SearchMobileUmroh: React.FC = () => {
           </DrawerContent>
         </Drawer>
 
-        {/* Bulan Keberangkatan */}
-        <Drawer
-          open={openDrawer === 'dateRange'}
-          onOpenChange={(open) => !open && closeDrawer()}
-        >
-          <DrawerTrigger asChild>
-            <div
-              className="cursor-pointer border-b border-neutral-100 pb-1.5"
-              onClick={() => openFilterPanel('dateRange')}
-            >
-              <div className="text-xs-regular mb-2.5 text-neutral-500">
-                Tanggal Keberangkatan
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <CalendarIconFilterMobile />
-                  {isEmpty(dateRange) ? (
-                    <p className="text-s-regular text-neutral-500">
-                      Pilih Tanggal Keberangkatan
-                    </p>
-                  ) : (
-                    <span className="text-s-regular">
-                      {dateRange?.from ? formatDateRangeShort(dateRange) : ''}
-                    </span>
-                  )}
+        {/* Bulan Keberangkatan - Only show for umrah packages */}
+        {packageType === 'umrah' && (
+          <Drawer
+            open={openDrawer === 'dateRange'}
+            onOpenChange={(open) => !open && closeDrawer()}
+          >
+            <DrawerTrigger asChild>
+              <div
+                className="cursor-pointer border-b border-neutral-100 pb-1.5"
+                onClick={() => openFilterPanel('dateRange')}
+              >
+                <div className="text-xs-regular mb-2.5 text-neutral-500">
+                  Tanggal Keberangkatan
                 </div>
-                <div className="flex items-center">
-                  {!isEmpty(dateRange) && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        resetFilter('dateRange')
-                      }}
-                      className="mr-2"
-                    >
-                      <X className="h-5 w-5 text-neutral-500" />
-                    </button>
-                  )}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <CalendarIconFilterMobile />
+                    {isEmpty(dateRange) ? (
+                      <p className="text-s-regular text-neutral-500">
+                        Pilih Tanggal Keberangkatan
+                      </p>
+                    ) : (
+                      <span className="text-s-regular">
+                        {dateRange?.from ? formatDateRangeShort(dateRange) : ''}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center">
+                    {!isEmpty(dateRange) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          resetFilter('dateRange')
+                        }}
+                        className="mr-2"
+                      >
+                        <X className="h-5 w-5 text-neutral-500" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </DrawerTrigger>
-          <DrawerContent className="px-4 pt-4 pb-8">
-            <DrawerTitle className="p-0" />
-            <div className="mb-12 space-y-4 overflow-y-auto">
-              <DateSelector setDateRange={setDateRange} dateRange={dateRange} />
-            </div>
-            <DrawerFooter className="justify-betweengap-3 fixed bottom-0 left-0 z-99 flex w-full flex-row items-center bg-white px-2.5 py-4">
-              <DrawerClose className="border-primary-500 text-s-regular w-full flex-1 rounded-full border-2  px-10 py-3">
-                Batal
-              </DrawerClose>
-              <DrawerClose className="bg-primary-500 text-s-regular w-full flex-1 rounded-full px-10 py-3">
-                Pilih
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+            </DrawerTrigger>
+            <DrawerContent className="px-4 pt-4 pb-8">
+              <DrawerTitle className="p-0" />
+              <div className="mb-12 space-y-4 overflow-y-auto">
+                <DateSelector
+                  setDateRange={setDateRange}
+                  dateRange={dateRange}
+                />
+              </div>
+              <DrawerFooter className="justify-betweengap-3 fixed bottom-0 left-0 z-99 flex w-full flex-row items-center bg-white px-2.5 py-4">
+                <DrawerClose className="border-primary-500 text-s-regular w-full flex-1 rounded-full border-2  px-10 py-3">
+                  Batal
+                </DrawerClose>
+                <DrawerClose className="bg-primary-500 text-s-regular w-full flex-1 rounded-full px-10 py-3">
+                  Pilih
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        )}
 
         {/* Bandara Keberangkatan */}
         <Drawer
@@ -448,7 +473,7 @@ const SearchMobileUmroh: React.FC = () => {
       </div>
 
       {/* Filter History Component */}
-      <FilterHistory />
+      <FilterHistory packageType={packageType} />
     </div>
   )
 }

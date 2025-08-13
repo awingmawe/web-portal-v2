@@ -152,8 +152,6 @@ export default function BiodataForm({
   // Update form values when manifestActive changes
   useEffect(() => {
     if (manifestActive && manifestActive.id) {
-      // console.log(manifestActive)
-
       // Create values object from manifestActive
       const manifestValues = {
         name: manifestActive.name || '',

@@ -4,6 +4,7 @@ import { InfoIcon } from '@/components/icons/info'
 import { StarIconPrimary } from '@/components/icons/star'
 import { StoreIcon } from '@/components/icons/store'
 import BadgePromo from '@/components/shared/Badge'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { capitalizeText, cn, isEmpty, isValidImage } from '@/lib/utils'
@@ -59,16 +60,26 @@ export const CardPackage = memo(function CardPackage({
   )
   const formattedDepartureDate = useMemo(() => {
     try {
-      return format(departureDate, 'dd MMM yyyy', { locale: id })
+      if (variantType === PACKAGE_TYPE.HAJJ_FURODA) {
+        return departureDate && format(departureDate, 'yyyy', { locale: id })
+      } else if (variantType === PACKAGE_TYPE.UMRAH) {
+        return (
+          departureDate && format(departureDate, 'dd MMM yyyy', { locale: id })
+        )
+      } else {
+        return ''
+      }
     } catch (error) {
       console.error('Error formatting departureDate:', error)
       return ''
     }
-  }, [departureDate])
+  }, [departureDate, variantType])
 
   const formattedArrivalDate = useMemo(() => {
     try {
-      return arrivalDate && format(arrivalDate, 'dd MMM yyyy', { locale: id })
+      return (
+        arrivalDate && `- ${format(arrivalDate, 'dd MMM yyyy', { locale: id })}`
+      )
     } catch (error) {
       console.error('Error formatting arrivalDate:', error)
       return ''
@@ -86,7 +97,11 @@ export const CardPackage = memo(function CardPackage({
 
   const numberOfDays = useMemo(() => {
     try {
-      return arrivalDate && differenceInDays(arrivalDate, departureDate) + 1
+      return (
+        arrivalDate &&
+        departureDate &&
+        differenceInDays(arrivalDate, departureDate) + 1
+      )
     } catch (error) {
       console.error('Error calculating numberOfDays:', error)
       return 0
@@ -128,7 +143,7 @@ export const CardPackage = memo(function CardPackage({
       observe(elem.current, () => {
         pushEvent({
           name: 'impression_package_card',
-          topic: 'umrah',
+          topic: packageType,
           category: eventCategory,
           data: {
             packageId,
@@ -158,7 +173,7 @@ export const CardPackage = memo(function CardPackage({
       onClick={() => {
         pushEvent({
           name: 'click_package_card',
-          topic: 'umrah',
+          topic: packageType,
           category: eventCategory,
           data: {
             packageId,
@@ -241,18 +256,23 @@ export const CardPackage = memo(function CardPackage({
         )}
 
         {/* Departure and Arrival Date */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CalendarIcon size={16} color="text-neutral-500" />
-            <p className="text-s-regular text-neutral-500">
-              {formattedDepartureDate} - {formattedArrivalDate}
-            </p>
-          </div>
-          <div className="bg-primary-500 inline-flex items-center justify-center gap-2.5 rounded-[100px] p-1.5">
-            <p className="text-s-regular text-center text-neutral-900">
-              {tripDuration ? tripDuration : numberOfDays} Hari
-            </p>
-          </div>
+        <div className="flex flex-wrap items-center justify-between">
+          {(formattedDepartureDate || formattedArrivalDate) && (
+            <div className="flex items-center gap-2">
+              <CalendarIcon size={16} color="text-neutral-500" />
+              <p className="text-s-regular text-neutral-500">
+                {formattedDepartureDate} {formattedArrivalDate}
+              </p>
+            </div>
+          )}
+
+          {(tripDuration !== 0 || numberOfDays !== 0) && (
+            <div className="bg-primary-500 inline-flex items-center justify-center gap-2.5 rounded-[100px] p-1.5">
+              <p className="text-s-regular text-center text-neutral-900">
+                {tripDuration ? tripDuration : numberOfDays} Hari
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Price */}

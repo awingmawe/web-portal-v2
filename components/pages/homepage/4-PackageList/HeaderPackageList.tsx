@@ -22,7 +22,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
   const { pushEvent } = useEventTracker()
   return (
     <div
-      className={`${params !== 'section' ? 'mt-0 max-lg:pl-0' : 'mt-[36px] max-lg:mt-8 max-lg:pl-4'}  mb-6 flex items-center justify-between`}
+      className={`${params !== 'section' && params !== 'type' ? 'mt-0 max-lg:pl-0' : 'mt-[36px] max-lg:mt-8 max-lg:pl-4'}  mb-6 flex items-center justify-between`}
     >
       <div className="flex flex-col gap-0.5">
         <p className="heading-3-bold max-lg:text-xl max-lg:leading-6.5">

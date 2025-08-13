@@ -1,4 +1,3 @@
-// components/shared/SearchHistory.tsx
 import { useSearchHistory } from '@/hooks/common/useSearchHistory'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { TrendingUp, X } from 'lucide-react'

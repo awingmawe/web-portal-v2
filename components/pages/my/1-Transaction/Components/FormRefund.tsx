@@ -159,9 +159,6 @@ export function ModalFormRefund({
       })
 
       setIsEditing(false)
-
-      // Show success message or handle success
-      console.log('Profile updated and refund processed successfully')
     } catch (error) {
       console.error('Error:', error)
       // Handle error - show error message to user

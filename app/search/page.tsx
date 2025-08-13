@@ -45,9 +45,6 @@ export default async function SearchGeneral({
       getFacilityEnum(`${awaitedParams.type}-facility`),
       getSectionEnum(awaitedParams.type || 'umrah'),
     ])
-
-  console.log(dataTagPackages, dataFacility, dataSection)
-
   return (
     <Fragment>
       <Topbar token={token} scrolled />

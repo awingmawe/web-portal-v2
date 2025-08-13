@@ -23,7 +23,6 @@ export const TransactionDetailMobileAction = ({
     ...transactionData,
     JourneyInformation: restTransaction,
   }
-  console.log(transaction)
 
   return (
     <div className="hidden max-lg:block">
