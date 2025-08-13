@@ -257,12 +257,14 @@ export const PembiayaanFormStep2 = forwardRef<
   const createSearchParams = useCallback(() => {
     return {
       [`query`]: searchTerm ? `%${searchTerm}%` : undefined,
+      packageType: 'umrah',
     }
   }, [searchTerm])
 
   // Fetch initial packages on component mount
   useEffect(() => {
     const params = createSearchParams()
+
     fetchInitialPackages(params)
   }, [fetchInitialPackages, createSearchParams])
 
