@@ -42,8 +42,8 @@ const DrawerPaymentLinkAja = memo(
           }
           const responseNext = await postNextPayment(id, payload)
           if (
-            selectedPayment == 'linkaja' ||
-            selectedPayment == 'linkaja-syariah'
+            selectedPayment == 'link-aja' ||
+            selectedPayment == 'link-aja-syariah'
           ) {
             window.location.href = responseNext?.paymentLink
           } else {
