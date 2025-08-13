@@ -10,6 +10,7 @@ export interface FilterState {
   departureAirport: Airport | null
   arrivalAirport: Airport | null
   airline: Airline | null
+  type: string | 'umrah' | 'hajj'
   priceRange:
     | {
         hargaMin: string
@@ -36,6 +37,7 @@ export const initialFilterState: FilterState = {
   airline: null,
   priceRange: undefined,
   dpRange: undefined,
+  type: 'umrah',
   facilityCode: '',
   section: '',
   tagSlug: '',

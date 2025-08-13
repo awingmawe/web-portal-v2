@@ -4,7 +4,7 @@
 import { toast } from '@/components/ui/sonner'
 import { Airline } from '@/constant/types/AirlineProps'
 import { Airport } from '@/constant/types/AirportProps'
-import { FilterState } from '@/constant/types/FilterProps'
+import { FilterState, initialFilterState } from '@/constant/types/FilterProps'
 import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -14,28 +14,6 @@ import { formatDateToYYYYMMDD, mapProductsToCardData } from '@/lib/utils'
 import { getAirlineV2, getAirportsV2 } from '@/services/general-service'
 import React, { createContext, useCallback, useContext, useState } from 'react'
 import { DateRange } from 'react-day-picker'
-
-// Initial filter state
-const initialFilterState: FilterState = {
-  hotelStars: 0,
-  dateRange: undefined,
-  departureAirport: null,
-  arrivalAirport: null,
-  airline: null,
-  // Add new attributes if there's a new state for filter
-  priceRange: {
-    hargaMax: '',
-    hargaMin: '',
-  },
-  dpRange: {
-    dpMax: '',
-    dpMin: '',
-  },
-  facilityCode: '',
-  section: '',
-  tagSlug: '',
-  filterName: '',
-}
 
 // Define filter property names for individual resets
 export type FilterKey = keyof FilterState
@@ -179,6 +157,7 @@ export const FilterProductProvider: React.FC<{
           facilityCode: 'fC',
           section: 'section',
           tagSlug: 'tS',
+          type: 'type',
           filterName: null,
           priceRange: null,
           dpRange: null,
@@ -245,6 +224,7 @@ export const FilterProductProvider: React.FC<{
         updatedFilters.facilityCode = params.get('fC') || ''
         updatedFilters.section = params.get('section') || ''
         updatedFilters.tagSlug = params.get('tS') || ''
+        updatedFilters.type = params.get('type') || 'umrah'
 
         // Handle complex objects that need async fetching
         const promises = []
@@ -392,6 +372,11 @@ export const FilterProductProvider: React.FC<{
         queryObject.maxDp = params.get('dpMax')
       }
 
+      // Extract type
+      if (params.has('type')) {
+        queryObject.type = params.get('type')
+      }
+
       return queryObject
     },
     []
@@ -447,7 +432,6 @@ export const FilterProductProvider: React.FC<{
     }
   }
 
-  // Submit handler
   // Submit handler
   const handleSubmit = useCallback(() => {
     try {
