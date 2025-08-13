@@ -9,6 +9,7 @@ interface HeaderPackageProps {
   desc: string
   type: string
   params: string
+  packageType: string
 }
 
 export const HeaderPackageList = memo(function HeaderPackageList({
@@ -16,6 +17,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
   desc,
   type,
   params = 'section',
+  packageType = 'umrah',
 }: HeaderPackageProps) {
   const { pushEvent } = useEventTracker()
   return (
@@ -36,7 +38,7 @@ export const HeaderPackageList = memo(function HeaderPackageList({
           pushEvent({
             name: 'click_more',
             category: 'home',
-            topic: 'umrah',
+            topic: packageType,
             data: {
               section: type,
             },

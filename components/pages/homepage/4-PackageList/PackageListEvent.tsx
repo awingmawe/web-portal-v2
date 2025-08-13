@@ -36,6 +36,7 @@ interface PackageSectionProps {
   data: CardData[]
   isLoading?: boolean
   header: boolean
+  packageType?: string | 'umrah' | 'hajj'
   eventCategory?: string
   params?: string
   renderSkeletonItems: (count: number, isLoading: boolean) => React.ReactNode
@@ -51,6 +52,7 @@ const PackageSection = ({
   header = true,
   eventCategory,
   params,
+  packageType,
   renderSkeletonItems,
 }: PackageSectionProps) => {
   const { lg } = useTailwindBreakpoint()
@@ -83,6 +85,7 @@ const PackageSection = ({
               desc={description ?? ''}
               type={type ?? ''}
               params={params ?? 'section'}
+              packageType={packageType ?? 'umrah'}
             />
           )}
           <Carousel
@@ -193,6 +196,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'promo' as const,
       data: dataPromo,
       isLoading: isPromoLoading || loading,
+      packageType: 'umrah',
       header: header,
       eventCategory,
     },
@@ -203,6 +207,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'regular' as const,
       data: dataRegular,
       isLoading: isRegularLoading || loading,
+      packageType: 'umrah',
       header: header,
       eventCategory,
     },
@@ -212,6 +217,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'plus' as const,
       data: dataPlus || [],
       isLoading: isPlusLoading || loading,
+      packageType: 'umrah',
       header: header,
       eventCategory,
     },
@@ -222,6 +228,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       data: dataHaji || [],
       isLoading: isHajiLoading || loading,
       header: header,
+      packageType: 'hajj',
       params: 'type',
       eventCategory,
     },
@@ -241,6 +248,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
         <Fragment key={section.title}>
           <PackageSection
             key={section.type}
+            packageType={section.packageType}
             title={section.title}
             description={section.description}
             type={section.type ?? ''}

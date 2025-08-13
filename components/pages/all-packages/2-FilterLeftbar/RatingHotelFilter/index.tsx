@@ -38,7 +38,7 @@ const RatingHotelFilter: React.FC = () => {
       <AccordionContent>
         <HotelRatingOptions
           selectedRating={filters.hotelStars}
-          onRatingChange={setHotelStars}
+          onRatingChangeAction={setHotelStars}
           isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>
