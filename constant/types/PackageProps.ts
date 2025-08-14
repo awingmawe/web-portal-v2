@@ -24,6 +24,7 @@ export interface PackageVariant {
     dpAmount: number
   }
   tripDuration: number
+  waitingPeriod: string
 }
 
 export interface PriceParams {
@@ -63,6 +64,7 @@ export interface CardData {
   departure: TravelRoute
   arrival: TravelRoute
   tripDuration: number
+  waitingPeriod: string
 }
 
 export interface PackageDetail {

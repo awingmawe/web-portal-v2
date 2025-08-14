@@ -9,7 +9,7 @@ import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { capitalizeText, cn, isEmpty, isValidImage } from '@/lib/utils'
 import NoImagePlaceholder from '@/public/images/no-image-placeholder.png'
-import { differenceInDays, format } from 'date-fns'
+import { addYears, differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -51,6 +51,7 @@ export const CardPackage = memo(function CardPackage({
     tripDuration,
     isLastCall,
     variantType,
+    waitingPeriod,
   } = data
 
   // Memoize complex calculations
@@ -60,9 +61,9 @@ export const CardPackage = memo(function CardPackage({
   )
   const formattedDepartureDate = useMemo(() => {
     try {
-      if (variantType === PACKAGE_TYPE.HAJJ_FURODA) {
+      if (packageType === PACKAGE_TYPE.HAJJ) {
         return departureDate && format(departureDate, 'yyyy', { locale: id })
-      } else if (variantType === PACKAGE_TYPE.UMRAH) {
+      } else if (packageType === PACKAGE_TYPE.UMRAH) {
         return (
           departureDate && format(departureDate, 'dd MMM yyyy', { locale: id })
         )
@@ -73,18 +74,34 @@ export const CardPackage = memo(function CardPackage({
       console.error('Error formatting departureDate:', error)
       return ''
     }
-  }, [departureDate, variantType])
+  }, [departureDate, packageType])
 
   const formattedArrivalDate = useMemo(() => {
     try {
-      return (
-        arrivalDate && `- ${format(arrivalDate, 'dd MMM yyyy', { locale: id })}`
-      )
+      if (packageType === PACKAGE_TYPE.UMRAH) {
+        return (
+          arrivalDate &&
+          `- ${format(arrivalDate, 'dd MMM yyyy', { locale: id })}`
+        )
+      } else if (variantType === PACKAGE_TYPE.HAJJ_SPECIAL) {
+        return (
+          waitingPeriod &&
+          `- ${format(
+            departureDate
+              ? addYears(departureDate, Number(waitingPeriod))
+              : new Date(),
+            'yyyy',
+            { locale: id }
+          )}`
+        )
+      } else {
+        return ''
+      }
     } catch (error) {
       console.error('Error formatting arrivalDate:', error)
       return ''
     }
-  }, [arrivalDate])
+  }, [arrivalDate, departureDate, packageType, variantType, waitingPeriod])
 
   const formattedReleasedAt = useMemo(() => {
     try {
@@ -97,16 +114,20 @@ export const CardPackage = memo(function CardPackage({
 
   const numberOfDays = useMemo(() => {
     try {
-      return (
-        arrivalDate &&
-        departureDate &&
-        differenceInDays(arrivalDate, departureDate) + 1
-      )
+      if (packageType === PACKAGE_TYPE.HAJJ) {
+        return tripDuration
+      } else {
+        return (
+          arrivalDate &&
+          departureDate &&
+          differenceInDays(arrivalDate, departureDate) + 1
+        )
+      }
     } catch (error) {
       console.error('Error calculating numberOfDays:', error)
       return 0
     }
-  }, [arrivalDate, departureDate])
+  }, [arrivalDate, departureDate, packageType, tripDuration])
 
   // Memoize the stars rendering
   const ratingStars = useMemo(

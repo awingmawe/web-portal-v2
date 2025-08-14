@@ -5,7 +5,24 @@ import { Slider } from '@/components/ui/slider'
 import { PriceParams } from '@/constant/types/PackageProps'
 import { usePriceRangeFilter } from '@/hooks/filter-product-hooks/useRangeFilter'
 import { formatNumberCurrency, isEmpty } from '@/lib/utils'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
+// Move debounce hook outside component or import from separate file
+const useDebounce = <T,>(value: T, delay: number): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 interface PriceRangeSliderProps {
   minMax: PriceParams
@@ -15,14 +32,14 @@ interface PriceRangeSliderProps {
         hargaMax: string
       }
     | undefined
-  setPriceRange: (range: { hargaMin: string; hargaMax: string }) => void
+  setPriceRangeAction: (range: { hargaMin: string; hargaMax: string }) => void
   isLoadingSkeleton: boolean
 }
 
 export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   minMax,
   filters,
-  setPriceRange,
+  setPriceRangeAction,
   isLoadingSkeleton,
 }) => {
   const { min, max } = minMax
@@ -30,67 +47,111 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   const formattedMax = Number(max)
 
   // Local state for input values
-  const [localHargaMin, setLocalHargaMin] = useState(filters?.hargaMin)
-  const [localHargaMax, setLocalHargaMax] = useState(filters?.hargaMax)
+  const [localHargaMin, setLocalHargaMin] = useState(filters?.hargaMin || '')
+  const [localHargaMax, setLocalHargaMax] = useState(filters?.hargaMax || '')
 
-  // Sync local state with props
+  // Track if we're updating from parent to prevent circular updates
+  const isUpdatingFromParent = useRef(false)
+  const lastUpdateFromParent = useRef({ min: '', max: '' })
+
+  // Sync local state with props only when they actually change
   useEffect(() => {
-    if (!isEmpty(filters?.hargaMin)) {
-      setLocalHargaMin(filters?.hargaMin)
-    } else {
-      // Reset to default or empty when the filter is reset
-      setLocalHargaMin('')
+    const newMin = filters?.hargaMin || ''
+
+    // Only update if the values are actually different
+    if (newMin !== lastUpdateFromParent.current.min) {
+      isUpdatingFromParent.current = true
+      setLocalHargaMin(newMin)
+      lastUpdateFromParent.current.min = newMin
+
+      // Reset flag after state update
+      setTimeout(() => {
+        isUpdatingFromParent.current = false
+      }, 0)
     }
   }, [filters?.hargaMin])
 
   useEffect(() => {
-    if (!isEmpty(filters?.hargaMax)) {
-      setLocalHargaMax(filters?.hargaMax)
-    } else {
-      // Reset to default or empty when the filter is reset
-      setLocalHargaMax('')
+    const newMax = filters?.hargaMax || ''
+
+    // Only update if the values are actually different
+    if (newMax !== lastUpdateFromParent.current.max) {
+      isUpdatingFromParent.current = true
+      setLocalHargaMax(newMax)
+      lastUpdateFromParent.current.max = newMax
+
+      // Reset flag after state update
+      setTimeout(() => {
+        isUpdatingFromParent.current = false
+      }, 0)
     }
   }, [filters?.hargaMax])
-
-  // Custom debounce hook
-  const useDebounce = (value: any, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value)
-
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value)
-      }, delay)
-
-      return () => {
-        clearTimeout(handler)
-      }
-    }, [value, delay])
-
-    return debouncedValue
-  }
 
   // Debounced values
   const debouncedHargaMin = useDebounce(localHargaMin, 1000)
   const debouncedHargaMax = useDebounce(localHargaMax, 1000)
 
+  // Memoized setPriceRange to prevent unnecessary re-renders
+  const memoizedSetPriceRange = useCallback(
+    (range: { hargaMin: string; hargaMax: string }) => {
+      if (!isUpdatingFromParent.current) {
+        setPriceRangeAction(range)
+      }
+    },
+    [setPriceRangeAction]
+  )
+
   // Effect for updating parent state when debounced values change
   useEffect(() => {
-    if (debouncedHargaMin !== filters?.hargaMin) {
-      setPriceRange({
+    if (
+      !isUpdatingFromParent.current &&
+      debouncedHargaMin !== filters?.hargaMin &&
+      localHargaMin !== '' // Only update if there's actually a value
+    ) {
+      memoizedSetPriceRange({
         hargaMin: debouncedHargaMin,
         hargaMax: filters?.hargaMax || '',
       })
     }
-  }, [debouncedHargaMin, filters?.hargaMin, filters?.hargaMax, setPriceRange])
+  }, [
+    debouncedHargaMin,
+    filters?.hargaMin,
+    filters?.hargaMax,
+    memoizedSetPriceRange,
+    localHargaMin,
+  ])
 
   useEffect(() => {
-    if (debouncedHargaMax !== filters?.hargaMax) {
-      setPriceRange({
+    if (
+      !isUpdatingFromParent.current &&
+      debouncedHargaMax !== filters?.hargaMax &&
+      localHargaMax !== '' // Only update if there's actually a value
+    ) {
+      memoizedSetPriceRange({
         hargaMin: filters?.hargaMin || '',
         hargaMax: debouncedHargaMax,
       })
     }
-  }, [debouncedHargaMax, filters?.hargaMin, filters?.hargaMax, setPriceRange])
+  }, [
+    debouncedHargaMax,
+    filters?.hargaMin,
+    filters?.hargaMax,
+    memoizedSetPriceRange,
+    localHargaMax,
+  ])
+
+  // Memoized local state setters to prevent unnecessary re-renders in the hook
+  const memoizedSetLocalHargaMin = useCallback((value: string) => {
+    if (!isUpdatingFromParent.current) {
+      setLocalHargaMin(value)
+    }
+  }, [])
+
+  const memoizedSetLocalHargaMax = useCallback((value: string) => {
+    if (!isUpdatingFromParent.current) {
+      setLocalHargaMax(value)
+    }
+  }, [])
 
   // Hooks for slider range - adapting to use the new priceRange structure
   const {
@@ -108,8 +169,8 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
       hargaMin: localHargaMin || String(formattedMin),
       hargaMax: localHargaMax || String(formattedMax),
     },
-    setHargaMin: setLocalHargaMin,
-    setHargaMax: setLocalHargaMax,
+    setHargaMin: memoizedSetLocalHargaMin,
+    setHargaMax: memoizedSetLocalHargaMax,
   })
 
   // Memoized skeleton components
@@ -137,15 +198,15 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   // Modified slider for using local state
   const priceSlider = useMemo(() => {
     const handleLocalSliderChange = (values: number[]) => {
-      // Ensure we always have exactly two values
-      if (values.length === 2) {
+      // Ensure we always have exactly two values and not updating from parent
+      if (values.length === 2 && !isUpdatingFromParent.current) {
         handleSliderChange(values as [number, number])
       }
     }
 
     const handleLocalSliderChangeEnd = (values: number[]) => {
-      // Ensure we always have exactly two values
-      if (values.length === 2) {
+      // Ensure we always have exactly two values and not updating from parent
+      if (values.length === 2 && !isUpdatingFromParent.current) {
         handleSliderChangeEnd(values as [number, number])
       }
     }
@@ -176,7 +237,15 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     const handleLocalHargaMinChange = (
       e: React.ChangeEvent<HTMLInputElement>
     ) => {
-      handleHargaMinChange(e)
+      if (!isUpdatingFromParent.current) {
+        handleHargaMinChange(e)
+      }
+    }
+
+    const handleLocalHargaMinBlur = () => {
+      if (!isUpdatingFromParent.current) {
+        handleHargaMinBlur()
+      }
     }
 
     return (
@@ -186,7 +255,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         }
         className="rounded-lg border-[0.5px] border-neutral-200 p-2"
         onChange={handleLocalHargaMinChange}
-        onBlur={handleHargaMinBlur}
+        onBlur={handleLocalHargaMinBlur}
         placeholder="Rp 0"
       />
     )
@@ -196,7 +265,15 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     const handleLocalHargaMaxChange = (
       e: React.ChangeEvent<HTMLInputElement>
     ) => {
-      handleHargaMaxChange(e)
+      if (!isUpdatingFromParent.current) {
+        handleHargaMaxChange(e)
+      }
+    }
+
+    const handleLocalHargaMaxBlur = () => {
+      if (!isUpdatingFromParent.current) {
+        handleHargaMaxBlur()
+      }
     }
 
     return (
@@ -207,7 +284,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
         className="rounded-lg border-[0.5px] border-neutral-200 p-2 text-right"
         align="text-right"
         onChange={handleLocalHargaMaxChange}
-        onBlur={handleHargaMaxBlur}
+        onBlur={handleLocalHargaMaxBlur}
         placeholder="Rp 0"
       />
     )

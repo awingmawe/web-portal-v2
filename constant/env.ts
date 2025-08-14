@@ -25,6 +25,7 @@ export const PACKAGE_TYPE = {
   HAJJ_SPECIAL: 'hajj-special',
   HAJJ_FURODA: 'hajj-furoda',
   HAJJ_DAKHILI: 'hajj-dakhili',
+  HAJJ: 'hajj',
   UMRAH: 'umrah',
 }
 

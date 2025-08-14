@@ -4,19 +4,36 @@ import { SectionPackageSkeleton } from '@/components/pages/search-packages/2-Fil
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+
+// Move debounce hook outside component or to a separate file
+const useDebounce = (value: any, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 interface SectionPackageOptionsProps {
   dataSectionPackage: TagPackages[]
   selectedSectionPackage?: string
-  onSectionPackageChange: (section: string) => void
+  onSectionPackageChangeAction: (section: string) => void
   isLoadingSkeleton?: boolean
 }
 
 export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
   dataSectionPackage,
   selectedSectionPackage,
-  onSectionPackageChange,
+  onSectionPackageChangeAction,
   isLoadingSkeleton,
 }) => {
   const updateQueryParams = useUpdateQueryParams()
@@ -24,45 +41,53 @@ export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
     selectedSectionPackage
   )
 
-  // Update local rating when prop changes
-  useEffect(() => {
-    setLocalSection(selectedSectionPackage)
-  }, [selectedSectionPackage])
+  // Use ref to track if we're updating from parent to prevent circular updates
+  const isUpdatingFromParent = useRef(false)
 
-  // Custom debounce hook
-  const useDebounce = (value: any, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value)
-
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value)
-      }, delay)
-
-      return () => {
-        clearTimeout(handler)
-      }
-    }, [value, delay])
-
-    return debouncedValue
-  }
-  // Get debounced value of rating
+  // Get debounced value of section
   const debouncedSection = useDebounce(localSection, 500)
 
-  // Effect to handle debounced rating changes
+  // Update local section when prop changes (only if it's different)
   useEffect(() => {
+    if (selectedSectionPackage !== localSection) {
+      isUpdatingFromParent.current = true
+      setLocalSection(selectedSectionPackage)
+      // Reset the flag after state update
+      setTimeout(() => {
+        isUpdatingFromParent.current = false
+      }, 0)
+    }
+  }, [selectedSectionPackage, localSection])
+
+  // Effect to handle debounced section changes
+  useEffect(() => {
+    // Only trigger if:
+    // 1. We have a debounced value
+    // 2. It's different from the selected prop
+    // 3. We're not currently updating from parent
+    // 4. Local section is not undefined (to handle initial render)
     if (
       debouncedSection !== undefined &&
-      debouncedSection !== selectedSectionPackage
+      debouncedSection !== selectedSectionPackage &&
+      !isUpdatingFromParent.current &&
+      localSection !== undefined
     ) {
-      onSectionPackageChange(debouncedSection)
-      updateQueryParams(['section', 'page'], [debouncedSection.toString(), 1])
+      onSectionPackageChangeAction(debouncedSection)
+      updateQueryParams(['section', 'page'], [debouncedSection.toString(), '1'])
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSection])
+  }, [
+    debouncedSection,
+    selectedSectionPackage,
+    onSectionPackageChangeAction,
+    updateQueryParams,
+    localSection,
+  ])
 
-  // Handle star selection
+  // Handle section selection
   const handleSectionChange = useCallback((value: string) => {
-    setLocalSection(value)
+    if (!isUpdatingFromParent.current) {
+      setLocalSection(value)
+    }
   }, [])
 
   if (isLoadingSkeleton) {
