@@ -322,10 +322,7 @@ const CheckoutPage = () => {
                               selectedVariant.netAmount * totalQty
                             const maxAmount = isLinkAja
                               ? LINKAJA_MAX_LIMIT -
-                                getLinkAjaTiering(
-                                  preBooking?.totalPrice ||
-                                    totalPrice * totalQty
-                                )
+                                getLinkAjaTiering(rawInputValue)
                               : preBooking?.totalPrice || totalPrice * totalQty
 
                             if (value >= minAmount && value <= maxAmount) {
@@ -347,10 +344,7 @@ const CheckoutPage = () => {
                                 selectedVariant.netAmount * totalQty
                               const maxAmount = isLinkAja
                                 ? LINKAJA_MAX_LIMIT -
-                                  getLinkAjaTiering(
-                                    preBooking?.totalPrice ||
-                                      totalPrice * totalQty
-                                  )
+                                  getLinkAjaTiering(rawInputValue)
                                 : preBooking?.totalPrice ||
                                   totalPrice * totalQty
 
@@ -396,10 +390,9 @@ const CheckoutPage = () => {
                       totalQty > 0
                         ? isLinkAja
                           ? preBooking?.totalPrice >
-                            LINKAJA_MAX_LIMIT -
-                              getLinkAjaTiering(preBooking?.totalPrice)
+                            LINKAJA_MAX_LIMIT - getLinkAjaTiering(rawInputValue)
                             ? LINKAJA_MAX_LIMIT -
-                              getLinkAjaTiering(preBooking?.totalPrice)
+                              getLinkAjaTiering(rawInputValue)
                             : preBooking?.totalPrice
                           : preBooking?.totalPrice || totalPrice * totalQty
                         : 0

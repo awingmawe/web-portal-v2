@@ -7,6 +7,7 @@ import {
   LOCAL_STORAGE_DETAIL_VARIANT,
   LOCAL_STORAGE_SELECTED_VARIANT,
 } from '@/constant/env'
+import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { Package } from '@/constant/types/PackageProps'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { useAuth } from '@/contexts/auth/context'
@@ -574,14 +575,16 @@ export const CheckoutProvider = ({
     const max =
       totalQty > 0
         ? isLinkAja
-          ? preBooking?.totalPrice > LINKAJA_MAX_LIMIT
-            ? LINKAJA_MAX_LIMIT
+          ? preBooking?.totalPrice >
+            LINKAJA_MAX_LIMIT - getLinkAjaTiering(Number(rawInputValue))
+            ? LINKAJA_MAX_LIMIT - getLinkAjaTiering(Number(rawInputValue))
             : preBooking?.totalPrice
           : preBooking?.totalPrice || totalPrice * totalQty
         : 0
     const distanceToMax = max - sliderValue
 
     if (distanceToMax <= 0) return 1 // fallback to make slider always responsive
+    console.log(distanceToMax < 500_000 ? distanceToMax : 500_000)
     return distanceToMax < 500_000 ? distanceToMax : 500_000
   }
 
