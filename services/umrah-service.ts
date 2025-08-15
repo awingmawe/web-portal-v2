@@ -51,8 +51,13 @@ export async function getPackageList(
   query: GetListQuery
 ): Promise<GenericResponse<Package>> {
   try {
+    const headers = {
+      'X-Page-Url':
+        typeof window === 'undefined' ? undefined : window.location.href,
+    }
     const response = await api.get(
-      `/public/umrah/v2.1/package?${qs.stringify(query)}`
+      `/public/umrah/v2.1/package?${qs.stringify(query)}`,
+      { headers }
     )
     return response.data
   } catch (error) {
