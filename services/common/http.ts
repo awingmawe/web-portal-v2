@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosError } from 'axios'
 import { redirect } from 'next/navigation'
 import { getAccessToken } from './auth'
 import { ACCOUNT_URL, API_URL } from '@/constant/env'
+import { getLocalReferralCode } from '@/lib/utils'
 
 // More specific header type
 interface RequestHeaders {
@@ -141,6 +142,10 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
       const token = getAccessToken()
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
+        const wukalaReferral = getLocalReferralCode()
+        if (wukalaReferral) {
+          config.headers.wukalaReferral = wukalaReferral
+        }
       }
     }
 
