@@ -53,7 +53,9 @@ export async function getPackageList(
   try {
     const headers = {
       'X-Page-Url':
-        typeof window === 'undefined' ? undefined : window.location.href,
+        typeof window === 'undefined'
+          ? undefined
+          : window.location.origin + '' + window.location.pathname,
     }
     const response = await api.get(
       `/public/umrah/v2.1/package?${qs.stringify(query)}`,
