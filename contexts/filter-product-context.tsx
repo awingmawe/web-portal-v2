@@ -55,6 +55,7 @@ interface FilterProductContextType {
   buildQueryParams: (
     searchParamsString: any,
     sortValue: any,
+    type: string,
     page: number
   ) => any
   initializeFiltersFromURL: (needLoading?: boolean) => void
@@ -303,11 +304,13 @@ export const FilterProductProvider: React.FC<{
     (
       searchParamsString: string,
       sortValue: string = 'price-low',
+      type: string = 'umrah',
       page: number = 1
     ) => {
       const params = new URLSearchParams(searchParamsString)
       const queryObject: Record<string, any> = {
         sortParam: sortValue,
+        type,
         page,
       }
 

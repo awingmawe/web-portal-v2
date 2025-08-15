@@ -6,23 +6,6 @@ import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-// Move debounce hook outside component or to a separate file
-const useDebounce = (value: any, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value)
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay])
-
-  return debouncedValue
-}
-
 interface SectionPackageOptionsProps {
   dataSectionPackage: TagPackages[]
   selectedSectionPackage?: string
@@ -44,46 +27,43 @@ export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
   // Use ref to track if we're updating from parent to prevent circular updates
   const isUpdatingFromParent = useRef(false)
 
-  // Get debounced value of section
+  // Update local rating when prop changes
+  useEffect(() => {
+    setLocalSection(selectedSectionPackage)
+  }, [selectedSectionPackage])
+
+  // Custom debounce hook
+  const useDebounce = (value: any, delay: number) => {
+    const [debouncedValue, setDebouncedValue] = useState(value)
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value)
+      }, delay)
+
+      return () => {
+        clearTimeout(handler)
+      }
+    }, [value, delay])
+
+    return debouncedValue
+  }
+  // Get debounced value of rating
   const debouncedSection = useDebounce(localSection, 500)
 
-  // Update local section when prop changes (only if it's different)
+  // Effect to handle debounced rating changes
   useEffect(() => {
-    if (selectedSectionPackage !== localSection) {
-      isUpdatingFromParent.current = true
-      setLocalSection(selectedSectionPackage)
-      // Reset the flag after state update
-      setTimeout(() => {
-        isUpdatingFromParent.current = false
-      }, 0)
-    }
-  }, [selectedSectionPackage, localSection])
-
-  // Effect to handle debounced section changes
-  useEffect(() => {
-    // Only trigger if:
-    // 1. We have a debounced value
-    // 2. It's different from the selected prop
-    // 3. We're not currently updating from parent
-    // 4. Local section is not undefined (to handle initial render)
     if (
       debouncedSection !== undefined &&
-      debouncedSection !== selectedSectionPackage &&
-      !isUpdatingFromParent.current &&
-      localSection !== undefined
+      debouncedSection !== selectedSectionPackage
     ) {
       onSectionPackageChangeAction(debouncedSection)
-      updateQueryParams(['section', 'page'], [debouncedSection.toString(), '1'])
+      updateQueryParams(['section', 'page'], [debouncedSection.toString(), 1])
     }
-  }, [
-    debouncedSection,
-    selectedSectionPackage,
-    onSectionPackageChangeAction,
-    updateQueryParams,
-    localSection,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSection])
 
-  // Handle section selection
+  // Handle star selection
   const handleSectionChange = useCallback((value: string) => {
     if (!isUpdatingFromParent.current) {
       setLocalSection(value)

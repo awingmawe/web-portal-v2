@@ -7,6 +7,23 @@ import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { starOptions } from '@/lib/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 
+// Custom debounce hook
+const useDebounce = (value: any, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
+
 interface HotelRatingOptionsProps {
   selectedRating?: number
   onRatingChangeAction: (rating: number) => void
@@ -27,23 +44,6 @@ export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
   useEffect(() => {
     setLocalRating(selectedRating)
   }, [selectedRating])
-
-  // Custom debounce hook
-  const useDebounce = (value: any, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value)
-
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value)
-      }, delay)
-
-      return () => {
-        clearTimeout(handler)
-      }
-    }, [value, delay])
-
-    return debouncedValue
-  }
 
   // Get debounced value of rating
   const debouncedRating = useDebounce(localRating, 500)

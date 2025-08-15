@@ -5,10 +5,12 @@ import NoPackageAvailable from '@/public/images/no-data-package.png'
 import Image from 'next/image'
 
 interface NoResultsProps {
-  resetAllFilters: () => void
+  resetAllFiltersAction: () => void
 }
 
-export const NoResults: React.FC<NoResultsProps> = ({ resetAllFilters }) => {
+export const NoResults: React.FC<NoResultsProps> = ({
+  resetAllFiltersAction,
+}) => {
   return (
     <div className="flex items-center justify-center">
       <div className="flex w-3/4 flex-row items-center gap-3.5 max-lg:flex-col">
@@ -21,7 +23,7 @@ export const NoResults: React.FC<NoResultsProps> = ({ resetAllFilters }) => {
             Hasil yang ingin kamu cari tidak ditemukan. Silakan hapus beberapa
             filter yang digunakan
           </p>
-          <Button className="px-10 py-3" onClick={resetAllFilters}>
+          <Button className="px-10 py-3" onClick={resetAllFiltersAction}>
             Reset Filter
           </Button>
         </div>

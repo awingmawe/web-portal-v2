@@ -2,6 +2,7 @@
 
 import FacilityFilter from '@/components/pages/search-packages/2-FilterLeftbar/FacilityFilter'
 import PriceRangeFilter from '@/components/pages/search-packages/2-FilterLeftbar/PriceRangeFilter'
+import RatingHotelFilter from '@/components/pages/search-packages/2-FilterLeftbar/RatingHotelFilter'
 import SectionFilter from '@/components/pages/search-packages/2-FilterLeftbar/SectionFilter'
 import TagPackageFilter from '@/components/pages/search-packages/2-FilterLeftbar/TagPackageFilter'
 import { Accordion } from '@/components/ui/accordion'
@@ -31,6 +32,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
       className="flex w-full flex-col gap-6"
     >
       <PriceRangeFilter dataMinMax={dataMinMax} />
+      <RatingHotelFilter />
       <FacilityFilter dataFacility={dataFacility} />
       <SectionFilter dataSectionPackage={dataSection} />
       <TagPackageFilter dataTagPackage={dataTagPackages} />

@@ -251,7 +251,9 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     return (
       <Input
         value={
-          isEmpty(localHargaMin) ? formatNumberCurrency(min) : localHargaMin
+          isEmpty(localHargaMin)
+            ? formatNumberCurrency(min)
+            : formatNumberCurrency(localHargaMin)
         }
         className="rounded-lg border-[0.5px] border-neutral-200 p-2"
         onChange={handleLocalHargaMinChange}
@@ -279,7 +281,9 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     return (
       <Input
         value={
-          isEmpty(localHargaMax) ? formatNumberCurrency(max) : localHargaMax
+          isEmpty(localHargaMax)
+            ? formatNumberCurrency(max)
+            : formatNumberCurrency(localHargaMax)
         }
         className="rounded-lg border-[0.5px] border-neutral-200 p-2 text-right"
         align="text-right"

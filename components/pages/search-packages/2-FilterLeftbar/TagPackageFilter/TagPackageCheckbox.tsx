@@ -9,19 +9,19 @@ import React from 'react'
 interface TagPackageOptionsProps {
   dataTagPackage: TagPackages[]
   selectedTagPackage?: string
-  onTagPackageChange: (tagSlug: string) => void
+  onTagPackageChangeAction: (tagSlug: string) => void
   isLoadingSkeleton?: boolean
 }
 
 export const TagPackageOptions: React.FC<TagPackageOptionsProps> = ({
   dataTagPackage,
   selectedTagPackage,
-  onTagPackageChange,
+  onTagPackageChangeAction,
   isLoadingSkeleton,
 }) => {
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: selectedTagPackage,
-    onSelectionChange: onTagPackageChange,
+    onSelectionChange: onTagPackageChangeAction,
     paramName: 'tS',
   })
 
