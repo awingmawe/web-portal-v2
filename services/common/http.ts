@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'
 import { redirect } from 'next/navigation'
-import { getAccessToken } from './auth'
+import { getAccessToken, getWukalaReferral } from './auth'
 import { ACCOUNT_URL, API_URL } from '@/constant/env'
 import { getLocalReferralCode } from '@/lib/utils'
 
@@ -138,14 +138,17 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
     }
 
     // Add auth token if needed
+    if (typeof window !== 'undefined') {
+      const wukalaReferral = getWukalaReferral() || getLocalReferralCode()
+      if (wukalaReferral) {
+        config.headers['X-Wukalla-Referral'] = wukalaReferral
+      }
+    }
+
     if (useAuth) {
       const token = getAccessToken()
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
-        const wukalaReferral = getLocalReferralCode()
-        if (wukalaReferral) {
-          config.headers.wukalaReferral = wukalaReferral
-        }
       }
     }
 
@@ -179,6 +182,11 @@ export function createServerApiClient(token: string): AxiosInstance {
     // Add the provided token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
+      const wukalaReferral = getWukalaReferral() || 'LINKAJA2'
+
+      if (wukalaReferral) {
+        config.headers['X-Wukalla-Referral'] = wukalaReferral
+      }
     }
 
     return config

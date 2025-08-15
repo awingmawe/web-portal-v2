@@ -5,6 +5,7 @@ export const cookieNames = {
   USER_ACCOUNT: 'user_account',
   SESSION_ID: 'session-id',
   IS_WEBVIEW: 'is-web-view',
+  WUKALA_REFERRAL: 'wukala-referral',
 }
 
 interface CookieOptions {

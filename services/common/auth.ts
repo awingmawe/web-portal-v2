@@ -17,3 +17,10 @@ export function clearAuth() {
   deleteCookie(cookieNames.USER_ACCESS_TOKEN)
   deleteCookie(cookieNames.USER_ACCOUNT)
 }
+
+export function setWukalaReferral(referralCode: string) {
+  setCookie(cookieNames.WUKALA_REFERRAL, referralCode)
+}
+export function getWukalaReferral(): string {
+  return getCookie(cookieNames.WUKALA_REFERRAL)
+}
