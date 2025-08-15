@@ -42,7 +42,7 @@ export default async function SearchGeneral({
     await Promise.all([
       getMinMaxPrice(),
       getTagPackagesEnum(awaitedParams.type || 'umrah'),
-      getFacilityEnum(`${awaitedParams.type}-facility`),
+      getFacilityEnum(`${awaitedParams.type || 'umrah'}-facility`),
       getSectionEnum(awaitedParams.type || 'umrah'),
     ])
   return (
