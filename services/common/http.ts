@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { getAccessToken, getWukalaReferral } from './auth'
 import { ACCOUNT_URL, API_URL } from '@/constant/env'
 import { getLocalReferralCode } from '@/lib/utils'
+import { cookieNames } from '@/services/common/cookie'
 
 // More specific header type
 interface RequestHeaders {
@@ -37,6 +38,13 @@ interface ApiErrorResponse {
   errorMessage?: string
   errorValidation?: Record<string, string[]>
   status?: number
+}
+
+async function getServerReferralCode(): Promise<string | undefined> {
+  const { cookies } = await import('next/headers') // dynamic import
+  const cookieStore = await cookies()
+  const wukalaCookie = cookieStore.get(cookieNames.WUKALA_REFERRAL)
+  return wukalaCookie?.value
 }
 
 function handleApiError(error: AxiosError<ApiErrorResponse>): never {
@@ -130,7 +138,7 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
   })
 
   // Request interceptor
-  instance.interceptors.request.use((config: any) => {
+  instance.interceptors.request.use(async (config: any) => {
     // Apply custom headers
     config.headers = {
       ...config.headers,
@@ -138,11 +146,19 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
     }
 
     // Add auth token if needed
+    let wukalaReferral: string | undefined
+
     if (typeof window !== 'undefined') {
-      const wukalaReferral = getWukalaReferral() || getLocalReferralCode()
-      if (wukalaReferral) {
-        config.headers['X-Wukalla-Referral'] = wukalaReferral
-      }
+      // Client side
+      wukalaReferral = getWukalaReferral() ?? getLocalReferralCode()
+    } else {
+      // Server side
+      wukalaReferral = await getServerReferralCode()
+      console.log('wukalaReferral', wukalaReferral)
+    }
+
+    if (wukalaReferral) {
+      config.headers['X-Wukalla-Referral'] = wukalaReferral
     }
 
     if (useAuth) {
@@ -151,6 +167,7 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
         config.headers.Authorization = `Bearer ${token}`
       }
     }
+    console.log('hearders', config.headers)
 
     return config
   })
@@ -182,11 +199,6 @@ export function createServerApiClient(token: string): AxiosInstance {
     // Add the provided token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
-      const wukalaReferral = getWukalaReferral() || 'LINKAJA2'
-
-      if (wukalaReferral) {
-        config.headers['X-Wukalla-Referral'] = wukalaReferral
-      }
     }
 
     return config
