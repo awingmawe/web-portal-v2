@@ -26,6 +26,10 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  if (pathname.startsWith('/linkaja')) {
+    cookieStore.set(cookieNames.WUKALA_REFERRAL, 'LINKAJA')
+  }
+
   if (pathname.startsWith('/my')) {
     const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value
 
@@ -50,5 +54,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/my(.*)', '/article(.*)'],
+  matcher: ['/my(.*)', '/article(.*)', '/linkaja(.*)'],
 }

@@ -24,7 +24,6 @@ import { GenericResponse } from '@/constant/types/GeneralProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { setLocalReferralCode } from '@/lib/utils'
-import { setWukalaReferral } from '@/services/common/auth'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -54,7 +53,6 @@ export default function LandingLinkAja({
     setFilters({
       ...filters,
     })
-    setWukalaReferral(LINKAJA_REFERRAL)
 
     // Update URL parameters
     updateQueryParams(['dpMin', 'dpMax', 'page'], [0, 18000000, 1])
