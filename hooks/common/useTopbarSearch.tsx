@@ -135,14 +135,14 @@ export const useTopbarSearch = () => {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter' && searchQuery) {
         setShowSuggestions(false)
-        window.location.href = handleSearchDesktop
+        window.location.href = handleSearchDesktop(activeSlug)
       }
       if (e.key === 'Escape') {
         setIsExpanded(false)
         setShowSuggestions(false)
       }
     },
-    [searchQuery, handleSearchDesktop]
+    [searchQuery, handleSearchDesktop, activeSlug]
   )
 
   const handlePackageClick = useCallback(() => {

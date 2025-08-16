@@ -108,6 +108,7 @@ interface SearchResultsFooterProps {
   isLoadingResults: boolean
   searchQuery: string
   handleSearchDesktop: string
+  addToHistory: () => void
 }
 
 export const SearchResultsFooter: React.FC<SearchResultsFooterProps> = ({
@@ -115,6 +116,7 @@ export const SearchResultsFooter: React.FC<SearchResultsFooterProps> = ({
   isLoadingResults,
   searchQuery,
   handleSearchDesktop,
+  addToHistory,
 }) => {
   if (cardData.length > 0 && !isLoadingResults) {
     return (
@@ -126,6 +128,7 @@ export const SearchResultsFooter: React.FC<SearchResultsFooterProps> = ({
           href={handleSearchDesktop}
           className="bg-primary-500 hover:bg-primary-700 text-s-regular w-full rounded-full px-10 py-4 text-center text-neutral-900 transition-all"
           onMouseDown={(e) => e.preventDefault()}
+          onClick={addToHistory}
         >
           Lihat semua hasil untuk &quot;{searchQuery}&quot;
         </Link>

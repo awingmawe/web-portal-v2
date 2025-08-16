@@ -21,10 +21,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { formatDateRangeShort, isEmpty } from '@/lib/utils'
 import { AnimatePresence, easeInOut, motion } from 'framer-motion'
 import { X } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 import React, { useState } from 'react'
 
 type FilterType =
@@ -53,6 +55,9 @@ const FilterDrawer: React.FC = () => {
   const { dateRange, arrivalAirport, departureAirport, hotelStars, airline } =
     filters
   const [activeFilter, setActiveFilter] = useState<FilterType>(null)
+
+  // Get query params from searchParams
+  const searchParams = useSearchParams()
 
   // Determine if any filters are applied
   const hasFilters =
@@ -305,43 +310,45 @@ const FilterDrawer: React.FC = () => {
                   </div>
 
                   {/* Bulan Keberangkatan */}
-                  <div
-                    className="cursor-pointer border-b border-neutral-100 pb-1.5"
-                    onClick={() => openFilterPanel('dateRange')}
-                  >
-                    <div className="text-xs-regular mb-2.5 text-neutral-500">
-                      Tanggal Keberangkatan
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <CalendarIconFilterMobile />
-                        {isEmpty(dateRange) ? (
-                          <p className="text-s-regular text-neutral-500">
-                            Pilih Tanggal Keberangkatan
-                          </p>
-                        ) : (
-                          <span className="text-s-regular">
-                            {dateRange?.from
-                              ? formatDateRangeShort(dateRange)
-                              : ''}
-                          </span>
-                        )}
+                  {searchParams.get('type') !== PACKAGE_TYPE.HAJJ && (
+                    <div
+                      className="cursor-pointer border-b border-neutral-100 pb-1.5"
+                      onClick={() => openFilterPanel('dateRange')}
+                    >
+                      <div className="text-xs-regular mb-2.5 text-neutral-500">
+                        Tanggal Keberangkatan
                       </div>
-                      <div className="flex items-center">
-                        {!isEmpty(dateRange) && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              resetFilter('dateRange')
-                            }}
-                            className="mr-2"
-                          >
-                            <X className="h-5 w-5 text-neutral-500" />
-                          </button>
-                        )}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <CalendarIconFilterMobile />
+                          {isEmpty(dateRange) ? (
+                            <p className="text-s-regular text-neutral-500">
+                              Pilih Tanggal Keberangkatan
+                            </p>
+                          ) : (
+                            <span className="text-s-regular">
+                              {dateRange?.from
+                                ? formatDateRangeShort(dateRange)
+                                : ''}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center">
+                          {!isEmpty(dateRange) && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                resetFilter('dateRange')
+                              }}
+                              className="mr-2"
+                            >
+                              <X className="h-5 w-5 text-neutral-500" />
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Bandara Keberangkatan */}
                   <div

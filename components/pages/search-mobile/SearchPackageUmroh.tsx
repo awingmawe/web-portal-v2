@@ -21,6 +21,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useFilterHistory } from '@/hooks/common/useFilterHistory'
 import {
@@ -85,7 +86,7 @@ const SearchMobileUmroh: React.FC<SearchMobileUmrohProps> = ({
     const queryParams = new URLSearchParams()
 
     // Add package type to query params
-    queryParams.append('packageType', packageType)
+    queryParams.append('type', packageType)
 
     // Add all relevant filters to query params
     if (hotelStars) {
@@ -93,7 +94,7 @@ const SearchMobileUmroh: React.FC<SearchMobileUmrohProps> = ({
     }
 
     // Only add date range for umrah packages
-    if (packageType === 'umrah') {
+    if (packageType === PACKAGE_TYPE.UMRAH) {
       if (dateRange?.from) {
         queryParams.append('sD', formatDateToYYYYMMDD(dateRange.from))
       }
@@ -125,7 +126,7 @@ const SearchMobileUmroh: React.FC<SearchMobileUmrohProps> = ({
         <div className="flex items-center gap-1">
           <SearchIcon size={24} />
           <p className="text-m-semibold w-full">
-            Cari Paket {packageType === 'hajj' ? 'Haji' : 'Umrah'}
+            Cari Paket {packageType === PACKAGE_TYPE.HAJJ ? 'Haji' : 'Umrah'}
           </p>
         </div>
         <p

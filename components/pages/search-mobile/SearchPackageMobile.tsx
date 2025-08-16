@@ -9,6 +9,7 @@ import {
   SearchResultsList,
 } from '@/components/shared/Topbar/TopbarSearch/TopbarSearchContent'
 import { CATEGORIES_FILTER_SEARCH } from '@/constant/env'
+import { useSearchHistory } from '@/hooks/common/useSearchHistory'
 import { useTopbarSearch } from '@/hooks/common/useTopbarSearch'
 
 const SearchMobileUmroh: React.FC = () => {
@@ -24,6 +25,7 @@ const SearchMobileUmroh: React.FC = () => {
     handlePackageClick,
     handleCategoryClick,
   } = useTopbarSearch()
+  const { addToHistory } = useSearchHistory()
   return (
     <div className="w-full px-4">
       {/* Search result on typing */}
@@ -49,7 +51,8 @@ const SearchMobileUmroh: React.FC = () => {
             cardData={cardData}
             isLoadingResults={isLoadingResults}
             searchQuery={searchQuery}
-            handleSearchDesktop={handleSearchDesktop}
+            handleSearchDesktop={handleSearchDesktop(activeSlug)}
+            addToHistory={() => addToHistory(searchQuery)}
           />
         </>
       ) : (
