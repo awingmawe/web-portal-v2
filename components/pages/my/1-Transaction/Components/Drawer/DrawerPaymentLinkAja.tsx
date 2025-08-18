@@ -151,7 +151,6 @@ const DrawerPaymentLinkAja = memo(
           >
             Bayar Sekarang
           </Button>
-          {selectedPayment}
           <Button
             className="border-primary-500 mx-4 mt-4 border border-2 py-2"
             variant={'outline'}
