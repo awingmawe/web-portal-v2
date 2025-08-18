@@ -255,11 +255,7 @@ export default function TransactionDetailContent({
         variant="transactionTopbar"
         title="Detail Transaction"
         onBackClick={() => {
-          if (window.history.length > 1) {
-            window.history.back()
-          } else {
-            router.push('/my/transaction')
-          }
+          router.push('/my/transaction')
         }}
         showCallCenter
       />
