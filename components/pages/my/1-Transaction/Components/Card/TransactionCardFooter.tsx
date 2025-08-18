@@ -105,8 +105,8 @@ export default function TransactionCardFooter({
           window.location.reload()
         },
         onPending: async (result: any) => {
-          console.log('Payment pending', result)
-          router.push(`/my/need-payment`)
+          // console.log('Payment pending', result)
+          // router.push(`/my/need-payment`)
           // Add expiration check logic
         },
         onError: (error: any) => {
@@ -460,14 +460,12 @@ export default function TransactionCardFooter({
                 try {
                   if (window.snap) {
                     window.snap.pay(paymentTransaction?.paymentToken, {
-                      onSuccess: async (result: any) => {
-                        console.log(result)
+                      onSuccess: async () => {
                         // router.replace('/my/transaction') // replace & refresh
                         window.location.reload()
                       },
-                      onPending: async (result: any) => {
-                        console.log('Payment pending', result)
-                        router.push(`/my/need-payment`)
+                      onPending: async () => {
+                        // router.push(`/my/need-payment`)
                         // Add expiration check logic
                       },
                       onError: (error: any) => {
