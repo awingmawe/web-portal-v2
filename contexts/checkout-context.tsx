@@ -301,7 +301,7 @@ export const CheckoutProvider = ({
           },
           onPending: async () => {
             // console.log('Payment pending', result)
-            // router.push(`/my/need-payment`)
+            router.push(`/my/need-payment`)
             // Add expiration check logic
           },
           onError: (error: any) => {
