@@ -23,7 +23,7 @@ const DrawerPaymentLinkAja = memo(
     onOpenChange: (val: boolean) => void
     bookingId: string
   }) => {
-    const [selectedPayment, setSelectedPayment] = useState('')
+    const [selectedPayment, setSelectedPayment] = useState('payment-gateway')
 
     const handlePaymentSelection = (paymentType: string) => {
       setSelectedPayment(paymentType)
@@ -31,30 +31,28 @@ const DrawerPaymentLinkAja = memo(
     const [loadingPayment, setLoadingPayment] = useState(false)
 
     const fetchPaymentStatement = useCallback(
-      async (id: any) => {
+      async (id: any, paymentMethod: string) => {
         setLoadingPayment(true)
         try {
           // Build query parameters
           const response = await getPaymentStatement(id)
           const payload = {
             amount: response.remainingPayment,
-            paymentPath: selectedPayment || 'payment-gateway',
+            paymentPath: paymentMethod,
           }
           const responseNext = await postNextPayment(id, payload)
           if (
-            selectedPayment == 'link-aja' ||
-            selectedPayment == 'link-aja-syariah'
+            paymentMethod == 'link-aja' ||
+            paymentMethod == 'link-aja-syariah'
           ) {
             window.location.href = responseNext?.paymentLink
           } else {
             window.snap.pay(responseNext?.paymentToken, {
-              onSuccess: async (result: any) => {
-                console.log(result)
+              onSuccess: async () => {
                 // router.replace('/my/transaction') // replace & refresh
                 window.location.reload()
               },
-              onPending: async (result: any) => {
-                console.log('Payment pending', result)
+              onPending: async () => {
                 // router.push(`/my/need-payment`)
                 // Add expiration check logic
               },
@@ -148,20 +146,18 @@ const DrawerPaymentLinkAja = memo(
             className="mx-4 mt-4 py-2"
             disabled={!selectedPayment || loadingPayment}
             onClick={() => {
-              fetchPaymentStatement(bookingId)
+              fetchPaymentStatement(bookingId, selectedPayment)
             }}
           >
             Bayar Sekarang
           </Button>
+          {selectedPayment}
           <Button
             className="border-primary-500 mx-4 mt-4 border border-2 py-2"
             variant={'outline'}
             disabled={loadingPayment}
             onClick={() => {
-              setSelectedPayment('payment-gateway')
-              setTimeout(() => {
-                fetchPaymentStatement(bookingId)
-              }, 100)
+              fetchPaymentStatement(bookingId, 'payment-gateway')
             }}
           >
             Metode Pembayaran Lain
