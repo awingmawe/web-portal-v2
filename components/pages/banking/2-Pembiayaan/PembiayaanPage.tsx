@@ -444,12 +444,13 @@ const PembiayaanPage: React.FC = () => {
               : 'mt-32 mb-12 flex justify-center'
           }
         >
-          <Button
-            className="w-full rounded-full bg-yellow-500 px-6 py-3 font-medium text-gray-800 hover:bg-yellow-600 md:w-auto md:max-w-xs"
-            onClick={openForm}
-          >
-            Ikuti Program Talangan Sekarang
-          </Button>
+          <Link href="/banking/credit/form">
+            <Button
+              className="w-full rounded-full bg-yellow-500 px-6 py-3 font-medium text-gray-800 hover:bg-yellow-600 md:w-auto md:max-w-xs"
+            >
+              Ikuti Program Talangan Sekarang
+            </Button>
+          </Link>
         </div>
       </div>
 

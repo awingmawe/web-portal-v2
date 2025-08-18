@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function BottomNavigation() {
-  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const isLinkAja = typeof window !== 'undefined' ? sessionStorage.getItem('isLinkAja') === 'true' : false
   const pathname = usePathname()
 
   // Define our navigation items with their paths and icons
