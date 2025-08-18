@@ -154,7 +154,6 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
     } else {
       // Server side
       wukalaReferral = await getServerReferralCode()
-      console.log('wukalaReferral', wukalaReferral)
     }
 
     if (wukalaReferral) {
@@ -167,7 +166,6 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
         config.headers.Authorization = `Bearer ${token}`
       }
     }
-    console.log('hearders', config.headers)
 
     return config
   })
