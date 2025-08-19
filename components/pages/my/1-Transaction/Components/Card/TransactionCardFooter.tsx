@@ -305,7 +305,7 @@ export default function TransactionCardFooter({
               </Button>
             ) : (
               <Button
-                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
+                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
                 variant="outline"
                 disabled={loadingPaymentTransaction}
                 onClick={() => fetchPaymentStatement(bookingId)}
