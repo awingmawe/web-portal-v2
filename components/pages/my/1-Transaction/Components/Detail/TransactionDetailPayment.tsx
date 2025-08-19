@@ -25,8 +25,6 @@ export default function TransactionDetailPayment({
   startDate,
   isPaidOff,
 }: TransactionDetailPaymentProps) {
-  console.log(paymentDetails)
-
   return (
     <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
       <div className="mb-4 flex items-center justify-between">
