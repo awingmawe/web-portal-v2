@@ -5,7 +5,9 @@ import {
   PackageVariant,
   VariantPriceType,
 } from '@/constant/types/PackageProps'
-import { formatCurrencyIndonesia, formatDateToRangeString } from '@/lib/utils'
+import { formatCurrencyIndonesia } from '@/lib/utils'
+import { format } from 'date-fns'
+import { id } from 'date-fns/locale'
 import React, {
   createContext,
   ReactNode,
@@ -39,7 +41,8 @@ interface PackageVariantContextState {
   numberOfDays: number
   handleBadgePromo: (
     discountType: string,
-    amount: number | string
+    amount: number | string,
+    currency?: string
   ) => string | null
   variantsPrice: VariantPriceType[]
   getVariantsPrice: (
@@ -253,10 +256,10 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
 
   // Format departure and arrival dates for display
   const formattedDeparture = selectedVariant?.departureDate
-    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
+    ? format(selectedVariant.departureDate, "d 'de' MMMM yyyy", { locale: id })
     : '-'
   const formattedArrival = selectedVariant?.arrivalDate
-    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
+    ? format(selectedVariant.arrivalDate, "d 'de' MMMM yyyy", { locale: id })
     : '-'
   const numberOfDays = selectedVariant?.tripDuration
     ? selectedVariant?.tripDuration
@@ -267,11 +270,11 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
             (1000 * 60 * 60 * 24)
         ) + 1
       : 0
-  const handleBadgePromo = (discountType: string, amount: number | string) => {
+  const handleBadgePromo = (discountType: string, amount: number | string, currency?: string) => {
     if (discountType === 'percentage') {
       return `${amount}%`
     } else if (discountType === 'nominal') {
-      return `${formatCurrencyIndonesia(amount as number)}`
+      return `${formatCurrencyIndonesia(amount as number, 1, currency )}`
     }
     return null
   }

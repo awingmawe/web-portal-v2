@@ -18,6 +18,7 @@ import {
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
   LOCAL_STORAGE_SELECTED_VARIANT,
+  PACKAGE_TYPE,
 } from '@/constant/env'
 import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
@@ -30,6 +31,7 @@ import { dissolve } from '@/lib/animation-setup'
 import {
   getHotelRating,
   getTripDuration,
+  isEmpty,
   setLocalReferralCode,
 } from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
@@ -185,7 +187,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
   // Check room type availability based on price
 
-  // When all version 2 muslim101 released, remove this
   const handleCheckout = () => {
     // !selectedRoomType || Object.keys(selectedRoomType).length === 0
     if (
@@ -252,7 +253,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     })
   }
 
-  // Show s loader when loading
+  // Shows loader when loading
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3 rounded-[20px] border border-neutral-100 bg-white p-4 max-lg:gap-2 max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:border-b max-lg:border-b-neutral-200 max-lg:px-0 max-lg:pt-0 max-lg:pb-4">
@@ -316,7 +317,11 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           <div className="text-s-regular mb-2 text-neutral-800 max-lg:hidden">
             Varian
           </div>
-          <div className="no-scrollbar mt-7.5 flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-1 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2">
+          <div
+            className={`no-scrollbar ${variants.some((e) => {
+              if (!isEmpty(e.discountAmount)) return 'mt-7.5'
+            })} flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-1 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2 max-lg:pb-2`}
+          >
             {variants.map((variant) =>
               lg ? (
                 <CheckoutDrawerMobile
@@ -346,7 +351,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                       Number(variant.discountAmount) > 0 && (
                         <BadgePromo
                           className="!text-s-semibold -top-[24px]"
-                          title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
+                          title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount, pkg.currency)}`}
                         />
                       )}
                   </div>
@@ -369,7 +374,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                     Number(variant.discountAmount) > 0 && (
                       <BadgePromo
                         className="!text-s-semibold -top-[25px]"
-                        title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
+                        title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount, pkg.currency)}`}
                       />
                     )}
                 </div>
@@ -392,32 +397,39 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         </Fragment>
       )}
       {/* Travel dates */}
-      {variants.length > 0 && selectedVariant && (
-        <div className="flex items-center justify-between max-lg:my-2">
-          <div className="flex flex-col items-center justify-center gap-1">
-            <div className="text-s-medium text-neutral-500">
-              Tanggal Berangkat
+      {variants.length > 0 &&
+        selectedVariant &&
+        pkg.packageType === PACKAGE_TYPE.UMRAH && (
+          <div className="flex items-center justify-between max-lg:my-2">
+            <div className="flex flex-col items-center justify-center gap-1">
+              <div className="text-s-medium text-neutral-500">
+                Tanggal Berangkat
+              </div>
+              <span className="text-m-regular text-neutral-900">
+                {formattedDeparture}
+              </span>
             </div>
-            <span className="text-m-regular text-neutral-900">
-              {formattedDeparture}
-            </span>
-          </div>
 
-          <div className="flex flex-col items-center">
-            <div className="text-s-regular -mb-2 text-neutral-300">
-              {numberOfDays} Hari
+            <div className="flex flex-col items-center">
+              <div className="text-s-regular -mb-2 text-neutral-300">
+                {numberOfDays} Hari
+              </div>
+              <ArrowLongIcon />
             </div>
-            <ArrowLongIcon />
-          </div>
 
-          <div className="flex flex-col items-center justify-center gap-1">
-            <div className="text-s-medium text-neutral-500">Tanggal Pulang</div>
-            <span className="text-m-regular text-neutral-900">
-              {formattedArrival}
-            </span>
+            <div className="flex flex-col items-center justify-center gap-1">
+              <div className="text-s-medium text-neutral-500">
+                Tanggal Pulang
+              </div>
+              <span className="text-m-regular text-neutral-900">
+                {formattedArrival}
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      {/* {pkg.packageType === PACKAGE_TYPE.HAJJ && (
+        
+      )} */}
       {/* Divider */}
       <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
       {/* Hotel selection with Popover */}

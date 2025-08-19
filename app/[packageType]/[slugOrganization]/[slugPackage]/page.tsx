@@ -76,8 +76,8 @@ export default async function DetailPackage({
 
   const detailData = await getPackageDetail(slugPackage)
   const idDetailPackage = detailData.id
-  const medinaIdHotel = detailData.medinaHotel.id
-  const meccaIdHotel = detailData.meccaHotel.id
+  const medinaIdHotel = detailData.medinaHotel.id ?? 0
+  const meccaIdHotel = detailData.meccaHotel.id ?? 0
   const [galleryData, packageVariants, galleryMedina, galleryMecca] =
     await Promise.all([
       getGalleryPackage(idDetailPackage),
@@ -173,17 +173,21 @@ export default async function DetailPackage({
                 termsCondition={detailData?.detail?.description}
               />
 
-              <HotelMecca
-                mecca={detailData?.meccaHotel}
-                meccaHotelImages={meccaHotelImages}
-                detailData={detailData}
-              />
+              {meccaIdHotel !== 0 && (
+                <HotelMecca
+                  mecca={detailData?.meccaHotel}
+                  meccaHotelImages={meccaHotelImages}
+                  detailData={detailData}
+                />
+              )}
 
-              <HotelMedina
-                medina={detailData?.medinaHotel}
-                medinaHotelImages={medinaHotelImages}
-                detailData={detailData}
-              />
+              {medinaIdHotel !== 0 && (
+                <HotelMedina
+                  medina={detailData?.medinaHotel}
+                  medinaHotelImages={medinaHotelImages}
+                  detailData={detailData}
+                />
+              )}
 
               <TermsCondition
                 termsCondition={detailData?.detail?.termsCondition}
