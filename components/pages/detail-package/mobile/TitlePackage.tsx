@@ -8,9 +8,13 @@ import { differenceInDays } from 'date-fns'
 
 interface TitlePackageMobileProps {
   title: string
+  currency: string
 }
 
-export default function TitlePackageMobile({ title }: TitlePackageMobileProps) {
+export default function TitlePackageMobile({
+  title,
+  currency,
+}: TitlePackageMobileProps) {
   const {
     isLoading,
     selectedVariant,
@@ -48,11 +52,11 @@ export default function TitlePackageMobile({ title }: TitlePackageMobileProps) {
           <div className="mt-1 flex items-center gap-2">
             {hasDiscount() && (
               <span className="text-s-regular text-neutral-500 line-through">
-                {formatCurrency(getOriginalPriceSelected())}
+                {formatCurrency(getOriginalPriceSelected(), currency)}
               </span>
             )}
             <span className="text-l-semibold text-primary-500">
-              {formatCurrency(getPriceSelected())}
+              {formatCurrency(getPriceSelected(), currency)}
             </span>
           </div>
         </>

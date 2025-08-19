@@ -16,6 +16,7 @@ export interface SelectHotelProps {
   defaultPackageVariantId?: number | null
   totalManifest?: number
   disabled?: boolean
+  currency: string
   variant?: 'normal' | 'checkout'
   disabledAddOnly?: boolean
   totalQty?: number
@@ -34,6 +35,7 @@ export default function SelectHotel({
   hideTotalPrice = false,
   totalManifest,
   totalQty,
+  currency,
   onChange,
 }: SelectHotelProps) {
   const {
@@ -148,12 +150,16 @@ export default function SelectHotel({
                   {availableRoomTypes.double ? (
                     <div>
                       <p className="text-s-semibold text-neutral-900">
-                        {formatCurrency(getVariantsPrice('double')?.price)}
+                        {formatCurrency(
+                          getVariantsPrice('double')?.price,
+                          currency
+                        )}
                       </p>
                       {getVariantsPrice('double')?.hasDiscount && (
                         <p className="text-s-regular mt-1 text-neutral-500 line-through">
                           {formatCurrency(
-                            getVariantsPrice('double')?.originalPrice
+                            getVariantsPrice('double')?.originalPrice,
+                            currency
                           )}
                         </p>
                       )}
@@ -234,12 +240,16 @@ export default function SelectHotel({
                   {availableRoomTypes.triple ? (
                     <div>
                       <p className="text-s-semibold text-neutral-900">
-                        {formatCurrency(getVariantsPrice('triple')?.price)}
+                        {formatCurrency(
+                          getVariantsPrice('triple')?.price,
+                          currency
+                        )}
                       </p>
                       {getVariantsPrice('triple')?.hasDiscount && (
                         <p className="text-s-regular mt-1 text-neutral-500 line-through">
                           {formatCurrency(
-                            getVariantsPrice('triple')?.originalPrice
+                            getVariantsPrice('triple')?.originalPrice,
+                            currency
                           )}
                         </p>
                       )}
@@ -320,12 +330,16 @@ export default function SelectHotel({
                   {availableRoomTypes.quad ? (
                     <div>
                       <p className="text-s-semibold text-neutral-900">
-                        {formatCurrency(getVariantsPrice('quad')?.price)}
+                        {formatCurrency(
+                          getVariantsPrice('quad')?.price,
+                          currency
+                        )}
                       </p>
                       {getVariantsPrice('quad')?.hasDiscount && (
                         <p className="text-s-regular mt-1 text-neutral-500 line-through">
                           {formatCurrency(
-                            getVariantsPrice('quad')?.originalPrice
+                            getVariantsPrice('quad')?.originalPrice,
+                            currency
                           )}
                         </p>
                       )}
@@ -394,12 +408,12 @@ export default function SelectHotel({
           <div className="text-m-regular text-neutral-500">Total Harga</div>
           <div className="flex flex-col items-start">
             <span className="text-l-semibold text-neutral-900">
-              {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice())}
+              {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice(), currency)}
             </span>
             {hasDiscount() && getOriginalPrice() > 0 && (
               <div className="flex items-center">
                 <span className="text-s-regular mr-1 text-neutral-500 line-through">
-                  {formatCurrency(getOriginalPrice())}
+                  {formatCurrency(getOriginalPrice(), currency)}
                 </span>
                 <span className="text-s-regular bg-error-500 rounded-md p-1 text-white">
                   {handleBadgePromo(
@@ -407,7 +421,8 @@ export default function SelectHotel({
                     String(
                       Number(selectedVariant?.discountAmount || 0) *
                         getTotalQty()
-                    )
+                    ),
+                    currency
                   )}
                 </span>
               </div>

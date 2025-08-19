@@ -322,9 +322,9 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
             Area Wisata Terdekat:
           </p>
           <div className="grid grid-cols-12 gap-x-6 gap-y-2">
-            {nonPriorityDestinations.map((dest: HotelDestination) => (
+            {nonPriorityDestinations.map((dest: HotelDestination, index) => (
               <DestinationItem
-                key={`${dest.destinationName}`}
+                key={`${dest.destinationName}-${index}`}
                 destination={dest}
               />
             ))}

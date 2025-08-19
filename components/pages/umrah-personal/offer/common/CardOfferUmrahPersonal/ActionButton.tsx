@@ -132,6 +132,7 @@ const OfferButton: React.FC<{
           discountType: 'fixed',
           discountAmount: 0,
         },
+        currency: dataOffer.currency,
       }
 
       localStorage.setItem(

@@ -228,7 +228,10 @@ export default async function DetailPackage({
             </div>
             <div className="col-span-4 flex-col gap-4 max-lg:order-1 max-lg:flex">
               {/* Adjust grid for mobile responsive */}
-              <TitlePackageMobile title={detailData?.title} />
+              <TitlePackageMobile
+                title={detailData?.title}
+                currency={detailData?.currency}
+              />
               <TravelDetail
                 organizationInstance={detailData?.organizationInstance}
                 title={detailData.title}

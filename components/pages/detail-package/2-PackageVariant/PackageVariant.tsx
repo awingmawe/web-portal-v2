@@ -215,6 +215,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         variantId: selectedVariant?.id,
         variant: selectedVariant,
         name: selectedVariant?.name,
+        currency: pkg.currency,
       })
     )
     router.push('/checkout')
@@ -329,6 +330,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                   title={pkg.title}
                   variants={variants}
                   image={pkg.thumbnail}
+                  currency={pkg.currency}
                   token={token || ''}
                 >
                   <div
@@ -435,6 +437,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       {/* Hotel selection with Popover */}
       {variants.length > 0 && (
         <SelectHotel
+          currency={pkg.currency}
           disabledAddOnly={
             isLinkAja
               ? Number(selectedVariant?.package.dpAmount) *
@@ -465,27 +468,30 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
             Checkout Sekarang
           </Button>
           {/* </Link> */}
-
-          <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
-            atau
-          </div>
-          <Link
-            href={`/banking/credit`}
-            onClick={() => handlePushEvent('click_paylater')}
-          >
-            <Button
-              className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
-              variant="outline"
-              size="lg"
-              id="btn-pay-later-desktop"
-            >
-              Pesan Sekarang, Bayar Nanti
-            </Button>
-          </Link>
-          <CheckAvailibility
-            token={token || ''}
-            handlePushEvent={handlePushEvent}
-          />
+          {pkg.packageType === PACKAGE_TYPE.UMRAH && (
+            <Fragment>
+              <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
+                atau
+              </div>
+              <Link
+                href={`/banking/credit`}
+                onClick={() => handlePushEvent('click_paylater')}
+              >
+                <Button
+                  className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
+                  variant="outline"
+                  size="lg"
+                  id="btn-pay-later-desktop"
+                >
+                  Pesan Sekarang, Bayar Nanti
+                </Button>
+              </Link>
+              <CheckAvailibility
+                token={token || ''}
+                handlePushEvent={handlePushEvent}
+              />
+            </Fragment>
+          )}
         </div>
       ) : (
         <div>

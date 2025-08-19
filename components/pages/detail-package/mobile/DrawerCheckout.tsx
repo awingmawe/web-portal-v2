@@ -38,12 +38,14 @@ const CheckoutDrawerMobile = React.memo(
     image,
     variants,
     token,
+    currency,
   }: {
     children: React.ReactNode
     title: string
     variants: PackageVariant[]
     image?: string
     token: string
+    currency: string
   }) => {
     const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
     const { shareViaWhatsApp } = useGallerySharing()
@@ -95,6 +97,7 @@ const CheckoutDrawerMobile = React.memo(
           variantId: selectedVariant?.id,
           variant: selectedVariant,
           name: selectedVariant?.name,
+          currency,
         })
       )
       window.location.href = '/checkout'
@@ -191,6 +194,7 @@ const CheckoutDrawerMobile = React.memo(
                   <div className="mb-35">
                     <SelectHotel
                       isMobile
+                      currency={currency}
                       disabledAddOnly={
                         isLinkAja
                           ? Number(selectedVariant?.package.dpAmount) *
@@ -217,12 +221,12 @@ const CheckoutDrawerMobile = React.memo(
                         <span className="text-l-semibold text-neutral-900">
                           {isEmpty(getPrice())
                             ? '-'
-                            : formatCurrency(getPrice())}
+                            : formatCurrency(getPrice(), currency)}
                         </span>
                         {hasDiscount() && getOriginalPrice() > 0 && (
                           <div className="flex items-center">
                             <span className="text-s-regular mr-1 text-neutral-500 line-through">
-                              {formatCurrency(getOriginalPrice())}
+                              {formatCurrency(getOriginalPrice(), currency)}
                             </span>
                             <span className="text-s-regular bg-error-500 rounded-md p-1 text-white">
                               {handleBadgePromo(
