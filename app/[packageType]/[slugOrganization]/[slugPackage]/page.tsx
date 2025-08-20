@@ -252,6 +252,8 @@ export default async function DetailPackage({
         <Footer type="compact" className="max-lg:hidden" />
         <ActionCheckoutMobile
           title={detailData?.title}
+          currency={detailData?.currency}
+          packageType={detailData?.packageType}
           variants={packageVariants.results}
           organization={detailData?.organizationInstance}
           thumbnail={detailData?.thumbnail}

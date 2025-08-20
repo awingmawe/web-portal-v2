@@ -18,6 +18,7 @@ import {
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
   LOCAL_STORAGE_SELECTED_VARIANT,
+  PACKAGE_TYPE,
 } from '@/constant/env'
 import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { PackageVariant } from '@/constant/types/PackageProps'
@@ -39,6 +40,7 @@ const CheckoutDrawerMobile = React.memo(
     variants,
     token,
     currency,
+    packageType,
   }: {
     children: React.ReactNode
     title: string
@@ -46,6 +48,7 @@ const CheckoutDrawerMobile = React.memo(
     image?: string
     token: string
     currency: string
+    packageType: string
   }) => {
     const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
     const { shareViaWhatsApp } = useGallerySharing()
@@ -63,6 +66,7 @@ const CheckoutDrawerMobile = React.memo(
       formattedArrival,
       formattedDeparture,
       getTotalQty,
+      availableRoomTypes,
     } = usePackageVariant()
 
     const variantName =
@@ -195,6 +199,7 @@ const CheckoutDrawerMobile = React.memo(
                     <SelectHotel
                       isMobile
                       currency={currency}
+                      packageType={packageType}
                       disabledAddOnly={
                         isLinkAja
                           ? Number(selectedVariant?.package.dpAmount) *
@@ -251,20 +256,29 @@ const CheckoutDrawerMobile = React.memo(
                       >
                         <WhatsappIcon size={48} />
                       </div>
-                      <Link href={`/banking/credit`} className="w-full">
-                        <Button
-                          variant="outline"
-                          className="border-primary-500 w-full rounded-full"
-                          size="md"
-                          id="btn-pay-later-mobile"
-                        >
-                          <p className="text-xs-semibold">Bayar Nanti</p>
-                        </Button>
-                      </Link>
+                      {packageType === PACKAGE_TYPE.UMRAH && (
+                        <Link href={`/banking/credit`} className="w-full">
+                          <Button
+                            variant="outline"
+                            className="border-primary-500 w-full rounded-full"
+                            size="md"
+                            id="btn-pay-later-mobile"
+                          >
+                            <p className="text-xs-semibold">Bayar Nanti</p>
+                          </Button>
+                        </Link>
+                      )}
                       <Button
                         className="w-full py-3"
                         variant="default"
-                        disabled={isEmptyRoomType}
+                        disabled={
+                          isEmptyRoomType &&
+                          availableRoomTypes.double &&
+                          availableRoomTypes.triple &&
+                          availableRoomTypes.quad
+                            ? true
+                            : false
+                        }
                         onClick={handleLocalStorage}
                       >
                         Checkout Sekarang

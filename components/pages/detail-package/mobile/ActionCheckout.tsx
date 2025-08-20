@@ -3,7 +3,7 @@
 import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import { Button } from '@/components/ui/button'
-import { CALL_CENTER } from '@/constant/env'
+import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
@@ -18,17 +18,22 @@ interface ActionCheckoutProps {
   organization?: OrganizationInstance
   thumbnail?: string
   token: string
+  packageType: string
+  currency: string
 }
 
 export default function ActionCheckoutMobile({
   variants,
   title,
+  packageType,
   // organization,
   thumbnail,
   token,
+  currency,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
-  const { isLoading, selectedVariant, setVariants } = usePackageVariant()
+  const { isLoading, selectedVariant, setVariants, availableRoomTypes } =
+    usePackageVariant()
 
   // Initialize variants in context when component mounts
   useEffect(() => {
@@ -38,18 +43,6 @@ export default function ActionCheckoutMobile({
   }, [variants, setVariants])
 
   const phoneNumberUsed = CALL_CENTER
-
-  const availableRoomTypes = useMemo(() => {
-    if (!selectedVariant) return { double: false, triple: false, quad: false }
-
-    return {
-      double:
-        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
-      triple:
-        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
-      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
-    }
-  }, [selectedVariant])
 
   const hasAvailableRoomTypes = useMemo(() => {
     return Object.values(availableRoomTypes).some((available) => available)
@@ -94,23 +87,27 @@ export default function ActionCheckoutMobile({
           >
             <WhatsappIcon size={48} />
           </div>
-          <Link href={`/banking/credit`} className="w-full">
-            <Button
-              variant="outline"
-              className="border-primary-500 w-full rounded-full"
-              size="md"
-              id="btn-pay-later-mobile"
-            >
-              <p className="text-xs-semibold">Bayar Nanti</p>
-            </Button>
-          </Link>
+          {packageType === PACKAGE_TYPE.UMRAH && (
+            <Link href={`/banking/credit`} className="w-full">
+              <Button
+                variant="outline"
+                className="border-primary-500 w-full rounded-full"
+                size="md"
+                id="btn-pay-later-mobile"
+              >
+                <p className="text-xs-semibold">Bayar Nanti</p>
+              </Button>
+            </Link>
+          )}
           {/* <Link
             href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
             className="w-full"
           > */}
           <CheckoutDrawerMobile
             title={title}
+            packageType={packageType}
             variants={variants}
+            currency={currency}
             image={thumbnail}
             token={token}
           >

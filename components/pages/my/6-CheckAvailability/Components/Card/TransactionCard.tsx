@@ -216,7 +216,6 @@ export default function TransactionCard({
           <Fragment>
             <TransactionCardFooter
               // detailOnly={detailOnly}
-              id={id}
               status={status}
               transaction={transaction}
               travelName={travelName}

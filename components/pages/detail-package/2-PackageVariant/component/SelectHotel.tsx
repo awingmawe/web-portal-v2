@@ -1,13 +1,20 @@
 'use client'
 
 import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
+import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { RoomType, usePackageVariant } from '@/contexts/package-variant-context'
 import { formatCurrency, isEmpty } from '@/lib/utils'
 import { Minus, Plus } from 'lucide-react'
-import { Fragment, useEffect, useMemo } from 'react'
+import { Fragment, useEffect } from 'react'
 
 export interface SelectHotelProps {
   isMobile?: boolean
@@ -16,11 +23,12 @@ export interface SelectHotelProps {
   defaultPackageVariantId?: number | null
   totalManifest?: number
   disabled?: boolean
-  currency: string
+  currency?: string
   variant?: 'normal' | 'checkout'
   disabledAddOnly?: boolean
   totalQty?: number
   hideTotalPrice?: boolean
+  packageType?: string
   onChange?: (roomType: RoomType, price: number) => void
 }
 
@@ -36,6 +44,7 @@ export default function SelectHotel({
   totalManifest,
   totalQty,
   currency,
+  packageType,
   onChange,
 }: SelectHotelProps) {
   const {
@@ -52,6 +61,7 @@ export default function SelectHotel({
     handleBadgePromo,
     getVariantsPrice,
     getTotalQty,
+    availableRoomTypes,
   } = usePackageVariant()
 
   useEffect(() => {
@@ -77,18 +87,6 @@ export default function SelectHotel({
     setSelectedVariant,
     setSelectedVariantId,
   ])
-
-  const availableRoomTypes = useMemo(() => {
-    if (!selectedVariant) return { double: false, triple: false, quad: false }
-
-    return {
-      double:
-        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
-      triple:
-        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
-      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
-    }
-  }, [selectedVariant])
 
   const handleQuantityChange = (roomType: string, change: number) => {
     const prev = selectedRoomType || {}
@@ -405,7 +403,37 @@ export default function SelectHotel({
       {/* Total price */}
       {variant == 'normal' && !hideTotalPrice && (
         <div className="mt-3 flex items-center justify-between max-lg:hidden">
-          <div className="text-m-regular text-neutral-500">Total Harga</div>
+          <div className="text-m-regular flex items-center gap-1 text-neutral-500">
+            Total Harga
+            {packageType === PACKAGE_TYPE.HAJJ && (
+              <Tooltip>
+                <TooltipTrigger>
+                  <MessageQuestionIcon size={16} />
+                </TooltipTrigger>
+                <TooltipContent
+                  className="max-w-[250px] bg-white p-4"
+                  arrowColor="bg-white fill-white"
+                >
+                  <div className="flex flex-col gap-2">
+                    <p className="text-m-medium text-[#484848]">
+                      Ketentuan Harga
+                    </p>
+                    <p className="text-s-regular text-[#333]">
+                      Perlu diperhatikan bahwa uang muka yang kamu bayar saat
+                      ini berdasar pada harga tahun 2025. <br />
+                      <br />
+                      Sisa pelunasan yang harus kamu bayar dapat mengalami
+                      penyesuaian sesuai dengan perkembangan biaya akomodasi,
+                      tiket, atau regulasi Haji. <br />
+                      <br />
+                      Pihak yang bertanggung jawab atas penyesuaian harga adalah
+                      pihak travel.
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
           <div className="flex flex-col items-start">
             <span className="text-l-semibold text-neutral-900">
               {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice(), currency)}

@@ -227,6 +227,7 @@ const CheckoutPage = () => {
                 <SelectHotel
                   variant="checkout"
                   currency={detailVariant?.currency}
+                  packageType={detailVariant?.packageType}
                   totalQty={totalQty}
                   isMobile
                   defaultValue={selectedVariant?.roomType}

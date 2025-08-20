@@ -1,0 +1,90 @@
+import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
+import { Button } from '@/components/ui/button'
+import { PACKAGE_TYPE } from '@/constant/env'
+import Link from 'next/link'
+import React, { Fragment } from 'react'
+
+interface ActionButtonsProps {
+  variants: any[]
+  availableRoomTypes: {
+    double: boolean
+    triple: boolean
+    quad: boolean
+  }
+  packageType: string
+  token: string
+  onCheckout: () => void
+  handlePushEvent: (name: string, withVariant?: boolean) => void
+}
+
+const ActionButtons: React.FC<ActionButtonsProps> = ({
+  variants,
+  availableRoomTypes,
+  packageType,
+  token,
+  onCheckout,
+  handlePushEvent,
+}) => {
+  if (variants.length > 0) {
+    return (
+      <div>
+        <Button
+          className="w-full rounded-full py-3 max-lg:hidden"
+          variant="default"
+          size="lg"
+          id="btn-checkout-desktop"
+          disabled={
+            availableRoomTypes.double ||
+            availableRoomTypes.triple ||
+            availableRoomTypes.quad
+              ? false
+              : true
+          }
+          onClick={onCheckout}
+        >
+          Checkout Sekarang
+        </Button>
+        {packageType === PACKAGE_TYPE.UMRAH && (
+          <Fragment>
+            <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
+              atau
+            </div>
+            <Link
+              href={`/banking/credit`}
+              onClick={() => handlePushEvent('click_paylater')}
+            >
+              <Button
+                className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
+                variant="outline"
+                size="lg"
+                id="btn-pay-later-desktop"
+              >
+                Pesan Sekarang, Bayar Nanti
+              </Button>
+            </Link>
+            <CheckAvailibility
+              token={token}
+              handlePushEvent={handlePushEvent}
+            />
+          </Fragment>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <Button
+        className="w-full rounded-full py-3 max-lg:hidden"
+        variant="outline"
+        disabled
+        size="lg"
+      >
+        Kursi tidak tersedia
+      </Button>
+      <CheckAvailibility token={token} handlePushEvent={handlePushEvent} />
+    </div>
+  )
+}
+
+export default ActionButtons

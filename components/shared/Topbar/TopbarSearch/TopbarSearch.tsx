@@ -127,7 +127,7 @@ const TopbarSearch: React.FC = () => {
                   cardData={cardData}
                   isLoadingResults={isLoadingResults}
                   searchQuery={searchQuery}
-                  handleSearchDesktop={handleSearchDesktop}
+                  handleSearchDesktop={handleSearchDesktop(activeSlug)}
                 />
               </PopoverContent>
             </Popover>

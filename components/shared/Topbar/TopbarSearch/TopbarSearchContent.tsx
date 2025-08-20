@@ -108,7 +108,7 @@ interface SearchResultsFooterProps {
   isLoadingResults: boolean
   searchQuery: string
   handleSearchDesktop: string
-  addToHistory: () => void
+  addToHistory?: () => void
 }
 
 export const SearchResultsFooter: React.FC<SearchResultsFooterProps> = ({

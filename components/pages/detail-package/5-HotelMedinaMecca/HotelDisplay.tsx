@@ -1,5 +1,6 @@
 'use client'
 
+import { InfoIcon } from '@/components/icons/info'
 import { MaximizeIcon } from '@/components/icons/maximize'
 import { MosqueIcon } from '@/components/icons/mosque'
 import { StarIconPrimary } from '@/components/icons/star'
@@ -14,6 +15,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { GalleryImage } from '@/constant/types/GalleryProps'
 import { Hotel, HotelDestination } from '@/constant/types/HotelProps'
 import { Package } from '@/constant/types/PackageProps'
@@ -234,9 +236,21 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
         )}
       </div>
 
+      {/* Information Hotel */}
+      {detailData.packageType === PACKAGE_TYPE.HAJJ && (
+        <div
+          className={`bg-info-100 text-info-800 mt-3 flex items-center rounded-lg px-3 py-2`}
+        >
+          <InfoIcon className="text-info-800 mr-2 min-w-4" size={16} />
+          <p className="text-s-regular">
+            Informasi hotel dapat berubah sewaktu-waktu sesuai kebijakan dan
+            ketentuan dari pihak travel
+          </p>
+        </div>
+      )}
       {/* Distance information */}
       {priorityDestinations.length > 0 && (
-        <div className="mb-1 flex items-center gap-[9px]">
+        <div className="mt-3 mb-1 flex items-center gap-[9px]">
           <MosqueIcon size={16} />
           <p className="text-s-regular text-neutral-500">
             {hotel && !isEmpty(hotelDestination)
