@@ -117,7 +117,7 @@ export default function SelectHotel({
   const isLimitReached = totalManifest ? totalQty === totalManifest : false
 
   return (
-    <div>
+    <Fragment>
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
         {variant == 'normal' && (
           <div className="text-s-regular mb-2 text-neutral-800 max-lg:text-sm max-lg:font-semibold">
@@ -458,6 +458,6 @@ export default function SelectHotel({
           </div>
         </div>
       )}
-    </div>
+    </Fragment>
   )
 }

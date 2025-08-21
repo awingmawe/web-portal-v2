@@ -1,7 +1,7 @@
-import { ArrowLongIcon } from '@/components/icons/arrow'
 import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
+import TravelDates from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
 import BadgePromo from '@/components/shared/Badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -30,7 +30,7 @@ import Placeholder from '@/public/images/no-image-placeholder.png'
 import { X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
 const CheckoutDrawerMobile = React.memo(
   ({
@@ -41,6 +41,7 @@ const CheckoutDrawerMobile = React.memo(
     token,
     currency,
     packageType,
+    variantType,
   }: {
     children: React.ReactNode
     title: string
@@ -49,8 +50,14 @@ const CheckoutDrawerMobile = React.memo(
     token: string
     currency: string
     packageType: string
+    variantType: string
   }) => {
-    const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+    const [isLinkAja, setIsLinkAja] = useState(false)
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
+      }
+    }, [])
     const { shareViaWhatsApp } = useGallerySharing()
     const {
       selectedVariant,
@@ -125,6 +132,7 @@ const CheckoutDrawerMobile = React.memo(
             <div className="flex flex-col gap-3">
               {selectedVariant && (
                 <Fragment>
+                  {/* Image and Name Package */}
                   <div className="flex items-center gap-3">
                     <Image
                       src={image || Placeholder}
@@ -139,60 +147,53 @@ const CheckoutDrawerMobile = React.memo(
                       </p>
                     </div>
                   </div>
-                  <div className="text-s-semibold text-neutral-900">Varian</div>
-                  <div className="no-scrollbar flex flex-wrap items-center gap-4 gap-y-6 max-lg:-mx-2 max-lg:-mt-2.5 max-lg:h-[100px] max-lg:flex-nowrap max-lg:overflow-x-auto max-lg:px-2">
+
+                  {/* Variants Section */}
+                  <div className="text-s-regular text-neutral-800 max-lg:hidden">
+                    Varian
+                  </div>
+                  <div
+                    className={`no-scrollbar flex flex-nowrap items-center gap-4 overflow-x-auto px-2`}
+                  >
                     {variants.map((variant) => (
                       <div
                         key={variant.id}
                         id={`variant-btn-${variant.id}`}
                         onClick={() => setSelectedVariantId(variant.id)}
-                        className={`${dissolve} hover:bg-primary-100 relative min-w-[90px] cursor-pointer rounded-lg p-2.5 text-nowrap max-lg:flex-shrink-0 ${
+                        className={`${dissolve} ${variants.some((e) => e.discountAmount != '0') ? 'mt-5.5 px-2' : ''} hover:bg-primary-100 relative min-w-[90px] flex-shrink-0 cursor-pointer rounded-lg p-2.5 ${
                           selectedVariantId === variant.id
                             ? 'border-primary-500 bg-primary-100 border-2'
                             : 'border-2 border-neutral-200 bg-transparent'
                         }`}
                       >
-                        <p className="text-m-regular text-center text-neutral-900">
+                        <p className="text-m-regular text-neutral-900">
                           {variant.name || `Varian ${variant.id}`}
                         </p>
                         {variant.discountAmount &&
                           Number(variant.discountAmount) > 0 && (
                             <BadgePromo
-                              className="!text-s-semibold -top-[25px]"
-                              title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount)}`}
+                              className="!text-s-semibold -top-[25px] left-0"
+                              title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount, currency)}`}
                             />
                           )}
                       </div>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between gap-2  max-lg:px-2">
-                    <div className="flex flex-col items-center justify-center gap-1">
-                      <div className="text-s-medium text-nowrap text-neutral-500">
-                        Tanggal Berangkat
-                      </div>
-                      <span className="text-m-regular text-nowrap text-neutral-900">
-                        {formattedDeparture}
-                      </span>
-                    </div>
+                  <TravelDates
+                    variants={variants}
+                    selectedVariant={selectedVariant}
+                    packageType={packageType}
+                    formattedDeparture={formattedDeparture}
+                    formattedArrival={formattedArrival}
+                    numberOfDays={numberOfDays}
+                    variantType={variantType}
+                    waitingPeriod={selectedVariant?.waitingPeriod}
+                  />
 
-                    <div className="flex flex-col items-center">
-                      <div className="text-s-regular -mb-2 text-neutral-300">
-                        {numberOfDays} Hari
-                      </div>
-                      <ArrowLongIcon />
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center gap-1">
-                      <div className="text-s-medium text-nowrap text-neutral-500">
-                        Tanggal Pulang
-                      </div>
-                      <span className="text-m-regular text-nowrap text-neutral-900">
-                        {formattedArrival}
-                      </span>
-                    </div>
-                  </div>
-                  <CheckAvailibility token={token || ''} />
+                  {packageType === PACKAGE_TYPE.UMRAH && (
+                    <CheckAvailibility token={token || ''} />
+                  )}
 
                   {/* Room Type Selection */}
                   <div className="mb-35">

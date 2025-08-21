@@ -27,7 +27,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 }) => {
   if (variants.length > 0) {
     return (
-      <div>
+      <Fragment>
         <Button
           className="w-full rounded-full py-3 max-lg:hidden"
           variant="default"
@@ -68,12 +68,12 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             />
           </Fragment>
         )}
-      </div>
+      </Fragment>
     )
   }
 
   return (
-    <div>
+    <Fragment>
       <Button
         className="w-full rounded-full py-3 max-lg:hidden"
         variant="outline"
@@ -83,7 +83,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         Kursi tidak tersedia
       </Button>
       <CheckAvailibility token={token} handlePushEvent={handlePushEvent} />
-    </div>
+    </Fragment>
   )
 }
 

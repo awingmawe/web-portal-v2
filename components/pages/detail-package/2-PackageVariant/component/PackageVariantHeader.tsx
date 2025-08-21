@@ -12,9 +12,7 @@ const PackageVariantHeader: React.FC<PackageVariantHeaderProps> = ({
       <p className="heading-4-medium text-neutral-900 max-lg:hidden">
         Cek Harga!
       </p>
-      <p className="text-m-semibold mb-2 text-neutral-900 lg:hidden">
-        Varian Paket
-      </p>
+      <p className="text-m-semibold text-neutral-900 lg:hidden">Varian Paket</p>
     </div>
   )
 }

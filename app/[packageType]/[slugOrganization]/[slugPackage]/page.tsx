@@ -257,6 +257,7 @@ export default async function DetailPackage({
           variants={packageVariants.results}
           organization={detailData?.organizationInstance}
           thumbnail={detailData?.thumbnail}
+          variantType={detailData?.variantType}
           token={token}
         />
       </GalleryProvider>

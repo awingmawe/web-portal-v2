@@ -10,7 +10,7 @@ import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import Link from 'next/link'
-import { useEffect, useMemo } from 'react'
+import { Fragment, useEffect, useMemo } from 'react'
 
 interface ActionCheckoutProps {
   variants: PackageVariant[]
@@ -20,12 +20,14 @@ interface ActionCheckoutProps {
   token: string
   packageType: string
   currency: string
+  variantType: string
 }
 
 export default function ActionCheckoutMobile({
   variants,
   title,
   packageType,
+  variantType,
   // organization,
   thumbnail,
   token,
@@ -77,10 +79,10 @@ export default function ActionCheckoutMobile({
 
   return (
     <div
-      className={`bg-neutral-0 fixed bottom-0 z-10 flex w-full items-center gap-1.5 border-t border-neutral-100 px-4 py-3 shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] lg:hidden ${dissolve}`}
+      className={`bg-neutral-0 fixed bottom-0 z-10 flex w-full items-center gap-1.5 border-t border-neutral-100 px-1 py-3 shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] lg:hidden ${dissolve}`}
     >
       {variants.length > 0 ? (
-        <>
+        <Fragment>
           <div
             onClick={handleWhatsAppShare}
             className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
@@ -99,10 +101,6 @@ export default function ActionCheckoutMobile({
               </Button>
             </Link>
           )}
-          {/* <Link
-            href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
-            className="w-full"
-          > */}
           <CheckoutDrawerMobile
             title={title}
             packageType={packageType}
@@ -110,6 +108,7 @@ export default function ActionCheckoutMobile({
             currency={currency}
             image={thumbnail}
             token={token}
+            variantType={variantType}
           >
             <Button
               variant="default"
@@ -121,8 +120,7 @@ export default function ActionCheckoutMobile({
               <p className="text-xs-semibold">Checkout Sekarang</p>
             </Button>
           </CheckoutDrawerMobile>
-          {/* </Link> */}
-        </>
+        </Fragment>
       ) : (
         <Button
           className="w-full rounded-full py-3"

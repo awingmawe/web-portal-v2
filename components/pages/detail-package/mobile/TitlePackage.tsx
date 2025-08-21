@@ -49,15 +49,20 @@ export default function TitlePackageMobile({
       {selectedVariant && (
         <>
           <p className="text-s-regular text-neutral-600">{variantName}</p>
-          <div className="mt-1 flex items-center gap-2">
-            {hasDiscount() && (
-              <span className="text-s-regular text-neutral-500 line-through">
-                {formatCurrency(getOriginalPriceSelected(), currency)}
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <div className="flex flex-col gap-1">
+              <p className="text-xs-medium text-neutral-500">
+                Harga Mulai Dari
+              </p>
+              <span className="text-l-semibold text-neutral-900">
+                {formatCurrency(getPriceSelected(), currency)}
               </span>
-            )}
-            <span className="text-l-semibold text-primary-500">
-              {formatCurrency(getPriceSelected(), currency)}
-            </span>
+              {hasDiscount() && (
+                <span className="text-s-regular text-neutral-500 line-through">
+                  {formatCurrency(getOriginalPriceSelected(), currency)}
+                </span>
+              )}
+            </div>
           </div>
         </>
       )}

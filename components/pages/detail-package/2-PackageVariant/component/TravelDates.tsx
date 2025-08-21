@@ -146,7 +146,7 @@ const TravelDates: React.FC<TravelDatesProps> = ({
 
   if (packageType === PACKAGE_TYPE.UMRAH) {
     return (
-      <div className="flex items-center justify-between max-lg:my-2">
+      <div className="flex items-center justify-between max-lg:gap-2">
         <div className="flex flex-col items-center justify-center gap-1">
           <div className="text-s-medium text-neutral-500">
             Tanggal Berangkat

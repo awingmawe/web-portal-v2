@@ -16,7 +16,7 @@ import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNum
 import { isNullOrEmpty } from '@/lib/utils'
 import { checkAvailibility, getStatusStock } from '@/services/umrah-service'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 interface CheckAvailibilityProps {
   type?: 'normal' | 'footer'
@@ -106,9 +106,9 @@ export default function CheckAvailibility({
     await handleSendOtp(setIsPhoneNumberModal)
   }
   return (
-    <div>
+    <Fragment>
       {token ? (
-        <>
+        <Fragment>
           <DrawerCheckAvailibility
             open={isQuotaDrawerOpen}
             setOpen={setIsQuotaDrawerOpen}
@@ -133,7 +133,7 @@ export default function CheckAvailibility({
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
           </Button>
-        </>
+        </Fragment>
       ) : (
         <Button
           className="w-full rounded-full py-2 lg:hidden"
@@ -226,6 +226,6 @@ export default function CheckAvailibility({
           <ArrowIcon size={16} className="-rotate-45 text-neutral-900" />
         </div>
       )}
-    </div>
+    </Fragment>
   )
 }
