@@ -120,7 +120,7 @@ export default function SelectHotel({
     <Fragment>
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
         {variant == 'normal' && (
-          <div className="text-s-regular mb-2 text-neutral-800 max-lg:text-sm max-lg:font-semibold">
+          <div className="text-s-regular mb-2 text-neutral-800 max-lg:text-sm">
             Jumlah Jemaah Per Kamar
           </div>
         )}
@@ -134,11 +134,11 @@ export default function SelectHotel({
                   : 'border-neutral-200 opacity-50'
             } bg-white px-1 py-3 shadow-none`}
           >
-            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
+            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-center">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
+                className={`flex max-lg:items-center ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col max-lg:flex-row max-lg:gap-2 lg:space-y-3'}`}
               >
-                <BedIcon3 className="mb-2 text-neutral-700" />
+                <BedIcon3 className="text-neutral-700 lg:mb-2" />
                 <div
                   className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
                 >
@@ -170,7 +170,7 @@ export default function SelectHotel({
                 </div>
               </div>
               <div
-                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px] max-lg:m-0`}
               >
                 {selectedRoomType?.double ? (
                   <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
@@ -224,11 +224,11 @@ export default function SelectHotel({
                   : 'border-neutral-200 opacity-50'
             } bg-white px-1 py-3 shadow-none`}
           >
-            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
+            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-center">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
+                className={`flex max-lg:items-center ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col max-lg:flex-row max-lg:gap-2 lg:space-y-3'}`}
               >
-                <BedIcon2 className="mb-2 text-neutral-700" />
+                <BedIcon2 className="text-neutral-700 lg:mb-2" />
                 <div
                   className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
                 >
@@ -260,7 +260,7 @@ export default function SelectHotel({
                 </div>
               </div>
               <div
-                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px] max-lg:m-0`}
               >
                 {selectedRoomType?.triple ? (
                   <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
@@ -314,11 +314,11 @@ export default function SelectHotel({
                   : 'border-neutral-200 opacity-50'
             } bg-white px-1 py-3 shadow-none`}
           >
-            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
+            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-center">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
+                className={`flex max-lg:items-center ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col max-lg:flex-row max-lg:gap-2 lg:space-y-3'}`}
               >
-                <BedIcon2 className="mb-2 text-neutral-700" />
+                <BedIcon2 className="text-neutral-700 lg:mb-2" />
                 <div
                   className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
                 >
@@ -350,7 +350,7 @@ export default function SelectHotel({
                 </div>
               </div>
               <div
-                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px] max-lg:m-0`}
               >
                 {selectedRoomType?.quad ? (
                   <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">

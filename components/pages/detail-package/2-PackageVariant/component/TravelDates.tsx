@@ -75,6 +75,7 @@ interface TravelDatesProps {
   numberOfDays: number
   variantType: string
   waitingPeriod: string | null | undefined
+  context: 'main' | 'drawer'
 }
 
 const TravelDates: React.FC<TravelDatesProps> = ({
@@ -86,7 +87,9 @@ const TravelDates: React.FC<TravelDatesProps> = ({
   numberOfDays,
   variantType,
   waitingPeriod,
+  context,
 }) => {
+  const [isOpen, setIsOpen] = React.useState(false)
   // Format departure date based on variant type - matching CardPackage logic
   const getFormattedDepartureDate = () => {
     try {
@@ -182,24 +185,46 @@ const TravelDates: React.FC<TravelDatesProps> = ({
             <p className="text-s-medium text-neutral-500">
               Estimasi Keberangkatan
             </p>
-            <Tooltip>
-              <TooltipTrigger>
-                <MessageQuestionIcon size={16} />
-              </TooltipTrigger>
-              <TooltipContent
-                className="max-w-[250px] bg-white p-4"
-                arrowColor="bg-white fill-white"
-              >
-                <TooltipHajj
-                  title={TEXT_TOOLTIP.HAJJ_TITLE}
-                  description={
-                    variantType === PACKAGE_TYPE.HAJJ_SPECIAL
-                      ? TEXT_TOOLTIP.HAJJ_SPECIAL
-                      : TEXT_TOOLTIP.HAJJ_REGULAR
-                  }
-                />
-              </TooltipContent>
-            </Tooltip>
+            {/* it divide by 2 because to prevent conflict for tooltip content */}
+            {context === 'drawer' ? (
+              <Tooltip open={isOpen} onOpenChange={setIsOpen}>
+                <TooltipTrigger onClick={() => setIsOpen(true)}>
+                  <MessageQuestionIcon size={16} />
+                </TooltipTrigger>
+                <TooltipContent
+                  className="z-[9999] max-w-[250px] bg-white p-4"
+                  arrowColor="bg-white fill-white"
+                >
+                  <TooltipHajj
+                    title={TEXT_TOOLTIP.HAJJ_TITLE}
+                    description={
+                      variantType === PACKAGE_TYPE.HAJJ_SPECIAL
+                        ? TEXT_TOOLTIP.HAJJ_SPECIAL
+                        : TEXT_TOOLTIP.HAJJ_REGULAR
+                    }
+                  />
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger>
+                  <MessageQuestionIcon size={16} />
+                </TooltipTrigger>
+                <TooltipContent
+                  className="z-99 max-w-[250px] bg-white p-4"
+                  arrowColor="bg-white fill-white"
+                >
+                  <TooltipHajj
+                    title={TEXT_TOOLTIP.HAJJ_TITLE}
+                    description={
+                      variantType === PACKAGE_TYPE.HAJJ_SPECIAL
+                        ? TEXT_TOOLTIP.HAJJ_SPECIAL
+                        : TEXT_TOOLTIP.HAJJ_REGULAR
+                    }
+                  />
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
           <p className="text-m-regular text-neutral-900">
             {displayDeparture} {displayArrival}

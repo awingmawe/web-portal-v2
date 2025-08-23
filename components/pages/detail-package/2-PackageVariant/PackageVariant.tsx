@@ -278,6 +278,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         numberOfDays={numberOfDays}
         variantType={pkg.variantType}
         waitingPeriod={selectedVariant?.waitingPeriod}
+        context="main"
       />
 
       {/* Divider */}

@@ -1,4 +1,3 @@
-import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
 import TravelDates from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
@@ -14,7 +13,6 @@ import {
 } from '@/components/ui/drawer'
 import {
   ACCOUNT_URL,
-  CALL_CENTER,
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
   LOCAL_STORAGE_SELECTED_VARIANT,
@@ -23,7 +21,6 @@ import {
 import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
-import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import { formatCurrency, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
@@ -58,7 +55,6 @@ const CheckoutDrawerMobile = React.memo(
         setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
       }
     }, [])
-    const { shareViaWhatsApp } = useGallerySharing()
     const {
       selectedVariant,
       getPrice,
@@ -79,15 +75,6 @@ const CheckoutDrawerMobile = React.memo(
     const variantName =
       selectedVariant?.name ||
       (selectedVariant ? `Varian ${selectedVariant.id}` : '')
-
-    const handleWhatsAppShare = () => {
-      // Include selected package variant information in the message if available
-      const variantInfo = selectedVariant
-        ? `\nVarian: ${selectedVariant.name || `Varian ${selectedVariant.id}`}`
-        : ''
-
-      shareViaWhatsApp(`${title}${variantInfo}`, CALL_CENTER)
-    }
 
     const handleLocalStorage = () => {
       if (!token && isEmpty(token)) {
@@ -153,7 +140,7 @@ const CheckoutDrawerMobile = React.memo(
                     Varian
                   </div>
                   <div
-                    className={`no-scrollbar flex flex-nowrap items-center gap-4 overflow-x-auto px-2`}
+                    className={`no-scrollbar flex flex-nowrap items-center gap-4 overflow-x-auto lg:px-2`}
                   >
                     {variants.map((variant) => (
                       <div
@@ -189,6 +176,7 @@ const CheckoutDrawerMobile = React.memo(
                     numberOfDays={numberOfDays}
                     variantType={variantType}
                     waitingPeriod={selectedVariant?.waitingPeriod}
+                    context="drawer"
                   />
 
                   {packageType === PACKAGE_TYPE.UMRAH && (
@@ -196,7 +184,7 @@ const CheckoutDrawerMobile = React.memo(
                   )}
 
                   {/* Room Type Selection */}
-                  <div className="mb-35">
+                  <div className="mb-30">
                     <SelectHotel
                       isMobile
                       currency={currency}
@@ -251,12 +239,6 @@ const CheckoutDrawerMobile = React.memo(
                       </div>
                     </div>
                     <div className="flex gap-1.5">
-                      <div
-                        onClick={handleWhatsAppShare}
-                        className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
-                      >
-                        <WhatsappIcon size={48} />
-                      </div>
                       {packageType === PACKAGE_TYPE.UMRAH && (
                         <Link href={`/banking/credit`} className="w-full">
                           <Button
@@ -282,7 +264,7 @@ const CheckoutDrawerMobile = React.memo(
                         }
                         onClick={handleLocalStorage}
                       >
-                        Checkout Sekarang
+                        Checkout
                       </Button>
                     </div>
                   </div>
