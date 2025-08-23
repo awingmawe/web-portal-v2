@@ -10,7 +10,9 @@ import {
   CALL_CENTER,
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
+  LOCAL_STORAGE_KURS_OPEN,
   LOCAL_STORAGE_SELECTED_VARIANT,
+  PACKAGE_TYPE,
 } from '@/constant/env'
 import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
@@ -23,6 +25,7 @@ import { dissolve } from '@/lib/animation-setup'
 import {
   getHotelRating,
   getTripDuration,
+  isEmpty,
   setLocalReferralCode,
 } from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
@@ -31,6 +34,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 // Import the new components
+import ModalKurs from '@/components/pages/detail-package/2-PackageVariant/modal/ModalKurs'
 import ActionButtons from './component/ActionButtons'
 import BottomActions from './component/BottomActions'
 import PackageVariantHeader from './component/PackageVariantHeader'
@@ -87,10 +91,16 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const { lg } = useTailwindBreakpoint()
   const [isLiked, setIsLiked] = useState(false)
   const [isSelectHotelModalOpen, setIsSelectHotelModalOpen] = useState(false)
+  const [isKursModalOpen, setIsKursModalOpen] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
 
   const statusLike = async () => {
     const statusLike = await getStatusLiked(pkg?.id as number)
     setIsLiked(statusLike.data)
+  }
+
+  const onCheckedChange = (checked: boolean) => {
+    setIsChecked(checked)
   }
 
   useEffect(() => {
@@ -166,19 +176,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     }, 500)
   }, [variants])
 
-  const handleCheckout = () => {
-    if (
-      selectedRoomType &&
-      Object.keys(selectedRoomType).length > 0 &&
-      Object.values(selectedRoomType).every((v) => v === 0)
-    ) {
-      setIsSelectHotelModalOpen(true)
-      return
-    }
-    if (!token) {
-      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
-      return
-    }
+  const handleSubmit = () => {
     localStorage.setItem(
       LOCAL_STORAGE_DETAIL_VARIANT,
       JSON.stringify(selectedVariant)
@@ -198,6 +196,34 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     )
     router.push('/checkout')
     handlePushEvent('click_checkout')
+  }
+
+  const handleCheckout = () => {
+    if (!token) {
+      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      return
+    }
+    if (isEmpty(localStorage.getItem(LOCAL_STORAGE_KURS_OPEN))) {
+      localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
+    }
+    if (
+      selectedRoomType &&
+      Object.keys(selectedRoomType).length > 0 &&
+      Object.values(selectedRoomType).every((v) => v === 0)
+    ) {
+      setIsSelectHotelModalOpen(true)
+      return
+    } else {
+      if (
+        pkg.packageType === PACKAGE_TYPE.HAJJ &&
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) !== 'true'
+      ) {
+        setIsKursModalOpen(true)
+        setIsSelectHotelModalOpen(false)
+      } else {
+        handleSubmit()
+      }
+    }
   }
 
   function handlePushEvent(name: string, withVariant = true) {
@@ -310,6 +336,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         packageType={pkg.packageType}
         token={token || ''}
         onCheckout={handleCheckout}
+        currency={pkg.currency}
         handlePushEvent={handlePushEvent}
       />
 
@@ -325,6 +352,17 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         handlePushEvent={handlePushEvent}
       />
 
+      {/* Modals for showing notes for kurs in USD and IDR for hajj packages */}
+      <ModalKurs
+        open={isKursModalOpen}
+        setOpen={setIsKursModalOpen}
+        onCheckout={handleSubmit}
+        checked={isChecked}
+        onCheckedChange={onCheckedChange}
+        currency={pkg.currency}
+      />
+
+      {/* Modal for selecting hotel if none of the rooms are chosen */}
       <ModalSelectHotel
         currency={pkg.currency}
         packageType={pkg.packageType}

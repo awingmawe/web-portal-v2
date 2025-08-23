@@ -1,6 +1,11 @@
+import { MessageQuestionIcon } from '@/components/icons/message-question'
+import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
-import TravelDates from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
+import TravelDates, {
+  TEXT_TOOLTIP,
+} from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
+import DrawerKurs from '@/components/pages/detail-package/mobile/DrawerKurs'
 import BadgePromo from '@/components/shared/Badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,15 +17,23 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import {
   ACCOUNT_URL,
+  CALL_CENTER,
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
+  LOCAL_STORAGE_KURS_OPEN,
   LOCAL_STORAGE_SELECTED_VARIANT,
   PACKAGE_TYPE,
 } from '@/constant/env'
 import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
+import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import { formatCurrency, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
@@ -49,12 +62,17 @@ const CheckoutDrawerMobile = React.memo(
     packageType: string
     variantType: string
   }) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [isOpenKurs, setIsOpenKurs] = useState(false)
+    const [isChecked, setIsChecked] = useState(false)
     const [isLinkAja, setIsLinkAja] = useState(false)
     useEffect(() => {
       if (typeof window !== 'undefined') {
         setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
       }
     }, [])
+    const { shareViaWhatsApp } = useGallerySharing()
+
     const {
       selectedVariant,
       getPrice,
@@ -72,6 +90,15 @@ const CheckoutDrawerMobile = React.memo(
       availableRoomTypes,
     } = usePackageVariant()
 
+    const handleWhatsAppShare = () => {
+      // Include selected package variant information in the message if available
+      const variantInfo = selectedVariant
+        ? `\nVarian: ${selectedVariant.name || `Varian ${selectedVariant.id}`}`
+        : ''
+
+      shareViaWhatsApp(`${title}${variantInfo}`, CALL_CENTER)
+    }
+
     const variantName =
       selectedVariant?.name ||
       (selectedVariant ? `Varian ${selectedVariant.id}` : '')
@@ -81,6 +108,17 @@ const CheckoutDrawerMobile = React.memo(
         window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
         return
       }
+      if (isEmpty(localStorage.getItem(LOCAL_STORAGE_KURS_OPEN))) {
+        localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
+      }
+      if (
+        packageType === PACKAGE_TYPE.HAJJ &&
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) !== 'true'
+      ) {
+        setIsOpenKurs(true)
+        return
+      }
+
       localStorage.setItem(
         LOCAL_STORAGE_DETAIL_VARIANT,
         JSON.stringify(selectedVariant)
@@ -99,6 +137,10 @@ const CheckoutDrawerMobile = React.memo(
         })
       )
       window.location.href = '/checkout'
+    }
+
+    const onCheckedChange = (checked: boolean) => {
+      setIsChecked(checked)
     }
 
     return (
@@ -136,18 +178,15 @@ const CheckoutDrawerMobile = React.memo(
                   </div>
 
                   {/* Variants Section */}
-                  <div className="text-s-regular text-neutral-800 max-lg:hidden">
-                    Varian
-                  </div>
                   <div
-                    className={`no-scrollbar flex flex-nowrap items-center gap-4 overflow-x-auto lg:px-2`}
+                    className={`no-scrollbar flex flex-nowrap items-center gap-4 overflow-x-auto ${variants.some((e) => e.discountAmount != '0') ? 'px-2' : ''}`}
                   >
                     {variants.map((variant) => (
                       <div
                         key={variant.id}
                         id={`variant-btn-${variant.id}`}
                         onClick={() => setSelectedVariantId(variant.id)}
-                        className={`${dissolve} ${variants.some((e) => e.discountAmount != '0') ? 'mt-5.5 px-2' : ''} hover:bg-primary-100 relative min-w-[90px] flex-shrink-0 cursor-pointer rounded-lg p-2.5 ${
+                        className={`${dissolve} ${variants.some((e) => e.discountAmount != '0') ? 'mt-5.5' : ''} hover:bg-primary-100 relative min-w-[90px] flex-shrink-0 cursor-pointer rounded-lg p-2.5 ${
                           selectedVariantId === variant.id
                             ? 'border-primary-500 bg-primary-100 border-2'
                             : 'border-2 border-neutral-200 bg-transparent'
@@ -184,7 +223,7 @@ const CheckoutDrawerMobile = React.memo(
                   )}
 
                   {/* Room Type Selection */}
-                  <div className="mb-30">
+                  <div className="mb-32.5">
                     <SelectHotel
                       isMobile
                       currency={currency}
@@ -207,9 +246,31 @@ const CheckoutDrawerMobile = React.memo(
                   <div
                     className={`bg-neutral-0 fixed bottom-0 left-0 z-10  w-full items-center px-4 py-3 lg:hidden ${dissolve}`}
                   >
-                    <div className="flex items-center justify-between py-3">
-                      <div className="text-m-regular text-neutral-500">
-                        Total Harga
+                    <div className="flex items-center justify-between pb-3">
+                      <div className="flex items-center gap-1">
+                        <div className="text-m-regular text-neutral-500">
+                          Total Harga
+                        </div>
+                        {packageType === PACKAGE_TYPE.HAJJ && (
+                          <Tooltip open={isOpen} onOpenChange={setIsOpen}>
+                            <TooltipTrigger onClick={() => setIsOpen(true)}>
+                              <MessageQuestionIcon size={16} />
+                            </TooltipTrigger>
+                            <TooltipContent
+                              className="z-[9999] max-w-[250px] bg-white p-4"
+                              arrowColor="bg-white fill-white"
+                            >
+                              <div className="flex flex-col gap-2">
+                                <p className="text-m-medium text-[#484848]">
+                                  Ketentuan Harga
+                                </p>
+                                <p className="text-s-regular text-[#333]">
+                                  {TEXT_TOOLTIP.PRICE}
+                                </p>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
                       </div>
                       <div className="flex flex-col items-start">
                         <span className="text-l-semibold text-neutral-900">
@@ -239,6 +300,12 @@ const CheckoutDrawerMobile = React.memo(
                       </div>
                     </div>
                     <div className="flex gap-1.5">
+                      <div
+                        onClick={handleWhatsAppShare}
+                        className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                      >
+                        <WhatsappIcon size={48} />
+                      </div>
                       {packageType === PACKAGE_TYPE.UMRAH && (
                         <Link href={`/banking/credit`} className="w-full">
                           <Button
@@ -273,6 +340,14 @@ const CheckoutDrawerMobile = React.memo(
             </div>
           </DrawerHeader>
         </DrawerContent>
+        <DrawerKurs
+          open={isOpenKurs}
+          setOpen={setIsOpenKurs}
+          onCheckout={handleLocalStorage}
+          currency={currency}
+          checked={isChecked}
+          onCheckedChange={onCheckedChange}
+        />
       </Drawer>
     )
   }

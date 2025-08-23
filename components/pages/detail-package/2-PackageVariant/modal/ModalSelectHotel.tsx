@@ -59,8 +59,8 @@ const ModalSelectHotel = ({
           </div>
         </DialogHeader>
 
-        <div className="">
-          <p className="text-m-regular mb-3 text-neutral-500">
+        <div className="flex flex-col gap-3">
+          <p className="text-m-regular text-neutral-500">
             Harap memilih jumlah kamar jemaah terlebih dahulu untuk bisa
             melakukan checkout.
           </p>
@@ -81,7 +81,7 @@ const ModalSelectHotel = ({
             }
           />
 
-          <div className="mt-5 flex items-end justify-end gap-3">
+          <div className="flex items-end justify-end gap-3">
             <Button
               variant="outline"
               className="border-primary-500 border-2 px-15 py-2.5"

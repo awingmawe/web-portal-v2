@@ -2,6 +2,7 @@
 
 import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
+import { TEXT_TOOLTIP } from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -402,7 +403,7 @@ export default function SelectHotel({
       </div>
       {/* Total price */}
       {variant == 'normal' && !hideTotalPrice && (
-        <div className="mt-3 flex items-center justify-between max-lg:hidden">
+        <div className="flex items-center justify-between max-lg:hidden">
           <div className="text-m-regular flex items-center gap-1 text-neutral-500">
             Total Harga
             {packageType === PACKAGE_TYPE.HAJJ && (
@@ -411,7 +412,7 @@ export default function SelectHotel({
                   <MessageQuestionIcon size={16} />
                 </TooltipTrigger>
                 <TooltipContent
-                  className="max-w-[250px] bg-white p-4"
+                  className="z-[9999] max-w-[250px] bg-white p-4"
                   arrowColor="bg-white fill-white"
                 >
                   <div className="flex flex-col gap-2">
@@ -419,15 +420,7 @@ export default function SelectHotel({
                       Ketentuan Harga
                     </p>
                     <p className="text-s-regular text-[#333]">
-                      Perlu diperhatikan bahwa uang muka yang kamu bayar saat
-                      ini berdasar pada harga tahun 2025. <br />
-                      <br />
-                      Sisa pelunasan yang harus kamu bayar dapat mengalami
-                      penyesuaian sesuai dengan perkembangan biaya akomodasi,
-                      tiket, atau regulasi Haji. <br />
-                      <br />
-                      Pihak yang bertanggung jawab atas penyesuaian harga adalah
-                      pihak travel.
+                      {TEXT_TOOLTIP.PRICE}
                     </p>
                   </div>
                 </TooltipContent>

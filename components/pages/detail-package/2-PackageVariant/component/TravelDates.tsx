@@ -11,7 +11,7 @@ import { addYears, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import React, { Fragment } from 'react'
 
-const TEXT_TOOLTIP = {
+export const TEXT_TOOLTIP = {
   HAJJ_TITLE: 'Waktu Keberangkatan',
   HAJJ_SPECIAL: (
     <>

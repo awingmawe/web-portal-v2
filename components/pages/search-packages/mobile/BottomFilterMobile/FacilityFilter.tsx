@@ -40,8 +40,8 @@ export const FacilityDrawer: React.FC<FacilityOptionsProps> = ({
       <div className="my-4 max-h-[200px] space-y-2 overflow-y-auto">
         {dataFacility.results.map((facility, index) => (
           <Checkbox
-            id={`facility-${facility.id}`}
-            key={facility.id}
+            id={`facility-${index}`}
+            key={`facility-${index}`}
             checked={isItemSelected(facility.code)}
             label={facility.name}
             border={index !== dataFacility.results.length - 1}

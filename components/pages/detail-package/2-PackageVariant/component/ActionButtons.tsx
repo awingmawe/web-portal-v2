@@ -13,6 +13,7 @@ interface ActionButtonsProps {
   }
   packageType: string
   token: string
+  currency: string
   onCheckout: () => void
   handlePushEvent: (name: string, withVariant?: boolean) => void
 }
@@ -44,9 +45,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         >
           Checkout Sekarang
         </Button>
+
         {packageType === PACKAGE_TYPE.UMRAH && (
           <Fragment>
-            <div className="text-s-regular my-1 text-center text-neutral-500 max-lg:hidden">
+            <div className="text-s-regular text-center text-neutral-500 max-lg:hidden">
               atau
             </div>
             <Link

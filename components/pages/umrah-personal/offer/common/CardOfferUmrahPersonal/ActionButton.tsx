@@ -1,7 +1,7 @@
-import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import BatalkanDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogBatalkan'
 import OfferDetailDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogDetailOffer'
 import SuccessBatalkanDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogSuccessBatalkan'
+import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import {
   LOCAL_STORAGE_DETAIL_VARIANT,

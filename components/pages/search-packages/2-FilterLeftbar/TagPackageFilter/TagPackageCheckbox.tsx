@@ -31,10 +31,10 @@ export const TagPackageOptions: React.FC<TagPackageOptionsProps> = ({
 
   return (
     <div className="max-h-[200px] space-y-2 overflow-y-auto">
-      {dataTagPackage.map((tagSlug) => (
+      {dataTagPackage.map((tagSlug, index) => (
         <Checkbox
           id={`tagSlug-${tagSlug.id}`}
-          key={tagSlug.id}
+          key={`tagSlug-${index}`}
           checked={isItemSelected(tagSlug.slug)}
           label={tagSlug.name}
           description={tagSlug.activePackageCount}
