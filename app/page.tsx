@@ -101,7 +101,6 @@ export default async function Home() {
     getPackageList({
       page: 1,
       size: 12,
-      section: 'regular',
       order: 'desc',
       orderBy: 'package.createdAt',
       packageType: 'hajj',
