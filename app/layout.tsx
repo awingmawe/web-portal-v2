@@ -2,7 +2,7 @@ import MazeAnalytics from '@/components/shared/MazeAnalytics'
 import QontakChatWidget from '@/components/shared/QontakChatWidget'
 import RemoveLocalReferralCode from '@/components/shared/RemoveLocalReferralCode'
 import { Toaster } from '@/components/ui/sonner'
-import { GTM_ID } from '@/constant/env'
+import { FACEBOOK_DOMAIN_VERIFICATION, GTM_ID } from '@/constant/env'
 import { ContextProviders } from '@/contexts/providers'
 import { cookieNames } from '@/services/common/cookie'
 import { GoogleTagManager } from '@next/third-parties/google'
@@ -30,6 +30,10 @@ export default async function RootLayout({
         <MazeAnalytics />
         <Suspense>
           <GoogleTagManager gtmId={GTM_ID as string} />
+          <meta
+            name="facebook-domain-verification"
+            content={FACEBOOK_DOMAIN_VERIFICATION}
+          />
 
           <ContextProviders>
             <SWRConfig>{children}</SWRConfig>

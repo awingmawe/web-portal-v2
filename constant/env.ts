@@ -20,6 +20,8 @@ export const LINKAJA_MAX_LIMIT = Number(
 export const IS_NOT_TRANSIT = ['GA', 'SV', 'JT']
 export const LOCAL_STORAGE_DETAIL_VARIANT = 'detailVariant'
 export const LOCAL_STORAGE_SELECTED_VARIANT = 'selectedVariant'
+export const FACEBOOK_DOMAIN_VERIFICATION =
+  process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION
 export const LOCAL_STORAGE_KURS_OPEN = 'isKursShowAgain'
 
 export const PACKAGE_TYPE = {
