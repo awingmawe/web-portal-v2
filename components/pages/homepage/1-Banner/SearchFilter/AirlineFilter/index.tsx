@@ -56,7 +56,7 @@ const AirlineFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
           </div>
         </div>
       </PopoverTrigger>
-      <PopoverContent align="start">
+      <PopoverContent align="start" data-lenis-prevent>
         <AirlineList
           selectedAirline={airline}
           onSelectAirline={setAirline}

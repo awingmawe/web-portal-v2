@@ -41,7 +41,7 @@ const TravelDetail = ({
 
   return (
     <div
-      className={`items-center justify-between border-b border-neutral-200 pb-4 ${mobile ? 'hidden max-lg:flex' : 'flex max-lg:hidden'} gap-2`}
+      className={`items-center justify-between border-t border-b border-neutral-200 py-4 ${mobile ? 'hidden max-lg:flex' : 'flex max-lg:hidden'} gap-2`}
     >
       <div className="flex items-center gap-3">
         <div className="rounded-full border border-neutral-200 p-[15px] max-lg:p-[7px]">

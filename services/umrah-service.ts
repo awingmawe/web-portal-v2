@@ -117,18 +117,26 @@ export async function getMinMaxPrice(): Promise<PriceParams> {
   }
 }
 
-export async function getTagPackagesEnum(): Promise<TagPackages[]> {
+export async function getTagPackagesEnum(
+  typePackage?: string
+): Promise<TagPackages[]> {
   try {
-    const response = await api.get(`/public/umrah/v1/tag/stats/count`)
+    const response = await api.get(
+      `/public/umrah/v1/tag/stats/count?type=${typePackage}`
+    )
     return response.data
   } catch (error) {
     console.error('Error fetching get tag packages enum:', error)
     throw error
   }
 }
-export async function getSectionEnum(): Promise<TagPackages[]> {
+export async function getSectionEnum(
+  typePackage?: string
+): Promise<TagPackages[]> {
   try {
-    const response = await api.get(`/public/umrah/v2/section/stats/count`)
+    const response = await api.get(
+      `/public/umrah/v2/section/stats/count?type=${typePackage}`
+    )
     return response.data
   } catch (error) {
     console.error('Error fetching get section packages enum:', error)

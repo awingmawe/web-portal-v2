@@ -21,6 +21,7 @@ interface PackageListEventProps {
   dataPromo?: CardData[]
   dataRegular?: CardData[]
   dataPlus?: CardData[]
+  dataHaji?: CardData[]
   dataCustom?: PackageTagSlug
   isLoading?: boolean
   eventCategory?: string
@@ -35,6 +36,7 @@ interface PackageSectionProps {
   data: CardData[]
   isLoading?: boolean
   header: boolean
+  packageType?: string | 'umrah' | 'hajj'
   eventCategory?: string
   params?: string
   renderSkeletonItems: (count: number, isLoading: boolean) => React.ReactNode
@@ -50,6 +52,7 @@ const PackageSection = ({
   header = true,
   eventCategory,
   params,
+  packageType,
   renderSkeletonItems,
 }: PackageSectionProps) => {
   const { lg } = useTailwindBreakpoint()
@@ -82,6 +85,7 @@ const PackageSection = ({
               desc={description ?? ''}
               type={type ?? ''}
               params={params ?? 'section'}
+              packageType={packageType ?? 'umrah'}
             />
           )}
           <Carousel
@@ -123,6 +127,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   dataPromo,
   dataRegular,
   dataPlus,
+  dataHaji,
   dataCustom,
   isLoading: externalLoading,
   eventCategory,
@@ -133,14 +138,21 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   const [isPromoLoading, setIsPromoLoading] = useState(true)
   const [isRegularLoading, setIsRegularLoading] = useState(true)
   const [isPlusLoading, setIsPlusLoading] = useState(true)
+  const [isHajiLoading, setIsHajiLoading] = useState(true)
 
   // Use either external or internal loading state - memoize this computation
   const loading = useMemo(
     () =>
       externalLoading !== undefined
         ? externalLoading
-        : isPromoLoading || isRegularLoading || isPlusLoading,
-    [externalLoading, isPromoLoading, isRegularLoading, isPlusLoading]
+        : isPromoLoading || isRegularLoading || isPlusLoading || isHajiLoading,
+    [
+      externalLoading,
+      isPromoLoading,
+      isRegularLoading,
+      isPlusLoading,
+      isHajiLoading,
+    ]
   )
 
   // Create the skeleton carousel items with useCallback
@@ -166,11 +178,13 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
     const promoTimer = setTimeout(() => setIsPromoLoading(false), 1)
     const regularTimer = setTimeout(() => setIsRegularLoading(false), 1)
     const plusTimer = setTimeout(() => setIsPlusLoading(false), 1)
+    const hajiTimer = setTimeout(() => setIsHajiLoading(false), 1)
 
     return () => {
       clearTimeout(promoTimer)
       clearTimeout(regularTimer)
       clearTimeout(plusTimer)
+      clearTimeout(hajiTimer)
     }
   }, [externalLoading])
 
@@ -182,6 +196,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'promo' as const,
       data: dataPromo,
       isLoading: isPromoLoading || loading,
+      packageType: 'umrah',
       header: header,
       eventCategory,
     },
@@ -192,6 +207,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'regular' as const,
       data: dataRegular,
       isLoading: isRegularLoading || loading,
+      packageType: 'umrah',
       header: header,
       eventCategory,
     },
@@ -201,7 +217,19 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       type: 'plus' as const,
       data: dataPlus || [],
       isLoading: isPlusLoading || loading,
+      packageType: 'umrah',
       header: header,
+      eventCategory,
+    },
+    {
+      title: 'Haji',
+      description: 'Pilihan paket terbaik untuk perjalanan suci kamu!',
+      type: 'hajj' as const,
+      data: dataHaji || [],
+      isLoading: isHajiLoading || loading,
+      header: header,
+      packageType: 'hajj',
+      params: 'type',
       eventCategory,
     },
     {
@@ -220,6 +248,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
         <Fragment key={section.title}>
           <PackageSection
             key={section.type}
+            packageType={section.packageType}
             title={section.title}
             description={section.description}
             type={section.type ?? ''}

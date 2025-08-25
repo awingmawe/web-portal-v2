@@ -64,6 +64,7 @@ export default async function SearchGeneral({
   const tagSlug = awaitedParams.tS || undefined
   const minDpAmount = awaitedParams.dpMin || undefined
   const maxDpAmount = awaitedParams.dpMax || undefined
+  const packageType = awaitedParams.packageType || 'umrah'
 
   // Order Filter
   // Handle sorting options
@@ -106,6 +107,7 @@ export default async function SearchGeneral({
     tagSlug,
     minDpAmount,
     maxDpAmount,
+    packageType,
   })
 
   return (

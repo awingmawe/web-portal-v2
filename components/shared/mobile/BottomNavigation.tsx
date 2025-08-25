@@ -6,10 +6,17 @@ import { ReceiptIcon, ReceiptIconFilled } from '@/components/icons/receipt'
 import { IconUserFilled, UserIconCircle } from '@/components/icons/user'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function BottomNavigation() {
-  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const [isLinkAja, setIsLinkAja] = useState(false)
   const pathname = usePathname()
+
+  // Safely access sessionStorage only on the client side
+  useEffect(() => {
+    const linkAjaValue = sessionStorage.getItem('isLinkAja') === 'true'
+    setIsLinkAja(linkAjaValue)
+  }, [])
 
   // Define our navigation items with their paths and icons
   const navItems = [

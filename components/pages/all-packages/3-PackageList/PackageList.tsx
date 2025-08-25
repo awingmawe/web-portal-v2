@@ -3,6 +3,7 @@
 
 import { CardPackage } from '@/components/shared/CardPackage'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { CardData } from '@/constant/types/PackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
@@ -49,6 +50,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   const { lg } = useTailwindBreakpoint()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
+  const type = searchParams.get('type') || PACKAGE_TYPE.UMRAH
 
   // Function to reset all filters
   const resetAllFilters = useCallback(() => {
@@ -93,6 +95,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     const paramsFilter = buildQueryParams(
       searchParams.toString(),
       currentSort,
+      type,
       page
     )
 

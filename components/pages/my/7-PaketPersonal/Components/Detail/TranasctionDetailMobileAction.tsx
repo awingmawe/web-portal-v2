@@ -1,5 +1,5 @@
-import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import OfferDetailDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogDetailOffer'
+import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -23,7 +23,6 @@ export const TransactionDetailMobileAction = ({
     ...transactionData,
     JourneyInformation: restTransaction,
   }
-  console.log(transaction)
 
   return (
     <div className="hidden max-lg:block">

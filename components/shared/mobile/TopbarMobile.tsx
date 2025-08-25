@@ -7,7 +7,7 @@ import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
 import FilterDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/FilterDrawerMobile'
 import QuestionDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/QuestionDrawer'
 import { Input } from '@/components/ui/input'
-import { CALL_CENTER } from '@/constant/env'
+import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
@@ -16,7 +16,7 @@ import { capitalizeText, formatDateRangeShort, isEmpty } from '@/lib/utils'
 import { Bell, Search } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React, {
   Fragment,
   useCallback,
@@ -78,6 +78,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
   }) => {
     const { filters } = useFilterProduct()
     const { goBack } = useCustomNavigation()
+    const searchParams = useSearchParams()
 
     const [showFixedHeader, setShowFixedHeader] = useState(false)
 
@@ -155,7 +156,9 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
                 isEmpty(arrivalAirport) &&
                 isEmpty(departureAirport) && (
                   <div className="text-s-medium text-center text-neutral-900">
-                    Umroh
+                    {searchParams.get('type') === PACKAGE_TYPE.HAJJ
+                      ? 'Haji'
+                      : 'Umrah'}
                   </div>
                 )}
               {formattedDateRange && (
@@ -176,7 +179,9 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
                 isEmpty(arrivalAirport) &&
                 isEmpty(departureAirport) && (
                   <div className="text-s-medium text-left text-neutral-900">
-                    Umroh
+                    {searchParams.get('type') === PACKAGE_TYPE.HAJJ
+                      ? 'Haji'
+                      : 'Umrah'}
                   </div>
                 )}
               {formattedDateRange && (

@@ -2,11 +2,11 @@
 
 import { EmailIcon } from '@/components/icons/email'
 import VerificationDialog from '@/components/pages/my/4-Profile/Card/VerificationDialog'
-import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import ProgressIndicator from '@/components/pages/umrah-personal/form/6-ProgressIndicator'
 import ExitConfirmationContent from '@/components/pages/umrah-personal/form/dialog/DialogEndForm'
 import TopbarMobileFormUmrahPersonal from '@/components/pages/umrah-personal/form/mobile/Topbar'
 import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/dialog/PhoneNumberNotVerified'
+import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import Topbar from '@/components/shared/Topbar'
 import { Button } from '@/components/ui/button'
 import { ACCOUNT_URL } from '@/constant/env'

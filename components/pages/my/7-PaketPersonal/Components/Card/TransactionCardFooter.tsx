@@ -2,8 +2,8 @@
 'use client'
 
 import { TransactionDetail } from '@/components/pages/my/7-PaketPersonal/Components/Detail/TransactionDetail'
-import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import OfferDetailDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogDetailOffer'
+import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'

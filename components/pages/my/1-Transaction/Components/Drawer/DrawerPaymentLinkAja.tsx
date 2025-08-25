@@ -65,7 +65,6 @@ const DrawerPaymentLinkAja = memo(
               },
             })
           }
-          // console.log(responseNext)
         } catch (err) {
           console.error('Error fetching transactions:', err)
         } finally {

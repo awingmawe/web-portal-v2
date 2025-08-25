@@ -73,7 +73,7 @@ export const CardPackageCompact = memo(function CardPackageCompact({
 
   const formattedArrivalDate = useMemo(() => {
     try {
-      return format(arrivalDate, 'dd MMM yyyy', { locale: id })
+      return arrivalDate && format(arrivalDate, 'dd MMM yyyy', { locale: id })
     } catch (error) {
       console.error('Error formatting arrivalDate:', error)
       return ''
@@ -91,7 +91,7 @@ export const CardPackageCompact = memo(function CardPackageCompact({
 
   const tripDuration = useMemo(() => {
     try {
-      return differenceInDays(arrivalDate, departureDate) + 1
+      return arrivalDate && differenceInDays(arrivalDate, departureDate) + 1
     } catch (error) {
       console.error('Error calculating tripDuration:', error)
       return 0

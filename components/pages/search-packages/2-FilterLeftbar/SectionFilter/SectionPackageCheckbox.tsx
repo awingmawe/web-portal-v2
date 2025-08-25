@@ -4,25 +4,28 @@ import { SectionPackageSkeleton } from '@/components/pages/search-packages/2-Fil
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 interface SectionPackageOptionsProps {
   dataSectionPackage: TagPackages[]
   selectedSectionPackage?: string
-  onSectionPackageChange: (section: string) => void
+  onSectionPackageChangeAction: (section: string) => void
   isLoadingSkeleton?: boolean
 }
 
 export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
   dataSectionPackage,
   selectedSectionPackage,
-  onSectionPackageChange,
+  onSectionPackageChangeAction,
   isLoadingSkeleton,
 }) => {
   const updateQueryParams = useUpdateQueryParams()
   const [localSection, setLocalSection] = useState<string | undefined>(
     selectedSectionPackage
   )
+
+  // Use ref to track if we're updating from parent to prevent circular updates
+  const isUpdatingFromParent = useRef(false)
 
   // Update local rating when prop changes
   useEffect(() => {
@@ -54,7 +57,7 @@ export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
       debouncedSection !== undefined &&
       debouncedSection !== selectedSectionPackage
     ) {
-      onSectionPackageChange(debouncedSection)
+      onSectionPackageChangeAction(debouncedSection)
       updateQueryParams(['section', 'page'], [debouncedSection.toString(), 1])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +65,9 @@ export const SectionPackageOptions: React.FC<SectionPackageOptionsProps> = ({
 
   // Handle star selection
   const handleSectionChange = useCallback((value: string) => {
-    setLocalSection(value)
+    if (!isUpdatingFromParent.current) {
+      setLocalSection(value)
+    }
   }, [])
 
   if (isLoadingSkeleton) {

@@ -16,55 +16,61 @@ export interface CheckboxProps
     Omit<VariantProps<typeof checkboxVariants>, 'variant'> {
   label?: string
   description?: string
+  classNameParent?: string
   border?: boolean
 }
 
 const Checkbox = React.forwardRef<
   React.ComponentRef<typeof CheckboxPrimitive.Root>,
   CheckboxProps
->(({ className, label, description, border, ...props }, ref) => {
-  const id = React.useId()
+>(
+  (
+    { classNameParent, className, label, description, border, ...props },
+    ref
+  ) => {
+    const id = React.useId()
 
-  return (
-    <div
-      className={`flex items-center gap-2 ${border && 'border-b-1 border-b-neutral-100'} pb-2`}
-    >
-      <CheckboxPrimitive.Root
-        id={props.id || id}
-        data-slot="checkbox"
-        ref={ref}
-        className={cn(checkboxVariants({ className }), dissolve)}
-        {...props}
+    return (
+      <div
+        className={`${classNameParent} flex items-center gap-2 ${border && 'border-b-1 border-b-neutral-100'} pb-2`}
       >
-        <CheckboxPrimitive.Indicator
-          data-slot="checkbox-indicator"
-          className={cn(
-            'flex items-center justify-center text-current data-[state=checked]:scale-100 data-[state=unchecked]:scale-0',
-            dissolve
-          )}
+        <CheckboxPrimitive.Root
+          id={props.id || id}
+          data-slot="checkbox"
+          ref={ref}
+          className={cn(checkboxVariants({ className }), dissolve)}
+          {...props}
         >
-          <CheckboxIcon size={8} />
-        </CheckboxPrimitive.Indicator>
-      </CheckboxPrimitive.Root>
+          <CheckboxPrimitive.Indicator
+            data-slot="checkbox-indicator"
+            className={cn(
+              'flex items-center justify-center text-current data-[state=checked]:scale-100 data-[state=unchecked]:scale-0',
+              dissolve
+            )}
+          >
+            <CheckboxIcon size={8} />
+          </CheckboxPrimitive.Indicator>
+        </CheckboxPrimitive.Root>
 
-      {(label || description) && (
-        <div className={`flex items-center gap-1`}>
-          {label && (
-            <label
-              htmlFor={props.id || id}
-              className="cursor-pointer text-sm font-medium text-neutral-900"
-            >
-              {label}
-            </label>
-          )}
-          {description && (
-            <p className="text-s-regular text-neutral-500">({description})</p>
-          )}
-        </div>
-      )}
-    </div>
-  )
-})
+        {(label || description) && (
+          <div className={`flex items-center gap-1`}>
+            {label && (
+              <label
+                htmlFor={props.id || id}
+                className="cursor-pointer text-sm font-medium text-neutral-900"
+              >
+                {label}
+              </label>
+            )}
+            {description && (
+              <p className="text-s-regular text-neutral-500">({description})</p>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+)
 
 Checkbox.displayName = 'Checkbox'
 

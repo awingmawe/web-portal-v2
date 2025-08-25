@@ -59,7 +59,6 @@ export const TransactionDetailMobileAction = ({
           // Additional logic on close
         },
       })
-      // console.log(responseNext)
     } catch (err) {
       console.error('Error fetching transactions:', err)
     } finally {

@@ -7,15 +7,32 @@ import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { starOptions } from '@/lib/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 
+// Custom debounce hook
+const useDebounce = (value: any, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
+
 interface HotelRatingOptionsProps {
   selectedRating?: number
-  onRatingChange: (rating: number) => void
+  onRatingChangeAction: (rating: number) => void
   isLoadingSkeleton?: boolean
 }
 
 export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
   selectedRating,
-  onRatingChange,
+  onRatingChangeAction,
   isLoadingSkeleton,
 }) => {
   const updateQueryParams = useUpdateQueryParams()
@@ -28,30 +45,13 @@ export const HotelRatingOptions: React.FC<HotelRatingOptionsProps> = ({
     setLocalRating(selectedRating)
   }, [selectedRating])
 
-  // Custom debounce hook
-  const useDebounce = (value: any, delay: number) => {
-    const [debouncedValue, setDebouncedValue] = useState(value)
-
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        setDebouncedValue(value)
-      }, delay)
-
-      return () => {
-        clearTimeout(handler)
-      }
-    }, [value, delay])
-
-    return debouncedValue
-  }
-
   // Get debounced value of rating
   const debouncedRating = useDebounce(localRating, 500)
 
   // Effect to handle debounced rating changes
   useEffect(() => {
     if (debouncedRating !== undefined && debouncedRating !== selectedRating) {
-      onRatingChange(debouncedRating)
+      onRatingChangeAction(debouncedRating)
       updateQueryParams(['hR', 'page'], [debouncedRating.toString(), 1])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

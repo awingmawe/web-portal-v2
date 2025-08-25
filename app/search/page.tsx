@@ -29,18 +29,22 @@ export async function generateMetadata({
   }
 }
 
-export default async function SearchGeneral() {
+export default async function SearchGeneral({
+  searchParams,
+}: {
+  searchParams: any
+}) {
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
+  const awaitedParams = await searchParams
 
   const [dataMinMax, dataTagPackages, dataFacility, dataSection] =
     await Promise.all([
       getMinMaxPrice(),
-      getTagPackagesEnum(),
-      getFacilityEnum('umrah-facility'),
-      getSectionEnum(),
+      getTagPackagesEnum(awaitedParams.type || 'umrah'),
+      getFacilityEnum(`${awaitedParams.type || 'umrah'}-facility`),
+      getSectionEnum(awaitedParams.type || 'umrah'),
     ])
-
   return (
     <Fragment>
       <Topbar token={token} scrolled />

@@ -46,7 +46,7 @@ const TagPackagesFilter: React.FC<TagPackageFilterProps> = ({
         <TagPackageOptions
           dataTagPackage={dataTagPackage}
           selectedTagPackage={filters.tagSlug}
-          onTagPackageChange={setTagSlug}
+          onTagPackageChangeAction={setTagSlug}
           isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>

@@ -17,13 +17,18 @@ export async function generateMetadata({
   }
 }
 
-export default async function SearchGeneral() {
+export default async function SearchGeneral({ params }: { params: any }) {
+  const { packageType } = await params
   return (
     <Fragment>
       <main className="fixed my-7.5 mt-auto mb-0 h-[100vh] w-full overflow-hidden bg-transparent">
-        <MobileTopbar variant="title" showBackButton title={'Umroh'} />
+        <MobileTopbar
+          variant="title"
+          showBackButton
+          title={`${packageType === 'umrah' ? 'Umrah' : 'Haji'}`}
+        />
         <section className="scrollbar-hide absolute top-[55px] bottom-0 z-11 container mx-auto mt-0 flex h-full w-full max-w-full flex-col overflow-y-auto rounded-tl-3xl rounded-tr-3xl bg-white pt-5 pb-[75px] shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
-          <SearchMobileUmroh />
+          <SearchMobileUmroh packageType={packageType} />
         </section>
       </main>
     </Fragment>

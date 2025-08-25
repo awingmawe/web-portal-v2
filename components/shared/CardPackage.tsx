@@ -4,11 +4,12 @@ import { InfoIcon } from '@/components/icons/info'
 import { StarIconPrimary } from '@/components/icons/star'
 import { StoreIcon } from '@/components/icons/store'
 import BadgePromo from '@/components/shared/Badge'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import { capitalizeText, cn, isEmpty, isValidImage } from '@/lib/utils'
 import NoImagePlaceholder from '@/public/images/no-image-placeholder.png'
-import { differenceInDays, format } from 'date-fns'
+import { addYears, differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -49,6 +50,8 @@ export const CardPackage = memo(function CardPackage({
     id: packageId,
     tripDuration,
     isLastCall,
+    variantType,
+    waitingPeriod,
   } = data
 
   // Memoize complex calculations
@@ -58,21 +61,47 @@ export const CardPackage = memo(function CardPackage({
   )
   const formattedDepartureDate = useMemo(() => {
     try {
-      return format(departureDate, 'dd MMM yyyy', { locale: id })
+      if (packageType === PACKAGE_TYPE.HAJJ) {
+        return departureDate && format(departureDate, 'yyyy', { locale: id })
+      } else if (packageType === PACKAGE_TYPE.UMRAH) {
+        return (
+          departureDate && format(departureDate, 'dd MMM yyyy', { locale: id })
+        )
+      } else {
+        return ''
+      }
     } catch (error) {
       console.error('Error formatting departureDate:', error)
       return ''
     }
-  }, [departureDate])
+  }, [departureDate, packageType])
 
   const formattedArrivalDate = useMemo(() => {
     try {
-      return format(arrivalDate, 'dd MMM yyyy', { locale: id })
+      if (packageType === PACKAGE_TYPE.UMRAH) {
+        return (
+          arrivalDate &&
+          `- ${format(arrivalDate, 'dd MMM yyyy', { locale: id })}`
+        )
+      } else if (variantType === PACKAGE_TYPE.HAJJ_SPECIAL) {
+        return (
+          waitingPeriod &&
+          `- ${format(
+            departureDate
+              ? addYears(departureDate, Number(waitingPeriod))
+              : new Date(),
+            'yyyy',
+            { locale: id }
+          )}`
+        )
+      } else {
+        return ''
+      }
     } catch (error) {
       console.error('Error formatting arrivalDate:', error)
       return ''
     }
-  }, [arrivalDate])
+  }, [arrivalDate, departureDate, packageType, variantType, waitingPeriod])
 
   const formattedReleasedAt = useMemo(() => {
     try {
@@ -85,12 +114,20 @@ export const CardPackage = memo(function CardPackage({
 
   const numberOfDays = useMemo(() => {
     try {
-      return differenceInDays(arrivalDate, departureDate) + 1
+      if (packageType === PACKAGE_TYPE.HAJJ) {
+        return tripDuration
+      } else {
+        return (
+          arrivalDate &&
+          departureDate &&
+          differenceInDays(arrivalDate, departureDate) + 1
+        )
+      }
     } catch (error) {
       console.error('Error calculating numberOfDays:', error)
       return 0
     }
-  }, [arrivalDate, departureDate])
+  }, [arrivalDate, departureDate, packageType, tripDuration])
 
   // Memoize the stars rendering
   const ratingStars = useMemo(
@@ -127,7 +164,7 @@ export const CardPackage = memo(function CardPackage({
       observe(elem.current, () => {
         pushEvent({
           name: 'impression_package_card',
-          topic: 'umrah',
+          topic: packageType,
           category: eventCategory,
           data: {
             packageId,
@@ -157,7 +194,7 @@ export const CardPackage = memo(function CardPackage({
       onClick={() => {
         pushEvent({
           name: 'click_package_card',
-          topic: 'umrah',
+          topic: packageType,
           category: eventCategory,
           data: {
             packageId,
@@ -180,8 +217,12 @@ export const CardPackage = memo(function CardPackage({
       className={`relative ${section === 'search-topbar' ? 'flex flex-row items-center gap-3' : 'flex flex-col'}`}
       id="card-package"
     >
+      {/* Badge Promo */}
+      {(showDiscount || variantType) && (
+        <BadgePromo variantType={variantType} showDiscount={showDiscount} />
+      )}
+
       {/* Image */}
-      {showDiscount && <BadgePromo title="PROMO 🎉" />}
       <div
         className={`relative flex flex-col gap-3 overflow-hidden rounded-[20px] shadow-md ${section === 'search-topbar' ? 'w-[200px]' : ''}`}
       >
@@ -236,18 +277,23 @@ export const CardPackage = memo(function CardPackage({
         )}
 
         {/* Departure and Arrival Date */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CalendarIcon size={16} color="text-neutral-500" />
-            <p className="text-s-regular text-neutral-500">
-              {formattedDepartureDate} - {formattedArrivalDate}
-            </p>
-          </div>
-          <div className="bg-primary-500 inline-flex items-center justify-center gap-2.5 rounded-[100px] p-1.5">
-            <p className="text-s-regular text-center text-neutral-900">
-              {tripDuration ? tripDuration : numberOfDays} Hari
-            </p>
-          </div>
+        <div className="flex flex-wrap items-center justify-between">
+          {(formattedDepartureDate || formattedArrivalDate) && (
+            <div className="flex items-center gap-2">
+              <CalendarIcon size={16} color="text-neutral-500" />
+              <p className="text-s-regular text-neutral-500">
+                {formattedDepartureDate} {formattedArrivalDate}
+              </p>
+            </div>
+          )}
+
+          {(tripDuration !== 0 || numberOfDays !== 0) && (
+            <div className="bg-primary-500 inline-flex items-center justify-center gap-2.5 rounded-[100px] p-1.5">
+              <p className="text-s-regular text-center text-neutral-900">
+                {tripDuration ? tripDuration : numberOfDays} Hari
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Price */}

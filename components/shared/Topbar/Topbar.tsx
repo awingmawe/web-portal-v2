@@ -6,7 +6,7 @@ import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { ReceiptItemIcon } from '@/components/icons/receipt-item'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
-import { TopbarSearch } from '@/components/shared/Topbar/TopbarSearch'
+import TopbarSearch from '@/components/shared/Topbar/TopbarSearch'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Popover,
