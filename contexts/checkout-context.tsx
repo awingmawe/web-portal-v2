@@ -62,7 +62,6 @@ export const CheckoutProvider = ({
   const [isReferralCodeChecked, setIsReferralCodeChecked] = useState(false)
   const [paymentToken, setPaymentToken] = useState<string>()
   const [loading, setLoading] = useState(false)
-  const [booking, setBooking] = useState<any>()
   const [dataSK, setDataSk] = useState<any>()
   const [dataRefundPolicy, setDataRefundPolicy] = useState<any>()
   const [nama, setNama] = useState('')
@@ -284,7 +283,6 @@ export const CheckoutProvider = ({
       const res = detailVariant?.isUmrahPersonal
         ? await bookingCheckoutUmrahPersonal(payloadUmrahPersonal)
         : await bookingCheckout(payload)
-      setBooking(res?.data)
       setPaymentToken(res?.data.order.paymentToken)
       setLoading(false)
 
@@ -624,7 +622,6 @@ export const CheckoutProvider = ({
     wukalaSetting,
     handleRemoveReferralCode,
     paymentToken,
-    booking,
     loading,
     handleInputChange,
     formatNumber,
