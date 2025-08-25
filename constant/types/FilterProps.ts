@@ -26,6 +26,7 @@ export interface FilterState {
   facilityCode: string
   section: string
   tagSlug: string
+  query: string | ''
 }
 
 // Initial filter state
@@ -41,5 +42,6 @@ export const initialFilterState: FilterState = {
   facilityCode: '',
   section: '',
   tagSlug: '',
+  query: '',
   filterName: undefined,
 }

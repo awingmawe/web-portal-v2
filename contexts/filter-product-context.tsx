@@ -159,6 +159,7 @@ export const FilterProductProvider: React.FC<{
           section: 'section',
           tagSlug: 'tS',
           type: 'type',
+          query: '',
           filterName: null,
           priceRange: null,
           dpRange: null,

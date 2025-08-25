@@ -31,7 +31,7 @@ export default async function FormManifest({ params }: { params: any }) {
     <Fragment>
       <Topbar type="plain" shadow />
 
-      <main className="my-7.5 bg-gradient-to-l from-white to-white max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-[100vh] max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
+      <main className="my-7.5 bg-gradient-to-l from-white to-white max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-dvh max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
         <Image
           src={'/images/mosque.png'}
           alt="mosque"

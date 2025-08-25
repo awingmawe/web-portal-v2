@@ -145,15 +145,23 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
 
   const getPriceSelected = useCallback((): number => {
     if (!selectedVariant) return 0
-    const { priceDouble, priceTriple, priceQuad } = selectedVariant
-    return Math.min(priceDouble, priceTriple, priceQuad)
+    const prices = [
+      selectedVariant.priceDouble,
+      selectedVariant.priceTriple,
+      selectedVariant.priceQuad,
+    ].filter((price) => price != 0)
+
+    return Math.min(...prices)
   }, [selectedVariant])
 
   const getOriginalPriceSelected = useCallback((): number => {
     if (!selectedVariant) return 0
-    const { originalPriceDouble, originalPriceTriple, originalPriceQuad } =
-      selectedVariant
-    return Math.min(originalPriceDouble, originalPriceTriple, originalPriceQuad)
+    const originalPrices = [
+      selectedVariant.originalPriceDouble,
+      selectedVariant.originalPriceTriple,
+      selectedVariant.originalPriceQuad,
+    ].filter((price) => price != 0)
+    return Math.min(...originalPrices)
   }, [selectedVariant])
 
   // Helper function to get original price based on selected variant and room type
