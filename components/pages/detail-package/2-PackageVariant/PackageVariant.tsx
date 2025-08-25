@@ -25,7 +25,6 @@ import { dissolve } from '@/lib/animation-setup'
 import {
   getHotelRating,
   getTripDuration,
-  isEmpty,
   setLocalReferralCode,
 } from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
@@ -62,11 +61,21 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   referralCodeParams,
 }) => {
   const [isLinkAja, setIsLinkAja] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
     }
   }, [])
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsChecked(
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) === 'true' ? true : false
+      )
+    }
+  }, [])
+
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
   const {
@@ -92,7 +101,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const [isLiked, setIsLiked] = useState(false)
   const [isSelectHotelModalOpen, setIsSelectHotelModalOpen] = useState(false)
   const [isKursModalOpen, setIsKursModalOpen] = useState(false)
-  const [isChecked, setIsChecked] = useState(false)
 
   const statusLike = async () => {
     const statusLike = await getStatusLiked(pkg?.id as number)
@@ -176,6 +184,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     }, 500)
   }, [variants])
 
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
+  }, [isChecked])
+
   const handleSubmit = () => {
     localStorage.setItem(
       LOCAL_STORAGE_DETAIL_VARIANT,
@@ -202,9 +214,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     if (!token) {
       window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
       return
-    }
-    if (isEmpty(localStorage.getItem(LOCAL_STORAGE_KURS_OPEN))) {
-      localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
     }
     if (
       selectedRoomType &&

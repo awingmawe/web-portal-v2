@@ -71,6 +71,20 @@ const CheckoutDrawerMobile = React.memo(
         setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
       }
     }, [])
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        setIsChecked(
+          localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) === 'true'
+            ? true
+            : false
+        )
+      }
+    }, [])
+
+    useEffect(() => {
+      localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
+    }, [isChecked])
+
     const { shareViaWhatsApp } = useGallerySharing()
 
     const {
@@ -107,9 +121,6 @@ const CheckoutDrawerMobile = React.memo(
       if (!token && isEmpty(token)) {
         window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
         return
-      }
-      if (isEmpty(localStorage.getItem(LOCAL_STORAGE_KURS_OPEN))) {
-        localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
       }
       if (
         packageType === PACKAGE_TYPE.HAJJ &&

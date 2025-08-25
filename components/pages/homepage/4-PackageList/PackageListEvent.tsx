@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { PackageTagSlug } from '@/constant/types/ArticleProps'
 import { CardData } from '@/constant/types/PackageProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -103,7 +104,9 @@ const PackageSection = ({
                   className="mx-4.5 hidden basis-4/5 flex-col items-center
               justify-center rounded-2xl border border-neutral-200 max-lg:flex md:basis-1/2 lg:basis-1/4"
                 >
-                  <Link href={`/search?page=1&query=&section=${type}`}>
+                  <Link
+                    href={`/search?page=1&query=&${type === PACKAGE_TYPE.HAJJ ? 'type=' : 'section='}${type}`}
+                  >
                     <div className="flex flex-col items-center gap-2">
                       <ChevronRightCircle className="h-10 w-10" />
                       <p className="text-m-regular text-center text-neutral-900">

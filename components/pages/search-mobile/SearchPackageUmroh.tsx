@@ -463,7 +463,7 @@ const SearchMobileUmroh: React.FC<SearchMobileUmrohProps> = ({
           Cari
         </Button>
         <p className="text-xs-regular text-center text-neutral-500">atau</p>
-        <Link href="/search" className="w-full">
+        <Link href={`/search?type=${packageType}`} className="w-full">
           <Button
             variant="outline"
             className="border-primary-500 w-full rounded-full border-2 py-3 text-xs text-neutral-900"

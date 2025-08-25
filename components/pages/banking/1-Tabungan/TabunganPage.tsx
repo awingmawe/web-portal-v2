@@ -107,7 +107,6 @@ const TabunganPage = () => {
         address: values.address,
         status: 'Diajukan',
       }
-      // console.log(Allpayload)
 
       await postSaving(Allpayload)
       // await new Promise((resolve) => setTimeout(resolve, 2000))
