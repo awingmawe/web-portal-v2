@@ -22,3 +22,17 @@ export const LOCAL_STORAGE_DETAIL_VARIANT = 'detailVariant'
 export const LOCAL_STORAGE_SELECTED_VARIANT = 'selectedVariant'
 export const FACEBOOK_DOMAIN_VERIFICATION =
   process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION
+export const LOCAL_STORAGE_KURS_OPEN = 'isKursShowAgain'
+
+export const PACKAGE_TYPE = {
+  HAJJ_SPECIAL: 'hajj-special',
+  HAJJ_FURODA: 'hajj-furoda',
+  HAJJ_DAKHILI: 'hajj-dakhili',
+  HAJJ: 'hajj',
+  UMRAH: 'umrah',
+}
+
+export const CATEGORIES_FILTER_SEARCH = [
+  { name: 'Umroh', slug: 'umrah' },
+  { name: 'Haji', slug: 'hajj' },
+]

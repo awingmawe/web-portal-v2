@@ -16,12 +16,16 @@ import { useState } from 'react'
 
 interface ModalSelectHotelProps {
   open: boolean
+  currency: string
+  packageType: string
   onOpenChange: (open: boolean) => void
   onSubmit?: (quotaAmount: string) => void
 }
 
 const ModalSelectHotel = ({
   open,
+  currency,
+  packageType,
   onOpenChange,
   onSubmit,
 }: ModalSelectHotelProps) => {
@@ -41,7 +45,7 @@ const ModalSelectHotel = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-3xl w-full rounded-2xl border-0 p-0 p-6">
+      <DialogContent className="w-full rounded-2xl border-0 p-6">
         <DialogHeader className="pb-0">
           <div className="flex items-center gap-4">
             <div className="rounded-lg bg-amber-50 p-3">
@@ -55,13 +59,15 @@ const ModalSelectHotel = ({
           </div>
         </DialogHeader>
 
-        <div className="">
-          <p className="text-m-regular mb-3 text-neutral-500">
+        <div className="flex flex-col gap-3">
+          <p className="text-m-regular text-neutral-500">
             Harap memilih jumlah kamar jemaah terlebih dahulu untuk bisa
             melakukan checkout.
           </p>
 
           <SelectHotel
+            currency={currency}
+            packageType={packageType}
             disabledAddOnly={
               isLinkAja
                 ? Number(selectedVariant?.package.dpAmount) *
@@ -75,7 +81,7 @@ const ModalSelectHotel = ({
             }
           />
 
-          <div className="mt-5 flex items-end justify-end gap-3">
+          <div className="flex items-end justify-end gap-3">
             <Button
               variant="outline"
               className="border-primary-500 border-2 px-15 py-2.5"

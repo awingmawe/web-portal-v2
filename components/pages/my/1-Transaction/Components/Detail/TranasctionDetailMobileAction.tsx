@@ -1,3 +1,4 @@
+'use client'
 import DrawerBatalkan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerBatalkan'
 import DrawerPaymentLinkAja from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerPaymentLinkAja'
 import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
@@ -10,7 +11,7 @@ import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 export const TransactionDetailMobileAction = ({
   statusTahapan,
   bookingId,
@@ -23,9 +24,15 @@ export const TransactionDetailMobileAction = ({
   idOrganisasi: any
   transaction?: any
 }) => {
-  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const [isLinkAja, setIsLinkAja] = useState(false)
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
     useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
+    }
+  }, [])
 
   const fetchPaymentStatement = useCallback(async (id: any) => {
     try {
@@ -36,13 +43,11 @@ export const TransactionDetailMobileAction = ({
       }
       const responseNext = await postNextPayment(id, payload)
       window.snap.pay(responseNext?.paymentToken, {
-        onSuccess: async (result: any) => {
-          console.log(result)
+        onSuccess: async () => {
           // router.replace('/my/transaction') // replace & refresh
           window.location.reload()
         },
-        onPending: async (result: any) => {
-          console.log('Payment pending', result)
+        onPending: async () => {
           // router.push(`/my/need-payment`)
           // Add expiration check logic
         },
@@ -54,7 +59,6 @@ export const TransactionDetailMobileAction = ({
           // Additional logic on close
         },
       })
-      // console.log(responseNext)
     } catch (err) {
       console.error('Error fetching transactions:', err)
     } finally {
@@ -179,14 +183,28 @@ export const TransactionDetailMobileAction = ({
               Bayar Pelunasan
             </Button>
           ) : (
-            <Button
-              className="w-full py-2"
-              onClick={() => {
-                fetchPaymentStatement(bookingId)
-              }}
-            >
-              Bayar Pelunasan
-            </Button>
+            <div className="w-full">
+              {transaction?.isPaidOff ? (
+                <Button
+                  className=" w-full py-2"
+                  disabled
+                  onClick={() => {
+                    fetchPaymentStatement(bookingId)
+                  }}
+                >
+                  Bayar Pelunasan
+                </Button>
+              ) : (
+                <Button
+                  className="w-full py-2"
+                  onClick={() => {
+                    fetchPaymentStatement(bookingId)
+                  }}
+                >
+                  Bayar Pelunasan
+                </Button>
+              )}
+            </div>
           )}
           <Link href={`/manifest/${bookingId}`} className="w-full">
             <Button className="w-full py-2">Lengkapi Data Jemaah</Button>

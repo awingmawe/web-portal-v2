@@ -66,7 +66,7 @@ const AirportFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
           <div className="flex flex-1 flex-col">{getDisplayText}</div>
         </div>
       </PopoverTrigger>
-      <PopoverContent align="center" className="w-[620px]">
+      <PopoverContent align="center" className="w-[620px]" data-lenis-prevent>
         <AirportList
           onSelectDepartureAirport={setDepartureAirport}
           onSelectArrivalAirport={setArrivalAirport}

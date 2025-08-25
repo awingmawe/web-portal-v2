@@ -5,6 +5,7 @@ import { CardPackage } from '@/components/shared/CardPackage'
 import { CardPackageCompact } from '@/components/shared/CardPackageCompact'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { CustomInfiniteScroll } from '@/components/shared/InfiniteScroll'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -50,6 +51,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   const updateQueryParams = useUpdateQueryParams()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
+  const itemsPerPage = 9 // Define your items per page constant
 
   // First, initialize filters from URL
   useEffect(() => {
@@ -60,11 +62,13 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     if (!isLoadingSkeleton) {
       const currentSort = searchParams.get('sort') || 'price-low'
       const page = parseInt(searchParams.get('page') || '1', 10)
+      const type = searchParams.get('type') || PACKAGE_TYPE.UMRAH
 
       // Build the params object from search params string
       const paramsFilter = buildQueryParams(
         searchParams.toString(),
         currentSort,
+        type,
         page
       )
 
@@ -84,11 +88,13 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
     const currentSort = searchParams.get('sort') || 'price-low'
     const page = parseInt(searchParams.get('page') || '1', 10) + 1
+    const type = searchParams.get('type') || PACKAGE_TYPE.UMRAH
 
     // Build the params object from search params string
     const paramsFilter = buildQueryParams(
       searchParams.toString(),
       currentSort,
+      type,
       page
     )
 
@@ -100,8 +106,18 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     // 1. Reset the internal state to default values
     resetFilters()
 
-    // 2. Delete all search params
-    window.history.pushState({}, '', window.location.pathname)
+    // 2. Clear all search params except type
+    const params = new URLSearchParams(window.location.search)
+    for (const key of Array.from(params.keys())) {
+      if (key !== 'type') {
+        params.delete(key)
+      }
+    }
+    window.history.pushState(
+      {},
+      '',
+      `${window.location.pathname}?${params.toString()}`
+    )
   }, [resetFilters])
 
   // Function to create URL with new sort parameter
@@ -117,26 +133,46 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
   // Calculate total pages
   const totalPages = useMemo(() => {
-    return Math.ceil(totalCSR / 9)
+    return Math.ceil(totalCSR / itemsPerPage)
   }, [totalCSR])
+
+  // Calculate results display info
+  const resultsDisplayInfo = useMemo(() => {
+    if (isMobile) {
+      // For mobile infinite scroll, show cumulative count
+      return {
+        displayCount: infinitePackages.length,
+        isRange: false,
+      }
+    } else {
+      // For desktop pagination, calculate the range
+      const currentPage = parseInt(searchParams.get('page') || '1', 10)
+      const startItem = (currentPage - 1) * itemsPerPage + 1
+      const endItem = Math.min(currentPage * itemsPerPage, totalCSR)
+
+      return {
+        startItem,
+        endItem,
+        isRange: true,
+      }
+    }
+  }, [isMobile, infinitePackages.length, searchParams, totalCSR])
 
   // Create page navigation function
   const goToPage = useCallback(
     (page: number) => {
       updateQueryParams(['page'], [page.toString()])
+      window.scrollTo(0, 0)
     },
     [updateQueryParams]
   )
 
   // Get the actual package data based on the current view mode
   const displayPackages = isMobile ? infinitePackages : packageDataCSR
-  const totalDisplayCount = isMobile
-    ? infinitePackages.length
-    : packageDataCSR.length
 
   // Render no results component if there are no packages and not loading
   if (displayPackages.length === 0 && !isLoadingSkeleton && !isLoading) {
-    return <NoResults resetAllFilters={resetAllFilters} />
+    return <NoResults resetAllFiltersAction={resetAllFilters} />
   }
 
   return (
@@ -146,7 +182,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
-          resultsCount={totalDisplayCount}
+          resultsDisplayInfo={resultsDisplayInfo}
           totalCount={totalCSR}
           currentSort={currentSort}
           createSortUrlAction={createSortUrl}

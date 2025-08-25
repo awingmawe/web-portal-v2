@@ -2,10 +2,7 @@ import { metadata } from '@/app/shared-metadata'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
 import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
-import {
-  PackageListEvent,
-  PackageListEvent as PackageListPlus,
-} from '@/components/pages/homepage/4-PackageList/PackageListEvent'
+import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScrollV2'
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ArtikelSection from '@/components/pages/homepage/7-Artikel/ArtikelSection'
@@ -49,6 +46,7 @@ export default async function Home() {
     dataGallery,
     dataCarousel,
     dataArtikel,
+    dataHaji,
   ] = await Promise.all([
     getBanner({
       page: 1,
@@ -68,6 +66,7 @@ export default async function Home() {
       section: 'promo',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getPackageList({
       page: 1,
@@ -75,6 +74,7 @@ export default async function Home() {
       section: 'plus',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getPackageList({
       page: 1,
@@ -82,6 +82,7 @@ export default async function Home() {
       section: 'regular',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getGalleryHomepage({
       page: 1,
@@ -96,6 +97,13 @@ export default async function Home() {
     getArticleList({
       page: 1,
       size: 4,
+    }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      order: 'desc',
+      orderBy: 'package.createdAt',
+      packageType: 'hajj',
     }),
   ])
 
@@ -133,6 +141,7 @@ export default async function Home() {
           <PackageListEvent
             dataPromo={mapProductsToCardData(dataPromo)}
             dataRegular={mapProductsToCardData(dataRegular)}
+            dataPlus={mapProductsToCardData(dataPlus)}
             eventCategory="home"
           />
         </div>
@@ -140,8 +149,8 @@ export default async function Home() {
       <main
         className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-lg:mt-0`}
       >
-        <PackageListPlus
-          dataPlus={mapProductsToCardData(dataPlus)}
+        <PackageListEvent
+          dataHaji={mapProductsToCardData(dataHaji)}
           eventCategory="home"
         />
       </main>

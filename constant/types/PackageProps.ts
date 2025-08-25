@@ -24,6 +24,7 @@ export interface PackageVariant {
     dpAmount: number
   }
   tripDuration: number
+  waitingPeriod: string | null
 }
 
 export interface PriceParams {
@@ -51,16 +52,19 @@ export interface CardData {
   isLastCall: boolean
   isPlus: boolean
   departureDate: string
-  arrivalDate: string
+  arrivalDate?: string
   codeCountry?: AdditionalCountry[]
   releasedAt: string
+  currency: string
   packageType: string
   variant?: any
+  variantType: string
   medinaHotel?: any
   meccaHotel?: any
   departure: TravelRoute
   arrival: TravelRoute
   tripDuration: number
+  waitingPeriod: string | null
 }
 
 export interface PackageDetail {
@@ -135,6 +139,7 @@ export interface Package {
   tag?: null | any
   price: number
   originalPrice: number
+  variantType: string
 }
 
 export type TotalLike = {

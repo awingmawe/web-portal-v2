@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { Button } from '@/components/ui/button'
@@ -11,8 +10,6 @@ import { useRouter } from 'next/navigation'
 import { Fragment } from 'react'
 
 export interface TransactionCardFooter {
-  detailOnly?: boolean
-  id: string
   status: string
   transaction?: any
   travelName: any
@@ -21,9 +18,7 @@ export interface TransactionCardFooter {
 
 export default function TransactionCardFooter({
   status,
-  id,
   transaction,
-  detailOnly,
   travelName,
   slug,
 }: TransactionCardFooter) {
@@ -65,8 +60,8 @@ export default function TransactionCardFooter({
       netAmount: transaction.packageVariants.package.dpAmount,
       name: transaction.packageVariants.name,
       variant: transaction.packageVariants,
+      currency: transaction.currency,
     }
-    // console.log(dataSelectedVariant)
 
     localStorage.setItem(
       LOCAL_STORAGE_DETAIL_VARIANT,

@@ -100,13 +100,12 @@ export default function TransactionCardFooter({
       const responseNext = await postNextPayment(id, payload)
       window.snap.pay(responseNext?.paymentToken, {
         onSuccess: async (result: any) => {
-          // console.log(result)
           // router.replace('/my/transaction') // replace & refresh
           window.location.reload()
         },
         onPending: async (result: any) => {
-          console.log('Payment pending', result)
-          router.push(`/my/need-payment`)
+          // console.log('Payment pending', result)
+          // router.push(`/my/need-payment`)
           // Add expiration check logic
         },
         onError: (error: any) => {
@@ -117,7 +116,6 @@ export default function TransactionCardFooter({
           // Additional logic on close
         },
       })
-      // console.log(responseNext)
     } catch (err) {
       console.error('Error fetching transactions:', err)
     } finally {
@@ -233,7 +231,7 @@ export default function TransactionCardFooter({
           <>
             {isLinkAja ? (
               <Button
-                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
                 variant="outline"
                 disabled={loadingPaymentTransaction}
                 onClick={() => setOpenDrawerPaymentLinkAja(true)}
@@ -242,7 +240,7 @@ export default function TransactionCardFooter({
               </Button>
             ) : (
               <Button
-                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
                 variant="outline"
                 disabled={loadingPaymentTransaction}
                 onClick={() => fetchPaymentStatement(bookingId)}
@@ -296,7 +294,7 @@ export default function TransactionCardFooter({
             </Link>
             {isLinkAja ? (
               <Button
-                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
                 variant="outline"
                 disabled={loadingPaymentTransaction}
                 onClick={() => setOpenDrawerPaymentLinkAja(true)}
@@ -360,7 +358,7 @@ export default function TransactionCardFooter({
                 <div>
                   {isLinkAja ? (
                     <Button
-                      className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                      className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
                       variant="outline"
                       disabled={loadingPaymentTransaction}
                       onClick={() => setOpenDrawerPaymentLinkAja(true)}
@@ -369,7 +367,7 @@ export default function TransactionCardFooter({
                     </Button>
                   ) : (
                     <Button
-                      className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                      className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
                       variant="outline"
                       disabled={loadingPaymentTransaction}
                       onClick={() => fetchPaymentStatement(bookingId)}
@@ -460,14 +458,12 @@ export default function TransactionCardFooter({
                 try {
                   if (window.snap) {
                     window.snap.pay(paymentTransaction?.paymentToken, {
-                      onSuccess: async (result: any) => {
-                        console.log(result)
+                      onSuccess: async () => {
                         // router.replace('/my/transaction') // replace & refresh
                         window.location.reload()
                       },
-                      onPending: async (result: any) => {
-                        console.log('Payment pending', result)
-                        router.push(`/my/need-payment`)
+                      onPending: async () => {
+                        // router.push(`/my/need-payment`)
                         // Add expiration check logic
                       },
                       onError: (error: any) => {

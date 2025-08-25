@@ -50,7 +50,6 @@ export const CardPackage2 = memo(function CardPackage({
     id: packageId,
     isLastCall,
   } = data
-  console.log(rating)
 
   // Memoize complex calculations
   const showDiscount = useMemo(
@@ -64,7 +63,7 @@ export const CardPackage2 = memo(function CardPackage({
   )
 
   const formattedArrivalDate = useMemo(
-    () => format(arrivalDate, 'dd MMM yyyy', { locale: id }),
+    () => arrivalDate && format(arrivalDate, 'dd MMM yyyy', { locale: id }),
     [arrivalDate]
   )
 
@@ -74,7 +73,7 @@ export const CardPackage2 = memo(function CardPackage({
   )
 
   const tripDuration = useMemo(
-    () => differenceInDays(arrivalDate, departureDate) + 1,
+    () => arrivalDate && differenceInDays(arrivalDate, departureDate) + 1,
     [arrivalDate, departureDate]
   )
 

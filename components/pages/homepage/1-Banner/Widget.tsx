@@ -16,7 +16,7 @@ import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 
 // Tab option types
-type TripType = 'umrah' | 'haji' | 'halal-trip'
+type TripType = 'umrah' | 'hajj' | 'halal-trip'
 
 interface SearchWidgetProps {
   className?: string
@@ -39,14 +39,6 @@ const NotchedContainer: React.FC<{
         className="pointer-events-none absolute top-[-20px] w-full max-xl:h-[185px]"
       />
       {children}
-
-      {/* <div
-        className="w-full rounded-[20px] bg-white shadow-[0px_0px_24px_0px_rgba(0,0,0,0.05)]"
-        style={{
-          clipPath: `path('M430 15C430 6.7157 423.284 0 415 0H20C8.9543 0 0 8.9543 0 20V${vControlPoint}C0 ${vControlPoint + 11.046} 8.9543 ${height} 20 ${height}H1180C1191.05 ${height} 1200 ${vControlPoint + 11.046} 1200 ${vControlPoint}V20C1200 8.9543 1191.05 0 1180 0H785C776.716 0 770 6.7157 770 15C770 23.2843 763.284 30 755 30H445C436.716 30 430 23.2843 430 15Z')`,
-        }}
-      >
-      </div> */}
     </div>
   )
 }
@@ -61,7 +53,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
   // State to track previous active tab for animation direction
   const [prevActiveTab, setPrevActiveTab] = useState<TripType | null>(null)
 
-  const disableTab = activeTab === 'haji' || activeTab === 'halal-trip'
+  const disableTab = activeTab === 'halal-trip'
   const styleDisable = 'cursor-not-allowed opacity-10 blur-[2.5px]'
 
   useEffect(() => {
@@ -106,7 +98,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
             <TabsWithAnimation
               tabs={[
                 { id: 'umrah', label: 'Umrah', icon: <MapPin size={20} /> },
-                { id: 'haji', label: 'Haji', icon: <MapPin size={20} /> },
+                { id: 'hajj', label: 'Haji', icon: <MapPin size={20} /> },
                 {
                   id: 'halal-trip',
                   label: 'Muslim Trip',
@@ -129,7 +121,7 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
               dissolve
             )}
           >
-            {/* Search Bar */}
+            {/* Header */}
             <div className="flex items-center justify-between">
               <div className={cn('flex items-center gap-1.5', dissolve)}>
                 <SearchIcon size={24} className="text-neutral-900" />
@@ -150,28 +142,14 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
                 </Link>
               </div>
             </div>
+
             {/* Filter */}
-            <SearchFilters />
+            <SearchFilters type={activeTab} />
           </div>
         </NotchedContainer>
 
         {/* Conditional feature availability widgets */}
         <AnimatePresence>
-          {activeTab === 'haji' && (
-            <motion.div
-              className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-0 items-center gap-0.5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={springTransition}
-            >
-              <LockIcon size={24} />
-              <p className="text-l-regular text-neutral-900">
-                Fitur Haji saat ini belum tersedia. Nantikan fitur ini
-                kedepannya!
-              </p>
-            </motion.div>
-          )}
-
           {activeTab === 'halal-trip' && (
             <motion.div
               className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-0 items-center gap-0.5"

@@ -312,6 +312,7 @@ const MobileCheckoutPage = ({}) => {
           <div className="rounded-2xl border border-neutral-100 p-3">
             <SelectHotel
               isMobile
+              currency={detailVariant?.currency}
               totalQty={totalQty}
               variant="normal"
               defaultValue={selectedVariant?.roomType}
@@ -382,7 +383,10 @@ const MobileCheckoutPage = ({}) => {
                     <p className="text-xs-regular ml-2 text-neutral-900">
                       Uang muka minimal{' '}
                       <b className="font-bold">
-                        {formatCurrency(selectedVariant.netAmount)}
+                        {formatCurrency(
+                          selectedVariant.netAmount,
+                          detailVariant?.currency
+                        )}
                       </b>{' '}
                       dan limit transaksi bulanan kamu di{' '}
                       <b className="font-bold">LinkAja</b> adalah{' '}
@@ -391,7 +395,11 @@ const MobileCheckoutPage = ({}) => {
                   ) : (
                     <p className="text-xs-regular ml-2 text-neutral-900">
                       Minimal pembayaran uang muka adalah{' '}
-                      {formatCurrency(selectedVariant.netAmount)}/orang
+                      {formatCurrency(
+                        selectedVariant.netAmount,
+                        detailVariant?.currency
+                      )}
+                      /orang
                     </p>
                   )}
                 </div>

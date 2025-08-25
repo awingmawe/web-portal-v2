@@ -59,8 +59,12 @@ export function capitalizeText(text: string): string {
     .join(' ')
 }
 
-export function formatCurrency(value?: string | number): string {
-  if (!value) return '-'
+export function formatCurrency(
+  value?: string | number,
+  currency: string = 'IDR'
+): string {
+  if (!value) return currency === 'USD' ? 'USD 0' : 'Rp.0'
+
   let numericValue: number
 
   if (typeof value === 'number') {
@@ -70,28 +74,57 @@ export function formatCurrency(value?: string | number): string {
   }
 
   if (isNaN(numericValue)) {
-    return 'Rp.0' // Return a default value if parsing fails
+    return currency === 'USD' ? 'USD 0' : 'Rp.0' // Return a default value if parsing fails
   }
 
-  const result = new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  })
-    .format(numericValue * (numericValue < 0 ? -1 : 1))
-    .replace(/\s/g, '')
+  const isNegative = numericValue < 0
+  const absoluteValue = Math.abs(numericValue)
 
-  return numericValue < 0 ? `-${result}` : result
+  let result: string
+
+  if (currency === 'USD') {
+    const formattedNumber = new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(absoluteValue)
+    result = `USD ${formattedNumber}`
+  } else {
+    // Default to IDR
+    result = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    })
+      .format(absoluteValue)
+      .replace(/\s/g, '')
+  }
+
+  return isNegative ? `-${result}` : result
 }
 
-export const formatNumberCurrency = (value: string) => {
+export const formatNumberCurrency = (
+  value: string,
+  currency: string = 'IDR'
+) => {
   const numericValue = parseInt(value.replace(/\D/g, ''), 10)
-  return isNaN(numericValue)
-    ? ''
-    : new Intl.NumberFormat('id-ID', {
-        style: 'decimal',
-        maximumFractionDigits: 0,
-      }).format(numericValue)
+
+  if (isNaN(numericValue)) return ''
+
+  if (currency === 'USD') {
+    const formattedNumber = new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(numericValue)
+    return `USD ${formattedNumber}`
+  } else {
+    // Default to IDR
+    return new Intl.NumberFormat('id-ID', {
+      style: 'decimal',
+      maximumFractionDigits: 0,
+    }).format(numericValue)
+  }
 }
 
 export const getMinimumNonZeroPrice = (
@@ -168,12 +201,13 @@ export function formatCreatedDate(dateString: Date) {
 
 export const handleDiscountType = (
   discountType: string,
-  discount: string | number
+  discount: string | number,
+  currency: string = 'IDR'
 ) => {
   if (discountType === 'percentage') {
     return `${discount || 0}%`
   }
-  return `${formatCurrency(discount || 0)}`
+  return `${formatCurrency(discount || 0, currency)}`
 }
 
 export const isValidImage = (fileName: any) => {
@@ -201,9 +235,11 @@ export function mapProductsToCardData(
       organizationName: product.organizationInstance?.name || 'Unknown',
       variant: product.packageVariant || [],
       originalPrice: product.packageVariant
-        ? formatCurrency(product.originalPrice)
-        : 'Rp0',
-      price: product.packageVariant ? formatCurrency(product.price) : 'Rp0',
+        ? formatCurrency(product.originalPrice, product.currency || 'IDR')
+        : formatCurrency(0, product.currency || 'IDR'),
+      price: product.packageVariant
+        ? formatCurrency(product.price, product.currency || 'IDR')
+        : formatCurrency(0, product.currency || 'IDR'),
       rating: getHotelRating(product),
       slugOrganization: product.organizationInstance?.slug || '',
       slugPackage: product.slug || '',
@@ -217,8 +253,11 @@ export function mapProductsToCardData(
       meccaHotel: product?.meccaHotel,
       medinaHotel: product?.medinaHotel,
       departure: product?.departure,
-      arrival: product.arrival,
+      arrival: product?.arrival,
+      currency: product?.currency,
+      variantType: product?.variantType,
       tripDuration: product?.packageVariant?.tripDuration,
+      waitingPeriod: product?.packageVariant?.waitingPeriod || null,
     })) || []
   )
 }
@@ -237,73 +276,6 @@ export const SimpleInterpolation = (
   value: number
 ): number => {
   return from * (1 - value) + to * value
-}
-
-/**
- * Formats a date to DD Month YYYY format in Indonesian
- */
-export function formatDateToRangeString(date: Date): string {
-  if (!date) return ''
-
-  try {
-    // Indonesian month names
-    const monthNames = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember',
-    ]
-
-    const day = date.getDate()
-    const month = monthNames[date.getMonth()]
-    const year = date.getFullYear()
-
-    return `${String(day).padStart(2, '0')} ${month} ${year}`
-  } catch (error) {
-    console.error('Error formatting date:', error)
-    return ''
-  }
-}
-
-/**
- * Formats a date to day and month only (DD MMM)
- */
-export function formatToShortDate(date: Date): string {
-  if (!date) return ''
-
-  try {
-    // Short month names
-    const monthNames = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'Mei',
-      'Jun',
-      'Jul',
-      'Ags',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ]
-
-    const day = date.getDate()
-    const month = monthNames[date.getMonth()]
-
-    return `${String(day).padStart(2, '0')} ${month}`
-  } catch (error) {
-    console.error('Error formatting date:', error)
-    return ''
-  }
 }
 
 export const formatDistance = (meters: any) => {
@@ -326,7 +298,8 @@ export const formatDistance = (meters: any) => {
 
 export function formatCurrencyIndonesia(
   value: number | string,
-  decimalPlaces = 1
+  decimalPlaces = 1,
+  currency: string = 'IDR'
 ): string {
   if (value === null || value === undefined || value === '') {
     return '0'
@@ -345,31 +318,57 @@ export function formatCurrencyIndonesia(
 
   let formattedValue: string
   let suffix: string
+  let prefix: string = ''
 
-  if (absValue >= 1_000_000_000) {
-    formattedValue = (Math.floor((numValue / 1_000_000_000) * 10) / 10).toFixed(
-      decimalPlaces
-    )
-    suffix = 'M'
-  } else if (absValue >= 1_000_000) {
-    formattedValue = (Math.floor((numValue / 1_000_000) * 10) / 10).toFixed(
-      decimalPlaces
-    )
-    suffix = 'jt'
-  } else if (absValue >= 1_000) {
-    formattedValue = (Math.floor((numValue / 1_000) * 10) / 10).toFixed(
-      decimalPlaces
-    )
-    suffix = 'rb'
+  if (currency === 'USD') {
+    prefix = 'USD '
+    // USD formatting with standard abbreviations
+    if (absValue >= 1_000_000_000) {
+      formattedValue = (
+        Math.floor((numValue / 1_000_000_000) * 10) / 10
+      ).toFixed(decimalPlaces)
+      suffix = 'B' // Billion
+    } else if (absValue >= 1_000_000) {
+      formattedValue = (Math.floor((numValue / 1_000_000) * 10) / 10).toFixed(
+        decimalPlaces
+      )
+      suffix = 'M' // Million
+    } else if (absValue >= 1_000) {
+      formattedValue = (Math.floor((numValue / 1_000) * 10) / 10).toFixed(
+        decimalPlaces
+      )
+      suffix = 'K' // Thousand
+    } else {
+      formattedValue = numValue.toFixed(decimalPlaces)
+      suffix = ''
+    }
   } else {
-    formattedValue = numValue.toFixed(decimalPlaces)
-    suffix = ''
+    // IDR formatting with Indonesian abbreviations
+    if (absValue >= 1_000_000_000) {
+      formattedValue = (
+        Math.floor((numValue / 1_000_000_000) * 10) / 10
+      ).toFixed(decimalPlaces)
+      suffix = 'M' // Miliar
+    } else if (absValue >= 1_000_000) {
+      formattedValue = (Math.floor((numValue / 1_000_000) * 10) / 10).toFixed(
+        decimalPlaces
+      )
+      suffix = 'jt' // Juta
+    } else if (absValue >= 1_000) {
+      formattedValue = (Math.floor((numValue / 1_000) * 10) / 10).toFixed(
+        decimalPlaces
+      )
+      suffix = 'rb' // Ribu
+    } else {
+      formattedValue = numValue.toFixed(decimalPlaces)
+      suffix = ''
+    }
   }
 
   // Clean up `.0`
   formattedValue = formattedValue.replace(/\.0+$/, '')
 
-  return `${formattedValue}${suffix}`
+  return `${prefix}${formattedValue}${suffix}`
 }
 
 export const formatDateRangeShort = (dateRange: DateRange): string => {

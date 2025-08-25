@@ -32,10 +32,10 @@ export const FacilityOptions: React.FC<FacilityOptionsProps> = ({
 
   return (
     <div className="max-h-[200px] space-y-2 overflow-y-auto">
-      {dataFacility.results.map((facility) => (
+      {dataFacility.results.map((facility, index) => (
         <Checkbox
           id={`facility-${facility.id}`}
-          key={facility.id}
+          key={`facility-${index}`}
           checked={isItemSelected(facility.code)}
           label={facility.name}
           onCheckedChange={(checked) =>

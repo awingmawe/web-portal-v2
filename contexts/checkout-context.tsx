@@ -584,7 +584,6 @@ export const CheckoutProvider = ({
     const distanceToMax = max - sliderValue
 
     if (distanceToMax <= 0) return 1 // fallback to make slider always responsive
-    console.log(distanceToMax < 500_000 ? distanceToMax : 500_000)
     return distanceToMax < 500_000 ? distanceToMax : 500_000
   }
 

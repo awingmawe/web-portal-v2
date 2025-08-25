@@ -1,12 +1,12 @@
 import { ArrowIcon } from '@/components/icons/arrow'
 import { EmailIcon } from '@/components/icons/email'
-import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/modalCek'
-import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/modalSukses'
-import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/modalTungguHasil'
+import CheckQuotaModal from '@/components/pages/detail-package/2-PackageVariant/modal/ModalCek'
+import ModalSuccess from '@/components/pages/detail-package/2-PackageVariant/modal/ModalSukses'
+import ModalWaitingHasil from '@/components/pages/detail-package/2-PackageVariant/modal/ModalTungguHasil'
 import DrawerCheckAvailibility from '@/components/pages/detail-package/mobile/DrawerCheckavailibility'
 import VerificationDialog from '@/components/pages/my/4-Profile/Card/VerificationDialog'
-import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/dialog/PhoneNumberNotVerified'
+import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/sonner'
 import { ACCOUNT_URL } from '@/constant/env'
@@ -16,7 +16,7 @@ import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNum
 import { isNullOrEmpty } from '@/lib/utils'
 import { checkAvailibility, getStatusStock } from '@/services/umrah-service'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 interface CheckAvailibilityProps {
   type?: 'normal' | 'footer'
@@ -106,9 +106,9 @@ export default function CheckAvailibility({
     await handleSendOtp(setIsPhoneNumberModal)
   }
   return (
-    <div>
+    <Fragment>
       {token ? (
-        <>
+        <Fragment>
           <DrawerCheckAvailibility
             open={isQuotaDrawerOpen}
             setOpen={setIsQuotaDrawerOpen}
@@ -133,7 +133,7 @@ export default function CheckAvailibility({
             Cek Kuota
             <ArrowIcon size={12} className="-rotate-45" />
           </Button>
-        </>
+        </Fragment>
       ) : (
         <Button
           className="w-full rounded-full py-2 lg:hidden"
@@ -226,6 +226,6 @@ export default function CheckAvailibility({
           <ArrowIcon size={16} className="-rotate-45 text-neutral-900" />
         </div>
       )}
-    </div>
+    </Fragment>
   )
 }

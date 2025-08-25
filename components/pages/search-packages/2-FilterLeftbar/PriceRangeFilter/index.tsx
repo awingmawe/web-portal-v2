@@ -54,7 +54,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({ dataMinMax }) => {
         <PriceRangeSlider
           minMax={dataMinMax}
           filters={filters.priceRange}
-          setPriceRange={setPriceRange}
+          setPriceRangeAction={setPriceRange}
           isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>

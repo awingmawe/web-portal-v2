@@ -75,8 +75,6 @@ const QontakChatWidget = ({ hide = false }: QontakChatWidgetProps) => {
               : undefined,
           }
 
-          console.log('Initializing Qontak Chat:', config)
-
           window.qchatInitialize(config)
 
           // Wait for iframe to appear, then adjust style

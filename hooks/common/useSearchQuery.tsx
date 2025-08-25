@@ -5,7 +5,7 @@ import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useSearchHistory } from '@/hooks/common/useSearchHistory'
 import { isEmpty } from '@/lib/utils'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { FormEvent, useCallback, useMemo, useState } from 'react'
+import { FormEvent, useCallback, useState } from 'react'
 
 export interface UseSearchQueryProps {
   redirectUri: string
@@ -101,14 +101,19 @@ export function useSearchQuery({
     [searchParams, setSearchQuery, addToHistory, redirectUri]
   )
 
-  const handleSearchDesktop = useMemo(() => {
-    const params = new URLSearchParams(searchParams.toString())
+  const handleSearchDesktop = useCallback(
+    (type: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      if (type) {
+        params.set('type', type)
+      }
+      params.set('query', searchQuery)
+      const queryString = params.toString()
 
-    params.set('query', searchQuery)
-    const queryString = params.toString()
-
-    return queryString ? `/${redirectUri}?${queryString}` : redirectUri
-  }, [searchParams, searchQuery, redirectUri])
+      return queryString ? `/${redirectUri}?${queryString}` : redirectUri
+    },
+    [searchParams, searchQuery, redirectUri]
+  )
 
   const clearSearch = useCallback(() => {
     setSearchQuery('')
