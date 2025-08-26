@@ -3,6 +3,8 @@ import {
   DetailVariant,
   LegalActions,
 } from '@/constant/types/CheckoutProps'
+import { Legal } from '@/constant/types/LegalProps'
+import { getSlugByVariantPackage } from '@/lib/utils'
 import { getLegalSyarat } from '@/services/general-service'
 import { checkRefundPolicy } from '@/services/identity-service'
 
@@ -16,6 +18,7 @@ interface UseLegalActionsProps {
       berlaku: string
     }[]
   ) => void
+  setDataLegal: (legal: Legal) => void
 }
 
 export const useLegalActions = ({
@@ -23,16 +26,26 @@ export const useLegalActions = ({
   detailVariant,
   setDataRefundPolicy,
   setParsedContent,
+  setDataLegal,
 }: UseLegalActionsProps): LegalActions => {
   const getLegal = async (): Promise<void> => {
     try {
-      const res = await getLegalSyarat()
+      const res = await getLegalSyarat('syarat-dan-ketentuan')
       setDataSk(res.results[0])
     } catch (error) {
       console.log(error)
     }
   }
 
+  const getLegalByVariant = async (variantType: string): Promise<void> => {
+    try {
+      const { slug } = getSlugByVariantPackage(variantType)
+      const res = await getLegalSyarat(slug)
+      setDataLegal(res.results[0])
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const getRefundPolicy = async (): Promise<void> => {
     try {
       const response = await checkRefundPolicy(
@@ -51,5 +64,6 @@ export const useLegalActions = ({
   return {
     getLegal,
     getRefundPolicy,
+    getLegalByVariant,
   }
 }

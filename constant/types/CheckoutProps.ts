@@ -1,3 +1,4 @@
+import { Legal } from '@/constant/types/LegalProps'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { PreBookingResponse } from '@/constant/types/PaymentCheckout'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
@@ -36,6 +37,7 @@ export interface DetailVariant {
   package: Package
   totalManifest: number
   currency: string
+  waitingPeriod: string
 }
 
 export interface PaymentDetails {
@@ -48,10 +50,13 @@ export interface PaymentDetails {
 }
 
 export interface CheckoutState {
+  // User data
   token: string
   detailVariant: DetailVariant
   selectedVariant: SelectedVariant
   selectedRoomType: RoomType
+
+  // Pre-booking data
   preBooking: PreBookingResponse
   prebookingLoading: boolean
   paymentDetails: PaymentDetails[] | []
@@ -61,17 +66,25 @@ export interface CheckoutState {
   rawInputValue: string
   selectedPayment: string
   paymentToken?: string
+
+  // Referral data
   referralCode: string
   wukalaSetting: boolean
   isReferralValid: boolean
   isReferralCodeChecked: boolean
+
+  // Jamaah data
   useMyData: boolean
   jamaahList: JamaahData[]
   nama: string
   noTlpn: string
+
+  // UI state
   loading: boolean
   termsAccepted: boolean
   isUmrahPersonal: boolean
+
+  // Legal data
   dataSK: DataSK
   dataRefundPolicy: string
   parsedContent:
@@ -80,6 +93,9 @@ export interface CheckoutState {
         berlaku: string
       }[]
     | []
+  dataLegal: Legal
+
+  // Other
   shouldCheckPreAfterClear: boolean
   shouldRunCheckPre: boolean
 }
@@ -119,6 +135,7 @@ export interface PaymentActions {
 export interface LegalActions {
   getLegal: () => Promise<void>
   getRefundPolicy: () => Promise<void>
+  getLegalByVariant: (variantType: string) => Promise<void>
 }
 
 export interface CheckoutContextValue
@@ -141,4 +158,5 @@ export interface CheckoutContextValue
   setSelectedRoomType: (roomType: RoomType) => void
   setShouldRunCheckPre: (should: boolean) => void
   setSelectedPayment: (payment: string) => void
+  setDataLegal: (legal: Legal) => void
 }

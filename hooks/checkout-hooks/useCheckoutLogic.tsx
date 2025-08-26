@@ -1,19 +1,23 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { getLocalReferralCode, setLocalReferralCode } from '@/lib/utils'
 import { useCheckout } from '@/contexts/checkout-context-v2'
+import { getLocalReferralCode, setLocalReferralCode } from '@/lib/utils'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export const useCheckoutLogic = () => {
-  const isLinkAja = sessionStorage?.getItem('isLinkAja') === 'true'
+  const isLinkAja =
+    typeof window !== 'undefined' &&
+    sessionStorage?.getItem('isLinkAja') === 'true'
   const [isOpenModal, setOpenModal] = useState(false)
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
+  const [isOpenModalDisclaimer, setOpenModalDisclaimer] = useState(false)
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const [disabledButtonCheckout, setDisabledButtonCheckout] = useState(true)
   const searchParams = useSearchParams()
 
   const {
+    token,
     detailVariant,
     selectedVariant,
     prebookingLoading,
@@ -50,6 +54,7 @@ export const useCheckoutLogic = () => {
     selectedPayment,
     setSelectedPayment,
     sliderStep,
+    dataLegal,
   } = useCheckout()
 
   // Handle referral code from URL params
@@ -100,6 +105,7 @@ export const useCheckoutLogic = () => {
   ])
 
   return {
+    token,
     isLinkAja,
     isOpenModal,
     setOpenModal,
@@ -144,5 +150,8 @@ export const useCheckoutLogic = () => {
     selectedPayment,
     setSelectedPayment,
     sliderStep,
+    dataLegal,
+    setOpenModalDisclaimer,
+    isOpenModalDisclaimer,
   }
 }

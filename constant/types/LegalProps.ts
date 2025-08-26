@@ -14,5 +14,6 @@ export interface GetLegalParams {
   size?: number
   order?: string
   orderBy?: string
+  slug?: string
   'slug:likelower'?: string
 }

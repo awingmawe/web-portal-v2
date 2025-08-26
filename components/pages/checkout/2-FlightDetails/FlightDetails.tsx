@@ -1,5 +1,6 @@
 'use client'
 
+import { PACKAGE_TYPE } from '@/constant/env'
 import { DetailVariant } from '@/constant/types/CheckoutProps'
 import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
 
@@ -21,18 +22,20 @@ const FlightDetails = ({ detailVariant }: FlightDetailsProps) => {
             {detailVariant?.package?.departure?.to?.airport?.cityName} (
             {detailVariant?.package?.departure?.to?.airport?.code})
           </p>
-          <p className="text-s-medium text-neutral-500">
-            {detailVariant?.departureDate &&
-              new Date(detailVariant.departureDate).toLocaleDateString(
-                'id-ID',
-                {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                }
-              )}
-          </p>
+          {detailVariant?.package?.packageType === PACKAGE_TYPE.UMRAH && (
+            <p className="text-s-medium text-neutral-500">
+              {detailVariant?.departureDate &&
+                new Date(detailVariant.departureDate).toLocaleDateString(
+                  'id-ID',
+                  {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  }
+                )}
+            </p>
+          )}
         </div>
       </div>
 
@@ -50,15 +53,20 @@ const FlightDetails = ({ detailVariant }: FlightDetailsProps) => {
             {detailVariant?.package?.arrival?.to?.airport?.cityName} (
             {detailVariant?.package?.arrival?.to?.airport?.code})
           </p>
-          <p className="text-s-medium text-neutral-500">
-            {detailVariant?.arrivalDate &&
-              new Date(detailVariant.arrivalDate).toLocaleDateString('id-ID', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-          </p>
+          {detailVariant?.package?.packageType === PACKAGE_TYPE.UMRAH && (
+            <p className="text-s-medium text-neutral-500">
+              {detailVariant?.arrivalDate &&
+                new Date(detailVariant.arrivalDate).toLocaleDateString(
+                  'id-ID',
+                  {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  }
+                )}
+            </p>
+          )}
         </div>
       </div>
     </div>

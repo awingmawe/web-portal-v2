@@ -1,8 +1,3 @@
-import { useState, useRef } from 'react'
-import { useAuth } from '@/contexts/auth/context'
-import { useEventTracker } from '@/contexts/event-tracker/context'
-import { useRouter } from 'next/navigation'
-import { Profile } from '@/contexts/auth/shared/type'
 import {
   CheckoutState,
   DataSK,
@@ -11,19 +6,34 @@ import {
   PaymentDetails,
   SelectedVariant,
 } from '@/constant/types/CheckoutProps'
+import { Legal } from '@/constant/types/LegalProps'
 import { PreBookingResponse } from '@/constant/types/PaymentCheckout'
+import { useAuth } from '@/contexts/auth/context'
+import { Profile } from '@/contexts/auth/shared/type'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { RoomType } from '@/contexts/package-variant-context'
+import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
 
 interface CheckoutStateReturn extends CheckoutState {
+  // User profile
   profile: Profile
+
+  // Event tracker
   pushEvent: (event: any) => void
+
+  // Router
   router: any
+
+  // Core state
   setToken: (token: string) => void
   setDetailVariant: (variant: DetailVariant) => void
   setSelectedVariant: (variant: SelectedVariant) => void
   setPreBooking: (preBooking: PreBookingResponse) => void
   setSelectedRoomType: (roomType: RoomType) => void
   setPreBookingLoading: (loading: boolean) => void
+
+  // Payment details
   setPaymentDetails: (details: PaymentDetails[]) => void
   setPaymentAmount: (amount: number) => void
   setTotalPrice: (price: number) => void
@@ -31,27 +41,58 @@ interface CheckoutStateReturn extends CheckoutState {
   setRawInputValue: (value: string) => void
   setSelectedPayment: (payment: string) => void
   setPaymentToken: (token?: string) => void
+
+  // Referral code
   setReferralCode: (code: string) => void
+
+  // Wukala setting
   setWukalaSetting: (setting: boolean) => void
+
+  // Referral code validation
   setIsReferralValid: (valid: boolean) => void
   setIsReferralCodeChecked: (checked: boolean) => void
+
+  // Use my data
   setUseMyData: (use: boolean) => void
+
+  // Jamaah list
   setJamaahList: React.Dispatch<React.SetStateAction<JamaahData[]>>
+
+  // Nama and no tlpn
   setNama: (nama: string) => void
   setNoTlpn: (noTlpn: string) => void
+
+  // Loading
   setLoading: (loading: boolean) => void
+
+  // Terms accepted
   setTermsAccepted: (accepted: boolean) => void
+
+  // Umrah personal
   setIsUmrahPersonal: (personal: boolean) => void
+
+  // Data SK
   setDataSk: (data: DataSK) => void
+
+  // Data refund policy
   setDataRefundPolicy: (policy: string) => void
+  setDataLegal: (legal: Legal) => void
+
+  // Parsed content
   setParsedContent: (
     content: {
       jumlah: string
       berlaku: string
     }[]
   ) => void
+
+  // Should check pre after clear
   setShouldCheckPreAfterClear: (should: boolean) => void
+
+  // Should run check pre
   setShouldRunCheckPre: (should: boolean) => void
+
+  // Refs
   checkPreCalled: React.MutableRefObject<boolean>
   isInitialRender: React.MutableRefObject<boolean>
   debounceTimerRef: React.MutableRefObject<any>
@@ -109,6 +150,7 @@ export const useCheckoutState = (): CheckoutStateReturn => {
       berlaku: string
     }[]
   >([])
+  const [dataLegal, setDataLegal] = useState<Legal>()
 
   // Control flags
   const [shouldCheckPreAfterClear, setShouldCheckPreAfterClear] =
@@ -192,6 +234,8 @@ export const useCheckoutState = (): CheckoutStateReturn => {
     setDataRefundPolicy,
     parsedContent,
     setParsedContent,
+    dataLegal: dataLegal as Legal,
+    setDataLegal,
 
     // Control flags
     shouldCheckPreAfterClear,

@@ -1,6 +1,7 @@
 import { getHotelRating, getTripDuration } from '@/lib/utils'
 import { DetailVariant, SelectedVariant } from '@/constant/types/CheckoutProps'
 import { PreBookingResponse } from '@/constant/types/PaymentCheckout'
+import { Package } from '@/constant/types/PackageProps'
 
 interface UseEventTrackerProps {
   pushEvent: (event: any) => void
@@ -12,7 +13,7 @@ interface UseEventTrackerProps {
   sliderValue: number
 }
 
-export const useEventTracker = ({
+export const useEventTrackerCheckout = ({
   pushEvent,
   detailVariant,
   selectedVariant,
@@ -24,15 +25,19 @@ export const useEventTracker = ({
   const handlePushEvent = (eventName: string): void => {
     pushEvent({
       name: eventName,
-      topic: 'umrah',
+      topic: detailVariant?.package.packageType,
       category: 'checkout',
       data: {
         packageId: detailVariant?.package.id,
+        departureDate: detailVariant?.departureDate,
+        arrivalDate: detailVariant?.arrivalDate,
         packageType: detailVariant?.package.packageType,
         title: detailVariant?.package.title,
         slug: detailVariant?.package.slug,
         hotelRating: getHotelRating(detailVariant?.package),
-        tripDuration: getTripDuration(detailVariant.package),
+        tripDuration: getTripDuration({
+          packageVariant: detailVariant,
+        } as unknown as Package), // because the type is not full filled, temporarily we add uknown as type
         travelName: detailVariant?.package.organizationInstance.name,
         travelCity: detailVariant?.package.organizationInstance.city.name,
         travelCityId: detailVariant?.package.organizationInstance.cityId,
@@ -47,7 +52,6 @@ export const useEventTracker = ({
         roomType: selectedVariant?.roomType,
         variantId: selectedVariant?.id,
         variantName: selectedVariant?.name,
-        departureDate: selectedVariant?.departureDate,
         quantity: totalQty,
         referralCode,
         netAmount: sliderValue,

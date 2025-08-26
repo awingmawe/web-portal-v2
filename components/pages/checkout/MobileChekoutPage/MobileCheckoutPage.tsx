@@ -3,8 +3,8 @@
 import { CashReceiptIcon } from '@/components/icons/cash-receipt'
 import { InfoIcon } from '@/components/icons/info'
 import { LinkAja, LinkAjaSyariah } from '@/components/icons/linkaja'
-import ModalCheckout from '@/components/pages/checkout/modal/modalCheckout'
-import ModalPengembalianDana from '@/components/pages/checkout/modal/modalPengembalianDana'
+import ModalCheckout from '@/components/pages/checkout/modal/ModalCheckout'
+import ModalPengembalianDana from '@/components/pages/checkout/modal/ModalPengembalianDana'
 import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/component/SelectHotel'
 import DrawerPengembalianDana from '@/components/pages/detail-package/mobile/DrawerPengemalianDana'
 import DrawerSK from '@/components/pages/detail-package/mobile/DrawerSK'
@@ -31,7 +31,9 @@ const MobileCheckoutPage = ({}) => {
   const [isOpenModalPengembalian, setOpenModalPengembalian] = useState(false)
   const [isHaveRefferalCode, setIsHaveReferralCode] = useState(false)
   const searchParams = useSearchParams()
-  const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const isLinkAja =
+    typeof window !== 'undefined' &&
+    sessionStorage?.getItem('isLinkAja') === 'true'
   const [disabledButtonCheckout, setDisabledButtonCheckout] = useState(true)
 
   const {
@@ -316,20 +318,20 @@ const MobileCheckoutPage = ({}) => {
               totalQty={totalQty}
               variant="normal"
               defaultValue={selectedVariant?.roomType}
-              defaultPackageVariant={selectedVariant.variant}
-              defaultPackageVariantId={selectedVariant.variantId}
+              defaultPackageVariant={selectedVariant?.variant}
+              defaultPackageVariantId={selectedVariant?.variantId}
               disabled={prebookingLoading}
               disabledAddOnly={
                 isLinkAja
                   ? sliderValue >=
                       LINKAJA_MAX_LIMIT -
                         getLinkAjaTiering(
-                          selectedVariant.netAmount * (totalQty + 1)
+                          selectedVariant?.netAmount * (totalQty + 1)
                         ) ||
-                    selectedVariant.netAmount * (totalQty + 1) >
+                    selectedVariant?.netAmount * (totalQty + 1) >
                       LINKAJA_MAX_LIMIT -
                         getLinkAjaTiering(
-                          selectedVariant.netAmount * (totalQty + 1)
+                          selectedVariant?.netAmount * (totalQty + 1)
                         )
                   : false
               }
@@ -337,7 +339,7 @@ const MobileCheckoutPage = ({}) => {
               onChange={(roomType) => {
                 setSelectedRoomType(roomType)
                 setShouldRunCheckPre(true)
-                setPaymentAmount(selectedVariant.netAmount)
+                setPaymentAmount(selectedVariant?.netAmount)
                 setRawInputValue(String(paymentAmount * totalQty))
               }}
             />
@@ -357,7 +359,7 @@ const MobileCheckoutPage = ({}) => {
               {/* <div className="mb-3 rounded-lg bg-yellow-50 p-3">
               <p className="text-xs font-medium text-yellow-800">
                 Minimal pembayaran untuk saat ini: Rp{' '}
-                {(selectedVariant.netAmount * jamaahList.length).toLocaleString(
+                {(selectedVariant?.netAmount * jamaahList.length).toLocaleString(
                   'id-ID'
                 )}
               </p>
@@ -384,7 +386,7 @@ const MobileCheckoutPage = ({}) => {
                       Uang muka minimal{' '}
                       <b className="font-bold">
                         {formatCurrency(
-                          selectedVariant.netAmount,
+                          selectedVariant?.netAmount,
                           detailVariant?.currency
                         )}
                       </b>{' '}
@@ -396,7 +398,7 @@ const MobileCheckoutPage = ({}) => {
                     <p className="text-xs-regular ml-2 text-neutral-900">
                       Minimal pembayaran uang muka adalah{' '}
                       {formatCurrency(
-                        selectedVariant.netAmount,
+                        selectedVariant?.netAmount,
                         detailVariant?.currency
                       )}
                       /orang
@@ -441,7 +443,7 @@ const MobileCheckoutPage = ({}) => {
                       disabled={prebookingLoading}
                       onBlur={() => {
                         const value = parseInt(rawInputValue) || 0
-                        const minAmount = selectedVariant.netAmount * totalQty
+                        const minAmount = selectedVariant?.netAmount * totalQty
                         const maxAmount = isLinkAja
                           ? LINKAJA_MAX_LIMIT -
                             getLinkAjaTiering(Number(rawInputValue))
@@ -460,7 +462,8 @@ const MobileCheckoutPage = ({}) => {
                         if (e.key === 'Enter') {
                           e.preventDefault()
                           const value = parseInt(rawInputValue) || 0
-                          const minAmount = selectedVariant.netAmount * totalQty
+                          const minAmount =
+                            selectedVariant?.netAmount * totalQty
                           const maxAmount = isLinkAja
                             ? LINKAJA_MAX_LIMIT -
                               getLinkAjaTiering(
@@ -483,7 +486,7 @@ const MobileCheckoutPage = ({}) => {
                 </div>
                 <input
                   type="range"
-                  min={totalQty > 0 ? selectedVariant.netAmount * totalQty : 0}
+                  min={totalQty > 0 ? selectedVariant?.netAmount * totalQty : 0}
                   max={
                     totalQty > 0
                       ? isLinkAja

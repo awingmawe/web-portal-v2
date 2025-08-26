@@ -10,7 +10,8 @@ import {
   CALL_CENTER,
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
-  LOCAL_STORAGE_KURS_OPEN,
+  LOCAL_STORAGE_KURS_OPEN_IDR,
+  LOCAL_STORAGE_KURS_OPEN_USD,
   LOCAL_STORAGE_SELECTED_VARIANT,
   PACKAGE_TYPE,
 } from '@/constant/env'
@@ -70,11 +71,21 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   }, [])
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsChecked(
-        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) === 'true' ? true : false
-      )
+      if (pkg.currency === 'IDR') {
+        setIsChecked(
+          localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_IDR) === 'true'
+            ? true
+            : false
+        )
+      } else {
+        setIsChecked(
+          localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_USD) === 'true'
+            ? true
+            : false
+        )
+      }
     }
-  }, [])
+  }, [pkg.currency])
 
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
@@ -185,8 +196,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   }, [variants])
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
-  }, [isChecked])
+    if (pkg.currency === 'IDR') {
+      localStorage.setItem(LOCAL_STORAGE_KURS_OPEN_IDR, isChecked.toString())
+    } else {
+      localStorage.setItem(LOCAL_STORAGE_KURS_OPEN_USD, isChecked.toString())
+    }
+  }, [isChecked, pkg.currency])
 
   const handleSubmit = () => {
     localStorage.setItem(
@@ -222,9 +237,15 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       setIsSelectHotelModalOpen(true)
       return
     } else {
+      const isKursOpenIDR =
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_IDR) === 'true'
+      const isKursOpenUSD =
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_USD) === 'true'
       if (
-        pkg.packageType === PACKAGE_TYPE.HAJJ &&
-        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) !== 'true'
+        (pkg.packageType === PACKAGE_TYPE.HAJJ &&
+          pkg.currency === 'IDR' &&
+          !isKursOpenIDR) ||
+        (pkg.currency === 'USD' && !isKursOpenUSD)
       ) {
         setIsKursModalOpen(true)
         setIsSelectHotelModalOpen(false)

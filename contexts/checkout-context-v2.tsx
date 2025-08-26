@@ -3,7 +3,7 @@
 import { CheckoutContextValue } from '@/constant/types/CheckoutProps'
 import { useCheckoutEffects } from '@/hooks/checkout-hooks/useCheckoutEffect'
 import { useCheckoutState } from '@/hooks/checkout-hooks/useCheckoutState'
-import { useEventTracker } from '@/hooks/checkout-hooks/useEventTracker'
+import { useEventTrackerCheckout } from '@/hooks/checkout-hooks/useEventTracker'
 import { useJamaahActions } from '@/hooks/checkout-hooks/useJamaahAction'
 import { useLegalActions } from '@/hooks/checkout-hooks/useLegalAction'
 import { usePaymentActions } from '@/hooks/checkout-hooks/usePaymentAction'
@@ -50,9 +50,10 @@ export const CheckoutProvider = ({
     detailVariant: state.detailVariant,
     setDataRefundPolicy: state.setDataRefundPolicy,
     setParsedContent: state.setParsedContent,
+    setDataLegal: state.setDataLegal,
   })
 
-  const { handlePushEvent } = useEventTracker({
+  const { handlePushEvent } = useEventTrackerCheckout({
     pushEvent: state.pushEvent,
     detailVariant: state.detailVariant,
     selectedVariant: state.selectedVariant,
@@ -114,6 +115,7 @@ export const CheckoutProvider = ({
     detailVariant: state.detailVariant,
     getRefundPolicy: legalActions.getRefundPolicy,
     debounceTimerRef: state.debounceTimerRef,
+    getLegalByVariant: legalActions.getLegalByVariant,
   })
 
   const isLinkAja =

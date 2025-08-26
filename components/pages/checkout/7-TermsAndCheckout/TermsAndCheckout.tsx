@@ -1,7 +1,7 @@
 'use client'
 
+import { InfoIcon } from '@/components/icons/info'
 import { Button } from '@/components/ui/button'
-import { PaymentMethod } from '@/constant/types/PaymentMethod'
 
 interface TermsAndCheckoutProps {
   termsAccepted: boolean
@@ -10,9 +10,9 @@ interface TermsAndCheckoutProps {
   setOpenModalPengembalian: (open: boolean) => void
   isEmptyRoomType: boolean
   disabledButtonCheckout: boolean
-  handleCheckout: (paymentMethod?: PaymentMethod) => void
-  isLinkAja: boolean
-  selectedPayment: string
+  currency: string
+  preBookingLoading: boolean
+  setOpenModalDisclaimer: (open: boolean) => void
 }
 
 const TermsAndCheckout = ({
@@ -20,28 +20,34 @@ const TermsAndCheckout = ({
   setTermsAccepted,
   setOpenModal,
   setOpenModalPengembalian,
+  setOpenModalDisclaimer,
   isEmptyRoomType,
   disabledButtonCheckout,
-  handleCheckout,
-  isLinkAja,
-  selectedPayment,
+  currency,
+  preBookingLoading,
 }: TermsAndCheckoutProps) => {
   const handleCheckoutClick = () => {
     if (!isEmptyRoomType && termsAccepted) {
-      handleCheckout(
-        isLinkAja
-          ? {
-              linkAja: true,
-              linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
-            }
-          : {}
-      )
+      setOpenModalDisclaimer(true)
     }
   }
 
   return (
-    <div className="">
-      <div className="mb-4 flex items-center">
+    <div className="flex flex-col gap-5">
+      {currency === 'USD' && (
+        <p
+          className={`text-s-regular bg-info-100 text-info-800 flex items-center gap-2 rounded-lg px-3 py-2`}
+        >
+          <InfoIcon
+            className="text-info-800 stroke-0"
+            color="black"
+            size={16}
+          />
+          Saat ini, kamu tidak akan dikenakan biaya apapun. Kamu dapat
+          melanjutkan pembayaran uang muka ketika tagihan sudah diterbitkan.
+        </p>
+      )}
+      <div className="flex items-center">
         <input
           type="checkbox"
           className="mr-2 h-4 w-4 accent-yellow-500"
@@ -67,25 +73,26 @@ const TermsAndCheckout = ({
         </span>
       </div>
 
-      {isEmptyRoomType && (
-        <p className="text-m-regular text-error-500 my-3">
-          Harap pilih minimal 1 jemaah
-        </p>
-      )}
+      <div className="flex flex-col gap-1">
+        {isEmptyRoomType && (
+          <p className="text-m-regular text-error-500">
+            Harap pilih minimal 1 jemaah
+          </p>
+        )}
 
-      {!isEmptyRoomType && !termsAccepted && (
-        <p className="mb-2 text-sm text-red-500">
-          *Harap setujui syarat & ketentuan
-        </p>
-      )}
-
-      <Button
-        disabled={disabledButtonCheckout}
-        className="w-full font-medium text-neutral-900"
-        onClick={handleCheckoutClick}
-      >
-        Lanjut Bayar Sekarang!
-      </Button>
+        {!isEmptyRoomType && !termsAccepted && (
+          <p className="text-sm text-red-500">
+            *Harap setujui syarat & ketentuan
+          </p>
+        )}
+        <Button
+          disabled={disabledButtonCheckout || preBookingLoading}
+          className="w-full font-medium text-neutral-900"
+          onClick={handleCheckoutClick}
+        >
+          Lanjut Bayar Sekarang!
+        </Button>
+      </div>
     </div>
   )
 }
