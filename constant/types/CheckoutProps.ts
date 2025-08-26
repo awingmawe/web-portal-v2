@@ -2,17 +2,12 @@ import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { PreBookingResponse } from '@/constant/types/PaymentCheckout'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { Profile } from '@/contexts/auth/shared/type'
+import { RoomType } from '@/contexts/package-variant-context'
 
 export interface JamaahData {
   id: string | number
   name: string
   phone: string
-}
-
-export interface RoomType {
-  double?: number
-  triple?: number
-  quad?: number
 }
 
 export interface DataSK {
@@ -28,6 +23,10 @@ export interface SelectedVariant {
   roomType: RoomType
   variant: PackageVariant
   variantId: number
+  id: number
+  isLastCall: boolean
+  departureDate: string
+  arrivalDate: string
 }
 
 export interface DetailVariant {
@@ -36,6 +35,7 @@ export interface DetailVariant {
   isUmrahPersonal: boolean
   package: Package
   totalManifest: number
+  currency: string
 }
 
 export interface PaymentDetails {
@@ -48,13 +48,13 @@ export interface PaymentDetails {
 }
 
 export interface CheckoutState {
-  token: string | null
+  token: string
   detailVariant: DetailVariant
   selectedVariant: SelectedVariant
-  selectedRoomType: RoomType | null
+  selectedRoomType: RoomType
   preBooking: PreBookingResponse
   prebookingLoading: boolean
-  paymentDetails: PaymentDetails[]
+  paymentDetails: PaymentDetails[] | []
   paymentAmount: number
   totalPrice: number
   sliderValue: number
@@ -74,10 +74,12 @@ export interface CheckoutState {
   isUmrahPersonal: boolean
   dataSK: DataSK
   dataRefundPolicy: string
-  parsedContent: {
-    jumlah: string
-    berlaku: string
-  }[]
+  parsedContent:
+    | {
+        jumlah: string
+        berlaku: string
+      }[]
+    | []
   shouldCheckPreAfterClear: boolean
   shouldRunCheckPre: boolean
 }
@@ -131,4 +133,12 @@ export interface CheckoutContextValue
   router: any
   isLinkAja: boolean
   handlePushEvent: (eventName: string) => void
+  setReferralCode: (code: string) => void
+  setPaymentAmount: (amount: number) => void
+  setSliderValue: (value: number) => void
+  setTermsAccepted: (accepted: boolean) => void
+  setRawInputValue: (value: string) => void
+  setSelectedRoomType: (roomType: RoomType) => void
+  setShouldRunCheckPre: (should: boolean) => void
+  setSelectedPayment: (payment: string) => void
 }

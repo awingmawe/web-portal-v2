@@ -203,7 +203,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         variantId: selectedVariant?.id,
         variant: selectedVariant,
         name: selectedVariant?.name,
-        currency: pkg.currency,
       })
     )
     router.push('/checkout')

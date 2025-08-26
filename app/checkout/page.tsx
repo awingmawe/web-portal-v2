@@ -1,11 +1,11 @@
 'use client'
 
-import Checkout from '@/components/pages/checkout/1-CheckoutPage/CheckoutPage'
 import MobileCheckoutPage from '@/components/pages/checkout/2-MobileChekoutPage/MobileCheckoutPage'
+import CheckoutPage from '@/components/pages/checkout/CheckoutPage'
 import Footer from '@/components/shared/Footer'
 import Topbar from '@/components/shared/Topbar'
 import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
-import { CheckoutProvider, useCheckout } from '@/contexts/checkout-context'
+import { CheckoutProvider, useCheckout } from '@/contexts/checkout-context-v2'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import Script from 'next/script'
 import { Fragment } from 'react'
@@ -20,7 +20,7 @@ function CheckoutContent() {
     <Fragment>
       <div className="hidden lg:block">
         <Topbar token={token} shadow scrolled />
-        <Checkout />
+        <CheckoutPage />
         <Footer type="compact" />
       </div>
       <div className="block lg:hidden">

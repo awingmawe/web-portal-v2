@@ -14,7 +14,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Separator } from '@/components/ui/separator'
 import { LINKAJA_MAX_LIMIT } from '@/constant/env'
 import { getLinkAjaTiering } from '@/constant/types/LinkAja'
-import { useCheckout } from '@/contexts/checkout-context'
+import { useCheckout } from '@/contexts/checkout-context-v2'
 import {
   formatCurrency,
   getLocalReferralCode,
@@ -443,7 +443,8 @@ const MobileCheckoutPage = ({}) => {
                         const value = parseInt(rawInputValue) || 0
                         const minAmount = selectedVariant.netAmount * totalQty
                         const maxAmount = isLinkAja
-                          ? LINKAJA_MAX_LIMIT - getLinkAjaTiering(rawInputValue)
+                          ? LINKAJA_MAX_LIMIT -
+                            getLinkAjaTiering(Number(rawInputValue))
                           : preBooking?.totalPrice || totalPrice * totalQty
 
                         if (value >= minAmount && value <= maxAmount) {
@@ -487,8 +488,10 @@ const MobileCheckoutPage = ({}) => {
                     totalQty > 0
                       ? isLinkAja
                         ? preBooking?.totalPrice >
-                          LINKAJA_MAX_LIMIT - getLinkAjaTiering(rawInputValue)
-                          ? LINKAJA_MAX_LIMIT - getLinkAjaTiering(rawInputValue)
+                          LINKAJA_MAX_LIMIT -
+                            getLinkAjaTiering(Number(rawInputValue))
+                          ? LINKAJA_MAX_LIMIT -
+                            getLinkAjaTiering(Number(rawInputValue))
                           : preBooking?.totalPrice
                         : preBooking?.totalPrice || totalPrice * totalQty
                       : 0
