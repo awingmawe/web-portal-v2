@@ -2,6 +2,8 @@
 
 import { InfoIcon } from '@/components/icons/info'
 import { Button } from '@/components/ui/button'
+import { PACKAGE_TYPE } from '@/constant/env'
+import { PaymentMethod } from '@/constant/types/PaymentMethod'
 
 interface TermsAndCheckoutProps {
   termsAccepted: boolean
@@ -13,6 +15,10 @@ interface TermsAndCheckoutProps {
   currency: string
   preBookingLoading: boolean
   setOpenModalDisclaimer: (open: boolean) => void
+  handleCheckout: (paymentMethod?: PaymentMethod) => void
+  isLinkAja: boolean
+  selectedPayment: string
+  packageType: string
 }
 
 const TermsAndCheckout = ({
@@ -21,14 +27,29 @@ const TermsAndCheckout = ({
   setOpenModal,
   setOpenModalPengembalian,
   setOpenModalDisclaimer,
+  handleCheckout,
   isEmptyRoomType,
   disabledButtonCheckout,
   currency,
   preBookingLoading,
+  isLinkAja,
+  selectedPayment,
+  packageType,
 }: TermsAndCheckoutProps) => {
   const handleCheckoutClick = () => {
     if (!isEmptyRoomType && termsAccepted) {
-      setOpenModalDisclaimer(true)
+      if (packageType === PACKAGE_TYPE.HAJJ) {
+        setOpenModalDisclaimer(true)
+      } else {
+        handleCheckout(
+          isLinkAja
+            ? {
+                linkAja: true,
+                linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+              }
+            : {}
+        )
+      }
     }
   }
 

@@ -76,17 +76,17 @@ const PaymentSection = ({
   }
 
   return (
-    <div className="rounded-[20px] border border-neutral-100 p-6">
-      <div className="mb-4 flex items-center gap-[12px]">
+    <div className="rounded-[20px] border border-neutral-100 max-lg:mx-4 max-lg:p-3 lg:p-4">
+      <div className="flex items-center max-lg:mb-2.5 max-lg:gap-1 lg:mb-4 lg:gap-3">
         <Image src="/images/money-3.svg" width={24} height={24} alt="money" />
-        <span className="font-semibold">Jumlah Bayar</span>
+        <p className="text-m-semibold">Jumlah Bayar</p>
       </div>
 
       {/* Divider */}
-      <div className="h-[1px] w-full bg-[#D2D2D1]" />
+      <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
 
       {/* Description */}
-      <div className="mt-3 flex justify-between">
+      <div className="flex justify-between lg:mt-3">
         <p className="text-m-regular">
           Gak perlu bayar full dulu, cukup uang muka aja dulu kamu yang atur!
         </p>
@@ -108,7 +108,7 @@ const PaymentSection = ({
       </div>
 
       {/* Input & slider */}
-      <div className="mt-4">
+      <div className="mt-4 max-lg:mt-2.5">
         {/* Jumlah Bayar + Sisa Pelunasan */}
         <div className="mb-4 flex items-center justify-between">
           {/* Label + Input */}
@@ -134,7 +134,7 @@ const PaymentSection = ({
           </div>
 
           {/* Sisa Pelunasan */}
-          <span className="text-s-regular mt-10 flex items-center whitespace-nowrap text-neutral-500">
+          <span className="text-s-regular mt-10 flex items-center whitespace-nowrap text-neutral-500 max-lg:hidden">
             Sisa Pelunasan{' '}
             {prebookingLoading ? (
               <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
@@ -167,8 +167,22 @@ const PaymentSection = ({
           step={sliderStep()}
           value={sliderValue}
           onChange={handleSliderChange}
-          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-gray-200 accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
+          className="bg-primary-200 h-2 w-full cursor-pointer appearance-none rounded-full accent-yellow-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-yellow-400 [&::-webkit-slider-thumb]:shadow"
         />
+
+        <span className="text-s-regular mt-2.5 flex items-center whitespace-nowrap text-neutral-500 lg:hidden">
+          Sisa Pelunasan{' '}
+          {prebookingLoading ? (
+            <div className="ml-2 h-5 w-5 animate-spin rounded-full border-b-2 border-gray-900"></div>
+          ) : (
+            <strong className="text-m-medium ml-2 text-neutral-900">
+              Rp
+              {Number(preBooking?.remainingPayment || 0).toLocaleString(
+                'id-ID'
+              )}
+            </strong>
+          )}
+        </span>
       </div>
     </div>
   )

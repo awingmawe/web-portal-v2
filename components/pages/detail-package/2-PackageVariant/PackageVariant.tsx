@@ -30,7 +30,6 @@ import {
 } from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { differenceInDays } from 'date-fns'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 // Import the new components
@@ -107,7 +106,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     availableRoomTypes,
   } = usePackageVariant()
 
-  const router = useRouter()
   const { lg } = useTailwindBreakpoint()
   const [isLiked, setIsLiked] = useState(false)
   const [isSelectHotelModalOpen, setIsSelectHotelModalOpen] = useState(false)
@@ -220,8 +218,8 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         name: selectedVariant?.name,
       })
     )
-    router.push('/checkout')
     handlePushEvent('click_checkout')
+    window.location.href = '/checkout' // why using this to prevent caching effect to checkout page
   }
 
   const handleCheckout = () => {

@@ -19,6 +19,7 @@ interface JamaahSectionProps {
   setPaymentAmount: (amount: number) => void
   setRawInputValue: (value: string) => void
   paymentAmount: number
+  isMobile: boolean
 }
 
 const JamaahSection = ({
@@ -33,10 +34,11 @@ const JamaahSection = ({
   setPaymentAmount,
   setRawInputValue,
   paymentAmount,
+  isMobile,
 }: JamaahSectionProps) => {
   return (
-    <div className="rounded-[20px] border border-neutral-100">
-      <div className="mb-4 flex items-center justify-between border-b border-neutral-100 p-4">
+    <div className="rounded-[20px] border border-neutral-100 max-lg:mx-4 max-lg:p-3">
+      <div className="mb-4 flex items-center justify-between border-b border-neutral-100 p-4 max-lg:hidden">
         <div className="flex items-center gap-[12px]">
           <Image src="/images/people.svg" width={24} height={24} alt="people" />
           <span className="font-semibold text-neutral-900">
@@ -45,9 +47,9 @@ const JamaahSection = ({
         </div>
       </div>
 
-      <div className="px-4 pb-4">
+      <div className="lg:px-4 lg:pb-4">
         <SelectHotel
-          variant="checkout"
+          variant={isMobile ? 'normal' : 'checkout'}
           currency={detailVariant?.package.currency}
           packageType={detailVariant?.package.packageType}
           totalQty={totalQty}

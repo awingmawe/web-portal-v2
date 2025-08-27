@@ -135,13 +135,17 @@ const CheckoutDrawerMobile = React.memo(
         window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
         return
       }
+      const isKursOpenIDR =
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_IDR) === 'true'
+      const isKursOpenUSD =
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_USD) === 'true'
       if (
-        packageType === PACKAGE_TYPE.HAJJ &&
-        (localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_IDR) !== 'true' ||
-          localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_USD) !== 'true')
+        (packageType === PACKAGE_TYPE.HAJJ &&
+          currency === 'IDR' &&
+          !isKursOpenIDR) ||
+        (currency === 'USD' && !isKursOpenUSD)
       ) {
         setIsOpenKurs(true)
-        return
       }
 
       localStorage.setItem(

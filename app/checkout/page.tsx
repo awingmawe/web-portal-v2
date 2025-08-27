@@ -1,6 +1,6 @@
 import CheckoutPage from '@/components/pages/checkout/CheckoutPage'
-import MobileCheckoutPage from '@/components/pages/checkout/MobileChekoutPage/MobileCheckoutPage'
 import Footer from '@/components/shared/Footer'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { cookieNames } from '@/services/common/cookie'
@@ -12,21 +12,16 @@ export default async function CheckoutContent() {
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   return (
     <Fragment>
-      <div className="hidden lg:block">
-        <Topbar token={token} shadow scrolled />
-        <CheckoutPage />
-        <Footer type="compact" />
-      </div>
-      <div className="block lg:hidden">
-        <MobileCheckoutPage />
-      </div>
+      <MobileTopbar
+        title="Checkout"
+        variant="plain"
+        backgroundColor="bg-white"
+        showBackButton
+      />
 
-      {/* <Script
-        src={SNAP_URL}
-        data-client-key={MIDTRANS_CLIENT_KEY}
-        strategy="lazyOnload"
-        onError={() => {}}
-      /> */}
+      <Topbar token={token} shadow scrolled />
+      <CheckoutPage />
+      <Footer type="compact" className="max-lg:hidden" />
 
       <EventTrackerImpression
         nameDidMount="impression_checkout"

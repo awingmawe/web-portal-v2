@@ -404,8 +404,6 @@ export const getHotelRating = (product: Package) => {
 }
 
 export const getTripDuration = (product: Package) => {
-  console.log(product)
-
   return (
     differenceInDays(
       product.packageVariant.arrivalDate,

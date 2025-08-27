@@ -1,5 +1,7 @@
 'use client'
 
+import { CashReceiptIcon } from '@/components/icons/cash-receipt'
+import { LinkAja, LinkAjaSyariah } from '@/components/icons/linkaja'
 import CheckoutHeader from '@/components/pages/checkout/1-CheckoutHeader/CheckoutHeader'
 import FlightDetails from '@/components/pages/checkout/2-FlightDetails/FlightDetails'
 import JamaahSection from '@/components/pages/checkout/3-JamaahSection/JamaahSection'
@@ -8,14 +10,20 @@ import PaymentMethodSection from '@/components/pages/checkout/5-PaymentMethodSec
 import ReferralSection from '@/components/pages/checkout/6-ReferralSection/ReferralSection'
 import TermsAndCheckout from '@/components/pages/checkout/7-TermsAndCheckout/TermsAndCheckout'
 import PackageDetails from '@/components/pages/checkout/8-PackageDetails.tsx/PackageDetails'
+import PriceBreakdown from '@/components/pages/checkout/component/PriceBreakdown'
 import ModalCheckout from '@/components/pages/checkout/modal/ModalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/ModalPengembalianDana'
 import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import { useCheckoutLogic } from '@/hooks/checkout-hooks/useCheckoutLogic'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { getSlugByVariantPackage } from '@/lib/utils'
 import { format } from 'date-fns'
 import { id } from 'date-fns/locale'
+import Script from 'next/script'
 import renderHTML from 'react-render-html'
 
 const CheckoutPage = () => {
@@ -83,6 +91,8 @@ const CheckoutPage = () => {
 
   const { title } = getSlugByVariantPackage(detailVariant?.package.variantType)
 
+  const { lg } = useTailwindBreakpoint()
+
   if (!token || !selectedVariant || !detailVariant) {
     return (
       <div className=" grid h-[78dvh] place-content-center p-8">
@@ -92,93 +102,188 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="mt-5 min-h-screen bg-white">
+    <>
       {/* Main content */}
-      <main className="container mx-auto px-4 py-6">
-        {/* Back button */}
-        <CheckoutHeader />
+      <main className="max-lg:mt-[50px]">
+        <div className="container mx-auto py-6 lg:px-4">
+          {/* Back button */}
+          <CheckoutHeader />
 
-        <div className="flex flex-col gap-6 lg:flex-row">
-          {/* Left section */}
-          <div className="w-full space-y-6 lg:w-2/3">
-            {/* Flight details */}
-            <FlightDetails detailVariant={detailVariant} />
+          <div className="flex flex-col gap-5 max-lg:gap-4 lg:flex-row">
+            {/* Left section */}
+            <div className="w-full space-y-5 max-lg:order-2 max-lg:space-y-4 lg:w-2/3">
+              {/* Divider */}
+              <div className="h-1 w-full bg-neutral-100 lg:hidden" />
 
-            {/* Jamaah data */}
-            <JamaahSection
+              {/* Flight details */}
+              <div className="max-lg:hidden">
+                <FlightDetails detailVariant={detailVariant} />
+              </div>
+
+              {/* Jamaah data */}
+              <JamaahSection
+                detailVariant={detailVariant}
+                selectedVariant={selectedVariant}
+                totalQty={totalQty}
+                prebookingLoading={prebookingLoading}
+                isLinkAja={isLinkAja}
+                sliderValue={sliderValue}
+                setSelectedRoomType={setSelectedRoomType}
+                setShouldRunCheckPre={setShouldRunCheckPre}
+                setPaymentAmount={setPaymentAmount}
+                setRawInputValue={setRawInputValue}
+                paymentAmount={paymentAmount}
+                isMobile={lg}
+              />
+
+              {/* Divider */}
+              <div className="h-1 w-full bg-neutral-100 lg:hidden" />
+
+              {/* Payment section */}
+              <PaymentSection
+                detailVariant={detailVariant}
+                selectedVariant={selectedVariant}
+                totalQty={totalQty}
+                isLinkAja={isLinkAja}
+                rawInputValue={rawInputValue}
+                formatNumber={formatNumber}
+                handleInputChange={handleInputChange}
+                prebookingLoading={prebookingLoading}
+                setSliderValue={setSliderValue}
+                setPaymentAmount={setPaymentAmount}
+                setRawInputValue={setRawInputValue}
+                preBooking={preBooking}
+                totalPrice={totalPrice}
+                sliderValue={sliderValue}
+                handleSliderChange={handleSliderChange}
+                sliderStep={sliderStep}
+              />
+
+              {/* Payment Method */}
+              <PaymentMethodSection
+                isLinkAja={isLinkAja}
+                selectedPayment={selectedPayment}
+                setSelectedPayment={setSelectedPayment}
+              />
+
+              {/* Referral code */}
+              <ReferralSection
+                isHaveRefferalCode={isHaveRefferalCode}
+                referralCode={referralCode}
+                setReferralCode={setReferralCode}
+                wukalaSetting={wukalaSetting}
+                handleCheckReferral={handleCheckReferral}
+                handleRemoveReferralCode={handleRemoveReferralCode}
+                isReferralCodeChecked={isReferralCodeChecked}
+                isReferralValid={isReferralValid}
+              />
+
+              {/* Divider */}
+              <div className="h-1 w-full bg-neutral-100 lg:hidden" />
+
+              {/* Price breakdown */}
+              <div className="max-lg:hidden">
+                <PriceBreakdown
+                  detailVariant={detailVariant}
+                  paymentDetails={paymentDetails}
+                  globalCurrencyRate={preBooking?.globalCurrencyRate}
+                />
+              </div>
+
+              {/* Terms and conditions */}
+              <TermsAndCheckout
+                currency={detailVariant?.package?.currency}
+                termsAccepted={termsAccepted}
+                preBookingLoading={prebookingLoading}
+                setTermsAccepted={setTermsAccepted}
+                setOpenModal={setOpenModal}
+                setOpenModalPengembalian={setOpenModalPengembalian}
+                isEmptyRoomType={isEmptyRoomType}
+                disabledButtonCheckout={disabledButtonCheckout}
+                setOpenModalDisclaimer={setOpenModalDisclaimer}
+                packageType={detailVariant?.package?.packageType}
+                isLinkAja={isLinkAja}
+                selectedPayment={selectedPayment}
+                handleCheckout={handleCheckout}
+              />
+
+              {/* Soon will refactor */}
+              {lg && isLinkAja && (
+                <div className="bg-white">
+                  <div className="rounded-[16px] border border-b border-neutral-200">
+                    <div className="flex items-center border-b border-neutral-200 p-4">
+                      <CashReceiptIcon className="text-neutral-900" size={20} />
+                      <h2 className="text-m-semibold ml-2.5 text-neutral-900">
+                        Metode Pembayaran
+                      </h2>
+                    </div>
+                    <RadioGroup
+                      value={selectedPayment}
+                      onValueChange={setSelectedPayment}
+                      className="p-4"
+                    >
+                      {/* LinkAja Syariah */}
+                      <div
+                        className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
+                        onClick={() => setSelectedPayment('linkAjaSyariah')}
+                      >
+                        <div className="flex items-center gap-4">
+                          <RadioGroupItem
+                            value="linkAjaSyariah"
+                            id="linkAjaSyariah"
+                            className="h-4 w-4"
+                          />
+                          <div className="flex items-center gap-2">
+                            <LinkAjaSyariah
+                              className="h-4 w-4"
+                              id="linkajaSyariahIcon"
+                            />
+                            <Label
+                              htmlFor="linkAjaSyariah"
+                              className="text-l-medium cursor-pointer"
+                            >
+                              LinkAja Syariah
+                            </Label>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* LinkAja */}
+                      <div
+                        className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
+                        onClick={() => setSelectedPayment('linkAja')}
+                      >
+                        <div className="flex items-center gap-4">
+                          <RadioGroupItem
+                            value="linkAja"
+                            id="linkaja"
+                            className="h-4 w-4"
+                          />
+                          <div className="flex items-center gap-2">
+                            <LinkAja className="h-4 w-4" id="linkajaIcon" />
+                            <Label
+                              htmlFor="linkaja"
+                              className="text-l-medium cursor-pointer"
+                            >
+                              LinkAja
+                            </Label>
+                          </div>
+                        </div>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right section - Package details */}
+            <PackageDetails
               detailVariant={detailVariant}
               selectedVariant={selectedVariant}
-              totalQty={totalQty}
-              prebookingLoading={prebookingLoading}
-              isLinkAja={isLinkAja}
-              sliderValue={sliderValue}
-              setSelectedRoomType={setSelectedRoomType}
-              setShouldRunCheckPre={setShouldRunCheckPre}
-              setPaymentAmount={setPaymentAmount}
-              setRawInputValue={setRawInputValue}
-              paymentAmount={paymentAmount}
-            />
-
-            {/* Payment section */}
-            <PaymentSection
-              detailVariant={detailVariant}
-              selectedVariant={selectedVariant}
-              totalQty={totalQty}
-              isLinkAja={isLinkAja}
-              rawInputValue={rawInputValue}
-              formatNumber={formatNumber}
-              handleInputChange={handleInputChange}
-              prebookingLoading={prebookingLoading}
-              setSliderValue={setSliderValue}
-              setPaymentAmount={setPaymentAmount}
-              setRawInputValue={setRawInputValue}
-              preBooking={preBooking}
-              totalPrice={totalPrice}
-              sliderValue={sliderValue}
-              handleSliderChange={handleSliderChange}
-              sliderStep={sliderStep}
-            />
-
-            {/* Payment Method */}
-            <PaymentMethodSection
-              isLinkAja={isLinkAja}
-              selectedPayment={selectedPayment}
-              setSelectedPayment={setSelectedPayment}
-            />
-
-            {/* Referral code */}
-            <ReferralSection
-              isHaveRefferalCode={isHaveRefferalCode}
-              referralCode={referralCode}
-              setReferralCode={setReferralCode}
-              wukalaSetting={wukalaSetting}
-              handleCheckReferral={handleCheckReferral}
-              handleRemoveReferralCode={handleRemoveReferralCode}
-              isReferralCodeChecked={isReferralCodeChecked}
-              isReferralValid={isReferralValid}
-            />
-
-            {/* Terms and conditions */}
-            <TermsAndCheckout
-              currency={detailVariant?.package?.currency}
-              termsAccepted={termsAccepted}
-              preBookingLoading={prebookingLoading}
-              setTermsAccepted={setTermsAccepted}
-              setOpenModal={setOpenModal}
-              setOpenModalPengembalian={setOpenModalPengembalian}
-              isEmptyRoomType={isEmptyRoomType}
-              disabledButtonCheckout={disabledButtonCheckout}
-              setOpenModalDisclaimer={setOpenModalDisclaimer}
+              paymentDetails={paymentDetails}
+              globalCurrencyRate={preBooking?.globalCurrencyRate}
             />
           </div>
-
-          {/* Right section - Package details */}
-          <PackageDetails
-            detailVariant={detailVariant}
-            selectedVariant={selectedVariant}
-            paymentDetails={paymentDetails}
-            globalCurrencyRate={preBooking?.globalCurrencyRate}
-          />
         </div>
       </main>
 
@@ -238,7 +343,16 @@ const CheckoutPage = () => {
           </div>
         }
       />
-    </div>
+
+      {/* Midtrans */}
+
+      <Script
+        src={SNAP_URL}
+        data-client-key={MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+        onError={() => {}}
+      />
+    </>
   )
 }
 

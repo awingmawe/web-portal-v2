@@ -145,7 +145,7 @@ const OfferButton: React.FC<{
         JSON.stringify(dataSelectedVariant)
       )
 
-      window.location.href = `/checkout`
+      window.location.href = `/checkout` // why using this to prevent caching effect to checkout page
     }
   }
   const handleExitDetailOffer = () => {
