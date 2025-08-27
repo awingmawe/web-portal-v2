@@ -24,7 +24,7 @@ const FlightDetails = ({ detailVariant }: FlightDetailsProps) => {
               {detailVariant?.package?.departure?.from?.airport?.cityName} (
               {detailVariant?.package?.departure?.from?.airport?.code})
             </span>
-            <span className="lg:hidden">
+            <span className="text-s-regular lg:hidden">
               {detailVariant?.package?.departure?.from?.airport?.code}
             </span>
             <ArrowIcon size={18} />
@@ -32,7 +32,7 @@ const FlightDetails = ({ detailVariant }: FlightDetailsProps) => {
               {detailVariant?.package?.departure?.to?.airport?.cityName} (
               {detailVariant?.package?.departure?.to?.airport?.code})
             </span>
-            <span className="lg:hidden">
+            <span className="text-s-regular lg:hidden">
               {detailVariant?.package?.departure?.to?.airport?.code}
             </span>
           </p>
@@ -66,7 +66,7 @@ const FlightDetails = ({ detailVariant }: FlightDetailsProps) => {
               {detailVariant?.package?.arrival?.from?.airport?.cityName} (
               {detailVariant?.package?.arrival?.from?.airport?.code})
             </span>
-            <span className="lg:hidden">
+            <span className="text-s-regular lg:hidden">
               {detailVariant?.package?.arrival?.from?.airport?.code}
             </span>
             <ArrowIcon size={18} />
@@ -74,7 +74,7 @@ const FlightDetails = ({ detailVariant }: FlightDetailsProps) => {
               {detailVariant?.package?.arrival?.to?.airport?.cityName} (
               {detailVariant?.package?.arrival?.to?.airport?.code})
             </span>
-            <span className=" lg:hidden">
+            <span className=" text-s-regular lg:hidden">
               {detailVariant?.package?.arrival?.to?.airport?.code}
             </span>
           </p>

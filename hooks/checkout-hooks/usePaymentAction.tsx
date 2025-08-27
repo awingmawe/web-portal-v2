@@ -9,6 +9,7 @@ import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { PreBookingResponse } from '@/constant/types/PaymentCheckout'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { RoomType } from '@/contexts/package-variant-context'
+import { isEmpty } from '@/lib/utils'
 import {
   bookingCheckout,
   bookingCheckoutUmrahPersonal,
@@ -158,6 +159,15 @@ export const usePaymentActions = ({
         ? await bookingCheckoutUmrahPersonal(payloadUmrahPersonal)
         : await bookingCheckout(payload)
 
+      if (isEmpty(res?.data?.order?.paymentToken)) {
+        handlePushEvent('submit_booking')
+        localStorage.removeItem('referralCode')
+        setLoading(false)
+
+        window.location.href = '/success-hajj-offering'
+        return
+      }
+
       setPaymentToken(res?.data.order.paymentToken)
       setLoading(false)
 
@@ -185,7 +195,7 @@ export const usePaymentActions = ({
 
       localStorage.removeItem('referralCode')
     } catch (error) {
-      toast.error('Gagal melakukan checkout [500]')
+      toast.error('Gagal melakukan checkout')
       console.error(error)
     } finally {
       setLoading(false)

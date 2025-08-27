@@ -28,21 +28,23 @@ const ReferralSection = ({
   }
 
   return (
-    <div className="rounded-[20px] border border-neutral-100 p-6">
-      <div>
-        <div className="mb-4 flex items-center gap-[12px]">
-          <Image
-            src="/images/discount-shape.svg"
-            width={24}
-            height={24}
-            alt="discount"
-          />
-          <span className="font-bold text-gray-800">Kode Referral</span>
-        </div>
+    <div className="rounded-[20px] border border-neutral-100 max-lg:mx-4 max-lg:p-3">
+      <div className="flex items-center max-lg:mb-2.5 max-lg:gap-1 lg:gap-3 lg:p-4">
+        <Image
+          src="/images/discount-shape.svg"
+          width={24}
+          height={24}
+          alt="discount"
+        />
+        <p className="text-l-semibold max-lg:text-sm max-lg:font-medium">
+          Kode Referral
+        </p>
+      </div>
 
-        <div className="mb-4 h-[1px] w-full bg-[#D2D2D1]" />
-
-        <p className="mb-5 font-medium text-gray-600">
+      {/* Divider */}
+      <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
+      <div className="lg:p-4">
+        <p className="text-m-regular mb-5 max-lg:text-xs max-lg:leading-4">
           Apakah kamu punya kode referal? pakai kode tersebut untuk dapetin
           potongan harga!
         </p>
@@ -51,7 +53,13 @@ const ReferralSection = ({
           <input
             type="text"
             placeholder="Masukkan kode referal"
-            className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 placeholder:text-gray-400"
+            className={`flex-1 rounded-full border px-4 py-2 text-sm text-gray-700 placeholder:text-neutral-400 ${
+              isReferralCodeChecked
+                ? isReferralValid
+                  ? 'border-success-500'
+                  : 'border-error-500'
+                : 'border-neutral-100'
+            }`}
             value={referralCode}
             onChange={(e) => setReferralCode(e.target.value)}
             disabled={wukalaSetting}
@@ -68,13 +76,13 @@ const ReferralSection = ({
 
         {referralCode && isReferralCodeChecked && (
           <p
-            className={`mt-5 font-medium ${
-              isReferralValid ? 'text-[#00B97D]' : 'text-red-500'
+            className={`text-s-regular mt-2.5 font-medium ${
+              isReferralValid ? 'text-success-500' : 'text-error-500'
             }`}
           >
             {isReferralValid
-              ? `Kode referral berhasil digunakan`
-              : `Kode referral tidak valid!`}
+              ? `Kode referral berhasil digunakan.`
+              : `Kode referral tidak terdaftar`}
           </p>
         )}
       </div>

@@ -2,8 +2,7 @@
 
 import { InfoIcon } from '@/components/icons/info'
 import { Button } from '@/components/ui/button'
-import { PACKAGE_TYPE } from '@/constant/env'
-import { PaymentMethod } from '@/constant/types/PaymentMethod'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface TermsAndCheckoutProps {
   termsAccepted: boolean
@@ -14,11 +13,7 @@ interface TermsAndCheckoutProps {
   disabledButtonCheckout: boolean
   currency: string
   preBookingLoading: boolean
-  setOpenModalDisclaimer: (open: boolean) => void
-  handleCheckout: (paymentMethod?: PaymentMethod) => void
-  isLinkAja: boolean
-  selectedPayment: string
-  packageType: string
+  handleCheckout: () => void
 }
 
 const TermsAndCheckout = ({
@@ -26,54 +21,34 @@ const TermsAndCheckout = ({
   setTermsAccepted,
   setOpenModal,
   setOpenModalPengembalian,
-  setOpenModalDisclaimer,
-  handleCheckout,
   isEmptyRoomType,
   disabledButtonCheckout,
   currency,
   preBookingLoading,
-  isLinkAja,
-  selectedPayment,
-  packageType,
+  handleCheckout,
 }: TermsAndCheckoutProps) => {
-  const handleCheckoutClick = () => {
-    if (!isEmptyRoomType && termsAccepted) {
-      if (packageType === PACKAGE_TYPE.HAJJ) {
-        setOpenModalDisclaimer(true)
-      } else {
-        handleCheckout(
-          isLinkAja
-            ? {
-                linkAja: true,
-                linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
-              }
-            : {}
-        )
-      }
-    }
-  }
-
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 max-lg:mx-4">
       {currency === 'USD' && (
-        <p
+        <div
           className={`text-s-regular bg-info-100 text-info-800 flex items-center gap-2 rounded-lg px-3 py-2`}
         >
           <InfoIcon
-            className="text-info-800 stroke-0"
+            className="text-info-800 h-5 w-5 stroke-0"
             color="black"
-            size={16}
+            size={20}
           />
-          Saat ini, kamu tidak akan dikenakan biaya apapun. Kamu dapat
-          melanjutkan pembayaran uang muka ketika tagihan sudah diterbitkan.
-        </p>
+          <p className="text-xs-regular">
+            Saat ini, kamu tidak akan dikenakan biaya apapun. Kamu dapat
+            melanjutkan pembayaran uang muka ketika tagihan sudah diterbitkan.
+          </p>
+        </div>
       )}
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          className="mr-2 h-4 w-4 accent-yellow-500"
+      <div className="flex items-center max-lg:rounded-[20px] max-lg:border-1 max-lg:border-neutral-100 max-lg:p-3">
+        <Checkbox
+          className="accent-primary-500 mr-2 h-4 w-4"
           checked={termsAccepted}
-          onChange={(e) => setTermsAccepted(e.target.checked)}
+          onCheckedChange={(e) => setTermsAccepted(e as boolean)}
         />
         <span className="text-sm text-gray-600">
           Dengan memesan, anda menyetujui{' '}
@@ -108,8 +83,8 @@ const TermsAndCheckout = ({
         )}
         <Button
           disabled={disabledButtonCheckout || preBookingLoading}
-          className="w-full font-medium text-neutral-900"
-          onClick={handleCheckoutClick}
+          className="w-full font-medium text-neutral-900 max-lg:hidden"
+          onClick={handleCheckout}
         >
           Lanjut Bayar Sekarang!
         </Button>

@@ -10,6 +10,7 @@ import PaymentMethodSection from '@/components/pages/checkout/5-PaymentMethodSec
 import ReferralSection from '@/components/pages/checkout/6-ReferralSection/ReferralSection'
 import TermsAndCheckout from '@/components/pages/checkout/7-TermsAndCheckout/TermsAndCheckout'
 import PackageDetails from '@/components/pages/checkout/8-PackageDetails.tsx/PackageDetails'
+import ActionButton from '@/components/pages/checkout/component/ActionButton'
 import PriceBreakdown from '@/components/pages/checkout/component/PriceBreakdown'
 import ModalCheckout from '@/components/pages/checkout/modal/ModalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/ModalPengembalianDana'
@@ -17,7 +18,7 @@ import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import { MIDTRANS_CLIENT_KEY, PACKAGE_TYPE, SNAP_URL } from '@/constant/env'
 import { useCheckoutLogic } from '@/hooks/checkout-hooks/useCheckoutLogic'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { getSlugByVariantPackage } from '@/lib/utils'
@@ -93,6 +94,23 @@ const CheckoutPage = () => {
 
   const { lg } = useTailwindBreakpoint()
 
+  const handleCheckoutClick = () => {
+    if (!isEmptyRoomType && termsAccepted) {
+      if (detailVariant?.package.packageType === PACKAGE_TYPE.HAJJ) {
+        setOpenModalDisclaimer(true)
+      } else {
+        handleCheckout(
+          isLinkAja
+            ? {
+                linkAja: true,
+                linkAjaSyariah: selectedPayment === 'linkAjaSyariah',
+              }
+            : {}
+        )
+      }
+    }
+  }
+
   if (!token || !selectedVariant || !detailVariant) {
     return (
       <div className=" grid h-[78dvh] place-content-center p-8">
@@ -104,7 +122,7 @@ const CheckoutPage = () => {
   return (
     <>
       {/* Main content */}
-      <main className="max-lg:mt-[50px]">
+      <main className="max-lg:mt-[50px] max-lg:pb-[50px]">
         <div className="container mx-auto py-6 lg:px-4">
           {/* Back button */}
           <CheckoutHeader />
@@ -182,7 +200,7 @@ const CheckoutPage = () => {
               <div className="h-1 w-full bg-neutral-100 lg:hidden" />
 
               {/* Price breakdown */}
-              <div className="max-lg:hidden">
+              <div className="lg:hidden">
                 <PriceBreakdown
                   detailVariant={detailVariant}
                   paymentDetails={paymentDetails}
@@ -200,11 +218,7 @@ const CheckoutPage = () => {
                 setOpenModalPengembalian={setOpenModalPengembalian}
                 isEmptyRoomType={isEmptyRoomType}
                 disabledButtonCheckout={disabledButtonCheckout}
-                setOpenModalDisclaimer={setOpenModalDisclaimer}
-                packageType={detailVariant?.package?.packageType}
-                isLinkAja={isLinkAja}
-                selectedPayment={selectedPayment}
-                handleCheckout={handleCheckout}
+                handleCheckout={handleCheckoutClick}
               />
 
               {/* Soon will refactor */}
@@ -287,6 +301,15 @@ const CheckoutPage = () => {
         </div>
       </main>
 
+      {/* Action Buttons For Mobile Version */}
+      <ActionButton
+        disabledButtonCheckout={disabledButtonCheckout}
+        preBookingLoading={prebookingLoading}
+        downPayment={preBooking?.downPayment}
+        currency={detailVariant?.package?.currency}
+        handleCheckoutClick={handleCheckoutClick}
+      />
+
       {/* Modals */}
       <ModalCheckout
         open={isOpenModal}
@@ -305,12 +328,12 @@ const CheckoutPage = () => {
         setIsOpen={setOpenModalDisclaimer}
         trigger={<div className="hidden" />}
         title={
-          <p className="heading-4-semibold">
+          <p className="heading-4-semibold max-lg:p-4">
             <em>Disclaimer</em> {title}
           </p>
         }
         content={
-          <div className="scrollbar-hide flex max-h-[70vh] flex-col gap-4  lg:overflow-y-auto">
+          <div className="scrollbar-hide flex max-h-[70vh] flex-col gap-4 lg:overflow-y-auto">
             <p className="text-m-regular text-neutral-500">
               Terakhir diperbarui:{' '}
               {dataLegal &&
@@ -325,7 +348,7 @@ const CheckoutPage = () => {
           <div className="ml-auto flex w-full justify-end gap-3 lg:max-w-sm">
             <Button
               variant="default"
-              className="px-10 py-3"
+              className="px-10 py-3 max-lg:w-full"
               onClick={() =>
                 handleCheckout(
                   isLinkAja
@@ -345,7 +368,6 @@ const CheckoutPage = () => {
       />
 
       {/* Midtrans */}
-
       <Script
         src={SNAP_URL}
         data-client-key={MIDTRANS_CLIENT_KEY}

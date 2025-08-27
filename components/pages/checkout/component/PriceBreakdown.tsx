@@ -22,7 +22,7 @@ export default function PriceBreakdown({
 }) {
   const [isOpen, setIsOpen] = React.useState(false)
   return (
-    <div className="flex flex-col gap-4 max-lg:gap-2.5 max-lg:rounded-2xl max-lg:border-1 max-lg:border-neutral-100 max-lg:px-3 max-lg:py-4">
+    <div className="flex flex-col gap-4 max-lg:mx-4 max-lg:gap-2.5 max-lg:rounded-2xl max-lg:border-1 max-lg:border-neutral-100 max-lg:px-3 max-lg:py-4">
       <div className="flex items-center justify-between">
         <h4 className="text-l-semibold">Rincian Pembayaran</h4>
         {detailVariant?.package?.currency === 'USD' && (

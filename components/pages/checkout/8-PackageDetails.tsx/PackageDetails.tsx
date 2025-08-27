@@ -59,7 +59,9 @@ const PackageDetails = ({
 
           {/* Kanan: Judul dan organisasi */}
           <div className="flex flex-col justify-center gap-1">
-            <h3 className="text-l-semibold">{detailVariant?.package?.title}</h3>
+            <p className="text-l-semibold max-lg:text-xs">
+              {detailVariant?.package?.title}
+            </p>
             <div className="flex items-center gap-2">
               <Image
                 src={

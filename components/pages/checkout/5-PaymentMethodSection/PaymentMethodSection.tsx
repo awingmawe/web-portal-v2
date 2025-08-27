@@ -21,8 +21,8 @@ const PaymentMethodSection = ({
   }
 
   return (
-    <div className="bg-white px-4 pt-4">
-      <div className="rounded-[16px] border border-b border-neutral-200">
+    <div className="bg-white px-4 pt-4 max-lg:mx-4">
+      <div className="rounded-[20px] border border-b border-neutral-200">
         <div className="flex items-center border-b border-neutral-200 p-4">
           <CashReceiptIcon className="text-neutral-900" size={20} />
           <h2 className="text-m-semibold ml-2.5 text-neutral-900">

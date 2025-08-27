@@ -41,9 +41,7 @@ const JamaahSection = ({
       <div className="mb-4 flex items-center justify-between border-b border-neutral-100 p-4 max-lg:hidden">
         <div className="flex items-center gap-[12px]">
           <Image src="/images/people.svg" width={24} height={24} alt="people" />
-          <span className="font-semibold text-neutral-900">
-            Jumlah Jemaah Per Kamar
-          </span>
+          <p className="text-l-semibold">Jumlah Jemaah Per Kamar</p>
         </div>
       </div>
 
