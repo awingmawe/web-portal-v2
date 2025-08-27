@@ -1,3 +1,4 @@
+import { PACKAGE_TYPE } from '@/constant/env'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { CardData, Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
@@ -454,4 +455,23 @@ export const isNullOrEmpty = (value: any): boolean => {
   }
 
   return false // For other types like numbers, booleans, etc.
+}
+
+export const getSlugByVariantPackage = (variantType: string) => {
+  switch (variantType) {
+    case PACKAGE_TYPE.HAJJ_FURODA:
+      return {
+        title: 'Haji Furoda',
+        slug: 'disclaimer-haji-furoda',
+      }
+    case PACKAGE_TYPE.HAJJ_DAKHILI:
+      return {
+        title: 'Haji Dakhili',
+        slug: 'disclaimer-haji-dakhili',
+      }
+    case PACKAGE_TYPE.HAJJ_SPECIAL:
+      return { title: 'Haji Khusus', slug: 'disclaimer-haji-khusus' }
+    default:
+      return { title: '', slug: '' }
+  }
 }

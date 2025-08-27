@@ -121,7 +121,7 @@ export default function SelectHotel({
     <Fragment>
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
         {variant == 'normal' && (
-          <div className="text-s-regular mb-2 text-neutral-800 max-lg:text-sm">
+          <div className="text-s-regular mb-2 max-lg:text-sm max-lg:font-medium">
             Jumlah Jemaah Per Kamar
           </div>
         )}

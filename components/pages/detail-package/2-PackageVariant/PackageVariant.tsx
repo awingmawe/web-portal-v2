@@ -10,7 +10,8 @@ import {
   CALL_CENTER,
   LINKAJA_MAX_LIMIT,
   LOCAL_STORAGE_DETAIL_VARIANT,
-  LOCAL_STORAGE_KURS_OPEN,
+  LOCAL_STORAGE_KURS_OPEN_IDR,
+  LOCAL_STORAGE_KURS_OPEN_USD,
   LOCAL_STORAGE_SELECTED_VARIANT,
   PACKAGE_TYPE,
 } from '@/constant/env'
@@ -29,7 +30,6 @@ import {
 } from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { differenceInDays } from 'date-fns'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 // Import the new components
@@ -70,11 +70,21 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   }, [])
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsChecked(
-        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) === 'true' ? true : false
-      )
+      if (pkg.currency === 'IDR') {
+        setIsChecked(
+          localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_IDR) === 'true'
+            ? true
+            : false
+        )
+      } else {
+        setIsChecked(
+          localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_USD) === 'true'
+            ? true
+            : false
+        )
+      }
     }
-  }, [])
+  }, [pkg.currency])
 
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
@@ -96,7 +106,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     availableRoomTypes,
   } = usePackageVariant()
 
-  const router = useRouter()
   const { lg } = useTailwindBreakpoint()
   const [isLiked, setIsLiked] = useState(false)
   const [isSelectHotelModalOpen, setIsSelectHotelModalOpen] = useState(false)
@@ -185,8 +194,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   }, [variants])
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KURS_OPEN, isChecked.toString())
-  }, [isChecked])
+    if (pkg.currency === 'IDR') {
+      localStorage.setItem(LOCAL_STORAGE_KURS_OPEN_IDR, isChecked.toString())
+    } else {
+      localStorage.setItem(LOCAL_STORAGE_KURS_OPEN_USD, isChecked.toString())
+    }
+  }, [isChecked, pkg.currency])
 
   const handleSubmit = () => {
     localStorage.setItem(
@@ -203,11 +216,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         variantId: selectedVariant?.id,
         variant: selectedVariant,
         name: selectedVariant?.name,
-        currency: pkg.currency,
       })
     )
-    router.push('/checkout')
     handlePushEvent('click_checkout')
+    window.location.href = '/checkout' // why using this to prevent caching effect to checkout page
   }
 
   const handleCheckout = () => {
@@ -223,9 +235,15 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       setIsSelectHotelModalOpen(true)
       return
     } else {
+      const isKursOpenIDR =
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_IDR) === 'true'
+      const isKursOpenUSD =
+        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN_USD) === 'true'
       if (
-        pkg.packageType === PACKAGE_TYPE.HAJJ &&
-        localStorage.getItem(LOCAL_STORAGE_KURS_OPEN) !== 'true'
+        (pkg.packageType === PACKAGE_TYPE.HAJJ &&
+          pkg.currency === 'IDR' &&
+          !isKursOpenIDR) ||
+        (pkg.currency === 'USD' && !isKursOpenUSD)
       ) {
         setIsKursModalOpen(true)
         setIsSelectHotelModalOpen(false)

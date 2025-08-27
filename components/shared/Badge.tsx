@@ -28,14 +28,15 @@ const BadgePromo = ({
           <CornerIcon className="absolute -bottom-[7px] left-0" />
         </div>
       )}
-      {variantType === PACKAGE_TYPE.HAJJ_FURODA && (
+      {(variantType === PACKAGE_TYPE.HAJJ_FURODA ||
+        variantType === PACKAGE_TYPE.HAJJ_DAKHILI) && (
         <div
           className={cn(
             ' bg-info-500 flex h-8 items-center rounded-full rounded-bl-none py-1 pr-3 pl-2.5 text-nowrap'
           )}
         >
           <div className="text-m-regular text-neutral-0 font-bold -tracking-[0.28px] max-lg:text-xs max-lg:leading-4 max-lg:font-semibold">
-            FURODA
+            {variantType === PACKAGE_TYPE.HAJJ_FURODA ? 'FURODA' : 'DAKHILI'}
           </div>
           <CornerIcon
             className="absolute -bottom-[7px] left-0"
