@@ -422,7 +422,7 @@ export const PembiayaanFormStep2 = forwardRef<
           <Button variant="ghost" size="sm" onClick={onBack} className="p-1">
             <ChevronLeft size={20} />
           </Button>
-          <span className="text-xs-medium font-medium">Kembali</span>
+          <span className="text-s-regular-medium ">Kembali</span>
         </div>
       )}
 
@@ -450,7 +450,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 >
                   <ChevronLeft size={20} />
                 </Button>
-                <span className="text-xs-medium font-medium">Kembali</span>
+                <span className="text-s-regular-medium ">Kembali</span>
               </div>
 
               {/* Search Bar and Date Filter */}
@@ -471,7 +471,7 @@ export const PembiayaanFormStep2 = forwardRef<
                   <Button
                     type="button"
                     variant="outline"
-                    className="h-10 w-[200px] max-w-[200px] truncate rounded-full p-0 text-left text-xs"
+                    className="text-s-regular h-10 w-[200px] max-w-[200px] truncate rounded-full p-0 text-left"
                   >
                     Semua Tanggal Keberangkatan
                   </Button>
@@ -521,7 +521,7 @@ export const PembiayaanFormStep2 = forwardRef<
                     {packagesLoading && (
                       <div className="flex justify-center py-4">
                         <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
-                        <span className="text-xs-medium ml-2 text-neutral-500">
+                        <span className="text-s-regular-medium ml-2 text-neutral-500">
                           Memuat paket...
                         </span>
                       </div>
@@ -542,7 +542,7 @@ export const PembiayaanFormStep2 = forwardRef<
 
                     {!hasMore && dataPaket.length > 0 && (
                       <div className="py-4 text-center">
-                        <p className="text-xs-medium text-neutral-500">
+                        <p className="text-s-regular-medium text-neutral-500">
                           Semua paket telah ditampilkan ({totalPackages} paket)
                         </p>
                       </div>
@@ -561,15 +561,14 @@ export const PembiayaanFormStep2 = forwardRef<
                 <div className="rounded-2xl border-2 border-dashed border-neutral-300 bg-white p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <span className="text-xs-medium text-neutral-600">
+                      <span className="text-s-regular-medium text-neutral-600">
                         Pilih paket terlebih dahulu
                       </span>
                     </div>
                     <div className="ml-4">
                       <Button
                         type="button"
-                        variant="outline"
-                        className="text-xs-medium border-0 bg-yellow-400 px-6 py-2 font-medium text-white hover:bg-yellow-500"
+                        className="text-s-regular-medium border-0 px-6 py-2  text-white"
                         onClick={() => setShowPackageSelection(true)}
                       >
                         Pilih Paket
@@ -601,12 +600,12 @@ export const PembiayaanFormStep2 = forwardRef<
                             />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h4 className="text-xs-medium line-clamp-2 leading-tight font-medium text-neutral-800">
+                            <h4 className="text-s-regular-medium line-clamp-2 text-neutral-800">
                               {selectedPkg.title}
                             </h4>
                             <div className="mt-1 flex items-center gap-1">
                               <span
-                                className="inline-flex cursor-pointer items-center gap-1 text-xs text-blue-600"
+                                className="text-s-regular inline-flex cursor-pointer items-center gap-1 text-blue-600"
                                 onClick={() => setShowPackageSelection(true)}
                               >
                                 <Edit3 size={10} />
@@ -644,7 +643,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 name="varian"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs text-neutral-600">
+                    <FormLabel className="text-s-regular text-neutral-600">
                       Varian *
                     </FormLabel>
                     <Select
@@ -669,7 +668,7 @@ export const PembiayaanFormStep2 = forwardRef<
                       </SelectContent>
                     </Select>
                     {selectedVariantDetails && (
-                      <p className="mt-1 text-xs text-neutral-500">
+                      <p className="text-s-regular mt-1 text-neutral-500">
                         {selectedVariantDetails.departureDate &&
                         selectedVariantDetails.arrivalDate
                           ? `${format(new Date(selectedVariantDetails.departureDate), 'dd MMMM yyyy', { locale: id })} → ${format(new Date(selectedVariantDetails.arrivalDate), 'dd MMMM yyyy', { locale: id })}`
@@ -716,7 +715,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 name="tenor"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs text-neutral-600">
+                    <FormLabel className="text-s-regular text-neutral-600">
                       Tenor *
                     </FormLabel>
                     <Select
@@ -741,30 +740,30 @@ export const PembiayaanFormStep2 = forwardRef<
 
               {/* Simulasi Pendanaan */}
               <div className="space-y-2 rounded-2xl border border-[#E8E8E8] p-4">
-                <h4 className="text-xs-medium font-medium text-neutral-900">
+                <h4 className="text-s-regular-medium  text-neutral-900">
                   Simulasi Pendanaan
                 </h4>
                 <div className="space-y-1">
                   {calculatedPricing.totalPrice > 0 && (
-                    <div className="flex justify-between text-xs">
-                      <span className="text-xs-regular text-neutral-400">
+                    <div className="text-s-regular flex justify-between">
+                      <span className="text-s-regular-regular text-neutral-400">
                         Total Pendanaan
                       </span>
-                      <span className="font-medium">
+                      <span>
                         {formatCurrency(calculatedPricing.totalPrice)}
                       </span>
                     </div>
                   )}
-                  <div className="flex justify-between text-xs">
-                    <span className="text-xs-regular text-neutral-400">
+                  <div className="text-s-regular flex justify-between">
+                    <span className="text-s-regular-regular text-neutral-400">
                       Angsuran Per Bulan
                     </span>
-                    <span className="font-medium">
+                    <span>
                       {formatCurrency(calculatedPricing.monthlyInstallment)}
                     </span>
                   </div>
                 </div>
-                <p className="text-xs-regular text-center text-neutral-500">
+                <p className="text-s-regular-regular text-center text-neutral-500">
                   *Perhitungan ini hanya simulasi, data dapat berubah sesuai
                   dengan ketentuan syariah terkait.
                 </p>
@@ -776,7 +775,7 @@ export const PembiayaanFormStep2 = forwardRef<
             <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-neutral-100 bg-white p-4">
               <Button
                 type="submit"
-                className="w-full rounded-full bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600"
+                className="w-full rounded-full bg-yellow-500 py-3  text-white hover:bg-yellow-600"
                 disabled={isLoading}
                 isLoading={isLoading}
               >
