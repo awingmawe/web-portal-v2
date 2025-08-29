@@ -21,7 +21,7 @@ export function ManifestProvider({ children }: ManifestProviderProps) {
     async (
       page: number,
       searchQuery: string,
-      countryId: any
+      countryId?: string
     ): Promise<GenericResponse<City> | null> => {
       try {
         const data = await getKota({

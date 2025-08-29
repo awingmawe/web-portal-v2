@@ -30,7 +30,7 @@ import {
   SubmissionDialogOrDrawer,
   useSubmissionDrawer,
 } from '@/components/pages/manifest/mobile/DrawerStatus'
-import { Calendar } from '@/components/ui/calendar'
+import { CustomCalendarView } from '@/components/shared/CustomCalendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Drawer,
@@ -967,33 +967,20 @@ export default function BiodataForm({
                         <CalendarDays size={18} />
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={
+                        <CustomCalendarView
+                          name={'Masa Berlaku Paspor'}
+                          value={
                             field.value ? new Date(field.value) : undefined
                           }
-                          onSelect={(date) =>
+                          onChange={(date) =>
                             field.onChange(
                               date ? format(date, 'yyyy-MM-dd') : ''
                             )
                           }
-                          locale={id}
                           disabled={(date) => date < new Date()}
-                          initialFocus
-                          fromYear={new Date().getFullYear() - 10}
-                          toYear={new Date().getFullYear() + 50}
-                          captionLayout="dropdown"
-                          className="rdp-clean-dropdown"
-                          classNames={{
-                            dropdown_month:
-                              'bg-white border border-neutral-300 rounded-lg px-3 py-2 text-sm font-medium text-neutral-900 cursor-pointer hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mr-3 min-w-[120px]',
-                            dropdown_year:
-                              'bg-white border border-neutral-300 rounded-lg px-3 py-2 text-sm font-medium text-neutral-900 cursor-pointer hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[80px]',
-                            caption_dropdowns:
-                              'flex items-center justify-center gap-2 p-4 bg-gray-50 border-b border-gray-200',
-                            nav: 'hidden', // Hide navigation arrows
-                            caption_label: 'hidden', // Hide default caption
-                          }}
+                          locale={id}
+                          minYear={1890}
+                          maxYear={new Date().getFullYear() + 20}
                         />
                       </PopoverContent>
                     </Popover>

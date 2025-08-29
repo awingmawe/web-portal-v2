@@ -36,9 +36,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { toast } from '@/components/ui/sonner'
+import { CardData, PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
+import { formatCurrency } from '@/lib/utils'
 import { getPackageVariantList } from '@/services/umrah-service'
+import { format } from 'date-fns'
+import { id } from 'date-fns/locale'
 import { ChevronLeft, Edit3, Loader2, Search } from 'lucide-react'
 
 // Form schema for step 2
@@ -76,7 +80,7 @@ export const PembiayaanFormStep2 = forwardRef<
   PembiayaanFormStep2Ref,
   PembiayaanStep2Props
 >(({ onSubmit, onBack, isLoading = false, screenSize, onCancel }, ref) => {
-  const [selectedPackage, setSelectedPackage] = useState<string>('')
+  const [selectedPackage, setSelectedPackage] = useState<number | string>()
   const [searchTerm, setSearchTerm] = useState('')
   const { getPrice, getTotalQty } = usePackageVariant()
   const [dataVariant, setDataVariant] = useState<any>([])
@@ -117,7 +121,7 @@ export const PembiayaanFormStep2 = forwardRef<
   const watchedValues = form.watch()
 
   // Get data variant function
-  const getDataVariant = async (id: any) => {
+  const getDataVariant = async (id: number) => {
     try {
       const res = await getPackageVariantList({
         packageId: id,
@@ -135,10 +139,10 @@ export const PembiayaanFormStep2 = forwardRef<
   }
 
   // Handle package selection
-  const handlePackageSelect = (packageId: string) => {
+  const handlePackageSelect = (packageId: number) => {
     setSelectedPackage(packageId)
     setSelectedVariantDetails(null)
-    form.setValue('selectedPackage', packageId)
+    form.setValue('selectedPackage', packageId.toString())
     setShowPackageSelection(false)
 
     // Check if this package matches sessionStorage variant
@@ -186,8 +190,7 @@ export const PembiayaanFormStep2 = forwardRef<
         }
 
         const selectedPkg = dataPaket.find(
-          (pkg: any) =>
-            pkg.id === values.selectedPackage ||
+          (pkg: CardData) =>
             pkg.slugPackage === values.selectedPackage ||
             pkg.id?.toString() === values.selectedPackage
         )
@@ -249,7 +252,7 @@ export const PembiayaanFormStep2 = forwardRef<
   // Handle variant change
   const handleVariantChange = (variantName: string) => {
     const selectedVariant = dataVariant.find(
-      (variant: any) => variant.name === variantName
+      (variant: PackageVariant) => variant.name === variantName
     )
     setSelectedVariantDetails(selectedVariant)
     form.setValue('varian', variantName)
@@ -290,7 +293,7 @@ export const PembiayaanFormStep2 = forwardRef<
   const createSearchParams = useCallback(() => {
     return {
       [`query`]: searchTerm ? `%${searchTerm}%` : undefined,
-      packageType: 'umrah',
+      type: 'umrah',
     }
   }, [searchTerm])
 
@@ -305,7 +308,7 @@ export const PembiayaanFormStep2 = forwardRef<
           const targetPackageId = variantData.packageId
 
           const foundPackage = dataPaket.find(
-            (pkg: any) =>
+            (pkg: CardData) =>
               pkg.id == targetPackageId ||
               pkg.id?.toString() === targetPackageId?.toString()
           )
@@ -313,7 +316,7 @@ export const PembiayaanFormStep2 = forwardRef<
           if (foundPackage) {
             const packageIdentifier =
               foundPackage.slugPackage || foundPackage.id?.toString()
-            handlePackageSelect(packageIdentifier)
+            handlePackageSelect(Number(packageIdentifier))
           }
         } catch (error) {
           // Silently handle error
@@ -357,7 +360,7 @@ export const PembiayaanFormStep2 = forwardRef<
   // Fetch variants when package changes
   useEffect(() => {
     const selectedPkg = dataPaket.find(
-      (pkg: any) =>
+      (pkg: CardData) =>
         pkg.slugPackage === selectedPackage ||
         pkg.id === selectedPackage ||
         pkg.id?.toString() === selectedPackage
@@ -383,7 +386,7 @@ export const PembiayaanFormStep2 = forwardRef<
         form.setValue('varian', firstVariant.name)
       } else {
         const selectedVariant = dataVariant.find(
-          (variant: any) => variant.name === currentVariant
+          (variant: PackageVariant) => variant.name === currentVariant
         )
         if (selectedVariant) {
           setSelectedVariantDetails(selectedVariant)
@@ -419,7 +422,7 @@ export const PembiayaanFormStep2 = forwardRef<
           <Button variant="ghost" size="sm" onClick={onBack} className="p-1">
             <ChevronLeft size={20} />
           </Button>
-          <span className="text-sm font-medium">Kembali</span>
+          <span className="text-xs-medium font-medium">Kembali</span>
         </div>
       )}
 
@@ -447,7 +450,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 >
                   <ChevronLeft size={20} />
                 </Button>
-                <span className="text-sm font-medium">Kembali</span>
+                <span className="text-xs-medium font-medium">Kembali</span>
               </div>
 
               {/* Search Bar and Date Filter */}
@@ -455,7 +458,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 <div className="relative flex-1">
                   <Input
                     placeholder="Cari Paket"
-                    className="rounded-full border border-gray-300 pl-2"
+                    className="rounded-full border border-neutral-300 pl-2"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -493,7 +496,7 @@ export const PembiayaanFormStep2 = forwardRef<
               >
                 {dataPaket.length === 0 && !packagesLoading ? (
                   <div className="py-8 text-center">
-                    <p className="text-gray-500">
+                    <p className="text-neutral-500">
                       {searchTerm
                         ? 'Tidak ada paket yang ditemukan'
                         : 'Belum ada paket tersedia'}
@@ -501,28 +504,24 @@ export const PembiayaanFormStep2 = forwardRef<
                   </div>
                 ) : (
                   <>
-                    {dataPaket.map((pkg: any, index: number) => (
+                    {dataPaket.map((pkg: CardData, index: number) => (
                       <div
                         key={`packages-${pkg.slugPackage}-${index}`}
                         className="w-[350px] cursor-pointer"
-                        onClick={() =>
-                          handlePackageSelect(pkg.slugPackage || pkg.id)
-                        }
+                        onClick={() => handlePackageSelect(pkg.id)}
                       >
                         <CardPackage2
                           data={pkg}
                           eventCategory="search"
-                          onClick={() =>
-                            handlePackageSelect(pkg.slugPackage || pkg.id)
-                          }
+                          onClick={() => handlePackageSelect(pkg.id)}
                         />
                       </div>
                     ))}
 
                     {packagesLoading && (
                       <div className="flex justify-center py-4">
-                        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-                        <span className="ml-2 text-sm text-gray-500">
+                        <Loader2 className="h-6 w-6 animate-spin text-neutral-400" />
+                        <span className="text-xs-medium ml-2 text-neutral-500">
                           Memuat paket...
                         </span>
                       </div>
@@ -543,7 +542,7 @@ export const PembiayaanFormStep2 = forwardRef<
 
                     {!hasMore && dataPaket.length > 0 && (
                       <div className="py-4 text-center">
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs-medium text-neutral-500">
                           Semua paket telah ditampilkan ({totalPackages} paket)
                         </p>
                       </div>
@@ -559,10 +558,10 @@ export const PembiayaanFormStep2 = forwardRef<
             {/* Package Selection Button */}
             <div className="space-y-2">
               {!selectedPackage && (
-                <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-white p-4">
+                <div className="rounded-2xl border-2 border-dashed border-neutral-300 bg-white p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <span className="text-sm text-gray-600">
+                      <span className="text-xs-medium text-neutral-600">
                         Pilih paket terlebih dahulu
                       </span>
                     </div>
@@ -570,7 +569,7 @@ export const PembiayaanFormStep2 = forwardRef<
                       <Button
                         type="button"
                         variant="outline"
-                        className="border-0 bg-yellow-400 px-6 py-2 text-sm font-medium text-white hover:bg-yellow-500"
+                        className="text-xs-medium border-0 bg-yellow-400 px-6 py-2 font-medium text-white hover:bg-yellow-500"
                         onClick={() => setShowPackageSelection(true)}
                       >
                         Pilih Paket
@@ -581,11 +580,11 @@ export const PembiayaanFormStep2 = forwardRef<
               )}
 
               {selectedPackage && (
-                <div className="rounded-2xl border border-gray-200 bg-white p-3">
+                <div className="rounded-2xl border border-neutral-200 bg-white p-3">
                   <div className="flex gap-3">
                     {(() => {
                       const selectedPkg = dataPaket.find(
-                        (pkg: any) =>
+                        (pkg: CardData) =>
                           pkg.slugPackage === selectedPackage ||
                           pkg.id === selectedPackage ||
                           pkg.id?.toString() === selectedPackage
@@ -602,7 +601,7 @@ export const PembiayaanFormStep2 = forwardRef<
                             />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h4 className="line-clamp-2 text-sm leading-tight font-medium text-gray-800">
+                            <h4 className="text-xs-medium line-clamp-2 leading-tight font-medium text-neutral-800">
                               {selectedPkg.title}
                             </h4>
                             <div className="mt-1 flex items-center gap-1">
@@ -645,7 +644,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 name="varian"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs text-gray-600">
+                    <FormLabel className="text-xs text-neutral-600">
                       Varian *
                     </FormLabel>
                     <Select
@@ -654,11 +653,11 @@ export const PembiayaanFormStep2 = forwardRef<
                       value={field.value}
                     >
                       <FormControl className="w-full">
-                        <SelectTrigger className="w-full rounded-2xl border-gray-300">
+                        <SelectTrigger className="w-full rounded-2xl border-neutral-300">
                           <SelectValue placeholder="Pilih varian paket" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent className="w-full rounded-2xl border-gray-300">
+                      <SelectContent className="w-full rounded-2xl border-neutral-300">
                         {dataVariant.map((res: any, index: any) => (
                           <SelectItem
                             key={`variant-${res.id || index}`}
@@ -670,22 +669,10 @@ export const PembiayaanFormStep2 = forwardRef<
                       </SelectContent>
                     </Select>
                     {selectedVariantDetails && (
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1 text-xs text-neutral-500">
                         {selectedVariantDetails.departureDate &&
                         selectedVariantDetails.arrivalDate
-                          ? `${new Date(
-                              selectedVariantDetails.departureDate
-                            ).toLocaleDateString('id-ID', {
-                              day: '2-digit',
-                              month: 'long',
-                              year: 'numeric',
-                            })} → ${new Date(
-                              selectedVariantDetails.arrivalDate
-                            ).toLocaleDateString('id-ID', {
-                              day: '2-digit',
-                              month: 'long',
-                              year: 'numeric',
-                            })}`
+                          ? `${format(new Date(selectedVariantDetails.departureDate), 'dd MMMM yyyy', { locale: id })} → ${format(new Date(selectedVariantDetails.arrivalDate), 'dd MMMM yyyy', { locale: id })}`
                           : 'Tanggal belum tersedia'}
                       </p>
                     )}
@@ -729,7 +716,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 name="tenor"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs text-gray-600">
+                    <FormLabel className="text-xs text-neutral-600">
                       Tenor *
                     </FormLabel>
                     <Select
@@ -737,7 +724,7 @@ export const PembiayaanFormStep2 = forwardRef<
                       defaultValue={field.value}
                     >
                       <FormControl className="w-full">
-                        <SelectTrigger className="mt-1 w-full rounded-2xl border-gray-300">
+                        <SelectTrigger className="mt-1 w-full rounded-2xl border-neutral-300">
                           <SelectValue placeholder="Pilih tenor" />
                         </SelectTrigger>
                       </FormControl>
@@ -754,33 +741,30 @@ export const PembiayaanFormStep2 = forwardRef<
 
               {/* Simulasi Pendanaan */}
               <div className="space-y-2 rounded-2xl border border-[#E8E8E8] p-4">
-                <h4 className="text-sm font-medium text-neutral-900">
+                <h4 className="text-xs-medium font-medium text-neutral-900">
                   Simulasi Pendanaan
                 </h4>
                 <div className="space-y-1">
                   {calculatedPricing.totalPrice > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-[12px] text-gray-400">
+                      <span className="text-xs-regular text-neutral-400">
                         Total Pendanaan
                       </span>
                       <span className="font-medium">
-                        Rp{calculatedPricing.totalPrice.toLocaleString('id-ID')}
+                        {formatCurrency(calculatedPricing.totalPrice)}
                       </span>
                     </div>
                   )}
                   <div className="flex justify-between text-xs">
-                    <span className="text-[12px] text-gray-400">
+                    <span className="text-xs-regular text-neutral-400">
                       Angsuran Per Bulan
                     </span>
                     <span className="font-medium">
-                      Rp
-                      {Math.round(
-                        calculatedPricing.monthlyInstallment
-                      ).toLocaleString('id-ID')}
+                      {formatCurrency(calculatedPricing.monthlyInstallment)}
                     </span>
                   </div>
                 </div>
-                <p className="text-center text-[12px] text-neutral-500">
+                <p className="text-xs-regular text-center text-neutral-500">
                   *Perhitungan ini hanya simulasi, data dapat berubah sesuai
                   dengan ketentuan syariah terkait.
                 </p>
@@ -789,7 +773,7 @@ export const PembiayaanFormStep2 = forwardRef<
           </div>
 
           {screenSize !== 'desktop' && (
-            <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-gray-100 bg-white p-4">
+            <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-neutral-100 bg-white p-4">
               <Button
                 type="submit"
                 className="w-full rounded-full bg-yellow-500 py-3 font-medium text-white hover:bg-yellow-600"

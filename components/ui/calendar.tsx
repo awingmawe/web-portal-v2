@@ -33,9 +33,6 @@ interface CalendarProps {
   day_hidden?: string
   IconLeft?: string
   IconRight?: string
-  dropdown_month?: string
-  dropdown_year?: string
-  caption_dropdowns?: string
 }
 
 function Calendar({
@@ -114,20 +111,6 @@ function Calendar({
           cellClassName?.day_range_middle
         ),
         day_hidden: cn('invisible', cellClassName?.day_hidden),
-        // Styling untuk dropdown year/month picker
-        // Styling untuk dropdown year/month picker
-        dropdown_month: cn(
-          'inline-flex h-9 items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 mr-2',
-          cellClassName?.dropdown_month
-        ),
-        dropdown_year: cn(
-          'inline-flex h-9 items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
-          cellClassName?.dropdown_year
-        ),
-        caption_dropdowns: cn(
-          'flex items-center justify-center gap-2 pb-4',
-          cellClassName?.caption_dropdowns
-        ),
         ...classNames,
       }}
       components={{
