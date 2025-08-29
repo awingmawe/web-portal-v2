@@ -16,6 +16,7 @@ interface ActionButtonsProps {
   currency: string
   onCheckout: () => void
   handlePushEvent: (name: string, withVariant?: boolean) => void
+  selectedVariant?: any
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
@@ -25,6 +26,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   token,
   onCheckout,
   handlePushEvent,
+  selectedVariant,
 }) => {
   if (variants.length > 0) {
     return (
@@ -53,7 +55,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             </div>
             <Link
               href={`/banking/credit`}
-              onClick={() => handlePushEvent('click_paylater')}
+              onClick={() => {
+                handlePushEvent('click_paylater')
+                sessionStorage.setItem(
+                  'variantPaylater',
+                  JSON.stringify(selectedVariant)
+                )
+              }}
             >
               <Button
                 className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"

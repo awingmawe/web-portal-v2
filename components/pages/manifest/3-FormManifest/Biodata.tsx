@@ -980,6 +980,20 @@ export default function BiodataForm({
                           locale={id}
                           disabled={(date) => date < new Date()}
                           initialFocus
+                          fromYear={new Date().getFullYear() - 10}
+                          toYear={new Date().getFullYear() + 50}
+                          captionLayout="dropdown"
+                          className="rdp-clean-dropdown"
+                          classNames={{
+                            dropdown_month:
+                              'bg-white border border-neutral-300 rounded-lg px-3 py-2 text-sm font-medium text-neutral-900 cursor-pointer hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mr-3 min-w-[120px]',
+                            dropdown_year:
+                              'bg-white border border-neutral-300 rounded-lg px-3 py-2 text-sm font-medium text-neutral-900 cursor-pointer hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[80px]',
+                            caption_dropdowns:
+                              'flex items-center justify-center gap-2 p-4 bg-gray-50 border-b border-gray-200',
+                            nav: 'hidden', // Hide navigation arrows
+                            caption_label: 'hidden', // Hide default caption
+                          }}
                         />
                       </PopoverContent>
                     </Popover>

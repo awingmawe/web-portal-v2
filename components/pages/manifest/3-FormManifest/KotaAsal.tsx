@@ -68,7 +68,7 @@ export default function KotaAsalCombobox({ control }: KotaAsalComboboxProps) {
     const loadInitialData = async () => {
       setLoading(true)
       try {
-        const data = await fetchCity(1, debouncedSearchQuery)
+        const data = await fetchCity(1, debouncedSearchQuery, '360')
         if (data) {
           setCities(data.results)
           setHasMore(data.results.length < data.total)
@@ -100,7 +100,7 @@ export default function KotaAsalCombobox({ control }: KotaAsalComboboxProps) {
     setLoading(true)
     try {
       const nextPage = page + 1
-      const data = await fetchCity(nextPage, debouncedSearchQuery)
+      const data = await fetchCity(nextPage, debouncedSearchQuery, '360')
 
       if (data && data.results.length > 0) {
         setCities((prev) => [...prev, ...data.results])

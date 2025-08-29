@@ -35,6 +35,7 @@ export const useCustomInfiniteScroll = (pageSize = 9) => {
         const initialPageParams = {
           ...params,
           page: 1,
+          type: 'umrah',
         }
         const result = await fetchPackage(initialPageParams, pageSize)
         const mappedData = mapProductsToCardData(result)
@@ -65,6 +66,7 @@ export const useCustomInfiniteScroll = (pageSize = 9) => {
         const nextPageParams = {
           ...params,
           page: currentPage,
+          type: 'umrah',
         }
 
         const result = await fetchPackage(nextPageParams, pageSize)
