@@ -605,7 +605,7 @@ export const PembiayaanFormStep2 = forwardRef<
                             </h4>
                             <div className="mt-1 flex items-center gap-1">
                               <span
-                                className="text-s-regular inline-flex cursor-pointer items-center gap-1 text-blue-600"
+                                className="text-s-regular text-info-600 inline-flex cursor-pointer items-center gap-1"
                                 onClick={() => setShowPackageSelection(true)}
                               >
                                 <Edit3 size={10} />
@@ -671,7 +671,7 @@ export const PembiayaanFormStep2 = forwardRef<
                       <p className="text-s-regular mt-1 text-neutral-500">
                         {selectedVariantDetails.departureDate &&
                         selectedVariantDetails.arrivalDate
-                          ? `${format(new Date(selectedVariantDetails.departureDate), 'dd MMMM yyyy', { locale: id })} → ${format(new Date(selectedVariantDetails.arrivalDate), 'dd MMMM yyyy', { locale: id })}`
+                          ? `${format(selectedVariantDetails.departureDate, 'dd MMMM yyyy', { locale: id })} → ${format(selectedVariantDetails.arrivalDate, 'dd MMMM yyyy', { locale: id })}`
                           : 'Tanggal belum tersedia'}
                       </p>
                     )}
@@ -746,7 +746,7 @@ export const PembiayaanFormStep2 = forwardRef<
                 <div className="space-y-1">
                   {calculatedPricing.totalPrice > 0 && (
                     <div className="text-s-regular flex justify-between">
-                      <span className="text-s-regular-regular text-neutral-400">
+                      <span className="text-s-regular text-neutral-400">
                         Total Pendanaan
                       </span>
                       <span>
@@ -755,7 +755,7 @@ export const PembiayaanFormStep2 = forwardRef<
                     </div>
                   )}
                   <div className="text-s-regular flex justify-between">
-                    <span className="text-s-regular-regular text-neutral-400">
+                    <span className="text-s-regular text-neutral-400">
                       Angsuran Per Bulan
                     </span>
                     <span>
@@ -763,7 +763,7 @@ export const PembiayaanFormStep2 = forwardRef<
                     </span>
                   </div>
                 </div>
-                <p className="text-s-regular-regular text-center text-neutral-500">
+                <p className="text-s-regular text-center text-neutral-500">
                   *Perhitungan ini hanya simulasi, data dapat berubah sesuai
                   dengan ketentuan syariah terkait.
                 </p>
@@ -775,7 +775,7 @@ export const PembiayaanFormStep2 = forwardRef<
             <div className="fixed right-0 bottom-0 left-0 mt-10 border-t border-neutral-100 bg-white p-4">
               <Button
                 type="submit"
-                className="w-full rounded-full bg-yellow-500 py-3  text-white hover:bg-yellow-600"
+                className="w-full rounded-full py-3  text-white "
                 disabled={isLoading}
                 isLoading={isLoading}
               >
