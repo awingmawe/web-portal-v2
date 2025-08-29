@@ -17,6 +17,7 @@ import TitlePackageMobile from '@/components/pages/detail-package/mobile/TitlePa
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
+import { PACKAGE_TYPE } from '@/constant/env'
 import {
   GalleryImage,
   HotelGalleryImage,
@@ -24,7 +25,11 @@ import {
 } from '@/constant/types/GalleryProps'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
-import { getHotelRating, getTripDuration } from '@/lib/utils'
+import {
+  getHotelRating,
+  getSlugByVariantPackage,
+  getTripDuration,
+} from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHotel } from '@/services/general-service'
 import {
@@ -135,6 +140,14 @@ export default async function DetailPackage({
     })
   )
 
+  const namePackageType = () => {
+    if (detailData.packageType === PACKAGE_TYPE.UMRAH) {
+      return detailData?.isPlus ? 'Umroh Plus Liburan' : 'Umroh Regular'
+    } else {
+      return getSlugByVariantPackage(detailData.variantType).title
+    }
+  }
+
   return (
     <Fragment>
       <GalleryProvider
@@ -164,9 +177,7 @@ export default async function DetailPackage({
                 arrival={detailData?.arrival}
                 meccaHotel={detailData?.meccaHotel?.name}
                 madinahHotel={detailData?.medinaHotel?.name}
-                type={
-                  detailData?.isPlus ? 'Umroh Plus Liburan' : 'Umroh Regular'
-                }
+                type={namePackageType()}
               />
 
               <PacakgeDescription
@@ -231,6 +242,7 @@ export default async function DetailPackage({
               <TitlePackageMobile
                 title={detailData?.title}
                 currency={detailData?.currency}
+                packageType={detailData?.packageType}
               />
               <TravelDetail
                 organizationInstance={detailData?.organizationInstance}

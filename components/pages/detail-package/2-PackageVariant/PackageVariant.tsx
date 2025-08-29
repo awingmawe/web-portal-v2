@@ -299,7 +299,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       className={`flex flex-col gap-3 rounded-[20px] border border-neutral-100 bg-white p-4 max-lg:gap-2 max-lg:rounded-none max-lg:border-x-0 max-lg:border-t-0 max-lg:border-b max-lg:border-b-neutral-200 max-lg:px-0 max-lg:pt-0 max-lg:pb-4 ${dissolve}`}
     >
       {/* Header */}
-      <PackageVariantHeader />
+      <PackageVariantHeader packageType={pkg.packageType} />
 
       {/* Booking Released Info */}
       {selectedVariant &&
@@ -307,16 +307,18 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           10 && <BookingReleasedInfo variant={selectedVariant} />}
 
       {/* Variants selection */}
-      <VariantSelection
-        variants={variants}
-        selectedVariantId={selectedVariantId}
-        lg={lg}
-        pkg={pkg}
-        token={token || ''}
-        onVariantSelect={setSelectedVariantId}
-        handleBadgePromo={handleBadgePromo}
-        handlePushEvent={handlePushEvent}
-      />
+      {pkg.packageType === PACKAGE_TYPE.UMRAH && (
+        <VariantSelection
+          variants={variants}
+          selectedVariantId={selectedVariantId}
+          lg={lg}
+          pkg={pkg}
+          token={token || ''}
+          onVariantSelect={setSelectedVariantId}
+          handleBadgePromo={handleBadgePromo}
+          handlePushEvent={handlePushEvent}
+        />
+      )}
 
       {/* Variants not available */}
       {variants.length === 0 && <VariantsNotAvailable />}

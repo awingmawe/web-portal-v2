@@ -34,7 +34,7 @@ const TermsAndCheckout = ({
           className={`text-s-regular bg-info-100 text-info-800 flex items-center gap-2 rounded-lg px-3 py-2`}
         >
           <InfoIcon
-            className="text-info-800 h-5 w-5 stroke-0"
+            className="text-info-800 h-5 w-5 flex-none stroke-0"
             color="black"
             size={20}
           />

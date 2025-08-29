@@ -104,7 +104,7 @@ const TravelDates: React.FC<TravelDatesProps> = ({
       ) {
         return (
           selectedVariant?.departureDate &&
-          `Tahun ${format(selectedVariant.departureDate, 'yyyy', { locale: id })}`
+          `${format(selectedVariant.departureDate, 'MMM yyyy', { locale: id })}`
         )
       } else {
         return formattedDeparture
