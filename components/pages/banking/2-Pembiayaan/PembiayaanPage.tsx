@@ -580,6 +580,7 @@ const PembiayaanPage: React.FC = () => {
                 <Button
                   type="button"
                   onClick={() => {
+                    sessionStorage.removeItem('variantPaylater')
                     closeForm()
                   }}
                   className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"

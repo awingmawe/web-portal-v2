@@ -30,7 +30,7 @@ import {
   SubmissionDialogOrDrawer,
   useSubmissionDrawer,
 } from '@/components/pages/manifest/mobile/DrawerStatus'
-import { Calendar } from '@/components/ui/calendar'
+import { CustomCalendarView } from '@/components/shared/CustomCalendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Drawer,
@@ -967,19 +967,20 @@ export default function BiodataForm({
                         <CalendarDays size={18} />
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={
+                        <CustomCalendarView
+                          name={'Masa Berlaku Paspor'}
+                          value={
                             field.value ? new Date(field.value) : undefined
                           }
-                          onSelect={(date) =>
+                          onChange={(date) =>
                             field.onChange(
                               date ? format(date, 'yyyy-MM-dd') : ''
                             )
                           }
-                          locale={id}
                           disabled={(date) => date < new Date()}
-                          initialFocus
+                          locale={id}
+                          minYear={1890}
+                          maxYear={new Date().getFullYear() + 20}
                         />
                       </PopoverContent>
                     </Popover>

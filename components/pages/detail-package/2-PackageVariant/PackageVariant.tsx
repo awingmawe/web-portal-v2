@@ -360,6 +360,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <ActionButtons
         variants={variants}
         availableRoomTypes={availableRoomTypes}
+        selectedVariant={selectedVariant}
         packageType={pkg.packageType}
         token={token || ''}
         onCheckout={handleCheckout}

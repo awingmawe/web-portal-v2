@@ -14,6 +14,7 @@ type CalendarViewProps = {
   locale?: any
   minYear?: number
   maxYear?: number
+  name: string
 }
 
 export const CustomCalendarView = ({
@@ -23,6 +24,7 @@ export const CustomCalendarView = ({
   locale = id,
   minYear = 1890,
   maxYear = new Date().getFullYear(),
+  name,
 }: CalendarViewProps) => {
   const [view, setView] = useState<'days' | 'months' | 'years'>('days')
   const [viewDate, setViewDate] = useState<Date>(value || new Date())
@@ -211,7 +213,7 @@ export const CustomCalendarView = ({
       {/* Header navigation */}
       <div className="mb-5 flex items-center gap-1">
         <CalendarIconFilterMobile size={24} />
-        <p className="text-l-semibold w-full">Pilih Tanggal Kelahiran</p>
+        <p className="text-l-semibold w-full">{name}</p>
       </div>
       <div className="mb-3 flex items-center justify-between">
         {/* Previous button */}
