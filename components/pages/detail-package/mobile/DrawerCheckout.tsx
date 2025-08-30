@@ -130,6 +130,26 @@ const CheckoutDrawerMobile = React.memo(
       selectedVariant?.name ||
       (selectedVariant ? `Varian ${selectedVariant.id}` : '')
 
+    const handleSubmit = () => {
+      localStorage.setItem(
+        LOCAL_STORAGE_DETAIL_VARIANT,
+        JSON.stringify(selectedVariant)
+      )
+      localStorage.setItem(
+        LOCAL_STORAGE_SELECTED_VARIANT,
+        JSON.stringify({
+          netAmount: selectedVariant?.package?.dpAmount,
+          packageId: selectedVariant?.packageId,
+          price: getPrice(),
+          roomType: selectedRoomType,
+          variantId: selectedVariant?.id,
+          variant: selectedVariant,
+          name: selectedVariant?.name,
+        })
+      )
+      window.location.href = '/checkout' // why using this to prevent caching effect to checkout page
+    }
+
     const handleLocalStorage = () => {
       if (!token && isEmpty(token)) {
         window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
@@ -146,26 +166,9 @@ const CheckoutDrawerMobile = React.memo(
         (currency === 'USD' && !isKursOpenUSD)
       ) {
         setIsOpenKurs(true)
+      } else {
+        handleSubmit()
       }
-
-      localStorage.setItem(
-        LOCAL_STORAGE_DETAIL_VARIANT,
-        JSON.stringify(selectedVariant)
-      )
-      localStorage.setItem(
-        LOCAL_STORAGE_SELECTED_VARIANT,
-        JSON.stringify({
-          netAmount: selectedVariant?.package?.dpAmount,
-          packageId: selectedVariant?.packageId,
-          price: getPrice(),
-          roomType: selectedRoomType,
-          variantId: selectedVariant?.id,
-          variant: selectedVariant,
-          name: selectedVariant?.name,
-          currency,
-        })
-      )
-      window.location.href = '/checkout'
     }
 
     const onCheckedChange = (checked: boolean) => {
@@ -207,33 +210,35 @@ const CheckoutDrawerMobile = React.memo(
                   </div>
 
                   {/* Variants Section */}
-                  <div
-                    className={`no-scrollbar flex flex-nowrap items-center gap-4 overflow-x-auto ${variants.some((e) => e.discountAmount != '0') ? 'px-2' : ''}`}
-                  >
-                    {variants.map((variant) => (
-                      <div
-                        key={variant.id}
-                        id={`variant-btn-${variant.id}`}
-                        onClick={() => setSelectedVariantId(variant.id)}
-                        className={`${dissolve} ${variants.some((e) => e.discountAmount != '0') ? 'mt-5.5' : ''} hover:bg-primary-100 relative min-w-[90px] flex-shrink-0 cursor-pointer rounded-lg p-2.5 ${
-                          selectedVariantId === variant.id
-                            ? 'border-primary-500 bg-primary-100 border-2'
-                            : 'border-2 border-neutral-200 bg-transparent'
-                        }`}
-                      >
-                        <p className="text-m-regular text-neutral-900">
-                          {variant.name || `Varian ${variant.id}`}
-                        </p>
-                        {variant.discountAmount &&
-                          Number(variant.discountAmount) > 0 && (
-                            <BadgePromo
-                              className="!text-s-semibold -top-[25px] left-0"
-                              title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount, currency)}`}
-                            />
-                          )}
-                      </div>
-                    ))}
-                  </div>
+                  {packageType === PACKAGE_TYPE.UMRAH && (
+                    <div
+                      className={`no-scrollbar flex flex-nowrap items-center gap-4 overflow-x-auto ${variants.some((e) => e.discountAmount != '0') ? 'px-2' : ''}`}
+                    >
+                      {variants.map((variant) => (
+                        <div
+                          key={variant.id}
+                          id={`variant-btn-${variant.id}`}
+                          onClick={() => setSelectedVariantId(variant.id)}
+                          className={`${dissolve} ${variants.some((e) => e.discountAmount != '0') ? 'mt-5.5' : ''} hover:bg-primary-100 relative min-w-[90px] flex-shrink-0 cursor-pointer rounded-lg p-2.5 ${
+                            selectedVariantId === variant.id
+                              ? 'border-primary-500 bg-primary-100 border-2'
+                              : 'border-2 border-neutral-200 bg-transparent'
+                          }`}
+                        >
+                          <p className="text-m-regular text-neutral-900">
+                            {variant.name || `Varian ${variant.id}`}
+                          </p>
+                          {variant.discountAmount &&
+                            Number(variant.discountAmount) > 0 && (
+                              <BadgePromo
+                                className="!text-s-semibold -top-[25px] left-0"
+                                title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount, currency)}`}
+                              />
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   <TravelDates
                     variants={variants}
@@ -372,7 +377,7 @@ const CheckoutDrawerMobile = React.memo(
         <DrawerKurs
           open={isOpenKurs}
           setOpen={setIsOpenKurs}
-          onCheckout={handleLocalStorage}
+          onCheckout={handleSubmit}
           currency={currency}
           checked={isChecked}
           onCheckedChange={onCheckedChange}

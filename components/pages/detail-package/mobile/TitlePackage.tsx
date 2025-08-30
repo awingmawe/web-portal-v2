@@ -1,6 +1,7 @@
 'use client'
 
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
 import { formatCurrency } from '@/lib/utils'
@@ -9,11 +10,13 @@ import { differenceInDays } from 'date-fns'
 interface TitlePackageMobileProps {
   title: string
   currency: string
+  packageType: string
 }
 
 export default function TitlePackageMobile({
   title,
   currency,
+  packageType,
 }: TitlePackageMobileProps) {
   const {
     isLoading,
@@ -48,7 +51,9 @@ export default function TitlePackageMobile({
       <h1 className="text-l-semibold break-all text-neutral-900">{title}</h1>
       {selectedVariant && (
         <>
-          <p className="text-s-regular text-neutral-600">{variantName}</p>
+          {packageType === PACKAGE_TYPE.UMRAH && (
+            <p className="text-s-regular text-neutral-600">{variantName}</p>
+          )}
           <div className="mt-2 flex items-center justify-between gap-2">
             <div className="flex flex-col gap-1">
               <p className="text-xs-medium text-neutral-500">

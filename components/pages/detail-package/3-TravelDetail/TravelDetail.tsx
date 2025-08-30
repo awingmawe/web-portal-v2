@@ -5,11 +5,7 @@ import { Button } from '@/components/ui/button'
 import { CALL_CENTER } from '@/constant/env'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
-import {
-  capitalizeText,
-  formatJoinedDate,
-  formatPhoneNumber,
-} from '@/lib/utils'
+import { capitalizeText, formatJoinedDate } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
 
@@ -30,14 +26,16 @@ const TravelDetail = ({
     name,
     legalInformation: { ppiu },
     createdAt,
-    directContact,
-    phoneNumber,
-    bdm,
+    // directContact,
+    // phoneNumber,
+    // bdm,
   } = organizationInstance
 
-  const phoneNumberUsed = directContact
-    ? formatPhoneNumber(phoneNumber)
-    : formatPhoneNumber(bdm?.persona?.phoneNumber ?? String(CALL_CENTER))
+  // const phoneNumberUsed = directContact
+  //   ? formatPhoneNumber(phoneNumber)
+  //   : formatPhoneNumber(bdm?.persona?.phoneNumber ?? String(CALL_CENTER))
+
+  const phoneNumberUsed = CALL_CENTER
 
   return (
     <div
