@@ -340,7 +340,7 @@ const CheckoutPage = () => {
                 format(dataLegal?.modifiedAt, 'MM yyyy', { locale: id })}
             </p>
             <div className="prose prose-img:inline prose-ul:[list-style:inherit] prose-ol:[list-style:in] prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-xs prose-li:[:marker:initial]  break-word min-w-full marker:text-inherit">
-              {renderHTML(dataLegal?.body || '')}
+              {dataLegal && renderHTML(dataLegal?.body || '')}
             </div>
           </div>
         }
@@ -349,7 +349,7 @@ const CheckoutPage = () => {
             <Button
               variant="default"
               className="px-10 py-3 max-lg:w-full"
-              onClick={() =>
+              onClick={() => {
                 handleCheckout(
                   isLinkAja
                     ? {
@@ -358,7 +358,8 @@ const CheckoutPage = () => {
                       }
                     : {}
                 )
-              }
+                setOpenModalDisclaimer(false)
+              }}
               isLoading={disabledButtonCheckout}
             >
               Setuju & Lanjutkan

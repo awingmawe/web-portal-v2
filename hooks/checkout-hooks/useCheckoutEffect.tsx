@@ -182,8 +182,10 @@ export const useCheckoutEffects = ({
 
   // Get legal documents on mount
   useEffect(() => {
-    getLegal()
-  }, [])
+    if (detailVariant) {
+      getLegal()
+    }
+  }, [detailVariant])
 
   // Get refund policy when detail variant changes
   useEffect(() => {
