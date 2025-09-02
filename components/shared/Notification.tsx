@@ -3,12 +3,8 @@
 import { PemabaruanIcon } from '@/components/icons/pembaharuan'
 import { PengingatIcon } from '@/components/icons/pengingat'
 import { PromoIcon } from '@/components/icons/promo'
-import {
-  Category,
-  Notification,
-  Tab,
-  useTopbarNotification,
-} from '@/hooks/common/useTopbarNotification'
+import { Category, Notification, Tab } from '@/constant/types/NotificationProps'
+import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
 import { motion } from 'framer-motion'
 import React from 'react'
 
@@ -106,7 +102,7 @@ const NotificationComponent: React.FC = () => {
               >
                 <div className="flex items-start space-x-3">
                   <div
-                    className={`flex h-8 w-8 justify-center rounded-lg text-sm `}
+                    className={`text-s-regular flex h-8 w-8 justify-center rounded-lg `}
                   >
                     {notification.type === 'warning' ? (
                       <PengingatIcon size={20} />

@@ -21,6 +21,7 @@ const TopbarNotification: React.FC = () => {
 
   return (
     <div ref={containerRef} className="relative">
+      {/* Desktop Notification */}
       <motion.div
         className="relative flex cursor-pointer items-center gap-1"
         onClick={handleNotifIconClick}
@@ -39,6 +40,7 @@ const TopbarNotification: React.FC = () => {
           )}
         </div>
       </motion.div>
+      {/* Mobile Notification */}
       <Link href={'/notification-mobile'}>
         <div className="relative lg:hidden">
           <div className=" r flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white ">
