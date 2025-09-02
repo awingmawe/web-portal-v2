@@ -12,6 +12,7 @@ import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import Topbar from '@/components/shared/Topbar'
+import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
 import { getArticleList } from '@/services/article-service'
@@ -110,18 +111,24 @@ export default async function Home() {
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
-      {/* Input for mobile responsive */}
-      <Link
-        href={'/search-mobile-package'}
-        className="focus-within::outline-none absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5 outline-none focus-visible:outline-0 lg:hidden"
-      >
-        <div className="flex items-center gap-1 rounded-full border-1 border-neutral-200 bg-white px-4 py-1.5">
-          <Search size={16} className="text-neutral-300" />
-          <p className="text-m-regular text-neutral-300">
-            Cari paket, travel, hotel atau airlinesee...
-          </p>
-        </div>
-      </Link>
+      <div className="absolute top-3.5 right-0 left-0 z-999 flex items-center px-4 lg:hidden">
+        <Link
+          href={'/search-mobile-package'}
+          className="max-w-[calc(100%-60px)] flex-1 outline-none focus-within:outline-none focus-visible:outline-0"
+        >
+          <div className="flex items-center gap-1 rounded-full border-1 border-neutral-200 bg-white px-4 py-1.5">
+            <Search size={16} className="text-neutral-300" />
+            <p className="text-m-regular truncate text-neutral-300">
+              Cari paket, travel, hotel atau airlines...
+            </p>
+          </div>
+        </Link>
+        {token && (
+          <div className="ml-4">
+            <TopbarNotif />
+          </div>
+        )}
+      </div>
       <Banner />
       <main className="relative">
         <div className="container mx-auto max-xl:px-0">
