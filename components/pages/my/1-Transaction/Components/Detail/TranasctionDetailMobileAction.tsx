@@ -5,7 +5,7 @@ import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/
 import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
 import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
-import { CALL_CENTER } from '@/constant/env'
+import { CALL_CENTER, STATUS_BOOKING } from '@/constant/env'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -155,6 +155,9 @@ export const TransactionDetailMobileAction = ({
     <div className="hidden max-lg:block">
       {JSON.stringify(isLinkAja)}
       {![
+        STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH,
+        STATUS_BOOKING.WAITING_FOR_BILL,
+        STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
         'waiting-approval',
         'waiting-down-payment',
         'canceled-by-user',

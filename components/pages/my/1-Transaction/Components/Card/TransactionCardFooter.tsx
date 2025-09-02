@@ -365,7 +365,8 @@ export default function TransactionCardFooter({
             ) : (
               status !== 'waiting-approval' &&
               status !== STATUS_BOOKING.WAITING_FOR_BILL &&
-              status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION && (
+              status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+              status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ && (
                 <div>
                   {isLinkAja ? (
                     <Button
@@ -420,6 +421,7 @@ export default function TransactionCardFooter({
                 'waiting-approval',
                 STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
                 STATUS_BOOKING.WAITING_FOR_BILL,
+                STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
               ].includes(status) && (
                 <Link href={`/manifest/${bookingId}`}>
                   <Button className="w-full px-4 py-3 text-nowrap">
@@ -460,7 +462,8 @@ export default function TransactionCardFooter({
           </Fragment>
         )}
 
-        {showDpButton && (
+        {(showDpButton ||
+          status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) && (
           // <a
           //   href={paymentTransaction ? paymentTransaction.paymentLink : ''}
           //   target="_blank"

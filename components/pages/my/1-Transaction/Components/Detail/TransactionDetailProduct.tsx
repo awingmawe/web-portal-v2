@@ -45,8 +45,6 @@ export default function TransactionDetailProduct({
     })
   }, [departureDate, arrivalDate, packageType, variantType, waitingPeriod])
 
-  console.log('dialog: ', variantType)
-
   return (
     <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
       <div className="mb-4 flex items-center justify-between">
