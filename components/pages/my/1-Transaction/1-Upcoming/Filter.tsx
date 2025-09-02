@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { format } from 'date-fns/format'
 import { Search } from 'lucide-react'
 import Link from 'next/link'
@@ -81,6 +82,27 @@ export const SearchAndFilter = ({
               <SelectItem className="rounded-2xl" value="umrah-personal">
                 Umroh Personal
               </SelectItem>
+              <SelectItem className="rounded-2xl" value={PACKAGE_TYPE.HAJJ}>
+                Haji
+              </SelectItem>
+              <SelectItem
+                className="rounded-2xl"
+                value={PACKAGE_TYPE.HAJJ_DAKHILI}
+              >
+                Haji Dakhili
+              </SelectItem>
+              <SelectItem
+                className="rounded-2xl"
+                value={PACKAGE_TYPE.HAJJ_FURODA}
+              >
+                Haji Furoda
+              </SelectItem>
+              <SelectItem
+                className="rounded-2xl"
+                value={PACKAGE_TYPE.HAJJ_SPECIAL}
+              >
+                Haji Khusus
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -98,6 +120,18 @@ export const SearchAndFilter = ({
             <SelectGroup>
               <SelectItem className="rounded-2xl" value="all">
                 Semua Tahapan
+              </SelectItem>
+              <SelectItem
+                className="rounded-2xl"
+                value={STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION}
+              >
+                Menunggu Penerbitan Tagihan
+              </SelectItem>
+              <SelectItem
+                className="rounded-2xl"
+                value={STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ}
+              >
+                Menunggu Uang Muka
               </SelectItem>
               <SelectItem className="rounded-2xl" value="waiting-approval">
                 Menunggu Konfirmasi
@@ -155,7 +189,6 @@ export const SearchAndFilterMobile = ({
 
   const handleReset = () => {
     // Increment the reset counter to trigger a reset in the component
-
     setResetCounter((prev) => prev + 1)
   }
 
@@ -163,15 +196,18 @@ export const SearchAndFilterMobile = ({
     switch (value) {
       case 'all':
         return 'Semua Tahapan'
+      case STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION:
+        return 'Menunggu Penerbitan Tagihan'
+      case STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ:
+        return 'Menunggu Uang Muka'
       case 'waiting-approval':
         return 'Menunggu Konfirmasi'
       case 'coming-soon':
         return 'Menunggu Pelunasan & Data Jemaah'
       case 'siap-berangkat':
         return 'Siap Berangkat'
-
       default:
-        break
+        return 'Semua Tahapan'
     }
   }
 
@@ -183,9 +219,16 @@ export const SearchAndFilterMobile = ({
         return 'Umroh'
       case 'umrah-personal':
         return 'Umroh Personal'
-
+      case PACKAGE_TYPE.HAJJ:
+        return 'Haji'
+      case PACKAGE_TYPE.HAJJ_DAKHILI:
+        return 'Haji Dakhili'
+      case PACKAGE_TYPE.HAJJ_FURODA:
+        return 'Haji Furoda'
+      case PACKAGE_TYPE.HAJJ_SPECIAL:
+        return 'Haji Khusus'
       default:
-        break
+        return 'Semua Produk'
     }
   }
 
@@ -228,12 +271,10 @@ export const SearchAndFilterMobile = ({
         />
       </div>
 
+      {/* Status Filter Drawer */}
       <Drawer>
         <DrawerTrigger asChild>
-          <button
-            className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700
-"
-          >
+          <button className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700">
             {renderStatusFilterTahapanText(statusFilterMobile)}
             <ChevronIcon />
           </button>
@@ -261,6 +302,32 @@ export const SearchAndFilterMobile = ({
                   className="text-s-regular ml-1 flex cursor-pointer"
                 >
                   Semua Tahapan
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value={STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION}
+                  id="status-tahapan-tagihan"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-tahapan-tagihan"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Menunggu Penerbitan Tagihan
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value={STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ}
+                  id="status-tahapan-uang-muka"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-tahapan-uang-muka"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Menunggu Uang Muka
                 </label>
               </div>
               <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
@@ -329,12 +396,11 @@ export const SearchAndFilterMobile = ({
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Product Type Filter Drawer */}
       <Drawer>
         <DrawerTrigger asChild>
-          <button
-            className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700
-"
-          >
+          <button className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700">
             {renderStatusFilterTypeText(statusFilterType)}
             <ChevronIcon />
           </button>
@@ -343,7 +409,7 @@ export const SearchAndFilterMobile = ({
           <DrawerHeader className="p-3">
             <DrawerTitle className="flex items-center">
               <FilterSquare className="" />
-              <p className="text-m-semibold ml-2 font-semibold">Tahapan</p>
+              <p className="text-m-semibold ml-2 font-semibold">Produk</p>
             </DrawerTitle>
           </DrawerHeader>
           <div className="space-y-2 overflow-y-auto px-4 pb-4 text-sm">
@@ -390,6 +456,58 @@ export const SearchAndFilterMobile = ({
                   Umroh Personal
                 </label>
               </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value={PACKAGE_TYPE.HAJJ}
+                  id="status-hajj"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-hajj"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Haji
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value={PACKAGE_TYPE.HAJJ_DAKHILI}
+                  id="status-hajj-dakhili"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-hajj-dakhili"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Haji Dakhili
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value={PACKAGE_TYPE.HAJJ_FURODA}
+                  id="status-hajj-furoda"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-hajj-furoda"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Haji Furoda
+                </label>
+              </div>
+              <div className="flex items-center space-x-2 border-t border-neutral-100 pt-2">
+                <RadioGroupItem
+                  value={PACKAGE_TYPE.HAJJ_SPECIAL}
+                  id="status-hajj-special"
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor="status-hajj-special"
+                  className="text-s-regular ml-1 flex cursor-pointer"
+                >
+                  Haji Khusus
+                </label>
+              </div>
             </RadioGroup>
           </div>
           <div className="flex w-full px-3 pt-3 pb-5">
@@ -416,12 +534,11 @@ export const SearchAndFilterMobile = ({
           </div>
         </DrawerContent>
       </Drawer>
+
+      {/* Date Filter Drawer */}
       <Drawer>
         <DrawerTrigger asChild>
-          <button
-            className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700
-"
-          >
+          <button className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700">
             {formatDateRange()}
             <ChevronIcon />
           </button>

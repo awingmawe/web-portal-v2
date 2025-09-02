@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ArrowIcon } from '@/components/icons/arrow'
 import { BriefCaseIcon } from '@/components/icons/briefcase'
 import { Calendar2 } from '@/components/icons/calendar'
 import { UsersIcon } from '@/components/icons/user'
-import dayjs from 'dayjs'
+import { formatDateByPackageType } from '@/lib/utils'
 import 'dayjs/locale/id'
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useMemo } from 'react'
 
 interface TransactionDetailProductProps {
   travelName: string
@@ -18,7 +17,9 @@ interface TransactionDetailProductProps {
   arrivalDate: string
   departureDate: string
   totalJemaah: string
-  roomType: string
+  variantType: string
+  packageType: string
+  waitingPeriod: string | null
 }
 
 export default function TransactionDetailProduct({
@@ -30,8 +31,22 @@ export default function TransactionDetailProduct({
   arrivalDate,
   departureDate,
   totalJemaah,
-  roomType,
+  variantType,
+  packageType,
+  waitingPeriod,
 }: TransactionDetailProductProps) {
+  const { formattedDepartureDate, formattedArrivalDate } = useMemo(() => {
+    return formatDateByPackageType({
+      departureDate,
+      arrivalDate,
+      packageType,
+      variantType,
+      waitingPeriod,
+    })
+  }, [departureDate, arrivalDate, packageType, variantType, waitingPeriod])
+
+  console.log('dialog: ', variantType)
+
   return (
     <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
       <div className="mb-4 flex items-center justify-between">
@@ -79,9 +94,8 @@ export default function TransactionDetailProduct({
           <div className="mt-2 flex items-center">
             <Calendar2 className="h-5 w-5 text-neutral-500" />
             <p className="ml-2 flex items-center text-sm text-neutral-500 max-lg:text-xs">
-              {dayjs(departureDate).locale('id').format('DD MMMM YYYY')}
-              <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
-              {dayjs(arrivalDate).locale('id').format('DD MMMM YYYY')}{' '}
+              {formattedDepartureDate}
+              {formattedArrivalDate}
             </p>
           </div>
           <div className="mt-2 flex items-center">

@@ -51,40 +51,8 @@ export default function List({
                     >
                       <CanceledProvider>
                         <TransactionCard
-                          status={transaction.status.slug}
-                          id={transaction.bookingCode}
-                          packageName={
-                            transaction?.packageSnapshot?.snapshot?.name
-                          }
-                          thumbnail={
-                            transaction?.packageSnapshot?.snapshot?.package
-                              .thumbnail
-                          }
-                          startDate={
-                            transaction?.packageSnapshot?.snapshot
-                              ?.departureDate
-                          }
-                          endDate={
-                            transaction?.packageSnapshot?.snapshot?.arrivalDate
-                          }
-                          organizationInstanceId={
-                            transaction?.packageSnapshot?.snapshot?.package
-                              .organizationInstanceId
-                          }
-                          createdDate={transaction.createdAt}
-                          jemaah={Number.parseInt(transaction.quantity, 10)}
-                          bookingId={String(transaction.id)}
-                          isCompletedManifest={transaction.isCompletedManifest}
-                          isManifestCommitted={transaction.isManifestCommitted}
-                          isPaidOff={transaction.isPaidOff}
-                          packagePersonalId={transaction.packagePersonalId}
                           statusTahapan="Akan Datang"
                           statusTahapanDetail={'Akan Datang'}
-                          noFooter={
-                            transaction.status.slug == 'waiting-approval' ||
-                            (transaction.isPaidOff &&
-                              transaction.isCompletedManifest)
-                          }
                           transaction={transaction}
                           fetchTransactions={fetchTransactions}
                         />
@@ -118,34 +86,8 @@ export default function List({
                 >
                   <CanceledProvider>
                     <TransactionCard
-                      status={transaction.status.slug}
-                      id={transaction.bookingCode}
-                      packageName={
-                        transaction?.packageSnapshot?.snapshot?.package?.title
-                      }
-                      thumbnail={
-                        transaction?.packageSnapshot?.snapshot.package
-                          ?.thumbnail
-                      }
-                      startDate={
-                        transaction?.packageSnapshot?.snapshot?.departureDate
-                      }
-                      endDate={
-                        transaction?.packageSnapshot?.snapshot?.arrivalDate
-                      }
-                      createdDate={transaction.createdAt}
-                      jemaah={Number.parseInt(transaction.quantity, 10)}
-                      bookingId={String(transaction.id)}
-                      isCompletedManifest={transaction.isCompletedManifest}
-                      isManifestCommitted={transaction.isManifestCommitted}
-                      isPaidOff={transaction.isPaidOff}
-                      packagePersonalId={transaction.packagePersonalId}
                       statusTahapan="Akan Datang"
                       statusTahapanDetail={'Akan Datang'}
-                      organizationInstanceId={
-                        transaction?.packageSnapshot?.snapshot?.package
-                          .organizationInstanceId
-                      }
                       transaction={transaction}
                       fetchTransactions={fetchTransactions}
                     />

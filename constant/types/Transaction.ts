@@ -34,6 +34,7 @@ export interface Transaction {
   modifiedBy: string | null
   invoiceFeeNumber: string | null
   wukalaDisbursementId: string | null
+  remainingHajjPayment: number
   bdmId: string | null
   status: {
     id: number
@@ -48,6 +49,8 @@ export interface Transaction {
       name: string
       arrivalDate: string
       departureDate: string
+      tripDuration: number
+      waitingPeriod: string | null
     }
   }
 }

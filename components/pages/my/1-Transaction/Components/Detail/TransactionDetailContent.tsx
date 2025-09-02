@@ -11,8 +11,14 @@ import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Compo
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { CALL_CENTER, MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import {
+  CALL_CENTER,
+  MIDTRANS_CLIENT_KEY,
+  SNAP_URL,
+  STATUS_BOOKING,
+} from '@/constant/env'
 import { CanceledProvider } from '@/contexts/canceled-package-context'
+import { formatCurrency, getSlugByVariantPackage } from '@/lib/utils'
 import {
   getManifestDetail,
   getPaymentStatement,
@@ -120,7 +126,9 @@ export default function TransactionDetailContent({
       if (
         transaction.status.slug == 'waiting-cancellation' ||
         transaction.status.slug == 'waiting-approval' ||
-        transaction.status.slug == 'approved'
+        transaction.status.slug == 'approved' ||
+        transaction.status.slug == STATUS_BOOKING.WAITING_FOR_BILL ||
+        transaction.status.slug == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
       ) {
         setStatusTahapan('Akan Datang')
       } else if (transaction.status.slug == 'waiting-down-payment') {
@@ -207,16 +215,6 @@ export default function TransactionDetailContent({
       setLoading(false)
     }
   }, [paymentTransaction, handleSnapPayment, isSnapInitialized])
-  const formatCurrency = (amount: any) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    })
-      .format(amount)
-      .replace('IDR', 'Rp')
-  }
   const roomTypeMapping: Record<
     RoomType,
     { label: string; type: string; subLabel: string }
@@ -284,7 +282,12 @@ export default function TransactionDetailContent({
                     Kategori Produk
                   </p>
                   <p className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
-                    Umroh
+                    {
+                      getSlugByVariantPackage(
+                        transaction?.packageSnapshot?.snapshot?.package
+                          ?.variantType
+                      ).title
+                    }
                   </p>
                 </div>
                 <div className="mt-1 flex items-center justify-between">
@@ -335,7 +338,15 @@ export default function TransactionDetailContent({
                   transaction?.packageSnapshot?.snapshot.departureDate || ''
                 }
                 totalJemaah={transaction?.quantity || ''}
-                roomType={transaction?.roomType || ''}
+                variantType={
+                  transaction?.packageSnapshot?.snapshot?.package?.variantType
+                }
+                packageType={
+                  transaction?.packageSnapshot?.snapshot?.package?.packageType
+                }
+                waitingPeriod={
+                  transaction?.packageSnapshot?.snapshot?.waitingPeriod || null
+                }
               />
               <Separator className="mb-4 !h-2 !bg-neutral-100" />
 
@@ -380,7 +391,11 @@ export default function TransactionDetailContent({
                               Harga/Jemaah
                             </p>
                             <p className="mt-0.5 text-sm font-medium text-neutral-900 max-lg:text-xs max-lg:font-medium">
-                              {formatCurrency(parseInt(roomInfo.price))}
+                              {formatCurrency(
+                                parseInt(roomInfo.price),
+                                transaction?.packageSnapshot?.snapshot?.package
+                                  ?.currency
+                              )}
                             </p>
                           </div>
                         </div>
@@ -459,6 +474,12 @@ export default function TransactionDetailContent({
               <div className="flex flex-col gap-3 p-4 max-lg:hidden">
                 {transaction?.status.slug !== 'waiting-approval' &&
                   transaction?.status.slug !== 'waiting-down-payment' &&
+                  transaction?.status.slug !==
+                    STATUS_BOOKING.WAITING_FOR_BILL &&
+                  transaction?.status.slug !==
+                    STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+                  transaction?.status.slug !==
+                    STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ &&
                   transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' && (

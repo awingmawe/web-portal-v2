@@ -17,7 +17,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { CALL_CENTER, MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
+import {
+  CALL_CENTER,
+  MIDTRANS_CLIENT_KEY,
+  SNAP_URL,
+  STATUS_BOOKING,
+} from '@/constant/env'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { formatCurrency } from '@/lib/utils'
@@ -47,6 +52,8 @@ export interface TransactionCardFooter {
   organizationInstanceId?: any
   fetchTransactions?: any
   transaction?: any
+  currency: string
+  remainingHajjPayment: number
 }
 
 export default function TransactionCardFooter({
@@ -63,6 +70,8 @@ export default function TransactionCardFooter({
   organizationInstanceId,
   fetchTransactions,
   transaction,
+  currency,
+  remainingHajjPayment,
 }: TransactionCardFooter) {
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const { lg } = useTailwindBreakpoint()
@@ -354,7 +363,9 @@ export default function TransactionCardFooter({
                 Pelunasan
               </Button>
             ) : (
-              status !== 'waiting-approval' && (
+              status !== 'waiting-approval' &&
+              status !== STATUS_BOOKING.WAITING_FOR_BILL &&
+              status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION && (
                 <div>
                   {isLinkAja ? (
                     <Button
@@ -403,9 +414,13 @@ export default function TransactionCardFooter({
             )} */}
 
             {!isManifestCommitted &&
-              !['waiting-cancellation', 'expired', 'waiting-approval'].includes(
-                status
-              ) && (
+              ![
+                'waiting-cancellation',
+                'expired',
+                'waiting-approval',
+                STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+                STATUS_BOOKING.WAITING_FOR_BILL,
+              ].includes(status) && (
                 <Link href={`/manifest/${bookingId}`}>
                   <Button className="w-full px-4 py-3 text-nowrap">
                     Lengkapi Data Jemaah
@@ -414,7 +429,9 @@ export default function TransactionCardFooter({
               )}
             {(status === 'approved' ||
               status === 'waiting-approval' ||
-              status === 'waiting-down-payment') && (
+              status === 'waiting-down-payment' ||
+              status === STATUS_BOOKING.WAITING_FOR_BILL ||
+              status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) && (
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -516,12 +533,18 @@ export default function TransactionCardFooter({
         {/* {renderCancelAction()} */}
       </div>
       <div className="hidden max-lg:block">
-        {status === 'waiting-down-payment' ? (
+        {status === 'waiting-down-payment' ||
+        status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ ? (
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs-medium text-neutral-500">Perlu Dibayar</p>
               <p className="text-s-semibold text-neutral-900">
-                {formatCurrency(paymentAmount)}
+                {formatCurrency(
+                  status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+                    ? remainingHajjPayment
+                    : paymentAmount,
+                  currency
+                )}
               </p>
             </div>
             <div>

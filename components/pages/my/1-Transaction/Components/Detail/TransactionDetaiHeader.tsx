@@ -1,4 +1,5 @@
 import { TimerIcon } from '@/components/icons/timer'
+import { STATUS_BOOKING } from '@/constant/env'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { ellipsis } from '@/lib/utils'
 import dayjs from 'dayjs'
@@ -58,6 +59,11 @@ export function TransactionDetailHeader({
           status == 'canceled-by-user'
         ) {
           return 'Dalam Proses Pembatalan'
+        } else if (
+          status === STATUS_BOOKING.WAITING_FOR_BILL ||
+          status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+        ) {
+          return 'Menunggu Penerbitan Tagihan'
         } else {
           return lg
             ? ellipsis(
@@ -90,7 +96,11 @@ export function TransactionDetailHeader({
       case 'Akan Datang':
         if (isPaidOff && isCompletedManifest) {
           return 'bg-success-100 text-success-700'
-        } else if (status === 'waiting-approval') {
+        } else if (
+          status === 'waiting-approval' ||
+          status === STATUS_BOOKING.WAITING_FOR_BILL ||
+          status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+        ) {
           return 'bg-warning-100 text-warning-700'
         } else if (
           status == 'waiting-cancellation' ||

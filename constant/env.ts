@@ -33,6 +33,13 @@ export const PACKAGE_TYPE = {
   UMRAH: 'umrah',
 }
 
+export const STATUS_BOOKING = {
+  WAITING_HAJJ_CONFIRMATION: 'waiting-hajj-confirmation',
+  WAITING_FOR_BILL: 'waiting-for-bill',
+  WAITING_DOWN_PAYMENT_HAJJ: 'waiting-down-payment-hajj',
+  WAITING_DOWN_PAYMENT_UMRAH: 'waiting-down-payment',
+}
+
 export const CATEGORIES_FILTER_SEARCH = [
   { name: 'Umroh', slug: 'umrah' },
   { name: 'Haji', slug: 'hajj' },
