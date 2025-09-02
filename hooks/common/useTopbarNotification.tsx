@@ -24,39 +24,6 @@ export interface Tab {
   id: 'semua' | 'belum-dibaca' | 'baca-semua'
   label: string
 }
-// Mock data
-// const mockNotifications: Notification[] = [
-//   {
-//     id: 1,
-//     category: 'umroh',
-//     title: 'Kuota Umroh September Hampir Penuh!',
-//     description:
-//       'Paket umroh September tersisa kuota terbatas. Segera amankan slot Kamu sebelum ditutup!',
-//     time: '10 m',
-//     isRead: false,
-//     type: 'warning',
-//   },
-//   {
-//     id: 2,
-//     category: 'promo',
-//     title: 'Diskon Khusus Hari Asyura!',
-//     description:
-//       'Dapatkan potongan hingga Rp1.000.000 untuk pembelian paket Umroh Plus Turki. Berlaku hanya sampai malam ini!',
-//     time: '15 m',
-//     isRead: false,
-//     type: 'promo',
-//   },
-//   {
-//     id: 3,
-//     category: 'info',
-//     title: 'Kini telah hadir Muslim Market!',
-//     description:
-//       'Dapatkan kemudahan saat berbelanja keperluan kamu di Muslim Market, yuk cek sekarang!',
-//     time: '15 m',
-//     isRead: false,
-//     type: 'info',
-//   },
-// ]
 
 const tabs: Tab[] = [
   { id: 'semua', label: 'Semua' },
@@ -115,7 +82,7 @@ export const useTopbarNotification = () => {
       const res = await getListNotif(filter)
       setNotifications(res)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
   const getDataBadge = async () => {
@@ -142,15 +109,7 @@ export const useTopbarNotification = () => {
   }, [])
 
   const handleTabClick = useCallback((tabId: TabId) => {
-    if (tabId === 'baca-semua') {
-      markAllAsRead()
-    } else {
-      setActiveTab(tabId)
-    }
-  }, [])
-
-  const markAllAsRead = useCallback(() => {
-    // setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))/
+    setActiveTab(tabId)
   }, [])
 
   const markAsRead = useCallback(async (notificationId: number) => {
@@ -161,7 +120,6 @@ export const useTopbarNotification = () => {
     } catch (error) {
       console.error(error)
     }
-    // console.log(notificationId)
   }, [])
 
   const getNotificationBgClass = useCallback(
@@ -261,7 +219,6 @@ export const useTopbarNotification = () => {
     // Handlers
     handleNotifIconClick,
     handleTabClick,
-    markAllAsRead,
     markAsRead,
     // Computed functions
     getNotificationBgClass,

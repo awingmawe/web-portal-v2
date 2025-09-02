@@ -32,7 +32,7 @@ const TopbarNotification: React.FC = () => {
           <NotifIcon size={24} className="text-neutral-600 " />
           {countBadge > 0 && (
             <span
-              className={`absolute -top-3 -right-2 flex items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white
+              className={`text-s-regular absolute -top-3 -right-2 flex items-center justify-center rounded-full bg-[#B3261E] text-white
             ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
             >
               {countBadge}
@@ -50,7 +50,8 @@ const TopbarNotification: React.FC = () => {
           </div>
           {countBadge > 0 && (
             <span
-              className={`absolute -top-2 -right-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white          ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
+              className={`text-s-regular absolute -top-2 -right-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#B3261E] text-white 
+                ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
             >
               {countBadge}
             </span>

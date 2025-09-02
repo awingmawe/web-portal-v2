@@ -5,7 +5,7 @@ import { PengingatIcon } from '@/components/icons/pengingat'
 import { PromoIcon } from '@/components/icons/promo'
 import { Category, Notification, Tab } from '@/constant/types/NotificationProps'
 import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
-import { timeSince } from '@/lib/utils'
+import { isEmpty, timeSince } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import React from 'react'
@@ -19,7 +19,7 @@ const NotificationComponent: React.FC = () => {
     handleTabClick,
     markAsRead,
   } = useTopbarNotification()
-  // const filteredNotifications = getFilteredNotifications()
+
   return (
     <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}
@@ -84,7 +84,7 @@ const NotificationComponent: React.FC = () => {
 
       {/* Notifications List */}
       <div className="max-h-96 overflow-y-auto">
-        {notifications !== undefined && notifications.length === 0 ? (
+        {isEmpty(notifications) ? (
           <div className="p-8 text-center">
             <div className="text-center">
               <p className="text-s-semibold mb-2 text-neutral-900">
@@ -97,99 +97,101 @@ const NotificationComponent: React.FC = () => {
           </div>
         ) : (
           <div className="divide-y divide-neutral-100">
-            {notifications !== undefined &&
-              notifications.map((notification: Notification, index: number) => {
-                if (notification.platformRoutes?.web) {
-                  return (
-                    <Link
-                      href={notification.platformRoutes.web}
-                      onClick={() => markAsRead(notification.id)}
-                      key={index}
-                    >
-                      <motion.div
-                        key={notification.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className={`cursor-pointer p-4 transition-colors  ${
-                          notification.readAt !== null ? '' : 'bg-primary-100'
-                        }`}
+            {!isEmpty(notifications) &&
+              notifications?.map(
+                (notification: Notification, index: number) => {
+                  if (notification.platformRoutes?.web) {
+                    return (
+                      <Link
+                        href={notification.platformRoutes.web}
+                        onClick={() => markAsRead(notification.id)}
+                        key={index}
                       >
-                        <div className="flex items-start space-x-3">
-                          <div
-                            className={`text-s-regular flex h-8 w-8 justify-center rounded-lg `}
-                          >
-                            {notification.type === 'warning' ? (
-                              <PengingatIcon size={20} />
-                            ) : notification.type === 'info' ? (
-                              <PemabaruanIcon size={20} />
-                            ) : (
-                              <PromoIcon size={20} />
-                            )}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="mb-1 flex items-center justify-between">
-                              <h4 className="text-m-medium break-words text-neutral-900">
-                                {notification.title}
-                              </h4>
-                              <span className="text-s-regular ml-2 flex-shrink-0 text-neutral-500">
-                                {timeSince(notification.createdAt)}
-                              </span>
+                        <motion.div
+                          key={notification.id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className={`cursor-pointer p-4 transition-colors  ${
+                            notification.readAt !== null ? '' : 'bg-primary-100'
+                          }`}
+                        >
+                          <div className="flex items-start space-x-3">
+                            <div
+                              className={`text-s-regular flex h-8 w-8 justify-center rounded-lg `}
+                            >
+                              {notification.type === 'warning' ? (
+                                <PengingatIcon size={20} />
+                              ) : notification.type === 'info' ? (
+                                <PemabaruanIcon size={20} />
+                              ) : (
+                                <PromoIcon size={20} />
+                              )}
                             </div>
-                            <p className="text-s-regular text-neutral-600">
-                              {notification.body}
-                            </p>
+                            <div className="min-w-0 flex-1">
+                              <div className="mb-1 flex items-center justify-between">
+                                <h4 className="text-m-medium break-words text-neutral-900">
+                                  {notification.title}
+                                </h4>
+                                <span className="text-s-regular ml-2 flex-shrink-0 text-neutral-500">
+                                  {timeSince(notification.createdAt)}
+                                </span>
+                              </div>
+                              <p className="text-s-regular text-neutral-600">
+                                {notification.body}
+                              </p>
+                            </div>
                           </div>
+                        </motion.div>
+                      </Link>
+                    )
+                  }
+
+                  return (
+                    <motion.div
+                      key={notification.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      onClick={() => markAsRead(notification.id)}
+                      className={`cursor-pointer p-4 transition-colors  ${
+                        notification.readAt !== null ? '' : 'bg-primary-100'
+                      }`}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div
+                          className={`text-s-regular flex h-8 w-8 justify-center rounded-lg `}
+                        >
+                          {notification.type === 'warning' ? (
+                            <PengingatIcon size={20} />
+                          ) : notification.type === 'info' ? (
+                            <PemabaruanIcon size={20} />
+                          ) : (
+                            <PromoIcon size={20} />
+                          )}
                         </div>
-                      </motion.div>
-                    </Link>
+                        <div className="min-w-0 flex-1">
+                          <div className="mb-1 flex items-center justify-between">
+                            <h4 className="text-m-medium break-words text-neutral-900">
+                              {notification.title}
+                            </h4>
+                            <span className="text-s-regular ml-2 flex-shrink-0 text-neutral-500">
+                              {timeSince(notification.createdAt)}
+                            </span>
+                          </div>
+                          <p className="text-s-regular text-neutral-600">
+                            {notification.body}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
                   )
                 }
-
-                return (
-                  <motion.div
-                    key={notification.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    onClick={() => markAsRead(notification.id)}
-                    className={`cursor-pointer p-4 transition-colors  ${
-                      notification.readAt !== null ? '' : 'bg-primary-100'
-                    }`}
-                  >
-                    <div className="flex items-start space-x-3">
-                      <div
-                        className={`text-s-regular flex h-8 w-8 justify-center rounded-lg `}
-                      >
-                        {notification.type === 'warning' ? (
-                          <PengingatIcon size={20} />
-                        ) : notification.type === 'info' ? (
-                          <PemabaruanIcon size={20} />
-                        ) : (
-                          <PromoIcon size={20} />
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-1 flex items-center justify-between">
-                          <h4 className="text-m-medium break-words text-neutral-900">
-                            {notification.title}
-                          </h4>
-                          <span className="text-s-regular ml-2 flex-shrink-0 text-neutral-500">
-                            {timeSince(notification.createdAt)}
-                          </span>
-                        </div>
-                        <p className="text-s-regular text-neutral-600">
-                          {notification.body}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )
-              })}
+              )}
           </div>
         )}
       </div>
 
       {/* Footer */}
-      {notifications !== undefined && notifications.length !== 0 && (
+      {isEmpty(notifications) && (
         <div className={`mb-4 max-lg:mt-5 max-lg:mb-0`}>
           <button className="text-m-medium w-full py-1 text-center text-neutral-900">
             Lihat Selengkapnya
