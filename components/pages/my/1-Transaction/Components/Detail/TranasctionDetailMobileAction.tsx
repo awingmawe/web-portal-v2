@@ -2,6 +2,7 @@
 import DrawerBatalkan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerBatalkan'
 import DrawerPaymentLinkAja from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerPaymentLinkAja'
 import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
+import TransactionActionButtonHajj from '@/components/pages/my/1-Transaction/Components/PriceConfirmationHajj/ActionButtonHajj'
 import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
 import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
@@ -17,12 +18,14 @@ export const TransactionDetailMobileAction = ({
   bookingId,
   idOrganisasi,
   transaction,
+  handleDirectPayment,
 }: {
   bookingCode: string
   statusTahapan: string
   bookingId: any
   idOrganisasi: any
   transaction?: any
+  handleDirectPayment?: any
 }) => {
   const [isLinkAja, setIsLinkAja] = useState(false)
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
@@ -235,6 +238,28 @@ export const TransactionDetailMobileAction = ({
           {/* </DrawerBatalkan> */}
 
           <Button className="w-full py-2">Bayar</Button>
+        </div>
+      )}
+      {statusTahapan == 'Waiting Hajj' && (
+        <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
+          {/* <DrawerBatalkan
+            bookingId={bookingId}
+            idOrganisasi={idOrganisasi}
+            id={transaction?.bookingCode}
+          > */}
+          <Link
+            href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+            target="_blank"
+            className="w-full"
+          >
+            <Button className="border-error-500 w-full py-2" variant="outline">
+              Batalkan Pesanan
+            </Button>
+          </Link>
+          <TransactionActionButtonHajj
+            transaction={transaction}
+            handleDirectPayment={handleDirectPayment}
+          />
         </div>
       )}
       {statusTahapan == 'Dibatalkan' && (

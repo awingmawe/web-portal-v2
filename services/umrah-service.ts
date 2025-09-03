@@ -288,6 +288,40 @@ export async function preBookingCreateCheckout(payload: {
     throw error
   }
 }
+export async function preBookingCreateHajj(payload: {
+  bookingId: number
+  double: number
+  triple: number
+  quad: number
+}) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/pre-hajj`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching pre hajj:', error)
+    throw error
+  }
+}
+export async function createHajj(payload: {
+  bookingId: number
+  double: number
+  triple: number
+  quad: number
+}) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/create-hajj`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching create hajj:', error)
+    throw error
+  }
+}
 export async function preBookingCreateCheckoutUmrahPersonal(payload: {
   packagePersonalId: number
   netAmount: number

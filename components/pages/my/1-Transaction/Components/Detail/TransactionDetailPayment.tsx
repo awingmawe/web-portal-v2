@@ -32,25 +32,27 @@ export default function TransactionDetailPayment({
           Rincian Pembayaran
         </h3>
 
-        {statusTahapan !== 'Dibatalkan' && statusTahapan !== 'Waiting' && (
-          <Link href={`/invoice/${bookingCode}`}>
-            <div className="flex cursor-pointer items-center">
-              <div
-                className="mr-2 rounded-md p-1"
-                style={{
-                  background:
-                    'linear-gradient(134.15deg, #FFC100 17.72%, #FFA500 104.07%, #9D7A42 128.84%, #4D2B17 195.91%, #785214 236.89%)',
-                }}
-              >
-                <DocumentTextIcon className="text-white" />
+        {statusTahapan !== 'Dibatalkan' &&
+          statusTahapan !== 'Waiting' &&
+          statusTahapan !== 'Waiting Hajj' && (
+            <Link href={`/invoice/${bookingCode}`}>
+              <div className="flex cursor-pointer items-center">
+                <div
+                  className="mr-2 rounded-md p-1"
+                  style={{
+                    background:
+                      'linear-gradient(134.15deg, #FFC100 17.72%, #FFA500 104.07%, #9D7A42 128.84%, #4D2B17 195.91%, #785214 236.89%)',
+                  }}
+                >
+                  <DocumentTextIcon className="text-white" />
+                </div>
+                <span className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
+                  Invoice Pembayaran
+                </span>
+                <ChevronRight className="ml-1 h-5 w-5" />
               </div>
-              <span className="text-sm font-semibold max-lg:text-xs max-lg:font-medium">
-                Invoice Pembayaran
-              </span>
-              <ChevronRight className="ml-1 h-5 w-5" />
-            </div>
-          </Link>
-        )}
+            </Link>
+          )}
       </div>
 
       {isPaidOff ? (
@@ -65,7 +67,7 @@ export default function TransactionDetailPayment({
         </div>
       ) : (
         <div>
-          {statusTahapan !== 'Waiting' && (
+          {statusTahapan !== 'Waiting' && statusTahapan !== 'Waiting Hajj' && (
             <div
               className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} mt-1 mb-3 hidden w-fit w-full rounded-full px-3 py-2 max-lg:block`}
             >

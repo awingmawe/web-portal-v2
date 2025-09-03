@@ -8,6 +8,7 @@ import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Compo
 import TransactionDetailPayment from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailPayment'
 import TransactionDetailProduct from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailProduct'
 import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailSkeleton'
+import TransactionActionButtonHajj from '@/components/pages/my/1-Transaction/Components/PriceConfirmationHajj/ActionButtonHajj'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -131,11 +132,12 @@ export default function TransactionDetailContent({
         transaction.status.slug == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
       ) {
         setStatusTahapan('Akan Datang')
+      } else if (transaction.status.slug == 'waiting-down-payment') {
+        setStatusTahapan('Waiting')
       } else if (
-        transaction.status.slug == 'waiting-down-payment' ||
         transaction.status.slug == STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
       ) {
-        setStatusTahapan('Waiting')
+        setStatusTahapan('Waiting Hajj')
       } else if (transaction.status.slug == 'completed') {
         setStatusTahapan('Selesai')
       } else {
@@ -441,33 +443,34 @@ export default function TransactionDetailContent({
                       </div>
                     ) : (
                       <div>
-                        {statusTahapan !== 'Waiting' && (
-                          <div
-                            className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
-                          >
+                        {statusTahapan !== 'Waiting' &&
+                          statusTahapan !== 'Waiting Hajj' && (
                             <div
-                              className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                              className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
                             >
-                              <InfoCircleIcon />
-                              <p className="text-s-regular text-current">
-                                {dayjs(transaction.createdAt).add(3, 'day') >
-                                dayjs() ? (
-                                  <span className="text-current">
-                                    Lengkapi sebelum{' '}
-                                    {dayjs(transaction.createdAt)
-                                      .add(3, 'day')
-                                      .locale('id')
-                                      .format('DD MMM YYYY')}
-                                  </span>
-                                ) : (
-                                  <span className="text-current">
-                                    Segera lengkapi manifest
-                                  </span>
-                                )}
-                              </p>
+                              <div
+                                className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                              >
+                                <InfoCircleIcon />
+                                <p className="text-s-regular text-current">
+                                  {dayjs(transaction.createdAt).add(3, 'day') >
+                                  dayjs() ? (
+                                    <span className="text-current">
+                                      Lengkapi sebelum{' '}
+                                      {dayjs(transaction.createdAt)
+                                        .add(3, 'day')
+                                        .locale('id')
+                                        .format('DD MMM YYYY')}
+                                    </span>
+                                  ) : (
+                                    <span className="text-current">
+                                      Segera lengkapi manifest
+                                    </span>
+                                  )}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
                       </div>
                     )}
 
@@ -605,18 +608,28 @@ export default function TransactionDetailContent({
                     <span className="font-medium">Bayar</span>
                   </Button>
                 )}
-                <Link
-                  href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                  target="_blank"
-                  className="w-full"
-                >
-                  <Button
-                    variant="outline"
-                    className="border-primary-500 w-full border-2"
+
+                {statusTahapan === 'Waiting Hajj' && (
+                  <TransactionActionButtonHajj
+                    transaction={transaction}
+                    handleDirectPayment={handleDirectPayment}
+                  />
+                )}
+
+                {statusTahapan !== 'Waiting Hajj' && (
+                  <Link
+                    href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+bertanya+mengenai+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                    target="_blank"
+                    className="w-full"
                   >
-                    <span className="font-medium">Bantuan</span>
-                  </Button>
-                </Link>
+                    <Button
+                      variant="outline"
+                      className="border-primary-500 w-full border-2"
+                    >
+                      <span className="font-medium">Bantuan</span>
+                    </Button>
+                  </Link>
+                )}
 
                 {transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
@@ -666,6 +679,7 @@ export default function TransactionDetailContent({
               .id
           }
           transaction={transaction}
+          handleDirectPayment={handleDirectPayment}
           // status={transaction.status.slug}
         />
       </CanceledProvider>
