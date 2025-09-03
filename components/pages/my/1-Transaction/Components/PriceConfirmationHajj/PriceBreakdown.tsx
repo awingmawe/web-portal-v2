@@ -15,22 +15,25 @@ export default function PriceBreakdown({
   currency: string
 }) {
   return (
-    <div className="flex flex-col gap-4 max-lg:mx-4 max-lg:py-4">
+    <div className="flex flex-col gap-4 max-lg:py-3">
       <div
-        className={`bg-warning-100  flex items-center justify-between rounded-lg px-3 py-2 lg:hidden`}
+        className={`bg-warning-100 flex items-center justify-between rounded-lg p-2 lg:hidden lg:px-3 lg:py-2`}
       >
-        <p className="text-s-regular text-info-800">
-          <InfoIcon className="text-warning-800 mr-2" size={16} />
-          Kurs Travel <span className="font-bold">{organizationName}</span>
-        </p>
-        <p className="text-m-semibold">
+        <div className="flex items-center">
+          <InfoIcon className="text-warning-700 mr-2 flex-none" size={16} />
+          <p className="text-s-regular text-warning-700">
+            {`Kurs Travel `}
+            <span className="text-warning-700 font-bold">
+              {organizationName}
+            </span>
+          </p>
+        </div>
+        <p className="text-s-semibold text-right">
           1 USD = {formatCurrency(value, currency)}
         </p>
       </div>
       <div className="flex justify-between gap-1.5 max-lg:flex-col lg:items-center">
-        <h4 className="text-l-semibold max-lg:text-sm max-lg:leading-5 max-lg:font-semibold">
-          Rincian Pembayaran
-        </h4>
+        <p className="text-m-medium">Rincian Pembayaran</p>
       </div>
       <div className="space-y-2">
         {paymentDetails?.map((detail: PaymentDetails, index: any) => (
@@ -69,7 +72,7 @@ export default function PriceBreakdown({
       <p
         className={`text-s-regular bg-info-100 text-info-800 flex items-center rounded-lg px-3 py-2 lg:hidden`}
       >
-        <InfoIcon className="text-info-800 mr-2" size={16} />
+        <InfoIcon className="mr-2 flex-none" color="#092b44" size={16} />
         Saat ini kamu hanya membayar uang muka, setelah berhasil lakukan
         pelunasan kepada travel.
       </p>

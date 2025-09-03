@@ -1,3 +1,5 @@
+import { PaymentDetails } from '@/constant/types/CheckoutProps'
+
 export interface PaymentTransaction {
   id: number
   issuerId: number
@@ -54,4 +56,26 @@ export interface PaymentTransaction {
     createdBy: string
     modifiedBy: string | null
   }
+}
+
+export interface PrePaymentTransactionHajj {
+  doublePrice: number
+  originalDoublePrice: number
+  originalQuadPrice: number
+  originalTriplePrice: number
+  paymentDetails: PaymentDetails[]
+  quadPrice: number
+  roomInfo: {
+    double: RoomTypeDetail | null
+    triple: RoomTypeDetail | null
+    quad: RoomTypeDetail | null
+  }
+  totalPrice: number
+  travelCurrencyRate: number
+  triplePrice: number
+}
+
+export interface RoomTypeDetail {
+  quantity: number
+  price: number
 }

@@ -66,33 +66,6 @@ export default function TransactionDetailContent({
   const router = useRouter()
   const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
 
-  // Initialize Snap
-  useEffect(() => {
-    // Check if Snap is already available
-    if (window.snap) {
-      setIsSnapInitialized(true)
-      return
-    }
-
-    // Load Snap.js
-    const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js'
-    const myMidtransClientKey = 'your-client-key' // Replace with your actual client key
-
-    const scriptTag = document.createElement('script')
-    scriptTag.src = midtransScriptUrl
-    scriptTag.setAttribute('data-client-key', myMidtransClientKey)
-    scriptTag.onload = () => {
-      setIsSnapInitialized(true)
-    }
-
-    document.body.appendChild(scriptTag)
-
-    return () => {
-      // Clean up script tag on unmount if needed
-      document.body.removeChild(scriptTag)
-    }
-  }, [])
-
   const fetchTransactions = useCallback(async () => {
     setLoading(true)
 
@@ -421,63 +394,70 @@ export default function TransactionDetailContent({
                   transaction?.packageSnapshot?.snapshot?.departureDate
                 }
                 isPaidOff={transaction?.isPaidOff}
+                status={transaction?.status?.slug}
               />
 
               {/* Manifest Data */}
-              {statusTahapan !== 'Akan Datang' && (
-                <>
-                  <Separator className="mb-4 !h-2 !bg-neutral-100" />
-                  <div className="mb-6 px-6 max-lg:px-3">
-                    <p className="mb-4 text-lg font-medium max-lg:text-xs">
-                      Data Jemaah
-                    </p>
+              {statusTahapan !== 'Akan Datang' &&
+                (transaction?.status?.slug ===
+                  STATUS_BOOKING.WAITING_FOR_BILL ||
+                  transaction?.status?.slug ===
+                    STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) && (
+                  <>
+                    <Separator className="mb-4 !h-2 !bg-neutral-100" />
+                    <div className="mb-6 px-6 max-lg:px-3">
+                      <p className="mb-4 text-lg font-medium max-lg:text-xs">
+                        Data Jemaah
+                      </p>
 
-                    {transaction.isCompletedManifest ? (
-                      <div className="bg-success-100 mb-3 hidden rounded-full px-3 py-2 max-lg:block">
-                        <div className="flex items-center gap-1">
-                          <ChecklistCircleActive />
-                          <p className="text-s-regular text-success-700 ">
-                            Data Lengkap
-                          </p>
+                      {transaction.isCompletedManifest ? (
+                        <div className="bg-success-100 mb-3 hidden rounded-full px-3 py-2 max-lg:block">
+                          <div className="flex items-center gap-1">
+                            <ChecklistCircleActive />
+                            <p className="text-s-regular text-success-700 ">
+                              Data Lengkap
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div>
-                        {statusTahapan !== 'Waiting' &&
-                          statusTahapan !== 'Waiting Hajj' && (
-                            <div
-                              className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
-                            >
+                      ) : (
+                        <div>
+                          {statusTahapan !== 'Waiting' &&
+                            statusTahapan !== 'Waiting Hajj' && (
                               <div
-                                className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                                className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
                               >
-                                <InfoCircleIcon />
-                                <p className="text-s-regular text-current">
-                                  {dayjs(transaction.createdAt).add(3, 'day') >
-                                  dayjs() ? (
-                                    <span className="text-current">
-                                      Lengkapi sebelum{' '}
-                                      {dayjs(transaction.createdAt)
-                                        .add(3, 'day')
-                                        .locale('id')
-                                        .format('DD MMM YYYY')}
-                                    </span>
-                                  ) : (
-                                    <span className="text-current">
-                                      Segera lengkapi manifest
-                                    </span>
-                                  )}
-                                </p>
+                                <div
+                                  className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                                >
+                                  <InfoCircleIcon />
+                                  <p className="text-s-regular text-current">
+                                    {dayjs(transaction.createdAt).add(
+                                      3,
+                                      'day'
+                                    ) > dayjs() ? (
+                                      <span className="text-current">
+                                        Lengkapi sebelum{' '}
+                                        {dayjs(transaction.createdAt)
+                                          .add(3, 'day')
+                                          .locale('id')
+                                          .format('DD MMM YYYY')}
+                                      </span>
+                                    ) : (
+                                      <span className="text-current">
+                                        Segera lengkapi manifest
+                                      </span>
+                                    )}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          )}
-                      </div>
-                    )}
+                            )}
+                        </div>
+                      )}
 
-                    <TransactionDetailManifest members={manifest?.results} />
-                  </div>
-                </>
-              )}
+                      <TransactionDetailManifest members={manifest?.results} />
+                    </div>
+                  </>
+                )}
             </div>
             {/* Right Sidebar */}
             {statusTahapan !== 'Selesai' && (
@@ -610,10 +590,7 @@ export default function TransactionDetailContent({
                 )}
 
                 {statusTahapan === 'Waiting Hajj' && (
-                  <TransactionActionButtonHajj
-                    transaction={transaction}
-                    handleDirectPayment={handleDirectPayment}
-                  />
+                  <TransactionActionButtonHajj transaction={transaction} />
                 )}
 
                 {statusTahapan !== 'Waiting Hajj' && (
@@ -679,8 +656,6 @@ export default function TransactionDetailContent({
               .id
           }
           transaction={transaction}
-          handleDirectPayment={handleDirectPayment}
-          // status={transaction.status.slug}
         />
       </CanceledProvider>
       <Script

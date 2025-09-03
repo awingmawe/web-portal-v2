@@ -36,7 +36,7 @@ export default function List({
               <TransactionSkeletonLoading noTabs noFilter noPagination />
             </div>
           ) : (
-            <div>
+            <div className="mb-20">
               <InfiniteScroll
                 isLoading={isLoading}
                 hasMore={currentPage < totalPages}

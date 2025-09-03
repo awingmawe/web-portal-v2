@@ -3,6 +3,7 @@ import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { DocumentTextIcon } from '@/components/icons/document'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { Separator } from '@/components/ui/separator'
+import { STATUS_BOOKING } from '@/constant/env'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { ChevronRight } from 'lucide-react'
@@ -15,6 +16,7 @@ interface TransactionDetailPaymentProps {
   startDate: string
   isPaidOff: boolean
   paymentDetails: any
+  status: string
 }
 
 export default function TransactionDetailPayment({
@@ -24,6 +26,7 @@ export default function TransactionDetailPayment({
   createdAt,
   startDate,
   isPaidOff,
+  status,
 }: TransactionDetailPaymentProps) {
   return (
     <div className="mb-6 px-6 max-lg:mb-3 max-lg:px-3">
@@ -34,7 +37,9 @@ export default function TransactionDetailPayment({
 
         {statusTahapan !== 'Dibatalkan' &&
           statusTahapan !== 'Waiting' &&
-          statusTahapan !== 'Waiting Hajj' && (
+          statusTahapan !== 'Waiting Hajj' &&
+          status !== STATUS_BOOKING.WAITING_FOR_BILL &&
+          status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION && (
             <Link href={`/invoice/${bookingCode}`}>
               <div className="flex cursor-pointer items-center">
                 <div
@@ -67,33 +72,36 @@ export default function TransactionDetailPayment({
         </div>
       ) : (
         <div>
-          {statusTahapan !== 'Waiting' && statusTahapan !== 'Waiting Hajj' && (
-            <div
-              className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} mt-1 mb-3 hidden w-fit w-full rounded-full px-3 py-2 max-lg:block`}
-            >
+          {statusTahapan !== 'Waiting' &&
+            status !== STATUS_BOOKING.WAITING_FOR_BILL &&
+            status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+            statusTahapan !== 'Waiting Hajj' && (
               <div
-                className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'text-warning-700 ' : 'text-error-700'} flex items-center gap-1`}
+                className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'} mt-1 mb-3 hidden w-fit w-full rounded-full px-3 py-2 max-lg:block`}
               >
-                <InfoCircleIcon />
-                <p className="text-s-regular text-current">
-                  {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
-                    <span className="text-current">
-                      Harap lunasi sebelum{' '}
-                      {dayjs(startDate)
-                        .subtract(21, 'day')
-                        .locale('id')
-                        .format('DD MMM YYYY')}
-                    </span>
-                  ) : (
-                    <span className="text-current">
-                      {' '}
-                      Segera lunasi pembayaran paket!
-                    </span>
-                  )}
-                </p>
+                <div
+                  className={`${dayjs(startDate).subtract(21, 'day') > dayjs() ? 'text-warning-700 ' : 'text-error-700'} flex items-center gap-1`}
+                >
+                  <InfoCircleIcon />
+                  <p className="text-s-regular text-current">
+                    {dayjs(startDate).subtract(21, 'day') > dayjs() ? (
+                      <span className="text-current">
+                        Harap lunasi sebelum{' '}
+                        {dayjs(startDate)
+                          .subtract(21, 'day')
+                          .locale('id')
+                          .format('DD MMM YYYY')}
+                      </span>
+                    ) : (
+                      <span className="text-current">
+                        {' '}
+                        Segera lunasi pembayaran paket!
+                      </span>
+                    )}
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       )}
 

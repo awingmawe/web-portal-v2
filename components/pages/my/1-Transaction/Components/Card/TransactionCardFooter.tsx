@@ -9,6 +9,7 @@ import { BatalkanPesanan } from '@/components/pages/my/1-Transaction/Components/
 
 import ModalPengembalianDanaDetail from '@/components/pages/my/1-Transaction/Components/Modal/modalPengembalianDanaDetail'
 import ModalSuccessCanceled from '@/components/pages/my/1-Transaction/Components/Modal/modalSukses'
+import TransactionActionButtonHajj from '@/components/pages/my/1-Transaction/Components/PriceConfirmationHajj/ActionButtonHajj'
 import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
 import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
@@ -54,6 +55,7 @@ export interface TransactionCardFooter {
   transaction?: any
   currency: string
   remainingHajjPayment: number
+  type: string
 }
 
 export default function TransactionCardFooter({
@@ -72,6 +74,7 @@ export default function TransactionCardFooter({
   transaction,
   currency,
   remainingHajjPayment,
+  type,
 }: TransactionCardFooter) {
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const { lg } = useTailwindBreakpoint()
@@ -83,59 +86,6 @@ export default function TransactionCardFooter({
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
     useState(false)
   const router = useRouter()
-  const fetcPaymentTransaction = useCallback(async () => {
-    setLoadingPaymentTransaction(true)
-
-    try {
-      // Build query parameters
-      const response = await getPaymentTransaction(bookingId)
-
-      // Update state with response data
-      setPaymentTransaction(response)
-    } catch (err) {
-      console.error('Error fetching transactions:', err)
-    } finally {
-      setLoadingPaymentTransaction(false)
-    }
-  }, [bookingId])
-
-  const fetchPaymentStatement = useCallback(async (id: any) => {
-    try {
-      // Build query parameters
-      const response = await getPaymentStatement(id)
-      const payload = {
-        amount: response.remainingPayment,
-      }
-      const responseNext = await postNextPayment(id, payload)
-      window.snap.pay(responseNext?.paymentToken, {
-        onSuccess: async (result: any) => {
-          // router.replace('/my/transaction') // replace & refresh
-          window.location.reload()
-        },
-        onPending: async (result: any) => {
-          // console.log('Payment pending', result)
-          // router.push(`/my/need-payment`)
-          // Add expiration check logic
-        },
-        onError: (error: any) => {
-          console.log(error)
-        },
-        onClose: () => {
-          // router.push(`/my/need-payment`)
-          // Additional logic on close
-        },
-      })
-    } catch (err) {
-      console.error('Error fetching transactions:', err)
-    } finally {
-    }
-  }, [])
-
-  useEffect(() => {
-    if (showDpButton) {
-      fetcPaymentTransaction()
-    }
-  }, [fetcPaymentTransaction, showDpButton])
 
   const {
     open,
@@ -167,96 +117,257 @@ export default function TransactionCardFooter({
     openSuksesRefund,
     setOpenSuksesRefund,
   } = useCanceled()
-  const renderActionButton = () => {
-    const isCanceled =
-      status === 'canceled-by-user' || status === 'canceled-by-travel'
 
-    switch (true) {
-      // Case 1: Proses Refund
-      case statusTahapanDetail === 'Dibatalkan' &&
-        isCanceled &&
-        transaction?.isRefundAvailable === true:
-        return (
-          <Button
-            variant="outline"
-            className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-            onClick={() => setOpenFormRefund(true)}
+  // Status validation functions
+  const isCanceled = () => {
+    return status === 'canceled-by-user' || status === 'canceled-by-travel'
+  }
+
+  const isDibatalkan = () => {
+    return statusTahapanDetail === 'Dibatalkan'
+  }
+
+  const isRefundAvailable = () => {
+    return transaction?.isRefundAvailable === true
+  }
+
+  const isRefundInProcess = () => {
+    if (!transaction?.bookingCanceled?.disbursementUser) return false
+    return transaction.bookingCanceled.disbursementUser.disbursed === false
+  }
+
+  const isRefundCompleted = () => {
+    if (!transaction?.bookingCanceled?.disbursementUser) return false
+    return transaction.bookingCanceled.disbursementUser.disbursed === true
+  }
+
+  const shouldShowPelunasanButton = () => {
+    const excludedStatuses = [
+      'waiting-approval',
+      STATUS_BOOKING.WAITING_FOR_BILL,
+      STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+      STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
+    ]
+    return !excludedStatuses.includes(status)
+  }
+
+  const shouldShowManifestButton = () => {
+    const excludedStatuses = [
+      'waiting-cancellation',
+      'expired',
+      'waiting-approval',
+      STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+      STATUS_BOOKING.WAITING_FOR_BILL,
+      STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
+    ]
+    return !isManifestCommitted && !excludedStatuses.includes(status)
+  }
+
+  const shouldShowCancelPopover = () => {
+    const allowedStatuses = [
+      'approved',
+      'waiting-approval',
+      'waiting-down-payment',
+      STATUS_BOOKING.WAITING_FOR_BILL,
+      STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+    ]
+    return allowedStatuses.includes(status)
+  }
+
+  const shouldShowDownPaymentButton = () => {
+    return showDpButton || status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+  }
+
+  const isWaitingForPayment = () => {
+    return (
+      (status === 'waiting-down-payment' ||
+        status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) &&
+      type === 'need-payment'
+    )
+  }
+
+  const isWaitingForPaymentHajj = () => {
+    return status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+  }
+
+  const shouldHideInLargeScreen = () => {
+    return (
+      lg &&
+      (status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
+        status === STATUS_BOOKING.WAITING_FOR_BILL)
+    )
+  }
+
+  // API functions
+  const fetcPaymentTransaction = useCallback(async () => {
+    setLoadingPaymentTransaction(true)
+    try {
+      const response = await getPaymentTransaction(bookingId)
+      setPaymentTransaction(response)
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    } finally {
+      setLoadingPaymentTransaction(false)
+    }
+  }, [bookingId])
+
+  const fetchPaymentStatement = useCallback(async (id: any) => {
+    try {
+      const response = await getPaymentStatement(id)
+      const payload = { amount: response.remainingPayment }
+      const responseNext = await postNextPayment(id, payload)
+
+      window.snap.pay(responseNext?.paymentToken, {
+        onSuccess: async (result: any) => {
+          window.location.reload()
+        },
+        onPending: async (result: any) => {
+          // Add expiration check logic
+        },
+        onError: (error: any) => {
+          console.log(error)
+        },
+        onClose: () => {
+          // Additional logic on close
+        },
+      })
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
+    }
+  }, [])
+
+  const handleDownPaymentClick = async () => {
+    setLoading(true)
+    try {
+      if (window.snap) {
+        window.snap.pay(paymentTransaction?.paymentToken, {
+          onSuccess: async () => {
+            window.location.reload()
+          },
+          onPending: async () => {
+            // Add expiration check logic
+          },
+          onError: (error: any) => {
+            console.log(error)
+          },
+          onClose: () => {
+            // Additional logic on close
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Render functions
+  const renderRefundStatus = () => {
+    if (isDibatalkan() && isCanceled() && isRefundAvailable()) {
+      return (
+        <Button
+          variant="outline"
+          className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+          onClick={() => setOpenFormRefund(true)}
+        >
+          Proses Refund
+        </Button>
+      )
+    }
+
+    if (isDibatalkan() && isCanceled() && isRefundInProcess()) {
+      return (
+        <div className="flex items-center gap-2 rounded-full bg-[#FFF7DC] px-4 py-2 text-sm text-[#A17800]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 24 24"
           >
-            Proses Refund
-          </Button>
-        )
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.75 15h-1.5v-1.5h1.5V17zm0-3h-1.5V7h1.5v7z" />
+          </svg>
+          <span>
+            Permintaan refund sedang dalam proses, harap tunggu 15–30 hari kerja
+          </span>
+        </div>
+      )
+    }
 
-      // Case 2: Refund sedang diproses (disbursement belum disalurkan)
-      case statusTahapanDetail === 'Dibatalkan' &&
-        isCanceled &&
-        transaction?.bookingCanceled?.disbursementUser !== null &&
-        transaction?.bookingCanceled?.disbursementUser?.disbursed === false:
-        return (
-          <div className="flex items-center gap-2 rounded-full bg-[#FFF7DC] px-4 py-2 text-sm text-[#A17800]">
+    if (isDibatalkan() && isCanceled() && isRefundCompleted()) {
+      return (
+        <div className="flex items-center gap-2 rounded-full bg-[#C1FFE9] px-4 py-2 text-sm text-[#007C59]">
+          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#007C59]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 flex-shrink-0"
-              fill="currentColor"
+              className="h-3 w-3 text-white"
               viewBox="0 0 24 24"
+              fill="currentColor"
             >
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.75 15h-1.5v-1.5h1.5V17zm0-3h-1.5V7h1.5v7z" />
+              <path d="M9 16.17 4.83 12 3.41 13.41 9 19 21 7 19.59 5.59z" />
             </svg>
-            <span>
-              Permintaan refund sedang dalam proses, harap tunggu 15–30 hari
-              kerja
-            </span>
           </div>
-        )
-      // Case 2: Refund sedang diproses (disbursement sudah disalurkan)
-      case statusTahapanDetail === 'Dibatalkan' &&
-        isCanceled &&
-        transaction?.bookingCanceled?.disbursementUser !== null &&
-        transaction?.bookingCanceled?.disbursementUser?.disbursed === true:
-        return (
-          <div className="flex items-center gap-2 rounded-full bg-[#C1FFE9] px-4 py-2 text-sm text-[#007C59]">
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#007C59]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3 w-3 text-white"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M9 16.17 4.83 12 3.41 13.41 9 19 21 7 19.59 5.59z" />
-              </svg>
-            </div>
-            <span>
-              Dana telah berhasil di refund pada{' '}
-              {dayjs(
-                transaction?.bookingCanceled?.disbursementUser?.modifiedAt
-              ).format('DD MMMM YYYY, HH:mm')}
-            </span>
-          </div>
-        )
-      // Case 3: Selesai manifest tapi belum lunas
-      case statusTahapanDetail !== 'Dibatalkan' &&
-        isCompletedManifest &&
-        !isPaidOff:
+          <span>
+            Dana telah berhasil di refund pada{' '}
+            {dayjs(
+              transaction?.bookingCanceled?.disbursementUser?.modifiedAt
+            ).format('DD MMMM YYYY, HH:mm')}
+          </span>
+        </div>
+      )
+    }
+
+    return null
+  }
+
+  const renderPelunasanButton = () => {
+    if (isLinkAja) {
+      return (
+        <Button
+          className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
+          variant="outline"
+          disabled={loadingPaymentTransaction}
+          onClick={() => setOpenDrawerPaymentLinkAja(true)}
+        >
+          Bayar Pelunasan
+        </Button>
+      )
+    }
+
+    return (
+      <Button
+        className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
+        variant="outline"
+        disabled={loadingPaymentTransaction}
+        onClick={() => fetchPaymentStatement(bookingId)}
+      >
+        Bayar Pelunasan
+      </Button>
+    )
+  }
+
+  const renderManifestButton = () => {
+    return (
+      <Link href={`/manifest/${bookingId}`}>
+        <Button className="w-full px-8 py-3 text-nowrap">
+          Lengkapi Data Jemaah
+        </Button>
+      </Link>
+    )
+  }
+
+  const renderActionButton = () => {
+    // Handle refund statuses first
+    const refundStatus = renderRefundStatus()
+    if (refundStatus) return refundStatus
+
+    // Handle non-canceled statuses
+    if (!isDibatalkan()) {
+      // Case: Manifest completed but not paid off
+      if (isCompletedManifest && !isPaidOff) {
         return (
           <>
-            {isLinkAja ? (
-              <Button
-                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
-                variant="outline"
-                disabled={loadingPaymentTransaction}
-                onClick={() => setOpenDrawerPaymentLinkAja(true)}
-              >
-                Bayar Pelunasan
-              </Button>
-            ) : (
-              <Button
-                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
-                variant="outline"
-                disabled={loadingPaymentTransaction}
-                onClick={() => fetchPaymentStatement(bookingId)}
-              >
-                Bayar Pelunasan
-              </Button>
-            )}
+            {renderPelunasanButton()}
             <Button
               className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
               variant="outline"
@@ -267,18 +378,13 @@ export default function TransactionCardFooter({
             </Button>
           </>
         )
+      }
 
-      // Case 4: Sudah lunas, tapi belum manifest
-      case statusTahapanDetail !== 'Dibatalkan' &&
-        !isCompletedManifest &&
-        isPaidOff:
+      // Case: Paid off but manifest not completed
+      if (!isCompletedManifest && isPaidOff) {
         return (
           <>
-            <Link href={`/manifest/${bookingId}`}>
-              <Button className="w-full px-8 py-3 text-nowrap">
-                Lengkapi Data Jemaah
-              </Button>
-            </Link>
+            {renderManifestButton()}
             <Button
               className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
               variant="outline"
@@ -289,18 +395,13 @@ export default function TransactionCardFooter({
             </Button>
           </>
         )
+      }
 
-      // Case 5: Belum lunas dan belum manifest
-      case statusTahapanDetail !== 'Dibatalkan' &&
-        !isCompletedManifest &&
-        !isPaidOff:
+      // Case: Not paid off and manifest not completed
+      if (!isCompletedManifest && !isPaidOff) {
         return (
           <>
-            <Link href={`/manifest/${bookingId}`}>
-              <Button className="w-full px-8 py-3 text-nowrap">
-                Lengkapi Data Jemaah
-              </Button>
-            </Link>
+            {renderManifestButton()}
             {isLinkAja ? (
               <Button
                 className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
@@ -322,14 +423,40 @@ export default function TransactionCardFooter({
             )}
           </>
         )
-
-      default:
-        return null
+      }
     }
+
+    return null
   }
 
-  return (
-    <Fragment>
+  const renderCancelPopover = () => {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            className="cursor-pointer !rounded-md border border-neutral-900 p-1"
+            variant={'outline'}
+          >
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="rounded-2xl p-0 px-1">
+          <div className="flex flex-col divide-y">
+            <Link
+              href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+              className="cursor-pointer p-3 hover:bg-gray-50"
+              target="_blank"
+            >
+              <p className="text-m-regular text-error-500">Batalkan Pesanan</p>
+            </Link>
+          </div>
+        </PopoverContent>
+      </Popover>
+    )
+  }
+
+  const renderDesktopActions = () => {
+    return (
       <div className="flex items-center gap-2 max-lg:hidden">
         <Button
           className="text-s-regular mr-1 px-3 font-medium text-nowrap text-gray-900"
@@ -338,250 +465,134 @@ export default function TransactionCardFooter({
         >
           Lihat Detail Pesanan
         </Button>
-        {(status === 'canceled-by-user' || status === 'canceled-by-travel') &&
-          transaction.isRefundAvailable === true && (
-            <Button
-              variant="outline"
-              className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-              onClick={() => {
-                setOpenFormRefund(true)
-              }}
-            >
-              Proses Refund
-            </Button>
-          )}
+
+        {isCanceled() && isRefundAvailable() && (
+          <Button
+            variant="outline"
+            className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
+            onClick={() => setOpenFormRefund(true)}
+          >
+            Proses Refund
+          </Button>
+        )}
+
         {!detailOnly && (
           <Fragment>
-            {status === 'waiting-cancellation' ? null : status ===
-              'expired' ? null : isPaidOff ? (
-              <Button
-                variant="outline"
-                className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
-                disabled
-              >
-                <ChecklistCircle />
-                Pelunasan
-              </Button>
-            ) : (
-              status !== 'waiting-approval' &&
-              status !== STATUS_BOOKING.WAITING_FOR_BILL &&
-              status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
-              status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ && (
-                <div>
-                  {isLinkAja ? (
-                    <Button
-                      className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
-                      variant="outline"
-                      disabled={loadingPaymentTransaction}
-                      onClick={() => setOpenDrawerPaymentLinkAja(true)}
-                    >
-                      Bayar Pelunasan
-                    </Button>
-                  ) : (
-                    <Button
-                      className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
-                      variant="outline"
-                      disabled={loadingPaymentTransaction}
-                      onClick={() => fetchPaymentStatement(bookingId)}
-                    >
-                      Bayar Pelunasan
-                    </Button>
-                  )}
-                </div>
-              )
-            )}
-
-            {/* {isPaidOff ? (
-              <Button
-                variant="outline"
-                className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
-                disabled
-              >
-                <ChecklistCircle />
-                Pelunasan
-              </Button>
-            ) : (
-              status !== 'waiting-approval' && (
-                <Button
-                  variant="outline"
-                  className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
-                  onClick={() => {
-                    fetchPaymentStatement(bookingId)
-                  }}
-                >
-                  Bayar Pelunasan
-                </Button>
-              )
-            )} */}
-
-            {!isManifestCommitted &&
-              ![
-                'waiting-cancellation',
-                'expired',
-                'waiting-approval',
-                STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
-                STATUS_BOOKING.WAITING_FOR_BILL,
-                STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
-              ].includes(status) && (
-                <Link href={`/manifest/${bookingId}`}>
-                  <Button className="w-full px-4 py-3 text-nowrap">
-                    Lengkapi Data Jemaah
-                  </Button>
-                </Link>
-              )}
-            {(status === 'approved' ||
-              status === 'waiting-approval' ||
-              status === 'waiting-down-payment' ||
-              status === STATUS_BOOKING.WAITING_FOR_BILL ||
-              status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) && (
-              <Popover>
-                <PopoverTrigger asChild>
+            {status === 'waiting-cancellation' ||
+            status === 'expired' ? null : (
+              <>
+                {isPaidOff ? (
                   <Button
-                    className="cursor-pointer !rounded-md border border-neutral-900 p-1"
-                    variant={'outline'}
+                    variant="outline"
+                    className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                    disabled
                   >
-                    <MoreHorizontal className="h-4 w-4" />
+                    <ChecklistCircle />
+                    Pelunasan
                   </Button>
-                </PopoverTrigger>
-                <PopoverContent className="rounded-2xl p-0 px-1">
-                  <div className="flex flex-col divide-y">
-                    <Link
-                      href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                      className="cursor-pointer p-3 hover:bg-gray-50"
-                      target="_blank"
-                      // onClick={() => setOpenBatalkan(true)}
-                    >
-                      <p className="text-m-regular text-error-500">
-                        Batalkan Pesanan
-                      </p>
-                    </Link>
-                  </div>
-                </PopoverContent>
-              </Popover>
+                ) : (
+                  shouldShowPelunasanButton() && (
+                    <div>{renderPelunasanButton()}</div>
+                  )
+                )}
+
+                {shouldShowManifestButton() && renderManifestButton()}
+                {shouldShowCancelPopover() && renderCancelPopover()}
+              </>
             )}
           </Fragment>
         )}
 
-        {(showDpButton ||
-          status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) && (
-          // <a
-          //   href={paymentTransaction ? paymentTransaction.paymentLink : ''}
-          //   target="_blank"
-          // >
+        {shouldShowDownPaymentButton() && (
           <>
             <Button
               className="w-full px-8 py-3 text-nowrap"
               disabled={loadingPaymentTransaction || loading}
-              onClick={async () => {
-                setLoading(true)
-
-                try {
-                  if (window.snap) {
-                    window.snap.pay(paymentTransaction?.paymentToken, {
-                      onSuccess: async () => {
-                        // router.replace('/my/transaction') // replace & refresh
-                        window.location.reload()
-                      },
-                      onPending: async () => {
-                        // router.push(`/my/need-payment`)
-                        // Add expiration check logic
-                      },
-                      onError: (error: any) => {
-                        console.log(error)
-                      },
-                      onClose: () => {
-                        // router.push(`/my/need-payment`)
-                        // Additional logic on close
-                      },
-                    })
-                    setLoading(false)
-                  }
-                } catch (error) {
-                  console.log(error)
-                } finally {
-                  setLoading(false)
-                }
-              }}
+              onClick={handleDownPaymentClick}
             >
               Bayar Uang Muka
             </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  className="cursor-pointer !rounded-md border border-neutral-900 p-1"
-                  variant={'outline'}
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="rounded-2xl p-0 px-1">
-                <div className="flex flex-col divide-y">
-                  <Link
-                    href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                    className="cursor-pointer p-3 hover:bg-gray-50"
-                    target="_blank"
-                    // onClick={() => setOpenBatalkan(true)}
-                  >
-                    <p className="text-m-regular text-error-500">
-                      Batalkan Pesanan
-                    </p>
-                  </Link>
-                </div>
-              </PopoverContent>
-            </Popover>
+            {renderCancelPopover()}
           </>
-          // </a>
         )}
-
-        {/* {renderCancelAction()} */}
       </div>
-      <div className="hidden max-lg:block">
-        {status === 'waiting-down-payment' ||
-        status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ ? (
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs-medium text-neutral-500">Perlu Dibayar</p>
-              <p className="text-s-semibold text-neutral-900">
-                {formatCurrency(
-                  status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
-                    ? remainingHajjPayment
-                    : paymentAmount,
-                  currency
-                )}
-              </p>
-            </div>
-            <div>
-              {lg ? (
-                <Link href={`/my/transaction/${bookingId}`}>
-                  <Button
-                    variant="ghost"
-                    className="px-3 font-medium text-neutral-900"
-                  >
-                    Lihat Detail
-                  </Button>
-                </Link>
-              ) : (
+    )
+  }
+
+  const renderMobileActions = () => {
+    if (isWaitingForPayment()) {
+      return (
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs-medium text-neutral-500">Perlu Dibayar</p>
+            <p className="text-s-semibold text-neutral-900">
+              {formatCurrency(
+                status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+                  ? remainingHajjPayment
+                  : paymentAmount,
+                currency
+              )}
+            </p>
+          </div>
+          <div>
+            {lg ? (
+              <Link href={`/my/transaction/${bookingId}`}>
                 <Button
                   variant="ghost"
                   className="px-3 font-medium text-neutral-900"
-                  onClick={() => setOpen(true)}
                 >
                   Lihat Detail
                 </Button>
-              )}
-              <Link
-                href={paymentTransaction ? paymentTransaction.paymentLink : ''}
-              >
-                <Button className="px-5 py-2 font-medium text-neutral-900">
-                  Bayar
-                </Button>
               </Link>
-            </div>
+            ) : (
+              <Button
+                variant="ghost"
+                className="px-3 font-medium text-neutral-900"
+                onClick={() => setOpen(true)}
+              >
+                Lihat Detail
+              </Button>
+            )}
+            <Link
+              href={paymentTransaction ? paymentTransaction.paymentLink : ''}
+            >
+              <Button className="px-5 py-2 font-medium text-neutral-900">
+                Bayar
+              </Button>
+            </Link>
           </div>
-        ) : (
-          <Fragment>{renderActionButton()}</Fragment>
-        )}
-      </div>
+        </div>
+      )
+    } else if (isWaitingForPaymentHajj()) {
+      return paymentTransaction ? (
+        <Link href={paymentTransaction ? paymentTransaction.paymentLink : ''}>
+          <Button className="w-full px-5 py-2 font-medium text-neutral-900">
+            Bayar Uang Muka
+          </Button>
+        </Link>
+      ) : (
+        <TransactionActionButtonHajj transaction={transaction} />
+      )
+    }
+
+    return <Fragment>{renderActionButton()}</Fragment>
+  }
+
+  useEffect(() => {
+    if (showDpButton) {
+      fetcPaymentTransaction()
+    }
+  }, [fetcPaymentTransaction, showDpButton])
+
+  if (shouldHideInLargeScreen()) {
+    return null
+  }
+
+  return (
+    <Fragment>
+      {renderDesktopActions()}
+
+      <div className="hidden max-lg:block">{renderMobileActions()}</div>
 
       <Script
         src={SNAP_URL}
@@ -590,6 +601,7 @@ export default function TransactionCardFooter({
         onLoad={() => setSnapReady(true)}
         onError={() => {}}
       />
+
       {open && (
         <TransactionDetail
           open={open}
@@ -599,6 +611,7 @@ export default function TransactionCardFooter({
           setOpenBatalkan={setOpenBatalkan}
         />
       )}
+
       {openBatalkan && (
         <BatalkanPesanan
           open={openBatalkan}
@@ -614,6 +627,7 @@ export default function TransactionCardFooter({
           reason={reason}
         />
       )}
+
       {openModalRefund && (
         <ModalPengembalianDanaDetail
           open={openModalRefund}
@@ -629,6 +643,7 @@ export default function TransactionCardFooter({
           setOpenModalSukses={setOpenModalSukses}
         />
       )}
+
       {openModalSukses && (
         <ModalSuccessCanceled
           open={openModalSukses}
@@ -636,6 +651,7 @@ export default function TransactionCardFooter({
           fetchTransactions={fetchTransactions}
         />
       )}
+
       {openFormRefund && (
         <ModalFormRefund
           open={openFormRefund}
@@ -649,6 +665,7 @@ export default function TransactionCardFooter({
           accountName={accountName}
         />
       )}
+
       {openVerifikasiEmail && (
         <VerificationDialog
           open={openVerifikasiEmail}
@@ -660,12 +677,14 @@ export default function TransactionCardFooter({
           setOpenSuksesRefund={setOpenSuksesRefund}
         />
       )}
+
       {openSuksesRefund && (
         <SuksesDialog
           open={openSuksesRefund}
           onOpenChange={setOpenSuksesRefund}
         />
       )}
+
       <DrawerPaymentLinkAja
         open={openDrawerPaymentLinkAja}
         onOpenChange={setOpenDrawerPaymentLinkAja}

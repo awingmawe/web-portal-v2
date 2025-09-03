@@ -18,7 +18,7 @@ import { Tag, TagPackages } from '@/constant/types/TagPackageProps'
 import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { PaymentStatement } from '@/constant/types/PaymentStatement'
-import { PaymentTransaction } from '@/constant/types/PaymentTransaction'
+import { PaymentTransaction, PrePaymentTransactionHajj } from '@/constant/types/PaymentTransaction'
 import {
   Attachment,
   ManifestPayload,
@@ -295,7 +295,7 @@ export async function preBookingCreateHajj(payload: {
   quad: number
 }) {
   try {
-    const response = await apiWithAuth.post<any>(
+    const response = await apiWithAuth.post<PrePaymentTransactionHajj>(
       `/umrah/v2/booking/pre-hajj`,
       payload
     )

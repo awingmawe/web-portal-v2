@@ -168,7 +168,8 @@ export default function TransactionCard({
     if (
       !noFooter &&
       lg &&
-      status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+      status != STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+      status != STATUS_BOOKING.WAITING_FOR_BILL
     ) {
       fetcPaymentTransaction()
     }
@@ -369,6 +370,7 @@ export default function TransactionCard({
               type={type}
               status={transaction?.status}
               remainingHajjPayment={remainingHajjPayment}
+              packageType={packageType}
             />
             <div className="hidden items-center gap-2 max-lg:flex">
               <Calendar2 className="h-4 w-4 text-neutral-500" />
@@ -384,7 +386,13 @@ export default function TransactionCard({
           </div>
         </RenderLinkToDetail>
         <div
-          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
+          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${
+            noFooter ||
+            status == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
+            status == STATUS_BOOKING.WAITING_FOR_BILL
+              ? 'max-lg:hidden'
+              : 'max-lg:block'
+          }`}
         >
           <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
             <p className="text-s-regular text-neutral-500">Dibuat pada</p>
@@ -425,6 +433,7 @@ export default function TransactionCard({
                     transaction={transaction}
                     remainingHajjPayment={remainingHajjPayment}
                     currency={currency}
+                    type={type ?? ''}
                   />
                 </CanceledProvider>
               )}

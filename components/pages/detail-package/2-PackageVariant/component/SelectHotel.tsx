@@ -31,6 +31,7 @@ export interface SelectHotelProps {
   hideTotalPrice?: boolean
   packageType?: string
   className?: string
+  titleText?: string
   onChange?: (roomType: RoomType, price: number) => void
 }
 
@@ -47,6 +48,7 @@ export default function SelectHotel({
   totalQty,
   currency,
   packageType,
+  titleText = 'Jumlah Jemaah Per Kamar',
   onChange,
   className,
 }: SelectHotelProps) {
@@ -124,7 +126,7 @@ export default function SelectHotel({
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
         {variant == 'normal' && (
           <div className="text-s-regular mb-2 max-lg:text-sm max-lg:font-medium">
-            Jumlah Jemaah Per Kamar
+            {titleText}
           </div>
         )}
         <div className={cn('flex gap-2 max-xl:flex-col', className)}>

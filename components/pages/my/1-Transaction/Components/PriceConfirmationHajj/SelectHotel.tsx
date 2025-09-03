@@ -47,28 +47,26 @@ const TransactionRoomInfo: React.FC<TransactionRoomInfoProps> = ({
 
   if (isEditable) {
     return (
-      <SelectHotel
-        className="flex-col"
-        variant={isMobile ? 'normal' : 'checkout'}
-        totalQty={transaction?.quantity}
-        isMobile
-        defaultValue={{
-          double: transaction?.roomTypeQuantity.double ?? 0,
-          triple: transaction?.roomTypeQuantity?.triple ?? 0,
-          quad: transaction?.roomTypeQuantity?.quad ?? 0,
-        }}
-        defaultPackageVariant={transaction?.packageSnapshot?.snapshot}
-        defaultPackageVariantId={transaction?.packageVariantId}
-        disabled={prebookingLoading}
-        onChange={(roomType) => {
-          setSelectedRoomType(roomType)
-          setShouldRunCheckPre(true)
-        }}
-      />
+      <div className="flex w-full flex-col gap-2">
+        <SelectHotel
+          className="flex-col"
+          titleText="Ubah Jumlah Jemaah"
+          variant={isMobile ? 'normal' : 'checkout'}
+          isMobile
+          defaultValue={transaction?.roomTypeQuantity}
+          defaultPackageVariant={transaction?.packageSnapshot?.snapshot}
+          defaultPackageVariantId={transaction?.packageVariantId}
+          disabled={prebookingLoading}
+          onChange={(roomType) => {
+            setSelectedRoomType(roomType)
+            setShouldRunCheckPre(true)
+          }}
+        />
+      </div>
     )
   }
 
-  return Object.entries(transaction?.roomInfo).map(
+  return Object?.entries(transaction?.roomInfo).map(
     ([roomType, roomInfo]: [string, any]) => {
       if (!isValidRoomInfo(roomInfo)) return null // Skip if room is null or invalid
 
@@ -78,32 +76,35 @@ const TransactionRoomInfo: React.FC<TransactionRoomInfoProps> = ({
 
       return (
         <div
-          className="flex flex-col items-start justify-between gap-2"
+          className="flex w-full flex-col items-start justify-between gap-2"
           key={roomType}
         >
           <p className="text-m-medium">Rincian Jemaah</p>
-          <div>
-            <p className="text-[10px] text-neutral-500">Tipe Kamar</p>
-            <p className="mt-0.5 text-[14px] font-medium text-neutral-900 max-lg:text-xs">
-              {roomConfig.label}{' '}
-              <span className="text-[14px] text-neutral-500 max-lg:block max-lg:text-xs">
+          <div className="flex w-full justify-between">
+            <div className="flex flex-col">
+              <p className="text-xs-regular text-neutral-500">Tipe Kamar</p>
+              <p className="text-s-regular text-neutral-900">
+                {roomConfig.label}
+              </p>
+              <p className="text-s-regular text-neutral-500">
                 {roomConfig.subLabel}
-              </span>
-            </p>
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs-regular text-neutral-500">Harga/Jemaah</p>
+              <p className="text-s-regular text-neutral-900">
+                {roomInfo?.quantity} Jemaah x
+                {formatCurrency(
+                  parseInt(roomInfo?.price),
+                  transaction?.packageSnapshot?.snapshot?.package?.currency
+                )}
+              </p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-[10px] text-neutral-500">Jumlah Jemaah</p>
-            <p className="mt-0.5 text-[14px] font-medium text-neutral-900 max-lg:text-xs max-lg:font-medium">
-              {roomInfo?.quantity} Jemaah
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-[10px] text-neutral-500">Harga/Jemaah</p>
-            <p className="mt-0.5 text-sm font-medium text-neutral-900 max-lg:text-xs max-lg:font-medium">
-              {formatCurrency(
-                parseInt(roomInfo?.price),
-                transaction?.packageSnapshot?.snapshot?.package?.currency
-              )}
+          <div className="flex w-full items-center justify-between">
+            <p className="text-xs-regular text-neutral-500">Total Jemaah</p>
+            <p className="text-s-medium text-neutral-900">
+              {transaction?.quantity} Jemaah
             </p>
           </div>
         </div>

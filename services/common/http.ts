@@ -4,6 +4,7 @@ import { getAccessToken, getWukalaReferral } from './auth'
 import { ACCOUNT_URL, API_URL } from '@/constant/env'
 import { getLocalReferralCode } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
+import { toast } from '@/components/ui/sonner'
 
 // More specific header type
 interface RequestHeaders {
@@ -64,6 +65,10 @@ function handleApiError(error: AxiosError<ApiErrorResponse>): never {
     } else {
       redirect(redirectUrl)
     }
+  }
+
+  if (response?.status === 500) {
+    toast.error('Terjadi kesalahan, silakan coba lagi nanti.')
   }
 
   // Format error message

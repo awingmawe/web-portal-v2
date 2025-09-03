@@ -18,14 +18,12 @@ export const TransactionDetailMobileAction = ({
   bookingId,
   idOrganisasi,
   transaction,
-  handleDirectPayment,
 }: {
   bookingCode: string
   statusTahapan: string
   bookingId: any
   idOrganisasi: any
   transaction?: any
-  handleDirectPayment?: any
 }) => {
   const [isLinkAja, setIsLinkAja] = useState(false)
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
@@ -218,7 +216,10 @@ export const TransactionDetailMobileAction = ({
         </div>
       ) : null}
 
-      {statusTahapan == 'Waiting' && (
+      {(statusTahapan === 'Waiting' ||
+        transaction?.status?.slug === STATUS_BOOKING.WAITING_FOR_BILL ||
+        transaction?.status?.slug ===
+          STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) && (
         <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
           {/* <DrawerBatalkan
             bookingId={bookingId}
@@ -236,8 +237,6 @@ export const TransactionDetailMobileAction = ({
           </Link>
 
           {/* </DrawerBatalkan> */}
-
-          <Button className="w-full py-2">Bayar</Button>
         </div>
       )}
       {statusTahapan == 'Waiting Hajj' && (
@@ -256,10 +255,7 @@ export const TransactionDetailMobileAction = ({
               Batalkan Pesanan
             </Button>
           </Link>
-          <TransactionActionButtonHajj
-            transaction={transaction}
-            handleDirectPayment={handleDirectPayment}
-          />
+          <TransactionActionButtonHajj transaction={transaction} />
         </div>
       )}
       {statusTahapan == 'Dibatalkan' && (

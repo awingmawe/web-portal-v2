@@ -1,6 +1,6 @@
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
-import { STATUS_BOOKING } from '@/constant/env'
+import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { PaymentTransaction } from '@/constant/types/PaymentTransaction'
 import { formatCurrency } from '@/lib/utils'
 import {
@@ -24,6 +24,7 @@ export interface TransactionCardPayment {
   }
   remainingHajjPayment: number
   type?: string
+  packageType?: string
 }
 
 function renderLunas(
@@ -86,6 +87,7 @@ export default function TransactionCardPayment({
   currency,
   type,
   status,
+  packageType,
 }: TransactionCardPayment) {
   const [loadingStatement, setLoadingStatement] = useState(false)
   const [paymentStatement, setPaymentStatement] = useState<any>(null)
@@ -165,7 +167,7 @@ export default function TransactionCardPayment({
   }
 
   return (
-    status.slug !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ &&
+    packageType !== PACKAGE_TYPE.HAJJ &&
     !noAmountLeft && (
       <div className="flex flex-col border-t border-neutral-100 pt-4 max-lg:hidden md:border-t-0 md:border-l md:pt-0 md:pl-4">
         <p className="text-m-medium text-neutral-500">Sisa Pembayaran</p>
@@ -178,9 +180,8 @@ export default function TransactionCardPayment({
                 ? formatCurrency(paymentStatement.remainingPayment, currency)
                 : '-'}
         </p>
-        {!noLabelNotif &&
-          status.slug !== STATUS_BOOKING.WAITING_FOR_BILL &&
-          status.slug !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+        {packageType !== PACKAGE_TYPE.HAJJ &&
+          !noLabelNotif &&
           renderLunas(
             isPaidOff,
             loadingPaymentTransaction,
