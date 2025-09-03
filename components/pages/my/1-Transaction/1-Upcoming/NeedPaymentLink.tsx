@@ -1,12 +1,13 @@
 'use client'
 import { ChevronRightIcon } from '@/components/icons/chevron'
 import { MoneyTimeIcon } from '@/components/icons/money-time'
+import { STATUS_BOOKING } from '@/constant/env'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { getTransactionListUmrah } from '@/services/umrah-service'
 import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 
-export default function NeedPaymentLink() {
+export default function NeedPaymentLink({ isMobile }: { isMobile: boolean }) {
   const [total, setTotal] = useState(0)
 
   const fetchTransactions = useCallback(async () => {
@@ -17,19 +18,20 @@ export default function NeedPaymentLink() {
         size: 10,
         order: 'desc',
         orderBy: 'createdAt',
-        'status.slug': 'waiting-down-payment',
+        'status.slug:in': `${STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ},${STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH}`,
       }
 
-      // Fetch data
-      const response = await getTransactionListUmrah(queryParams)
+      if (isMobile) {
+        // Fetch data
+        const response = await getTransactionListUmrah(queryParams)
 
-      // Update state with response data
-
-      setTotal(response.total)
+        // Update state with response data
+        setTotal(response.total)
+      }
     } catch (err) {
       console.error('Error fetching transactions:', err)
     }
-  }, [])
+  }, [isMobile])
 
   useEffect(() => {
     fetchTransactions()

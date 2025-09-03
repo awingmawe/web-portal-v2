@@ -1,13 +1,19 @@
+import { STATUS_BOOKING } from '@/constant/env'
+import { addHours, format } from 'date-fns'
+import { id } from 'date-fns/locale'
+
 export interface TransactionCardHeader {
   status: string
   isCompletedManifest: boolean
   isPaidOff: boolean
+  modifiedAt?: string
 }
 
 export default function TransactionCardHeader({
   status,
   isCompletedManifest,
   isPaidOff,
+  modifiedAt,
 }: TransactionCardHeader) {
   const renderStatusColor = (
     status: string,
@@ -16,7 +22,12 @@ export default function TransactionCardHeader({
   ) => {
     if (isPaidOff && isCompletedManifest) {
       return 'bg-success-100 text-success-700'
-    } else if (status === 'waiting-approval') {
+    } else if (
+      status === 'waiting-approval' ||
+      status == STATUS_BOOKING.WAITING_FOR_BILL ||
+      status == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
+      status == STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+    ) {
       return 'bg-warning-100 text-warning-700'
     } else if (
       status == 'waiting-cancellation' ||
@@ -46,6 +57,12 @@ export default function TransactionCardHeader({
       status == 'expired'
     ) {
       return 'Dalam Proses Pembatalan'
+    } else if (status == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) {
+      return 'Menunggu Penerbitan Tagihan'
+    } else if (status == STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) {
+      return 'Tagihan sudah diterbitkan, harap segera membayar uang muka'
+    } else if (status == STATUS_BOOKING.WAITING_FOR_BILL) {
+      return `Menunggu Penerbitan Tagihan. Otomatis batal pada ${modifiedAt && format(addHours(modifiedAt, 24), 'dd MMM yyyy, HH:mm', { locale: id })}`
     } else {
       return 'Menunggu kelengkapan data jemaah dan pelunasan pembayaran'
     }

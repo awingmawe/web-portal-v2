@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
-import { ArrowIcon } from '@/components/icons/arrow'
 import { Calendar, Calendar2 } from '@/components/icons/calendar'
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
@@ -12,41 +10,30 @@ import TransactionCardHeader from '@/components/pages/my/1-Transaction/Component
 import TransactionCardPayment from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardPayment'
 import DrawerBatalkan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerBatalkan'
 import { Skeleton } from '@/components/ui/skeleton'
+import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
+import { Transaction } from '@/constant/types/Transaction'
 import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { formatDateByPackageType, getSlugByVariantPackage } from '@/lib/utils'
 import { getOrderPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { MoreVertical } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 
 export interface TransactionCardProps {
-  status: string
-  id: string
-  bookingId: string
-  packageName: string
-  thumbnail: string
-  startDate: string
-  endDate: string
-  createdDate: string
-  jemaah: number
-  isCompletedManifest: boolean
-  isManifestCommitted: boolean
-  isPaidOff: boolean
-  statusTahapan: string
-  statusTahapanDetail: string
+  transaction: Transaction
+  statusTahapan?: string
+  statusTahapanDetail?: string
   noHeader?: boolean
   noAmountLeft?: boolean
   detailOnly?: boolean
   noLabelNotif?: boolean
   showDpButton?: boolean
-  organizationInstanceId?: any
-  noFooter?: boolean
   fetchTransactions?: any
-  transaction?: any
-  packagePersonalId?: number
+  type?: string
 }
 
 function renderManifestComplete(
@@ -104,36 +91,64 @@ const RenderLinkToDetail = ({
 }
 
 export default function TransactionCard({
-  status,
-  id,
-  packageName,
-  thumbnail,
-  bookingId,
-  startDate,
-  endDate,
-  createdDate,
-  jemaah,
-  isCompletedManifest,
-  isManifestCommitted,
-  isPaidOff,
-  statusTahapan,
-  statusTahapanDetail,
+  transaction,
+  statusTahapan = 'Akan Datang',
+  statusTahapanDetail = 'Akan Datang',
   noHeader,
   noAmountLeft,
   detailOnly,
   noLabelNotif,
   showDpButton,
-  noFooter,
-  organizationInstanceId,
   fetchTransactions,
-  transaction,
-  packagePersonalId,
+  type,
 }: TransactionCardProps) {
+  // ---------------------- PROPERTIES FROM TRANSACTION -------------------------------- //
+  // ---------------- ADD NEW PROPERTIES HERE FROM TRANSACTION -------------------------//
+  const status = transaction?.status?.slug
+  const id = transaction?.bookingCode
+  const bookingId = String(transaction?.id)
+  const packageName = transaction?.packageSnapshot?.snapshot?.package?.title
+  const thumbnail = transaction?.packageSnapshot?.snapshot?.package.thumbnail
+  const startDate = transaction?.packageSnapshot?.snapshot?.departureDate
+  const endDate = transaction?.packageSnapshot?.snapshot?.arrivalDate
+  const createdDate = transaction?.createdAt
+  const modifiedAt = transaction?.modifiedAt
+  const jemaah = Number.parseInt(transaction?.quantity, 10)
+  const isCompletedManifest = transaction?.isCompletedManifest
+  const isManifestCommitted = transaction?.isManifestCommitted
+  const isPaidOff = transaction?.isPaidOff
+  const organizationInstanceId =
+    transaction?.packageSnapshot?.snapshot?.package.organizationInstanceId
+  const waitingPeriod = transaction?.packageSnapshot?.snapshot?.waitingPeriod
+  const packageType =
+    transaction?.packageSnapshot?.snapshot?.package?.packageType
+  const variantType =
+    transaction?.packageSnapshot?.snapshot?.package?.variantType
+  const currency = transaction?.packageSnapshot?.snapshot?.package?.currency
+  const remainingHajjPayment = transaction?.remainingHajjPayment
+
+  // Compute noFooter logic inside component
+  const noFooter =
+    transaction?.status.slug == 'waiting-approval' ||
+    (transaction?.isPaidOff && transaction?.isCompletedManifest)
+
+  // -------------------- END PROPERTIES FROM TRANSACTION ---------------------------- //
+
   const { lg } = useTailwindBreakpoint()
   const [orderPayment, setOrderPayment] = useState<any>(null)
   const [orderPaymentLoading, setOrderPaymentLoading] = useState<any>(
     lg ? true : false
   )
+
+  const { formattedDepartureDate, formattedArrivalDate } = useMemo(() => {
+    return formatDateByPackageType({
+      departureDate: startDate,
+      arrivalDate: endDate,
+      packageType,
+      variantType,
+      waitingPeriod,
+    })
+  }, [startDate, endDate, packageType, variantType, waitingPeriod])
 
   const fetcPaymentTransaction = useCallback(async () => {
     setOrderPaymentLoading(true)
@@ -150,10 +165,15 @@ export default function TransactionCard({
   }, [bookingId])
 
   useEffect(() => {
-    if (!noFooter && lg) {
+    if (
+      !noFooter &&
+      lg &&
+      status != STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+      status != STATUS_BOOKING.WAITING_FOR_BILL
+    ) {
       fetcPaymentTransaction()
     }
-  }, [fetcPaymentTransaction, noFooter, lg])
+  }, [fetcPaymentTransaction, noFooter, lg, status])
 
   const renderStatusTahapanColor = (status: string) => {
     if (status == 'Akan Datang') {
@@ -220,6 +240,7 @@ export default function TransactionCard({
             status={status}
             isCompletedManifest={isCompletedManifest}
             isPaidOff={isPaidOff}
+            modifiedAt={modifiedAt}
           />
         )}
       </RenderLinkToDetail>
@@ -229,11 +250,15 @@ export default function TransactionCard({
       >
         <div className="flex items-center justify-between border-b border-neutral-200 p-4">
           <div className="flex items-center gap-2 max-lg:block">
-            <p className="font-medium max-lg:text-xs">Umroh</p>
+            <p className="font-medium max-lg:text-xs">
+              {getSlugByVariantPackage(packageType).title}
+            </p>
             <p className="font-medium max-lg:hidden">/ </p>
             <p className="text-neutral-500 max-lg:hidden">ID : {id}</p>
             <p className="hidden text-neutral-500 max-lg:block max-lg:text-xs">
-              Dibuat Pada: {dayjs(createdDate).locale(id).format('DD MMM YYYY')}
+              Dibuat Pada:{' '}
+              {createdDate &&
+                dayjs(createdDate).locale(id).format('DD MMM YYYY')}
             </p>
           </div>
           <div className="flex items-center">
@@ -244,22 +269,23 @@ export default function TransactionCard({
             </p>
             {!isPaidOff && (
               <Fragment>
-                {(status === 'approved' ||
+                {status === 'approved' ||
                   status === 'waiting-approval' ||
-                  status === 'waiting-down-payment') && (
-                  <DrawerBatalkan
-                    bookingId={bookingId}
-                    idOrganisasi={organizationInstanceId}
-                    id={id}
-                  >
-                    {/* <Button
+                  status === 'waiting-down-payment' ||
+                  (status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ && (
+                    <DrawerBatalkan
+                      bookingId={bookingId}
+                      idOrganisasi={organizationInstanceId}
+                      id={id}
+                    >
+                      {/* <Button
                       className="!rounded-lg border-2 border-neutral-900 px-1 py-1"
                       variant="outline"
                     > */}
-                    <MoreVertical className="ml-1 ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
-                    {/* </Button> */}
-                  </DrawerBatalkan>
-                )}
+                      <MoreVertical className=" ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
+                      {/* </Button> */}
+                    </DrawerBatalkan>
+                  ))}
               </Fragment>
             )}
           </div>
@@ -318,9 +344,8 @@ export default function TransactionCard({
                   <div className="mt-4 flex items-center gap-2 max-lg:hidden">
                     <Calendar2 className="h-5 w-5 text-neutral-500" />
                     <p className="text-m-regular flex items-center text-neutral-500">
-                      {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
-                      <ArrowIcon size={20} className="mx-2 text-neutral-500" />{' '}
-                      {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+                      {formattedDepartureDate}
+                      {formattedArrivalDate}
                     </p>
                   </div>
                   <div className="mt-4 flex items-center gap-2 max-lg:hidden">
@@ -328,7 +353,8 @@ export default function TransactionCard({
                     <p className="text-m-regular text-neutral-500">
                       {jemaah} Jemaah
                     </p>
-                    {!noLabelNotif &&
+                    {packageType === PACKAGE_TYPE.UMRAH &&
+                      !noLabelNotif &&
                       renderManifestComplete(isCompletedManifest, createdDate)}
                   </div>
                 </div>
@@ -336,17 +362,21 @@ export default function TransactionCard({
             </div>
             <TransactionCardPayment
               noLabelNotif={noLabelNotif}
+              currency={currency}
               isPaidOff={isPaidOff}
               noAmountLeft={noAmountLeft}
               bookingId={bookingId}
               startDate={startDate}
+              type={type}
+              status={transaction?.status}
+              remainingHajjPayment={remainingHajjPayment}
+              packageType={packageType}
             />
             <div className="hidden items-center gap-2 max-lg:flex">
               <Calendar2 className="h-4 w-4 text-neutral-500" />
               <p className="flex items-center text-xs text-neutral-500">
-                {dayjs(startDate).locale('id').format('DD MMMM YYYY')}{' '}
-                <ArrowIcon size={18} className="mx-2 text-neutral-500" />{' '}
-                {dayjs(endDate).locale('id').format('DD MMMM YYYY')}
+                {formattedDepartureDate}
+                {formattedArrivalDate}
               </p>
             </div>
             <div className="mt-1 hidden items-center gap-2 max-lg:flex">
@@ -356,7 +386,13 @@ export default function TransactionCard({
           </div>
         </RenderLinkToDetail>
         <div
-          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${noFooter ? 'max-lg:hidden' : 'max-lg:block'}`}
+          className={`flex items-center justify-between border-t border-neutral-200 p-4 max-lg:py-2 ${
+            noFooter ||
+            status == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
+            status == STATUS_BOOKING.WAITING_FOR_BILL
+              ? 'max-lg:hidden'
+              : 'max-lg:block'
+          }`}
         >
           <div className="flex items-center gap-2 text-gray-500 max-lg:hidden">
             <p className="text-s-regular text-neutral-500">Dibuat pada</p>
@@ -368,7 +404,7 @@ export default function TransactionCard({
           {!noFooter && (
             <Fragment>
               {orderPaymentLoading ? (
-                <div className="flex hidden items-center justify-between p-4 max-lg:block">
+                <div className="hidden items-center justify-between p-4 max-lg:block">
                   <div className="flex items-center gap-2">
                     <Skeleton className="h-5 w-24" />
                     <Skeleton className="h-5 w-32" />
@@ -395,6 +431,9 @@ export default function TransactionCard({
                     organizationInstanceId={organizationInstanceId}
                     fetchTransactions={fetchTransactions}
                     transaction={transaction}
+                    remainingHajjPayment={remainingHajjPayment}
+                    currency={currency}
+                    type={type ?? ''}
                   />
                 </CanceledProvider>
               )}

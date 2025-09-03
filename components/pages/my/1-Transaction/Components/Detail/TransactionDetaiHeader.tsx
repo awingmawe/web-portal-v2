@@ -1,4 +1,5 @@
 import { TimerIcon } from '@/components/icons/timer'
+import { STATUS_BOOKING } from '@/constant/env'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { ellipsis } from '@/lib/utils'
 import dayjs from 'dayjs'
@@ -34,7 +35,7 @@ export function TransactionDetailHeader({
       status == 'Dalam Proses Pembatalan'
     ) {
       return 'bg-error-100 text-error-700'
-    } else if (status == 'Waiting') {
+    } else if (status == 'Waiting' || status == 'Waiting Hajj') {
       return 'bg-warning-100 text-warning-700'
     } else {
       return 'bg-neutral-100 text-neutral-700'
@@ -58,6 +59,11 @@ export function TransactionDetailHeader({
           status == 'canceled-by-user'
         ) {
           return 'Dalam Proses Pembatalan'
+        } else if (
+          status === STATUS_BOOKING.WAITING_FOR_BILL ||
+          status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+        ) {
+          return 'Menunggu Penerbitan Tagihan'
         } else {
           return lg
             ? ellipsis(
@@ -90,7 +96,11 @@ export function TransactionDetailHeader({
       case 'Akan Datang':
         if (isPaidOff && isCompletedManifest) {
           return 'bg-success-100 text-success-700'
-        } else if (status === 'waiting-approval') {
+        } else if (
+          status === 'waiting-approval' ||
+          status === STATUS_BOOKING.WAITING_FOR_BILL ||
+          status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+        ) {
           return 'bg-warning-100 text-warning-700'
         } else if (
           status == 'waiting-cancellation' ||
@@ -111,12 +121,12 @@ export function TransactionDetailHeader({
 
   return (
     <div
-      className={`mb-4 flex items-center space-x-2 px-4  ${lg && statusTahapan == 'Waiting' && 'w-full  max-lg:mb-0 max-lg:flex-col'} max-lg:px-3`}
+      className={`mb-4 flex items-center space-x-2 px-4  ${lg && (statusTahapan == 'Waiting' || status == 'Waiting Hajj') && 'w-full  max-lg:mb-0 max-lg:flex-col'} max-lg:px-3`}
     >
       <p
-        className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} relative z-20 rounded-full px-6 py-2 ${statusTahapan !== 'Selesai' && 'shadow-[2px_0px_4.8px_0px_#202B3324]'} ${lg && statusTahapan == 'Waiting' && 'w-full'} max-lg:py-1 max-lg:text-xs`}
+        className={`text-m-medium ${renderStatusTahapanColor(statusTahapan)} relative z-20 rounded-full px-6 py-2 ${statusTahapan !== 'Selesai' && 'shadow-[2px_0px_4.8px_0px_#202B3324]'} ${lg && (statusTahapan == 'Waiting' || status == 'Waiting Hajj') && 'w-full'} max-lg:py-1 max-lg:text-xs`}
       >
-        {statusTahapan === 'Waiting' ? (
+        {statusTahapan === 'Waiting' || statusTahapan === 'Waiting Hajj' ? (
           <span className="text-warning-700 flex">
             <TimerIcon className="mr-2" />
             Bayar uang muka sebelum{' '}

@@ -2,7 +2,7 @@ import { PACKAGE_TYPE } from '@/constant/env'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { CardData, Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
-import { differenceInDays } from 'date-fns'
+import { addYears, differenceInDays } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
 import { id } from 'date-fns/locale'
 import dayjs from 'dayjs'
@@ -459,6 +459,16 @@ export const isNullOrEmpty = (value: any): boolean => {
 
 export const getSlugByVariantPackage = (variantType: string) => {
   switch (variantType) {
+    case PACKAGE_TYPE.HAJJ:
+      return {
+        title: 'Haji',
+        slug: 'hajj',
+      }
+    case PACKAGE_TYPE.UMRAH:
+      return {
+        title: 'Umrah',
+        slug: 'umrah',
+      }
     case PACKAGE_TYPE.HAJJ_FURODA:
       return {
         title: 'Haji Furoda',
@@ -473,5 +483,73 @@ export const getSlugByVariantPackage = (variantType: string) => {
       return { title: 'Haji Khusus', slug: 'disclaimer-haji-khusus' }
     default:
       return { title: '', slug: '' }
+  }
+}
+
+export const formatDateByPackageType = ({
+  departureDate,
+  arrivalDate,
+  packageType,
+  variantType,
+  waitingPeriod,
+}: {
+  departureDate: string
+  arrivalDate: string
+  packageType: string
+  variantType: string
+  waitingPeriod: string | null
+}) => {
+  // Format departure date
+  const formattedDepartureDate = (() => {
+    try {
+      if (packageType === PACKAGE_TYPE.HAJJ) {
+        return departureDate
+          ? formatInTimeZone(departureDate, 'Asia/Jakarta', 'yyyy', {
+              locale: id,
+            })
+          : ''
+      } else if (packageType === PACKAGE_TYPE.UMRAH) {
+        return departureDate
+          ? formatInTimeZone(departureDate, 'Asia/Jakarta', 'dd MMM yyyy', {
+              locale: id,
+            })
+          : ''
+      } else {
+        return ''
+      }
+    } catch (error) {
+      console.error('Error formatting departureDate:', error)
+      return ''
+    }
+  })()
+
+  // Format arrival date
+  const formattedArrivalDate = (() => {
+    try {
+      if (packageType === PACKAGE_TYPE.UMRAH) {
+        return arrivalDate
+          ? `- ${formatInTimeZone(arrivalDate, 'Asia/Jakarta', 'dd MMM yyyy', { locale: id })}`
+          : ''
+      } else if (variantType === PACKAGE_TYPE.HAJJ_SPECIAL) {
+        return waitingPeriod && departureDate
+          ? `- ${formatInTimeZone(
+              addYears(departureDate, Number(waitingPeriod)),
+              'Asia/Jakarta',
+              'yyyy',
+              { locale: id }
+            )}`
+          : ''
+      } else {
+        return ''
+      }
+    } catch (error) {
+      console.error('Error formatting arrivalDate:', error)
+      return ''
+    }
+  })()
+
+  return {
+    formattedDepartureDate,
+    formattedArrivalDate,
   }
 }

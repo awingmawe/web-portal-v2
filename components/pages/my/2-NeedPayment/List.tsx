@@ -49,28 +49,7 @@ export default function List({
                     >
                       <CanceledProvider>
                         <TransactionCard
-                          status={transaction.status.slug}
-                          id={transaction.bookingCode}
-                          packageName={
-                            transaction?.packageSnapshot?.snapshot?.name
-                          }
-                          thumbnail={
-                            transaction?.packageSnapshot?.snapshot?.package
-                              .thumbnail
-                          }
-                          startDate={
-                            transaction?.packageSnapshot?.snapshot
-                              ?.departureDate
-                          }
-                          endDate={
-                            transaction?.packageSnapshot?.snapshot?.arrivalDate
-                          }
-                          createdDate={transaction.createdAt}
-                          jemaah={Number.parseInt(transaction.quantity)}
-                          bookingId={String(transaction.id)}
-                          isCompletedManifest={transaction.isCompletedManifest}
-                          isManifestCommitted={transaction.isManifestCommitted}
-                          isPaidOff={transaction.isPaidOff}
+                          transaction={transaction}
                           statusTahapan="Waiting"
                           statusTahapanDetail="Waiting"
                           noHeader
@@ -78,6 +57,7 @@ export default function List({
                           detailOnly
                           noLabelNotif
                           showDpButton
+                          type="need-payment"
                         />
                       </CanceledProvider>
                     </div>
@@ -109,27 +89,7 @@ export default function List({
                 >
                   <CanceledProvider>
                     <TransactionCard
-                      status={transaction.status.slug}
-                      id={transaction.bookingCode}
-                      packageName={
-                        transaction?.packageSnapshot?.snapshot?.package?.title
-                      }
-                      thumbnail={
-                        transaction?.packageSnapshot?.snapshot?.package
-                          .thumbnail
-                      }
-                      startDate={
-                        transaction?.packageSnapshot?.snapshot?.departureDate
-                      }
-                      endDate={
-                        transaction?.packageSnapshot?.snapshot?.arrivalDate
-                      }
-                      createdDate={transaction.createdAt}
-                      jemaah={Number.parseInt(transaction.quantity)}
-                      bookingId={String(transaction.id)}
-                      isCompletedManifest={transaction.isCompletedManifest}
-                      isManifestCommitted={transaction.isManifestCommitted}
-                      isPaidOff={transaction.isPaidOff}
+                      transaction={transaction}
                       statusTahapan="Waiting"
                       statusTahapanDetail="Waiting"
                       noHeader
@@ -137,6 +97,7 @@ export default function List({
                       detailOnly
                       noLabelNotif
                       showDpButton
+                      type="need-payment"
                     />
                   </CanceledProvider>
                 </div>

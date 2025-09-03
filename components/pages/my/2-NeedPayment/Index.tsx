@@ -7,6 +7,7 @@ import { SearchAndFilter } from '@/components/pages/my/2-NeedPayment/Filter'
 import List from '@/components/pages/my/2-NeedPayment/List'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
+import { STATUS_BOOKING } from '@/constant/env'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -68,7 +69,7 @@ export default function TransactionNeedPayment() {
         order: 'desc',
         orderBy: 'createdAt',
         'bookingCode:likeLower': `%${searchQuery}%`,
-        'status.slug': 'waiting-down-payment',
+        'status.slug:in': `${STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ},${STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH}`,
       }
 
       if (dateRange?.from) {

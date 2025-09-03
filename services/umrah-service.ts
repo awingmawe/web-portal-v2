@@ -18,7 +18,7 @@ import { Tag, TagPackages } from '@/constant/types/TagPackageProps'
 import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { PaymentStatement } from '@/constant/types/PaymentStatement'
-import { PaymentTransaction } from '@/constant/types/PaymentTransaction'
+import { PaymentTransaction, PrePaymentTransactionHajj } from '@/constant/types/PaymentTransaction'
 import {
   Attachment,
   ManifestPayload,
@@ -285,6 +285,40 @@ export async function preBookingCreateCheckout(payload: {
     return response.data
   } catch (error) {
     console.error('Error fetching payment transaction:', error)
+    throw error
+  }
+}
+export async function preBookingCreateHajj(payload: {
+  bookingId: number
+  double: number
+  triple: number
+  quad: number
+}) {
+  try {
+    const response = await apiWithAuth.post<PrePaymentTransactionHajj>(
+      `/umrah/v2/booking/pre-hajj`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching pre hajj:', error)
+    throw error
+  }
+}
+export async function createHajj(payload: {
+  bookingId: number
+  double: number
+  triple: number
+  quad: number
+}) {
+  try {
+    const response = await apiWithAuth.post<any>(
+      `/umrah/v2/booking/create-hajj`,
+      payload
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching create hajj:', error)
     throw error
   }
 }
