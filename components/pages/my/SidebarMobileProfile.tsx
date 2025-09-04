@@ -122,7 +122,7 @@ export const SidebarMobileProfile = () => {
         </div>
         <MenuItem
           icon={<MoneysIcon />}
-          label="Talangan Umroh"
+          label="Pembiayaan Umroh"
           loading={profile ? false : true}
           href="/my/banking"
         />
