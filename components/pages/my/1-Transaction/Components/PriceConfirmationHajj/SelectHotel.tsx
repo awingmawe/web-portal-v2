@@ -93,7 +93,7 @@ const TransactionRoomInfo: React.FC<TransactionRoomInfoProps> = ({
             <div className="text-right">
               <p className="text-xs-regular text-neutral-500">Harga/Jemaah</p>
               <p className="text-s-regular text-neutral-900">
-                {roomInfo?.quantity} Jemaah x
+                {roomInfo?.quantity} Jemaah x{' '}
                 {formatCurrency(
                   parseInt(roomInfo?.price),
                   transaction?.packageSnapshot?.snapshot?.package?.currency
