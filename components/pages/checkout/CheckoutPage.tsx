@@ -221,6 +221,7 @@ const CheckoutPage = () => {
 
             {/* Right section - Package details */}
             <PackageDetails
+              isLinkAja={isLinkAja}
               detailVariant={detailVariant}
               selectedVariant={selectedVariant}
               paymentDetails={paymentDetails}

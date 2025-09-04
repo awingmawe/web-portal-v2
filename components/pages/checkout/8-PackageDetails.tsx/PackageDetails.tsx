@@ -18,6 +18,7 @@ interface PackageDetailsProps {
   selectedVariant: SelectedVariant
   paymentDetails: PaymentDetails[]
   globalCurrencyRate: number
+  isLinkAja: boolean
 }
 
 const PackageDetails = ({
@@ -25,6 +26,7 @@ const PackageDetails = ({
   selectedVariant,
   paymentDetails,
   globalCurrencyRate,
+  isLinkAja,
 }: PackageDetailsProps) => {
   const Placeholder = '/images/no-image-placeholder.png'
 
@@ -183,6 +185,7 @@ const PackageDetails = ({
 
         <div className="max-lg:hidden">
           <PriceBreakdown
+            isLinkAja={isLinkAja}
             detailVariant={detailVariant}
             paymentDetails={paymentDetails}
             globalCurrencyRate={globalCurrencyRate}
