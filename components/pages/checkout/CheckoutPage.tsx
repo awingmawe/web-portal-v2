@@ -1,7 +1,5 @@
 'use client'
 
-import { CashReceiptIcon } from '@/components/icons/cash-receipt'
-import { LinkAja, LinkAjaSyariah } from '@/components/icons/linkaja'
 import CheckoutHeader from '@/components/pages/checkout/1-CheckoutHeader/CheckoutHeader'
 import FlightDetails from '@/components/pages/checkout/2-FlightDetails/FlightDetails'
 import JamaahSection from '@/components/pages/checkout/3-JamaahSection/JamaahSection'
@@ -16,8 +14,6 @@ import ModalCheckout from '@/components/pages/checkout/modal/ModalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/ModalPengembalianDana'
 import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { MIDTRANS_CLIENT_KEY, PACKAGE_TYPE, SNAP_URL } from '@/constant/env'
 import { useCheckoutLogic } from '@/hooks/checkout-hooks/useCheckoutLogic'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -177,13 +173,6 @@ const CheckoutPage = () => {
                 sliderStep={sliderStep}
               />
 
-              {/* Payment Method */}
-              <PaymentMethodSection
-                isLinkAja={isLinkAja}
-                selectedPayment={selectedPayment}
-                setSelectedPayment={setSelectedPayment}
-              />
-
               {/* Referral code */}
               <ReferralSection
                 isHaveRefferalCode={isHaveRefferalCode}
@@ -205,8 +194,16 @@ const CheckoutPage = () => {
                   detailVariant={detailVariant}
                   paymentDetails={paymentDetails}
                   globalCurrencyRate={preBooking?.globalCurrencyRate}
+                  isLinkAja={isLinkAja}
                 />
               </div>
+
+              {/* Payment Method */}
+              <PaymentMethodSection
+                isLinkAja={isLinkAja}
+                selectedPayment={selectedPayment}
+                setSelectedPayment={setSelectedPayment}
+              />
 
               {/* Terms and conditions */}
               <TermsAndCheckout
@@ -220,74 +217,6 @@ const CheckoutPage = () => {
                 disabledButtonCheckout={disabledButtonCheckout}
                 handleCheckout={handleCheckoutClick}
               />
-
-              {/* Soon will refactor */}
-              {lg && isLinkAja && (
-                <div className="bg-white">
-                  <div className="rounded-[16px] border border-b border-neutral-200">
-                    <div className="flex items-center border-b border-neutral-200 p-4">
-                      <CashReceiptIcon className="text-neutral-900" size={20} />
-                      <h2 className="text-m-semibold ml-2.5 text-neutral-900">
-                        Metode Pembayaran
-                      </h2>
-                    </div>
-                    <RadioGroup
-                      value={selectedPayment}
-                      onValueChange={setSelectedPayment}
-                      className="p-4"
-                    >
-                      {/* LinkAja Syariah */}
-                      <div
-                        className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
-                        onClick={() => setSelectedPayment('linkAjaSyariah')}
-                      >
-                        <div className="flex items-center gap-4">
-                          <RadioGroupItem
-                            value="linkAjaSyariah"
-                            id="linkAjaSyariah"
-                            className="h-4 w-4"
-                          />
-                          <div className="flex items-center gap-2">
-                            <LinkAjaSyariah
-                              className="h-4 w-4"
-                              id="linkajaSyariahIcon"
-                            />
-                            <Label
-                              htmlFor="linkAjaSyariah"
-                              className="text-l-medium cursor-pointer"
-                            >
-                              LinkAja Syariah
-                            </Label>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* LinkAja */}
-                      <div
-                        className="cursor-pointer rounded-lg border border-gray-200 bg-white p-3"
-                        onClick={() => setSelectedPayment('linkAja')}
-                      >
-                        <div className="flex items-center gap-4">
-                          <RadioGroupItem
-                            value="linkAja"
-                            id="linkaja"
-                            className="h-4 w-4"
-                          />
-                          <div className="flex items-center gap-2">
-                            <LinkAja className="h-4 w-4" id="linkajaIcon" />
-                            <Label
-                              htmlFor="linkaja"
-                              className="text-l-medium cursor-pointer"
-                            >
-                              LinkAja
-                            </Label>
-                          </div>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Right section - Package details */}

@@ -150,12 +150,14 @@ export const CardPackageCompact = memo(function CardPackageCompact({
   return (
     <div className="relative" id="card-package">
       {/* Image */}
-      {showDiscount && <BadgePromo title="PROMO 🎉" className="-top-5 z-30" />}
+      {showDiscount && (
+        <BadgePromo title="PROMO 🎉" className="-top-10 left-0 z-30" />
+      )}
       <div
         style={{
           background: 'linear-gradient(0deg, #FFFFFF 46.42%, #FFDC71 290.1%)',
         }}
-        className="relative z-10 rounded-2xl border border-neutral-100 px-5 pt-2 pb-5"
+        className="relative z-1 rounded-2xl border border-neutral-100 px-5 pt-2 pb-5"
       >
         {!isEmpty(codeCountry) && isPlus && (
           <div className="absolute top-0 right-0 flex flex-col rounded-[20px]">

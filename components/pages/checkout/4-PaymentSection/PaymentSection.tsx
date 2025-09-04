@@ -86,11 +86,27 @@ const PaymentSection = ({
           color="black"
           size={20}
         />
-        <p className="text-xs-regular">
-          Minimal pembayaran uang muka adalah{' '}
-          {formatCurrency(selectedVariant.netAmount, detailVariant?.currency)}
-          /orang
-        </p>
+        {isLinkAja ? (
+          <p className="text-xs-regular">
+            Uang muka minimal{' '}
+            <strong>
+              {formatCurrency(
+                selectedVariant.netAmount,
+                detailVariant?.currency
+              )}{' '}
+            </strong>
+            dan limit
+            <br />
+            transaksi bulanan kamu di LinkAja adalah{' '}
+            <strong>Rp40.000.000</strong>
+          </p>
+        ) : (
+          <p className="text-xs-regular">
+            Minimal pembayaran uang muka adalah{' '}
+            {formatCurrency(selectedVariant.netAmount, detailVariant?.currency)}
+            /orang
+          </p>
+        )}
       </div>
 
       <div className="flex items-center max-lg:mb-2.5 max-lg:gap-1 lg:gap-3 lg:p-4">
@@ -109,27 +125,11 @@ const PaymentSection = ({
           <p className="text-m-regular max-lg:text-xs max-lg:leading-4">
             Gak perlu bayar full dulu, cukup uang muka aja dulu kamu yang atur!
           </p>
-          {isLinkAja ? (
-            <span className="text-s-regular text-right whitespace-nowrap text-neutral-500">
-              Uang muka minimal{' '}
-              {formatCurrency(
-                selectedVariant.netAmount,
-                detailVariant?.currency
-              )}{' '}
-              dan limit
-              <br />
-              transaksi bulanan kamu di LinkAja adalah Rp40.000.000
-            </span>
-          ) : (
-            <span className="text-s-regular whitespace-nowrap text-neutral-500 max-lg:hidden">
-              *uang muka minimal{' '}
-              {formatCurrency(
-                selectedVariant.netAmount,
-                detailVariant?.currency
-              )}
-              /orang
-            </span>
-          )}
+          <span className="text-s-regular whitespace-nowrap text-neutral-500 max-lg:hidden">
+            *uang muka minimal{' '}
+            {formatCurrency(selectedVariant.netAmount, detailVariant?.currency)}
+            /orang
+          </span>
         </div>
 
         {/* Input & slider */}

@@ -15,10 +15,12 @@ export default function PriceBreakdown({
   detailVariant,
   paymentDetails,
   globalCurrencyRate,
+  isLinkAja,
 }: {
   detailVariant: DetailVariant
   paymentDetails: any[]
   globalCurrencyRate: number
+  isLinkAja: boolean
 }) {
   const [isOpen, setIsOpen] = React.useState(false)
   return (
@@ -91,14 +93,18 @@ export default function PriceBreakdown({
           </div>
         ))}
       </div>
-      {detailVariant.package.packageType === PACKAGE_TYPE.UMRAH && (
-        <p
-          className={`text-s-regular bg-info-100 text-info-800 flex items-center rounded-lg px-3 py-2`}
-        >
-          <InfoIcon className="text-info-800 mr-2" size={16} />
-          Jumlah yang dibayar setelah melakukan pembayaran uang muka.
-        </p>
-      )}
+      {detailVariant.package.packageType === PACKAGE_TYPE.UMRAH &&
+        !isLinkAja && (
+          <p
+            className={`text-s-regular bg-info-100 text-info-800 flex items-center rounded-lg px-3 py-2`}
+          >
+            <InfoIcon
+              className="mr-2 flex-none stroke-neutral-900 stroke-1"
+              size={16}
+            />
+            Jumlah yang dibayar setelah melakukan pembayaran uang muka.
+          </p>
+        )}
     </div>
   )
 }

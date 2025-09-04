@@ -1,5 +1,5 @@
 import { toast } from '@/components/ui/sonner'
-import { LINKAJA_MAX_LIMIT } from '@/constant/env'
+import { LINKAJA_MAX_LIMIT, PACKAGE_TYPE } from '@/constant/env'
 import {
   DetailVariant,
   PaymentActions,
@@ -159,7 +159,10 @@ export const usePaymentActions = ({
         ? await bookingCheckoutUmrahPersonal(payloadUmrahPersonal)
         : await bookingCheckout(payload)
 
-      if (isEmpty(res?.data?.order?.paymentToken)) {
+      if (
+        detailVariant?.package?.packageType === PACKAGE_TYPE.HAJJ &&
+        isEmpty(res?.data?.order?.paymentToken)
+      ) {
         handlePushEvent('submit_booking')
         localStorage.removeItem('referralCode')
         setLoading(false)
