@@ -25,7 +25,7 @@ export default async function SuccessOffering() {
             untuk membayar.
           </p>
         </div>
-        <Link href="/my" className="w-full cursor-pointer">
+        <Link href="/my/transaction" className="w-full cursor-pointer">
           <Button className="w-full px-10 py-3">Lihat Detail</Button>
         </Link>
       </div>

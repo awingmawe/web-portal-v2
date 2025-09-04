@@ -35,7 +35,7 @@ const SubmenuCards = () => {
     },
     {
       icon: <SavingIcon size={25} color="white" />,
-      label: 'Talangan Umroh',
+      label: 'Pembiayaan Umroh',
       href: '/banking/credit',
       background: 'bg-[#03DAC8]',
     },
