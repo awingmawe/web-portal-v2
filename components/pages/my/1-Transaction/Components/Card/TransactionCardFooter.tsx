@@ -21,6 +21,7 @@ import {
 import {
   CALL_CENTER,
   MIDTRANS_CLIENT_KEY,
+  PACKAGE_TYPE,
   SNAP_URL,
   STATUS_BOOKING,
 } from '@/constant/env'
@@ -321,6 +322,13 @@ export default function TransactionCardFooter({
   }
 
   const renderPelunasanButton = () => {
+    if (
+      transaction?.packageSnapshot?.snapshot?.package?.packageType ===
+      PACKAGE_TYPE.HAJJ
+    ) {
+      return null
+    }
+
     if (isLinkAja) {
       return (
         <Button
