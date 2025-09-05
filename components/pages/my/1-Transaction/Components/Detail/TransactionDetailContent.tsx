@@ -66,6 +66,31 @@ export default function TransactionDetailContent({
   const router = useRouter()
   const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
 
+  // Initialize Snap
+  useEffect(() => {
+    // Check if Snap is already available
+    if (window.snap) {
+      setIsSnapInitialized(true)
+      return
+    }
+
+    // Load Snap.js
+    const midtransScriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js'
+
+    const scriptTag = document.createElement('script')
+    scriptTag.src = midtransScriptUrl
+    scriptTag.onload = () => {
+      setIsSnapInitialized(true)
+    }
+
+    document.body.appendChild(scriptTag)
+
+    return () => {
+      // Clean up script tag on unmount if needed
+      document.body.removeChild(scriptTag)
+    }
+  }, [])
+
   const fetchTransactions = useCallback(async () => {
     setLoading(true)
 
@@ -661,6 +686,7 @@ export default function TransactionDetailContent({
       <Script
         src={SNAP_URL}
         data-client-key={MIDTRANS_CLIENT_KEY}
+        style={{ pointerEvents: 'auto' }}
         strategy="lazyOnload"
         onLoad={() => {}}
         onError={() => {}}

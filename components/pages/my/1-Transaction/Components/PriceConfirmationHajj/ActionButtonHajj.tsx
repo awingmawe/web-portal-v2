@@ -43,6 +43,7 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
   const [paymentDetails, setPaymentDetails] = React.useState<PaymentDetails[]>(
     []
   )
+  const [transactionNew, setTransactionNew] = React.useState<any>(transaction)
   const [isPrebookingLoading, setPreBookingLoading] = React.useState(false)
 
   const bayarDpHajj = async () => {
@@ -55,23 +56,26 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
         quad: selectedRoomType?.quad || 0,
       })
 
-      window.snap.pay(response?.order?.paymentToken, {
-        onSuccess: async (result: any) => {
-          console.log(result)
-          window.location.reload()
-        },
-        onPending: async (result: any) => {
-          console.log('Payment pending', result)
-          window.location.reload()
-        },
-        onError: (error: any) => {
-          console.log(error)
-          setPreBookingLoading(false)
-        },
-        onClose: () => {
-          setPreBookingLoading(false)
-        },
-      })
+      if (response?.order?.paymentToken) {
+        document.body.style.pointerEvents = 'auto'
+        window.snap.pay(response?.order?.paymentToken, {
+          onSuccess: async (result: any) => {
+            console.log(result)
+            window.location.reload()
+          },
+          onPending: async (result: any) => {
+            console.log('Payment pending', result)
+            window.location.reload()
+          },
+          onError: (error: any) => {
+            console.log(error)
+            setPreBookingLoading(false)
+          },
+          onClose: () => {
+            setPreBookingLoading(false)
+          },
+        })
+      }
     } catch (e) {
       setPreBookingLoading(false)
       console.log(e)
@@ -89,6 +93,31 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
       })
 
       setPaymentDetails(response.paymentDetails)
+
+      const mergedTransaction = {
+        ...transaction,
+        roomTypeQuantity: {
+          double: selectedRoomType?.double || 0,
+          triple: selectedRoomType?.triple || 0,
+          quad: selectedRoomType?.quad || 0,
+        },
+        roomInfo: response.roomInfo,
+        packageSnapshot: {
+          ...transaction?.packageSnapshot,
+          snapshot: {
+            ...transaction?.packageSnapshot?.snapshot,
+            // Update current prices (in IDR from response)
+            priceDouble: response.doublePrice.toString(),
+            priceTriple: response.triplePrice.toString(),
+            priceQuad: response.quadPrice.toString(),
+            // Update original prices (in IDR from response)
+            originalPriceDouble: response.originalDoublePrice.toString(),
+            originalPriceTriple: response.originalTriplePrice.toString(),
+            originalPriceQuad: response.originalQuadPrice.toString(),
+          },
+        },
+      }
+      setTransactionNew(mergedTransaction)
       setPreBookingLoading(false)
     } catch (e) {
       setPreBookingLoading(false)
@@ -122,7 +151,7 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
             </span>
             <span className="text-s-regular text-warning-600 flex items-center">
               <TimerIcon className="mr-1" size={16} />
-              {dayjs(transaction?.createdAt)
+              {dayjs(transactionNew?.createdAt)
                 .add(1, 'day')
                 .locale('id')
                 .format('DD MMM YYYY HH:mm')}
@@ -151,19 +180,19 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
               Kurs Travel
               <strong className="text-warning-700 ml-1">
                 {
-                  transaction?.packageSnapshot?.snapshot.package
+                  transactionNew?.packageSnapshot?.snapshot.package
                     .organizationInstance.name
                 }
               </strong>
             </p>
             <p className="text-s-semibold">
-              1 USD = {formatCurrency(transaction?.bookingExchange?.value)}
+              1 USD = {formatCurrency(transactionNew?.bookingExchange?.value)}
             </p>
           </div>
           <div className="flex justify-between max-lg:flex-col lg:gap-5">
             <div className="flex-1">
               <TransactionRoomInfo
-                transaction={transaction}
+                transaction={transactionNew}
                 isEditable={isEditing}
                 roomTypeMapping={roomTypeMapping}
                 setShouldRunCheckPre={setPreBookingLoading}
@@ -174,14 +203,14 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
             <PriceBreakdown
               paymentDetails={paymentDetails}
               currency={
-                transaction?.packageSnapshot?.snapshot?.package.currency ||
+                transactionNew?.packageSnapshot?.snapshot?.package.currency ||
                 'IDR'
               }
               organizationName={
-                transaction?.packageSnapshot?.snapshot.package
+                transactionNew?.packageSnapshot?.snapshot.package
                   .organizationInstance.name || ''
               }
-              value={transaction?.bookingExchange?.value || 0}
+              value={transactionNew?.bookingExchange?.value || 0}
             />
           </div>
           <p
@@ -201,7 +230,7 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
             onClick={() => setIsEditing((prev) => !prev)}
             disabled={isPrebookingLoading}
           >
-            {isEditing ? 'BatalkanPerubahan' : 'Ubah Pesanan'}
+            {isEditing ? 'Batalkan Perubahan' : 'Ubah Pesanan'}
           </Button>
           <Button
             variant="default"
