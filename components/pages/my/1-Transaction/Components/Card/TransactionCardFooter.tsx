@@ -78,6 +78,8 @@ export default function TransactionCardFooter({
   type,
 }: TransactionCardFooter) {
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
+  const packageType =
+    transaction?.packageSnapshot?.snapshot?.package?.packageType
   const { lg } = useTailwindBreakpoint()
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
@@ -143,13 +145,10 @@ export default function TransactionCardFooter({
   }
 
   const shouldShowPelunasanButton = () => {
-    const excludedStatuses = [
-      'waiting-approval',
-      STATUS_BOOKING.WAITING_FOR_BILL,
-      STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
-      STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
-    ]
-    return !excludedStatuses.includes(status)
+    const excludedStatuses = ['waiting-approval']
+    return (
+      !excludedStatuses.includes(status) && packageType !== PACKAGE_TYPE.HAJJ
+    )
   }
 
   const shouldShowManifestButton = () => {
@@ -157,11 +156,12 @@ export default function TransactionCardFooter({
       'waiting-cancellation',
       'expired',
       'waiting-approval',
-      STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
-      STATUS_BOOKING.WAITING_FOR_BILL,
-      STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
     ]
-    return !isManifestCommitted && !excludedStatuses.includes(status)
+    return (
+      !isManifestCommitted &&
+      !excludedStatuses.includes(status) &&
+      packageType !== PACKAGE_TYPE.HAJJ
+    )
   }
 
   const shouldShowCancelPopover = () => {
@@ -171,6 +171,7 @@ export default function TransactionCardFooter({
       'waiting-down-payment',
       STATUS_BOOKING.WAITING_FOR_BILL,
       STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+      STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
     ]
     return allowedStatuses.includes(status)
   }

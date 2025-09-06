@@ -106,12 +106,20 @@ export default function TransactionUpcoming() {
         queryParams['packageType'] = 'umrah-personal'
       } else if (statusFilterType === PACKAGE_TYPE.HAJJ) {
         queryParams['packageType'] = PACKAGE_TYPE.HAJJ
-      } else if (statusFilterType === PACKAGE_TYPE.HAJJ_DAKHILI) {
-        queryParams['packageType'] = PACKAGE_TYPE.HAJJ_DAKHILI
-      } else if (statusFilterType === PACKAGE_TYPE.HAJJ_FURODA) {
-        queryParams['packageType'] = PACKAGE_TYPE.HAJJ_FURODA
-      } else if (statusFilterType === PACKAGE_TYPE.HAJJ_SPECIAL) {
-        queryParams['packageType'] = PACKAGE_TYPE.HAJJ_SPECIAL
+      } else if (
+        [
+          PACKAGE_TYPE.HAJJ_DAKHILI,
+          PACKAGE_TYPE.HAJJ_FURODA,
+          PACKAGE_TYPE.HAJJ_SPECIAL,
+        ].includes(statusFilterType)
+      ) {
+        if (statusFilterType === PACKAGE_TYPE.HAJJ_DAKHILI) {
+          queryParams['variantType'] = PACKAGE_TYPE.HAJJ_DAKHILI
+        } else if (statusFilterType === PACKAGE_TYPE.HAJJ_FURODA) {
+          queryParams['variantType'] = PACKAGE_TYPE.HAJJ_FURODA
+        } else if (statusFilterType === PACKAGE_TYPE.HAJJ_SPECIAL) {
+          queryParams['variantType'] = PACKAGE_TYPE.HAJJ_SPECIAL
+        }
       }
 
       if (dateRange?.from) {
