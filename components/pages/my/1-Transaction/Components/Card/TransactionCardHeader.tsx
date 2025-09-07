@@ -1,17 +1,21 @@
-import { STATUS_BOOKING } from '@/constant/env'
+import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { addHours, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 
 export interface TransactionCardHeader {
   status: string
   isCompletedManifest: boolean
+  isManifestCommitted: boolean
   isPaidOff: boolean
+  packageType: string
   modifiedAt?: string
 }
 
 export default function TransactionCardHeader({
   status,
   isCompletedManifest,
+  isManifestCommitted,
+  packageType,
   isPaidOff,
   modifiedAt,
 }: TransactionCardHeader) {
@@ -20,7 +24,14 @@ export default function TransactionCardHeader({
     isPaidOff?: boolean,
     isCompletedManifest?: boolean
   ) => {
-    if (isPaidOff && isCompletedManifest) {
+    // if user has paid off and has completed manifest
+    // or if user is booking hajj package and has commited manifest
+    // then status is success
+    if (
+      isPaidOff &&
+      (isCompletedManifest ||
+        (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
+    ) {
       return 'bg-success-100 text-success-700'
     } else if (
       status === 'waiting-approval' ||
@@ -46,7 +57,14 @@ export default function TransactionCardHeader({
     isPaidOff?: boolean,
     isCompletedManifest?: boolean
   ) => {
-    if (isPaidOff && isCompletedManifest) {
+    // if user has paid off and has completed manifest
+    // or if user is booking hajj package and has commited manifest
+    // then status is success
+    if (
+      isPaidOff &&
+      (isCompletedManifest ||
+        (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
+    ) {
       return 'Siap Berangkat!'
     } else if (status === 'waiting-approval') {
       return 'Menunggu konfirmasi'

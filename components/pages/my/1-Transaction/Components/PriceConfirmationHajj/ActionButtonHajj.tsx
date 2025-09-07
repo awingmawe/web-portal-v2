@@ -139,7 +139,7 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
       isOpen={isOpenTransaction}
       setIsOpen={setIsOpenTransaction}
       trigger={
-        <Button className="border-primary-500 w-full border-2 max-lg:py-2">
+        <Button className="w-full px-8 py-3 max-lg:py-2">
           <span className="font-medium">Bayar</span>
         </Button>
       }
@@ -227,7 +227,9 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
           <Button
             variant="ghost"
             className="px-10 py-3 text-nowrap max-lg:w-full"
-            onClick={() => setIsEditing((prev) => !prev)}
+            onClick={() => {
+              setIsEditing((prev) => !prev)
+            }}
             disabled={isPrebookingLoading}
           >
             {isEditing ? 'Batalkan Perubahan' : 'Ubah Pesanan'}

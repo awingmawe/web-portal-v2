@@ -381,9 +381,8 @@ export default function TransactionCard({
     transactionData.status !== STATUS_BOOKING.WAITING_FOR_BILL
 
   const showFooter =
-    !transactionData.noFooter &&
-    transactionData.status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
-    transactionData.status !== STATUS_BOOKING.WAITING_FOR_BILL
+    !transactionData.noFooter ||
+    (transactionData.packageType === PACKAGE_TYPE.HAJJ && !lg)
 
   // ========================= EFFECTS =========================
   const fetchPaymentTransaction = useCallback(async () => {
@@ -415,8 +414,10 @@ export default function TransactionCard({
           <TransactionCardHeader
             status={transactionData.status}
             isCompletedManifest={transactionData.isCompletedManifest}
+            isManifestCommitted={transactionData.isManifestCommitted}
             isPaidOff={transactionData.isPaidOff}
             modifiedAt={transactionData.modifiedAt}
+            packageType={transactionData.packageType}
           />
         )}
       </ConditionalLink>
@@ -551,6 +552,7 @@ export default function TransactionCard({
                     status={transactionData.status}
                     statusTahapanDetail={statusTahapanDetail}
                     paymentAmount={orderPayment?.orderPayment?.paymentAmount}
+                    paymentLink={orderPayment?.paymentLink}
                     organizationInstanceId={
                       transactionData.organizationInstanceId
                     }
