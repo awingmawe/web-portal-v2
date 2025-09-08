@@ -1,21 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // hooks/common/useTopbarNotification.tsx
 import { MoneysIcon } from '@/components/icons/moneys'
 import { PersonalPaket } from '@/components/icons/personal-paket'
 import { PilotSeatIcon } from '@/components/icons/pilot-seat'
 import { ReceiptIcon } from '@/components/icons/receipt'
+import { Badge, Notification } from '@/constant/types/NotificationProps'
+import { getListNotif, postReadNotif } from '@/services/notification-service'
+import { getNotificationBadge } from '@/services/umrah-service'
 import { easeIn, easeOut } from 'framer-motion'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
 // Types
-export interface Notification {
-  id: number
-  category: string
-  title: string
-  description: string
-  time: string
-  isRead: boolean
-  type: 'warning' | 'promo' | 'info'
-}
 
 export interface Category {
   id: string
@@ -30,50 +25,39 @@ export interface Tab {
   label: string
 }
 // Mock data
-const mockNotifications: Notification[] = [
-  {
-    id: 1,
-    category: 'umroh',
-    title: 'Kuota Umroh September Hampir Penuh!',
-    description:
-      'Paket umroh September tersisa kuota terbatas. Segera amankan slot Kamu sebelum ditutup!',
-    time: '10 m',
-    isRead: false,
-    type: 'warning',
-  },
-  {
-    id: 2,
-    category: 'promo',
-    title: 'Diskon Khusus Hari Asyura!',
-    description:
-      'Dapatkan potongan hingga Rp1.000.000 untuk pembelian paket Umroh Plus Turki. Berlaku hanya sampai malam ini!',
-    time: '15 m',
-    isRead: false,
-    type: 'promo',
-  },
-  {
-    id: 3,
-    category: 'info',
-    title: 'Kini telah hadir Muslim Market!',
-    description:
-      'Dapatkan kemudahan saat berbelanja keperluan kamu di Muslim Market, yuk cek sekarang!',
-    time: '15 m',
-    isRead: false,
-    type: 'info',
-  },
-]
+// const mockNotifications: Notification[] = [
+//   {
+//     id: 1,
+//     category: 'umroh',
+//     title: 'Kuota Umroh September Hampir Penuh!',
+//     description:
+//       'Paket umroh September tersisa kuota terbatas. Segera amankan slot Kamu sebelum ditutup!',
+//     time: '10 m',
+//     isRead: false,
+//     type: 'warning',
+//   },
+//   {
+//     id: 2,
+//     category: 'promo',
+//     title: 'Diskon Khusus Hari Asyura!',
+//     description:
+//       'Dapatkan potongan hingga Rp1.000.000 untuk pembelian paket Umroh Plus Turki. Berlaku hanya sampai malam ini!',
+//     time: '15 m',
+//     isRead: false,
+//     type: 'promo',
+//   },
+//   {
+//     id: 3,
+//     category: 'info',
+//     title: 'Kini telah hadir Muslim Market!',
+//     description:
+//       'Dapatkan kemudahan saat berbelanja keperluan kamu di Muslim Market, yuk cek sekarang!',
+//     time: '15 m',
+//     isRead: false,
+//     type: 'info',
+//   },
+// ]
 
-const categories: Category[] = [
-  { id: 'payment', label: 'Butuh Dibayar', count: 3, icon: <MoneysIcon /> },
-  {
-    id: 'transaction',
-    label: 'Transaksi',
-    count: 1,
-    icon: <ReceiptIcon size={24} />,
-  },
-  { id: 'umroh', label: 'Umroh Personal', count: 1, icon: <PersonalPaket /> },
-  { id: 'quota', label: 'Cek Kuota', count: 1, icon: <PilotSeatIcon /> },
-]
 const tabs: Tab[] = [
   { id: 'semua', label: 'Semua' },
   { id: 'belum-dibaca', label: 'Belum dibaca' },
@@ -83,16 +67,16 @@ const tabs: Tab[] = [
 export const useTopbarNotification = () => {
   // State management
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
-  const [notifications, setNotifications] =
-    useState<Notification[]>(mockNotifications)
+  const [notifications, setNotifications] = useState<Notification[]>()
+  const [badge, setBadge] = useState<Badge>()
+  const [countBadge, setCountBadge] = useState<number>(0)
   const [activeTab, setActiveTab] = useState<TabId>('semua')
+  const [size, setSize] = useState<number>(10)
+  const [page, setPage] = useState<number>(1)
 
   // Refs
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-
-  // Computed values
-  const unreadCount = notifications.filter((n) => !n.isRead).length
 
   // Handle click outside to close notification panel
   useEffect(() => {
@@ -121,6 +105,38 @@ export const useTopbarNotification = () => {
     }
   }, [isExpanded])
 
+  const getDataList = async () => {
+    try {
+      const filter = {
+        size,
+        page,
+        ...(activeTab !== 'semua' ? { readAt: 'isNull' } : {}),
+      }
+      const res = await getListNotif(filter)
+      setNotifications(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const getDataBadge = async () => {
+    try {
+      const res = await getNotificationBadge()
+      setBadge(res)
+      const total =
+        (res.needToBePaid ?? 0) +
+        (res.onGoingTransaction ?? 0) +
+        (res.waitingOffers ?? 0) +
+        (res.checkAvailabilities ?? 0)
+      setCountBadge(total)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getDataList()
+    getDataBadge()
+  }, [activeTab])
+
   const handleNotifIconClick = useCallback(() => {
     setIsExpanded((prev) => !prev)
   }, [])
@@ -134,25 +150,19 @@ export const useTopbarNotification = () => {
   }, [])
 
   const markAllAsRead = useCallback(() => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))
+    // setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))/
   }, [])
 
-  const markAsRead = useCallback((notificationId: number) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
-    )
-  }, [])
-
-  const getFilteredNotifications = useCallback((): Notification[] => {
-    switch (activeTab) {
-      case 'belum-dibaca':
-        return notifications.filter((n) => !n.isRead)
-      case 'baca-semua':
-        return notifications.filter((n) => n.isRead)
-      default:
-        return notifications
+  const markAsRead = useCallback(async (notificationId: number) => {
+    try {
+      await postReadNotif(notificationId)
+      getDataList()
+      getDataBadge()
+    } catch (error) {
+      console.error(error)
     }
-  }, [activeTab, notifications])
+    // console.log(notificationId)
+  }, [])
 
   const getNotificationBgClass = useCallback(
     (type: Notification['type']): string => {
@@ -170,22 +180,6 @@ export const useTopbarNotification = () => {
     []
   )
 
-  const addNotification = useCallback(
-    (notification: Omit<Notification, 'id'>) => {
-      const newNotification: Notification = {
-        ...notification,
-        id: Date.now(), // Simple ID generation
-      }
-      setNotifications((prev) => [newNotification, ...prev])
-    },
-    []
-  )
-
-  const removeNotification = useCallback((notificationId: number) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
-  }, [])
-
-  // Animation variants
   const searchNotifVariants = {
     visible: {
       opacity: 1,
@@ -225,30 +219,51 @@ export const useTopbarNotification = () => {
       },
     },
   }
-
+  const categories: Category[] = [
+    {
+      id: 'payment',
+      label: 'Butuh Dibayar',
+      count: badge?.needToBePaid ?? 0,
+      icon: <MoneysIcon />,
+    },
+    {
+      id: 'transaction',
+      label: 'Transaksi',
+      count: badge?.onGoingTransaction ?? 0,
+      icon: <ReceiptIcon size={24} />,
+    },
+    {
+      id: 'umroh',
+      label: 'Umroh Personal',
+      count: badge?.waitingOffers ?? 0,
+      icon: <PersonalPaket />,
+    },
+    {
+      id: 'quota',
+      label: 'Cek Kuota',
+      count: badge?.checkAvailabilities ?? 0,
+      icon: <PilotSeatIcon />,
+    },
+  ]
   return {
     // State
     isExpanded,
     notifications,
     activeTab,
-    unreadCount,
     categories,
     tabs,
-
+    badge,
     // Refs
     inputRef,
     containerRef,
+    countBadge,
 
     // Handlers
     handleNotifIconClick,
     handleTabClick,
     markAllAsRead,
     markAsRead,
-    addNotification,
-    removeNotification,
-
     // Computed functions
-    getFilteredNotifications,
     getNotificationBgClass,
 
     // Animation variants

@@ -18,7 +18,10 @@ import { Tag, TagPackages } from '@/constant/types/TagPackageProps'
 import { PackageGalleryImage } from '@/constant/types/GalleryProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { PaymentStatement } from '@/constant/types/PaymentStatement'
-import { PaymentTransaction, PrePaymentTransactionHajj } from '@/constant/types/PaymentTransaction'
+import {
+  PaymentTransaction,
+  PrePaymentTransactionHajj,
+} from '@/constant/types/PaymentTransaction'
 import {
   Attachment,
   ManifestPayload,
@@ -32,6 +35,7 @@ import {
   RequestFormUmrahPersonal,
 } from '@/constant/types/UmrahPersonalProps'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
+import { Badge } from '@/constant/types/NotificationProps'
 
 export async function getBanner(
   query: GetListQuery
@@ -46,7 +50,15 @@ export async function getBanner(
     throw error
   }
 }
-
+export async function getNotificationBadge(): Promise<Badge> {
+  try {
+    const response = await api.get(`/umrah/v2/notification-badge`)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching package data list:', error)
+    throw error
+  }
+}
 export async function getPackageList(
   query: GetListQuery
 ): Promise<GenericResponse<Package>> {

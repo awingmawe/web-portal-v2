@@ -11,7 +11,7 @@ const TopbarNotification: React.FC = () => {
     // State
     isExpanded,
 
-    unreadCount,
+    countBadge,
     // Refs
     containerRef,
 
@@ -29,13 +29,13 @@ const TopbarNotification: React.FC = () => {
         whileTap={{ scale: 0.95 }}
       >
         <div className="relative hidden lg:block">
-          <NotifIcon
-            size={24}
-            className="text-neutral-600 hover:text-neutral-800"
-          />
-          {unreadCount > 0 && (
-            <span className="absolute -top-3 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
-              {unreadCount}
+          <NotifIcon size={24} className="text-neutral-600 " />
+          {countBadge > 0 && (
+            <span
+              className={`absolute -top-3 -right-2 flex items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white
+            ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
+            >
+              {countBadge}
             </span>
           )}
         </div>
@@ -48,9 +48,11 @@ const TopbarNotification: React.FC = () => {
               <NotifIconBlack size={20} className="text--700" />
             </div>
           </div>
-          {unreadCount > 0 && (
-            <span className="absolute -top-2 -right-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
-              {unreadCount}
+          {countBadge > 0 && (
+            <span
+              className={`absolute -top-2 -right-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white          ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
+            >
+              {countBadge}
             </span>
           )}
         </div>

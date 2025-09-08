@@ -4,10 +4,15 @@ import { ReactNode } from 'react'
 export interface Notification {
   id: number
   category: string
-  title: string
-  description: string
-  time: string
-  isRead: boolean
+  notification: {
+    body: string
+    title: string
+  }
+  platformRoutes: {
+    web: string
+  }
+  createdAt: string
+  readAt: string
   type: 'warning' | 'promo' | 'info'
 }
 
@@ -20,4 +25,11 @@ export interface Category {
 export interface Tab {
   id: 'semua' | 'belum-dibaca' | 'baca-semua'
   label: string
+}
+
+export interface Badge {
+  checkAvailabilities: number
+  needToBePaid: number
+  onGoingTransaction: number
+  waitingOffers: number
 }
