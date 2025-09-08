@@ -4,10 +4,9 @@ import { ReactNode } from 'react'
 export interface Notification {
   id: number
   category: string
-  notification: {
-    body: string
-    title: string
-  }
+  body: string
+  title: string
+
   platformRoutes: {
     web: string
   }

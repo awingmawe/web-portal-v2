@@ -111,7 +111,7 @@ const NotificationComponent: React.FC = () => {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         className={`cursor-pointer p-4 transition-colors  ${
-                          !notification.readAt !== null ? '' : 'bg-primary-100'
+                          notification.readAt !== null ? '' : 'bg-primary-100'
                         }`}
                       >
                         <div className="flex items-start space-x-3">
@@ -129,14 +129,14 @@ const NotificationComponent: React.FC = () => {
                           <div className="min-w-0 flex-1">
                             <div className="mb-1 flex items-center justify-between">
                               <h4 className="text-m-medium break-words text-neutral-900">
-                                {notification.notification.title}
+                                {notification.title}
                               </h4>
                               <span className="text-s-regular ml-2 flex-shrink-0 text-neutral-500">
                                 {timeSince(notification.createdAt)}
                               </span>
                             </div>
                             <p className="text-s-regular text-neutral-600">
-                              {notification.notification.body}
+                              {notification.body}
                             </p>
                           </div>
                         </div>
@@ -152,7 +152,7 @@ const NotificationComponent: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     onClick={() => markAsRead(notification.id)}
                     className={`cursor-pointer p-4 transition-colors  ${
-                      !notification.readAt !== null ? '' : 'bg-primary-100'
+                      notification.readAt !== null ? '' : 'bg-primary-100'
                     }`}
                   >
                     <div className="flex items-start space-x-3">
@@ -170,14 +170,14 @@ const NotificationComponent: React.FC = () => {
                       <div className="min-w-0 flex-1">
                         <div className="mb-1 flex items-center justify-between">
                           <h4 className="text-m-medium break-words text-neutral-900">
-                            {notification.notification.title}
+                            {notification.title}
                           </h4>
                           <span className="text-s-regular ml-2 flex-shrink-0 text-neutral-500">
                             {timeSince(notification.createdAt)}
                           </span>
                         </div>
                         <p className="text-s-regular text-neutral-600">
-                          {notification.notification.body}
+                          {notification.body}
                         </p>
                       </div>
                     </div>
