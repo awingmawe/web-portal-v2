@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
+
 export const TransactionDetailMobileAction = ({
   statusTahapan,
   bookingId,
@@ -29,12 +30,92 @@ export const TransactionDetailMobileAction = ({
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
     useState(false)
 
+  const {
+    openFormRefund,
+    setOpenFormRefund,
+    openVerifikasiEmail,
+    setOpenVerifikasiEmail,
+    setSelectedBank,
+    selectedBank,
+    setAccountNumber,
+    accountNumber,
+    setAccountName,
+    accountName,
+    openSuksesRefund,
+    setOpenSuksesRefund,
+  } = useCanceled()
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
     }
   }, [])
 
+  // Status validation functions (matching TransactionCardFooter)
+  const isCanceled = () => {
+    return (
+      transaction?.status?.slug === 'canceled-by-user' ||
+      transaction?.status?.slug === 'canceled-by-travel'
+    )
+  }
+
+  const isDibatalkan = () => {
+    return statusTahapan === 'Dibatalkan'
+  }
+
+  const isRefundAvailable = () => {
+    return transaction?.isRefundAvailable === true
+  }
+
+  const isRefundInProcess = () => {
+    if (!transaction?.bookingCanceled?.disbursementUser) return false
+    return transaction.bookingCanceled.disbursementUser.disbursed === false
+  }
+
+  const isRefundCompleted = () => {
+    if (!transaction?.bookingCanceled?.disbursementUser) return false
+    return transaction.bookingCanceled.disbursementUser.disbursed === true
+  }
+
+  const isWaitingStatus = () => {
+    return (
+      statusTahapan === 'Waiting' ||
+      transaction?.status?.slug === STATUS_BOOKING.WAITING_FOR_BILL ||
+      transaction?.status?.slug === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+    )
+  }
+
+  const isWaitingHajjStatus = () => {
+    return statusTahapan === 'Waiting Hajj'
+  }
+
+  const shouldShowMainActionButtons = () => {
+    const excludedStatuses = [
+      STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH,
+      STATUS_BOOKING.WAITING_FOR_BILL,
+      STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+      'waiting-approval',
+      'waiting-down-payment',
+      'canceled-by-user',
+      'canceled-by-travel',
+      'expired',
+    ]
+    return !excludedStatuses.includes(transaction?.status.slug)
+  }
+
+  const shouldShowCancelButton = () => {
+    return isWaitingStatus()
+  }
+
+  const shouldShowHajjActions = () => {
+    return isWaitingHajjStatus()
+  }
+
+  const shouldShowRefundActions = () => {
+    return isDibatalkan()
+  }
+
+  // API functions
   const fetchPaymentStatement = useCallback(async (id: any) => {
     try {
       // Build query parameters
@@ -66,203 +147,168 @@ export const TransactionDetailMobileAction = ({
     }
   }, [])
 
-  const {
-    openFormRefund,
-    setOpenFormRefund,
-    openVerifikasiEmail,
-    setOpenVerifikasiEmail,
-    setSelectedBank,
-    selectedBank,
-    setAccountNumber,
-    accountNumber,
-    setAccountName,
-    accountName,
-    openSuksesRefund,
-    setOpenSuksesRefund,
-  } = useCanceled()
+  // Render functions
+  const renderRefundStatus = () => {
+    if (isDibatalkan() && isCanceled() && isRefundAvailable()) {
+      return (
+        <Button className="w-full py-2" onClick={() => setOpenFormRefund(true)}>
+          Proses Refund
+        </Button>
+      )
+    }
 
-  const renderActionButton = () => {
-    const isCanceled =
-      transaction?.status?.slug === 'canceled-by-user' ||
-      transaction?.status?.slug === 'canceled-by-travel'
-
-    switch (true) {
-      // Case 1: Proses Refund
-      case statusTahapan === 'Dibatalkan' &&
-        isCanceled &&
-        transaction?.isRefundAvailable === true:
-        return (
-          <Button
-            className="w-full py-2"
-            onClick={() => setOpenFormRefund(true)}
+    if (isDibatalkan() && isCanceled() && isRefundInProcess()) {
+      return (
+        <div className="flex items-center gap-2 rounded-full bg-[#FFF7DC] px-4 py-2 text-sm text-[#A17800]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 24 24"
           >
-            Proses Refund
-          </Button>
-        )
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.75 15h-1.5v-1.5h1.5V17zm0-3h-1.5V7h1.5v7z" />
+          </svg>
+          <span>
+            Permintaan refund sedang dalam proses, harap tunggu 15–30 hari kerja
+          </span>
+        </div>
+      )
+    }
 
-      // Case 2: Refund sedang diproses (disbursement belum disalurkan)
-      case statusTahapan === 'Dibatalkan' &&
-        isCanceled &&
-        transaction?.bookingCanceled?.disbursementUser !== null &&
-        transaction?.bookingCanceled?.disbursementUser?.disbursed === false:
-        return (
-          <div className="flex items-center gap-2 rounded-full bg-[#FFF7DC] px-4 py-2 text-sm text-[#A17800]">
+    if (isDibatalkan() && isCanceled() && isRefundCompleted()) {
+      return (
+        <div className="flex w-full items-center gap-2 rounded-full bg-[#C1FFE9] px-4 py-2 text-sm text-[#007C59]">
+          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#007C59]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 flex-shrink-0"
-              fill="currentColor"
+              className="h-3 w-3 text-white"
               viewBox="0 0 24 24"
+              fill="currentColor"
             >
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.75 15h-1.5v-1.5h1.5V17zm0-3h-1.5V7h1.5v7z" />
+              <path d="M9 16.17 4.83 12 3.41 13.41 9 19 21 7 19.59 5.59z" />
             </svg>
-            <span>
-              Permintaan refund sedang dalam proses, harap tunggu 15–30 hari
-              kerja
-            </span>
           </div>
-        )
-      // Case 2: Refund sedang diproses (disbursement sudah disalurkan)
-      case statusTahapan === 'Dibatalkan' &&
-        isCanceled &&
-        transaction?.bookingCanceled?.disbursementUser !== null &&
-        transaction?.bookingCanceled?.disbursementUser?.disbursed === true:
-        return (
-          <div className="flex w-full items-center gap-2 rounded-full bg-[#C1FFE9] px-4 py-2 text-sm text-[#007C59]">
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#007C59]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3 w-3 text-white"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M9 16.17 4.83 12 3.41 13.41 9 19 21 7 19.59 5.59z" />
-              </svg>
-            </div>
-            <span>
-              Dana telah berhasil di refund pada{' '}
-              {dayjs(
-                transaction?.bookingCanceled?.disbursementUser?.modifiedAt
-              ).format('DD MMMM YYYY, HH:mm')}
-            </span>
-          </div>
-        )
-
-      default:
-        return null
+          <span>
+            Dana telah berhasil di refund pada{' '}
+            {dayjs(
+              transaction?.bookingCanceled?.disbursementUser?.modifiedAt
+            ).format('DD MMMM YYYY, HH:mm')}
+          </span>
+        </div>
+      )
     }
+
+    return null
+  }
+
+  const renderPaymentButton = () => {
+    if (isLinkAja) {
+      return (
+        <Button
+          className="w-full py-2"
+          onClick={() => setOpenDrawerPaymentLinkAja(true)}
+        >
+          Bayar Pelunasan
+        </Button>
+      )
+    }
+
+    return (
+      <div className="w-full">
+        <Button
+          className="w-full py-2"
+          disabled={transaction?.isPaidOff}
+          onClick={() => {
+            fetchPaymentStatement(bookingId)
+          }}
+        >
+          Bayar Pelunasan
+        </Button>
+      </div>
+    )
+  }
+
+  const renderMainActionButtons = () => {
+    return (
+      <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
+        <DrawerBatalkan
+          bookingId={bookingId}
+          idOrganisasi={idOrganisasi}
+          id={transaction?.bookingCode}
+        >
+          <Button
+            className="!rounded-lg border-2 border-neutral-900 px-1 py-1"
+            variant="outline"
+          >
+            <MoreHorizontal className="h-5 w-5" />
+          </Button>
+        </DrawerBatalkan>
+
+        {renderPaymentButton()}
+
+        <Link href={`/manifest/${bookingId}`} className="w-full">
+          <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
+        </Link>
+      </div>
+    )
+  }
+
+  const renderCancelButton = () => {
+    return (
+      <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
+        <Link
+          href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+          target="_blank"
+          className="w-full"
+        >
+          <Button className="border-error-500 w-full py-2" variant="outline">
+            Batalkan Pesanan
+          </Button>
+        </Link>
+      </div>
+    )
+  }
+
+  const renderHajjActions = () => {
+    return (
+      <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
+        <Link
+          href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+          target="_blank"
+          className="w-full"
+        >
+          <Button className="border-error-500 w-full py-2" variant="outline">
+            Batalkan Pesanan
+          </Button>
+        </Link>
+        <TransactionActionButtonHajj transaction={transaction} />
+      </div>
+    )
+  }
+
+  const renderRefundActions = () => {
+    const refundStatus = renderRefundStatus()
+    if (!refundStatus) return null
+
+    return (
+      <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
+        {refundStatus}
+      </div>
+    )
   }
 
   return (
     <div className="hidden max-lg:block">
       {JSON.stringify(isLinkAja)}
-      {![
-        STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH,
-        STATUS_BOOKING.WAITING_FOR_BILL,
-        STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
-        'waiting-approval',
-        'waiting-down-payment',
-        'canceled-by-user',
-        'canceled-by-travel',
-        'expired',
-      ].includes(transaction?.status.slug) ? (
-        <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
-          <DrawerBatalkan
-            bookingId={bookingId}
-            idOrganisasi={idOrganisasi}
-            id={transaction?.bookingCode}
-          >
-            <Button
-              className="!rounded-lg border-2 border-neutral-900 px-1 py-1"
-              variant="outline"
-            >
-              <MoreHorizontal className="h-5 w-5" />
-            </Button>
-          </DrawerBatalkan>
 
-          {isLinkAja ? (
-            <Button
-              className="w-full py-2"
-              onClick={() => setOpenDrawerPaymentLinkAja(true)}
-            >
-              Bayar Pelunasan
-            </Button>
-          ) : (
-            <div className="w-full">
-              {transaction?.isPaidOff ? (
-                <Button
-                  className=" w-full py-2"
-                  disabled
-                  onClick={() => {
-                    fetchPaymentStatement(bookingId)
-                  }}
-                >
-                  Bayar Pelunasan
-                </Button>
-              ) : (
-                <Button
-                  className="w-full py-2"
-                  onClick={() => {
-                    fetchPaymentStatement(bookingId)
-                  }}
-                >
-                  Bayar Pelunasan
-                </Button>
-              )}
-            </div>
-          )}
-          <Link href={`/manifest/${bookingId}`} className="w-full">
-            <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
-          </Link>
-        </div>
-      ) : null}
+      {shouldShowMainActionButtons() && renderMainActionButtons()}
 
-      {(statusTahapan === 'Waiting' ||
-        transaction?.status?.slug === STATUS_BOOKING.WAITING_FOR_BILL ||
-        transaction?.status?.slug ===
-          STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) && (
-        <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
-          {/* <DrawerBatalkan
-            bookingId={bookingId}
-            idOrganisasi={idOrganisasi}
-            id={transaction?.bookingCode}
-          > */}
-          <Link
-            href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-            target="_blank"
-            className="w-full"
-          >
-            <Button className="border-error-500 w-full py-2" variant="outline">
-              Batalkan Pesanan
-            </Button>
-          </Link>
+      {shouldShowCancelButton() && renderCancelButton()}
 
-          {/* </DrawerBatalkan> */}
-        </div>
-      )}
-      {statusTahapan == 'Waiting Hajj' && (
-        <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
-          {/* <DrawerBatalkan
-            bookingId={bookingId}
-            idOrganisasi={idOrganisasi}
-            id={transaction?.bookingCode}
-          > */}
-          <Link
-            href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-            target="_blank"
-            className="w-full"
-          >
-            <Button className="border-error-500 w-full py-2" variant="outline">
-              Batalkan Pesanan
-            </Button>
-          </Link>
-          <TransactionActionButtonHajj transaction={transaction} />
-        </div>
-      )}
-      {statusTahapan == 'Dibatalkan' && (
-        <div className="fixed right-0 bottom-0 left-0 z-50 flex  h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
-          {renderActionButton()}
-        </div>
-      )}
+      {shouldShowHajjActions() && renderHajjActions()}
+
+      {shouldShowRefundActions() && renderRefundActions()}
+
       {openFormRefund && (
         <ModalFormRefund
           open={openFormRefund}
@@ -276,6 +322,7 @@ export const TransactionDetailMobileAction = ({
           accountName={accountName}
         />
       )}
+
       {openVerifikasiEmail && (
         <VerificationDialog
           open={openVerifikasiEmail}
@@ -287,12 +334,14 @@ export const TransactionDetailMobileAction = ({
           setOpenSuksesRefund={setOpenSuksesRefund}
         />
       )}
+
       {openSuksesRefund && (
         <SuksesDialog
           open={openSuksesRefund}
           onOpenChange={setOpenSuksesRefund}
         />
       )}
+
       <DrawerPaymentLinkAja
         open={openDrawerPaymentLinkAja}
         onOpenChange={setOpenDrawerPaymentLinkAja}

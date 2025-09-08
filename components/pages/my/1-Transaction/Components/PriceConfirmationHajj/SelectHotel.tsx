@@ -68,59 +68,64 @@ const TransactionRoomInfo: React.FC<TransactionRoomInfoProps> = ({
   }
 
   return (
-    <>
-      {Object?.entries(transaction?.roomInfo).map(
-        ([roomType, roomInfo]: [string, any], index: number) => {
-          if (!isValidRoomInfo(roomInfo)) return null // Skip if room is null or invalid
+    transaction?.roomInfo && (
+      <>
+        {Object.entries(transaction?.roomInfo).map(
+          ([roomType, roomInfo]: [string, any], index: number) => {
+            if (!isValidRoomInfo(roomInfo)) return null // Skip if room is null or invalid
 
-          const roomConfig = roomTypeMapping[roomType as RoomTypeString]
+            const roomConfig = roomTypeMapping[roomType as RoomTypeString]
 
-          if (!roomConfig) return null
+            if (!roomConfig) return null
 
-          return (
-            <div
-              className="mb-2 flex w-full flex-col items-start justify-between gap-2"
-              key={roomType}
-            >
-              {index === 0 && <p className="text-m-medium">Rincian Jemaah</p>}
-              <div className="flex w-full justify-between">
-                <div className="flex flex-col">
-                  <p className="text-xs-regular text-neutral-500">Tipe Kamar</p>
-                  <p className="text-s-regular text-neutral-900">
-                    {roomConfig.label}
-                  </p>
-                  <p className="text-s-regular text-neutral-500">
-                    {roomConfig.subLabel}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs-regular text-neutral-500">
-                    Harga/Jemaah
-                  </p>
-                  <p className="text-s-regular text-neutral-900">
-                    {roomInfo?.quantity} Jemaah x{' '}
-                    {formatCurrency(
-                      parseInt(roomInfo?.price),
-                      transaction?.packageSnapshot?.snapshot?.package?.currency
-                    )}
-                  </p>
+            return (
+              <div
+                className="mb-2 flex w-full flex-col items-start justify-between gap-2"
+                key={roomType}
+              >
+                {index === 0 && <p className="text-m-medium">Rincian Jemaah</p>}
+                <div className="flex w-full justify-between">
+                  <div className="flex flex-col">
+                    <p className="text-xs-regular text-neutral-500">
+                      Tipe Kamar
+                    </p>
+                    <p className="text-s-regular text-neutral-900">
+                      {roomConfig.label}
+                    </p>
+                    <p className="text-s-regular text-neutral-500">
+                      {roomConfig.subLabel}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs-regular text-neutral-500">
+                      Harga/Jemaah
+                    </p>
+                    <p className="text-s-regular text-neutral-900">
+                      {roomInfo?.quantity} Jemaah x{' '}
+                      {formatCurrency(
+                        parseInt(roomInfo?.price),
+                        transaction?.packageSnapshot?.snapshot?.package
+                          ?.currency
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        }
-      )}
-      <div className="flex w-full items-center justify-between">
-        <p className="text-s-regular">Total Jemaah</p>
-        <p className="text-s-medium ">
-          {Object.values(transaction?.roomInfo).reduce(
-            (acc: number, curr: any) => acc + (curr?.quantity || 0),
-            0
-          )}{' '}
-          Jemaah
-        </p>
-      </div>
-    </>
+            )
+          }
+        )}
+        <div className="flex w-full items-center justify-between">
+          <p className="text-s-regular">Total Jemaah</p>
+          <p className="text-s-medium ">
+            {Object.values(transaction?.roomInfo).reduce(
+              (acc: number, curr: any) => acc + (curr?.quantity || 0),
+              0
+            )}{' '}
+            Jemaah
+          </p>
+        </div>
+      </>
+    )
   )
 }
 

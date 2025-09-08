@@ -502,7 +502,17 @@ export const formatDateByPackageType = ({
   // Format departure date
   const formattedDepartureDate = (() => {
     try {
-      if (packageType === PACKAGE_TYPE.HAJJ) {
+      if (
+        variantType === PACKAGE_TYPE.HAJJ_FURODA ||
+        variantType === PACKAGE_TYPE.HAJJ_DAKHILI
+      ) {
+        return departureDate
+          ? formatInTimeZone(departureDate, 'Asia/Jakarta', 'MMM yyyy', {
+              locale: id,
+            })
+          : ''
+      }
+      if (variantType === PACKAGE_TYPE.HAJJ_SPECIAL) {
         return departureDate
           ? formatInTimeZone(departureDate, 'Asia/Jakarta', 'yyyy', {
               locale: id,

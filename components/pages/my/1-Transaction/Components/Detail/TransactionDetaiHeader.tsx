@@ -1,5 +1,5 @@
 import { TimerIcon } from '@/components/icons/timer'
-import { STATUS_BOOKING } from '@/constant/env'
+import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { ellipsis } from '@/lib/utils'
 import dayjs from 'dayjs'
@@ -11,6 +11,8 @@ interface TransactionDetaiHeaderProps {
   isPaidOff: boolean
   createdDate: string
   isCompletedManifest: boolean
+  packageType: string
+  isManifestCommitted: boolean
 }
 
 export function TransactionDetailHeader({
@@ -19,6 +21,8 @@ export function TransactionDetailHeader({
   isPaidOff,
   createdDate,
   isCompletedManifest,
+  packageType,
+  isManifestCommitted,
 }: TransactionDetaiHeaderProps) {
   const { lg } = useTailwindBreakpoint()
 
@@ -49,7 +53,11 @@ export function TransactionDetailHeader({
   ) => {
     switch (statusTahapan) {
       case 'Akan Datang':
-        if (isPaidOff && isCompletedManifest) {
+        if (
+          isPaidOff &&
+          (isCompletedManifest ||
+            (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
+        ) {
           return 'Siap Berangkat!'
         } else if (status === 'waiting-approval') {
           return 'Menunggu konfirmasi'
@@ -94,7 +102,11 @@ export function TransactionDetailHeader({
   ) => {
     switch (statusTahapan) {
       case 'Akan Datang':
-        if (isPaidOff && isCompletedManifest) {
+        if (
+          isPaidOff &&
+          (isCompletedManifest ||
+            (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
+        ) {
           return 'bg-success-100 text-success-700'
         } else if (
           status === 'waiting-approval' ||
