@@ -93,7 +93,7 @@ export default async function ArtilceDetail({ params }: any) {
     description: dataArticleDetail?.description,
     author: dataUser?.name,
     publishedAt: dataArticleDetail?.published_at,
-    tag: dataArticleDetail?.hashtags?.map((tag) => tag).join(', '),
+    tag: dataArticleDetail?.hashtags?.map((tag) => tag).join(', ') ?? '',
   }
 
   return (

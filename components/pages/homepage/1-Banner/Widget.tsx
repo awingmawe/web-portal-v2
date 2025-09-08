@@ -131,9 +131,12 @@ const SearchWidget: React.FC<SearchWidgetProps> = ({ className }) => {
                 <span className="text-s-regular text-neutral-500">
                   Masih bingung kapan?
                 </span>
-                <span className="text-s-regular text-neutral-900">
+                <Link
+                  href={`/search?type=${activeTab}`}
+                  className="text-s-regular cursor-pointer text-neutral-900"
+                >
                   Lihat Semua Paket
-                </span>
+                </Link>
                 <Link href="/search">
                   <MaximizeIcon
                     size={14}

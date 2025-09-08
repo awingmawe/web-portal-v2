@@ -1,6 +1,7 @@
 import { TimerIcon } from '@/components/icons/timer'
-import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
+import { STATUS_BOOKING } from '@/constant/env'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
 import { ellipsis } from '@/lib/utils'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
@@ -10,9 +11,9 @@ interface TransactionDetaiHeaderProps {
   status: string
   isPaidOff: boolean
   createdDate: string
-  isCompletedManifest: boolean
   packageType: string
   isManifestCommitted: boolean
+  variantType: string
 }
 
 export function TransactionDetailHeader({
@@ -20,11 +21,19 @@ export function TransactionDetailHeader({
   status,
   isPaidOff,
   createdDate,
-  isCompletedManifest,
   packageType,
   isManifestCommitted,
+  variantType,
 }: TransactionDetaiHeaderProps) {
   const { lg } = useTailwindBreakpoint()
+  const { isCompletedHajjKhusus, isCompletedHajjRegular, isCompletedUmrah } =
+    useGetStatusValidation({
+      status,
+      isManifestCommitted,
+      isPaidOff,
+      packageType,
+      variantType,
+    })
 
   const renderStatusTahapanColor = (status: string) => {
     if (status == 'Akan Datang') {
@@ -46,17 +55,13 @@ export function TransactionDetailHeader({
     }
   }
 
-  const renderStatusText = (
-    status: string,
-    isPaidOff?: boolean,
-    isCompletedManifest?: boolean
-  ) => {
+  const renderStatusText = (status: string) => {
     switch (statusTahapan) {
       case 'Akan Datang':
         if (
-          isPaidOff &&
-          (isCompletedManifest ||
-            (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
+          isCompletedHajjKhusus ||
+          isCompletedHajjRegular ||
+          isCompletedUmrah
         ) {
           return 'Siap Berangkat!'
         } else if (status === 'waiting-approval') {
@@ -94,18 +99,13 @@ export function TransactionDetailHeader({
     }
   }
 
-  const renderStatusColor = (
-    status: string,
-    statusTahapan: string,
-    isPaidOff?: boolean,
-    isCompletedManifest?: boolean
-  ) => {
+  const renderStatusColor = (status: string, statusTahapan: string) => {
     switch (statusTahapan) {
       case 'Akan Datang':
         if (
-          isPaidOff &&
-          (isCompletedManifest ||
-            (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
+          isCompletedHajjKhusus ||
+          isCompletedHajjRegular ||
+          isCompletedUmrah
         ) {
           return 'bg-success-100 text-success-700'
         } else if (
@@ -154,9 +154,9 @@ export function TransactionDetailHeader({
         )}
       </p>
       <p
-        className={`text-s-medium ${renderStatusColor(status, statusTahapan, isPaidOff, isCompletedManifest)} relative z-10 -ml-10 rounded-full px-6 py-2.5 pl-10 max-lg:py-1.5 max-lg:text-xs`}
+        className={`text-s-medium ${renderStatusColor(status, statusTahapan)} relative z-10 -ml-10 rounded-full px-6 py-2.5 pl-10 max-lg:py-1.5 max-lg:text-xs`}
       >
-        {renderStatusText(status, isPaidOff, isCompletedManifest)}
+        {renderStatusText(status)}
       </p>
     </div>
   )

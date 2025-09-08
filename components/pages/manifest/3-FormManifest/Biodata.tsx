@@ -981,6 +981,7 @@ export default function BiodataForm({
                           locale={id}
                           minYear={1890}
                           maxYear={new Date().getFullYear() + 20}
+                          allowFutureDates
                         />
                       </PopoverContent>
                     </Popover>

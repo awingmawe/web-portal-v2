@@ -1,4 +1,5 @@
-import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
+import { STATUS_BOOKING } from '@/constant/env'
+import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
 import { addHours, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 
@@ -9,29 +10,31 @@ export interface TransactionCardHeader {
   isPaidOff: boolean
   packageType: string
   modifiedAt?: string
+  variantType?: string
 }
 
 export default function TransactionCardHeader({
   status,
-  isCompletedManifest,
   isManifestCommitted,
   packageType,
   isPaidOff,
   modifiedAt,
+  variantType,
 }: TransactionCardHeader) {
-  const renderStatusColor = (
-    status: string,
-    isPaidOff?: boolean,
-    isCompletedManifest?: boolean
-  ) => {
+  const { isCompletedHajjKhusus, isCompletedHajjRegular, isCompletedUmrah } =
+    useGetStatusValidation({
+      status,
+      isManifestCommitted,
+      isPaidOff,
+      variantType,
+      packageType,
+    })
+
+  const renderStatusColor = () => {
     // if user has paid off and has completed manifest
     // or if user is booking hajj package and has commited manifest
     // then status is success
-    if (
-      isPaidOff &&
-      (isCompletedManifest ||
-        (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
-    ) {
+    if (isCompletedHajjRegular || isCompletedHajjKhusus || isCompletedUmrah) {
       return 'bg-success-100 text-success-700'
     } else if (
       status === 'waiting-approval' ||
@@ -52,19 +55,11 @@ export default function TransactionCardHeader({
     }
   }
 
-  const renderStatusText = (
-    status: string,
-    isPaidOff?: boolean,
-    isCompletedManifest?: boolean
-  ) => {
+  const renderStatusText = () => {
     // if user has paid off and has completed manifest
     // or if user is booking hajj package and has commited manifest
     // then status is success
-    if (
-      isPaidOff &&
-      (isCompletedManifest ||
-        (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
-    ) {
+    if (isCompletedHajjRegular || isCompletedHajjKhusus || isCompletedUmrah) {
       return 'Siap Berangkat!'
     } else if (status === 'waiting-approval') {
       return 'Menunggu konfirmasi'
@@ -88,10 +83,10 @@ export default function TransactionCardHeader({
 
   return (
     <div
-      className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor(status, isPaidOff, isCompletedManifest)}`}
+      className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor()}`}
     >
       <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
-        {renderStatusText(status, isPaidOff, isCompletedManifest)}
+        {renderStatusText()}
       </h3>
     </div>
   )
