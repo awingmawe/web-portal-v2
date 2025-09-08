@@ -19,7 +19,6 @@ const NotificationComponent: React.FC = () => {
     handleTabClick,
     markAsRead,
   } = useTopbarNotification()
-
   return (
     <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}
