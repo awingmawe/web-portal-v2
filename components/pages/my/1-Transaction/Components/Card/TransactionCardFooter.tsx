@@ -58,6 +58,7 @@ export interface TransactionCardFooter {
   remainingHajjPayment: number
   type: string
   paymentLink?: string
+  variantType: string
 }
 
 export default function TransactionCardFooter({
@@ -78,6 +79,7 @@ export default function TransactionCardFooter({
   remainingHajjPayment,
   type,
   paymentLink,
+  variantType,
 }: TransactionCardFooter) {
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const packageType =
@@ -159,11 +161,17 @@ export default function TransactionCardFooter({
       'expired',
       'waiting-approval',
     ]
+
+    // only for package type hajj khusus
+    const isShowManifestHajjSpecial =
+      variantType === PACKAGE_TYPE.HAJJ_SPECIAL && !isManifestCommitted
+
     return (
-      packageType === PACKAGE_TYPE.HAJJ &&
-      status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ &&
-      !isManifestCommitted &&
-      !excludedStatuses.includes(status)
+      isShowManifestHajjSpecial ||
+      (packageType === PACKAGE_TYPE.HAJJ &&
+        status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ &&
+        !isManifestCommitted &&
+        !excludedStatuses.includes(status))
     )
   }
 
@@ -510,7 +518,7 @@ export default function TransactionCardFooter({
           </Button>
         )}
 
-        {!detailOnly && (
+        {(variantType === PACKAGE_TYPE.HAJJ_SPECIAL || !detailOnly) && (
           <Fragment>
             {status === 'waiting-cancellation' ||
             status === 'expired' ? null : (

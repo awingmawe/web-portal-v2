@@ -225,7 +225,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
 
               {token && (
                 <Fragment>
-                  <TopbarNotif />
+                  <TopbarNotif token={token} />
                 </Fragment>
               )}
 
