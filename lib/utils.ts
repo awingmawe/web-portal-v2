@@ -489,7 +489,6 @@ export const getSlugByVariantPackage = (variantType: string) => {
 export const formatDateByPackageType = ({
   departureDate,
   arrivalDate,
-  packageType,
   variantType,
   waitingPeriod,
 }: {
@@ -518,14 +517,12 @@ export const formatDateByPackageType = ({
               locale: id,
             })
           : ''
-      } else if (packageType === PACKAGE_TYPE.UMRAH) {
+      } else {
         return departureDate
           ? formatInTimeZone(departureDate, 'Asia/Jakarta', 'dd MMM yyyy', {
               locale: id,
             })
           : ''
-      } else {
-        return ''
       }
     } catch (error) {
       console.error('Error formatting departureDate:', error)
@@ -536,11 +533,7 @@ export const formatDateByPackageType = ({
   // Format arrival date
   const formattedArrivalDate = (() => {
     try {
-      if (packageType === PACKAGE_TYPE.UMRAH) {
-        return arrivalDate
-          ? `- ${formatInTimeZone(arrivalDate, 'Asia/Jakarta', 'dd MMM yyyy', { locale: id })}`
-          : ''
-      } else if (variantType === PACKAGE_TYPE.HAJJ_SPECIAL) {
+      if (variantType === PACKAGE_TYPE.HAJJ_SPECIAL) {
         return waitingPeriod && departureDate
           ? `- ${formatInTimeZone(
               addYears(departureDate, Number(waitingPeriod)),
@@ -550,7 +543,9 @@ export const formatDateByPackageType = ({
             )}`
           : ''
       } else {
-        return ''
+        return arrivalDate
+          ? `- ${formatInTimeZone(arrivalDate, 'Asia/Jakarta', 'dd MMM yyyy', { locale: id })}`
+          : ''
       }
     } catch (error) {
       console.error('Error formatting arrivalDate:', error)
