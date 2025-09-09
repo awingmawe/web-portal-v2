@@ -268,10 +268,13 @@ export async function getPaymentTransaction(
 }
 
 export async function getOrderPayment(
-  bookingId: string
+  bookingId: string,
+  token?: string
 ): Promise<PaymentTransaction> {
   try {
-    const response = await apiWithAuth.get(
+    const client = token ? createServerApiClient(token) : apiWithAuth
+
+    const response = await client.get(
       `/umrah/v1/booking/${bookingId}/order-payment`
     )
     return response.data

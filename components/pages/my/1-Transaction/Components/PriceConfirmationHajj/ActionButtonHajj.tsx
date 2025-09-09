@@ -14,7 +14,13 @@ import React, { useEffect } from 'react'
 
 type RoomTypeString = 'double' | 'triple' | 'quad'
 
-const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
+const TransactionActionButtonHajj = ({
+  transaction,
+  textTitle = 'Bayar',
+}: {
+  transaction: any
+  textTitle?: string
+}) => {
   const roomTypeMapping: Record<
     RoomTypeString,
     { label: string; type: string; subLabel: string }
@@ -73,6 +79,7 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
           },
           onClose: () => {
             setPreBookingLoading(false)
+            window.location.reload()
           },
         })
       }
@@ -139,8 +146,8 @@ const TransactionActionButtonHajj = ({ transaction }: { transaction: any }) => {
       isOpen={isOpenTransaction}
       setIsOpen={setIsOpenTransaction}
       trigger={
-        <Button className="w-full px-8 py-3 max-lg:py-2">
-          <span className="font-medium">Bayar</span>
+        <Button className="w-full px-8 py-3 max-lg:px-5 max-lg:py-2">
+          <span className="font-medium">{textTitle}</span>
         </Button>
       }
       title={

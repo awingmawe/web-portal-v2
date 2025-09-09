@@ -6,7 +6,7 @@ import TransactionActionButtonHajj from '@/components/pages/my/1-Transaction/Com
 import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
 import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
-import { CALL_CENTER, STATUS_BOOKING } from '@/constant/env'
+import { CALL_CENTER, PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -19,12 +19,16 @@ export const TransactionDetailMobileAction = ({
   bookingId,
   idOrganisasi,
   transaction,
+  paymentLink,
+  paymentToken,
 }: {
   bookingCode: string
   statusTahapan: string
   bookingId: any
   idOrganisasi: any
   transaction?: any
+  paymentLink: string
+  paymentToken: string
 }) => {
   const [isLinkAja, setIsLinkAja] = useState(false)
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
@@ -79,9 +83,13 @@ export const TransactionDetailMobileAction = ({
 
   const isWaitingStatus = () => {
     return (
+      (transaction?.status?.slug === 'waiting-approval' &&
+        transaction?.packageSnapshot?.snapshot?.package?.packageType ===
+          PACKAGE_TYPE.HAJJ) ||
       statusTahapan === 'Waiting' ||
       transaction?.status?.slug === STATUS_BOOKING.WAITING_FOR_BILL ||
-      transaction?.status?.slug === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+      transaction?.status?.slug === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
+      (transaction?.isManifestCommitted && transaction?.isPaidOff)
     )
   }
 
@@ -95,16 +103,11 @@ export const TransactionDetailMobileAction = ({
       STATUS_BOOKING.WAITING_FOR_BILL,
       STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
       'waiting-approval',
-      'waiting-down-payment',
       'canceled-by-user',
       'canceled-by-travel',
       'expired',
     ]
     return !excludedStatuses.includes(transaction?.status.slug)
-  }
-
-  const shouldShowCancelButton = () => {
-    return isWaitingStatus()
   }
 
   const shouldShowHajjActions = () => {
@@ -124,7 +127,11 @@ export const TransactionDetailMobileAction = ({
         amount: response.remainingPayment,
       }
       const responseNext = await postNextPayment(id, payload)
-      window.snap.pay(responseNext?.paymentToken, {
+
+      const paymentTokenValidation = paymentToken
+        ? paymentToken
+        : responseNext?.paymentToken
+      window.snap.pay(paymentTokenValidation, {
         onSuccess: async () => {
           // router.replace('/my/transaction') // replace & refresh
           window.location.reload()
@@ -137,6 +144,7 @@ export const TransactionDetailMobileAction = ({
           console.log(error)
         },
         onClose: () => {
+          window.location.reload()
           // router.push(`/my/need-payment`)
           // Additional logic on close
         },
@@ -243,12 +251,13 @@ export const TransactionDetailMobileAction = ({
             <MoreHorizontal className="h-5 w-5" />
           </Button>
         </DrawerBatalkan>
+        {!transaction?.isPaidOff && renderPaymentButton()}
 
-        {renderPaymentButton()}
-
-        <Link href={`/manifest/${bookingId}`} className="w-full">
-          <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
-        </Link>
+        {!transaction?.isManifestCommitted && (
+          <Link href={`/manifest/${bookingId}`} className="w-full">
+            <Button className="w-full py-2">Lengkapi Data Jemaah</Button>
+          </Link>
+        )}
       </div>
     )
   }
@@ -281,7 +290,19 @@ export const TransactionDetailMobileAction = ({
             Batalkan Pesanan
           </Button>
         </Link>
-        <TransactionActionButtonHajj transaction={transaction} />
+        {paymentLink ? (
+          <Button
+            className="w-full py-2"
+            disabled={transaction?.isPaidOff}
+            onClick={() => {
+              fetchPaymentStatement(bookingId)
+            }}
+          >
+            Bayar
+          </Button>
+        ) : (
+          <TransactionActionButtonHajj transaction={transaction} />
+        )}
       </div>
     )
   }
@@ -303,7 +324,7 @@ export const TransactionDetailMobileAction = ({
 
       {shouldShowMainActionButtons() && renderMainActionButtons()}
 
-      {shouldShowCancelButton() && renderCancelButton()}
+      {isWaitingStatus() && renderCancelButton()}
 
       {shouldShowHajjActions() && renderHajjActions()}
 
