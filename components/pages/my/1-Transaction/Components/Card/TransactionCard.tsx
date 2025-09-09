@@ -383,9 +383,7 @@ export default function TransactionCard({
     transactionData.status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
     transactionData.status !== STATUS_BOOKING.WAITING_FOR_BILL
 
-  const showFooter =
-    !transactionData.noFooter ||
-    (transactionData.packageType === PACKAGE_TYPE.HAJJ && !lg)
+  const showFooter = !transactionData.noFooter
 
   // ========================= EFFECTS =========================
   const fetchPaymentTransaction = useCallback(async () => {
@@ -565,6 +563,7 @@ export default function TransactionCard({
                     remainingHajjPayment={transactionData.remainingHajjPayment}
                     currency={transactionData.currency}
                     type={type ?? ''}
+                    variantType={transactionData.variantType}
                   />
                 </CanceledProvider>
               )}

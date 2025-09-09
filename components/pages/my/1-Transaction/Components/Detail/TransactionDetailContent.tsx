@@ -274,7 +274,12 @@ export default function TransactionDetailContent({
       ) : (
         <Fragment>
           <div
-            className={`${statusTahapan !== 'Selesai' ? 'grid grid-cols-1 lg:grid-cols-[1fr_300px]' : 'grid md:grid-cols-1'} rounded-lg bg-white shadow-md max-lg:h-auto`}
+            className={`${
+              transaction?.packageSnapshot?.snapshot?.package?.variantType ===
+                PACKAGE_TYPE.HAJJ_SPECIAL || statusTahapan !== 'Selesai'
+                ? 'grid grid-cols-1 lg:grid-cols-[1fr_300px]'
+                : 'grid md:grid-cols-1'
+            } rounded-lg bg-white shadow-md max-lg:h-auto`}
           >
             <div className="scrollbar-hide max-h-[80vh] overflow-y-auto border-r border-neutral-100 py-4 max-lg:max-h-full">
               {/* Header */}
@@ -509,7 +514,9 @@ export default function TransactionDetailContent({
               )}
             </div>
             {/* Right Sidebar */}
-            {statusTahapan !== 'Selesai' && (
+            {(transaction?.packageSnapshot?.snapshot?.package?.variantType ===
+              PACKAGE_TYPE.HAJJ_SPECIAL ||
+              statusTahapan !== 'Selesai') && (
               <div className="flex flex-col gap-3 p-4 max-lg:hidden">
                 {transaction?.status.slug !== 'waiting-approval' &&
                   transaction?.status.slug !== 'waiting-down-payment' &&

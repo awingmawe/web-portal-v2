@@ -34,7 +34,7 @@ export default function TransactionCardHeader({
     // if user has paid off and has completed manifest
     // or if user is booking hajj package and has commited manifest
     // then status is success
-    if (isCompletedHajjRegular || isCompletedHajjKhusus || isCompletedUmrah) {
+    if (isCompletedHajjRegular || isCompletedUmrah) {
       return 'bg-success-100 text-success-700'
     } else if (
       status === 'waiting-approval' ||
@@ -59,7 +59,7 @@ export default function TransactionCardHeader({
     // if user has paid off and has completed manifest
     // or if user is booking hajj package and has commited manifest
     // then status is success
-    if (isCompletedHajjRegular || isCompletedHajjKhusus || isCompletedUmrah) {
+    if (isCompletedHajjRegular || isCompletedUmrah) {
       return 'Siap Berangkat!'
     } else if (status === 'waiting-approval') {
       return 'Menunggu konfirmasi'
@@ -76,6 +76,8 @@ export default function TransactionCardHeader({
       return 'Tagihan sudah diterbitkan, harap segera membayar uang muka'
     } else if (status == STATUS_BOOKING.WAITING_FOR_BILL) {
       return `Menunggu Penerbitan Tagihan. Otomatis batal pada ${modifiedAt && format(addHours(modifiedAt, 24), 'dd MMM yyyy, HH:mm', { locale: id })}`
+    } else if (isCompletedHajjKhusus) {
+      return 'Menunggu kelengkapan data jemaah'
     } else {
       return 'Menunggu kelengkapan data jemaah dan pelunasan pembayaran'
     }
