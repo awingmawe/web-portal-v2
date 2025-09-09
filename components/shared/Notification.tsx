@@ -8,9 +8,8 @@ import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
 import { isEmpty, timeSince } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import React from 'react'
 
-const NotificationComponent: React.FC = () => {
+const NotificationComponent = ({ token }: { token: string }) => {
   const {
     categories,
     tabs,
@@ -18,7 +17,7 @@ const NotificationComponent: React.FC = () => {
     notifications,
     handleTabClick,
     markAsRead,
-  } = useTopbarNotification()
+  } = useTopbarNotification({ token })
   return (
     <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}

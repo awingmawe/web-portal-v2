@@ -125,7 +125,7 @@ export default async function Home() {
         </Link>
         {token && (
           <div className="ml-4">
-            <TopbarNotif />
+            <TopbarNotif token={token} />
           </div>
         )}
       </div>

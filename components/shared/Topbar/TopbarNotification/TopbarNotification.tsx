@@ -4,9 +4,8 @@ import NotificationComponent from '@/components/shared/Notification'
 import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import React from 'react'
 
-const TopbarNotification: React.FC = () => {
+const TopbarNotification = ({ token }: { token: string }) => {
   const {
     // State
     isExpanded,
@@ -17,7 +16,7 @@ const TopbarNotification: React.FC = () => {
 
     // Handlers
     handleNotifIconClick,
-  } = useTopbarNotification()
+  } = useTopbarNotification({ token })
 
   return (
     <div ref={containerRef} className="relative">
@@ -68,7 +67,7 @@ const TopbarNotification: React.FC = () => {
             transition={{ duration: 0.2 }}
             className="absolute right-0 z-999 mt-2 w-[350px] overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-xl"
           >
-            <NotificationComponent />
+            <NotificationComponent token={token} />
           </motion.div>
         )}
       </AnimatePresence>

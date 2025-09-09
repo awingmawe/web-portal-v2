@@ -1,6 +1,8 @@
 import { metadata } from '@/app/shared-metadata'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import NotificationComponent from '@/components/shared/Notification'
+import { cookieNames } from '@/services/common/cookie'
+import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
 export async function generateMetadata() {
@@ -10,6 +12,9 @@ export async function generateMetadata() {
 }
 
 export default async function NotificationMobile() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
+
   return (
     <Fragment>
       <main className="fixed my-7.5 mt-auto mb-0 h-[100vh] w-full overflow-hidden bg-transparent">
@@ -18,7 +23,7 @@ export default async function NotificationMobile() {
           showBackButton={true}
           title="Notifikasi"
         />
-        <NotificationComponent />
+        <NotificationComponent token={token} />
       </main>
     </Fragment>
   )

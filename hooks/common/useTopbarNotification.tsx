@@ -1,5 +1,6 @@
+'use client'
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// hooks/common/useTopbarNotification.tsx
 import { MoneysIcon } from '@/components/icons/moneys'
 import { PersonalPaket } from '@/components/icons/personal-paket'
 import { PilotSeatIcon } from '@/components/icons/pilot-seat'
@@ -31,7 +32,7 @@ const tabs: Tab[] = [
   { id: 'baca-semua', label: 'Baca Semua' },
 ]
 
-export const useTopbarNotification = () => {
+export const useTopbarNotification = ({ token }: { token: string }) => {
   // State management
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [notifications, setNotifications] = useState<Notification[]>()
@@ -79,7 +80,7 @@ export const useTopbarNotification = () => {
         page,
         ...(activeTab !== 'semua' ? { readAt: 'isNull' } : {}),
       }
-      const res = await getListNotif(filter)
+      const res = await getListNotif(filter, token)
       setNotifications(res)
     } catch (error) {
       console.error(error)
@@ -87,7 +88,7 @@ export const useTopbarNotification = () => {
   }
   const getDataBadge = async () => {
     try {
-      const res = await getNotificationBadge()
+      const res = await getNotificationBadge(token)
       setBadge(res)
       const total =
         (res.needToBePaid ?? 0) +
@@ -114,7 +115,7 @@ export const useTopbarNotification = () => {
 
   const markAsRead = useCallback(async (notificationId: number) => {
     try {
-      await postReadNotif(notificationId)
+      await postReadNotif(notificationId, token)
       getDataList()
       getDataBadge()
     } catch (error) {
