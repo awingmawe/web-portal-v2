@@ -344,7 +344,10 @@ export default function TransactionCard({
         transaction?.packageSnapshot?.snapshot?.waitingPeriod ?? '',
       packageType: transaction?.packageSnapshot?.snapshot?.package?.packageType,
       variantType: transaction?.packageSnapshot?.snapshot?.package?.variantType,
-      currency: transaction?.packageSnapshot?.snapshot?.package?.currency,
+      currency:
+        status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+          ? 'IDR'
+          : transaction?.packageSnapshot?.snapshot?.package?.currency,
       remainingHajjPayment: transaction?.remainingHajjPayment,
       noFooter,
     }
@@ -418,6 +421,7 @@ export default function TransactionCard({
             isPaidOff={transactionData.isPaidOff}
             modifiedAt={transactionData.modifiedAt}
             packageType={transactionData.packageType}
+            variantType={transactionData.variantType}
           />
         )}
       </ConditionalLink>

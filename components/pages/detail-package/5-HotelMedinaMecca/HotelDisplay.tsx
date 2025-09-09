@@ -83,7 +83,7 @@ const HotelImage = React.memo(
   }) => (
     <div className="relative cursor-pointer" onClick={onClick}>
       {/* Show skeleton until image is loaded */}
-      {!isLoaded && (
+      {!image.src && (
         <div className="aspect-video h-auto w-full animate-pulse rounded-lg bg-neutral-200"></div>
       )}
 

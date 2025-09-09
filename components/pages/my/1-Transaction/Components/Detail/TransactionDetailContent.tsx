@@ -287,7 +287,9 @@ export default function TransactionDetailContent({
                 statusTahapan={statusTahapan}
                 status={transaction?.status.slug}
                 isPaidOff={transaction?.isPaidOff}
-                isCompletedManifest={transaction?.isCompletedManifest}
+                variantType={
+                  transaction?.packageSnapshot?.snapshot?.package?.variantType
+                }
               />
 
               {/* Transaction Info */}
