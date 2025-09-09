@@ -64,7 +64,6 @@ export default function List({
                           transaction={transaction}
                           noHeader
                           noAmountLeft
-                          detailOnly
                           noLabelNotif
                         />
                       </CanceledProvider>
@@ -112,7 +111,6 @@ export default function List({
                       statusTahapanDetail={'Dibatalkan'}
                       noHeader
                       noAmountLeft
-                      detailOnly
                       noLabelNotif
                     />
                   </CanceledProvider>

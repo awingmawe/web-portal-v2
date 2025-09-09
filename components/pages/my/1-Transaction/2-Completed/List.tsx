@@ -53,7 +53,6 @@ export default function List({
                           statusTahapanDetail={'Selesai'}
                           noHeader
                           noAmountLeft
-                          detailOnly
                           noLabelNotif
                           transaction={transaction}
                         />
@@ -91,7 +90,6 @@ export default function List({
                       statusTahapanDetail={'Selesai'}
                       noHeader
                       noAmountLeft
-                      detailOnly
                       noLabelNotif
                       transaction={transaction}
                     />

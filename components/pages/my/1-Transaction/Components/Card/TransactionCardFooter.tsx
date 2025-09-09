@@ -27,22 +27,17 @@ import {
 } from '@/constant/env'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { useMobileActionStatus } from '@/hooks/my-hooks/common/useGetStatusFooterValidation'
 import { formatCurrency } from '@/lib/utils'
-import {
-  getPaymentStatement,
-  getPaymentTransaction,
-  postNextPayment,
-} from '@/services/umrah-service'
+import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import { MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
-import { Fragment, useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useState } from 'react'
 
 export interface TransactionCardFooter {
-  detailOnly?: boolean
-  isCompletedManifest: boolean
   isManifestCommitted: boolean
   isPaidOff: boolean
   showDpButton?: boolean
@@ -57,15 +52,14 @@ export interface TransactionCardFooter {
   currency: string
   remainingHajjPayment: number
   type: string
-  paymentLink?: string
+  paymentLink: string
   variantType: string
+  paymentToken: string
 }
 
 export default function TransactionCardFooter({
-  detailOnly,
   status,
   statusTahapanDetail,
-  isCompletedManifest,
   isManifestCommitted,
   isPaidOff,
   showDpButton,
@@ -80,6 +74,7 @@ export default function TransactionCardFooter({
   type,
   paymentLink,
   variantType,
+  paymentToken,
 }: TransactionCardFooter) {
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const packageType =
@@ -87,7 +82,6 @@ export default function TransactionCardFooter({
   const { lg } = useTailwindBreakpoint()
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
-  const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
   const [snapReady, setSnapReady] = useState(false)
   const [loading, setLoading] = useState(false)
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
@@ -125,24 +119,28 @@ export default function TransactionCardFooter({
     setOpenSuksesRefund,
   } = useCanceled()
 
-  // Status validation functions
+  // -------------- For Cancelled Validation ------------
   const isCanceled = () => {
     return status === 'canceled-by-user' || status === 'canceled-by-travel'
   }
 
+  // -------------- For Dibatalkan Validation ------------
   const isDibatalkan = () => {
     return statusTahapanDetail === 'Dibatalkan'
   }
 
+  // -------------- For Refund Validation ------------
   const isRefundAvailable = () => {
     return transaction?.isRefundAvailable === true
   }
 
+  // -------------- For Refund In Process Validation ------------
   const isRefundInProcess = () => {
     if (!transaction?.bookingCanceled?.disbursementUser) return false
     return transaction.bookingCanceled.disbursementUser.disbursed === false
   }
 
+  // -------------- For Refund Complete Validation ------------
   const isRefundCompleted = () => {
     if (!transaction?.bookingCanceled?.disbursementUser) return false
     return transaction.bookingCanceled.disbursementUser.disbursed === true
@@ -150,9 +148,7 @@ export default function TransactionCardFooter({
 
   const shouldShowPelunasanButton = () => {
     const excludedStatuses = ['waiting-approval']
-    return (
-      !excludedStatuses.includes(status) && packageType !== PACKAGE_TYPE.HAJJ
-    )
+    return !excludedStatuses.includes(status)
   }
 
   const shouldShowManifestButton = () => {
@@ -160,11 +156,16 @@ export default function TransactionCardFooter({
       'waiting-cancellation',
       'expired',
       'waiting-approval',
+      STATUS_BOOKING.WAITING_FOR_BILL,
+      STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+      STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
     ]
 
     // only for package type hajj khusus
     const isShowManifestHajjSpecial =
-      variantType === PACKAGE_TYPE.HAJJ_SPECIAL && !isManifestCommitted
+      variantType === PACKAGE_TYPE.HAJJ_SPECIAL &&
+      !isManifestCommitted &&
+      !excludedStatuses.includes(status)
 
     return (
       isShowManifestHajjSpecial ||
@@ -182,6 +183,7 @@ export default function TransactionCardFooter({
       'waiting-down-payment',
       STATUS_BOOKING.WAITING_FOR_BILL,
       STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
+      STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
     ]
     return allowedStatuses.includes(status)
   }
@@ -198,10 +200,6 @@ export default function TransactionCardFooter({
     )
   }
 
-  const isWaitingForPaymentHajj = () => {
-    return status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
-  }
-
   const shouldHideInLargeScreen = () => {
     return (
       lg &&
@@ -209,19 +207,6 @@ export default function TransactionCardFooter({
         status === STATUS_BOOKING.WAITING_FOR_BILL)
     )
   }
-
-  // API functions
-  const fetcPaymentTransaction = useCallback(async () => {
-    setLoadingPaymentTransaction(true)
-    try {
-      const response = await getPaymentTransaction(bookingId)
-      setPaymentTransaction(response)
-    } catch (err) {
-      console.error('Error fetching transactions:', err)
-    } finally {
-      setLoadingPaymentTransaction(false)
-    }
-  }, [bookingId])
 
   const fetchPaymentStatement = useCallback(async (id: any) => {
     try {
@@ -252,7 +237,7 @@ export default function TransactionCardFooter({
     setLoading(true)
     try {
       if (window.snap) {
-        window.snap.pay(paymentTransaction?.paymentToken, {
+        window.snap.pay(paymentToken, {
           onSuccess: async () => {
             window.location.reload()
           },
@@ -375,102 +360,6 @@ export default function TransactionCardFooter({
     )
   }
 
-  const renderActionButton = () => {
-    // Handle refund statuses first
-    const refundStatus = renderRefundStatus()
-    if (refundStatus) return refundStatus
-
-    // Handle non-canceled statuses
-    if (!isDibatalkan()) {
-      // Case: Manifest completed but not paid off
-      if (isCompletedManifest && !isPaidOff) {
-        return (
-          <>
-            {renderPelunasanButton()}
-            <Button
-              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
-              variant="outline"
-              disabled
-            >
-              <ChecklistCircle2 />
-              Data Jemaah Lengkap
-            </Button>
-          </>
-        )
-      }
-
-      // Case: Paid off but manifest not completed and not hajj
-      if (
-        isPaidOff &&
-        !(
-          !isCompletedManifest ||
-          (packageType !== PACKAGE_TYPE.HAJJ && !isManifestCommitted)
-        )
-      ) {
-        return (
-          <>
-            {renderManifestButton()}
-            <Button
-              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
-              variant="outline"
-              disabled
-            >
-              <ChecklistCircle2 />
-              Pelunasan
-            </Button>
-          </>
-        )
-      }
-
-      // Case: Not paid off and manifest not completed
-      if (!isCompletedManifest && !isPaidOff) {
-        return (
-          <>
-            {renderManifestButton()}
-            {isLinkAja ? (
-              <Button
-                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
-                variant="outline"
-                disabled={loadingPaymentTransaction}
-                onClick={() => setOpenDrawerPaymentLinkAja(true)}
-              >
-                Bayar Pelunasan
-              </Button>
-            ) : (
-              <Button
-                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
-                variant="outline"
-                disabled={loadingPaymentTransaction}
-                onClick={() => fetchPaymentStatement(bookingId)}
-              >
-                Bayar Pelunasan
-              </Button>
-            )}
-          </>
-        )
-      }
-
-      if (
-        isPaidOff &&
-        (isCompletedManifest ||
-          (packageType === PACKAGE_TYPE.HAJJ && isManifestCommitted))
-      ) {
-        return (
-          <Button
-            className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
-            variant="outline"
-            disabled
-          >
-            <ChecklistCircle2 />
-            Data Jemaah Lengkap
-          </Button>
-        )
-      }
-    }
-
-    return null
-  }
-
   const renderCancelPopover = () => {
     return (
       <Popover>
@@ -497,9 +386,186 @@ export default function TransactionCardFooter({
     )
   }
 
+  const { actionType } = useMobileActionStatus({
+    status,
+    packageType,
+    isPaidOff,
+    isManifestCommitted,
+    isWaitingForPayment,
+    shouldShowManifestButton,
+    isDibatalkan,
+  })
+
+  const renderActionMobileButton = () => {
+    switch (actionType) {
+      case 'refund-status':
+        return renderRefundStatus()
+
+      case 'waiting-payment':
+        return (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs-medium text-neutral-500">Perlu Dibayar</p>
+              <p className="text-s-semibold text-neutral-900">
+                {formatCurrency(
+                  status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+                    ? remainingHajjPayment
+                    : paymentAmount,
+                  currency
+                )}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/my/transaction/${bookingId}`}
+                className="text-nowrap"
+              >
+                <Button
+                  variant="ghost"
+                  className="px-3 font-medium text-neutral-900"
+                >
+                  Lihat Detail
+                </Button>
+              </Link>
+
+              {packageType === PACKAGE_TYPE.UMRAH ? (
+                <Link href={paymentLink}>
+                  <Button className="px-5 py-2 font-medium text-neutral-900">
+                    Bayar Uang Muka
+                  </Button>
+                </Link>
+              ) : paymentLink ? (
+                <Link href={paymentLink ? paymentLink : ''}>
+                  <Button className="w-full px-5 py-2 font-medium text-neutral-900">
+                    Bayar Uang Muka
+                  </Button>
+                </Link>
+              ) : (
+                <TransactionActionButtonHajj transaction={transaction} />
+              )}
+            </div>
+          </div>
+        )
+
+      case 'waiting-down-payment-hajj':
+        return paymentLink ? (
+          <Link href={paymentLink ? paymentLink : ''}>
+            <Button className="w-full px-5 py-2 font-medium text-neutral-900">
+              Bayar Uang Muka
+            </Button>
+          </Link>
+        ) : (
+          <TransactionActionButtonHajj
+            transaction={transaction}
+            textTitle="Bayar Uang Muka"
+          />
+        )
+
+      case 'umrah-both-completed':
+        return (
+          <>
+            <Button
+              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+              variant="outline"
+              disabled
+            >
+              <ChecklistCircle2 />
+              Pelunasan
+            </Button>
+            <Button
+              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+              variant="outline"
+              disabled
+            >
+              <ChecklistCircle2 />
+              Data Jemaah Lengkap
+            </Button>
+          </>
+        )
+
+      case 'umrah-manifest-completed':
+        return (
+          <>
+            {renderPelunasanButton()}
+            <Button
+              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+              variant="outline"
+              disabled
+            >
+              <ChecklistCircle2 />
+              Data Jemaah Lengkap
+            </Button>
+          </>
+        )
+
+      case 'umrah-payment-completed':
+        return (
+          <>
+            {renderManifestButton()}
+            <Button
+              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+              variant="outline"
+              disabled
+            >
+              <ChecklistCircle2 />
+              Pelunasan
+            </Button>
+          </>
+        )
+
+      case 'umrah-both-incomplete':
+        return (
+          <>
+            {renderManifestButton()}
+            {isLinkAja ? (
+              <Button
+                className="border-primary-500 mt-0 w-full border-2 px-8 py-3 text-nowrap"
+                variant="outline"
+                disabled={loadingPaymentTransaction}
+                onClick={() => setOpenDrawerPaymentLinkAja(true)}
+              >
+                Bayar Pelunasan
+              </Button>
+            ) : (
+              <Button
+                className="border-primary-500 mt-3 w-full border-2 px-8 py-3 text-nowrap"
+                variant="outline"
+                disabled={loadingPaymentTransaction}
+                onClick={() => fetchPaymentStatement(bookingId)}
+              >
+                Bayar Pelunasan
+              </Button>
+            )}
+          </>
+        )
+
+      case 'manifest-button':
+        return renderManifestButton()
+
+      case 'hajj-manifest-completed':
+        return (
+          <Button
+            className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+            variant="outline"
+            disabled
+          >
+            <ChecklistCircle2 />
+            Data Jemaah Lengkap
+          </Button>
+        )
+
+      case 'hajj-manifest-incomplete':
+        return renderManifestButton()
+
+      case 'none':
+      default:
+        return null
+    }
+  }
+
   const renderDesktopActions = () => {
     return (
-      <div className="flex items-center gap-2 max-lg:hidden">
+      <>
         <Button
           className="text-s-regular mr-1 px-3 font-medium text-nowrap text-gray-900"
           variant="ghost"
@@ -518,41 +584,53 @@ export default function TransactionCardFooter({
           </Button>
         )}
 
-        {(variantType === PACKAGE_TYPE.HAJJ_SPECIAL || !detailOnly) && (
-          <Fragment>
-            {status === 'waiting-cancellation' ||
-            status === 'expired' ? null : (
-              <>
-                {isPaidOff ? (
-                  <Button
-                    variant="outline"
-                    className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
-                    disabled
-                  >
-                    <ChecklistCircle />
-                    Pelunasan
-                  </Button>
-                ) : (
-                  shouldShowPelunasanButton() && (
-                    <div>{renderPelunasanButton()}</div>
-                  )
-                )}
+        {packageType === PACKAGE_TYPE.HAJJ &&
+          (status === 'approve' && isManifestCommitted ? (
+            <Button
+              className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
+              variant="outline"
+              disabled
+            >
+              <ChecklistCircle2 />
+              Data Jemaah Lengkap
+            </Button>
+          ) : (
+            shouldShowManifestButton() && renderManifestButton()
+          ))}
 
-                {shouldShowManifestButton() && renderManifestButton()}
-                {shouldShowCancelPopover() && renderCancelPopover()}
-              </>
-            )}
-          </Fragment>
-        )}
+        {packageType === PACKAGE_TYPE.UMRAH &&
+          (status === 'waiting-cancellation' || status === 'expired' ? null : (
+            <>
+              {isPaidOff ? (
+                <>
+                  {isManifestCommitted ? null : (
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                      disabled
+                    >
+                      <ChecklistCircle />
+                      Pelunasan
+                    </Button>
+                  )}
+                </>
+              ) : (
+                shouldShowPelunasanButton() && renderPelunasanButton()
+              )}
+              {shouldShowManifestButton() && renderManifestButton()}
+            </>
+          ))}
         {shouldShowDownPaymentButton() && (
           <Fragment>
             {packageType === PACKAGE_TYPE.HAJJ ? (
-              paymentLink ? (
-                <Link href={paymentLink}>
-                  <Button className="w-full px-5 py-2 font-medium text-neutral-900">
-                    Bayar Uang Muka
-                  </Button>
-                </Link>
+              paymentToken ? (
+                <Button
+                  className="w-full px-8 py-3 font-medium text-neutral-900"
+                  disabled={loadingPaymentTransaction || loading}
+                  onClick={handleDownPaymentClick}
+                >
+                  Bayar Uang Muka
+                </Button>
               ) : (
                 <TransactionActionButtonHajj transaction={transaction} />
               )
@@ -565,83 +643,13 @@ export default function TransactionCardFooter({
                 Bayar Uang Muka
               </Button>
             )}
-            {renderCancelPopover()}
           </Fragment>
         )}
-      </div>
+
+        {shouldShowCancelPopover() && renderCancelPopover()}
+      </>
     )
   }
-
-  const renderMobileActions = () => {
-    if (isWaitingForPayment()) {
-      return (
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs-medium text-neutral-500">Perlu Dibayar</p>
-            <p className="text-s-semibold text-neutral-900">
-              {formatCurrency(
-                status === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
-                  ? remainingHajjPayment
-                  : paymentAmount,
-                currency
-              )}
-            </p>
-          </div>
-          <div>
-            {lg ? (
-              <Link href={`/my/transaction/${bookingId}`}>
-                <Button
-                  variant="ghost"
-                  className="px-3 font-medium text-neutral-900"
-                >
-                  Lihat Detail
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                variant="ghost"
-                className="px-3 font-medium text-neutral-900"
-                onClick={() => setOpen(true)}
-              >
-                Lihat Detail
-              </Button>
-            )}
-            <Link
-              href={
-                paymentTransaction
-                  ? paymentTransaction.paymentLink
-                  : paymentLink
-                    ? paymentLink
-                    : ''
-              }
-            >
-              <Button className="px-5 py-2 font-medium text-neutral-900">
-                Bayar
-              </Button>
-            </Link>
-          </div>
-        </div>
-      )
-    } else if (isWaitingForPaymentHajj()) {
-      return paymentLink ? (
-        <Link href={paymentLink ? paymentLink : ''}>
-          <Button className="w-full px-5 py-2 font-medium text-neutral-900">
-            Bayar Uang Muka
-          </Button>
-        </Link>
-      ) : (
-        <TransactionActionButtonHajj transaction={transaction} />
-      )
-    }
-
-    return <Fragment>{renderActionButton()}</Fragment>
-  }
-
-  useEffect(() => {
-    if (showDpButton) {
-      fetcPaymentTransaction()
-    }
-  }, [fetcPaymentTransaction, showDpButton])
 
   if (shouldHideInLargeScreen()) {
     return null
@@ -649,9 +657,11 @@ export default function TransactionCardFooter({
 
   return (
     <Fragment>
-      {renderDesktopActions()}
+      <div className="flex items-center gap-2 max-lg:hidden">
+        {renderDesktopActions()}
+      </div>
 
-      <div className="hidden max-lg:block">{renderMobileActions()}</div>
+      <div className="hidden max-lg:block">{renderActionMobileButton()}</div>
 
       <Script
         src={SNAP_URL}
@@ -668,6 +678,8 @@ export default function TransactionCardFooter({
           bookingId={bookingId}
           statusTahapan={statusTahapanDetail}
           setOpenBatalkan={setOpenBatalkan}
+          paymentLink={paymentLink}
+          paymentToken={paymentToken}
         />
       )}
 

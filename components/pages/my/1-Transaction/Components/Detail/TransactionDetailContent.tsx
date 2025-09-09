@@ -20,11 +20,11 @@ import {
   STATUS_BOOKING,
 } from '@/constant/env'
 import { CanceledProvider } from '@/contexts/canceled-package-context'
+import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
 import { formatCurrency, getSlugByVariantPackage } from '@/lib/utils'
 import {
   getManifestDetail,
   getPaymentStatement,
-  getPaymentTransaction,
   getTransactionDetail,
   postNextPayment,
 } from '@/services/umrah-service'
@@ -41,6 +41,8 @@ interface TransactionDetailContentProps {
   isFixedLoading: boolean
   onOpenChange?: any
   setOpenBatalkan?: (open: boolean) => void
+  paymentToken: string
+  paymentLink: string
 }
 
 type RoomType = 'double' | 'triple' | 'quad'
@@ -57,22 +59,24 @@ export default function TransactionDetailContent({
   isFixedLoading,
   bookingId,
   onOpenChange,
+  paymentToken,
+  paymentLink,
   setOpenBatalkan,
 }: TransactionDetailContentProps) {
   const [loading, setLoading] = useState(true)
   const [transaction, setTransaction] = useState<any>(null)
-  const [paymentTransaction, setPaymentTransaction] = useState<any>(null)
   const [manifest, setManifest] = useState<any>(null)
   const [isSnapInitialized, setIsSnapInitialized] = useState(false)
   const router = useRouter()
   const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
 
-  const isCompletedHajj =
-    transaction?.isPaidOff &&
-    (transaction?.isCompletedManifest ||
-      (transaction?.packageSnapshot?.snapshot?.package?.packageType ===
-        PACKAGE_TYPE.HAJJ &&
-        transaction?.isManifestCommitted))
+  const { isCompletedHajjKhusus } = useGetStatusValidation({
+    status: transaction?.status,
+    isManifestCommitted: transaction?.isManifestCommitted,
+    isPaidOff: transaction?.isPaidOff,
+    variantType: transaction?.variantType,
+    packageType: transaction?.packageType,
+  })
 
   // Initialize Snap
   useEffect(() => {
@@ -105,7 +109,6 @@ export default function TransactionDetailContent({
     try {
       // Fetch data
       const transactionDetail = await getTransactionDetail(bookingId)
-      const paymentTransaction = await getPaymentTransaction(bookingId)
       const manifest = await getManifestDetail({
         bookingId,
         page: 1,
@@ -114,7 +117,6 @@ export default function TransactionDetailContent({
 
       // Update state with response data
       setTransaction(transactionDetail)
-      setPaymentTransaction(paymentTransaction)
       setManifest(manifest)
 
       setLoading(false)
@@ -144,13 +146,16 @@ export default function TransactionDetailContent({
         transaction.status.slug == STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
       ) {
         setStatusTahapan('Waiting Hajj')
-      } else if (transaction.status.slug == 'completed' || isCompletedHajj) {
+      } else if (
+        transaction.status.slug == 'completed' ||
+        isCompletedHajjKhusus
+      ) {
         setStatusTahapan('Selesai')
       } else {
         setStatusTahapan('Dibatalkan')
       }
     }
-  }, [isCompletedHajj, transaction])
+  }, [isCompletedHajjKhusus, transaction])
 
   const handleSnapPayment = useCallback(
     (token: string) => {
@@ -219,13 +224,13 @@ export default function TransactionDetailContent({
 
     setLoading(true)
     onOpenChange()
-    if (paymentTransaction?.paymentToken) {
-      handleSnapPayment(paymentTransaction.paymentToken)
+    if (paymentToken) {
+      handleSnapPayment(paymentToken)
     } else {
       console.error('No payment token available')
       setLoading(false)
     }
-  }, [paymentTransaction, handleSnapPayment, isSnapInitialized])
+  }, [handleSnapPayment, isSnapInitialized])
   const roomTypeMapping: Record<
     RoomType,
     { label: string; type: string; subLabel: string }
@@ -416,7 +421,7 @@ export default function TransactionDetailContent({
                               </span>
                             </p>
                           </div>
-                          <div className="text-right">
+                          <div className="text-right max-lg:hidden">
                             <p className="text-[10px] text-neutral-500">
                               Jumlah Jemaah
                             </p>
@@ -458,60 +463,67 @@ export default function TransactionDetailContent({
               />
 
               {/* Manifest Data */}
-              {statusTahapan !== 'Akan Datang' && (
-                <>
-                  <Separator className="mb-4 !h-2 !bg-neutral-100" />
-                  <div className="mb-6 px-6 max-lg:px-3">
-                    <p className="mb-4 text-lg font-medium max-lg:text-xs">
-                      Data Jemaah
-                    </p>
+              {transaction.status.slug !== STATUS_BOOKING.WAITING_FOR_BILL &&
+                transaction.status.slug !==
+                  STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+                (paymentLink ||
+                  transaction.status.slug !==
+                    STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) && (
+                  <>
+                    <Separator className="mb-4 !h-2 !bg-neutral-100" />
+                    <div className="mb-6 px-6 max-lg:px-3">
+                      <p className="mb-4 text-lg font-medium max-lg:text-xs">
+                        Data Jemaah
+                      </p>
 
-                    {transaction.isCompletedManifest ? (
-                      <div className="bg-success-100 mb-3 hidden rounded-full px-3 py-2 max-lg:block">
-                        <div className="flex items-center gap-1">
-                          <ChecklistCircleActive />
-                          <p className="text-s-regular text-success-700 ">
-                            Data Lengkap
-                          </p>
+                      {transaction.isCompletedManifest ? (
+                        <div className="bg-success-100 mb-3 hidden rounded-full px-3 py-2 max-lg:block">
+                          <div className="flex items-center gap-1">
+                            <ChecklistCircleActive />
+                            <p className="text-s-regular text-success-700 ">
+                              Data Lengkap
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div>
-                        {statusTahapan !== 'Waiting' &&
-                          statusTahapan !== 'Waiting Hajj' && (
-                            <div
-                              className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
-                            >
+                      ) : (
+                        <div>
+                          {statusTahapan !== 'Waiting' &&
+                            statusTahapan !== 'Waiting Hajj' && (
                               <div
-                                className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                                className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
                               >
-                                <InfoCircleIcon />
-                                <p className="text-s-regular text-current">
-                                  {dayjs(transaction.createdAt).add(3, 'day') >
-                                  dayjs() ? (
-                                    <span className="text-current">
-                                      Lengkapi sebelum{' '}
-                                      {dayjs(transaction.createdAt)
-                                        .add(3, 'day')
-                                        .locale('id')
-                                        .format('DD MMM YYYY')}
-                                    </span>
-                                  ) : (
-                                    <span className="text-current">
-                                      Segera lengkapi manifest
-                                    </span>
-                                  )}
-                                </p>
+                                <div
+                                  className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'text-warning-700' : 'text-error-700'} flex items-center gap-1`}
+                                >
+                                  <InfoCircleIcon />
+                                  <p className="text-s-regular text-current">
+                                    {dayjs(transaction.createdAt).add(
+                                      3,
+                                      'day'
+                                    ) > dayjs() ? (
+                                      <span className="text-current">
+                                        Lengkapi sebelum{' '}
+                                        {dayjs(transaction.createdAt)
+                                          .add(3, 'day')
+                                          .locale('id')
+                                          .format('DD MMM YYYY')}
+                                      </span>
+                                    ) : (
+                                      <span className="text-current">
+                                        Segera lengkapi manifest
+                                      </span>
+                                    )}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          )}
-                      </div>
-                    )}
+                            )}
+                        </div>
+                      )}
 
-                    <TransactionDetailManifest members={manifest?.results} />
-                  </div>
-                </>
-              )}
+                      <TransactionDetailManifest members={manifest?.results} />
+                    </div>
+                  </>
+                )}
             </div>
             {/* Right Sidebar */}
             {(transaction?.packageSnapshot?.snapshot?.package?.variantType ===
@@ -646,9 +658,18 @@ export default function TransactionDetailContent({
                   </Button>
                 )}
 
-                {statusTahapan === 'Waiting Hajj' && (
-                  <TransactionActionButtonHajj transaction={transaction} />
-                )}
+                {statusTahapan === 'Waiting Hajj' &&
+                  (paymentToken || paymentLink ? (
+                    <Button
+                      className="border-primary-500 w-full border-2"
+                      disabled={!isSnapInitialized || loading}
+                      onClick={handleDirectPayment}
+                    >
+                      <span className="font-medium">Bayar</span>
+                    </Button>
+                  ) : (
+                    <TransactionActionButtonHajj transaction={transaction} />
+                  ))}
 
                 {statusTahapan !== 'Waiting Hajj' && (
                   <Link
@@ -705,6 +726,8 @@ export default function TransactionDetailContent({
       )}
       <CanceledProvider>
         <TransactionDetailMobileAction
+          paymentLink={paymentLink}
+          paymentToken={paymentToken}
           bookingCode={transaction?.bookingCode}
           bookingId={bookingId}
           statusTahapan={statusTahapan}

@@ -25,12 +25,12 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 
 // ========================= TYPES =========================
 export interface TransactionCardProps {
+  detailOnly?: boolean
   transaction: Transaction
   statusTahapan?: string
   statusTahapanDetail?: string
   noHeader?: boolean
   noAmountLeft?: boolean
-  detailOnly?: boolean
   noLabelNotif?: boolean
   showDpButton?: boolean
   fetchTransactions?: any
@@ -310,18 +310,33 @@ export default function TransactionCard({
   statusTahapanDetail = 'Akan Datang',
   noHeader,
   noAmountLeft,
-  detailOnly,
   noLabelNotif,
   showDpButton,
   fetchTransactions,
   type,
 }: TransactionCardProps) {
+  const { lg } = useTailwindBreakpoint()
+
   // ========================= EXTRACT TRANSACTION DATA =========================
   const transactionData: TransactionData = useMemo(() => {
     const status = transaction?.status?.slug
-    const noFooter =
-      status === 'waiting-approval' ||
-      (transaction?.isPaidOff && transaction?.isCompletedManifest)
+
+    const noFooterCondition = () => {
+      // Only desktop that always show footer
+      if (lg) {
+        if (
+          status === STATUS_BOOKING.WAITING_FOR_BILL ||
+          status === 'waiting-approval' ||
+          status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+        ) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    }
 
     return {
       status,
@@ -349,12 +364,11 @@ export default function TransactionCard({
           ? 'IDR'
           : transaction?.packageSnapshot?.snapshot?.package?.currency,
       remainingHajjPayment: transaction?.remainingHajjPayment,
-      noFooter,
+      noFooter: noFooterCondition(),
     }
-  }, [transaction])
+  }, [transaction, lg])
 
   // ========================= HOOKS =========================
-  const { lg } = useTailwindBreakpoint()
   const [orderPayment, setOrderPayment] = useState<any>(null)
   const [orderPaymentLoading, setOrderPaymentLoading] = useState<boolean>(
     lg ? true : false
@@ -379,7 +393,6 @@ export default function TransactionCard({
 
   const shouldFetchPayment =
     !transactionData.noFooter &&
-    lg &&
     transactionData.status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
     transactionData.status !== STATUS_BOOKING.WAITING_FOR_BILL
 
@@ -544,9 +557,7 @@ export default function TransactionCard({
               ) : (
                 <CanceledProvider>
                   <TransactionCardFooter
-                    detailOnly={detailOnly}
                     isPaidOff={transactionData.isPaidOff}
-                    isCompletedManifest={transactionData.isCompletedManifest}
                     isManifestCommitted={transactionData.isManifestCommitted}
                     showDpButton={showDpButton}
                     bookingId={transactionData.bookingId}
@@ -555,6 +566,7 @@ export default function TransactionCard({
                     statusTahapanDetail={statusTahapanDetail}
                     paymentAmount={orderPayment?.orderPayment?.paymentAmount}
                     paymentLink={orderPayment?.paymentLink}
+                    paymentToken={orderPayment?.paymentToken}
                     organizationInstanceId={
                       transactionData.organizationInstanceId
                     }
