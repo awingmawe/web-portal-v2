@@ -176,10 +176,12 @@ export async function getGalleryHomepage(
   }
 }
 
-export async function getLegalSyarat(): Promise<GenericResponse<Airline>> {
+export async function getLegalSyarat(
+  slug: string = 'syarat-dan-ketentuan'
+): Promise<GenericResponse<Legal>> {
   try {
     const response = await api.get(
-      `/public/general/v1/legal?slug:likeLower=syarat-ketentuan`
+      `/public/general/v1/legal?slug:likeLower=${slug}`
     )
     return response.data
   } catch (error) {

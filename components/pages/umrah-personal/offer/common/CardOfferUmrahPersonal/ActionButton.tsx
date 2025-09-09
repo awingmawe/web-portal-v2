@@ -1,7 +1,7 @@
-import LayoutDrawerDialog from '@/components/pages/umrah-personal/common/LayoutDrawerDialog'
 import BatalkanDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogBatalkan'
 import OfferDetailDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogDetailOffer'
 import SuccessBatalkanDialogContent from '@/components/pages/umrah-personal/offer/dialog/DialogSuccessBatalkan'
+import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import {
   LOCAL_STORAGE_DETAIL_VARIANT,
@@ -132,6 +132,7 @@ const OfferButton: React.FC<{
           discountType: 'fixed',
           discountAmount: 0,
         },
+        currency: dataOffer.currency,
       }
 
       localStorage.setItem(
@@ -144,7 +145,7 @@ const OfferButton: React.FC<{
         JSON.stringify(dataSelectedVariant)
       )
 
-      window.location.href = `/checkout`
+      window.location.href = `/checkout` // why using this to prevent caching effect to checkout page
     }
   }
   const handleExitDetailOffer = () => {

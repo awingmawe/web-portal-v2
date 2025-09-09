@@ -110,7 +110,6 @@ export function EventTrackerProvider({
   }
 
   async function pushEvent(opt: EventAttribute) {
-    console.log('Add queue push event', opt.name)
     const { name, category, topic, data = {}, backgroundProcess } = opt
     const parsedUrl = queryString.parseUrl(window.location.href)
 
@@ -156,7 +155,6 @@ export function EventTrackerProvider({
   }
 
   async function execute(payload: any, backgroundProcess?: boolean) {
-    console.log(`Push Event : ${payload.event?.name}`)
     payload.user = {
       sessionId,
       userId: profile?.id,

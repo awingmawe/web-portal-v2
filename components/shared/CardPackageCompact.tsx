@@ -73,7 +73,7 @@ export const CardPackageCompact = memo(function CardPackageCompact({
 
   const formattedArrivalDate = useMemo(() => {
     try {
-      return format(arrivalDate, 'dd MMM yyyy', { locale: id })
+      return arrivalDate && format(arrivalDate, 'dd MMM yyyy', { locale: id })
     } catch (error) {
       console.error('Error formatting arrivalDate:', error)
       return ''
@@ -91,7 +91,7 @@ export const CardPackageCompact = memo(function CardPackageCompact({
 
   const tripDuration = useMemo(() => {
     try {
-      return differenceInDays(arrivalDate, departureDate) + 1
+      return arrivalDate && differenceInDays(arrivalDate, departureDate) + 1
     } catch (error) {
       console.error('Error calculating tripDuration:', error)
       return 0
@@ -150,12 +150,14 @@ export const CardPackageCompact = memo(function CardPackageCompact({
   return (
     <div className="relative" id="card-package">
       {/* Image */}
-      {showDiscount && <BadgePromo title="PROMO 🎉" className="-top-5 z-30" />}
+      {showDiscount && (
+        <BadgePromo title="PROMO 🎉" className="-top-10 left-0 z-30" />
+      )}
       <div
         style={{
           background: 'linear-gradient(0deg, #FFFFFF 46.42%, #FFDC71 290.1%)',
         }}
-        className="relative z-10 rounded-2xl border border-neutral-100 px-5 pt-2 pb-5"
+        className="relative z-1 rounded-2xl border border-neutral-100 px-5 pt-2 pb-5"
       >
         {!isEmpty(codeCountry) && isPlus && (
           <div className="absolute top-0 right-0 flex flex-col rounded-[20px]">

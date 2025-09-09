@@ -10,7 +10,8 @@ type ManifestContextProps = {
   setManifestActive: (manifest: ManifestUser) => void
   fetchCity: (
     page: number,
-    searchQuery: string
+    searchQuery: string,
+    countryId?: any
   ) => Promise<GenericResponse<City> | null>
 }
 

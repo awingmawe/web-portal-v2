@@ -1,6 +1,7 @@
 'use client'
 
 import BookingReleasedInfo from '@/components/shared/BookingReleasedInfo'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
 import { formatCurrency } from '@/lib/utils'
@@ -8,9 +9,15 @@ import { differenceInDays } from 'date-fns'
 
 interface TitlePackageMobileProps {
   title: string
+  currency: string
+  packageType: string
 }
 
-export default function TitlePackageMobile({ title }: TitlePackageMobileProps) {
+export default function TitlePackageMobile({
+  title,
+  currency,
+  packageType,
+}: TitlePackageMobileProps) {
   const {
     isLoading,
     selectedVariant,
@@ -44,16 +51,23 @@ export default function TitlePackageMobile({ title }: TitlePackageMobileProps) {
       <h1 className="text-l-semibold break-all text-neutral-900">{title}</h1>
       {selectedVariant && (
         <>
-          <p className="text-s-regular text-neutral-600">{variantName}</p>
-          <div className="mt-1 flex items-center gap-2">
-            {hasDiscount() && (
-              <span className="text-s-regular text-neutral-500 line-through">
-                {formatCurrency(getOriginalPriceSelected())}
+          {packageType === PACKAGE_TYPE.UMRAH && (
+            <p className="text-s-regular text-neutral-600">{variantName}</p>
+          )}
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <div className="flex flex-col gap-1">
+              <p className="text-xs-medium text-neutral-500">
+                Harga Mulai Dari
+              </p>
+              <span className="text-l-semibold text-neutral-900">
+                {formatCurrency(getPriceSelected(), currency)}
               </span>
-            )}
-            <span className="text-l-semibold text-primary-500">
-              {formatCurrency(getPriceSelected())}
-            </span>
+              {hasDiscount() && (
+                <span className="text-s-regular text-neutral-500 line-through">
+                  {formatCurrency(getOriginalPriceSelected(), currency)}
+                </span>
+              )}
+            </div>
           </div>
         </>
       )}

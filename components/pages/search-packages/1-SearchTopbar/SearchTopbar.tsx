@@ -6,10 +6,14 @@ import AirlineFilter from '@/components/pages/homepage/1-Banner/SearchFilter/Air
 import AirportFilter from '@/components/pages/homepage/1-Banner/SearchFilter/AirportFilter'
 import DateFilter from '@/components/pages/homepage/1-Banner/SearchFilter/DateFilter'
 import { Button } from '@/components/ui/button'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
+import { useSearchParams } from 'next/navigation'
 import React from 'react'
 
 const SearchFilters: React.FC = () => {
+  const searchParams = useSearchParams()
+
   const { isDisabled, isLoading, handleSubmit, isLoadingSkeleton } =
     useFilterProduct()
 
@@ -17,8 +21,12 @@ const SearchFilters: React.FC = () => {
     <div className="items fixed top-18 z-20 w-full bg-white py-3 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden">
       <div className="container mx-auto flex items-center justify-between">
         {/* Departure Date Filter */}
-        <DateFilter colorIcon="primary-500" whatPage="filter_search" />
-        <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+        {searchParams.get('type') !== PACKAGE_TYPE.HAJJ && (
+          <>
+            <DateFilter colorIcon="primary-500" whatPage="filter_search" />
+            <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+          </>
+        )}
 
         {/* Airport Filter */}
         <AirportFilter colorIcon="primary-500" whatPage="filter_search" />

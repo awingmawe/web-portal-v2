@@ -20,3 +20,27 @@ export const LINKAJA_MAX_LIMIT = Number(
 export const IS_NOT_TRANSIT = ['GA', 'SV', 'JT']
 export const LOCAL_STORAGE_DETAIL_VARIANT = 'detailVariant'
 export const LOCAL_STORAGE_SELECTED_VARIANT = 'selectedVariant'
+export const FACEBOOK_DOMAIN_VERIFICATION =
+  process.env.NEXT_PUBLIC_FACEBOOK_DOMAIN_VERIFICATION
+export const LOCAL_STORAGE_KURS_OPEN_IDR = 'isKursIDRShowAgain'
+export const LOCAL_STORAGE_KURS_OPEN_USD = 'isKursUSDShowAgain'
+
+export const PACKAGE_TYPE = {
+  HAJJ_SPECIAL: 'hajj-special',
+  HAJJ_FURODA: 'hajj-furoda',
+  HAJJ_DAKHILI: 'hajj-dakhili',
+  HAJJ: 'hajj',
+  UMRAH: 'umrah',
+}
+
+export const STATUS_BOOKING = {
+  WAITING_HAJJ_CONFIRMATION: 'waiting-hajj-confirmation',
+  WAITING_FOR_BILL: 'waiting-for-bill',
+  WAITING_DOWN_PAYMENT_HAJJ: 'waiting-down-payment-hajj',
+  WAITING_DOWN_PAYMENT_UMRAH: 'waiting-down-payment',
+}
+
+export const CATEGORIES_FILTER_SEARCH = [
+  { name: 'Umroh', slug: 'umrah' },
+  { name: 'Haji', slug: 'hajj' },
+]

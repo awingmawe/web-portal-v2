@@ -8,8 +8,12 @@ import { useFilterHistory } from '@/hooks/common/useFilterHistory'
 import { format } from 'date-fns'
 import { PlaneTakeoff } from 'lucide-react'
 
-export function FilterHistory() {
-  const { filterHistory } = useFilterHistory()
+interface FilterHistoryProps {
+  packageType?: 'umrah' | 'hajj'
+}
+
+export function FilterHistory({ packageType = 'umrah' }: FilterHistoryProps) {
+  const { getHistoryByPackageType } = useFilterHistory()
   const {
     setHotelStars,
     setDateRange,
@@ -17,6 +21,9 @@ export function FilterHistory() {
     setArrivalAirport,
     setAirline,
   } = useFilterProduct()
+
+  // Get filtered history based on package type
+  const relevantHistory = getHistoryByPackageType(packageType)
 
   // Apply a filter history item
   const applyHistoryItem = (historyItem: any) => {
@@ -27,8 +34,8 @@ export function FilterHistory() {
       setHotelStars(savedFilters.hotelStars)
     }
 
-    // Apply date range if present
-    if (savedFilters.dateRange) {
+    // Apply date range only for umrah packages
+    if (packageType === 'umrah' && savedFilters.dateRange) {
       setDateRange(savedFilters.dateRange)
     }
 
@@ -59,7 +66,7 @@ export function FilterHistory() {
     return format(date, 'dd MMM yyyy')
   }
 
-  if (filterHistory.length === 0) {
+  if (relevantHistory.length === 0) {
     return null
   }
 
@@ -67,16 +74,18 @@ export function FilterHistory() {
     <div className="flex w-full flex-col gap-2">
       <div className="flex items-center gap-1">
         <SearchIconStatus />
-        <p className="text-m-semibold text-neutral-900">Terakhir Dicari</p>
+        <p className="text-m-semibold text-neutral-900">
+          Terakhir Dicari {packageType === 'hajj' ? 'Haji' : 'Umrah'}
+        </p>
       </div>
 
       {/* Horizontal scrollable container */}
       <div className="scrollbar-hide -mx-4 overflow-x-auto px-4">
         <div className="flex flex-row gap-3">
-          {filterHistory.map((historyItem) => (
+          {relevantHistory.map((historyItem) => (
             <div
               key={historyItem.id}
-              className="w-[280px] flex-shrink-0 rounded-xl border border-neutral-100 p-3"
+              className="w-[280px] flex-shrink-0 cursor-pointer rounded-xl border border-neutral-100 p-3 transition-colors hover:bg-neutral-50"
               onClick={() => applyHistoryItem(historyItem)}
             >
               {/* Hotel */}
@@ -93,19 +102,21 @@ export function FilterHistory() {
                 </span>
               </div>
 
-              {/* Date */}
-              <div className="flex items-center gap-1 py-1">
-                <Calendar3 size={16} />
-                <span className="text-s-regular truncate text-neutral-900">
-                  {historyItem.filters.dateRange?.from
-                    ? `${formatDate(historyItem.filters.dateRange.from)} → ${
-                        historyItem.filters.dateRange.to
-                          ? formatDate(historyItem.filters.dateRange.to)
-                          : 'Seluruh Tanggal'
-                      }`
-                    : 'Seluruh Tanggal'}
-                </span>
-              </div>
+              {/* Date - Only show for umrah packages */}
+              {packageType === 'umrah' && (
+                <div className="flex items-center gap-1 py-1">
+                  <Calendar3 size={16} />
+                  <span className="text-s-regular truncate text-neutral-900">
+                    {historyItem.filters.dateRange?.from
+                      ? `${formatDate(historyItem.filters.dateRange.from)} → ${
+                          historyItem.filters.dateRange.to
+                            ? formatDate(historyItem.filters.dateRange.to)
+                            : 'Seluruh Tanggal'
+                        }`
+                      : 'Seluruh Tanggal'}
+                  </span>
+                </div>
+              )}
 
               {/* Airport */}
               <div className="flex items-center gap-1 py-1">

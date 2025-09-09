@@ -8,7 +8,7 @@ import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim101 | Talangan Umroh', `Talangan Umroh`),
+    ...metadata('Muslim101 | Pembiayaan Umroh', `Pembiayaan Umroh`),
   }
 }
 export default async function SearchGeneral() {
@@ -21,7 +21,11 @@ export default async function SearchGeneral() {
       <Topbar shadow scrolled token={token} />
 
       {/* Mobile (tanpa wrapper) */}
-      <MobileTopbar variant="plainBank" showBackButton title="Talangan Umroh" />
+      <MobileTopbar
+        variant="plainBank"
+        showBackButton
+        title="Pembiayaan Umroh"
+      />
       <div className="mx-auto block lg:container lg:hidden">
         <PembiayaanPage />
       </div>

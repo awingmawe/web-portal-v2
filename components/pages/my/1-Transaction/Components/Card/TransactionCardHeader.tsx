@@ -1,22 +1,47 @@
+import { STATUS_BOOKING } from '@/constant/env'
+import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
+import { addHours, format } from 'date-fns'
+import { id } from 'date-fns/locale'
+
 export interface TransactionCardHeader {
   status: string
   isCompletedManifest: boolean
+  isManifestCommitted: boolean
   isPaidOff: boolean
+  packageType: string
+  modifiedAt?: string
+  variantType?: string
 }
 
 export default function TransactionCardHeader({
   status,
-  isCompletedManifest,
+  isManifestCommitted,
+  packageType,
   isPaidOff,
+  modifiedAt,
+  variantType,
 }: TransactionCardHeader) {
-  const renderStatusColor = (
-    status: string,
-    isPaidOff?: boolean,
-    isCompletedManifest?: boolean
-  ) => {
-    if (isPaidOff && isCompletedManifest) {
+  const { isCompletedHajjKhusus, isCompletedHajjRegular, isCompletedUmrah } =
+    useGetStatusValidation({
+      status,
+      isManifestCommitted,
+      isPaidOff,
+      variantType,
+      packageType,
+    })
+
+  const renderStatusColor = () => {
+    // if user has paid off and has completed manifest
+    // or if user is booking hajj package and has commited manifest
+    // then status is success
+    if (isCompletedHajjRegular || isCompletedHajjKhusus || isCompletedUmrah) {
       return 'bg-success-100 text-success-700'
-    } else if (status === 'waiting-approval') {
+    } else if (
+      status === 'waiting-approval' ||
+      status == STATUS_BOOKING.WAITING_FOR_BILL ||
+      status == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
+      status == STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+    ) {
       return 'bg-warning-100 text-warning-700'
     } else if (
       status == 'waiting-cancellation' ||
@@ -30,12 +55,11 @@ export default function TransactionCardHeader({
     }
   }
 
-  const renderStatusText = (
-    status: string,
-    isPaidOff?: boolean,
-    isCompletedManifest?: boolean
-  ) => {
-    if (isPaidOff && isCompletedManifest) {
+  const renderStatusText = () => {
+    // if user has paid off and has completed manifest
+    // or if user is booking hajj package and has commited manifest
+    // then status is success
+    if (isCompletedHajjRegular || isCompletedHajjKhusus || isCompletedUmrah) {
       return 'Siap Berangkat!'
     } else if (status === 'waiting-approval') {
       return 'Menunggu konfirmasi'
@@ -46,6 +70,12 @@ export default function TransactionCardHeader({
       status == 'expired'
     ) {
       return 'Dalam Proses Pembatalan'
+    } else if (status == STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) {
+      return 'Menunggu Penerbitan Tagihan'
+    } else if (status == STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) {
+      return 'Tagihan sudah diterbitkan, harap segera membayar uang muka'
+    } else if (status == STATUS_BOOKING.WAITING_FOR_BILL) {
+      return `Menunggu Penerbitan Tagihan. Otomatis batal pada ${modifiedAt && format(addHours(modifiedAt, 24), 'dd MMM yyyy, HH:mm', { locale: id })}`
     } else {
       return 'Menunggu kelengkapan data jemaah dan pelunasan pembayaran'
     }
@@ -53,10 +83,10 @@ export default function TransactionCardHeader({
 
   return (
     <div
-      className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor(status, isPaidOff, isCompletedManifest)}`}
+      className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor()}`}
     >
       <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
-        {renderStatusText(status, isPaidOff, isCompletedManifest)}
+        {renderStatusText()}
       </h3>
     </div>
   )

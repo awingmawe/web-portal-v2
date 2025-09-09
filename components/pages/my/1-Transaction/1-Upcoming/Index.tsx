@@ -10,6 +10,7 @@ import List from '@/components/pages/my/1-Transaction/1-Upcoming/List'
 import NeedPaymentLink from '@/components/pages/my/1-Transaction/1-Upcoming/NeedPaymentLink'
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import { CustomPagination } from '@/components/shared/CustomPagination'
+import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Transaction } from '@/constant/types/Transaction'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
@@ -78,13 +79,17 @@ export default function TransactionUpcoming() {
         size: 10,
         order: 'desc',
         orderBy: 'createdAt',
-        'bookingCode:likeLower': `%${searchQuery}%`,
+        'bookingCode:likeLower': searchQuery ? `%${searchQuery}%` : undefined,
       }
 
       // Add optional filters if they exist
       if (statusFilter === 'all') {
         queryParams['status.slug:in'] =
-          'waiting-cancellation,waiting-approval,approved'
+          `waiting-cancellation,waiting-approval,approved,${STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ},${STATUS_BOOKING.WAITING_FOR_BILL},${STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION}`
+      } else if (statusFilter === STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) {
+        queryParams['status.slug:in'] = STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+      } else if (statusFilter === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION) {
+        queryParams['status.slug:in'] = STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
       } else if (statusFilter === 'waiting-approval') {
         queryParams['status.slug:in'] = 'waiting-approval'
       } else if (statusFilter === 'coming-soon') {
@@ -99,7 +104,24 @@ export default function TransactionUpcoming() {
         queryParams['packageType'] = 'umrah'
       } else if (statusFilterType === 'umrah-personal') {
         queryParams['packageType'] = 'umrah-personal'
+      } else if (statusFilterType === PACKAGE_TYPE.HAJJ) {
+        queryParams['packageType'] = PACKAGE_TYPE.HAJJ
+      } else if (
+        [
+          PACKAGE_TYPE.HAJJ_DAKHILI,
+          PACKAGE_TYPE.HAJJ_FURODA,
+          PACKAGE_TYPE.HAJJ_SPECIAL,
+        ].includes(statusFilterType)
+      ) {
+        if (statusFilterType === PACKAGE_TYPE.HAJJ_DAKHILI) {
+          queryParams['variantType'] = PACKAGE_TYPE.HAJJ_DAKHILI
+        } else if (statusFilterType === PACKAGE_TYPE.HAJJ_FURODA) {
+          queryParams['variantType'] = PACKAGE_TYPE.HAJJ_FURODA
+        } else if (statusFilterType === PACKAGE_TYPE.HAJJ_SPECIAL) {
+          queryParams['variantType'] = PACKAGE_TYPE.HAJJ_SPECIAL
+        }
       }
+
       if (dateRange?.from) {
         queryParams['createdAt:gte'] = dateRange.from.toISOString()
       }
@@ -212,7 +234,7 @@ export default function TransactionUpcoming() {
         />
       )}
 
-      <NeedPaymentLink />
+      <NeedPaymentLink isMobile={lg} />
 
       {/* Error state */}
       {error && (

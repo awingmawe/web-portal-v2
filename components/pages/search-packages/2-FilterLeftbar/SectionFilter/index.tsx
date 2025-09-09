@@ -46,7 +46,7 @@ const SectionPackagesFilter: React.FC<SectionPackageFilterProps> = ({
         <SectionPackageOptions
           dataSectionPackage={dataSectionPackage}
           selectedSectionPackage={filters.section}
-          onSectionPackageChange={setSection}
+          onSectionPackageChangeAction={setSection}
           isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>

@@ -70,7 +70,7 @@ const ProgramCards: React.FC<{ className?: string }> = ({ className }) => {
     {
       id: 'umroh',
       title: 'Umroh',
-      link: '/search-mobile/umroh',
+      link: '/search-mobile/umrah',
       comingSoon: false,
       background:
         'linear-gradient(0deg, rgba(254, 189, 0, 0.20) 0%, rgba(95, 71, 0, 0.20) 100%)',
@@ -79,8 +79,8 @@ const ProgramCards: React.FC<{ className?: string }> = ({ className }) => {
     {
       id: 'haji',
       title: 'Haji',
-      link: '/haji',
-      comingSoon: true,
+      link: '/search-mobile/hajj',
+      comingSoon: false,
       background:
         'linear-gradient(0deg, rgba(0, 119, 205, 0.20) 0%, rgba(0, 23, 40, 0.20) 100%)',
       icon: <HajjIcon />,

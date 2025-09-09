@@ -47,9 +47,8 @@ export function useFetchPackage() {
         tagSlug: queryParams.tagSlug,
         minDpAmount: queryParams.minDp,
         maxDpAmount: queryParams.maxDp,
-        packageType: queryParams.packageType,
+        packageType: queryParams.type,
       }
-      console.log(apiParams)
 
       const response = await getPackageList(apiParams)
       return response

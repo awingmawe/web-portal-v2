@@ -1,52 +1,34 @@
-'use client'
-
-import Checkout from '@/components/pages/checkout/1-CheckoutPage/CheckoutPage'
-import MobileCheckoutPage from '@/components/pages/checkout/2-MobileChekoutPage/MobileCheckoutPage'
+import CheckoutPage from '@/components/pages/checkout/CheckoutPage'
 import Footer from '@/components/shared/Footer'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
-import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
-import { CheckoutProvider, useCheckout } from '@/contexts/checkout-context'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
-import Script from 'next/script'
+import { cookieNames } from '@/services/common/cookie'
+import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 
-function CheckoutContent() {
-  const { token, detailVariant, selectedVariant } = useCheckout()
-
-  if (!token || !selectedVariant || !detailVariant) {
-    return <div className="p-8 text-center text-gray-500">Loading...</div>
-  }
+export default async function CheckoutContent() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   return (
     <Fragment>
-      <div className="hidden lg:block">
-        <Topbar token={token} shadow scrolled />
-        <Checkout />
-        <Footer type="compact" />
-      </div>
-      <div className="block lg:hidden">
-        <MobileCheckoutPage />
-      </div>
-
-      <Script
-        src={SNAP_URL}
-        data-client-key={MIDTRANS_CLIENT_KEY}
-        strategy="lazyOnload"
-        onError={() => {}}
+      <MobileTopbar
+        title="Checkout"
+        variant="plain"
+        backgroundColor="bg-white"
+        showBackButton
       />
-    </Fragment>
-  )
-}
 
-export default function CheckoutGeneral() {
-  return (
-    <CheckoutProvider>
-      <CheckoutContent />
+      <Topbar token={token} shadow scrolled />
+      <CheckoutPage />
+      <Footer type="compact" className="max-lg:hidden" />
+
       <EventTrackerImpression
         nameDidMount="impression_checkout"
         nameDidUnmount="exit_checkout"
         topic={'umrah'}
         category="checkout"
       />
-    </CheckoutProvider>
+    </Fragment>
   )
 }

@@ -20,7 +20,8 @@ export function ManifestProvider({ children }: ManifestProviderProps) {
   const fetchCity = useCallback(
     async (
       page: number,
-      searchQuery: string
+      searchQuery: string,
+      countryId?: string
     ): Promise<GenericResponse<City> | null> => {
       try {
         const data = await getKota({
@@ -29,6 +30,7 @@ export function ManifestProvider({ children }: ManifestProviderProps) {
           orderBy: 'name',
           order: 'desc',
           [`name:likeLower`]: searchQuery ? `%${searchQuery}%` : undefined,
+          ...(countryId && { countryId }),
         })
         return data
       } catch (error) {

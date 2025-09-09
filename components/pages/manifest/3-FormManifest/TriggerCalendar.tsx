@@ -41,6 +41,7 @@ const TriggerCalendar = ({ field }: { field: any }) => {
           </DrawerHeader>
           <DrawerContent className="p-4">
             <CustomCalendarView
+              name="Pilih tanggal lahir"
               value={field.value ? new Date(field.value) : undefined}
               onChange={(date) =>
                 field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
@@ -78,6 +79,7 @@ const TriggerCalendar = ({ field }: { field: any }) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <CustomCalendarView
+          name="Pilih tanggal lahir"
           value={field.value ? new Date(field.value) : undefined}
           onChange={(date) =>
             field.onChange(date ? format(date, 'yyyy-MM-dd') : '')

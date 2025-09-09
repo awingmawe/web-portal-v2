@@ -50,7 +50,6 @@ export default function CheckAvailability() {
 
       // Fetch data
       const response = await getCheckListUmrah(queryParams)
-      // console.log(response)
 
       // Update state with response data
 

@@ -47,6 +47,7 @@ function AnimationScrollV2({
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       touchMultiplier: showKabah ? 1 : 0,
       infinite: false,
+      lerp: 1,
     })
 
     lenisRef.current = lenis

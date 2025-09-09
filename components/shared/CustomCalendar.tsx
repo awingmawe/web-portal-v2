@@ -14,6 +14,9 @@ type CalendarViewProps = {
   locale?: any
   minYear?: number
   maxYear?: number
+  name: string
+  // Add new prop to control navigation behavior
+  allowFutureDates?: boolean
 }
 
 export const CustomCalendarView = ({
@@ -23,6 +26,8 @@ export const CustomCalendarView = ({
   locale = id,
   minYear = 1890,
   maxYear = new Date().getFullYear(),
+  name,
+  allowFutureDates = false, // Default to false for backward compatibility
 }: CalendarViewProps) => {
   const [view, setView] = useState<'days' | 'months' | 'years'>('days')
   const [viewDate, setViewDate] = useState<Date>(value || new Date())
@@ -172,6 +177,59 @@ export const CustomCalendarView = ({
     setViewDate(new Date(newYear, 0, 1))
   }
 
+  // Improved navigation disabled logic
+  const isPrevDisabled = () => {
+    if (view === 'days') {
+      if (allowFutureDates) {
+        // For future dates (like passport expiry), disable going before current month
+        return (
+          year === currentDate.getFullYear() && month <= currentDate.getMonth()
+        )
+      } else {
+        // For past dates (like birth dates), disable going before minYear
+        return year === minYear && month === 0
+      }
+    } else if (view === 'months') {
+      if (allowFutureDates) {
+        return year <= currentDate.getFullYear()
+      } else {
+        return year <= minYear
+      }
+    } else {
+      if (allowFutureDates) {
+        return startYear <= currentDate.getFullYear()
+      } else {
+        return startYear <= minYear
+      }
+    }
+  }
+
+  const isNextDisabled = () => {
+    if (view === 'days') {
+      if (allowFutureDates) {
+        // For future dates, disable going beyond maxYear
+        return year === maxYear && month === 11
+      } else {
+        // For past dates, disable going beyond current month
+        return (
+          year === currentDate.getFullYear() && month >= currentDate.getMonth()
+        )
+      }
+    } else if (view === 'months') {
+      if (allowFutureDates) {
+        return year >= maxYear
+      } else {
+        return year >= currentDate.getFullYear()
+      }
+    } else {
+      if (allowFutureDates) {
+        return endYear >= maxYear
+      } else {
+        return endYear >= currentDate.getFullYear()
+      }
+    }
+  }
+
   // Header content based on view
   const headerContent = () => {
     if (view === 'days') {
@@ -211,7 +269,7 @@ export const CustomCalendarView = ({
       {/* Header navigation */}
       <div className="mb-5 flex items-center gap-1">
         <CalendarIconFilterMobile size={24} />
-        <p className="text-l-semibold w-full">Pilih Tanggal Kelahiran</p>
+        <p className="text-l-semibold w-full">{name}</p>
       </div>
       <div className="mb-3 flex items-center justify-between">
         {/* Previous button */}
@@ -227,11 +285,7 @@ export const CustomCalendarView = ({
               goToPrevYearRange()
             }
           }}
-          disabled={
-            (view === 'days' && year === minYear && month === 0) ||
-            (view === 'months' && year <= minYear) ||
-            (view === 'years' && startYear <= minYear)
-          }
+          disabled={isPrevDisabled()}
         >
           <ChevronLeft className="h-6 w-6" />
         </Button>
@@ -252,13 +306,7 @@ export const CustomCalendarView = ({
               goToNextYearRange()
             }
           }}
-          disabled={
-            (view === 'days' &&
-              year === currentDate.getFullYear() &&
-              month >= currentDate.getMonth()) ||
-            (view === 'months' && year >= maxYear) ||
-            (view === 'years' && endYear >= maxYear)
-          }
+          disabled={isNextDisabled()}
         >
           <ChevronRight className="h-6 w-6" />
         </Button>

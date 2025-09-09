@@ -1,13 +1,21 @@
 'use client'
 
 import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
+import { MessageQuestionIcon } from '@/components/icons/message-question'
+import { TEXT_TOOLTIP } from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { RoomType, usePackageVariant } from '@/contexts/package-variant-context'
-import { formatCurrency, isEmpty } from '@/lib/utils'
+import { cn, formatCurrency, isEmpty } from '@/lib/utils'
 import { Minus, Plus } from 'lucide-react'
-import { Fragment, useEffect, useMemo } from 'react'
+import { Fragment, useEffect } from 'react'
 
 export interface SelectHotelProps {
   isMobile?: boolean
@@ -16,10 +24,14 @@ export interface SelectHotelProps {
   defaultPackageVariantId?: number | null
   totalManifest?: number
   disabled?: boolean
+  currency?: string
   variant?: 'normal' | 'checkout'
   disabledAddOnly?: boolean
   totalQty?: number
   hideTotalPrice?: boolean
+  packageType?: string
+  className?: string
+  titleText?: string
   onChange?: (roomType: RoomType, price: number) => void
 }
 
@@ -34,7 +46,11 @@ export default function SelectHotel({
   hideTotalPrice = false,
   totalManifest,
   totalQty,
+  currency,
+  packageType,
+  titleText = 'Jumlah Jemaah Per Kamar',
   onChange,
+  className,
 }: SelectHotelProps) {
   const {
     selectedVariant,
@@ -50,6 +66,7 @@ export default function SelectHotel({
     handleBadgePromo,
     getVariantsPrice,
     getTotalQty,
+    availableRoomTypes,
   } = usePackageVariant()
 
   useEffect(() => {
@@ -75,18 +92,6 @@ export default function SelectHotel({
     setSelectedVariant,
     setSelectedVariantId,
   ])
-
-  const availableRoomTypes = useMemo(() => {
-    if (!selectedVariant) return { double: false, triple: false, quad: false }
-
-    return {
-      double:
-        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
-      triple:
-        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
-      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
-    }
-  }, [selectedVariant])
 
   const handleQuantityChange = (roomType: string, change: number) => {
     const prev = selectedRoomType || {}
@@ -117,14 +122,14 @@ export default function SelectHotel({
   const isLimitReached = totalManifest ? totalQty === totalManifest : false
 
   return (
-    <div>
+    <Fragment>
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
         {variant == 'normal' && (
-          <div className="text-s-regular mb-2 text-neutral-800 max-lg:text-sm max-lg:font-semibold">
-            Jumlah Jemaah Per Kamar
+          <div className="text-s-regular mb-2 max-lg:text-sm max-lg:font-medium">
+            {titleText}
           </div>
         )}
-        <div className="flex gap-2 max-xl:flex-col">
+        <div className={cn('flex gap-2 max-xl:flex-col', className)}>
           <Card
             className={`w-full min-w-[52px] border-1 ${
               selectedRoomType?.double
@@ -134,11 +139,11 @@ export default function SelectHotel({
                   : 'border-neutral-200 opacity-50'
             } bg-white px-1 py-3 shadow-none`}
           >
-            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
+            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-center">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
+                className={`flex max-lg:items-center ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col max-lg:flex-row max-lg:gap-2 lg:space-y-3'}`}
               >
-                <BedIcon3 className="mb-2 text-neutral-700" />
+                <BedIcon3 className="text-neutral-700 lg:mb-2" />
                 <div
                   className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
                 >
@@ -148,12 +153,16 @@ export default function SelectHotel({
                   {availableRoomTypes.double ? (
                     <div>
                       <p className="text-s-semibold text-neutral-900">
-                        {formatCurrency(getVariantsPrice('double')?.price)}
+                        {formatCurrency(
+                          getVariantsPrice('double')?.price,
+                          currency
+                        )}
                       </p>
                       {getVariantsPrice('double')?.hasDiscount && (
                         <p className="text-s-regular mt-1 text-neutral-500 line-through">
                           {formatCurrency(
-                            getVariantsPrice('double')?.originalPrice
+                            getVariantsPrice('double')?.originalPrice,
+                            currency
                           )}
                         </p>
                       )}
@@ -166,7 +175,7 @@ export default function SelectHotel({
                 </div>
               </div>
               <div
-                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px] max-lg:m-0`}
               >
                 {selectedRoomType?.double ? (
                   <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
@@ -220,11 +229,11 @@ export default function SelectHotel({
                   : 'border-neutral-200 opacity-50'
             } bg-white px-1 py-3 shadow-none`}
           >
-            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
+            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-center">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
+                className={`flex max-lg:items-center ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col max-lg:flex-row max-lg:gap-2 lg:space-y-3'}`}
               >
-                <BedIcon2 className="mb-2 text-neutral-700" />
+                <BedIcon2 className="text-neutral-700 lg:mb-2" />
                 <div
                   className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
                 >
@@ -234,12 +243,16 @@ export default function SelectHotel({
                   {availableRoomTypes.triple ? (
                     <div>
                       <p className="text-s-semibold text-neutral-900">
-                        {formatCurrency(getVariantsPrice('triple')?.price)}
+                        {formatCurrency(
+                          getVariantsPrice('triple')?.price,
+                          currency
+                        )}
                       </p>
                       {getVariantsPrice('triple')?.hasDiscount && (
                         <p className="text-s-regular mt-1 text-neutral-500 line-through">
                           {formatCurrency(
-                            getVariantsPrice('triple')?.originalPrice
+                            getVariantsPrice('triple')?.originalPrice,
+                            currency
                           )}
                         </p>
                       )}
@@ -252,7 +265,7 @@ export default function SelectHotel({
                 </div>
               </div>
               <div
-                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px] max-lg:m-0`}
               >
                 {selectedRoomType?.triple ? (
                   <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
@@ -306,11 +319,11 @@ export default function SelectHotel({
                   : 'border-neutral-200 opacity-50'
             } bg-white px-1 py-3 shadow-none`}
           >
-            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-end">
+            <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-center">
               <div
-                className={`flex  ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col space-y-3 max-lg:flex-row max-lg:gap-2'}`}
+                className={`flex max-lg:items-center ${variant == 'checkout' ? 'w-full flex-row gap-2' : 'flex-col max-lg:flex-row max-lg:gap-2 lg:space-y-3'}`}
               >
-                <BedIcon2 className="mb-2 text-neutral-700" />
+                <BedIcon2 className="text-neutral-700 lg:mb-2" />
                 <div
                   className={`space-y-1 ${variant == 'checkout' && 'flex w-full justify-between'}`}
                 >
@@ -320,12 +333,16 @@ export default function SelectHotel({
                   {availableRoomTypes.quad ? (
                     <div>
                       <p className="text-s-semibold text-neutral-900">
-                        {formatCurrency(getVariantsPrice('quad')?.price)}
+                        {formatCurrency(
+                          getVariantsPrice('quad')?.price,
+                          currency
+                        )}
                       </p>
                       {getVariantsPrice('quad')?.hasDiscount && (
                         <p className="text-s-regular mt-1 text-neutral-500 line-through">
                           {formatCurrency(
-                            getVariantsPrice('quad')?.originalPrice
+                            getVariantsPrice('quad')?.originalPrice,
+                            currency
                           )}
                         </p>
                       )}
@@ -338,7 +355,7 @@ export default function SelectHotel({
                 </div>
               </div>
               <div
-                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px]`}
+                className={`${variant == 'checkout' ? 'mt-3' : 'mt-5'} w-full max-w-[120px] max-lg:m-0`}
               >
                 {selectedRoomType?.quad ? (
                   <div className="flex h-10 w-full items-center justify-between rounded-full border-1 border-neutral-300 bg-white">
@@ -390,16 +407,38 @@ export default function SelectHotel({
       </div>
       {/* Total price */}
       {variant == 'normal' && !hideTotalPrice && (
-        <div className="mt-3 flex items-center justify-between max-lg:hidden">
-          <div className="text-m-regular text-neutral-500">Total Harga</div>
+        <div className="flex items-center justify-between max-lg:hidden">
+          <div className="text-m-regular flex items-center gap-1 text-neutral-500">
+            Total Harga
+            {packageType === PACKAGE_TYPE.HAJJ && (
+              <Tooltip>
+                <TooltipTrigger>
+                  <MessageQuestionIcon size={16} />
+                </TooltipTrigger>
+                <TooltipContent
+                  className="z-[9999] max-w-[250px] bg-white p-4"
+                  arrowColor="bg-white fill-white"
+                >
+                  <div className="flex flex-col gap-2">
+                    <p className="text-m-medium text-[#484848]">
+                      Ketentuan Harga
+                    </p>
+                    <p className="text-s-regular text-[#333]">
+                      {TEXT_TOOLTIP.PRICE}
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
           <div className="flex flex-col items-start">
             <span className="text-l-semibold text-neutral-900">
-              {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice())}
+              {isEmpty(getPrice()) ? '-' : formatCurrency(getPrice(), currency)}
             </span>
             {hasDiscount() && getOriginalPrice() > 0 && (
               <div className="flex items-center">
                 <span className="text-s-regular mr-1 text-neutral-500 line-through">
-                  {formatCurrency(getOriginalPrice())}
+                  {formatCurrency(getOriginalPrice(), currency)}
                 </span>
                 <span className="text-s-regular bg-error-500 rounded-md p-1 text-white">
                   {handleBadgePromo(
@@ -407,7 +446,8 @@ export default function SelectHotel({
                     String(
                       Number(selectedVariant?.discountAmount || 0) *
                         getTotalQty()
-                    )
+                    ),
+                    currency
                   )}
                 </span>
               </div>
@@ -415,6 +455,6 @@ export default function SelectHotel({
           </div>
         </div>
       )}
-    </div>
+    </Fragment>
   )
 }

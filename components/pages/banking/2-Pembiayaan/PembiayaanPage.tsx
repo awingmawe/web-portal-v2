@@ -151,8 +151,6 @@ const PembiayaanPage: React.FC = () => {
         providerId: 1,
       }
 
-      console.log('dataKirim', dataKirim)
-
       await updateProfile(dataProfile)
       // // // Here you would normally submit to your API
       await bankCredit(dataKirim)
@@ -292,7 +290,7 @@ const PembiayaanPage: React.FC = () => {
           <div className="relative h-70 w-full">
             <Image
               src="/images/icon-pembiayaan-mobile.svg"
-              alt="Banner Talangan"
+              alt="Banner Pembiayaan"
               width={100}
               height={100}
               className="w-full rounded-lg object-contain"
@@ -301,7 +299,7 @@ const PembiayaanPage: React.FC = () => {
 
           <div className="mt-5 mb-4">
             <h1 className="text-l-semibold text-neutral-900">
-              Program Talangan Umroh
+              Program Pembiayaan Umroh
             </h1>
           </div>
         </div>
@@ -327,7 +325,7 @@ const PembiayaanPage: React.FC = () => {
           <div className="relative mb-5 h-64 w-full px-6">
             <Image
               src="/images/image-landing.svg"
-              alt="Banner Talangan"
+              alt="Banner Pembiayaan"
               width={100}
               height={100}
               className="w-full rounded-lg object-contain"
@@ -342,7 +340,7 @@ const PembiayaanPage: React.FC = () => {
           <div className="relative mt-10 mb-3 h-50 w-full">
             <Image
               src="/images/icon-pembiayan-tab.svg"
-              alt="Banner Talangan"
+              alt="Banner Pembiayaan"
               width={100}
               height={100}
               className="w-full rounded-lg object-contain"
@@ -355,14 +353,14 @@ const PembiayaanPage: React.FC = () => {
       {screenSize === 'desktop' && (
         <div className="p-6">
           <div className="flex items-center justify-between">
-            <h1 className="heading-2-semibold">Program Talangan Umroh</h1>
+            <h1 className="heading-2-semibold">Program Pembiayaan Umroh</h1>
           </div>
         </div>
       )}
       {screenSize === 'tab' && (
         <div className="px-0 pb-6">
           <div className="flex items-center justify-between">
-            <h1 className="heading-2-semibold">Program Talangan Umroh</h1>
+            <h1 className="heading-2-semibold">Program Pembiayaan Umroh</h1>
           </div>
         </div>
       )}
@@ -394,7 +392,9 @@ const PembiayaanPage: React.FC = () => {
           </p>
           <p className="text-m-regular">
             Dengan{' '}
-            <b className="font-semibold">program Talangan Umroh Muslim101, </b>
+            <b className="font-semibold">
+              program Pembiayaan Umroh Muslim101,{' '}
+            </b>
             kami hadir membawa solusi syariah yang aman dan terpercaya.
           </p>
         </div>
@@ -444,13 +444,12 @@ const PembiayaanPage: React.FC = () => {
               : 'mt-32 mb-12 flex justify-center'
           }
         >
-          <Link href="/banking/credit/form">
-            <Button
-              className="w-full rounded-full bg-yellow-500 px-6 py-3 font-medium text-gray-800 hover:bg-yellow-600 md:w-auto md:max-w-xs"
-            >
-              Ikuti Program Talangan Sekarang
-            </Button>
-          </Link>
+          <Button
+            className="w-full rounded-full bg-yellow-500 px-6 py-3 font-medium text-gray-800 hover:bg-yellow-600 md:w-auto md:max-w-xs"
+            onClick={openForm}
+          >
+            Ikuti Program Pembiayaan Sekarang
+          </Button>
         </div>
       </div>
 
@@ -460,7 +459,7 @@ const PembiayaanPage: React.FC = () => {
           <div className="relative h-auto w-full max-w-4xl rounded-3xl bg-white shadow-lg">
             <div className="flex p-6">
               <h2 className="text-xl font-semibold">
-                Form Program Talangan Umroh
+                Form Program Pembiayaan Umroh
               </h2>
             </div>
 
@@ -583,6 +582,7 @@ const PembiayaanPage: React.FC = () => {
                 <Button
                   type="button"
                   onClick={() => {
+                    sessionStorage.removeItem('variantPaylater')
                     closeForm()
                   }}
                   className="rounded-full border border-yellow-500 bg-white px-8 py-3 text-sm font-medium text-yellow-500 hover:bg-yellow-50"

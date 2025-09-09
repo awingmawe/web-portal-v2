@@ -39,8 +39,8 @@ export const PromoDrawer: React.FC<PromoDrawerProps> = ({
       <div className="my-4 max-h-[200px] space-y-2 overflow-y-auto">
         {dataTagPackages.map((tagPackage, index) => (
           <Checkbox
-            id={`tagPackage-${tagPackage.id}`}
-            key={tagPackage.id}
+            id={`tagPackage-${index}`}
+            key={`tagPackage-${index}`}
             checked={isItemSelected(tagPackage.slug)}
             label={tagPackage.name}
             border={index !== dataTagPackages.length - 1}

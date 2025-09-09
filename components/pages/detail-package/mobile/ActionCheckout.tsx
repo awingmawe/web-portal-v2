@@ -3,14 +3,14 @@
 import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import { Button } from '@/components/ui/button'
-import { CALL_CENTER } from '@/constant/env'
+import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
 import Link from 'next/link'
-import { useEffect, useMemo } from 'react'
+import { Fragment, useEffect, useMemo } from 'react'
 
 interface ActionCheckoutProps {
   variants: PackageVariant[]
@@ -18,17 +18,24 @@ interface ActionCheckoutProps {
   organization?: OrganizationInstance
   thumbnail?: string
   token: string
+  packageType: string
+  currency: string
+  variantType: string
 }
 
 export default function ActionCheckoutMobile({
   variants,
   title,
+  packageType,
+  variantType,
   // organization,
   thumbnail,
   token,
+  currency,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
-  const { isLoading, selectedVariant, setVariants } = usePackageVariant()
+  const { isLoading, selectedVariant, setVariants, availableRoomTypes } =
+    usePackageVariant()
 
   // Initialize variants in context when component mounts
   useEffect(() => {
@@ -38,18 +45,6 @@ export default function ActionCheckoutMobile({
   }, [variants, setVariants])
 
   const phoneNumberUsed = CALL_CENTER
-
-  const availableRoomTypes = useMemo(() => {
-    if (!selectedVariant) return { double: false, triple: false, quad: false }
-
-    return {
-      double:
-        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
-      triple:
-        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
-      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
-    }
-  }, [selectedVariant])
 
   const hasAvailableRoomTypes = useMemo(() => {
     return Object.values(availableRoomTypes).some((available) => available)
@@ -84,35 +79,36 @@ export default function ActionCheckoutMobile({
 
   return (
     <div
-      className={`bg-neutral-0 fixed bottom-0 z-10 flex w-full items-center gap-1.5 border-t border-neutral-100 px-4 py-3 shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] lg:hidden ${dissolve}`}
+      className={`bg-neutral-0 fixed bottom-0 z-10 flex w-full items-center gap-1.5 border-t border-neutral-100 px-1 py-3 shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] lg:hidden ${dissolve}`}
     >
       {variants.length > 0 ? (
-        <>
+        <Fragment>
           <div
             onClick={handleWhatsAppShare}
             className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
           >
             <WhatsappIcon size={48} />
           </div>
-          <Link href={`/banking/credit`} className="w-full">
-            <Button
-              variant="outline"
-              className="border-primary-500 w-full rounded-full"
-              size="md"
-              id="btn-pay-later-mobile"
-            >
-              <p className="text-xs-semibold">Bayar Nanti</p>
-            </Button>
-          </Link>
-          {/* <Link
-            href={`/checkout?packageId=${selectedVariant?.packageId}&roomType=${selectedRoomType}`}
-            className="w-full"
-          > */}
+          {packageType === PACKAGE_TYPE.UMRAH && (
+            <Link href={`/banking/credit`} className="w-full">
+              <Button
+                variant="outline"
+                className="border-primary-500 w-full rounded-full"
+                size="md"
+                id="btn-pay-later-mobile"
+              >
+                <p className="text-xs-semibold">Bayar Nanti</p>
+              </Button>
+            </Link>
+          )}
           <CheckoutDrawerMobile
             title={title}
+            packageType={packageType}
             variants={variants}
+            currency={currency}
             image={thumbnail}
             token={token}
+            variantType={variantType}
           >
             <Button
               variant="default"
@@ -124,8 +120,7 @@ export default function ActionCheckoutMobile({
               <p className="text-xs-semibold">Checkout Sekarang</p>
             </Button>
           </CheckoutDrawerMobile>
-          {/* </Link> */}
-        </>
+        </Fragment>
       ) : (
         <Button
           className="w-full rounded-full py-3"

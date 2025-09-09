@@ -2,10 +2,7 @@ import { metadata } from '@/app/shared-metadata'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
 import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
-import {
-  PackageListEvent,
-  PackageListEvent as PackageListPlus,
-} from '@/components/pages/homepage/4-PackageList/PackageListEvent'
+import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/AnimationScrollV2'
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ArtikelSection from '@/components/pages/homepage/7-Artikel/ArtikelSection'
@@ -15,6 +12,7 @@ import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import Topbar from '@/components/shared/Topbar'
+import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
 import { getArticleList } from '@/services/article-service'
@@ -49,6 +47,7 @@ export default async function Home() {
     dataGallery,
     dataCarousel,
     dataArtikel,
+    dataHaji,
   ] = await Promise.all([
     getBanner({
       page: 1,
@@ -68,6 +67,7 @@ export default async function Home() {
       section: 'promo',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getPackageList({
       page: 1,
@@ -75,6 +75,7 @@ export default async function Home() {
       section: 'plus',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getPackageList({
       page: 1,
@@ -82,6 +83,7 @@ export default async function Home() {
       section: 'regular',
       order: 'desc',
       orderBy: 'package.createdAt',
+      packageType: 'umrah',
     }),
     getGalleryHomepage({
       page: 1,
@@ -97,23 +99,36 @@ export default async function Home() {
       page: 1,
       size: 4,
     }),
+    getPackageList({
+      page: 1,
+      size: 12,
+      order: 'desc',
+      orderBy: 'package.createdAt',
+      packageType: 'hajj',
+    }),
   ])
 
   return (
     <Fragment>
       <Topbar type="homepage" token={token} />
-      {/* Input for mobile responsive */}
-      <Link
-        href={'/search-mobile-package'}
-        className="focus-within::outline-none absolute top-3.5 left-1/2 z-9 w-[90%] -translate-x-1/2 py-1.5 outline-none focus-visible:outline-0 lg:hidden"
-      >
-        <div className="flex items-center gap-1 rounded-full border-1 border-neutral-200 bg-white px-4 py-1.5">
-          <Search size={16} className="text-neutral-300" />
-          <p className="text-m-regular text-neutral-300">
-            Cari paket, travel, hotel atau airlinesee...
-          </p>
-        </div>
-      </Link>
+      <div className="absolute top-3.5 right-0 left-0 z-999 flex items-center px-4 lg:hidden">
+        <Link
+          href={'/search-mobile-package'}
+          className="max-w-[calc(100%-60px)] flex-1 outline-none focus-within:outline-none focus-visible:outline-0"
+        >
+          <div className="flex items-center gap-1 rounded-full border-1 border-neutral-200 bg-white px-4 py-1.5">
+            <Search size={16} className="text-neutral-300" />
+            <p className="text-m-regular truncate text-neutral-300">
+              Cari paket, travel, hotel atau airlines...
+            </p>
+          </div>
+        </Link>
+        {token && (
+          <div className="ml-4">
+            <TopbarNotif />
+          </div>
+        )}
+      </div>
       <Banner />
       <main className="relative">
         <div className="container mx-auto max-xl:px-0">
@@ -133,6 +148,7 @@ export default async function Home() {
           <PackageListEvent
             dataPromo={mapProductsToCardData(dataPromo)}
             dataRegular={mapProductsToCardData(dataRegular)}
+            dataPlus={mapProductsToCardData(dataPlus)}
             eventCategory="home"
           />
         </div>
@@ -140,8 +156,8 @@ export default async function Home() {
       <main
         className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-lg:mt-0`}
       >
-        <PackageListPlus
-          dataPlus={mapProductsToCardData(dataPlus)}
+        <PackageListEvent
+          dataHaji={mapProductsToCardData(dataHaji)}
           eventCategory="home"
         />
       </main>

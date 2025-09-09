@@ -1,11 +1,9 @@
 'use client'
 
-import {
-  Package,
-  PackageVariant,
-  VariantPriceType,
-} from '@/constant/types/PackageProps'
-import { formatCurrencyIndonesia, formatDateToRangeString } from '@/lib/utils'
+import { PackageVariant, VariantPriceType } from '@/constant/types/PackageProps'
+import { formatCurrencyIndonesia } from '@/lib/utils'
+import { format } from 'date-fns'
+import { id } from 'date-fns/locale'
 import React, {
   createContext,
   ReactNode,
@@ -39,7 +37,8 @@ interface PackageVariantContextState {
   numberOfDays: number
   handleBadgePromo: (
     discountType: string,
-    amount: number | string
+    amount: number | string,
+    currency?: string
   ) => string | null
   variantsPrice: VariantPriceType[]
   getVariantsPrice: (
@@ -49,6 +48,11 @@ interface PackageVariantContextState {
   getPriceSelected: () => number
   getOriginalPriceSelected: () => number
   isEmptyRoomType: boolean
+  availableRoomTypes: {
+    double: boolean
+    triple: boolean
+    quad: boolean
+  }
 }
 
 // Initial state
@@ -76,6 +80,11 @@ const initialState: PackageVariantContextState = {
   isEmptyRoomType: false,
   getOriginalPriceSelected: () => 0,
   getPriceSelected: () => 0,
+  availableRoomTypes: {
+    double: false,
+    triple: false,
+    quad: false,
+  },
 }
 
 // Create context
@@ -98,7 +107,6 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
   initialSelectedVariant = null,
   initialLoading = true,
 }) => {
-  const [currentPackage, setCurrentPackage] = useState<Package | null>()
   const [selectedVariant, setSelectedVariant] = useState<PackageVariant | null>(
     initialSelectedVariant
   )
@@ -137,15 +145,23 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
 
   const getPriceSelected = useCallback((): number => {
     if (!selectedVariant) return 0
-    const { priceDouble, priceTriple, priceQuad } = selectedVariant
-    return Math.min(priceDouble, priceTriple, priceQuad)
+    const prices = [
+      selectedVariant.priceDouble,
+      selectedVariant.priceTriple,
+      selectedVariant.priceQuad,
+    ].filter((price) => price != 0)
+
+    return Math.min(...prices)
   }, [selectedVariant])
 
   const getOriginalPriceSelected = useCallback((): number => {
     if (!selectedVariant) return 0
-    const { originalPriceDouble, originalPriceTriple, originalPriceQuad } =
-      selectedVariant
-    return Math.min(originalPriceDouble, originalPriceTriple, originalPriceQuad)
+    const originalPrices = [
+      selectedVariant.originalPriceDouble,
+      selectedVariant.originalPriceTriple,
+      selectedVariant.originalPriceQuad,
+    ].filter((price) => price != 0)
+    return Math.min(...originalPrices)
   }, [selectedVariant])
 
   // Helper function to get original price based on selected variant and room type
@@ -253,10 +269,10 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
 
   // Format departure and arrival dates for display
   const formattedDeparture = selectedVariant?.departureDate
-    ? formatDateToRangeString(new Date(selectedVariant.departureDate))
+    ? format(selectedVariant.departureDate, 'd MMMM yyyy', { locale: id })
     : '-'
   const formattedArrival = selectedVariant?.arrivalDate
-    ? formatDateToRangeString(new Date(selectedVariant.arrivalDate))
+    ? format(selectedVariant.arrivalDate, 'd MMMM yyyy', { locale: id })
     : '-'
   const numberOfDays = selectedVariant?.tripDuration
     ? selectedVariant?.tripDuration
@@ -267,15 +283,20 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
             (1000 * 60 * 60 * 24)
         ) + 1
       : 0
-  const handleBadgePromo = (discountType: string, amount: number | string) => {
+  const handleBadgePromo = (
+    discountType: string,
+    amount: number | string,
+    currency?: string
+  ) => {
     if (discountType === 'percentage') {
       return `${amount}%`
     } else if (discountType === 'nominal') {
-      return `${formatCurrencyIndonesia(amount as number)}`
+      return `${formatCurrencyIndonesia(amount as number, 1, currency)}`
     }
     return null
   }
 
+  // Helper function to check if the selected room type from user is empty or not
   const isEmptyRoomType = useMemo(() => {
     return (
       (selectedRoomType?.double === 0 ||
@@ -286,10 +307,22 @@ export const PackageVariantProvider: React.FC<PackageVariantProviderProps> = ({
     )
   }, [selectedRoomType])
 
+  // Helper function to get original price based on selected variant and room type from backend
+  const availableRoomTypes = useMemo(() => {
+    if (!selectedVariant) return { double: false, triple: false, quad: false }
+
+    return {
+      double:
+        selectedVariant.priceDouble !== null && selectedVariant.priceDouble > 0,
+      triple:
+        selectedVariant.priceTriple !== null && selectedVariant.priceTriple > 0,
+      quad: selectedVariant.priceQuad !== null && selectedVariant.priceQuad > 0,
+    }
+  }, [selectedVariant])
+
   // Context value
   const value = {
-    currentPackage,
-    setCurrentPackage,
+    availableRoomTypes,
     selectedVariant,
     selectedVariantId,
     variants,

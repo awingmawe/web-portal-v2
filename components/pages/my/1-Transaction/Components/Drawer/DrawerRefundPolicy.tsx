@@ -43,7 +43,6 @@ const DrawerRefundPolicy = React.memo(
           bookingId: bookingId,
           reason: description === '' ? reason : description,
         }
-        // console.log(payload)
         await getPostCanceled(payload)
         setOpen(false) // tutup drawer refund
         setDescription('')
