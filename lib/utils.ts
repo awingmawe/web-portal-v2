@@ -563,3 +563,15 @@ export const formatDateByPackageType = ({
     formattedArrivalDate,
   }
 }
+
+export function timeSince(createdAt: string): string {
+  const created = dayjs(createdAt)
+  const now = dayjs()
+
+  const diffMinutes = now.diff(created, 'minute')
+  const diffHours = now.diff(created, 'hour')
+
+  if (diffMinutes < 1) return 'baru saja'
+  if (diffMinutes < 60) return `${diffMinutes} m`
+  return `${diffHours} j`
+}

@@ -6,6 +6,7 @@ import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { ReceiptItemIcon } from '@/components/icons/receipt-item'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
+import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
 import TopbarSearch from '@/components/shared/Topbar/TopbarSearch'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -221,6 +222,12 @@ const TopbarContent = React.memo<TopbarContentProps>(
             <div className="flex items-center gap-3">
               {/* Search */}
               <TopbarSearch />
+
+              {token && (
+                <Fragment>
+                  <TopbarNotif />
+                </Fragment>
+              )}
 
               {/* Login and Profile */}
               {isEmpty(token) ? (
