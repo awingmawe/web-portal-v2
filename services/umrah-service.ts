@@ -50,9 +50,10 @@ export async function getBanner(
     throw error
   }
 }
-export async function getNotificationBadge(): Promise<Badge> {
+export async function getNotificationBadge(token: string): Promise<Badge> {
   try {
-    const response = await api.get(`/umrah/v2/notification-badge`)
+    const client = token ? createServerApiClient(token) : apiWithAuth
+    const response = await client.get(`/umrah/v2/notification-badge`)
     return response.data
   } catch (error) {
     console.error('Error fetching package data list:', error)

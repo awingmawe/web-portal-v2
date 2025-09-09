@@ -1,10 +1,11 @@
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { Notification } from '@/constant/types/NotificationProps'
-import { apiWithAuth } from '@/services/common/http'
+import { apiWithAuth, createServerApiClient } from '@/services/common/http'
 import qs from 'query-string'
 
 export async function getListNotif(
-  query: GetListQuery
+  query: GetListQuery,
+  token: string
 ): Promise<Notification[]> {
   try {
     let queryString = qs.stringify(query, { encode: false })
@@ -12,7 +13,8 @@ export async function getListNotif(
     if (query.readAt) {
       queryString = queryString.replace('readAt=isNull', 'readAt:isNull')
     }
-    const response = await apiWithAuth.get(
+    const client = token ? createServerApiClient(token) : apiWithAuth
+    const response = await client.get(
       `/notification/v1/user-notification?${queryString}`
     )
     return response.data.results
@@ -22,9 +24,13 @@ export async function getListNotif(
   }
 }
 
-export async function postReadNotif(notificationId: number): Promise<number> {
+export async function postReadNotif(
+  notificationId: number,
+  token: string
+): Promise<number> {
   try {
-    const response = await apiWithAuth.post(
+    const client = token ? createServerApiClient(token) : apiWithAuth
+    const response = await client.post(
       `/notification/v1/user-notification/${notificationId}/read`
     )
     return response.data
