@@ -428,16 +428,10 @@ export default function TransactionCardFooter({
                 </Button>
               </Link>
 
-              {packageType === PACKAGE_TYPE.UMRAH ? (
-                <Link href={paymentLink}>
-                  <Button className="px-5 py-2 font-medium text-neutral-900">
-                    Bayar Uang Muka
-                  </Button>
-                </Link>
-              ) : paymentLink ? (
+              {paymentLink ? (
                 <Link href={paymentLink ? paymentLink : ''}>
                   <Button className="w-full px-5 py-2 font-medium text-neutral-900">
-                    Bayar Uang Muka
+                    Bayar
                   </Button>
                 </Link>
               ) : (

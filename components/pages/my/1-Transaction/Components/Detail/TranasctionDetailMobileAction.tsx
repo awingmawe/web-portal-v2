@@ -86,7 +86,6 @@ export const TransactionDetailMobileAction = ({
       (transaction?.status?.slug === 'waiting-approval' &&
         transaction?.packageSnapshot?.snapshot?.package?.packageType ===
           PACKAGE_TYPE.HAJJ) ||
-      statusTahapan === 'Waiting' ||
       transaction?.status?.slug === STATUS_BOOKING.WAITING_FOR_BILL ||
       transaction?.status?.slug === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
       (transaction?.isManifestCommitted && transaction?.isPaidOff)
@@ -94,7 +93,10 @@ export const TransactionDetailMobileAction = ({
   }
 
   const isWaitingHajjStatus = () => {
-    return statusTahapan === 'Waiting Hajj'
+    return (
+      statusTahapan === 'Waiting Hajj' ||
+      transaction?.status?.slug === 'waiting-down-payment'
+    )
   }
 
   const shouldShowMainActionButtons = () => {
@@ -108,10 +110,6 @@ export const TransactionDetailMobileAction = ({
       'expired',
     ]
     return !excludedStatuses.includes(transaction?.status.slug)
-  }
-
-  const shouldShowHajjActions = () => {
-    return isWaitingHajjStatus()
   }
 
   const shouldShowRefundActions = () => {
@@ -326,7 +324,7 @@ export const TransactionDetailMobileAction = ({
 
       {isWaitingStatus() && renderCancelButton()}
 
-      {shouldShowHajjActions() && renderHajjActions()}
+      {isWaitingHajjStatus() && renderHajjActions()}
 
       {shouldShowRefundActions() && renderRefundActions()}
 
