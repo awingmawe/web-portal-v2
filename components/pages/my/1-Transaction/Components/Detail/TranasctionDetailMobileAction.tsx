@@ -318,7 +318,7 @@ export const TransactionDetailMobileAction = ({
 
   return (
     <div className="hidden max-lg:block">
-      {JSON.stringify(isLinkAja)}
+      {isLinkAja && JSON.stringify(isLinkAja)}
 
       {shouldShowMainActionButtons() && renderMainActionButtons()}
 

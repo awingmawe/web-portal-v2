@@ -21,7 +21,7 @@ import {
 } from '@/constant/env'
 import { CanceledProvider } from '@/contexts/canceled-package-context'
 import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
-import { formatCurrency, getSlugByVariantPackage } from '@/lib/utils'
+import { formatCurrency, getSlugByVariantPackage, isEmpty } from '@/lib/utils'
 import {
   getManifestDetail,
   getPaymentStatement,
@@ -463,7 +463,8 @@ export default function TransactionDetailContent({
               />
 
               {/* Manifest Data */}
-              {transaction.status.slug !== STATUS_BOOKING.WAITING_FOR_BILL &&
+              {statusTahapan !== 'Dibatalkan' &&
+                transaction.status.slug !== STATUS_BOOKING.WAITING_FOR_BILL &&
                 transaction.status.slug !==
                   STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
                 (paymentLink ||
@@ -488,7 +489,8 @@ export default function TransactionDetailContent({
                       ) : (
                         <div>
                           {statusTahapan !== 'Waiting' &&
-                            statusTahapan !== 'Waiting Hajj' && (
+                            statusTahapan !== 'Waiting Hajj' &&
+                            statusTahapan !== 'Dibatalkan' && (
                               <div
                                 className={`${dayjs(transaction.createdAt).add(3, 'day') > dayjs() ? 'bg-warning-100' : 'bg-error-100'}  mb-3 hidden rounded-full px-3 py-2 max-lg:block`}
                               >
@@ -659,7 +661,7 @@ export default function TransactionDetailContent({
                 )}
 
                 {statusTahapan === 'Waiting Hajj' &&
-                  (paymentToken || paymentLink ? (
+                  (!isEmpty(paymentToken) || !isEmpty(paymentLink) ? (
                     <Button
                       className="border-primary-500 w-full border-2"
                       disabled={!isSnapInitialized || loading}
