@@ -5,9 +5,11 @@ import { PengingatIcon } from '@/components/icons/pengingat'
 import { PromoIcon } from '@/components/icons/promo'
 import { Category, Notification, Tab } from '@/constant/types/NotificationProps'
 import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
+import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { isEmpty, timeSince } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 const NotificationComponent = ({ token }: { token: string }) => {
   const {
@@ -18,6 +20,14 @@ const NotificationComponent = ({ token }: { token: string }) => {
     handleTabClick,
     markAsRead,
   } = useTopbarNotification({ token })
+
+  const { messages } = useWebSocket(token ?? '')
+
+  useEffect(() => {
+    console.log('messages', messages)
+    console.log('token', token)
+  }, [messages, token])
+
   return (
     <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}
