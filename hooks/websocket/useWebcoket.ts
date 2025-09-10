@@ -19,7 +19,6 @@ export function useWebSocket<T = any>(token: string) {
 
     const connect = () => {
       const url = `${WEBSOCKET_URL}?token=${token}`
-      console.log('[WebSocket] connecting to', url)
 
       ws = createWebSocket(url, (msg) => {
         try {
@@ -33,24 +32,21 @@ export function useWebSocket<T = any>(token: string) {
       socketRef.current = ws
 
       ws.onopen = () => {
-        console.log('✅ [WebSocket] connected')
         setIsConnected(true)
         retries.current = 0
       }
 
       ws.onclose = () => {
-        console.warn('⚠️ [WebSocket] disconnected')
         setIsConnected(false)
         if (retries.current < MAX_RETRIES) {
           retries.current += 1
           reconnectTimeout.current = setTimeout(connect, RECONNECT_INTERVAL)
         } else {
-          console.error('❌ [WebSocket] max retries reached')
         }
       }
 
       ws.onerror = (err) => {
-        console.error('❌ [WebSocket] error:', err)
+        console.error('❌ error:', err)
         ws?.close()
       }
     }
@@ -58,7 +54,6 @@ export function useWebSocket<T = any>(token: string) {
     connect()
 
     return () => {
-      console.log('🛑 [WebSocket] cleanup')
       if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current)
       ws?.close()
     }
@@ -69,7 +64,6 @@ export function useWebSocket<T = any>(token: string) {
     if (socket?.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(data))
     } else {
-      console.warn('[WebSocket] Not connected, message skipped')
     }
   }
 
