@@ -2,8 +2,10 @@
 import { NotifIcon, NotifIconBlack } from '@/components/icons/notif'
 import NotificationComponent from '@/components/shared/Notification'
 import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
+import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
 const TopbarNotification = ({ token }: { token: string }) => {
   const {
@@ -17,6 +19,15 @@ const TopbarNotification = ({ token }: { token: string }) => {
     // Handlers
     handleNotifIconClick,
   } = useTopbarNotification({ token })
+
+  const { messages } = useWebSocket<{ type: string; content: string }>(
+    token ?? ''
+  )
+
+  useEffect(() => {
+    console.log('messages', messages)
+    console.log('token', token)
+  }, [messages, token])
 
   return (
     <div ref={containerRef} className="relative">

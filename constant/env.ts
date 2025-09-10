@@ -44,3 +44,5 @@ export const CATEGORIES_FILTER_SEARCH = [
   { name: 'Umroh', slug: 'umrah' },
   { name: 'Haji', slug: 'hajj' },
 ]
+
+export const WEBSOCKET_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL
