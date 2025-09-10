@@ -72,7 +72,8 @@ export default function TransactionDetailPayment({
         </div>
       ) : (
         <div>
-          {statusTahapan !== 'Waiting' &&
+          {statusTahapan !== 'Dibatalkan' &&
+            statusTahapan !== 'Waiting' &&
             status !== STATUS_BOOKING.WAITING_FOR_BILL &&
             status !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
             statusTahapan !== 'Waiting Hajj' && (

@@ -200,10 +200,12 @@ export async function getCheckListUmrah(
 }
 
 export async function getTransactionDetail(
-  bookingId: string
-): Promise<GenericResponse<Transaction>> {
+  bookingId: string,
+  token?: string
+): Promise<Transaction> {
   try {
-    const response = await apiWithAuth.get(`/umrah/v2/booking/${bookingId}`)
+    const client = token ? createServerApiClient(token) : apiWithAuth
+    const response = await client.get(`/umrah/v2/booking/${bookingId}`)
     return response.data
   } catch (error) {
     console.error('Error fetching transaction umrah:', error)
