@@ -568,7 +568,7 @@ export default function TransactionCardFooter({
           Lihat Detail Pesanan
         </Button>
 
-        {isCanceled() && isRefundAvailable() && (
+        {!isDibatalkan() && isCanceled() && isRefundAvailable() && (
           <Button
             variant="outline"
             className="border-primary-500 w-full rounded-full border-2 px-8 py-3 text-nowrap"
@@ -578,7 +578,8 @@ export default function TransactionCardFooter({
           </Button>
         )}
 
-        {packageType === PACKAGE_TYPE.HAJJ &&
+        {!isDibatalkan() &&
+          packageType === PACKAGE_TYPE.HAJJ &&
           (status === 'approve' && isManifestCommitted ? (
             <Button
               className="disabled mt-3 w-full border-2 border-neutral-200 px-8 py-3 font-medium text-nowrap text-neutral-200"
@@ -592,7 +593,8 @@ export default function TransactionCardFooter({
             shouldShowManifestButton() && renderManifestButton()
           ))}
 
-        {packageType === PACKAGE_TYPE.UMRAH &&
+        {!isDibatalkan() &&
+          packageType === PACKAGE_TYPE.UMRAH &&
           (status === 'waiting-cancellation' || status === 'expired' ? null : (
             <>
               {isPaidOff ? (
@@ -614,7 +616,7 @@ export default function TransactionCardFooter({
               {shouldShowManifestButton() && renderManifestButton()}
             </>
           ))}
-        {shouldShowDownPaymentButton() && (
+        {!isDibatalkan() && shouldShowDownPaymentButton() && (
           <Fragment>
             {packageType === PACKAGE_TYPE.HAJJ ? (
               paymentToken ? (
@@ -640,7 +642,7 @@ export default function TransactionCardFooter({
           </Fragment>
         )}
 
-        {shouldShowCancelPopover() && renderCancelPopover()}
+        {!isDibatalkan() && shouldShowCancelPopover() && renderCancelPopover()}
       </>
     )
   }
