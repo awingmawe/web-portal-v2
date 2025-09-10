@@ -11,17 +11,17 @@ export function createWebSocket(
 
   socket = new WebSocket(url)
 
-  socket.onopen = () => {
-    console.log('[WebSocket] Connected:', url)
-  }
+  //   socket.onopen = () => {
+  //     console.log('[WebSocket] Connected:', url)
+  //   }
 
-  socket.onclose = () => {
-    console.log('[WebSocket] Disconnected')
-  }
+  //   socket.onclose = () => {
+  //     console.log('[WebSocket] Disconnected')
+  //   }
 
-  socket.onerror = (err) => {
-    console.error('[WebSocket] Error:', err)
-  }
+  //   socket.onerror = (err) => {
+  //     console.error('[WebSocket] Error:', err)
+  //   }
 
   if (onMessage) {
     socket.onmessage = onMessage
