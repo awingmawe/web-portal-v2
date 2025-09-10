@@ -228,7 +228,9 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     inputRef,
     containerRef,
     countBadge,
-
+    setNotifications,
+    setBadge,
+    setCountBadge,
     // Handlers
     handleNotifIconClick,
     handleTabClick,

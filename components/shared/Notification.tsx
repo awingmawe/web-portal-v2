@@ -20,13 +20,24 @@ const NotificationComponent = ({ token }: { token: string }) => {
     handleTabClick,
     markAsRead,
     markAsReadAll,
+    // Setter (tambahkan ini)
+    setNotifications,
+    setCountBadge,
   } = useTopbarNotification({ token })
 
   const { messages } = useWebSocket(token ?? '')
 
   useEffect(() => {
-    console.log('messages', messages)
-    console.log('token', token)
+    if (!messages.length) return
+
+    const latest = messages[messages.length - 1]
+
+    if (latest.event === 'new_notif') {
+      setNotifications((prev) => [latest.data, ...(prev ?? [])])
+      setCountBadge((prev) => prev + 1)
+
+      console.log('🔔 Notif baru:', latest.data)
+    }
   }, [messages, token])
 
   return (
