@@ -327,7 +327,9 @@ export default function TransactionCard({
         if (
           status === STATUS_BOOKING.WAITING_FOR_BILL ||
           status === 'waiting-approval' ||
-          status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+          status === STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION ||
+          status === 'canceled-by-user' ||
+          status === 'canceled-by-travel'
         ) {
           return true
         } else {
