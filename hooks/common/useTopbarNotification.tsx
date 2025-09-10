@@ -5,20 +5,17 @@ import { MoneysIcon } from '@/components/icons/moneys'
 import { PersonalPaket } from '@/components/icons/personal-paket'
 import { PilotSeatIcon } from '@/components/icons/pilot-seat'
 import { ReceiptIcon } from '@/components/icons/receipt'
-import { Badge, Notification } from '@/constant/types/NotificationProps'
+import {
+  Badge,
+  Category,
+  Notification,
+} from '@/constant/types/NotificationProps'
 import { getListNotif, postReadNotif } from '@/services/notification-service'
 import { getNotificationBadge } from '@/services/umrah-service'
 import { easeIn, easeOut } from 'framer-motion'
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 // Types
-
-export interface Category {
-  id: string
-  label: string
-  count: number
-  icon: ReactNode
-}
 
 type TabId = 'semua' | 'belum-dibaca' | 'baca-semua'
 export interface Tab {
@@ -39,7 +36,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   const [badge, setBadge] = useState<Badge>()
   const [countBadge, setCountBadge] = useState<number>(0)
   const [activeTab, setActiveTab] = useState<TabId>('semua')
-  const [size, setSize] = useState<number>(10)
+  const [size, setSize] = useState<number>(3)
   const [page, setPage] = useState<number>(1)
 
   // Refs
@@ -78,6 +75,8 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
       const filter = {
         size,
         page,
+        order: 'desc',
+        orderBy: 'createdAt',
         ...(activeTab !== 'semua' ? { readAt: 'isNull' } : {}),
       }
       const res = await getListNotif(filter, token)
@@ -113,9 +112,18 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     setActiveTab(tabId)
   }, [])
 
-  const markAsRead = useCallback(async (notificationId: number) => {
+  const markAsRead = useCallback(async (notificationId: string) => {
     try {
       await postReadNotif(notificationId, token)
+      getDataList()
+      getDataBadge()
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
+  const markAsReadAll = useCallback(async () => {
+    try {
+      await postReadNotif('all', token)
       getDataList()
       getDataBadge()
     } catch (error) {
@@ -183,25 +191,29 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
       id: 'payment',
       label: 'Butuh Dibayar',
       count: badge?.needToBePaid ?? 0,
-      icon: <MoneysIcon />,
+      icon: <MoneysIcon size={30} />,
+      href: '/my/need-payment?type=completed&page=1&query=&date=',
     },
     {
       id: 'transaction',
       label: 'Transaksi',
       count: badge?.onGoingTransaction ?? 0,
-      icon: <ReceiptIcon size={24} />,
+      icon: <ReceiptIcon size={30} />,
+      href: '/my/transaction?type=upcoming&page=1&query=&status=all&date=',
     },
     {
       id: 'umroh',
       label: 'Umroh Personal',
       count: badge?.waitingOffers ?? 0,
-      icon: <PersonalPaket />,
+      icon: <PersonalPaket size={30} />,
+      href: '/my/paket-personal',
     },
     {
       id: 'quota',
       label: 'Cek Kuota',
       count: badge?.checkAvailabilities ?? 0,
-      icon: <PilotSeatIcon />,
+      icon: <PilotSeatIcon size={30} />,
+      href: '/my/check-availability',
     },
   ]
   return {
@@ -221,6 +233,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     handleNotifIconClick,
     handleTabClick,
     markAsRead,
+    markAsReadAll,
     // Computed functions
     getNotificationBgClass,
 

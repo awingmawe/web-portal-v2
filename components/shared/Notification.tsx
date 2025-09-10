@@ -19,6 +19,7 @@ const NotificationComponent = ({ token }: { token: string }) => {
     notifications,
     handleTabClick,
     markAsRead,
+    markAsReadAll,
   } = useTopbarNotification({ token })
 
   const { messages } = useWebSocket(token ?? '')
@@ -31,27 +32,29 @@ const NotificationComponent = ({ token }: { token: string }) => {
   return (
     <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}
-      <div className="border-b border-neutral-100 p-4">
+      <div className=" p-4">
         <p className="text-l-semibold mb-3 text-neutral-800 max-lg:hidden">
           Notifikasi
         </p>
 
         {/* Category Icons */}
         <div className="mb-4 flex justify-between">
-          {categories.map((category: Category) => (
-            <div
-              key={category.id}
-              className="relative flex flex-col items-center gap-2"
-            >
-              <span className="absolute -top-3 -right-0 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
-                {category.count}
-              </span>
-              {category.icon}
+          {categories.map((category: Category, index: number) => (
+            <Link href={category.href} key={index}>
+              <div
+                key={category.id}
+                className="relative flex flex-col items-center gap-2"
+              >
+                <span className="absolute -top-3 -right-0 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
+                  {category.count}
+                </span>
+                {category.icon}
 
-              <span className="text-m-regular text-center text-neutral-900 ">
-                {category.label}
-              </span>
-            </div>
+                <span className="text-m-regular text-center text-neutral-900 ">
+                  {category.label}
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
 
@@ -78,12 +81,12 @@ const NotificationComponent = ({ token }: { token: string }) => {
 
           {/* Tombol kanan */}
           <button
-            onClick={() => handleTabClick('baca-semua')}
-            className={`text-s-regular rounded-xl px-3 py-1.5 transition-colors ${
-              activeTab === 'baca-semua'
-                ? 'bg-primary-100 text-primary-800'
-                : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-800'
-            }`}
+            onClick={() => {
+              markAsReadAll()
+              // handleTabClick('baca-semua')
+            }}
+            className={`text-s-regular hover:text-neutral-800' rounded-xl px-3 py-1.5 text-neutral-600 transition-colors hover:bg-neutral-100
+            `}
           >
             Baca Semua
           </button>
@@ -104,7 +107,7 @@ const NotificationComponent = ({ token }: { token: string }) => {
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-neutral-100">
+          <div>
             {!isEmpty(notifications) &&
               notifications?.map(
                 (notification: Notification, index: number) => {
@@ -112,14 +115,14 @@ const NotificationComponent = ({ token }: { token: string }) => {
                     return (
                       <Link
                         href={notification.platformRoutes.web}
-                        onClick={() => markAsRead(notification.id)}
+                        onClick={() => markAsRead(notification.id.toString())}
                         key={index}
                       >
                         <motion.div
                           key={notification.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className={`cursor-pointer p-4 transition-colors  ${
+                          className={`mb-2 cursor-pointer  rounded-lg p-4 transition-colors  ${
                             notification.readAt !== null ? '' : 'bg-primary-100'
                           }`}
                         >
@@ -127,9 +130,9 @@ const NotificationComponent = ({ token }: { token: string }) => {
                             <div
                               className={`text-s-regular flex h-8 w-8 justify-center rounded-lg `}
                             >
-                              {notification.type === 'warning' ? (
+                              {notification.category === 'PENGINGAT' ? (
                                 <PengingatIcon size={20} />
-                              ) : notification.type === 'info' ? (
+                              ) : notification.category === 'PEMBAHARUAN' ? (
                                 <PemabaruanIcon size={20} />
                               ) : (
                                 <PromoIcon size={20} />
@@ -159,8 +162,8 @@ const NotificationComponent = ({ token }: { token: string }) => {
                       key={notification.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      onClick={() => markAsRead(notification.id)}
-                      className={`cursor-pointer p-4 transition-colors  ${
+                      onClick={() => markAsRead(notification.id.toString())}
+                      className={`mb-2 cursor-pointer rounded-lg p-4 transition-colors ${
                         notification.readAt !== null ? '' : 'bg-primary-100'
                       }`}
                     >
@@ -168,9 +171,9 @@ const NotificationComponent = ({ token }: { token: string }) => {
                         <div
                           className={`text-s-regular flex h-8 w-8 justify-center rounded-lg `}
                         >
-                          {notification.type === 'warning' ? (
+                          {notification.category === 'PENGINGAT' ? (
                             <PengingatIcon size={20} />
-                          ) : notification.type === 'info' ? (
+                          ) : notification.category === 'PEMBAHARUAN' ? (
                             <PemabaruanIcon size={20} />
                           ) : (
                             <PromoIcon size={20} />
@@ -199,7 +202,7 @@ const NotificationComponent = ({ token }: { token: string }) => {
       </div>
 
       {/* Footer */}
-      {isEmpty(notifications) && (
+      {!isEmpty(notifications) && (
         <div className={`mb-4 max-lg:mt-5 max-lg:mb-0`}>
           <button className="text-m-medium w-full py-1 text-center text-neutral-900">
             Lihat Selengkapnya

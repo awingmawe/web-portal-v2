@@ -25,9 +25,9 @@ export async function getListNotif(
 }
 
 export async function postReadNotif(
-  notificationId: number,
+  notificationId: string,
   token: string
-): Promise<number> {
+): Promise<string> {
   try {
     const client = token ? createServerApiClient(token) : apiWithAuth
     const response = await client.post(
