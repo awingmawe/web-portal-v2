@@ -35,6 +35,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   const [notifications, setNotifications] = useState<Notification[]>()
   const [badge, setBadge] = useState<Badge>()
   const [countBadge, setCountBadge] = useState<number>(0)
+  const [totalNotif, setTotalNotif] = useState<number>(0)
   const [activeTab, setActiveTab] = useState<TabId>('semua')
   const [size, setSize] = useState<number>(3)
   const [page, setPage] = useState<number>(1)
@@ -80,7 +81,8 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
         ...(activeTab !== 'semua' ? { readAt: 'isNull' } : {}),
       }
       const res = await getListNotif(filter, token)
-      setNotifications(res)
+      setNotifications(res.results)
+      setTotalNotif(res.total)
     } catch (error) {
       console.error(error)
     }
@@ -102,7 +104,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   useEffect(() => {
     getDataList()
     getDataBadge()
-  }, [activeTab])
+  }, [activeTab, size, page])
 
   const handleNotifIconClick = useCallback(() => {
     setIsExpanded((prev) => !prev)
@@ -191,28 +193,28 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
       id: 'payment',
       label: 'Butuh Dibayar',
       count: badge?.needToBePaid ?? 0,
-      icon: <MoneysIcon size={30} />,
+      icon: <MoneysIcon size={24} />,
       href: '/my/need-payment?type=completed&page=1&query=&date=',
     },
     {
       id: 'transaction',
       label: 'Transaksi',
       count: badge?.onGoingTransaction ?? 0,
-      icon: <ReceiptIcon size={30} />,
+      icon: <ReceiptIcon size={24} />,
       href: '/my/transaction?type=upcoming&page=1&query=&status=all&date=',
     },
     {
       id: 'umroh',
       label: 'Umroh Personal',
       count: badge?.waitingOffers ?? 0,
-      icon: <PersonalPaket size={30} />,
+      icon: <PersonalPaket size={24} />,
       href: '/my/paket-personal',
     },
     {
       id: 'quota',
       label: 'Cek Kuota',
       count: badge?.checkAvailabilities ?? 0,
-      icon: <PilotSeatIcon size={30} />,
+      icon: <PilotSeatIcon size={24} />,
       href: '/my/check-availability',
     },
   ]
@@ -224,6 +226,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     categories,
     tabs,
     badge,
+
     // Refs
     inputRef,
     containerRef,
@@ -231,11 +234,15 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     setNotifications,
     setBadge,
     setCountBadge,
+    setSize,
+    setPage,
     // Handlers
     handleNotifIconClick,
     handleTabClick,
     markAsRead,
     markAsReadAll,
+    totalNotif,
+    page,
     // Computed functions
     getNotificationBgClass,
 

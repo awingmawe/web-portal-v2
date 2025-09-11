@@ -1,4 +1,4 @@
-import { GetListQuery } from '@/constant/types/GeneralProps'
+import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import { Notification } from '@/constant/types/NotificationProps'
 import { apiWithAuth, createServerApiClient } from '@/services/common/http'
 import qs from 'query-string'
@@ -6,7 +6,7 @@ import qs from 'query-string'
 export async function getListNotif(
   query: GetListQuery,
   token: string
-): Promise<Notification[]> {
+): Promise<GenericResponse<Notification>> {
   try {
     let queryString = qs.stringify(query, { encode: false })
 
@@ -17,7 +17,7 @@ export async function getListNotif(
     const response = await client.get(
       `/notification/v1/user-notification?${queryString}`
     )
-    return response.data.results
+    return response.data
   } catch (error) {
     console.error('Error fetching article detail:', error)
     throw error

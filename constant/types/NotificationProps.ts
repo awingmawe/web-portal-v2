@@ -11,7 +11,7 @@ export interface Notification {
     web: string
   }
   createdAt: string
-  readAt: string
+  readAt?: string
   type: string
 }
 
