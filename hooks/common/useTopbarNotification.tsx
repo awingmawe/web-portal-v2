@@ -243,6 +243,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     markAsReadAll,
     totalNotif,
     page,
+    size,
     // Computed functions
     getNotificationBgClass,
 

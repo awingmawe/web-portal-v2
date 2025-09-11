@@ -43,9 +43,9 @@ const TopbarNotification = ({ token }: { token: string }) => {
           {countBadge > 0 && (
             <span
               className={`text-s-regular absolute -top-3 -right-2 flex items-center justify-center rounded-full bg-[#B3261E] text-white
-            ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
+      ${countBadge > 99 ? 'h-6 w-6' : 'h-5 w-5'}`}
             >
-              {countBadge}
+              {countBadge > 99 ? '99+' : countBadge}
             </span>
           )}
         </div>
@@ -63,7 +63,7 @@ const TopbarNotification = ({ token }: { token: string }) => {
               className={`text-s-regular absolute -top-2 -right-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#B3261E] text-white 
                 ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
             >
-              {countBadge}
+              {countBadge > 99 ? '99+' : countBadge}
             </span>
           )}
         </div>

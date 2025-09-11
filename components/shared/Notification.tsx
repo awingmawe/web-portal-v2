@@ -70,14 +70,12 @@ const NotificationComponent = ({
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!shouldUseInfiniteScroll) {
-      if (fromMy) {
-        setSize(10)
-      } else {
-        setSize(3)
-      }
+    if (fromMy || mobile) {
+      setSize(10)
+    } else {
+      setSize(3)
     }
-  }, [fromMy, setSize, shouldUseInfiniteScroll])
+  }, [fromMy, setSize])
 
   useEffect(() => {
     if (shouldUseInfiniteScroll && token && activeTab !== 'baca-semua') {
@@ -204,8 +202,8 @@ const NotificationComponent = ({
             {categories.map((category: Category, index: number) => (
               <Link href={category.href} key={index}>
                 <div className="relative flex h-15 w-15 flex-col items-center gap-2">
-                  <span className="absolute -top-2 -right-0.5 z-10 flex h-[20px] w-[20px] items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
-                    {category.count}
+                  <span className="absolute -top-2 -right-0.5 z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
+                    {category.count > 99 ? '99+' : category.count}
                   </span>
                   <div className="flex h-10 w-10 items-center justify-center">
                     {category.icon}
