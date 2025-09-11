@@ -21,14 +21,22 @@ interface CardNotificationProps {
   //ini untuk dari pathname my/notifiakasi
   fromMy?: boolean
   mobile?: boolean
+  setCountBadge?: React.Dispatch<React.SetStateAction<number>>
 }
 
 interface WebSocketMessage {
   event: string
-  data: Notification
+  data: {
+    notification: Notification
+  }
 }
 
-const CardNotification = ({ token, fromMy, mobile }: CardNotificationProps) => {
+const CardNotification = ({
+  token,
+  fromMy,
+  mobile,
+  setCountBadge,
+}: CardNotificationProps) => {
   // Conditionally use hooks based on mode
   const shouldUseInfiniteScroll = mobile && !fromMy
 
@@ -56,7 +64,6 @@ const CardNotification = ({ token, fromMy, mobile }: CardNotificationProps) => {
     totalNotif,
     setPage,
     setNotifications,
-    setCountBadge,
     page,
   } = useTopbarNotification({ token })
 
@@ -89,11 +96,14 @@ const CardNotification = ({ token, fromMy, mobile }: CardNotificationProps) => {
 
     if (latest.event === 'new_notif') {
       if (shouldUseInfiniteScroll) {
-        addNotification(latest.data)
+        addNotification({ ...latest.data.notification, readAt: null })
       } else {
-        setNotifications((prev) => [latest.data, ...(prev ?? [])])
+        setNotifications((prev) => [
+          { ...latest.data.notification, readAt: null },
+          ...(prev ?? []),
+        ])
       }
-      setCountBadge((prev: number) => prev + 1)
+      setCountBadge?.((prev: number) => prev + 1)
     }
   }, [
     messages,

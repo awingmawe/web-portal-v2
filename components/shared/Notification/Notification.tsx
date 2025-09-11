@@ -11,12 +11,14 @@ interface NotificationComponentProps {
   //ini untuk dari pathname my/notifiakasi
   fromMy?: boolean
   mobile?: boolean
+  setCountBadge?: React.Dispatch<React.SetStateAction<number>>
 }
 
 const NotificationComponent: React.FC<NotificationComponentProps> = ({
   token,
   fromMy,
   mobile,
+  setCountBadge,
 }) => {
   // Traditional pagination hook (for fromMy and dropdown)
   const {
@@ -61,7 +63,12 @@ const NotificationComponent: React.FC<NotificationComponentProps> = ({
       )}
 
       {!fromMy && <div className="mb-1 h-0.5 w-full bg-neutral-100" />}
-      <CardNotification token={token} fromMy={fromMy} mobile={mobile} />
+      <CardNotification
+        token={token}
+        fromMy={fromMy}
+        mobile={mobile}
+        setCountBadge={setCountBadge}
+      />
 
       {!isEmpty(notifications) && !fromMy && !mobile && (
         <Link href={'/my/notification'}>
