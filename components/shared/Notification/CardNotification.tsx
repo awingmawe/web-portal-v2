@@ -185,7 +185,9 @@ const CardNotification = ({ token, fromMy, mobile }: CardNotificationProps) => {
       className={fromMy ? `rounded-[20px] border-1 border-neutral-100 p-4` : ''}
     >
       {/* Tabs */}
-      <div className="my-3 flex items-center justify-between">
+      <div
+        className={`${fromMy && 'mt-0'} my-3 flex items-center justify-between`}
+      >
         {/* Group kiri */}
         <div className="flex space-x-1">
           {tabs
@@ -228,7 +230,7 @@ const CardNotification = ({ token, fromMy, mobile }: CardNotificationProps) => {
       <div
         ref={scrollRef}
         className={`overflow-y-auto ${
-          fromMy ? 'h-[50vh]' : mobile ? 'h-[60vh]' : 'max-h-96'
+          fromMy ? 'h-full' : mobile ? 'h-[80dvh]' : 'max-h-96'
         }`}
       >
         {isEmpty(notifications) && !isLoading ? (

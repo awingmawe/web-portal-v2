@@ -29,10 +29,12 @@ const NotificationComponent: React.FC<NotificationComponentProps> = ({
     <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}
 
-      <div className="text-l-semibold mb-3 text-neutral-800 max-lg:hidden">
+      <div
+        className={`${fromMy ? 'heading-3-medium' : 'text-l-semibold '} mb-3 text-neutral-800 max-lg:hidden`}
+      >
         Notifikasi
         {fromMy && (
-          <p className="text-m-regular text-left text-neutral-800 max-lg:hidden">
+          <p className="text-l-regular text-left text-neutral-800 max-lg:hidden">
             Dapatkan informasi terbaru anda disini!
           </p>
         )}
@@ -58,7 +60,7 @@ const NotificationComponent: React.FC<NotificationComponentProps> = ({
         </div>
       )}
 
-      <div className="mb-1 h-0.5 w-full bg-neutral-100" />
+      {!fromMy && <div className="mb-1 h-0.5 w-full bg-neutral-100" />}
       <CardNotification token={token} fromMy={fromMy} mobile={mobile} />
 
       {!isEmpty(notifications) && !fromMy && !mobile && (
