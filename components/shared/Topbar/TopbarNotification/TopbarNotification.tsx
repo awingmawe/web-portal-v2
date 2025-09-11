@@ -2,10 +2,8 @@
 import { NotifIcon, NotifIconBlack } from '@/components/icons/notif'
 import NotificationComponent from '@/components/shared/Notification'
 import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
-import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import { useEffect } from 'react'
 
 const TopbarNotification = ({ token }: { token: string }) => {
   const {
@@ -13,21 +11,13 @@ const TopbarNotification = ({ token }: { token: string }) => {
     isExpanded,
 
     countBadge,
+    setCountBadge,
     // Refs
     containerRef,
 
     // Handlers
     handleNotifIconClick,
   } = useTopbarNotification({ token })
-
-  const { messages } = useWebSocket<{ type: string; content: string }>(
-    token ?? ''
-  )
-
-  useEffect(() => {
-    console.log('messages', messages)
-    console.log('token', token)
-  }, [messages, token])
 
   return (
     <div ref={containerRef} className="relative">
@@ -43,9 +33,9 @@ const TopbarNotification = ({ token }: { token: string }) => {
           {countBadge > 0 && (
             <span
               className={`text-s-regular absolute -top-3 -right-2 flex items-center justify-center rounded-full bg-[#B3261E] text-white
-            ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
+      ${countBadge > 99 ? 'h-6 w-6' : 'h-5 w-5'}`}
             >
-              {countBadge}
+              {countBadge > 99 ? '99+' : countBadge}
             </span>
           )}
         </div>
@@ -63,7 +53,7 @@ const TopbarNotification = ({ token }: { token: string }) => {
               className={`text-s-regular absolute -top-2 -right-2 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[#B3261E] text-white 
                 ${countBadge < 100 ? 'h-5 w-5' : 'h-6 w-6'}`}
             >
-              {countBadge}
+              {countBadge > 99 ? '99+' : countBadge}
             </span>
           )}
         </div>
@@ -78,7 +68,10 @@ const TopbarNotification = ({ token }: { token: string }) => {
             transition={{ duration: 0.2 }}
             className="absolute right-0 z-999 mt-2 w-[350px] overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-xl"
           >
-            <NotificationComponent token={token} />
+            <NotificationComponent
+              token={token}
+              setCountBadge={setCountBadge}
+            />
           </motion.div>
         )}
       </AnimatePresence>

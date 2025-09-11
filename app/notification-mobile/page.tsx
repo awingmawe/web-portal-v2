@@ -1,6 +1,6 @@
 import { metadata } from '@/app/shared-metadata'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
-import NotificationComponent from '@/components/shared/Notification'
+import Notification from '@/components/shared/Notification'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
@@ -23,7 +23,7 @@ export default async function NotificationMobile() {
           showBackButton={true}
           title="Notifikasi"
         />
-        <NotificationComponent token={token} />
+        <Notification token={token} mobile={true} />
       </main>
     </Fragment>
   )

@@ -11,8 +11,8 @@ export interface Notification {
     web: string
   }
   createdAt: string
-  readAt: string
-  type: 'warning' | 'promo' | 'info'
+  readAt?: string | null
+  type: string
 }
 
 export interface Category {
@@ -20,6 +20,7 @@ export interface Category {
   label: string
   count: number
   icon: ReactNode
+  href: string
 }
 export interface Tab {
   id: 'semua' | 'belum-dibaca' | 'baca-semua'
