@@ -1,11 +1,11 @@
 import { metadata } from '@/app/shared-metadata'
 import LayoutMy from '@/components/pages/my/Layout'
-import NotificationComponent from '@/components/shared/Notification'
+import Notification from '@/components/shared/Notification'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
 export async function generateMetadata() {
   return {
-    ...metadata('Muslim101 | Daftar List Tabungan', `Daftar List Tabungan`),
+    ...metadata('Muslim101 | Daftar List Notifikasi', `Daftar List Notifikasi`),
   }
 }
 
@@ -17,7 +17,7 @@ export default async function NotifikasiPage() {
       <div className="mx-auto max-w-7xl lg:px-4">
         {/* <TransactionUpcoming /> */}
 
-        <NotificationComponent token={token} fromMy={true} />
+        <Notification token={token} fromMy={true} />
         {/* <BottomNavigation /> */}
       </div>
     </LayoutMy>

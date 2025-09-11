@@ -4,7 +4,7 @@ import { PemabaruanIcon } from '@/components/icons/pembaharuan'
 import { PengingatIcon } from '@/components/icons/pengingat'
 import { PromoIcon } from '@/components/icons/promo'
 import { CustomPagination } from '@/components/shared/CustomPagination'
-import { Category, Notification } from '@/constant/types/NotificationProps'
+import { Notification } from '@/constant/types/NotificationProps'
 import { useNotificationInfiniteScroll } from '@/hooks/common/useNotificationInfiniteScroll'
 import {
   Tab,
@@ -16,8 +16,9 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef } from 'react'
 
-interface NotificationComponentProps {
+interface CardNotificationProps {
   token: string
+  //ini untuk dari pathname my/notifiakasi
   fromMy?: boolean
   mobile?: boolean
 }
@@ -27,11 +28,7 @@ interface WebSocketMessage {
   data: Notification
 }
 
-const NotificationComponent = ({
-  token,
-  fromMy,
-  mobile,
-}: NotificationComponentProps) => {
+const CardNotification = ({ token, fromMy, mobile }: CardNotificationProps) => {
   // Conditionally use hooks based on mode
   const shouldUseInfiniteScroll = mobile && !fromMy
 
@@ -49,7 +46,6 @@ const NotificationComponent = ({
 
   // Traditional pagination hook (for fromMy and dropdown)
   const {
-    categories,
     tabs,
     activeTab,
     notifications: paginatedNotifications,
@@ -185,86 +181,54 @@ const NotificationComponent = ({
   const isLoading = shouldUseInfiniteScroll ? infiniteLoading : false
 
   return (
-    <div className={`p-4 max-lg:mt-10`}>
-      {/* Header */}
-      <div>
-        <div className="text-l-semibold mb-3 text-neutral-800 max-lg:hidden">
-          Notifikasi
-          {fromMy && (
-            <p className="text-m-regular text-left text-neutral-800 max-lg:hidden">
-              Dapatkan informasi terbaru anda disini!
-            </p>
-          )}
-        </div>
-
-        {!fromMy && (
-          <div className="mb-4 flex justify-between">
-            {categories.map((category: Category, index: number) => (
-              <Link href={category.href} key={index}>
-                <div className="relative flex h-15 w-15 flex-col items-center gap-2">
-                  <span className="absolute -top-2 -right-0.5 z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
-                    {category.count > 99 ? '99+' : category.count}
-                  </span>
-                  <div className="flex h-10 w-10 items-center justify-center">
-                    {category.icon}
-                  </div>
-                  <span className="text-m-regular text-center leading-tight text-neutral-900">
-                    {category.label}
-                  </span>
-                </div>
-              </Link>
+    <div
+      className={fromMy ? `rounded-[20px] border-1 border-neutral-100 p-4` : ''}
+    >
+      {/* Tabs */}
+      <div className="my-3 flex items-center justify-between">
+        {/* Group kiri */}
+        <div className="flex space-x-1">
+          {tabs
+            .filter((tab: Tab) => tab.id !== 'baca-semua')
+            .map((tab: Tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabClickWithReset(tab.id)}
+                className={`text-s-regular cursor-pointer rounded-full px-3 py-1.5 transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-primary-300 font-bold text-neutral-900'
+                    : 'bg-primary-100 text-neutral-900 '
+                }`}
+              >
+                {tab.label}
+              </button>
             ))}
-          </div>
-        )}
-
-        <div className="mb-1 h-0.5 w-full bg-neutral-100" />
-
-        {/* Tabs */}
-        <div className="mb-2 flex items-center justify-between">
-          {/* Group kiri */}
-          <div className="flex space-x-1">
-            {tabs
-              .filter((tab: Tab) => tab.id !== 'baca-semua')
-              .map((tab: Tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabClickWithReset(tab.id)}
-                  className={`text-s-regular rounded-xl px-3 py-1.5 transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-orange-100 text-orange-800'
-                      : 'text-neutral-600 hover:bg-gray-100 hover:text-neutral-800'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-          </div>
-
-          <button
-            onClick={() => {
-              markAsReadAll()
-
-              if (shouldUseInfiniteScroll && activeTab !== 'baca-semua') {
-                setTimeout(() => {
-                  fetchInitialNotifications({
-                    activeTab: activeTab as 'semua' | 'belum-dibaca',
-                    token,
-                  })
-                }, 500)
-              }
-            }}
-            className={`text-s-regular rounded-xl px-3 py-1.5 text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-800`}
-          >
-            Baca Semua
-          </button>
         </div>
+
+        <button
+          onClick={() => {
+            markAsReadAll()
+
+            if (shouldUseInfiniteScroll && activeTab !== 'baca-semua') {
+              setTimeout(() => {
+                fetchInitialNotifications({
+                  activeTab: activeTab as 'semua' | 'belum-dibaca',
+                  token,
+                })
+              }, 500)
+            }
+          }}
+          className={`text-s-regular rounded-fukk cursor-pointer px-3 py-1.5 transition-colors`}
+        >
+          Baca Semua
+        </button>
       </div>
 
       {/* Notifications List */}
       <div
         ref={scrollRef}
         className={`overflow-y-auto ${
-          fromMy ? 'h-[70vh]' : mobile ? 'h-[60vh]' : 'max-h-96'
+          fromMy ? 'h-[50vh]' : mobile ? 'h-[60vh]' : 'max-h-96'
         }`}
       >
         {isEmpty(notifications) && !isLoading ? (
@@ -285,7 +249,7 @@ const NotificationComponent = ({
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className={`mb-2 cursor-pointer rounded-lg p-4 transition-colors ${
+                  className={`hover:bg-warning-200 mb-2 cursor-pointer rounded-lg p-4 transition-colors ${
                     notification.readAt !== null
                       ? ''
                       : notification.category === 'PROMO'
@@ -347,29 +311,18 @@ const NotificationComponent = ({
                 <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-orange-500"></div>
               </div>
             )}
+            {fromMy && (
+              <CustomPagination
+                currentPage={page}
+                totalPages={Math.ceil(totalNotif / 10)}
+                goToPage={goToPage}
+              />
+            )}
           </div>
         )}
       </div>
-
-      {fromMy && (
-        <CustomPagination
-          currentPage={page}
-          totalPages={Math.ceil(totalNotif / 10)}
-          goToPage={goToPage}
-        />
-      )}
-
-      {!isEmpty(notifications) && !fromMy && !mobile && (
-        <Link href={'/my/notification'}>
-          <div className={`mb-4 max-lg:mt-5 max-lg:mb-0`}>
-            <button className="text-m-medium w-full cursor-pointer py-1 text-center text-neutral-900">
-              Lihat Selengkapnya
-            </button>
-          </div>
-        </Link>
-      )}
     </div>
   )
 }
 
-export default NotificationComponent
+export default CardNotification
