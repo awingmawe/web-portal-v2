@@ -84,8 +84,6 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
         orderBy: 'createdAt',
         ...(activeTab === 'belum-dibaca' ? { readAt: 'isNull' } : {}),
       }
-      console.log(activeTab)
-
       const res = await getListNotif(filter, token)
       setNotifications(res.results)
       setTotalNotif(res.total)

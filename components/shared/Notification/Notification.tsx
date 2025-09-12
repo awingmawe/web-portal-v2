@@ -12,7 +12,6 @@ interface NotificationComponentProps {
   fromMy: boolean
   mobile?: boolean
   setCountBadge?: React.Dispatch<React.SetStateAction<number>>
-  markAsReadAll?: any
 }
 
 const NotificationComponent: React.FC<NotificationComponentProps> = ({
