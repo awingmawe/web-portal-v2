@@ -10,7 +10,11 @@ import {
   Category,
   Notification,
 } from '@/constant/types/NotificationProps'
-import { getListNotif, postReadNotif } from '@/services/notification-service'
+import {
+  getListCountNotif,
+  getListNotif,
+  postReadNotif,
+} from '@/services/notification-service'
 import { getNotificationBadge } from '@/services/umrah-service'
 import { easeIn, easeOut } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -78,7 +82,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
         page,
         order: 'desc',
         orderBy: 'createdAt',
-        ...(activeTab !== 'semua' ? { readAt: 'isNull' } : {}),
+        ...(activeTab === 'belum-dibaca' ? { readAt: 'isNull' } : {}),
       }
       const res = await getListNotif(filter, token)
       setNotifications(res.results)
@@ -90,12 +94,15 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   const getDataBadge = async () => {
     try {
       const res = await getNotificationBadge(token)
+      const resStat = await getListCountNotif(token)
       setBadge(res)
       const total =
         (res.needToBePaid ?? 0) +
         (res.onGoingTransaction ?? 0) +
         (res.waitingOffers ?? 0) +
-        (res.checkAvailabilities ?? 0)
+        (res.checkAvailabilities ?? 0) +
+        (resStat.unread ?? 0)
+
       setCountBadge(total)
     } catch (error) {
       console.log(error)
@@ -126,13 +133,16 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   const markAsReadAll = useCallback(async () => {
     try {
       await postReadNotif('all', token)
-      getDataList()
+      if (activeTab === 'belum-dibaca') {
+        setNotifications([]) // kosongin list biar jelas udah ga ada notif unread
+      } else {
+        getDataList()
+      }
       getDataBadge()
     } catch (error) {
       console.error(error)
     }
-  }, [])
-
+  }, [token, activeTab])
   const getNotificationBgClass = useCallback(
     (type: Notification['type']): string => {
       switch (type) {

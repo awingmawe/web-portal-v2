@@ -19,7 +19,7 @@ import { useCallback, useEffect, useRef } from 'react'
 interface CardNotificationProps {
   token: string
   //ini untuk dari pathname my/notifiakasi
-  fromMy?: boolean
+  fromMy: boolean
   mobile?: boolean
   setCountBadge?: React.Dispatch<React.SetStateAction<number>>
 }
@@ -220,15 +220,6 @@ const CardNotification = ({
         <button
           onClick={() => {
             markAsReadAll()
-
-            if (shouldUseInfiniteScroll && activeTab !== 'baca-semua') {
-              setTimeout(() => {
-                fetchInitialNotifications({
-                  activeTab: activeTab as 'semua' | 'belum-dibaca',
-                  token,
-                })
-              }, 500)
-            }
           }}
           className={`text-s-regular rounded-fukk cursor-pointer px-3 py-1.5 transition-colors`}
         >

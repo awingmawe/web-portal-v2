@@ -23,7 +23,7 @@ export default async function NotificationMobile() {
           showBackButton={true}
           title="Notifikasi"
         />
-        <Notification token={token} mobile={true} />
+        <Notification token={token} mobile={true} fromMy={false} />
       </main>
     </Fragment>
   )

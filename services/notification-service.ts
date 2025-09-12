@@ -1,5 +1,5 @@
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
-import { Notification } from '@/constant/types/NotificationProps'
+import { Notification, StatsProps } from '@/constant/types/NotificationProps'
 import { apiWithAuth, createServerApiClient } from '@/services/common/http'
 import qs from 'query-string'
 
@@ -16,6 +16,19 @@ export async function getListNotif(
     const client = token ? createServerApiClient(token) : apiWithAuth
     const response = await client.get(
       `/notification/v1/user-notification?${queryString}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching article detail:', error)
+    throw error
+  }
+}
+
+export async function getListCountNotif(token: string): Promise<StatsProps> {
+  try {
+    const client = token ? createServerApiClient(token) : apiWithAuth
+    const response = await client.get(
+      `/notification/v1/user-notification/stats`
     )
     return response.data
   } catch (error) {
