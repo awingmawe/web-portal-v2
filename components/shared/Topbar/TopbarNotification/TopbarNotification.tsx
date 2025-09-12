@@ -28,6 +28,7 @@ const TopbarNotification = ({ token }: { token: string }) => {
   const { messages } = useWebSocket(token ?? '') as {
     messages: WebSocketMessage[]
   }
+
   useEffect(() => {
     if (!messages.length) return
 
@@ -87,6 +88,7 @@ const TopbarNotification = ({ token }: { token: string }) => {
             className="absolute right-0 z-999 mt-2 w-[350px] overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-xl"
           >
             <NotificationComponent
+              fromMy={false}
               token={token}
               setCountBadge={setCountBadge}
             />

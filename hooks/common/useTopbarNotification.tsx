@@ -82,8 +82,10 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
         page,
         order: 'desc',
         orderBy: 'createdAt',
-        ...(activeTab !== 'semua' ? { readAt: 'isNull' } : {}),
+        ...(activeTab === 'belum-dibaca' ? { readAt: 'isNull' } : {}),
       }
+      console.log(activeTab)
+
       const res = await getListNotif(filter, token)
       setNotifications(res.results)
       setTotalNotif(res.total)
@@ -95,8 +97,6 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     try {
       const res = await getNotificationBadge(token)
       const resStat = await getListCountNotif(token)
-      console.log(resStat)
-
       setBadge(res)
       const total =
         (res.needToBePaid ?? 0) +
@@ -104,6 +104,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
         (res.waitingOffers ?? 0) +
         (res.checkAvailabilities ?? 0) +
         (resStat.unread ?? 0)
+
       setCountBadge(total)
     } catch (error) {
       console.log(error)
@@ -134,13 +135,16 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   const markAsReadAll = useCallback(async () => {
     try {
       await postReadNotif('all', token)
-      getDataList()
+      if (activeTab === 'belum-dibaca') {
+        setNotifications([]) // kosongin list biar jelas udah ga ada notif unread
+      } else {
+        getDataList()
+      }
       getDataBadge()
     } catch (error) {
       console.error(error)
     }
-  }, [])
-
+  }, [token, activeTab])
   const getNotificationBgClass = useCallback(
     (type: Notification['type']): string => {
       switch (type) {

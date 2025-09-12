@@ -9,9 +9,10 @@ import Link from 'next/link'
 interface NotificationComponentProps {
   token: string
   //ini untuk dari pathname my/notifiakasi
-  fromMy?: boolean
+  fromMy: boolean
   mobile?: boolean
   setCountBadge?: React.Dispatch<React.SetStateAction<number>>
+  markAsReadAll?: any
 }
 
 const NotificationComponent: React.FC<NotificationComponentProps> = ({
