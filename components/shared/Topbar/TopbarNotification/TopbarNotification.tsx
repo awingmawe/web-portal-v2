@@ -2,9 +2,16 @@
 import { NotifIcon, NotifIconBlack } from '@/components/icons/notif'
 import NotificationComponent from '@/components/shared/Notification'
 import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
+import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-
+import { useEffect } from 'react'
+interface WebSocketMessage {
+  event: string
+  data: {
+    notification: Notification
+  }
+}
 const TopbarNotification = ({ token }: { token: string }) => {
   const {
     // State
@@ -18,7 +25,18 @@ const TopbarNotification = ({ token }: { token: string }) => {
     // Handlers
     handleNotifIconClick,
   } = useTopbarNotification({ token })
+  const { messages } = useWebSocket(token ?? '') as {
+    messages: WebSocketMessage[]
+  }
+  useEffect(() => {
+    if (!messages.length) return
 
+    const latest = messages[messages.length - 1]
+
+    if (latest.event === 'new_notif') {
+      setCountBadge?.((prev: number) => prev + 1)
+    }
+  }, [messages, setCountBadge])
   return (
     <div ref={containerRef} className="relative">
       {/* Desktop Notification */}

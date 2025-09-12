@@ -33,3 +33,7 @@ export interface Badge {
   onGoingTransaction: number
   waitingOffers: number
 }
+export interface StatsProps {
+  read: number
+  unread: number
+}

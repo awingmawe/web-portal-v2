@@ -10,7 +10,11 @@ import {
   Category,
   Notification,
 } from '@/constant/types/NotificationProps'
-import { getListNotif, postReadNotif } from '@/services/notification-service'
+import {
+  getListCountNotif,
+  getListNotif,
+  postReadNotif,
+} from '@/services/notification-service'
 import { getNotificationBadge } from '@/services/umrah-service'
 import { easeIn, easeOut } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -90,12 +94,16 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   const getDataBadge = async () => {
     try {
       const res = await getNotificationBadge(token)
+      const resStat = await getListCountNotif(token)
+      console.log(resStat)
+
       setBadge(res)
       const total =
         (res.needToBePaid ?? 0) +
         (res.onGoingTransaction ?? 0) +
         (res.waitingOffers ?? 0) +
-        (res.checkAvailabilities ?? 0)
+        (res.checkAvailabilities ?? 0) +
+        (resStat.unread ?? 0)
       setCountBadge(total)
     } catch (error) {
       console.log(error)
