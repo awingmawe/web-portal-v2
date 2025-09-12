@@ -98,7 +98,11 @@ export default async function ArtilceDetail({ params }: any) {
 
   return (
     <LayoutArticle>
-      <TopbarMobileArticle href="back" applyRouter />
+      <TopbarMobileArticle
+        href="back"
+        applyRouter
+        isWebview={isWebview == 'true'}
+      />
       <main className="container mx-auto mt-7.5 mb-12.5 max-lg:mt-15 max-lg:px-4">
         <ImageDetail
           created_at={dataArticleDetail.created_at}
