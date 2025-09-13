@@ -15,6 +15,7 @@ import {
 } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { Facility } from '@/constant/types/FacilityProps'
 import { RequestFormUmrahPersonal } from '@/constant/types/UmrahPersonalProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { STEP_1 } from '@/contexts/umrah-personal/constant'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { umrahPersonalRegister } from '@/services/umrah-service'
@@ -30,6 +31,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
   dataEnumVehicle,
 }) => {
   const { currentStep } = useUmrahPersonal()
+  const { pushEvent } = useEventTracker()
   const router = useRouter()
   const form = useForm<UmrahPersonalFormType>({
     resolver: zodResolver(umrahPersonalFormSchema),
@@ -72,6 +74,35 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
     try {
       const result = await umrahPersonalRegister(payload)
 
+      pushEvent({
+        name: 'submit_create_umroh_personal',
+        category: 'umrah-personal',
+        topic: 'umrah',
+        data: {
+          packageType: payload.journeyType,
+          activity: payload.activity,
+          createVisa: payload.createVisa,
+          useInsurance: payload.useInsurance,
+          departureDate: payload.departureDate,
+          arrivalDate: payload.arrivalDate,
+          totalManifest: payload.totalManifest,
+          departureAirportFrom: payload.departure.from,
+          departureAirportTo: payload.departure.to,
+          departureAirline: payload.departure.airline,
+          departureFlightClass: payload.departure.flightClass,
+          departureFlightRoute: payload.departure.flightRoute,
+          arrivalAirportFrom: payload.arrival.from,
+          arrivalAirportTo: payload.arrival.to,
+          arrivalAirline: payload.arrival.airline,
+          arrivalFlightClass: payload.arrival.flightClass,
+          arrivalFlightRoute: payload.arrival.flightRoute,
+          hotelMakkahStar: data.hotelMecca.hotelMecca.rating,
+          hotelMakkahName: data.hotelMecca.hotelMecca.name,
+          hotelMedinaStar: data.hotelMedina?.hotelMedina?.rating,
+          hotelMedinaName: data.hotelMedina?.hotelMedina?.name,
+          transportationName: data.transportation?.transportation.name ?? null,
+        },
+      })
       if (result) {
         router.push(`/umrah-personal/success-offering`)
       }

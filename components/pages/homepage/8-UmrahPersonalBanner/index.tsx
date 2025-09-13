@@ -3,6 +3,7 @@
 import { ArrowCircleRight } from '@/components/icons/arrow-circle-right'
 import ChecklistIcon from '@/components/icons/checklist'
 import { Button } from '@/components/ui/button'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -17,6 +18,8 @@ const UmrahPersonalBanner: React.FC<UmrahPersonalBannerProps> = ({
   className = '',
 }) => {
   const { lg } = useTailwindBreakpoint()
+  const { pushEvent } = useEventTracker()
+
   const router = useRouter()
   const features = [
     'Harga paket fleksibel sesuai kebutuhan',
@@ -32,7 +35,17 @@ const UmrahPersonalBanner: React.FC<UmrahPersonalBannerProps> = ({
         Fitur Eksklusif Muslim101
       </p>
       <div
-        onClick={!lg ? () => {} : () => router.push('/umrah-personal/landing')}
+        onClick={
+          !lg
+            ? () => {}
+            : () => {
+                pushEvent({
+                  name: 'click_umrah_personal_banner',
+                  category: 'home',
+                })
+                router.push('/umrah-personal/landing')
+              }
+        }
         className="from-primary-100 to-primary-500 relative overflow-hidden rounded-[12px] bg-gradient-to-r px-10 pt-7 pb-0 max-lg:px-4 max-lg:pt-4"
       >
         <Image
@@ -86,7 +99,15 @@ const UmrahPersonalBanner: React.FC<UmrahPersonalBannerProps> = ({
                 disesuaikan! Yuk, rencanakan dan sesuaikan sekarang!
               </p>
             </div>
-            <Link href={'/umrah-personal/landing'}>
+            <Link
+              href={'/umrah-personal/landing'}
+              onClick={() =>
+                pushEvent({
+                  name: 'click_umrah_personal_banner',
+                  category: 'home',
+                })
+              }
+            >
               <Button
                 className="bg-neutral-0 mt-4 flex items-center gap-1.5 px-10 py-5 hover:bg-neutral-100 max-lg:w-full max-lg:py-3"
                 type="button"

@@ -63,6 +63,7 @@ const Step4HotelInfo: React.FC<Step4HotelInfoProps> = ({
     form.setValue(`${STEP_4}.hotelMedina`, {
       id: hotel.id,
       name: hotel.name,
+      rating: hotel.rating,
       hotelDestination: hotel.hotelDestination,
       hotelGallery: hotel.hotelGallery ?? [],
     })

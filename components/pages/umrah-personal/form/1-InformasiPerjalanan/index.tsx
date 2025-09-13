@@ -154,6 +154,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                           form.setValue(`${STEP_4}.hotelMedina`, {
                             id: 0,
                             name: '',
+                            rating: 0,
                             hotelDestination: [],
                             hotelGallery: [],
                           })
