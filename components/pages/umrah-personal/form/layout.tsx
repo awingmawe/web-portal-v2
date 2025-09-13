@@ -11,6 +11,7 @@ import Topbar from '@/components/shared/Topbar'
 import { Button } from '@/components/ui/button'
 import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { useStepVisibility } from '@/hooks/umrah-personal/form/useVisibilityStepper'
 import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNumberVerification'
@@ -33,6 +34,7 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
 
   const { profile } = useAuth()
   const [open, setOpen] = React.useState(false)
+  const { pushEvent } = useEventTracker()
 
   const {
     currentStep,
@@ -55,6 +57,11 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
 
   const handleExitConfirmation = () => {
     setOpenDialogDrawerEndForm?.(false)
+    pushEvent({
+      name: 'cancel_create_umroh_personal',
+      category: 'umrah_personal',
+      topic: 'umrah',
+    })
     setCurrentStep(1)
     router.push(`/umrah-personal/landing`)
   }

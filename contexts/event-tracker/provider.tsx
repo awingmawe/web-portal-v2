@@ -1,6 +1,6 @@
 'use client'
 
-import { API_URL, HMAC_SECRET } from '@/constant/env'
+import { API_URL, HMAC_SECRET, LOCAL_STORAGE_UTM } from '@/constant/env'
 import { getMyProfile } from '@/contexts/auth/shared/api'
 import { Profile } from '@/contexts/auth/shared/type'
 import { EventTrackerContext } from '@/contexts/event-tracker/context'
@@ -18,6 +18,91 @@ export type EventAttribute = {
   topic?: string
   data?: any
   backgroundProcess?: boolean
+  user?: Partial<Profile>
+}
+
+interface UTMData {
+  utm_source?: string
+  utm_media?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+  expiry: number
+}
+
+// UTM Storage Utilities
+const UTM_EXPIRY_DAYS = 7
+
+function setUTMToLocalStorage(utmParams: Partial<UTMData>) {
+  const expiryTime = Date.now() + UTM_EXPIRY_DAYS * 24 * 60 * 60 * 1000 // 7 days from now
+
+  const utmData: UTMData = {
+    ...utmParams,
+    expiry: expiryTime,
+  }
+
+  // Only store if there's at least one UTM parameter
+  const hasUTMParams = Object.keys(utmParams).some(
+    (key) => key.startsWith('utm_') && utmParams[key as keyof typeof utmParams]
+  )
+
+  if (hasUTMParams) {
+    localStorage.setItem(LOCAL_STORAGE_UTM, JSON.stringify(utmData))
+  }
+}
+
+function getUTMFromLocalStorage(): Partial<UTMData> | null {
+  try {
+    const storedData = localStorage.getItem(LOCAL_STORAGE_UTM)
+    if (!storedData) return null
+
+    const utmData: UTMData = JSON.parse(storedData)
+
+    // Check if expired
+    if (Date.now() > utmData.expiry) {
+      localStorage.removeItem(LOCAL_STORAGE_UTM)
+      return null
+    }
+
+    // Return UTM parameters without expiry
+    const { ...utmParams } = utmData
+    return utmParams
+  } catch (error) {
+    console.warn('Error reading UTM from localStorage:', error)
+    localStorage.removeItem(LOCAL_STORAGE_UTM) // Clean up corrupted data
+    return null
+  }
+}
+
+function extractUTMFromURL(): Partial<UTMData> {
+  if (typeof window === 'undefined') return {}
+
+  const parsedUrl = queryString.parseUrl(window.location.href)
+  const { utm_source, utm_media, utm_campaign, utm_term, utm_content } =
+    parsedUrl?.query || {}
+
+  return {
+    utm_source: utm_source as string,
+    utm_media: utm_media as string,
+    utm_campaign: utm_campaign as string,
+    utm_term: utm_term as string,
+    utm_content: utm_content as string,
+  }
+}
+
+function getCurrentUTMParams(): Partial<UTMData> {
+  // First try to get from URL (current visit)
+  const urlUTM = extractUTMFromURL()
+  const hasCurrentUTM = Object.values(urlUTM).some((value) => value)
+
+  if (hasCurrentUTM) {
+    // If URL has UTM, use and store it
+    setUTMToLocalStorage(urlUTM)
+    return urlUTM
+  }
+
+  // Otherwise, use stored UTM
+  return getUTMFromLocalStorage() || {}
 }
 
 function isMobile() {
@@ -111,12 +196,11 @@ export function EventTrackerProvider({
 
   async function pushEvent(opt: EventAttribute) {
     const { name, category, topic, data = {}, backgroundProcess } = opt
-    const parsedUrl = queryString.parseUrl(window.location.href)
-
-    const { utm_source, utm_media, utm_campaign, utm_term, utm_content } =
-      parsedUrl?.query
 
     try {
+      // Get current UTM parameters (from URL or localStorage)
+      const utmParams = getCurrentUTMParams()
+
       const payload = {
         event: {
           name,
@@ -133,11 +217,11 @@ export function EventTrackerProvider({
           longitude: '',
         },
         utm: {
-          utm_source,
-          utm_media,
-          utm_campaign,
-          utm_term,
-          utm_content,
+          utm_source: utmParams.utm_source,
+          utm_media: utmParams.utm_media,
+          utm_campaign: utmParams.utm_campaign,
+          utm_term: utmParams.utm_term,
+          utm_content: utmParams.utm_content,
         },
         __v: 0,
       }
@@ -163,6 +247,12 @@ export function EventTrackerProvider({
       fullName: profile?.name,
       username: profile?.username,
       joinDate: profile?.createdAt,
+      ...(payload.event.category === 'umrah-personal'
+        ? {
+            phoneNumber: profile?.persona?.phoneNumber,
+            phoneNumberVerified: profile?.phonenumberVerified,
+          }
+        : {}),
     }
 
     try {
@@ -205,6 +295,16 @@ export function EventTrackerProvider({
 
   useEffect(() => {
     if (hasLoggedIn()) getProfile()
+
+    // Initialize UTM handling on first load
+    const urlUTM = extractUTMFromURL()
+    const hasCurrentUTM = Object.values(urlUTM).some((value) => value)
+
+    if (hasCurrentUTM) {
+      // Store UTM parameters from URL
+      setUTMToLocalStorage(urlUTM)
+    }
+
     const __sessionIdFromCookie = getCookie(cookieNames.SESSION_ID)
     const __sessionId = window?.sessionStorage.getItem('session-id') || uuid()
     window.sessionStorage.setItem('session-id', __sessionId)

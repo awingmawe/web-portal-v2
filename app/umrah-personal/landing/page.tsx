@@ -4,6 +4,7 @@ import LearnMoreSection from '@/components/pages/umrah-personal/landing/2-LearnM
 import UmrohPersonalStartSection from '@/components/pages/umrah-personal/landing/3-UmrahPersonalStart/BannerStart'
 import ScrollContainerWrapper from '@/components/pages/umrah-personal/landing/layout'
 import TopbarMobileLandingUmrahPersonal from '@/components/pages/umrah-personal/landing/mobile/Topbar'
+import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
 
@@ -22,6 +23,14 @@ export default async function UmrahPersonalLanding() {
       <UmrohLandingSection token={token} />
       <LearnMoreSection />
       <UmrohPersonalStartSection />
+
+      <EventTrackerImpression
+        id="umrah_personal_landing"
+        nameDidMount="impression_umrah_personal_landing"
+        nameDidUnmount="exit_umrah_personal_landing"
+        topic="umrah"
+        category="umrah-personal"
+      />
     </ScrollContainerWrapper>
   )
 }

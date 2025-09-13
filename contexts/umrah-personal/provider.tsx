@@ -1,10 +1,14 @@
 'use client'
 
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import {
   INITIAL_STEP,
   STEP_1,
   STEP_2,
+  STEP_3,
+  STEP_4,
+  STEP_5,
   TOTAL_STEPS,
 } from '@/contexts/umrah-personal/constant'
 import { UmrahPersonalContext } from '@/contexts/umrah-personal/context'
@@ -15,6 +19,7 @@ export const UmrahPersonalProvider: React.FC<{
   children: React.ReactNode
 }> = ({ children }) => {
   // Use useState instead of useRef for reactive state
+  const { pushEvent } = useEventTracker()
   const [currentStep, setCurrentStep] = useState<number>(INITIAL_STEP)
   const [totalSteps, setTotalSteps] = useState<number>(TOTAL_STEPS)
   const [openDialogDrawerEndForm, setOpenDialogDrawerEndForm] = useState(false)
@@ -115,7 +120,14 @@ export const UmrahPersonalProvider: React.FC<{
         currentStepKey = STEP_2
         isValid = await trigger(STEP_2)
         break
+      case 3:
+        currentStepKey = STEP_3
+        break
+      case 4:
+        currentStepKey = STEP_4
+        break
       case 5:
+        currentStepKey = STEP_5
         isValid = true
         break
     }
@@ -151,6 +163,15 @@ export const UmrahPersonalProvider: React.FC<{
       }
       return
     }
+
+    pushEvent({
+      name: 'click_next_umroh_personal',
+      category: 'umrah-personal',
+      topic: 'umrah',
+      data: {
+        stepName: currentStepKey,
+      },
+    })
 
     const nextStep = currentStep + 1
     setCurrentStep(nextStep)
