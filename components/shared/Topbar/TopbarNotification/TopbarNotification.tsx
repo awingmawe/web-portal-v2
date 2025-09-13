@@ -1,43 +1,59 @@
 'use client'
 import { NotifIcon, NotifIconBlack } from '@/components/icons/notif'
 import NotificationComponent from '@/components/shared/Notification'
+import { Notification } from '@/constant/types/NotificationProps'
 import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
 import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+
 interface WebSocketMessage {
   event: string
   data: {
     notification: Notification
   }
 }
+
 const TopbarNotification = ({ token }: { token: string }) => {
   const {
-    // State
     isExpanded,
-
     countBadge,
     setCountBadge,
-    // Refs
+    getDataBadge,
     containerRef,
-
-    // Handlers
     handleNotifIconClick,
   } = useTopbarNotification({ token })
+
   const { messages } = useWebSocket(token ?? '') as {
     messages: WebSocketMessage[]
   }
+  const processedMessagesRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     if (!messages.length) return
 
     const latest = messages[messages.length - 1]
+    const messageId = `${latest.event}-${JSON.stringify(latest.data)}-${Date.now()}`
+
+    if (processedMessagesRef.current.has(messageId)) {
+      return
+    }
+
+    processedMessagesRef.current.add(messageId)
 
     if (latest.event === 'new_notif') {
       setCountBadge?.((prev: number) => prev + 1)
+      setTimeout(() => {
+        getDataBadge?.()
+      }, 100)
     }
-  }, [messages, setCountBadge])
+    if (processedMessagesRef.current.size > 100) {
+      const messagesArray = Array.from(processedMessagesRef.current)
+      processedMessagesRef.current = new Set(messagesArray.slice(-50))
+    }
+  }, [messages, setCountBadge, getDataBadge])
+
   return (
     <div ref={containerRef} className="relative">
       {/* Desktop Notification */}
@@ -59,6 +75,7 @@ const TopbarNotification = ({ token }: { token: string }) => {
           )}
         </div>
       </motion.div>
+
       {/* Mobile Notification */}
       <Link href={'/notification-mobile'}>
         <div className="relative lg:hidden">
@@ -91,6 +108,8 @@ const TopbarNotification = ({ token }: { token: string }) => {
               fromMy={false}
               token={token}
               setCountBadge={setCountBadge}
+              webSocketMessages={messages}
+              isDropdownOpen={isExpanded}
             />
           </motion.div>
         )}

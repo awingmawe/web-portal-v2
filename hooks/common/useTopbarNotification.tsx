@@ -34,7 +34,6 @@ const tabs: Tab[] = [
 ]
 
 export const useTopbarNotification = ({ token }: { token: string }) => {
-  // State management
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
   const [notifications, setNotifications] = useState<Notification[]>()
   const [badge, setBadge] = useState<Badge>()
@@ -44,11 +43,9 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
   const [size, setSize] = useState<number>(3)
   const [page, setPage] = useState<number>(1)
 
-  // Refs
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Handle click outside to close notification panel
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -67,15 +64,13 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isExpanded])
-
-  // Focus input when expanded and maintain focus when popover opens
   useEffect(() => {
     if (isExpanded && inputRef.current) {
       inputRef.current?.focus()
     }
   }, [isExpanded])
 
-  const getDataList = async () => {
+  const getDataList = useCallback(async () => {
     try {
       const filter = {
         size,
@@ -90,12 +85,15 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     } catch (error) {
       console.error(error)
     }
-  }
-  const getDataBadge = async () => {
+  }, [size, page, activeTab, token])
+
+  const getDataBadge = useCallback(async () => {
     try {
       const res = await getNotificationBadge(token)
       const resStat = await getListCountNotif(token)
+
       setBadge(res)
+
       const total =
         (res.needToBePaid ?? 0) +
         (res.onGoingTransaction ?? 0) +
@@ -107,11 +105,17 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     } catch (error) {
       console.log(error)
     }
-  }
+  }, [token])
+
   useEffect(() => {
-    getDataList()
-    getDataBadge()
-  }, [activeTab, size, page])
+    if (!token) return
+
+    const loadData = async () => {
+      await Promise.all([getDataList(), getDataBadge()])
+    }
+
+    loadData()
+  }, [activeTab, size, page, token])
 
   const handleNotifIconClick = useCallback(() => {
     setIsExpanded((prev) => !prev)
@@ -119,30 +123,36 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
 
   const handleTabClick = useCallback((tabId: TabId) => {
     setActiveTab(tabId)
+    setPage(1)
   }, [])
 
-  const markAsRead = useCallback(async (notificationId: string) => {
-    try {
-      await postReadNotif(notificationId, token)
-      getDataList()
-      getDataBadge()
-    } catch (error) {
-      console.error(error)
-    }
-  }, [])
+  const markAsRead = useCallback(
+    async (notificationId: string) => {
+      try {
+        await postReadNotif(notificationId, token)
+        return true
+      } catch (error) {
+        console.error('Error marking notification as read:', error)
+        throw error
+      }
+    },
+    [token]
+  )
+
   const markAsReadAll = useCallback(async () => {
     try {
       await postReadNotif('all', token)
-      if (activeTab === 'belum-dibaca') {
-        setNotifications([]) // kosongin list biar jelas udah ga ada notif unread
-      } else {
-        getDataList()
-      }
-      getDataBadge()
+      setTimeout(async () => {
+        await Promise.all([getDataList(), getDataBadge()])
+      }, 200)
+
+      return true
     } catch (error) {
-      console.error(error)
+      console.error('Error marking all notifications as read:', error)
+      throw error
     }
-  }, [token, activeTab])
+  }, [token, getDataList, getDataBadge])
+
   const getNotificationBgClass = useCallback(
     (type: Notification['type']): string => {
       switch (type) {
@@ -198,6 +208,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
       },
     },
   }
+
   const categories: Category[] = [
     {
       id: 'payment',
@@ -228,16 +239,14 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
       href: '/my/check-availability',
     },
   ]
+
   return {
-    // State
     isExpanded,
     notifications,
     activeTab,
     categories,
     tabs,
     badge,
-
-    // Refs
     inputRef,
     containerRef,
     countBadge,
@@ -246,7 +255,6 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     setCountBadge,
     setSize,
     setPage,
-    // Handlers
     handleNotifIconClick,
     handleTabClick,
     markAsRead,
@@ -254,11 +262,11 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
     totalNotif,
     page,
     size,
-    // Computed functions
     getNotificationBgClass,
-
-    // Animation variants
     searchNotifVariants,
     notificationPanelVariants,
+    getDataList,
+    getDataBadge,
+    currentSize: 3,
   }
 }
