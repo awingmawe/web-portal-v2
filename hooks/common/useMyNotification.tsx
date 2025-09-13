@@ -50,9 +50,6 @@ export const useMyNotification = ({
 
   useEffect(() => {
     currentSizeRef.current = pageSize
-    console.log(
-      `useMyNotification: Size set to ${pageSize} for isMyPage: ${isMyPage}`
-    )
   }, [pageSize, isMyPage])
 
   const getDataList = useCallback(
@@ -73,9 +70,6 @@ export const useMyNotification = ({
         if (!signal?.aborted) {
           setNotifications(res.results)
           setTotalNotif(res.total)
-          console.log(
-            `useMyNotification: Fetched ${res.results.length} notifications`
-          )
         }
       } catch (error: any) {
         if (!signal?.aborted) {
@@ -116,7 +110,7 @@ export const useMyNotification = ({
         }
       } catch (error: any) {
         if (!signal?.aborted) {
-          console.log('useMyNotification: Error fetching badge:', error)
+          console.error('useMyNotification: Error fetching badge:', error)
         }
       }
     },
@@ -134,9 +128,6 @@ export const useMyNotification = ({
     const signal = abortControllerRef.current.signal
 
     const loadInitialData = async () => {
-      console.log(
-        `useMyNotification: Initial data load for isMyPage: ${isMyPage}`
-      )
       await Promise.all([getDataList(signal), getDataBadge(signal)])
       isInitializedRef.current = true
     }
@@ -166,7 +157,6 @@ export const useMyNotification = ({
   }, [activeTab, page, getDataList])
 
   const handleTabClick = useCallback((tabId: TabId) => {
-    console.log(`useMyNotification: Tab clicked: ${tabId}`)
     setActiveTab(tabId)
     setPage(1)
   }, [])

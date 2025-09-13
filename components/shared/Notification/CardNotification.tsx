@@ -44,14 +44,6 @@ const CardNotification = ({
   const shouldUseInfiniteScroll = mobile && !fromMy
   const shouldUseIsolatedHook = fromMy || mobile
 
-  console.log('CardNotification Init:', {
-    fromMy,
-    mobile,
-    shouldUseInfiniteScroll,
-    shouldUseIsolatedHook,
-    hasToken: !!token,
-  })
-
   const {
     notifications: infiniteNotifications,
     hasMore,
@@ -93,7 +85,6 @@ const CardNotification = ({
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (shouldUseInfiniteScroll && token && activeTab !== 'baca-semua') {
-      console.log('Initializing infinite scroll...')
       fetchInitialNotifications({
         activeTab: activeTab as 'semua' | 'belum-dibaca',
         token,
@@ -117,7 +108,6 @@ const CardNotification = ({
 
     if (latest.event === 'new_notif') {
       const newNotification = { ...latest.data.notification, readAt: null }
-      console.log('New notification received:', newNotification)
 
       if (shouldUseInfiniteScroll) {
         addNotification(newNotification)
@@ -238,7 +228,6 @@ const CardNotification = ({
 
   const handleTabClickWithReset = useCallback(
     (tabId: 'semua' | 'belum-dibaca' | 'baca-semua') => {
-      console.log('Tab clicked:', tabId)
       handleTabClick(tabId)
       if (shouldUseInfiniteScroll && tabId !== 'baca-semua') {
         resetNotifications()
@@ -253,9 +242,6 @@ const CardNotification = ({
 
   const handleMarkAsReadAll = useCallback(async () => {
     try {
-      const unreadCount = notifications?.filter((n) => !n.readAt).length ?? 0
-      console.log('Marking all as read, unread count:', unreadCount)
-
       if (shouldUseInfiniteScroll) {
         if (activeTab === 'belum-dibaca') {
           resetNotifications()
@@ -297,7 +283,6 @@ const CardNotification = ({
 
   const goToPage = useCallback(
     (newPage: number) => {
-      console.log('Going to page:', newPage)
       setPage(newPage)
       window.scrollTo(0, 0)
     },

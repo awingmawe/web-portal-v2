@@ -103,7 +103,7 @@ export const useTopbarNotification = ({ token }: { token: string }) => {
 
       setCountBadge(total)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }, [token])
 
