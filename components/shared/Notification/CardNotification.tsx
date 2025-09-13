@@ -98,18 +98,7 @@ const CardNotification = ({
     if (!messages.length) return
 
     const latest = messages[messages.length - 1]
-
-    if (!latest || !latest.data || !latest.data.notification) {
-      return
-    }
-
-    const notification = latest.data.notification
-
-    if (!notification.id || !notification.createdAt) {
-      return
-    }
-
-    const messageId = `${latest.event}-${notification.id}-${notification.createdAt}`
+    const messageId = `${latest?.event}-${latest?.data?.notification?.id}-${latest?.data?.notification?.createdAt}`
 
     if (processedMessagesRef.current.has(messageId)) {
       return
@@ -118,21 +107,12 @@ const CardNotification = ({
     processedMessagesRef.current.add(messageId)
 
     if (latest.event === 'new_notif') {
-      const newNotification = { ...notification, readAt: null }
-
-      console.log('Processing new notification:', {
-        id: newNotification.id,
-        title: newNotification.title,
-        fromMy,
-        mobile,
-        shouldUseInfiniteScroll,
-      })
+      const newNotification = { ...latest.data.notification, readAt: null }
 
       if (shouldUseInfiniteScroll) {
         addNotification(newNotification)
       } else {
         setNotifications((prev) => [newNotification, ...(prev ?? [])])
-
         if (isDropdownOpen && !fromMy && !mobile) {
           setTimeout(() => {
             getDataList?.()
