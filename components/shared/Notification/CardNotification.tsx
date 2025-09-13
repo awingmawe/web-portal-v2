@@ -336,7 +336,7 @@ const CardNotification = ({
         }`}
       >
         {isEmpty(notifications) && !isLoading ? (
-          <div className="rounded bg-neutral-50 p-8 text-center">
+          <div className="p-8 text-center">
             <div className="text-center">
               <p className="text-s-semibold mb-2 text-neutral-900">
                 Belum ada pembaruan lagi, nih
@@ -355,7 +355,7 @@ const CardNotification = ({
                   animate={{ opacity: 1, x: 0 }}
                   className={`hover:bg-warning-200 mb-2 cursor-pointer rounded-lg p-4 transition-colors ${
                     notification.readAt !== null
-                      ? 'bg-neutral-50'
+                      ? ''
                       : notification.category === 'PROMO'
                         ? 'bg-warning-100'
                         : 'bg-primary-100'
