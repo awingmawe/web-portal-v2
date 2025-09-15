@@ -158,7 +158,7 @@ export const hotelMeccaSchema = z.object({
   hotelMecca: z.object({
     id: z.number(),
     name: z.string(),
-    rating: z.number(),
+    rating: z.number().optional(),
     hotelDestination: z.array(
       z.object({
         id: z.number(),
@@ -181,7 +181,7 @@ export const hotelMedinaSchema = z.object({
   hotelMedina: z.object({
     id: z.number(),
     name: z.string(),
-    rating: z.number(),
+    rating: z.number().optional(),
     hotelDestination: z.array(
       z.object({
         id: z.number(),

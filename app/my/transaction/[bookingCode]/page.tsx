@@ -1,5 +1,6 @@
 import TransactionDetailContent from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailContent'
 import LayoutMy from '@/components/pages/my/Layout'
+import { STATUS_BOOKING } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
 import { getOrderPayment, getTransactionDetail } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
@@ -16,7 +17,10 @@ export default async function TransactionDetailPage({ params }: any) {
   if (
     dataDetail?.status?.slug !== 'canceled-by-user' &&
     dataDetail?.status?.slug !== 'canceled-by-travel' &&
-    dataDetail?.status?.slug !== 'expired'
+    dataDetail?.status?.slug !== 'expired' &&
+    dataDetail?.status?.slug !== 'waiting-approval' &&
+    dataDetail?.status?.slug !== STATUS_BOOKING.WAITING_FOR_BILL &&
+    dataDetail?.status?.slug !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
   ) {
     transactionData = await getOrderPayment(awaitedParams.bookingCode, token)
   }
