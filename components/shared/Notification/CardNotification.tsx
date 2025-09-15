@@ -5,12 +5,8 @@ import { PengingatIcon } from '@/components/icons/pengingat'
 import { PromoIcon } from '@/components/icons/promo'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { Notification } from '@/constant/types/NotificationProps'
-import { useMyNotification } from '@/hooks/common/useMyNotification' // NEW: Import isolated hook
+import { useNotification } from '@/hooks/common/useMyNotification'
 import { useNotificationInfiniteScroll } from '@/hooks/common/useNotificationInfiniteScroll'
-import {
-  Tab,
-  useTopbarNotification,
-} from '@/hooks/common/useTopbarNotification'
 import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { isEmpty, timeSince } from '@/lib/utils'
 import { motion } from 'framer-motion'
@@ -33,6 +29,20 @@ interface WebSocketMessage {
   }
 }
 
+// Type guard to validate websocket message structure
+const isValidWebSocketMessage = (message: any): message is WebSocketMessage => {
+  return (
+    message &&
+    typeof message.event === 'string' &&
+    message.data &&
+    message.data.notification &&
+    message.data.notification.id !== undefined &&
+    message.data.notification.id !== null &&
+    message.data.notification.createdAt &&
+    message.data.notification.title
+  )
+}
+
 const CardNotification = ({
   token,
   fromMy,
@@ -42,8 +52,17 @@ const CardNotification = ({
   isDropdownOpen = false,
 }: CardNotificationProps) => {
   const shouldUseInfiniteScroll = mobile && !fromMy
-  const shouldUseIsolatedHook = fromMy || mobile
 
+  // Determine notification mode
+  const getNotificationMode = () => {
+    if (fromMy) return 'page'
+    if (mobile) return 'mobile'
+    return 'dropdown'
+  }
+
+  const mode = getNotificationMode()
+
+  // Infinite scroll hook (only for mobile)
   const {
     notifications: infiniteNotifications,
     hasMore,
@@ -54,12 +73,8 @@ const CardNotification = ({
     addNotification,
     updateNotification,
   } = useNotificationInfiniteScroll(10)
-  const isolatedHook = useMyNotification({
-    token,
-    pageSize: fromMy || mobile ? 10 : 3,
-    isMyPage: fromMy,
-  })
-  const traditionalHook = useTopbarNotification({ token })
+
+  // Unified notification hook
   const {
     tabs,
     activeTab,
@@ -73,7 +88,12 @@ const CardNotification = ({
     page,
     getDataList,
     getDataBadge,
-  } = shouldUseIsolatedHook ? isolatedHook : traditionalHook
+    isLoading: hookLoading,
+  } = useNotification({
+    token,
+    mode,
+    pageSize: fromMy || mobile ? 10 : 3,
+  })
 
   const localWebSocket = useWebSocket(
     webSocketMessages ? '' : (token ?? '')
@@ -83,6 +103,8 @@ const CardNotification = ({
 
   const messages = webSocketMessages || localWebSocket.messages
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  // Infinite scroll initialization
   useEffect(() => {
     if (shouldUseInfiniteScroll && token && activeTab !== 'baca-semua') {
       fetchInitialNotifications({
@@ -92,13 +114,21 @@ const CardNotification = ({
     }
   }, [shouldUseInfiniteScroll, activeTab, token, fetchInitialNotifications])
 
+  // WebSocket handling with better safety
   const processedMessagesRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     if (!messages.length) return
 
     const latest = messages[messages.length - 1]
-    const messageId = `${latest?.event}-${latest?.data?.notification?.id}-${latest?.data?.notification?.createdAt}`
+
+    // Validate message structure using type guard
+    if (!isValidWebSocketMessage(latest)) {
+      return
+    }
+
+    const notification = latest.data.notification
+    const messageId = `${latest.event}-${notification.id}-${notification.createdAt}`
 
     if (processedMessagesRef.current.has(messageId)) {
       return
@@ -107,25 +137,22 @@ const CardNotification = ({
     processedMessagesRef.current.add(messageId)
 
     if (latest.event === 'new_notif') {
-      const newNotification = { ...latest.data.notification, readAt: null }
+      const newNotification = { ...notification, readAt: null }
 
       if (shouldUseInfiniteScroll) {
         addNotification(newNotification)
       } else {
         setNotifications((prev) => [newNotification, ...(prev ?? [])])
-        if (isDropdownOpen && !fromMy && !mobile) {
+
+        // Refresh dropdown data when open
+        if (isDropdownOpen && mode === 'dropdown') {
           setTimeout(() => {
             getDataList?.()
           }, 100)
         }
       }
 
-      setCountBadge?.((prev: number) => prev + 1)
-    }
-
-    if (processedMessagesRef.current.size > 50) {
-      const messagesArray = Array.from(processedMessagesRef.current)
-      processedMessagesRef.current = new Set(messagesArray.slice(-25))
+      // setCountBadge?.((prev: number) => prev + 1)
     }
   }, [
     messages,
@@ -134,8 +161,7 @@ const CardNotification = ({
     setNotifications,
     setCountBadge,
     isDropdownOpen,
-    fromMy,
-    mobile,
+    mode,
     getDataList,
   ])
 
@@ -271,7 +297,6 @@ const CardNotification = ({
       window.location.reload()
     }
   }, [
-    notifications,
     shouldUseInfiniteScroll,
     activeTab,
     resetNotifications,
@@ -289,9 +314,8 @@ const CardNotification = ({
     [setPage]
   )
 
-  const isLoading = shouldUseInfiniteScroll
-    ? infiniteLoading
-    : isolatedHook?.isLoading || false
+  const isLoading = shouldUseInfiniteScroll ? infiniteLoading : hookLoading
+
   return (
     <div
       className={
@@ -304,8 +328,8 @@ const CardNotification = ({
       >
         <div className="flex space-x-1">
           {tabs
-            .filter((tab: Tab) => tab.id !== 'baca-semua')
-            .map((tab: Tab) => (
+            .filter((tab) => tab.id !== 'baca-semua')
+            .map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => handleTabClickWithReset(tab.id)}
@@ -332,7 +356,7 @@ const CardNotification = ({
       <div
         ref={scrollRef}
         className={`overflow-y-auto ${
-          fromMy ? 'min-h-[400px]' : mobile ? 'h-[80dvh]' : 'max-h-96'
+          fromMy ? 'h-full' : mobile ? 'h-[80dvh]' : 'max-h-96'
         }`}
       >
         {isEmpty(notifications) && !isLoading ? (

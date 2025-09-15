@@ -2,7 +2,7 @@
 import { NotifIcon, NotifIconBlack } from '@/components/icons/notif'
 import NotificationComponent from '@/components/shared/Notification'
 import { Notification } from '@/constant/types/NotificationProps'
-import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
+import { useNotification } from '@/hooks/common/useMyNotification'
 import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
@@ -23,7 +23,7 @@ const TopbarNotification = ({ token }: { token: string }) => {
     getDataBadge,
     containerRef,
     handleNotifIconClick,
-  } = useTopbarNotification({ token })
+  } = useNotification({ token, mode: 'dropdown' })
 
   const { messages } = useWebSocket(token ?? '') as {
     messages: WebSocketMessage[]
@@ -47,10 +47,6 @@ const TopbarNotification = ({ token }: { token: string }) => {
       setTimeout(() => {
         getDataBadge?.()
       }, 100)
-    }
-    if (processedMessagesRef.current.size > 100) {
-      const messagesArray = Array.from(processedMessagesRef.current)
-      processedMessagesRef.current = new Set(messagesArray.slice(-50))
     }
   }, [messages, setCountBadge, getDataBadge])
 

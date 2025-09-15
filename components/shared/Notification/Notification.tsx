@@ -2,7 +2,7 @@
 
 import CardNotification from '@/components/shared/Notification/CardNotification'
 import { Category, Notification } from '@/constant/types/NotificationProps'
-import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
+import { useNotification } from '@/hooks/common/useMyNotification'
 import { isEmpty } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -30,14 +30,21 @@ const NotificationComponent: React.FC<NotificationComponentProps> = ({
   webSocketMessages,
   isDropdownOpen = false,
 }) => {
-  const { categories, notifications } = useTopbarNotification({
-    token: !fromMy && !mobile ? token : '',
+  const getNotificationMode = () => {
+    if (fromMy) return 'page'
+    if (mobile) return 'mobile'
+    return 'dropdown'
+  }
+
+  const mode = getNotificationMode()
+  const { categories, notifications } = useNotification({
+    token,
+    mode,
+    ...(mode === 'dropdown' && { pageSize: 3 }),
   })
 
   return (
-    <div
-      className={`${fromMy ? 'min-h-screen bg-white' : ''} p-4 max-lg:mt-10`}
-    >
+    <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}
       <div
         className={`${fromMy ? 'heading-3-medium' : 'text-l-semibold '} mb-3 text-neutral-800 max-lg:hidden`}
