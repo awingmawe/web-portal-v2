@@ -20,7 +20,8 @@ export default async function TransactionDetailPage({ params }: any) {
     dataDetail?.status?.slug !== 'expired' &&
     dataDetail?.status?.slug !== 'waiting-approval' &&
     dataDetail?.status?.slug !== STATUS_BOOKING.WAITING_FOR_BILL &&
-    dataDetail?.status?.slug !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION
+    dataDetail?.status?.slug !== STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+    dataDetail?.status?.slug !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
   ) {
     transactionData = await getOrderPayment(awaitedParams.bookingCode, token)
   }
