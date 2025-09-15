@@ -30,7 +30,7 @@ interface WebSocketMessage {
 }
 
 // Type guard to validate websocket message structure
-const isValidWebSocketMessage = (message: any): message is WebSocketMessage => {
+const isValidWebSocketMessage = (message: WebSocketMessage) => {
   return (
     message &&
     typeof message.event === 'string' &&
