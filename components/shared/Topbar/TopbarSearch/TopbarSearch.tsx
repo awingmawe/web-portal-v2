@@ -1,4 +1,3 @@
-// components/TopbarSearch.tsx
 'use client'
 
 import { SearchIcon } from '@/components/icons/search'
@@ -39,7 +38,6 @@ const TopbarSearch: React.FC = () => {
     handleSearchIconClick,
     handleXClick,
     handleInputChange,
-    handleKeyDown,
     handlePackageClick,
     handleCategoryClick,
     handleOpenAutoFocus,
@@ -88,7 +86,6 @@ const TopbarSearch: React.FC = () => {
                     className="w-full max-w-[310px] pr-10"
                     value={searchQuery}
                     onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
                   />
                   <X
                     className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer rounded-full p-1 text-neutral-500 transition-colors hover:bg-neutral-100"

@@ -286,7 +286,7 @@ export default function TransactionDetailContent({
                 : 'grid md:grid-cols-1'
             } rounded-lg bg-white shadow-md max-lg:h-auto`}
           >
-            <div className="scrollbar-hide max-h-[80vh] overflow-y-auto border-r border-neutral-100 py-4 max-lg:max-h-full">
+            <div className="scrollbar-hide mb-10 max-h-[80vh] overflow-y-auto border-r border-neutral-100 pt-4 max-lg:max-h-full">
               {/* Header */}
               <TransactionDetailHeader
                 packageType={
@@ -467,6 +467,7 @@ export default function TransactionDetailContent({
                 transaction.status.slug !== STATUS_BOOKING.WAITING_FOR_BILL &&
                 transaction.status.slug !==
                   STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION &&
+                transaction.status.slug !== 'waiting-approval' &&
                 (paymentLink ||
                   transaction.status.slug !==
                     STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ) && (

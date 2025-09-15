@@ -41,6 +41,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
 
   // Final form submission
   const onSubmit = async (data: UmrahPersonalFormType) => {
+    console.log('masuk')
     const payload: RequestFormUmrahPersonal = {
       // Journey Information
       journeyType: data.journeyInformation.journeyType,
@@ -74,36 +75,37 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
     try {
       const result = await umrahPersonalRegister(payload)
 
-      pushEvent({
-        name: 'submit_create_umroh_personal',
-        category: 'umrah-personal',
-        topic: 'umrah',
-        data: {
-          packageType: payload.journeyType,
-          activity: payload.activity,
-          createVisa: payload.createVisa,
-          useInsurance: payload.useInsurance,
-          departureDate: payload.departureDate,
-          arrivalDate: payload.arrivalDate,
-          totalManifest: payload.totalManifest,
-          departureAirportFrom: payload.departure.from,
-          departureAirportTo: payload.departure.to,
-          departureAirline: payload.departure.airline,
-          departureFlightClass: payload.departure.flightClass,
-          departureFlightRoute: payload.departure.flightRoute,
-          arrivalAirportFrom: payload.arrival.from,
-          arrivalAirportTo: payload.arrival.to,
-          arrivalAirline: payload.arrival.airline,
-          arrivalFlightClass: payload.arrival.flightClass,
-          arrivalFlightRoute: payload.arrival.flightRoute,
-          hotelMakkahStar: data.hotelMecca.hotelMecca.rating,
-          hotelMakkahName: data.hotelMecca.hotelMecca.name,
-          hotelMedinaStar: data.hotelMedina?.hotelMedina?.rating,
-          hotelMedinaName: data.hotelMedina?.hotelMedina?.name,
-          transportationName: data.transportation?.transportation.name ?? null,
-        },
-      })
       if (result) {
+        pushEvent({
+          name: 'submit_create_umroh_personal',
+          category: 'umrah-personal',
+          topic: 'umrah',
+          data: {
+            packageType: payload.journeyType,
+            activity: payload.activity,
+            createVisa: payload.createVisa,
+            useInsurance: payload.useInsurance,
+            departureDate: payload.departureDate,
+            arrivalDate: payload.arrivalDate,
+            totalManifest: payload.totalManifest,
+            departureAirportFrom: payload.departure.from,
+            departureAirportTo: payload.departure.to,
+            departureAirline: payload.departure.airline,
+            departureFlightClass: payload.departure.flightClass,
+            departureFlightRoute: payload.departure.flightRoute,
+            arrivalAirportFrom: payload.arrival.from,
+            arrivalAirportTo: payload.arrival.to,
+            arrivalAirline: payload.arrival.airline,
+            arrivalFlightClass: payload.arrival.flightClass,
+            arrivalFlightRoute: payload.arrival.flightRoute,
+            hotelMakkahStar: data.hotelMecca.hotelMecca.rating,
+            hotelMakkahName: data.hotelMecca.hotelMecca.name,
+            hotelMedinaStar: data.hotelMedina?.hotelMedina?.rating,
+            hotelMedinaName: data.hotelMedina?.hotelMedina?.name,
+            transportationName:
+              data.transportation?.transportation.name ?? null,
+          },
+        })
         router.push(`/umrah-personal/success-offering`)
       }
     } catch (error) {

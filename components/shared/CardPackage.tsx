@@ -7,9 +7,15 @@ import BadgePromo from '@/components/shared/Badge'
 import { PACKAGE_TYPE } from '@/constant/env'
 import { CardData } from '@/constant/types/PackageProps'
 import { useEventTracker } from '@/contexts/event-tracker/context'
-import { capitalizeText, cn, isEmpty, isValidImage } from '@/lib/utils'
+import {
+  capitalizeText,
+  cn,
+  formatDateByPackageType,
+  isEmpty,
+  isValidImage,
+} from '@/lib/utils'
 import NoImagePlaceholder from '@/public/images/no-image-placeholder.png'
-import { addYears, differenceInDays, format } from 'date-fns'
+import { differenceInDays, format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -59,49 +65,15 @@ export const CardPackage = memo(function CardPackage({
     () => !isEmpty(discount) && Number(discount) > 0,
     [discount]
   )
-  const formattedDepartureDate = useMemo(() => {
-    try {
-      if (packageType === PACKAGE_TYPE.HAJJ) {
-        return departureDate && format(departureDate, 'yyyy', { locale: id })
-      } else if (packageType === PACKAGE_TYPE.UMRAH) {
-        return (
-          departureDate && format(departureDate, 'dd MMM yyyy', { locale: id })
-        )
-      } else {
-        return ''
-      }
-    } catch (error) {
-      console.error('Error formatting departureDate:', error)
-      return ''
-    }
-  }, [departureDate, packageType])
-
-  const formattedArrivalDate = useMemo(() => {
-    try {
-      if (packageType === PACKAGE_TYPE.UMRAH) {
-        return (
-          arrivalDate &&
-          `- ${format(arrivalDate, 'dd MMM yyyy', { locale: id })}`
-        )
-      } else if (variantType === PACKAGE_TYPE.HAJJ_SPECIAL) {
-        return (
-          waitingPeriod &&
-          `- ${format(
-            departureDate
-              ? addYears(departureDate, Number(waitingPeriod))
-              : new Date(),
-            'yyyy',
-            { locale: id }
-          )}`
-        )
-      } else {
-        return ''
-      }
-    } catch (error) {
-      console.error('Error formatting arrivalDate:', error)
-      return ''
-    }
-  }, [arrivalDate, departureDate, packageType, variantType, waitingPeriod])
+  const { formattedDepartureDate, formattedArrivalDate } = useMemo(() => {
+    return formatDateByPackageType({
+      departureDate,
+      arrivalDate: arrivalDate ?? '',
+      packageType: packageType,
+      variantType: variantType,
+      waitingPeriod: waitingPeriod,
+    })
+  }, [departureDate, arrivalDate, packageType, variantType, waitingPeriod])
 
   const formattedReleasedAt = useMemo(() => {
     try {
@@ -239,7 +211,12 @@ export const CardPackage = memo(function CardPackage({
         {!isEmpty(codeCountry) && isPlus && (
           <div className="absolute right-0 flex flex-col">{countryFlags}</div>
         )}
-        <div className="absolute bottom-[-4%] left-1/2 inline-flex w-[95%] -translate-x-1/2 -translate-y-1/2 items-center justify-start gap-2 rounded-2xl bg-white/60 px-3 py-1.5 backdrop-blur-[5.20px]">
+        <div
+          className={cn(
+            'absolute bottom-[-4%] left-1/2 inline-flex w-[95%] -translate-x-1/2 -translate-y-1/2 items-center justify-start gap-2 rounded-2xl bg-white/60 px-3 py-1.5 backdrop-blur-[5.20px]',
+            section === 'search-topbar' && 'bottom-[-15%]'
+          )}
+        >
           <StoreIcon size={20} />
           <div className="flex flex-col gap-0.5">
             <p className="text-m-medium break-after-all text-neutral-900 uppercase max-sm:text-xs max-sm:leading-4">
