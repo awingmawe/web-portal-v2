@@ -293,7 +293,12 @@ export default function TransactionDetailContent({
                   transaction?.packageSnapshot?.snapshot?.package?.packageType
                 }
                 isManifestCommitted={transaction?.isManifestCommitted}
-                createdDate={transaction?.createdAt}
+                createdDate={
+                  transaction?.status?.slug ===
+                  STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ
+                    ? transaction?.bookingExchange?.expiredAt
+                    : transaction?.createdAt
+                }
                 statusTahapan={statusTahapan}
                 status={transaction?.status.slug}
                 isPaidOff={transaction?.isPaidOff}

@@ -3,7 +3,8 @@ import { STATUS_BOOKING } from '@/constant/env'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
 import { ellipsis } from '@/lib/utils'
-import dayjs from 'dayjs'
+import { formatInTimeZone } from 'date-fns-tz'
+import { id } from 'date-fns/locale'
 import 'dayjs/locale/id'
 
 interface TransactionDetaiHeaderProps {
@@ -142,10 +143,14 @@ export function TransactionDetailHeader({
           <span className="text-warning-700 flex">
             <TimerIcon className="mr-2" />
             Bayar uang muka sebelum{' '}
-            {dayjs(createdDate)
-              .add(1, 'day')
-              .locale('id')
-              .format('DD MMMM YYYY HH:mm')}
+            {formatInTimeZone(
+              createdDate,
+              'Asia/Jakarta',
+              'dd MMMM yyyy HH:mm',
+              {
+                locale: id,
+              }
+            )}
           </span>
         ) : statusTahapan === 'waiting-approval' ? (
           'Menunggu Konfirmasi'
