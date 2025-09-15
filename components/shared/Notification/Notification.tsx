@@ -1,36 +1,51 @@
 'use client'
 
 import CardNotification from '@/components/shared/Notification/CardNotification'
-import { Category } from '@/constant/types/NotificationProps'
-import { useTopbarNotification } from '@/hooks/common/useTopbarNotification'
+import { Category, Notification } from '@/constant/types/NotificationProps'
+import { useNotification } from '@/hooks/common/useMyNotification'
 import { isEmpty } from '@/lib/utils'
 import Link from 'next/link'
 
+interface WebSocketMessage {
+  event: string
+  data: {
+    notification: Notification
+  }
+}
+
 interface NotificationComponentProps {
   token: string
-  //ini untuk dari pathname my/notifiakasi
   fromMy: boolean
   mobile?: boolean
   setCountBadge?: React.Dispatch<React.SetStateAction<number>>
+  webSocketMessages?: WebSocketMessage[]
+  isDropdownOpen?: boolean
 }
 
 const NotificationComponent: React.FC<NotificationComponentProps> = ({
   token,
   fromMy,
-  mobile,
+  mobile = false,
   setCountBadge,
+  webSocketMessages,
+  isDropdownOpen = false,
 }) => {
-  // Traditional pagination hook (for fromMy and dropdown)
-  const {
-    categories,
+  const getNotificationMode = () => {
+    if (fromMy) return 'page'
+    if (mobile) return 'mobile'
+    return 'dropdown'
+  }
 
-    notifications,
-  } = useTopbarNotification({ token })
+  const mode = getNotificationMode()
+  const { categories, notifications } = useNotification({
+    token,
+    mode,
+    ...(mode === 'dropdown' && { pageSize: 3 }),
+  })
 
   return (
     <div className={`p-4 max-lg:mt-10`}>
       {/* Header */}
-
       <div
         className={`${fromMy ? 'heading-3-medium' : 'text-l-semibold '} mb-3 text-neutral-800 max-lg:hidden`}
       >
@@ -42,9 +57,10 @@ const NotificationComponent: React.FC<NotificationComponentProps> = ({
         )}
       </div>
 
+      {/* Categories - Only show when NOT fromMy */}
       {!fromMy && (
         <div className="mb-4 flex justify-between">
-          {categories.map((category: Category, index: number) => (
+          {categories?.map((category: Category, index: number) => (
             <Link href={category.href} key={index}>
               <div className="relative flex h-15 w-15 flex-col items-center gap-2">
                 <span className="absolute -top-2 -right-0.5 z-10 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-[#B3261E] text-xs font-medium text-white">
@@ -62,14 +78,20 @@ const NotificationComponent: React.FC<NotificationComponentProps> = ({
         </div>
       )}
 
+      {/* Divider - Only show when NOT fromMy */}
       {!fromMy && <div className="mb-1 h-0.5 w-full bg-neutral-100" />}
+
+      {/* Main Notification Card */}
       <CardNotification
         token={token}
         fromMy={fromMy}
         mobile={mobile}
         setCountBadge={setCountBadge}
+        webSocketMessages={webSocketMessages}
+        isDropdownOpen={isDropdownOpen}
       />
 
+      {/* "Lihat Selengkapnya" button - Only show when NOT fromMy and NOT mobile */}
       {!isEmpty(notifications) && !fromMy && !mobile && (
         <Link href={'/my/notification'}>
           <div className={`max-lg:mt-5 max-lg:mb-0`}>

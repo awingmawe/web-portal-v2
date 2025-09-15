@@ -5,11 +5,8 @@ import { PengingatIcon } from '@/components/icons/pengingat'
 import { PromoIcon } from '@/components/icons/promo'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { Notification } from '@/constant/types/NotificationProps'
+import { useNotification } from '@/hooks/common/useMyNotification'
 import { useNotificationInfiniteScroll } from '@/hooks/common/useNotificationInfiniteScroll'
-import {
-  Tab,
-  useTopbarNotification,
-} from '@/hooks/common/useTopbarNotification'
 import { useWebSocket } from '@/hooks/websocket/useWebcoket'
 import { isEmpty, timeSince } from '@/lib/utils'
 import { motion } from 'framer-motion'
@@ -18,10 +15,11 @@ import { useCallback, useEffect, useRef } from 'react'
 
 interface CardNotificationProps {
   token: string
-  //ini untuk dari pathname my/notifiakasi
   fromMy: boolean
   mobile?: boolean
   setCountBadge?: React.Dispatch<React.SetStateAction<number>>
+  webSocketMessages?: WebSocketMessage[]
+  isDropdownOpen?: boolean
 }
 
 interface WebSocketMessage {
@@ -31,14 +29,38 @@ interface WebSocketMessage {
   }
 }
 
+// Type guard to validate websocket message structure
+const isValidWebSocketMessage = (message: WebSocketMessage) => {
+  return (
+    message &&
+    typeof message.event === 'string' &&
+    message.data &&
+    message.data.notification &&
+    message.data.notification.id !== undefined &&
+    message.data.notification.id !== null &&
+    message.data.notification.createdAt &&
+    message.data.notification.title
+  )
+}
+
 const CardNotification = ({
   token,
   fromMy,
-  mobile,
+  mobile = false,
   setCountBadge,
+  webSocketMessages,
+  isDropdownOpen = false,
 }: CardNotificationProps) => {
-  // Conditionally use hooks based on mode
   const shouldUseInfiniteScroll = mobile && !fromMy
+
+  // Determine notification mode
+  const getNotificationMode = () => {
+    if (fromMy) return 'page'
+    if (mobile) return 'mobile'
+    return 'dropdown'
+  }
+
+  const mode = getNotificationMode()
 
   // Infinite scroll hook (only for mobile)
   const {
@@ -52,7 +74,7 @@ const CardNotification = ({
     updateNotification,
   } = useNotificationInfiniteScroll(10)
 
-  // Traditional pagination hook (for fromMy and dropdown)
+  // Unified notification hook
   const {
     tabs,
     activeTab,
@@ -60,26 +82,29 @@ const CardNotification = ({
     handleTabClick,
     markAsRead: originalMarkAsRead,
     markAsReadAll,
-    setSize,
     totalNotif,
     setPage,
     setNotifications,
     page,
-  } = useTopbarNotification({ token })
+    getDataList,
+    getDataBadge,
+    isLoading: hookLoading,
+  } = useNotification({
+    token,
+    mode,
+    pageSize: fromMy || mobile ? 10 : 3,
+  })
 
-  const { messages } = useWebSocket(token ?? '') as {
+  const localWebSocket = useWebSocket(
+    webSocketMessages ? '' : (token ?? '')
+  ) as {
     messages: WebSocketMessage[]
   }
+
+  const messages = webSocketMessages || localWebSocket.messages
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (fromMy || mobile) {
-      setSize(10)
-    } else {
-      setSize(3)
-    }
-  }, [fromMy, setSize])
-
+  // Infinite scroll initialization
   useEffect(() => {
     if (shouldUseInfiniteScroll && token && activeTab !== 'baca-semua') {
       fetchInitialNotifications({
@@ -89,21 +114,45 @@ const CardNotification = ({
     }
   }, [shouldUseInfiniteScroll, activeTab, token, fetchInitialNotifications])
 
+  // WebSocket handling with better safety
+  const processedMessagesRef = useRef<Set<string>>(new Set())
+
   useEffect(() => {
     if (!messages.length) return
 
     const latest = messages[messages.length - 1]
 
+    // Validate message structure using type guard
+    if (!isValidWebSocketMessage(latest)) {
+      return
+    }
+
+    const notification = latest.data.notification
+    const messageId = `${latest.event}-${notification.id}-${notification.createdAt}`
+
+    if (processedMessagesRef.current.has(messageId)) {
+      return
+    }
+
+    processedMessagesRef.current.add(messageId)
+
     if (latest.event === 'new_notif') {
+      const newNotification = { ...notification, readAt: null }
+
       if (shouldUseInfiniteScroll) {
-        addNotification({ ...latest.data.notification, readAt: null })
+        addNotification(newNotification)
       } else {
-        setNotifications((prev) => [
-          { ...latest.data.notification, readAt: null },
-          ...(prev ?? []),
-        ])
+        setNotifications((prev) => [newNotification, ...(prev ?? [])])
+
+        // Refresh dropdown data when open
+        if (isDropdownOpen && mode === 'dropdown') {
+          setTimeout(() => {
+            getDataList?.()
+          }, 100)
+        }
       }
-      setCountBadge?.((prev: number) => prev + 1)
+
+      // setCountBadge?.((prev: number) => prev + 1)
     }
   }, [
     messages,
@@ -111,24 +160,60 @@ const CardNotification = ({
     addNotification,
     setNotifications,
     setCountBadge,
+    isDropdownOpen,
+    mode,
+    getDataList,
   ])
 
   const markAsReadInfinite = useCallback(
     async (notificationId: string) => {
       try {
         updateNotification(notificationId, { readAt: new Date().toISOString() })
+        setCountBadge?.((prev: number) => Math.max(0, prev - 1))
         await originalMarkAsRead(notificationId)
+        getDataBadge?.()
       } catch (error) {
         console.error('Error marking notification as read:', error)
         updateNotification(notificationId, { readAt: '' })
+        setCountBadge?.((prev: number) => prev + 1)
       }
     },
-    [originalMarkAsRead, updateNotification]
+    [originalMarkAsRead, updateNotification, setCountBadge, getDataBadge]
+  )
+
+  const markAsReadPaginated = useCallback(
+    async (notificationId: string) => {
+      try {
+        setNotifications(
+          (prev) =>
+            prev?.map((notif) =>
+              notif.id.toString() === notificationId
+                ? { ...notif, readAt: new Date().toISOString() }
+                : notif
+            ) ?? []
+        )
+        setCountBadge?.((prev: number) => Math.max(0, prev - 1))
+        await originalMarkAsRead(notificationId)
+        getDataBadge?.()
+      } catch (error) {
+        console.error('Error marking notification as read:', error)
+        setNotifications(
+          (prev) =>
+            prev?.map((notif) =>
+              notif.id.toString() === notificationId
+                ? { ...notif, readAt: null }
+                : notif
+            ) ?? []
+        )
+        setCountBadge?.((prev: number) => prev + 1)
+      }
+    },
+    [originalMarkAsRead, setNotifications, setCountBadge, getDataBadge]
   )
 
   const markAsRead = shouldUseInfiniteScroll
     ? markAsReadInfinite
-    : originalMarkAsRead
+    : markAsReadPaginated
 
   const handleScroll = useCallback(() => {
     if (
@@ -140,7 +225,7 @@ const CardNotification = ({
       return
 
     const { scrollTop, scrollHeight, clientHeight } = scrollRef.current
-    const threshold = 100 // Load more when 100px from bottom
+    const threshold = 100
 
     if (scrollHeight - scrollTop - clientHeight < threshold) {
       loadMoreNotifications({
@@ -177,6 +262,50 @@ const CardNotification = ({
     [handleTabClick, resetNotifications, shouldUseInfiniteScroll]
   )
 
+  const notifications = shouldUseInfiniteScroll
+    ? infiniteNotifications
+    : paginatedNotifications
+
+  const handleMarkAsReadAll = useCallback(async () => {
+    try {
+      if (shouldUseInfiniteScroll) {
+        if (activeTab === 'belum-dibaca') {
+          resetNotifications()
+        }
+      } else {
+        if (activeTab === 'belum-dibaca') {
+          setNotifications([])
+        } else {
+          setNotifications(
+            (prev) =>
+              prev?.map((notif) => ({
+                ...notif,
+                readAt: new Date().toISOString(),
+              })) ?? []
+          )
+        }
+      }
+
+      setCountBadge?.(0)
+      await markAsReadAll()
+
+      setTimeout(() => {
+        getDataBadge?.()
+      }, 200)
+    } catch (error) {
+      console.error('Error marking all as read:', error)
+      window.location.reload()
+    }
+  }, [
+    shouldUseInfiniteScroll,
+    activeTab,
+    resetNotifications,
+    setNotifications,
+    setCountBadge,
+    markAsReadAll,
+    getDataBadge,
+  ])
+
   const goToPage = useCallback(
     (newPage: number) => {
       setPage(newPage)
@@ -185,24 +314,22 @@ const CardNotification = ({
     [setPage]
   )
 
-  const notifications = shouldUseInfiniteScroll
-    ? infiniteNotifications
-    : paginatedNotifications
-  const isLoading = shouldUseInfiniteScroll ? infiniteLoading : false
+  const isLoading = shouldUseInfiniteScroll ? infiniteLoading : hookLoading
 
   return (
     <div
-      className={fromMy ? `rounded-[20px] border-1 border-neutral-100 p-4` : ''}
+      className={
+        fromMy ? `rounded-[20px] border-1 border-neutral-100 bg-white p-4` : ''
+      }
     >
       {/* Tabs */}
       <div
         className={`${fromMy && 'mt-0'} my-3 flex items-center justify-between`}
       >
-        {/* Group kiri */}
         <div className="flex space-x-1">
           {tabs
-            .filter((tab: Tab) => tab.id !== 'baca-semua')
-            .map((tab: Tab) => (
+            .filter((tab) => tab.id !== 'baca-semua')
+            .map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => handleTabClickWithReset(tab.id)}
@@ -218,10 +345,8 @@ const CardNotification = ({
         </div>
 
         <button
-          onClick={() => {
-            markAsReadAll()
-          }}
-          className={`text-s-regular rounded-fukk cursor-pointer px-3 py-1.5 transition-colors`}
+          onClick={handleMarkAsReadAll}
+          className={`text-s-regular cursor-pointer rounded-full px-3 py-1.5 transition-colors`}
         >
           Baca Semua
         </button>
@@ -246,7 +371,7 @@ const CardNotification = ({
             </div>
           </div>
         ) : (
-          <div>
+          <div className={fromMy ? 'space-y-2' : ''}>
             {notifications?.map((notification: Notification, index: number) => {
               const notificationContent = (
                 <motion.div
@@ -314,12 +439,15 @@ const CardNotification = ({
                 <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-orange-500"></div>
               </div>
             )}
-            {fromMy && (
-              <CustomPagination
-                currentPage={page}
-                totalPages={Math.ceil(totalNotif / 10)}
-                goToPage={goToPage}
-              />
+
+            {fromMy && totalNotif > 0 && (
+              <div className="mt-6 flex justify-center">
+                <CustomPagination
+                  currentPage={page}
+                  totalPages={Math.ceil(totalNotif / 10)}
+                  goToPage={goToPage}
+                />
+              </div>
             )}
           </div>
         )}
