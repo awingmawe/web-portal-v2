@@ -1,7 +1,6 @@
 'use client'
 
 import AuthProvider from '@/contexts/auth/providers'
-import { CheckoutProvider } from '@/contexts/checkout-context-v2'
 import { EventTrackerProvider } from '@/contexts/event-tracker/provider'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
 import { ManifestProvider } from '@/contexts/manifest-context/provider'
@@ -28,11 +27,9 @@ export function ContextProviders({ children }: ProvidersProps) {
           <PackageVariantProvider>
             <ManifestProvider>
               <UmrahPersonalProvider>
-                <CheckoutProvider>
-                  {/* Add other providers here as needed */}
-                  {/* <ThemeProvider> */}
-                  <AuthProvider>{children}</AuthProvider>
-                </CheckoutProvider>
+                {/* Add other providers here as needed */}
+                {/* <ThemeProvider> */}
+                <AuthProvider>{children}</AuthProvider>
               </UmrahPersonalProvider>
               {/* </ThemeProvider> */}
             </ManifestProvider>

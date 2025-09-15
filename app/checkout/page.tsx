@@ -2,16 +2,16 @@ import CheckoutPage from '@/components/pages/checkout/CheckoutPage'
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
+import { CheckoutProvider } from '@/contexts/checkout-context-v2'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
-import { Fragment } from 'react'
 
 export default async function CheckoutContent() {
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   return (
-    <Fragment>
+    <CheckoutProvider>
       <MobileTopbar
         title="Checkout"
         variant="plain"
@@ -29,6 +29,6 @@ export default async function CheckoutContent() {
         topic={'umrah'}
         category="checkout"
       />
-    </Fragment>
+    </CheckoutProvider>
   )
 }
