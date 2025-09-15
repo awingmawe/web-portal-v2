@@ -290,22 +290,6 @@ export const useNotification = ({
     }
   }, [token, getDataList, getDataBadge, mode])
 
-  const getNotificationBgClass = useCallback(
-    (type: Notification['type']): string => {
-      switch (type) {
-        case 'warning':
-          return 'bg-orange-100'
-        case 'promo':
-          return 'bg-green-100'
-        case 'info':
-          return 'bg-blue-100'
-        default:
-          return 'bg-gray-100'
-      }
-    },
-    []
-  )
-
   // Animation variants (for dropdown mode)
   const searchNotifVariants = {
     visible: {
@@ -411,8 +395,6 @@ export const useNotification = ({
     getDataList,
     getDataBadge,
 
-    // Utilities
-    getNotificationBgClass,
     searchNotifVariants,
     notificationPanelVariants,
 
