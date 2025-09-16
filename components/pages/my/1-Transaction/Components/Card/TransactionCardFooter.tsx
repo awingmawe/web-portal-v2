@@ -186,7 +186,10 @@ export default function TransactionCardFooter({
       STATUS_BOOKING.WAITING_HAJJ_CONFIRMATION,
       STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ,
     ]
-    return allowedStatuses.includes(status)
+    return (
+      allowedStatuses.includes(status) ||
+      (status === 'completed' && variantType === PACKAGE_TYPE.HAJJ_SPECIAL)
+    )
   }
 
   const shouldShowDownPaymentButton = () => {
