@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import DrawerRefundPolicy from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerRefundPolicy'
+import DrawerSukses from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerSukses'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -8,21 +8,19 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer'
-import { checkRefundPolicy } from '@/services/identity-service'
-import { getPreCanceled } from '@/services/umrah-service'
+import { toast } from '@/components/ui/sonner'
+import { getPostCanceled } from '@/services/umrah-service'
 import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 const DrawerBatalkanPesanan = React.memo(
   ({
     bookingId,
-    idOrganisasi,
     openForm,
     setOpenForm,
     setOpen,
   }: {
     bookingId?: any
-    idOrganisasi?: any
     openForm?: any
     setOpenForm?: any
     setOpen?: any
@@ -39,65 +37,62 @@ const DrawerBatalkanPesanan = React.memo(
     ]
     const [reason, setReason] = useState('')
     const [description, setDescription] = useState('')
-    const [dataRefundPolicy, setDataRefundPolicy] = useState<any>()
-    const [parsedContent, setParsedContent] = useState<any>(null)
-    const [dataPre, setDataPre] = useState<any>()
-    const [openRefundPolicy, setOpenRefundPolicy] = useState(false)
+    const [openSukses, setOpenSukses] = useState(false)
+    const [isLoadingBatalkan, setIsLoadingBatalkan] = useState(false)
     const isOtherReasonSelected = reason === 'Lainnya'
     // const handleClick = () => {
     //   // handleUseMyDataChangeMobile()
     //   closeRef.current?.click() // Tutup drawer
     // }
-    const getDataPreCanceled = async () => {
-      try {
-        const res = await getPreCanceled(bookingId)
-        setDataPre(res)
-      } catch (error) {
-        console.log(error)
+
+    const handleSubmitRefund = async () => {
+      setIsLoadingBatalkan(true)
+      const payload = {
+        bookingId: bookingId,
+        reason: description === '' ? reason : description,
       }
-    }
-    const getRefundPolicy = async () => {
       try {
-        const response = await checkRefundPolicy(idOrganisasi)
-        setDataRefundPolicy(response)
-        const parsedContent = response?.kondisi
-          ? JSON.parse(response?.kondisi)
-          : ''
-        setParsedContent(parsedContent)
+        await getPostCanceled(payload)
+        setDescription('')
+        setTimeout(() => {
+          setOpenForm(false)
+          setOpen(false) // tutup drawer refund
+          setOpenSukses(true) // buka drawer sukses
+        }, 300)
       } catch (error) {
-        console.error(error)
+        if (error instanceof Error) {
+          toast.error(error.message)
+        }
+      } finally {
+        setIsLoadingBatalkan(false)
       }
     }
 
-    useEffect(() => {
-      getDataPreCanceled()
-      getRefundPolicy()
-    }, [])
     return (
       <>
         <Drawer open={openForm} onOpenChange={setOpenForm}>
           <DrawerContent className="z-[999] bg-white p-0">
             <div className="mx-auto w-full max-w-md">
-              <DrawerHeader className="border-gray-200 px-4 py-3">
+              <DrawerHeader className="border-gray-200 px-0">
                 <div className="flex items-center">
                   <DrawerClose ref={closeRef} className="hidden" />
                   <DrawerTitle className="flex text-lg font-medium">
                     <Image
                       src="/images/IconModalBatalkan.svg"
-                      width={20}
-                      height={20}
+                      width={24}
+                      height={24}
                       alt="check icon"
-                      className="mr-2 bg-[#FFF2CC]"
+                      className="mr-2 "
                     />
                     Batalkan Pesanan
                   </DrawerTitle>
                 </div>
               </DrawerHeader>
 
-              <p className="p-2 text-[14px] font-[400] text-gray-500">
+              <p className="px-0 text-[14px] font-[400] text-gray-500">
                 Berikan alasan untuk membatalkan pesanan
               </p>
-              <div className="space-y-3 p-4">
+              <div className="space-y-3 px-0 py-4">
                 {cancellationReasons.map((item) => (
                   <label key={item} className="flex items-center gap-3 text-sm">
                     <input
@@ -106,7 +101,6 @@ const DrawerBatalkanPesanan = React.memo(
                       value={item}
                       checked={reason === item}
                       onChange={() => setReason(item)}
-                      // className="h-4 w-4 text-yellow-500 accent-yellow-500"
                     />
                     <span className="text-[16px] font-[400] text-[#000000]">
                       {item}
@@ -120,12 +114,13 @@ const DrawerBatalkanPesanan = React.memo(
                     placeholder="Berikan keterangan pembatalan"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full rounded-[20px] border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-yellow-500 focus:outline-none"
+                    className="focus:border-primary-500 w-full rounded-[20px] border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:outline-none"
                   />
                 )}
 
                 {/* Refund Info Box */}
-                <div className="mt-6 rounded-[12px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm">
+                {/* Stil dont know what is this for, but keep it first for now */}
+                {/* <div className="mt-6 rounded-[12px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm">
                   <p className="font-[14px] font-[500] text-[#30302F]">
                     Estimasi Dana yang Dapat Dikembalikan
                   </p>
@@ -149,12 +144,12 @@ const DrawerBatalkanPesanan = React.memo(
                     *Perhitungan ini hanya simulasi dan dapat berubah sesuai
                     dengan ketentuan mitra terkait.
                   </p>
-                </div>
+                </div> */}
 
                 {/* Action Buttons */}
                 <div className="mt-6 flex items-center justify-between gap-4">
                   <Button
-                    className="h-[40px] w-[200px] rounded-full border-2 border-yellow-500 bg-white text-yellow-500 "
+                    className="border-primary-500 text-primary-500 h-[40px] w-[200px] rounded-full border-2 bg-white "
                     onClick={() => {
                       setDescription('')
                       setReason('')
@@ -165,15 +160,9 @@ const DrawerBatalkanPesanan = React.memo(
                     Kembali
                   </Button>
                   <Button
-                    className="h-[40px] w-1/2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600"
-                    onClick={() => {
-                      setOpen(false) // tutup drawer refund
-                      setOpenForm(false)
-                      setTimeout(() => {
-                        setOpenRefundPolicy(true) // buka drawer sukses
-                      }, 300)
-                    }}
-                    disabled={!reason}
+                    className="bg-primary-500 hover:bg-primary-600 h-[40px] w-1/2 rounded-full text-white"
+                    onClick={handleSubmitRefund}
+                    disabled={!reason || isLoadingBatalkan}
                   >
                     Batalkan Pesanan
                   </Button>
@@ -182,7 +171,10 @@ const DrawerBatalkanPesanan = React.memo(
             </div>
           </DrawerContent>
         </Drawer>
-        <DrawerRefundPolicy
+        <DrawerSukses open={openSukses} onOpenChange={setOpenSukses} />
+
+        {/* Refund Policy Drawer, for now it is not used, so keep it for now */}
+        {/* <DrawerRefundPolicy
           dataRefundPolicy={dataRefundPolicy}
           parsedContent={parsedContent}
           description={description}
@@ -193,7 +185,7 @@ const DrawerBatalkanPesanan = React.memo(
           setOpenForm={setOpenForm}
           setDescription={setDescription}
           setReason={setReason}
-        />
+        /> */}
       </>
     )
   }

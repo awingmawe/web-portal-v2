@@ -2,6 +2,7 @@
 'use client'
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
+import { shouldBatalkanByUser } from '@/components/pages/my/1-Transaction/Components/constant'
 import { TransactionDetailMobileAction } from '@/components/pages/my/1-Transaction/Components/Detail/TranasctionDetailMobileAction'
 import { TransactionDetailHeader } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetaiHeader'
 import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailManifest'
@@ -697,7 +698,22 @@ export default function TransactionDetailContent({
                 {transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' &&
-                  transaction?.status.slug !== 'waiting-cancellation' && (
+                  transaction?.status.slug !== 'waiting-cancellation' &&
+                  (shouldBatalkanByUser(transaction?.status.slug) ? (
+                    <Button
+                      variant="outline"
+                      className="border-error-500  block w-full border-2"
+                      onClick={() => {
+                        if (typeof setOpenBatalkan === 'function') {
+                          setOpenBatalkan(true)
+                        }
+                      }}
+                    >
+                      <span className="text-error-500 font-medium">
+                        Batalkan Pesanan
+                      </span>
+                    </Button>
+                  ) : (
                     <Link
                       href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
                       target="_blank"
@@ -706,18 +722,18 @@ export default function TransactionDetailContent({
                       <Button
                         variant="outline"
                         className="border-error-500  block w-full border-2"
-                        //    onClick={() => {
-                        //     if (typeof setOpenBatalkan === 'function') {
-                        //      setOpenBatalkan(true)
-                        //   }
-                        // }}
+                        onClick={() => {
+                          if (typeof setOpenBatalkan === 'function') {
+                            setOpenBatalkan(true)
+                          }
+                        }}
                       >
                         <span className="text-error-500 font-medium">
                           Batalkan Pesanan
                         </span>
                       </Button>
                     </Link>
-                  )}
+                  ))}
                 <div className="relative mt-auto">
                   <Image
                     src="/images/kabbah.svg"

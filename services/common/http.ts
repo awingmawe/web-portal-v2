@@ -33,7 +33,7 @@ class HeadersManager {
 export const headersManager = new HeadersManager()
 
 // Error types
-interface ApiErrorResponse {
+export interface ApiErrorResponse {
   message?: string
   reason?: string
   errorMessage?: string

@@ -2,6 +2,7 @@
 'use client'
 
 import { ChecklistCircle, ChecklistCircle2 } from '@/components/icons/checkbox'
+import { shouldBatalkanByUser } from '@/components/pages/my/1-Transaction/Components/constant'
 import { TransactionDetail } from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetail'
 import DrawerPaymentLinkAja from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerPaymentLinkAja'
 import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
@@ -373,13 +374,24 @@ export default function TransactionCardFooter({
         </PopoverTrigger>
         <PopoverContent className="rounded-2xl p-0 px-1">
           <div className="flex flex-col divide-y">
-            <Link
-              href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-              className="cursor-pointer p-3 hover:bg-gray-50"
-              target="_blank"
-            >
-              <p className="text-m-regular text-error-500">Batalkan Pesanan</p>
-            </Link>
+            {shouldBatalkanByUser(status) ? (
+              <p
+                className="text-m-regular text-error-500 cursor-pointer p-3 hover:bg-gray-50"
+                onClick={() => setOpenBatalkan(true)}
+              >
+                Batalkan Pesanan
+              </p>
+            ) : (
+              <Link
+                href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+                className="cursor-pointer p-3 hover:bg-gray-50"
+                target="_blank"
+              >
+                <p className="text-m-regular text-error-500">
+                  Batalkan Pesanan
+                </p>
+              </Link>
+            )}
           </div>
         </PopoverContent>
       </Popover>
@@ -684,10 +696,6 @@ export default function TransactionCardFooter({
           open={openBatalkan}
           bookingId={bookingId}
           onOpenChange={setOpenBatalkan}
-          setParsedContent={setParsedContent}
-          setDataRefundPolicy={setDataRefundPolicy}
-          organizationInstanceId={organizationInstanceId}
-          setOpenModalRefund={setOpenModalRefund}
           setDescription={setDescription}
           description={description}
           setReason={setReason}
