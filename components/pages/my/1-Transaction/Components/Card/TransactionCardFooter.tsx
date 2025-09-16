@@ -645,7 +645,9 @@ export default function TransactionCardFooter({
             ) : (
               shouldShowPelunasanButton() && renderPelunasanButton()
             )}
-            {/* {shouldShowManifestButton() && renderManifestButton()} */}
+            {packageType !== PACKAGE_TYPE.HAJJ &&
+              shouldShowManifestButton() &&
+              renderManifestButton()}
           </>
         )}
         {!isDibatalkan() && shouldShowDownPaymentButton() && (
