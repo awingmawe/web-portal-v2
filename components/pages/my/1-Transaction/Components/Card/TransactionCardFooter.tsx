@@ -147,9 +147,19 @@ export default function TransactionCardFooter({
     return transaction.bookingCanceled.disbursementUser.disbursed === true
   }
 
+  const isCompleted = () => {
+    return status === 'completed'
+  }
+
   const shouldShowPelunasanButton = () => {
-    const excludedStatuses = ['waiting-approval']
-    return !excludedStatuses.includes(status)
+    const excludedStatuses = [
+      'waiting-approval',
+      STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH,
+    ]
+    return (
+      !excludedStatuses.includes(status) ||
+      (status === 'approved' && !isPaidOff)
+    )
   }
 
   const shouldShowManifestButton = () => {
@@ -168,10 +178,18 @@ export default function TransactionCardFooter({
       !isManifestCommitted &&
       !excludedStatuses.includes(status)
 
+    // Kalo hasilnya true maka akan muncul button lengkapi data manifest
     return (
       isShowManifestHajjSpecial ||
-      (packageType === PACKAGE_TYPE.HAJJ &&
+      (!isCompleted() &&
+        packageType === PACKAGE_TYPE.HAJJ &&
         status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_HAJJ &&
+        status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH &&
+        !isManifestCommitted &&
+        !excludedStatuses.includes(status)) ||
+      (!isCompleted() &&
+        packageType === PACKAGE_TYPE.UMRAH &&
+        status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH &&
         !isManifestCommitted &&
         !excludedStatuses.includes(status))
     )
@@ -322,10 +340,7 @@ export default function TransactionCardFooter({
   }
 
   const renderPelunasanButton = () => {
-    if (
-      transaction?.packageSnapshot?.snapshot?.package?.packageType ===
-      PACKAGE_TYPE.HAJJ
-    ) {
+    if (packageType === PACKAGE_TYPE.HAJJ) {
       return null
     }
 
@@ -608,29 +623,31 @@ export default function TransactionCardFooter({
             shouldShowManifestButton() && renderManifestButton()
           ))}
 
-        {!isDibatalkan() &&
-          packageType === PACKAGE_TYPE.UMRAH &&
-          (status === 'waiting-cancellation' || status === 'expired' ? null : (
-            <>
-              {isPaidOff ? (
-                <>
-                  {isManifestCommitted ? null : (
-                    <Button
-                      variant="outline"
-                      className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
-                      disabled
-                    >
-                      <ChecklistCircle />
-                      Pelunasan
-                    </Button>
-                  )}
-                </>
-              ) : (
-                shouldShowPelunasanButton() && renderPelunasanButton()
-              )}
-              {shouldShowManifestButton() && renderManifestButton()}
-            </>
-          ))}
+        {isDibatalkan() ||
+        status === 'waiting-cancellation' ||
+        status === 'expired' ||
+        isCompleted() ||
+        status === 'waiting-approval' ? null : (
+          <>
+            {isPaidOff ? ( // Kalo dia sudah bayar pelunasan
+              <>
+                {isManifestCommitted ? null : ( // Kalo dia sudah lengkapi data jemaah
+                  <Button
+                    variant="outline"
+                    className="w-full rounded-full border-2 px-8 py-3 text-nowrap"
+                    disabled
+                  >
+                    <ChecklistCircle />
+                    Pelunasan
+                  </Button>
+                )}
+              </>
+            ) : (
+              shouldShowPelunasanButton() && renderPelunasanButton()
+            )}
+            {/* {shouldShowManifestButton() && renderManifestButton()} */}
+          </>
+        )}
         {!isDibatalkan() && shouldShowDownPaymentButton() && (
           <Fragment>
             {packageType === PACKAGE_TYPE.HAJJ ? (
