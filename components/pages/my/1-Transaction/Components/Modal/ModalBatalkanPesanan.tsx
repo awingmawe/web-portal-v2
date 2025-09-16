@@ -2,20 +2,17 @@
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { checkRefundPolicy } from '@/services/identity-service'
-import { getPreCanceled } from '@/services/umrah-service'
+import { toast } from '@/components/ui/sonner'
+import { useCanceled } from '@/contexts/canceled-package-context'
+import { getPostCanceled } from '@/services/umrah-service'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { CircleX } from 'lucide-react'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface TransactionDetailProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  organizationInstanceId: any
-  setParsedContent?: any
-  setDataRefundPolicy?: any
-  setOpenModalRefund?: any
   bookingId?: any
   setDescription: any
   setReason: any
@@ -36,59 +33,39 @@ const cancellationReasons = [
 export function BatalkanPesanan({
   open,
   onOpenChange,
-  organizationInstanceId,
-  setParsedContent,
-  setDataRefundPolicy,
-  setOpenModalRefund,
   bookingId,
   setDescription,
   setReason,
   description,
   reason,
 }: TransactionDetailProps) {
-  const [dataPre, setDataPre] = useState<any>()
+  const [isLoadingBatalkan, setIsLoadingBatalkan] = useState(false)
 
+  const { setOpenModalSukses, setOpenBatalkan } = useCanceled()
   const isOtherReasonSelected = reason === 'Lainnya'
 
-  // const dataPre = {
-  //   totalDana: 50000000,
-  //   totalPercentage: 75,
-  //   totalRefund: 37500000,
-  // }
-
-  const handleSubmit = () => {
-    setOpenModalRefund(true)
+  const handleSubmit = async () => {
     onOpenChange(false)
-
-    // Lanjutkan dengan logic pembatalan
-  }
-  const getDataPreCanceled = async () => {
+    setIsLoadingBatalkan(true)
+    const payload = {
+      bookingId: bookingId,
+      reason: description === '' ? reason : description,
+    }
     try {
-      const res = await getPreCanceled(bookingId)
-      setDataPre(res)
+      await getPostCanceled(payload)
+      setDescription('')
+      setTimeout(() => {
+        setOpenBatalkan(false)
+        setOpenModalSukses(true) // buka drawer sukses
+      }, 300)
     } catch (error) {
-      console.log(error)
+      if (error instanceof Error) {
+        toast.error(error.message)
+      }
+    } finally {
+      setIsLoadingBatalkan(false)
     }
   }
-  const getRefundPolicy = async () => {
-    try {
-      const response = await checkRefundPolicy(organizationInstanceId)
-      setDataRefundPolicy(response)
-      const parsedContent = response?.kondisi
-        ? JSON.parse(response?.kondisi)
-        : ''
-      setParsedContent(parsedContent)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    if (open) {
-      getDataPreCanceled()
-      getRefundPolicy()
-    }
-  }, [open])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -145,7 +122,8 @@ export function BatalkanPesanan({
         </div>
 
         {/* Refund Info Box */}
-        <div className="mt-6 rounded-[12px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm">
+        {/* Stil dont know what is this for, but keep it first for now */}
+        {/* <div className="mt-6 rounded-[12px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm">
           <p className="font-[14px] font-[500] text-[#30302F]">
             Estimasi Dana yang Dapat Dikembalikan
           </p>
@@ -169,13 +147,14 @@ export function BatalkanPesanan({
             *Perhitungan ini hanya simulasi dan dapat berubah sesuai dengan
             ketentuan mitra terkait.
           </p>
-        </div>
+        </div> */}
 
         {/* Action Buttons */}
         <div className="mt-6 flex items-center justify-between gap-4">
           <Button
             variant="outline"
             className="w-1/2 rounded-full border-2 border-yellow-500 text-yellow-500 hover:bg-yellow-100"
+            disabled={isLoadingBatalkan}
             onClick={() => {
               setDescription('')
               setReason('')
@@ -187,7 +166,7 @@ export function BatalkanPesanan({
           <Button
             className="w-1/2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600"
             onClick={handleSubmit}
-            disabled={!reason}
+            disabled={!reason || isLoadingBatalkan}
           >
             Batalkan Pesanan
           </Button>

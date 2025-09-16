@@ -594,7 +594,7 @@ export async function getPostCanceled(payload: any): Promise<any> {
     )
     return response.data
   } catch (error) {
-    console.error('Error fetching invoice:', error)
+    console.error('Error cancel booking by user:', error)
     throw error
   }
 }

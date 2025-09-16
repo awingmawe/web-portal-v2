@@ -476,6 +476,7 @@ export default function TransactionCard({
                 bookingId={transactionData.bookingId}
                 idOrganisasi={transactionData.organizationInstanceId}
                 id={transactionData.id}
+                status={transactionData.status}
               >
                 <MoreVertical className="ml-2 hidden h-4 w-4 text-neutral-500 max-lg:ml-1 max-lg:block" />
               </DrawerBatalkan>
