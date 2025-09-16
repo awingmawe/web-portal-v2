@@ -722,11 +722,6 @@ export default function TransactionDetailContent({
                       <Button
                         variant="outline"
                         className="border-error-500  block w-full border-2"
-                        onClick={() => {
-                          if (typeof setOpenBatalkan === 'function') {
-                            setOpenBatalkan(true)
-                          }
-                        }}
                       >
                         <span className="text-error-500 font-medium">
                           Batalkan Pesanan

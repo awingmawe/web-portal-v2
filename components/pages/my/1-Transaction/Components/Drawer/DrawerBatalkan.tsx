@@ -64,10 +64,7 @@ const DrawerBatalkan = React.memo(
                   target="_blank"
                   className="w-full"
                 >
-                  <Button
-                    className="border-error-500 w-full rounded-full border-2 bg-white py-3"
-                    onClick={handleBuka}
-                  >
+                  <Button className="border-error-500 w-full rounded-full border-2 bg-white py-3">
                     Batalkan Pesanan
                   </Button>
                 </Link>

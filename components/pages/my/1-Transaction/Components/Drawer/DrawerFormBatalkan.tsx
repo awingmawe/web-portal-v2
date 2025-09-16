@@ -71,9 +71,9 @@ const DrawerBatalkanPesanan = React.memo(
     return (
       <>
         <Drawer open={openForm} onOpenChange={setOpenForm}>
-          <DrawerContent className="z-[999] bg-white p-0">
+          <DrawerContent className="z-[999] bg-white">
             <div className="mx-auto w-full max-w-md">
-              <DrawerHeader className="border-gray-200 px-0">
+              <DrawerHeader className="border-gray-200 px-4">
                 <div className="flex items-center">
                   <DrawerClose ref={closeRef} className="hidden" />
                   <DrawerTitle className="flex text-lg font-medium">
@@ -89,10 +89,10 @@ const DrawerBatalkanPesanan = React.memo(
                 </div>
               </DrawerHeader>
 
-              <p className="px-0 text-[14px] font-[400] text-gray-500">
+              <p className="px-4 text-[14px] font-[400] text-gray-500">
                 Berikan alasan untuk membatalkan pesanan
               </p>
-              <div className="space-y-3 px-0 py-4">
+              <div className="space-y-3 px-4 py-4">
                 {cancellationReasons.map((item) => (
                   <label key={item} className="flex items-center gap-3 text-sm">
                     <input
@@ -114,7 +114,7 @@ const DrawerBatalkanPesanan = React.memo(
                     placeholder="Berikan keterangan pembatalan"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="focus:border-primary-500 w-full rounded-[20px] border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:outline-none"
+                    className="focus:border-primary-500 w-full rounded-[20px] border border-gray-300 px-4 py-2 text-sm placeholder-gray-400 focus:outline-none"
                   />
                 )}
 
@@ -149,18 +149,16 @@ const DrawerBatalkanPesanan = React.memo(
                 {/* Action Buttons */}
                 <div className="mt-6 flex items-center justify-between gap-4">
                   <Button
-                    className="border-primary-500 text-primary-500 h-[40px] w-[200px] rounded-full border-2 bg-white "
+                    className="border-primary-500 text-primary-500 h-[40px]  w-full rounded-full border-2 bg-white "
                     onClick={() => {
                       setDescription('')
                       setReason('')
-                      setOpen(true)
-                      setOpenForm(false)
                     }}
                   >
                     Kembali
                   </Button>
                   <Button
-                    className="bg-primary-500 hover:bg-primary-600 h-[40px] w-1/2 rounded-full text-white"
+                    className="bg-primary-500 hover:bg-primary-600 h-[40px] w-full rounded-full text-white"
                     onClick={handleSubmitRefund}
                     disabled={!reason || isLoadingBatalkan}
                   >
