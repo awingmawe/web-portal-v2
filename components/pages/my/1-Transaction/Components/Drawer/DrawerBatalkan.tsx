@@ -77,7 +77,6 @@ const DrawerBatalkan = React.memo(
         </Drawer>
         <DrawerBatalkanPesanan
           bookingId={bookingId}
-          idOrganisasi={idOrganisasi}
           openForm={openForm}
           setOpenForm={setOpenForm}
           setOpen={setOpen}
