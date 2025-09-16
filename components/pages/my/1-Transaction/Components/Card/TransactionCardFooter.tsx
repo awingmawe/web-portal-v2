@@ -176,6 +176,7 @@ export default function TransactionCardFooter({
     const isShowManifestHajjSpecial =
       variantType === PACKAGE_TYPE.HAJJ_SPECIAL &&
       !isManifestCommitted &&
+      status !== STATUS_BOOKING.WAITING_DOWN_PAYMENT_UMRAH &&
       !excludedStatuses.includes(status)
 
     // Kalo hasilnya true maka akan muncul button lengkapi data manifest
