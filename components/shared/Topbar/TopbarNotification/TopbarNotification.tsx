@@ -64,7 +64,7 @@ const TopbarNotification = ({ token }: { token: string }) => {
           {countBadge > 0 && (
             <span
               className={`text-s-regular absolute -top-3 -right-2 flex items-center justify-center rounded-full bg-[#B3261E] text-white
-      ${countBadge > 99 ? 'h-6 w-6' : 'h-5 w-5'}`}
+      ${countBadge > 99 ? 'h-5 w-7.5' : 'h-5 w-5'}`}
             >
               {countBadge > 99 ? '99+' : countBadge}
             </span>
