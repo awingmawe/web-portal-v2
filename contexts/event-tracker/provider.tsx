@@ -217,11 +217,11 @@ export function EventTrackerProvider({
           longitude: '',
         },
         utm: {
-          utm_source: utmParams.utm_source,
-          utm_media: utmParams.utm_media,
-          utm_campaign: utmParams.utm_campaign,
-          utm_term: utmParams.utm_term,
-          utm_content: utmParams.utm_content,
+          source: utmParams.utm_source,
+          medium: utmParams.utm_media,
+          campaign: utmParams.utm_campaign,
+          term: utmParams.utm_term,
+          content: utmParams.utm_content,
         },
         __v: 0,
       }
