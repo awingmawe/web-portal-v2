@@ -23,7 +23,7 @@ export type EventAttribute = {
 
 interface UTMData {
   utm_source?: string
-  utm_media?: string
+  utm_medium?: string
   utm_campaign?: string
   utm_term?: string
   utm_content?: string
@@ -78,12 +78,12 @@ function extractUTMFromURL(): Partial<UTMData> {
   if (typeof window === 'undefined') return {}
 
   const parsedUrl = queryString.parseUrl(window.location.href)
-  const { utm_source, utm_media, utm_campaign, utm_term, utm_content } =
+  const { utm_source, utm_medium, utm_campaign, utm_term, utm_content } =
     parsedUrl?.query || {}
 
   return {
     utm_source: utm_source as string,
-    utm_media: utm_media as string,
+    utm_medium: utm_medium as string,
     utm_campaign: utm_campaign as string,
     utm_term: utm_term as string,
     utm_content: utm_content as string,
@@ -218,7 +218,7 @@ export function EventTrackerProvider({
         },
         utm: {
           source: utmParams.utm_source,
-          medium: utmParams.utm_media,
+          medium: utmParams.utm_medium,
           campaign: utmParams.utm_campaign,
           term: utmParams.utm_term,
           content: utmParams.utm_content,
