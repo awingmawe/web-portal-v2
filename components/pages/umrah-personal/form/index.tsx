@@ -41,7 +41,6 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
 
   // Final form submission
   const onSubmit = async (data: UmrahPersonalFormType) => {
-    console.log('masuk')
     const payload: RequestFormUmrahPersonal = {
       // Journey Information
       journeyType: data.journeyInformation.journeyType,
