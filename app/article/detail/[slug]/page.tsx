@@ -62,23 +62,31 @@ export default async function ArtilceDetail({ params }: any) {
     ])
 
   let tag
-  if (dataArticleDetail.type === 'promo-umrah') {
-    tag = await getTagById(Number(dataArticleDetail.promo_tag))
-  }
-
-  const dataPerTag = await getPackageList({
-    page: 1,
-    size: 12,
-    ['tagPackage.tagSlug']: tag?.slug ?? undefined,
-    order: 'desc',
-    orderBy: 'createdAt',
-  })
-
+  let dataPerTag
   let dataPackageSlug: PackageTagSlug | undefined = undefined
+
   if (dataArticleDetail.type === 'promo-umrah') {
-    dataPackageSlug = {
-      slug: tag?.slug ?? '',
-      data: mapProductsToCardData(dataPerTag),
+    try {
+      tag = await getTagById(Number(dataArticleDetail.promo_tag))
+
+      // Only call getPackageList if we have a valid tag with slug
+      if (tag?.slug) {
+        dataPerTag = await getPackageList({
+          page: 1,
+          size: 12,
+          ['tagPackage.tagSlug']: tag.slug,
+          order: 'desc',
+          orderBy: 'createdAt',
+        })
+
+        dataPackageSlug = {
+          slug: tag.slug,
+          data: mapProductsToCardData(dataPerTag),
+        }
+      }
+    } catch (error) {
+      console.error(error)
+      tag = {}
     }
   }
 
