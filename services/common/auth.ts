@@ -1,12 +1,25 @@
 import { setCookie, getCookie, deleteCookie, cookieNames } from './cookie'
 
 export function setAccessToken(token: string, expiresIn?: number) {
-  const options = expiresIn ? { maxAge: expiresIn } : {}
+  const options = expiresIn
+    ? { expires: new Date(Number(expiresIn) * 1000) }
+    : {}
   setCookie(cookieNames.USER_ACCESS_TOKEN, token, options)
+}
+
+export function setRefreshToken(token: string, expiresIn?: number) {
+  const options = expiresIn
+    ? { expires: new Date(Number(expiresIn) * 1000) }
+    : {}
+  setCookie(cookieNames.USER_REFRESH_TOKEN, token, options)
 }
 
 export function getAccessToken(): string {
   return getCookie(cookieNames.USER_ACCESS_TOKEN)
+}
+
+export function getRefreshToken(): string {
+  return getCookie(cookieNames.USER_REFRESH_TOKEN)
 }
 
 export function setUserAccount(accountData: string) {

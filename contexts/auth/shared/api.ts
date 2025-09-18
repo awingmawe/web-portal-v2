@@ -1,7 +1,8 @@
 import { Permissions, Profile } from './type'
 import { SWRConfiguration } from 'swr'
 import { useSWRFetcher } from '@/services/use-swr-fetcher'
-import { apiWithAuth } from '@/services/common/http'
+import { api, apiWithAuth } from '@/services/common/http'
+import { getRefreshToken } from '@/services/common/auth'
 
 export function getMyProfile() {
   return apiWithAuth.get<Profile>('/identity/my-profile')
@@ -31,4 +32,12 @@ export function usePermission(
     getMyPermission,
     config
   )
+}
+
+export function refreshToken() {
+  const refreshToken = getRefreshToken()
+
+  return api.post('/auth/v2/refresh', {
+    refreshToken: refreshToken,
+  })
 }
