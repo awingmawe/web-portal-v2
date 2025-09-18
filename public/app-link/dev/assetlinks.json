@@ -6,19 +6,8 @@
       "package_name": "com.muslim101.muslimapp.dev",
       "sha256_cert_fingerprints": [
         "6B:7B:BD:27:51:EE:F7:52:F0:F7:A0:11:F2:85:B3:64:7C:86:10:6F:65:D6:6F:C1:D8:43:B3:82:29:20:47:01",
-        "28:0B:1D:75:99:34:A6:CF:0F:4C:A4:E8:1D:AD:0E:4B:0C:52:F9:40:B1:97:D3:6E:3B:5B:4B:67:BD:FD:C5:49"
-      ]
-    }
-  },
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.muslim101.muslimapp",
-      "sha256_cert_fingerprints": [
-        "6B:7B:BD:27:51:EE:F7:52:F0:F7:A0:11:F2:85:B3:64:7C:86:10:6F:65:D6:6F:C1:D8:43:B3:82:29:20:47:01",
         "28:0B:1D:75:99:34:A6:CF:0F:4C:A4:E8:1D:AD:0E:4B:0C:52:F9:40:B1:97:D3:6E:3B:5B:4B:67:BD:FD:C5:49",
-        "F5:C7:05:F6:86:CE:A6:70:F4:B2:8F:51:90:37:B3:E7:B5:4B:58:FF:B8:65:AE:1F:97:63:2D:EA:D3:D6:AB:45"
+        "90:36:AB:7B:84:8B:8A:D0:E5:A5:80:77:02:48:FD:43:FA:6F:00:44:3A:79:CA:5A:2C:F8:6B:49:F7:A3:A0:5E"
       ]
     }
   }
