@@ -1,5 +1,6 @@
 'use client'
 
+import { ACTIVITY_TYPES } from '@/constant/schema/umrah-personal-schema/constant'
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import {
@@ -124,7 +125,10 @@ export const UmrahPersonalProvider: React.FC<{
         currentStepKey = STEP_3
         break
       case 4:
-        currentStepKey = STEP_4
+        currentStepKey =
+          form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA
+            ? STEP_5
+            : STEP_4
         break
       case 5:
         currentStepKey = STEP_5
