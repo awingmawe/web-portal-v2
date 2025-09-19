@@ -206,7 +206,7 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         case 'logo':
           return (
             <Image
-              src="/images/logo.svg"
+              src="/images/logo.png"
               alt="logo-muslim101"
               width={134}
               height={16}
