@@ -920,12 +920,8 @@ export default function BiodataForm({
                         placeholder="Masukkan nomor paspor"
                         {...field}
                         maxLength={16}
-                        type="tel"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
                         onChange={(e) => {
-                          const value = handleNumberOnly(e)
-                          field.onChange(value)
+                          field.onChange(e.target.value)
                         }}
                         value={field.value}
                         onBlur={field.onBlur}
