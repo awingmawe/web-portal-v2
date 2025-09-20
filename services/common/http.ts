@@ -11,7 +11,7 @@ import { ACCOUNT_URL, API_URL } from '@/constant/env'
 import { getLocalReferralCode } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { toast } from '@/components/ui/sonner'
-import { refreshToken } from '@/contexts/auth/shared/api'
+import { refreshToken } from '@/contexts/auth/shared/token'
 
 // More specific header type
 interface RequestHeaders {
@@ -63,11 +63,25 @@ async function refreshAccessToken(): Promise<string | null> {
     return refreshPromise
   }
 
+  let refreshtoken: string | undefined
+
+  if (typeof window !== 'undefined') {
+    refreshtoken = getRefreshToken()
+  } else {
+    const { cookies } = await import('next/headers')
+    const cookieStore = await cookies()
+    refreshtoken = cookieStore.get(cookieNames.USER_REFRESH_TOKEN)?.value
+  }
+
+  if (!refreshtoken) {
+    console.log('No refresh token available')
+    return null
+  }
+
   isRefreshing = true
   refreshPromise = (async () => {
     try {
-      const resp = await refreshToken() // ⬅️ use your API function
-
+      const resp = await refreshToken(refreshtoken as string)
       const newToken = resp.data?.accessToken
       const exp = resp.data?.exp
       if (newToken) {
@@ -89,22 +103,6 @@ async function refreshAccessToken(): Promise<string | null> {
 
 function handleApiError(error: AxiosError<ApiErrorResponse>): never {
   const { response } = error
-
-  // Handle authentication errors
-  if (response?.status === 401) {
-    const currentUrl =
-      typeof window !== 'undefined'
-        ? window.location.href
-        : response.config?.url || '/'
-
-    const redirectUrl = `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(currentUrl)}&logout=1`
-
-    if (typeof window !== 'undefined') {
-      window.location.href = redirectUrl
-    } else {
-      redirect(redirectUrl)
-    }
-  }
 
   if (response?.status === 500) {
     toast.error('Terjadi kesalahan, silakan coba lagi nanti.')
@@ -217,8 +215,7 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
     async (error: AxiosError<ApiErrorResponse>) => {
       const { response, config } = error
 
-      // Only handle 401 if this client requires auth
-      if (response?.status === 401 && useAuth && config) {
+      if (response?.status === 401 && config) {
         try {
           const newToken = await refreshAccessToken()
           console.log('REFRESH TOKEN ' + newToken)
@@ -241,9 +238,11 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
         )}&logout=1`
 
         if (typeof window !== 'undefined') {
-          window.location.href = redirectUrl
+          // window.location.href = redirectUrl
+          console.log('TOKEN EXPIRED')
         } else {
-          redirect(redirectUrl)
+          console.log('TOKEN EXPIRED')
+          // redirect(redirectUrl)
         }
       }
 
