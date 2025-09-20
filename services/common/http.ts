@@ -74,7 +74,6 @@ async function refreshAccessToken(): Promise<string | null> {
   }
 
   if (!refreshtoken) {
-    console.log('No refresh token available')
     return null
   }
 
@@ -218,7 +217,6 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
       if (response?.status === 401 && config) {
         try {
           const newToken = await refreshAccessToken()
-          console.log('REFRESH TOKEN ' + newToken)
           if (newToken) {
             config.headers = config.headers ?? {}
             config.headers['Authorization'] = `Bearer ${newToken}`
@@ -238,15 +236,12 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
         )}&logout=1`
 
         if (typeof window !== 'undefined') {
-          // window.location.href = redirectUrl
-          console.log('TOKEN EXPIRED')
+          window.location.href = redirectUrl
         } else {
-          console.log('TOKEN EXPIRED')
-          // redirect(redirectUrl)
+          redirect(redirectUrl)
         }
       }
 
-      // All other errors
       return handleApiError(error)
     }
   )
