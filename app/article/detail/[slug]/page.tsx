@@ -3,6 +3,7 @@ import TopbarMobileArticle from '@/components/pages/article/common/TopbarMobile'
 import ImageDetail from '@/components/pages/article/detail/1-Image/ImageDetail'
 import ContentArticle from '@/components/pages/article/detail/2-Content/Content'
 import LayoutArticle from '@/components/pages/article/Layout'
+import { NODE_ENV, URL } from '@/constant/env'
 import { PackageTagSlug } from '@/constant/types/ArticleProps'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
@@ -104,8 +105,76 @@ export default async function ArtilceDetail({ params }: any) {
     tag: dataArticleDetail?.hashtags?.map((tag) => tag).join(', ') ?? '',
   }
 
+  // --- JSON-LD for Article Schema ---
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: dataArticleDetail?.title,
+    image: [
+      dataArticleDetail?.thumbnail || 'https://www.muslim101.com/thumbnail.png', // Fallback image
+    ],
+    datePublished: dataArticleDetail?.published_at,
+    dateModified:
+      dataArticleDetail?.updated_at || dataArticleDetail?.published_at,
+    author: {
+      '@type': 'Person',
+      name: dataUser?.name || 'Muslim101',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Muslim101',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${URL}/thumbnail.png`, // Ganti dengan URL logo Anda
+      },
+    },
+    description: dataArticleDetail?.description,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${URL}/article/detail/${dataArticleDetail?.slug}`,
+    },
+  }
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Artikel',
+        item: `${URL}/article`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: dataArticleDetail.title,
+        item: `${URL}/article/detail/${dataArticleDetail.slug}`,
+      },
+    ],
+  }
+
   return (
     <LayoutArticle>
+      {NODE_ENV === 'production' && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(breadcrumbJsonLd),
+            }}
+          />
+        </>
+      )}
       <TopbarMobileArticle
         href="back"
         applyRouter

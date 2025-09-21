@@ -5,6 +5,7 @@ import { PackageResults } from '@/components/pages/all-packages/3-PackageList/Pa
 import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilterMobile/BottomFilter'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
+import { NODE_ENV, URL } from '@/constant/env'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
@@ -15,6 +16,7 @@ import {
   getTagPackagesEnum,
 } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
+import queryString from 'query-string'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -110,8 +112,74 @@ export default async function SearchGeneral({
     packageType,
   })
 
+  // --- JSON-LD for CollectionPage/WebPage Schema ---
+  const searchPageJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage', // Atau "WebPage"
+    name: `Daftar Paket Muslim101 ${query ? `untuk "${query}"` : ''}`,
+    description: `Temukan berbagai pilihan paket umrah dan haji terbaik di Muslim101. ${query ? `Hasil pencarian untuk "${query}".` : ''}`,
+    url: `${URL}/search${awaitedParams ? `?${queryString.stringify(awaitedParams)}` : ''}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement:
+        dataPackage?.results?.map((pkg, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Product',
+            name: pkg.title,
+            url: `${URL}/${pkg.packageType}/${pkg.organizationInstance.slug}/${pkg.slug}`,
+            image: pkg.thumbnail,
+            offers: {
+              '@type': 'Offer',
+              priceCurrency: pkg.currency,
+              price: pkg.price.toString(),
+            },
+          },
+        })) || [],
+    },
+  }
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Paket',
+        item: `${URL}/all-packages`,
+      },
+    ],
+  }
+  // --- End JSON-LD ---
+
   return (
     <Fragment>
+      {/* JSON-LD Script */}
+      {NODE_ENV === 'production' && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(searchPageJsonLd),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(breadcrumbJsonLd),
+            }}
+          />
+        </>
+      )}
+      {/* End JSON-LD Script */}
+
       <Topbar type="normal" token={token} />
       <SearchTopbar />
       <main className="my-7.5 max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-dvh max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
