@@ -2,6 +2,7 @@ import * as cookieCutter from 'cookie-cutter'
 
 export const cookieNames = {
   USER_ACCESS_TOKEN: 'user_access_token',
+  USER_REFRESH_TOKEN: 'user_refresh_token',
   USER_ACCOUNT: 'user_account',
   SESSION_ID: 'session-id',
   IS_WEBVIEW: 'is-web-view',
