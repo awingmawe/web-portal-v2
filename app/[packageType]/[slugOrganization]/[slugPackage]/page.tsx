@@ -154,7 +154,7 @@ export default async function DetailPackage({
     '@type': 'Product',
     name: detailData.title,
     description: detailData.detail?.description || detailData.title,
-    image: detailData.thumbnail || `${URL}/thumbnail.png`, // Fallback image
+    image: detailData.thumbnail || `${URL}/images/logo.png`, // Fallback image
     sku: detailData.id.toString(),
     brand: {
       '@type': 'Brand',
@@ -166,7 +166,7 @@ export default async function DetailPackage({
       priceCurrency: detailData.currency || 'IDR',
       price: detailData.price.toString(),
       itemCondition: 'https://schema.org/NewCondition',
-      availability: 'https://schema.org/InStock', // Asumsi selalu tersedia jika ditampilkan
+      availability: 'https://schema.org/InStock',
       seller: {
         '@type': 'Organization',
         name: detailData.organizationInstance.name,

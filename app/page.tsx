@@ -129,7 +129,7 @@ export default async function Home() {
     '@type': 'Organization',
     name: 'Muslim101',
     url: URL,
-    logo: `${URL}/thumbnail.png`,
+    logo: `${URL}/images/logo.png`,
     sameAs: [
       'https://web.facebook.com/muslim101.id',
       'https://www.instagram.com/muslim101.id/',

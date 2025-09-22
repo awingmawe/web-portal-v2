@@ -114,7 +114,7 @@ export default async function SearchGeneral({
   // --- JSON-LD for CollectionPage/WebPage Schema ---
   const searchPageJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'CollectionPage', // Atau "WebPage"
+    '@type': 'SearchResultsPage',
     name: `Daftar Paket Muslim101 ${query ? `untuk "${query}"` : ''}`,
     description: `Temukan berbagai pilihan paket umrah dan haji terbaik di Muslim101. ${query ? `Hasil pencarian untuk "${query}".` : ''}`,
     url: `${URL}/search${awaitedParams ? `?${queryString.stringify(awaitedParams)}` : ''}`,

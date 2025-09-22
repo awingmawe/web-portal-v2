@@ -111,7 +111,7 @@ export default async function ArtilceDetail({ params }: any) {
     '@type': 'Article',
     headline: dataArticleDetail?.title,
     image: [
-      dataArticleDetail?.thumbnail || 'https://www.muslim101.com/thumbnail.png', // Fallback image
+      dataArticleDetail?.thumbnail || `${URL}/images/logo.png`, // Fallback image
     ],
     datePublished: dataArticleDetail?.published_at,
     dateModified:
@@ -125,7 +125,7 @@ export default async function ArtilceDetail({ params }: any) {
       name: 'Muslim101',
       logo: {
         '@type': 'ImageObject',
-        url: `${URL}/thumbnail.png`, // Ganti dengan URL logo Anda
+        url: `${URL}/images/logo.png`,
       },
     },
     description: dataArticleDetail?.description,
