@@ -1,16 +1,12 @@
 import { setCookie, getCookie, deleteCookie, cookieNames } from './cookie'
 
 export function setAccessToken(token: string, expiresIn?: number) {
-  const options = expiresIn
-    ? { expires: new Date(Number(expiresIn) * 1000) }
-    : {}
+  const options = expiresIn ? { maxAge: expiresIn } : {}
   setCookie(cookieNames.USER_ACCESS_TOKEN, token, options)
 }
 
 export function setRefreshToken(token: string, expiresIn?: number) {
-  const options = expiresIn
-    ? { expires: new Date(Number(expiresIn) * 1000) }
-    : {}
+  const options = expiresIn ? { maxAge: expiresIn } : {}
   setCookie(cookieNames.USER_REFRESH_TOKEN, token, options)
 }
 
