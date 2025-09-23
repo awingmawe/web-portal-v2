@@ -6,6 +6,7 @@ import {
   getRefreshToken,
   getWukalaReferral,
   setAccessToken,
+  setRefreshToken,
 } from './auth'
 import { ACCOUNT_URL, API_URL } from '@/constant/env'
 import { getLocalReferralCode } from '@/lib/utils'
@@ -82,9 +83,12 @@ async function refreshAccessToken(): Promise<string | null> {
     try {
       const resp = await refreshToken(refreshtoken as string)
       const newToken = resp.data?.accessToken
-      const exp = resp.data?.exp
+      const newRefreshToken = resp.data?.refreshToken
+      const exp = resp.data?.expiresIn
+
       if (newToken) {
-        setAccessToken(newToken, exp)
+        setRefreshToken(newRefreshToken, Number(exp))
+        setAccessToken(newToken, Number(exp))
         return newToken
       }
       return null
