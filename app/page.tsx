@@ -13,6 +13,7 @@ import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import Topbar from '@/components/shared/Topbar'
 import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
+import { NODE_ENV, URL } from '@/constant/env'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
 import { getArticleList } from '@/services/article-service'
@@ -108,8 +109,70 @@ export default async function Home() {
     }),
   ])
 
+  // --- JSON-LD for WebSite and Organization Schema ---
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Muslim101',
+    url: URL,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${URL}/search?query={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+  const organizationJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Muslim101',
+    url: URL,
+    logo: `${URL}/images/logo.png`,
+    sameAs: [
+      'https://web.facebook.com/muslim101.id',
+      'https://www.instagram.com/muslim101.id/',
+    ],
+  }
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: URL,
+      },
+    ],
+  }
+  // --- End JSON-LD ---
+
   return (
     <Fragment>
+      {/* JSON-LD Scripts */}
+      {NODE_ENV === 'production' && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationJsonLd),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(breadcrumbJsonLd),
+            }}
+          />
+        </>
+      )}
+      {/* End JSON-LD Scripts */}
       <Topbar type="homepage" token={token} />
       <div className="absolute top-3.5 right-0 left-0 z-999 flex items-center px-4 lg:hidden">
         <Link

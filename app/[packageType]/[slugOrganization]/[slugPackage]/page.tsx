@@ -17,7 +17,7 @@ import TitlePackageMobile from '@/components/pages/detail-package/mobile/TitlePa
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
-import { PACKAGE_TYPE } from '@/constant/env'
+import { NODE_ENV, PACKAGE_TYPE, URL } from '@/constant/env'
 import {
   GalleryImage,
   HotelGalleryImage,
@@ -148,8 +148,75 @@ export default async function DetailPackage({
     }
   }
 
+  // --- JSON-LD for Product Schema ---
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: detailData.title,
+    description: detailData.detail?.description || detailData.title,
+    image: detailData.thumbnail || `${URL}/images/logo.png`, // Fallback image
+    sku: detailData.id.toString(),
+    brand: {
+      '@type': 'Brand',
+      name: detailData.organizationInstance.name,
+    },
+    offers: {
+      '@type': 'Offer',
+      url: `${URL}/package/${detailData.slug}`,
+      priceCurrency: detailData.currency || 'IDR',
+      price: detailData.price.toString(),
+      itemCondition: 'https://schema.org/NewCondition',
+      availability: 'https://schema.org/InStock',
+      seller: {
+        '@type': 'Organization',
+        name: detailData.organizationInstance.name,
+      },
+    },
+  }
+  // JSON-LD BreadcrumbList
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Paket',
+        item: `${URL}/search`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: detailData.title,
+        item: `${URL}/${detailData.packageType}/${detailData.organizationInstance.slug}/${detailData.slug}`,
+      },
+    ],
+  }
+  // --- End JSON-LD ---
   return (
     <Fragment>
+      {/* JSON-LD Script */}
+      {NODE_ENV === 'production' && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(breadcrumbJsonLd),
+            }}
+          />
+        </>
+      )}
+      {/* End JSON-LD Script */}
       <GalleryProvider
         packageImages={packageImages || []}
         medinaHotelImages={medinaHotelImages || []}
