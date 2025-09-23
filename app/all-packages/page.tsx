@@ -70,7 +70,7 @@ export default async function SearchGeneral({
 
   // Order Filter
   // Handle sorting options
-  let orderBy = 'packageVariant.priceQuad' // Default sort field
+  let orderBy = 'package.createdAt' // Default sort field
   let filterPrice
   let order = 'asc' // Default sort order
 
