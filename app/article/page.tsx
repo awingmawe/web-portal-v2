@@ -4,6 +4,7 @@ import { ArticleSearchWidget } from '@/components/pages/article/landing/1-Widget
 import { NewsArticle } from '@/components/pages/article/landing/2-NewArticle/NewArticle'
 import { AllArticle } from '@/components/pages/article/landing/3-AllArticle/AllArticle'
 import LayoutArticle from '@/components/pages/article/Layout'
+import { NODE_ENV, URL } from '@/constant/env'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import {
   getArticleByHiglight,
@@ -69,8 +70,96 @@ export default async function ArticleHome({ searchParams }: any) {
     total: dataAllArticleResponse.total - 4,
   }
 
+  // --- JSON-LD for WebSite ---
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Muslim101',
+    url: URL,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${URL}/article/list?query={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  }
+
+  // --- JSON-LD for Article List ---
+  const articleListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement:
+      dataArticleTerbaru?.map((article, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'NewsArticle',
+          headline: article.title,
+          description: article.description,
+          image: article.thumbnail || `${URL}/thumbnail.png`,
+          datePublished: article.published_at,
+          author: [
+            {
+              '@type': 'Person',
+              name: article.created_by || 'Muslim101',
+            },
+          ],
+          publisher: {
+            '@type': 'Organization',
+            name: 'Muslim101',
+            logo: {
+              '@type': 'ImageObject',
+              url: `${URL}/thumbnail.png`,
+            },
+          },
+          url: `${URL}/article/detail/${article.slug}`,
+        },
+      })) || [],
+  }
+
+  // --- JSON-LD for Breadcrumb ---
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Artikel',
+        item: `${URL}/article`,
+      },
+    ],
+  }
   return (
     <LayoutArticle>
+      {/* JSON-LD Scripts */}
+      {NODE_ENV === 'production' && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(websiteJsonLd),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(articleListJsonLd),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(breadcrumbJsonLd),
+            }}
+          />
+        </>
+      )}
       <TopbarMobileArticle
         href={isWebview ? '/close-web-view' : 'back'}
         isWebview={isWebview == 'true'}
