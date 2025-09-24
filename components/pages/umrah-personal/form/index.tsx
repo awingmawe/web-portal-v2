@@ -105,6 +105,14 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
               data.transportation?.transportation.name ?? null,
           },
         })
+        pushEvent({
+          name: 'click_next_umroh_personal',
+          category: 'umrah-personal',
+          topic: 'umrah',
+          data: {
+            stepName: 'Review Pilihan',
+          },
+        })
         router.push(`/umrah-personal/success-offering`)
       }
     } catch (error) {

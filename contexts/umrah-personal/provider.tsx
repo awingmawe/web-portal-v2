@@ -109,29 +109,38 @@ export const UmrahPersonalProvider: React.FC<{
   ) => {
     let isValid = false
     let currentStepKey = ''
+    let titleStepName = ''
 
     form.clearErrors()
 
     switch (currentStep) {
       case 1:
         currentStepKey = STEP_1
+        titleStepName = 'Informasi Perjalanan'
         isValid = await trigger(STEP_1)
         break
       case 2:
         currentStepKey = STEP_2
+        titleStepName = 'Detail Keberangkatan'
         isValid = await trigger(STEP_2)
         break
       case 3:
         currentStepKey = STEP_3
+        titleStepName = 'Penginapan Makkah'
         break
       case 4:
         currentStepKey =
           form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA
             ? STEP_5
             : STEP_4
+        titleStepName =
+          form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA
+            ? 'Transportasi'
+            : 'Penginapan Madinah'
         break
       case 5:
         currentStepKey = STEP_5
+        titleStepName = 'Transportasi'
         isValid = true
         break
     }
@@ -173,7 +182,7 @@ export const UmrahPersonalProvider: React.FC<{
       category: 'umrah-personal',
       topic: 'umrah',
       data: {
-        stepName: currentStepKey,
+        stepName: titleStepName,
       },
     })
 
