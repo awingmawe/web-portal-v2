@@ -110,12 +110,15 @@ export default async function ArtilceDetail({ params }: any) {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: dataArticleDetail?.title,
-    image: [
-      dataArticleDetail?.thumbnail || `${URL}/images/logo.png`, // Fallback image
-    ],
-    datePublished: dataArticleDetail?.published_at,
-    dateModified:
-      dataArticleDetail?.updated_at || dataArticleDetail?.published_at,
+    image: dataArticleDetail?.thumbnail
+      ? [dataArticleDetail.thumbnail]
+      : [`${URL}/thumbnail.png`],
+    datePublished: dataArticleDetail?.published_at
+      ? new Date(dataArticleDetail.published_at).toISOString()
+      : new Date().toISOString(),
+    dateModified: dataArticleDetail?.updated_at
+      ? new Date(dataArticleDetail.updated_at).toISOString()
+      : new Date(dataArticleDetail.published_at).toISOString(),
     author: {
       '@type': 'Person',
       name: dataUser?.name || 'Muslim101',
@@ -125,14 +128,20 @@ export default async function ArtilceDetail({ params }: any) {
       name: 'Muslim101',
       logo: {
         '@type': 'ImageObject',
-        url: `${URL}/images/logo.png`,
+        url: `${URL}/thumbnail.png`,
+        width: 400,
+        height: 400,
       },
     },
-    description: dataArticleDetail?.description,
+    description: dataArticleDetail?.description || '',
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `${URL}/article/detail/${dataArticleDetail?.slug}`,
     },
+    // Tambahkan field ini jika ada
+    articleBody: dataArticleDetail?.content || '',
+    wordCount: dataArticleDetail?.content?.length || 0,
+    url: `${URL}/article/detail/${dataArticleDetail?.slug}`,
   }
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
