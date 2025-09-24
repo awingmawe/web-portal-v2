@@ -26,6 +26,7 @@ import {
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
 import {
+  formatCurrency,
   getHotelRating,
   getSlugByVariantPackage,
   getTripDuration,
@@ -164,7 +165,7 @@ export default async function DetailPackage({
       '@type': 'Offer',
       url: `${URL}/package/${detailData.slug}`,
       priceCurrency: detailData.currency || 'IDR',
-      price: detailData.price.toString(),
+      price: formatCurrency(detailData?.price, detailData.currency || 'IDR'),
       itemCondition: 'https://schema.org/NewCondition',
       availability: 'https://schema.org/InStock',
       seller: {
