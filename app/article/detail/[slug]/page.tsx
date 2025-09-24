@@ -112,7 +112,7 @@ export default async function ArtilceDetail({ params }: any) {
     headline: dataArticleDetail?.title,
     image: dataArticleDetail?.thumbnail
       ? [dataArticleDetail.thumbnail]
-      : [`${URL}/images/logo.png`],
+      : [`${URL}/thumbnail.png`],
     datePublished: dataArticleDetail?.published_at
       ? new Date(dataArticleDetail.published_at).toISOString()
       : new Date().toISOString(),
