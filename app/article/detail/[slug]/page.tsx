@@ -108,7 +108,7 @@ export default async function ArtilceDetail({ params }: any) {
   // --- JSON-LD for Article Schema ---
   const articleJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'NewsArticle',
     headline: dataArticleDetail?.title,
     image: dataArticleDetail?.thumbnail
       ? [dataArticleDetail.thumbnail]
@@ -119,10 +119,14 @@ export default async function ArtilceDetail({ params }: any) {
     dateModified: dataArticleDetail?.updated_at
       ? new Date(dataArticleDetail.updated_at).toISOString()
       : new Date(dataArticleDetail.published_at).toISOString(),
-    author: {
-      '@type': 'Person',
-      name: dataUser?.name || 'Muslim101',
-    },
+    author: [
+      {
+        '@type': 'Person',
+        name: dataUser?.name || 'Muslim101',
+        url: `${URL}`,
+      },
+    ],
+    isAccessibleForFree: 'http://schema.org/True',
     publisher: {
       '@type': 'Organization',
       name: 'Muslim101',
@@ -138,10 +142,8 @@ export default async function ArtilceDetail({ params }: any) {
       '@type': 'WebPage',
       '@id': `${URL}/article/detail/${dataArticleDetail?.slug}`,
     },
-    // Tambahkan field ini jika ada
     articleBody: dataArticleDetail?.content || '',
     wordCount: dataArticleDetail?.content?.length || 0,
-    url: `${URL}/article/detail/${dataArticleDetail?.slug}`,
   }
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -162,6 +164,12 @@ export default async function ArtilceDetail({ params }: any) {
       {
         '@type': 'ListItem',
         position: 3,
+        name: 'Artikel List',
+        item: `${URL}/article/list`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
         name: dataArticleDetail.title,
         item: `${URL}/article/detail/${dataArticleDetail.slug}`,
       },
