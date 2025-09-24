@@ -376,7 +376,7 @@ export default function ContentArticle({
                   </Link>
                 </div>
                 {comments?.length > 0 && (
-                  <div className="max-h-96 overflow-y-auto p-4 px-0 pt-0">
+                  <div className="max-h-96 flex-col overflow-y-auto p-4 px-0 pt-0">
                     {comments?.map((comment) => (
                       <div
                         key={comment?.id}
