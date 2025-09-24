@@ -247,7 +247,7 @@ export async function getBookingId(
 ): Promise<any> {
   try {
     const client = token ? createServerApiClient(token) : apiWithAuth
-    const response = await client.get(`/umrah/v1/booking/${bookingId}`)
+    const response = await client.get(`/umrah/v2/booking/${bookingId}`)
     return response.data
   } catch (error) {
     console.error('Error fetching booking detail:', error)
