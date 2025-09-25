@@ -9,6 +9,7 @@ import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
+import { talanganService } from '@/services/talangan-service'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { BedDouble } from 'lucide-react'
@@ -28,7 +29,18 @@ const BankingPageDetail: React.FC = () => {
     try {
       setLoading(true)
       
-      // Check localStorage first for talangan applications
+      // Try to get talangan applications from API first
+      const talanganResponse = await talanganService.getUserApplications(1, 50)
+      
+      if (talanganResponse.success && talanganResponse.data?.applications?.length > 0) {
+        console.log('Found API talangan applications:', talanganResponse.data.applications)
+        setLocalApplications(talanganResponse.data.applications)
+        setViewMode('list')
+        setLoading(false)
+        return
+      }
+      
+      // Check localStorage as fallback for testing
       if (typeof window !== 'undefined') {
         const localApplicationsData = localStorage.getItem('talanganApplications')
         
@@ -37,6 +49,7 @@ const BankingPageDetail: React.FC = () => {
             const applications = JSON.parse(localApplicationsData)
             
             if (applications && applications.length > 0) {
+              console.log('Found localStorage applications (fallback):', applications)
               setLocalApplications(applications)
               setViewMode('list') // Use list layout for localStorage data
               setLoading(false)

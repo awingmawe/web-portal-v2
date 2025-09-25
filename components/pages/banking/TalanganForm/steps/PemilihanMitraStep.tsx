@@ -9,8 +9,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { TalanganFormData } from '../TalanganFormPage'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { talanganService, CreditProvider } from '@/services/talangan-service'
 
 interface PemilihanMitraStepProps {
   formData: TalanganFormData
@@ -27,92 +28,149 @@ export default function PemilihanMitraStep({
   const [selectedPartner, setSelectedPartner] = useState(formData.selectedPartner || '')
   const [tenor, setTenor] = useState(formData.tenor || 24)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [partners, setPartners] = useState<CreditProvider[]>([])
+  const [isLoadingPartners, setIsLoadingPartners] = useState(true)
+  const [simulation, setSimulation] = useState<any>(null)
 
-  const handlePartnerSelect = (partner: string) => {
-    setSelectedPartner(partner)
-    updateFormData({ selectedPartner: partner })
+  // Load partners on component mount
+  useEffect(() => {
+    const loadPartners = async () => {
+      try {
+        setIsLoadingPartners(true)
+        const response = await talanganService.getCreditProviders()
+        
+        if (response.success) {
+          setPartners(response.data)
+        } else {
+          console.error('Failed to load partners:', response.error)
+        }
+      } catch (error) {
+        console.error('Error loading partners:', error)
+      } finally {
+        setIsLoadingPartners(false)
+      }
+    }
+
+    loadPartners()
+  }, [])
+
+  const handlePartnerSelect = async (partnerId: string) => {
+    setSelectedPartner(partnerId)
+    updateFormData({ selectedPartner: partnerId })
+    
+    // Calculate simulation locally for now
+    if (formData.selectedPackage?.price && partnerId) {
+      const partner = partners.find(p => p.id === partnerId)
+      if (partner?.terms) {
+        const amount = parseInt(formData.selectedPackage.price.replace(/\D/g, ''))
+        const monthlyRate = partner.terms.interestRate / 100
+        const totalInterest = amount * monthlyRate * tenor
+        const totalAmount = amount + totalInterest + partner.terms.adminFee
+        const monthlyInstallment = totalAmount / tenor
+        
+        setSimulation({
+          totalAmount,
+          monthlyInstallment,
+          totalInterest,
+          adminFee: partner.terms.adminFee
+        })
+      }
+    }
   }
 
-  const handleTenorChange = (newTenor: string) => {
+  const handleTenorChange = async (newTenor: string) => {
     const tenorValue = parseInt(newTenor)
     setTenor(tenorValue)
     updateFormData({ tenor: tenorValue })
+
+    // Re-calculate simulation when tenor changes
+    if (selectedPartner && formData.selectedPackage?.price) {
+      const partner = partners.find(p => p.id === selectedPartner)
+      if (partner?.terms) {
+        const amount = parseInt(formData.selectedPackage.price.replace(/\D/g, ''))
+        const monthlyRate = partner.terms.interestRate / 100
+        const totalInterest = amount * monthlyRate * tenorValue
+        const totalAmount = amount + totalInterest + partner.terms.adminFee
+        const monthlyInstallment = totalAmount / tenorValue
+        
+        setSimulation({
+          totalAmount,
+          monthlyInstallment,
+          totalInterest,
+          adminFee: partner.terms.adminFee
+        })
+      }
+    }
   }
 
   const handleSubmit = async () => {
-    if (isSubmitting) return // Prevent double submission
+    if (isSubmitting || !selectedPartner) return
     
     setIsSubmitting(true)
     
     try {
-      if (typeof window !== 'undefined') {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        // Generate application ID
-        const applicationId = `TLG-${new Date().getFullYear()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
-        
-        // Create application data
-        const application = {
-          id: applicationId,
-          status: 'submitted', // submitted, approved, rejected, in_review
-          submittedAt: new Date().toISOString(),
-          personalData: {
-            fullName: formData.fullName,
-            email: formData.email,
-            phoneNumber: formData.phoneNumber,
-            birthDate: formData.birthDate,
-            gender: formData.gender,
-            job: formData.job,
-            address: formData.address,
-            cityName: formData.cityName,
-            provinceName: formData.provinceName,
-          },
-          packageData: formData.selectedPackage,
-          financing: {
-            partnerId: selectedPartner,
-            partnerName: selectedPartner === 'permata' ? 'Permata Bank' : 'BFI Finance',
-            requestedAmount: formData.selectedPackage?.price || 0,
-            tenor: tenor,
-            monthlyInstallment: Math.round((formData.selectedPackage?.price || 0) / tenor)
-          }
+      // Parse package price safely
+      const packagePrice = formData.selectedPackage?.price ? 
+        parseInt(formData.selectedPackage.price.toString().replace(/\D/g, '')) : 0
+      
+      // Create credit submission data for new API
+      const submissionData = {
+        providerId: selectedPartner,
+        amount: packagePrice,
+        tenor: tenor,
+        purpose: `Talangan Umrah - ${formData.selectedPackage?.title || 'Package'}`,
+        personalData: {
+          fullName: formData.fullName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          ktp: formData.nik || '', // Assuming NIK is stored in formData
+          birthDate: formData.birthDate,
+          address: formData.address,
+          occupation: formData.job,
+          monthlyIncome: formData.monthlyIncome || 0
+        },
+        documents: {
+          ktpUrl: formData.ktpFile ? 'uploaded-ktp-url' : undefined,
+          npwpUrl: formData.npwpFile ? 'uploaded-npwp-url' : undefined,
+        },
+        metadata: {
+          packageId: formData.selectedPackage?.id?.toString(),
+          travelAgentId: formData.selectedPackage?.organizationName,
+          departureDate: formData.selectedPackage?.departureDate
         }
-        
-        // Get existing applications
-        const existingApplications = JSON.parse(localStorage.getItem('talanganApplications') || '[]')
-        
-        // Add new application
-        existingApplications.unshift(application)
-        
-        // Save to localStorage
-        localStorage.setItem('talanganApplications', JSON.stringify(existingApplications))
+      }
+      
+      console.log('Submitting credit application:', submissionData)
+      
+      const response = await talanganService.submitCreditApplication(submissionData)
+      
+      if (response.success) {
+        console.log('Application submitted successfully:', response.data)
         
         // Clear form data
-        localStorage.removeItem('talanganFormData')
-        localStorage.removeItem('talanganCurrentStep')
-        // Also clear sessionStorage
-        sessionStorage.removeItem('talanganFormData')
-        sessionStorage.removeItem('talanganCurrentStep')
-        sessionStorage.removeItem('talanganSelectedPackage')
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('talanganFormData')
+          localStorage.removeItem('talanganCurrentStep')
+          sessionStorage.removeItem('talanganFormData')
+          sessionStorage.removeItem('talanganCurrentStep')
+          sessionStorage.removeItem('talanganSelectedPackage')
+        }
         
-        console.log('Application saved:', application)
-        console.log('All applications in localStorage:', existingApplications)
-        console.log('localStorage key set successfully')
-        
-        // Redirect to my banking page with a small delay to ensure localStorage is written
-        setTimeout(() => {
-          router.push('/my/banking')
-        }, 100)
+        // Redirect to banking page
+        router.push('/my/banking')
+      } else {
+        console.error('Application submission failed:', response.error)
+        alert('Gagal mengirim aplikasi: ' + (response.error?.message || 'Unknown error'))
+        setIsSubmitting(false)
       }
     } catch (error) {
       console.error('Error submitting application:', error)
+      alert('Terjadi kesalahan saat mengirim aplikasi')
       setIsSubmitting(false)
     }
   }
 
-  // Mock calculation
-  const totalPengajuan = 49000000
-  const angsuranPerBulan = Math.round(totalPengajuan / tenor)
+  const selectedPartnerData = partners.find(p => p.id === selectedPartner)
 
   return (
     <div className="mx-auto max-w-4xl bg-white rounded-lg p-6 lg:p-8 shadow-sm">
@@ -120,120 +178,126 @@ export default function PemilihanMitraStep({
         Pilihan Mitra Tersedia
       </h3>
 
-      <div className="space-y-6">
-        {/* Permata Bank Option */}
-        <div
-          className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
-            selectedPartner === 'permata'
-              ? 'border-yellow-500 bg-yellow-50'
-              : 'border-gray-200 hover:border-gray-300'
-          }`}
-          onClick={() => handlePartnerSelect('permata')}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                <span className="text-white text-xs font-bold">PB</span>
-              </div>
-              <h4 className="text-lg font-semibold">Permata Bank</h4>
-            </div>
+      {isLoadingPartners ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="text-gray-500">Loading partners...</div>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {partners.map((partner) => (
             <div
-              className={`w-6 h-6 rounded-full border-2 ${
-                selectedPartner === 'permata'
-                  ? 'border-yellow-500 bg-yellow-500'
-                  : 'border-gray-300'
+              key={partner.id}
+              className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
+                selectedPartner === partner.id
+                  ? 'border-yellow-500 bg-yellow-50'
+                  : 'border-gray-200 hover:border-gray-300'
               }`}
+              onClick={() => handlePartnerSelect(partner.id)}
             >
-              {selectedPartner === 'permata' && (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-8 h-8 rounded flex items-center justify-center bg-blue-500`}>
+                    <span className="text-white text-xs font-bold">{partner.code || partner.name.charAt(0)}</span>
+                  </div>
+                  <h4 className="text-lg font-semibold">{partner.name}</h4>
+                </div>
+                <div
+                  className={`w-6 h-6 rounded-full border-2 ${
+                    selectedPartner === partner.id
+                      ? 'border-yellow-500 bg-yellow-500'
+                      : 'border-gray-300'
+                  }`}
+                >
+                  {selectedPartner === partner.id && (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                <h5 className="font-medium mb-2">Ketentuan</h5>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  {(partner.requirements || []).map((req, index) => (
+                    <li key={index}>{index + 1}. {req}</li>
+                  ))}
+                </ul>
+                {partner.description && (
+                  <p className="text-sm text-gray-600 mt-2 italic">{partner.description}</p>
+                )}
+              </div>
+
+              {partner.terms && (
+                <>
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <span>Min. Rp {partner.terms.minAmount.toLocaleString('id-ID')}</span>
+                    <span>Max. Rp {partner.terms.maxAmount.toLocaleString('id-ID')}</span>
+                    <span>Bunga {partner.terms.interestRate}% / bulan</span>
+                  </div>
+                  
+                  {partner.terms.adminFee > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      Admin Fee: Rp {partner.terms.adminFee.toLocaleString('id-ID')}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Tenor Selection & Simulation */}
+              {selectedPartner === partner.id && (
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tenor *
+                    </label>
+                    <Select value={tenor.toString()} onValueChange={handleTenorChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {partner.terms && Array.from(
+                          { length: Math.floor((partner.terms.maxTenor - partner.terms.minTenor) / 6) + 1 },
+                          (_, i) => partner.terms!.minTenor + i * 6
+                        ).map((option) => (
+                          <SelectItem key={option} value={option.toString()}>
+                            {option} bulan
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {simulation && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h5 className="font-medium mb-2">Simulasi Talangan</h5>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span>Total Pengajuan Talangan</span>
+                          <span className="font-medium">Rp{simulation.totalAmount?.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Angsuran Per Bulan</span>
+                          <span className="font-medium">Rp{simulation.monthlyInstallment?.toLocaleString('id-ID')}</span>
+                        </div>
+                        {simulation.totalInterest && (
+                          <div className="flex justify-between">
+                            <span>Total Bunga</span>
+                            <span className="font-medium">Rp{simulation.totalInterest?.toLocaleString('id-ID')}</span>
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">
+                        *Perhitungan ini hanya simulasi, data dapat berubah sesuai dengan ketentuan mitra terkait.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          </div>
-
-          <div className="bg-blue-50 p-4 rounded-lg mb-4">
-            <h5 className="font-medium mb-2">Ketentuan</h5>
-            <p className="text-sm text-gray-700 mb-2">
-              Untuk pengajuan talangan umroh melalui Permata Bank, mohon perhatikan ketentuan berikut:
-            </p>
-            <ol className="text-sm text-gray-700 space-y-1">
-              <li>1. Memiliki rekening Tabungan Permata Bank yang aktif minimal 3 bulan atau kartu kredit dari bank manapun.</li>
-              <li>2. Jika jumlah talangan yang disetujui lebih kecil dari pengajuan, maka selisihnya akan menjadi DP (Down Payment) atau uang muka.</li>
-            </ol>
-          </div>
-
-          {selectedPartner === 'permata' && (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tenor *
-                </label>
-                <Select value={tenor.toString()} onValueChange={handleTenorChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="12">12</SelectItem>
-                    <SelectItem value="18">18</SelectItem>
-                    <SelectItem value="24">24</SelectItem>
-                    <SelectItem value="36">36</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h5 className="font-medium mb-2">Simulasi Talangan</h5>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>Total Pengajuan Talangan</span>
-                    <span className="font-medium">Rp{totalPengajuan.toLocaleString('id-ID')}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Angsuran Per Bulan</span>
-                    <span className="font-medium">Rp{angsuranPerBulan.toLocaleString('id-ID')}</span>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  *Perhitungan ini hanya simulasi, data dapat berubah sesuai dengan ketentuan mitra terkait.
-                </p>
-              </div>
-            </div>
-          )}
+          ))}
         </div>
-
-        {/* BFI Finance Option (Disabled) */}
-        <div className="border-2 border-gray-200 rounded-lg p-6 opacity-50">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-orange-600 rounded flex items-center justify-center">
-                <span className="text-white text-xs font-bold">BFI</span>
-              </div>
-              <h4 className="text-lg font-semibold">BFI Finance</h4>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <p className="text-red-600 text-sm font-medium mb-2">
-              Travel penyelenggara tidak terdaftar pada program Talangan BFI Finance.{' '}
-              <span className="text-blue-600 cursor-pointer">Cari Paket Lain</span>
-            </p>
-          </div>
-
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h5 className="font-medium mb-2">Ketentuan</h5>
-            <p className="text-sm text-gray-700 mb-2">
-              Untuk pengajuan talangan umroh melalui BFI Finance, mohon perhatikan ketentuan berikut:
-            </p>
-            <ol className="text-sm text-gray-700 space-y-1">
-              <li>1. Limit maksimal talangan adalah Rp40.000.000</li>
-              <li>2. Pembiayaan hanya berlaku untuk Mitra Travel Umroh terpilih yang bekerjasama dengan BFI Finance.</li>
-              <li>3. Pembiayaan ini berlaku untuk 1 (satu) orang jamaah per pengajuan.</li>
-              <li>4. Jika jumlah talangan yang disetujui lebih kecil dari pengajuan, maka selisihnya akan menjadi DP (Down Payment) atau uang muka.</li>
-            </ol>
-          </div>
-        </div>
-      </div>
+      )}
 
       <div className="mt-8 p-4 bg-blue-50 rounded-lg">
         <p className="text-sm text-gray-700">
