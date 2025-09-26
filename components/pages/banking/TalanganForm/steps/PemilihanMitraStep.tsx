@@ -13,6 +13,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { talanganService } from '@/services/talangan-service'
 import { CreditProvider } from '@/constant/types/TalanganProps'
+import { toast } from '@/components/ui/sonner'
+import { formatCurrency } from '@/lib/utils'
 
 interface PemilihanMitraStepProps {
   formData: TalanganFormData
@@ -43,10 +45,10 @@ export default function PemilihanMitraStep({
         if (response.success) {
           setPartners(response.data)
         } else {
-          console.error('Failed to load partners:', response.error)
+          toast.error('Gagal memuat data mitra kredit')
         }
-      } catch (error) {
-        console.error('Error loading partners:', error)
+      } catch {
+        toast.error('Terjadi kesalahan saat memuat data mitra')
       } finally {
         setIsLoadingPartners(false)
       }
@@ -145,6 +147,7 @@ export default function PemilihanMitraStep({
       const response = await talanganService.submitCreditApplication(submissionData)
       
       if (response.success) {
+        toast.success('Aplikasi talangan berhasil diajukan!')
         
         // Clear form data
         if (typeof window !== 'undefined') {
@@ -158,13 +161,11 @@ export default function PemilihanMitraStep({
         // Redirect to banking page
         router.push('/my/banking')
       } else {
-        console.error('Application submission failed:', response.error)
-        alert('Gagal mengirim aplikasi: ' + (response.error?.message || 'Unknown error'))
+        toast.error('Gagal mengirim aplikasi: ' + (response.error?.message || 'Terjadi kesalahan'))
         setIsSubmitting(false)
       }
-    } catch (error) {
-      console.error('Error submitting application:', error)
-      alert('Terjadi kesalahan saat mengirim aplikasi')
+    } catch {
+      toast.error('Terjadi kesalahan saat mengirim aplikasi')
       setIsSubmitting(false)
     }
   }
@@ -229,14 +230,14 @@ export default function PemilihanMitraStep({
               {partner.terms && (
                 <>
                   <div className="flex items-center space-x-4 text-sm text-gray-600">
-                    <span>Min. Rp {partner.terms.minAmount.toLocaleString('id-ID')}</span>
-                    <span>Max. Rp {partner.terms.maxAmount.toLocaleString('id-ID')}</span>
+                    <span>Min. {formatCurrency(partner.terms.minAmount)}</span>
+                    <span>Max. {formatCurrency(partner.terms.maxAmount)}</span>
                     <span>Bunga {partner.terms.interestRate}% / bulan</span>
                   </div>
                   
                   {partner.terms.adminFee > 0 && (
                     <div className="mt-2 text-sm text-gray-600">
-                      Admin Fee: Rp {partner.terms.adminFee.toLocaleString('id-ID')}
+                      Admin Fee: {formatCurrency(partner.terms.adminFee)}
                     </div>
                   )}
                 </>
@@ -272,16 +273,16 @@ export default function PemilihanMitraStep({
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span>Total Pengajuan Talangan</span>
-                          <span className="font-medium">Rp{simulation.totalAmount?.toLocaleString('id-ID')}</span>
+                          <span className="font-medium">{formatCurrency(simulation.totalAmount)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Angsuran Per Bulan</span>
-                          <span className="font-medium">Rp{simulation.monthlyInstallment?.toLocaleString('id-ID')}</span>
+                          <span className="font-medium">{formatCurrency(simulation.monthlyInstallment)}</span>
                         </div>
                         {simulation.totalInterest && (
                           <div className="flex justify-between">
                             <span>Total Bunga</span>
-                            <span className="font-medium">Rp{simulation.totalInterest?.toLocaleString('id-ID')}</span>
+                            <span className="font-medium">{formatCurrency(simulation.totalInterest)}</span>
                           </div>
                         )}
                       </div>

@@ -20,58 +20,6 @@ export const talanganService = {
       const response = await apiWithAuth.get('/banking/v2/credit/providers')
       return { success: true, data: response.data }
     } catch (error: any) {
-      console.error('getCreditProviders error:', error.message)
-      
-      // Return mock data if backend is not ready
-      if (error.response?.status === 500 || error.response?.data?.errorMessage?.includes('PRISMA_DATABASE_URL')) {
-        console.log('Backend not ready, using mock data')
-        const mockProviders = [
-          {
-            id: 'permata-bank',
-            name: 'Permata Bank',
-            code: 'PB',
-            logo: null,
-            description: 'Proses persetujuan 1-2 hari kerja',
-            features: ['Proses cepat', 'Bunga kompetitif'],
-            terms: {
-              minTenor: 12,
-              maxTenor: 36,
-              minAmount: 5000000,
-              maxAmount: 100000000,
-              interestRate: 1.5,
-              adminFee: 50000
-            },
-            requirements: [
-              'Memiliki rekening Tabungan Permata Bank yang aktif minimal 3 bulan atau kartu kredit dari bank manapun',
-              'Jika jumlah talangan yang disetujui lebih kecil dari pengajuan, maka selisihnya akan menjadi DP (Down Payment) atau uang muka'
-            ],
-            status: 'active'
-          },
-          {
-            id: 'bfi-finance',
-            name: 'BFI Finance',
-            code: 'BFI',
-            logo: null,
-            description: 'Khusus untuk mitra travel terpilih',
-            features: ['Tenor fleksibel', 'Proses mudah'],
-            terms: {
-              minTenor: 6,
-              maxTenor: 24,
-              minAmount: 3000000,
-              maxAmount: 75000000,
-              interestRate: 2.0,
-              adminFee: 75000
-            },
-            requirements: [
-              'Memiliki penghasilan tetap minimal Rp 3.000.000 per bulan',
-              'Proses persetujuan maksimal 2 hari kerja setelah dokumen lengkap'
-            ],
-            status: 'active'
-          }
-        ]
-        return { success: true, data: mockProviders }
-      }
-      
       return { success: false, error: error.response?.data || { message: error.message } }
     }
   },
@@ -82,7 +30,6 @@ export const talanganService = {
       const response = await apiWithAuth.post('/banking/v2/credit/submissions', data)
       return { success: true, data: response.data }
     } catch (error: any) {
-      console.error('submitCreditApplication error:', error)
       return { success: false, error: error.response?.data || { message: error.message } }
     }
   },
@@ -94,7 +41,6 @@ export const talanganService = {
       const response = await apiWithAuth.get(`/banking/v2/credit/submissions${queryString ? `?${queryString}` : ''}`)
       return { success: true, data: response.data }
     } catch (error: any) {
-      console.error('getCreditSubmissions error:', error)
       return { success: false, error: error.response?.data || { message: error.message } }
     }
   },
@@ -132,7 +78,6 @@ export const talanganService = {
       const response = await apiWithAuth.post('/api/talangan/eligibility-check', data)
       return { success: true, data: response.data }
     } catch (error: any) {
-      console.error('checkEligibility error:', error)
       return { success: false, error: error.response?.data || { message: error.message } }
     }
   },
@@ -143,7 +88,6 @@ export const talanganService = {
       const response = await apiWithAuth.post('/api/talangan/simulation', data)
       return { success: true, data: response.data }
     } catch (error: any) {
-      console.error('simulatePayment error:', error)
       return { success: false, error: error.response?.data || { message: error.message } }
     }
   },
@@ -154,7 +98,6 @@ export const talanganService = {
       const response = await apiWithAuth.post('/api/talangan/submit-application', data)
       return { success: true, data: response.data }
     } catch (error: any) {
-      console.error('submitApplication error:', error)
       return { success: false, error: error.response?.data || { message: error.message } }
     }
   },
@@ -166,7 +109,6 @@ export const talanganService = {
       const response = await apiWithAuth.get(`/banking/v2/credit/submissions?page=${page}&limit=${size}`)
       return { success: true, data: response.data }
     } catch (error: any) {
-      console.log('getUserApplications error:', error)
       // If 404, return empty data instead of error
       if (error.response?.status === 404) {
         return { success: true, data: { applications: [], total: 0 } }
