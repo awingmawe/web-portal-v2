@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -15,38 +14,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { FileUpload } from '@/components/pages/manifest/3-FormManifest/UploadDokumen'
 import KotaAsalCombobox from '@/components/pages/banking/1-Tabungan/KotaAsal'
 import ProvinsiAsalCombobox from '@/components/pages/banking/1-Tabungan/ProvinsiAsal'
 import TriggerCalendar from '@/components/pages/manifest/3-FormManifest/TriggerCalendar'
 import { TalanganFormData } from '../TalanganFormPage'
-import { CalendarIcon } from 'lucide-react'
-
-// Form schema for validation
-const dataDiriSchema = z.object({
-  fullName: z.string().min(1, 'Nama sesuai KTP wajib diisi'),
-  email: z.string().email('Format email tidak valid'),
-  phoneNumber: z.string().min(10, 'Nomor telepon minimal 10 digit'),
-  birthDate: z.string().min(1, 'Tanggal lahir wajib diisi'),
-  gender: z.enum(['pria', 'wanita'], {
-    required_error: 'Jenis kelamin wajib dipilih',
-  }),
-  job: z.string().optional(),
-  cityId: z.string().min(1, 'Kabupaten/Kota wajib diisi'),
-  cityName: z.string().min(1, 'Kabupaten/Kota wajib diisi'),
-  provinceId: z.string().min(1, 'Provinsi wajib diisi'),
-  provinceName: z.string().min(1, 'Provinsi wajib diisi'),
-  address: z.string().optional(),
-})
-
-type DataDiriFormValues = z.infer<typeof dataDiriSchema>
+import { dataDiriSchema, DataDiriFormValues } from '@/constant/schema/talangan-schema'
 
 interface DataDiriStepProps {
   formData: TalanganFormData

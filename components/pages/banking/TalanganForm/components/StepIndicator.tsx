@@ -21,26 +21,26 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
               <div
                 className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold ${
                   step.number < currentStep
-                    ? 'border-yellow-500 bg-yellow-500 text-white'
+                    ? 'border-primary-500 bg-primary-500 text-white'
                     : step.number === currentStep
-                    ? 'border-yellow-500 bg-yellow-500 text-white'
-                    : 'border-gray-300 bg-white text-gray-400'
+                    ? 'border-primary-500 bg-primary-500 text-white'
+                    : 'border-neutral-300 bg-white text-neutral-400'
                 }`}
               >
                 {step.number < currentStep ? (
                   <Check size={16} />
                 ) : (
-                  <span className="text-sm">{step.number}</span>
+                  <span className="text-s-semibold">{step.number}</span>
                 )}
               </div>
               
               {/* Step Title */}
               <div className="mt-2 text-center">
                 <span
-                  className={`text-sm font-medium ${
+                  className={`text-s-semibold ${
                     step.number <= currentStep
-                      ? 'text-gray-900'
-                      : 'text-gray-400'
+                      ? 'text-neutral-900'
+                      : 'text-neutral-400'
                   }`}
                 >
                   {step.title}
@@ -54,8 +54,8 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
                 <div
                   className={`h-0.5 w-16 lg:w-24 ${
                     step.number < currentStep
-                      ? 'bg-yellow-500'
-                      : 'bg-gray-300'
+                      ? 'bg-primary-500'
+                      : 'bg-neutral-300'
                   }`}
                 />
               </div>

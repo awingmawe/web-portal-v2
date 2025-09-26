@@ -10,6 +10,7 @@ import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
 import { getbankCredit } from '@/services/banking-service'
 import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
 import { talanganService } from '@/services/talangan-service'
+import { formatDateToDDMMYYYY } from '@/lib/utils'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { BedDouble } from 'lucide-react'
@@ -192,16 +193,6 @@ const BankingPageDetail: React.FC = () => {
     }
   }
 
-  const formatTanggal = (tanggal: string) => {
-    const date = new Date(tanggal)
-    return date.toLocaleString('id-ID', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
 
   const formatTanggal3 = (tanggal: string) => {
     const date = new Date(tanggal)
@@ -341,7 +332,7 @@ const BankingPageDetail: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <span className="text-gray-600">Tanggal Pengajuan</span>
                   <p className="text-right text-xs font-medium text-gray-800 md:text-sm">
-                    {formatTanggal(data.createdAt)}
+                    {formatDateToDDMMYYYY(new Date(data.createdAt))}
                   </p>
                 </div>
               </div>
@@ -838,7 +829,7 @@ const TalanganListLayout: React.FC<{ applications: any[] }> = ({ applications })
 
             {/* Applications List */}
             <div className="space-y-4">
-              {currentApplications.map((app, index) => {
+              {currentApplications.map((app) => {
                 const statusInfo = getStatusBadge(app.status)
                 return (
                   <div key={app.id} className="bg-white rounded-lg p-6 shadow-sm">

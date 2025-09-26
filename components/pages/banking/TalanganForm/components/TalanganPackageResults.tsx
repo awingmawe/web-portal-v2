@@ -24,7 +24,6 @@ export const TalanganPackageResults: React.FC = () => {
   const {
     isLoadingSkeleton,
     isLoading,
-    resetFilters,
     packages: packageDataCSR,
     totalPackages: totalCSR,
     initializeFiltersFromURL,
@@ -51,6 +50,7 @@ export const TalanganPackageResults: React.FC = () => {
     const params = buildQueryParams(
       searchParams.toString(),
       currentSort,
+      'umrah',
       page
     )
     
@@ -89,11 +89,6 @@ export const TalanganPackageResults: React.FC = () => {
     }
   }, [loadMore, queryParams])
 
-  // Reset all filters callback
-  const resetAllFilters = useCallback(() => {
-    resetFilters()
-    window.history.pushState({}, '', window.location.pathname)
-  }, [resetFilters])
 
   // Function to create URL with new sort parameter
   const createSortUrl = useCallback(
@@ -127,7 +122,7 @@ export const TalanganPackageResults: React.FC = () => {
 
   // Render no results component if there are no packages and not loading
   if (displayPackages.length === 0 && !isLoadingSkeleton && !isLoading) {
-    return <NoResults resetAllFilters={resetAllFilters} />
+    return <NoResults resetAllFiltersAction={() => {}} />
   }
 
   return (

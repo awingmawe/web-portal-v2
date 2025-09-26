@@ -10,14 +10,12 @@ import { BedIcon } from '@/components/icons/bed'
 
 interface FormPengajuanStepProps {
   formData: TalanganFormData
-  updateFormData: (data: Partial<TalanganFormData>) => void
   onNext: () => void
   onPrev: () => void
 }
 
 export default function FormPengajuanStep({
   formData,
-  updateFormData,
   onNext,
   onPrev,
 }: FormPengajuanStepProps) {

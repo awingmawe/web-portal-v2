@@ -27,7 +27,6 @@ export default async function TalanganForm() {
         variant="plainBank" 
         showBackButton 
         title="Form Talangan Umroh"
-        backUrl="/banking/credit"
       />
       
       {/* Mobile Content */}

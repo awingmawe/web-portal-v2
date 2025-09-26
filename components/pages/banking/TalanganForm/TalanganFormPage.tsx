@@ -62,26 +62,18 @@ export default function TalanganFormPage() {
   // Load form data and selected package from session storage on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      console.log('TalanganFormPage: Loading from sessionStorage...')
       
       const savedFormData = sessionStorage.getItem('talanganFormData')
       const savedCurrentStep = sessionStorage.getItem('talanganCurrentStep')
       const selectedPackageData = sessionStorage.getItem('talanganSelectedPackage')
       const urlStep = searchParams.get('step')
       
-      console.log('SessionStorage and URL values:', {
-        savedFormData: !!savedFormData,
-        savedCurrentStep,
-        selectedPackageData: !!selectedPackageData,
-        urlStep
-      })
       
       // Load saved form data first
       if (savedFormData) {
         try {
           const parsedData = JSON.parse(savedFormData)
           setFormData(parsedData)
-          console.log('Form data loaded:', parsedData)
         } catch (error) {
           console.error('Error parsing saved form data:', error)
         }
@@ -91,7 +83,6 @@ export default function TalanganFormPage() {
       if (selectedPackageData) {
         try {
           const packageData = JSON.parse(selectedPackageData)
-          console.log('Package data found:', packageData)
           setFormData(prev => ({
             ...prev,
             selectedPackage: packageData
@@ -105,22 +96,17 @@ export default function TalanganFormPage() {
       // Determine which step to show - URL parameter has HIGHEST priority
       if (urlStep && parseInt(urlStep) >= 1 && parseInt(urlStep) <= 3) {
         const step = parseInt(urlStep)
-        console.log('Using URL step parameter:', step)
         setCurrentStep(step)
       } else if (selectedPackageData) {
-        console.log('Package data found - Going to step 2!')
         setCurrentStep(2)
       } else if (savedCurrentStep) {
         const step = parseInt(savedCurrentStep, 10)
         if (step >= 1 && step <= 3) {
-          console.log('Using saved step:', step)
           setCurrentStep(step)
         } else {
-          console.log('Invalid saved step, starting at step 1')
           setCurrentStep(1)
         }
       } else {
-        console.log('First time visit - Starting at step 1')
         setCurrentStep(1)
       }
       
@@ -132,7 +118,6 @@ export default function TalanganFormPage() {
   // Save form data and current step to session storage whenever they change (skip initial load)
   useEffect(() => {
     if (typeof window !== 'undefined' && !isInitialLoad) {
-      console.log('Auto-saving form data and step:', currentStep)
       sessionStorage.setItem('talanganFormData', JSON.stringify(formData))
       sessionStorage.setItem('talanganCurrentStep', currentStep.toString())
     }
@@ -157,9 +142,6 @@ export default function TalanganFormPage() {
     }
   }
 
-  const goToStep = (step: number) => {
-    setCurrentStep(step)
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">

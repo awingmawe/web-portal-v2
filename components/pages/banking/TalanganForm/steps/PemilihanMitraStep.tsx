@@ -11,7 +11,8 @@ import {
 import { TalanganFormData } from '../TalanganFormPage'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { talanganService, CreditProvider } from '@/services/talangan-service'
+import { talanganService } from '@/services/talangan-service'
+import { CreditProvider } from '@/constant/types/TalanganProps'
 
 interface PemilihanMitraStepProps {
   formData: TalanganFormData
@@ -140,12 +141,10 @@ export default function PemilihanMitraStep({
         }
       }
       
-      console.log('Submitting credit application:', submissionData)
       
       const response = await talanganService.submitCreditApplication(submissionData)
       
       if (response.success) {
-        console.log('Application submitted successfully:', response.data)
         
         // Clear form data
         if (typeof window !== 'undefined') {
@@ -170,7 +169,6 @@ export default function PemilihanMitraStep({
     }
   }
 
-  const selectedPartnerData = partners.find(p => p.id === selectedPartner)
 
   return (
     <div className="mx-auto max-w-4xl bg-white rounded-lg p-6 lg:p-8 shadow-sm">

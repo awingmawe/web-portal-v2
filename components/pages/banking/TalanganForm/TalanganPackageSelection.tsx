@@ -9,12 +9,37 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { FilterProductProvider } from '@/contexts/filter-product-context'
 
+interface DataMinMax {
+  minAmount: number
+  maxAmount: number
+  minTenor?: number
+  maxTenor?: number
+}
+
+interface TagPackage {
+  id: string
+  name: string
+  slug: string
+}
+
+interface Facility {
+  id: string
+  name: string
+  icon?: string
+}
+
+interface Section {
+  id: string
+  name: string
+  description?: string
+}
+
 interface TalanganPackageSelectionProps {
   token: string
-  dataMinMax: any
-  dataTagPackages: any
-  dataFacility: any
-  dataSection: any
+  dataMinMax: DataMinMax
+  dataTagPackages: TagPackage[]
+  dataFacility: Facility[]
+  dataSection: Section[]
 }
 
 export default function TalanganPackageSelection({
