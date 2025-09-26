@@ -15,8 +15,6 @@ import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { FileUpload } from '@/components/pages/manifest/3-FormManifest/UploadDokumen'
-import KotaAsalCombobox from '@/components/pages/banking/1-Tabungan/KotaAsal'
-import ProvinsiAsalCombobox from '@/components/pages/banking/1-Tabungan/ProvinsiAsal'
 import TriggerCalendar from '@/components/pages/manifest/3-FormManifest/TriggerCalendar'
 import { TalanganFormData } from '../TalanganFormPage'
 import { dataDiriSchema, DataDiriFormValues } from '@/constant/schema/talangan-schema'
@@ -46,6 +44,8 @@ export default function DataDiriStep({
       provinceId: formData.provinceId,
       provinceName: formData.provinceName,
       address: formData.address,
+      nik: formData.nik,
+      monthlyIncome: formData.monthlyIncome,
     },
   })
 
@@ -214,14 +214,10 @@ export default function DataDiriStep({
                     Kabupaten/Kota *
                   </FormLabel>
                   <FormControl>
-                    <KotaAsalCombobox
-                      selectedCityId={field.value}
-                      onCityChange={(cityId, cityName) => {
-                        field.onChange(cityId)
-                        form.setValue('cityName', cityName)
-                      }}
-                      provinceId={form.watch('provinceId')}
-                      placeholder="Pilih kabupaten/kota"
+                    <Input 
+                      placeholder="Masukkan kabupaten/kota"
+                      {...field}
+                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />
@@ -238,16 +234,10 @@ export default function DataDiriStep({
                     Provinsi *
                   </FormLabel>
                   <FormControl>
-                    <ProvinsiAsalCombobox
-                      selectedProvinceId={field.value}
-                      onProvinceChange={(provinceId, provinceName) => {
-                        field.onChange(provinceId)
-                        form.setValue('provinceName', provinceName)
-                        // Reset city when province changes
-                        form.setValue('cityId', '')
-                        form.setValue('cityName', '')
-                      }}
-                      placeholder="Pilih provinsi"
+                    <Input 
+                      placeholder="Masukkan provinsi"
+                      {...field}
+                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />
@@ -277,6 +267,53 @@ export default function DataDiriStep({
               </FormItem>
             )}
           />
+
+          {/* Row 5: NIK and Monthly Income */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="nik"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium text-gray-700">
+                    NIK *
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Masukkan 16 digit NIK"
+                      {...field}
+                      className="rounded-full"
+                      maxLength={16}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="monthlyIncome"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium text-gray-700">
+                    Pendapatan Bulanan *
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Masukkan pendapatan bulanan"
+                      {...field}
+                      className="rounded-full"
+                      onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      value={field.value || ''}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* File Uploads */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -8,38 +8,17 @@ import { TalanganPackageResults } from './components/TalanganPackageResults'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { FilterProductProvider } from '@/contexts/filter-product-context'
-
-interface DataMinMax {
-  minAmount: number
-  maxAmount: number
-  minTenor?: number
-  maxTenor?: number
-}
-
-interface TagPackage {
-  id: string
-  name: string
-  slug: string
-}
-
-interface Facility {
-  id: string
-  name: string
-  icon?: string
-}
-
-interface Section {
-  id: string
-  name: string
-  description?: string
-}
+import { PriceParams } from '@/constant/types/PackageProps'
+import { TagPackages } from '@/constant/types/TagPackageProps'
+import { Facility } from '@/constant/types/FacilityProps'
+import { GenericResponse } from '@/constant/types/GeneralProps'
 
 interface TalanganPackageSelectionProps {
   token: string
-  dataMinMax: DataMinMax
-  dataTagPackages: TagPackage[]
-  dataFacility: Facility[]
-  dataSection: Section[]
+  dataMinMax: PriceParams
+  dataTagPackages: TagPackages[]
+  dataFacility: GenericResponse<Facility>
+  dataSection: TagPackages[]
 }
 
 export default function TalanganPackageSelection({

@@ -30,30 +30,13 @@ export default async function TalanganPilihPaketPage() {
       getSectionEnum(),
     ])
 
-  // Transform PriceParams to DataMinMax
-  const dataMinMax = {
-    minAmount: parseInt(priceParams.min) || 0,
-    maxAmount: parseInt(priceParams.max) || 100000000,
-    minTenor: 6,
-    maxTenor: 36,
-  }
+  // Keep priceParams as PriceParams for FilterLeftbar compatibility
+  const dataMinMax = priceParams
 
-  // Transform TagPackages to TagPackage (convert id from number to string)
-  const transformedTagPackages = dataTagPackages.map(tag => ({
-    ...tag,
-    id: tag.id.toString(),
-  }))
-
-  // Transform facilities and sections similarly
-  const transformedFacilities = dataFacility.results?.map(facility => ({
-    ...facility,
-    id: facility.id.toString(),
-  })) || []
-
-  const transformedSections = dataSection.map(section => ({
-    ...section,
-    id: section.id.toString(),
-  }))
+  // Keep original data structure since FilterLeftbar expects it
+  const transformedTagPackages = dataTagPackages
+  const transformedFacilities = dataFacility
+  const transformedSections = dataSection
 
   return (
     <TalanganPackageSelection

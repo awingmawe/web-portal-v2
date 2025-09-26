@@ -23,6 +23,8 @@ export interface TalanganFormData {
   provinceId: string
   provinceName: string
   address: string
+  nik: string
+  monthlyIncome: number
   ktpFile: File | null
   npwpFile: File | null
   
@@ -46,6 +48,8 @@ const initialFormData: TalanganFormData = {
   provinceId: '',
   provinceName: '',
   address: '',
+  nik: '',
+  monthlyIncome: 0,
   ktpFile: null,
   npwpFile: null,
   selectedPackage: null,
@@ -220,7 +224,6 @@ export default function TalanganFormPage() {
           {currentStep === 2 && (
             <FormPengajuanStep
               formData={formData}
-              updateFormData={updateFormData}
               onNext={goToNextStep}
               onPrev={goToPrevStep}
             />

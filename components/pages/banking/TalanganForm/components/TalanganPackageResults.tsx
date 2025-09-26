@@ -132,7 +132,10 @@ export const TalanganPackageResults: React.FC = () => {
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
-          resultsCount={totalDisplayCount}
+          resultsDisplayInfo={{
+            isRange: false,
+            displayCount: totalDisplayCount
+          }}
           totalCount={totalCSR}
           currentSort={currentSort}
           createSortUrlAction={createSortUrl}

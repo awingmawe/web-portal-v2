@@ -15,6 +15,8 @@ export const dataDiriSchema = z.object({
   provinceId: z.string().min(1, 'Provinsi wajib diisi'),
   provinceName: z.string().min(1, 'Provinsi wajib diisi'),
   address: z.string().optional(),
+  nik: z.string().min(16, 'NIK harus 16 digit').max(16, 'NIK harus 16 digit'),
+  monthlyIncome: z.number().min(0, 'Pendapatan bulanan tidak boleh negatif'),
 })
 
 export type DataDiriFormValues = z.infer<typeof dataDiriSchema>
