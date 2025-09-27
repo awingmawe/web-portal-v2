@@ -276,9 +276,8 @@ export default function BottomNavigation({
           >
             <div className="relative">
               {currentIcon}
-
               {/* Badge with animation - only show if has badge count */}
-              {item.badge && item.badge > 0 && (
+              {item.badge && item.badge > 0 ? (
                 <motion.div
                   className="bg-error-500 absolute -top-2 -right-3 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium text-white"
                   variants={badgeAnimationVariants}
@@ -286,7 +285,7 @@ export default function BottomNavigation({
                 >
                   {item.badge > 9 ? '9+' : item.badge}
                 </motion.div>
-              )}
+              ) : null}
             </div>
             <span className="mt-1 text-xs">{item.name}</span>
           </button>
