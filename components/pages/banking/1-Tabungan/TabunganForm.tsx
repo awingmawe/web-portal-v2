@@ -138,13 +138,13 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#181818]">
                   Nama Sesuai KTP <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Masukkan nama sesuai KTP"
-                    className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
+                    className="w-full rounded-[20px] border border-[#c9c9c9] p-2"
                     {...field}
                   />
                 </FormControl>
@@ -159,14 +159,14 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#181818]">
                   Email <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
                     type="email"
                     placeholder="Masukkan Email"
-                    className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
+                    className="w-full rounded-[20px] border border-[#c9c9c9] p-2"
                     {...field}
                   />
                 </FormControl>
@@ -181,7 +181,7 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
             name="phoneNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#181818]">
                   No. Telp <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
@@ -190,7 +190,7 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
                       +62
                     </p>
                     <Input
-                      className="w-full rounded-[20px] border border-[#D2D2D1] p-2 pl-11"
+                      className="w-full rounded-[20px] border border-[#c9c9c9] p-2 pl-11"
                       placeholder="85867467367"
                       type="tel"
                       inputMode="numeric"
@@ -224,7 +224,7 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
             name="gender"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#181818]">
                   Jenis Kelamin <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
@@ -237,7 +237,7 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
                       <FormControl>
                         <RadioGroupItem value="male" />
                       </FormControl>
-                      <FormLabel className="text-[12px] font-[400] text-[#414141]">
+                      <FormLabel className="text-[12px] font-[400] text-[#181818]">
                         Pria
                       </FormLabel>
                     </FormItem>
@@ -245,7 +245,7 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
                       <FormControl>
                         <RadioGroupItem value="female" />
                       </FormControl>
-                      <FormLabel className="text-[12px] font-[400] text-[#414141]">
+                      <FormLabel className="text-[12px] font-[400] text-[#181818]">
                         Wanita
                       </FormLabel>
                     </FormItem>
@@ -261,14 +261,14 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
             name="born"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#181818]">
                   Tanggal Lahir <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <TriggerCalendar field={field} />
                   {/* <Input
                     type="date"
-                    className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
+                    className="w-full rounded-[20px] border border-[#c9c9c9] p-2"
                     {...field}
                   /> */}
                 </FormControl>
@@ -282,13 +282,13 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
             name="job"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#181818]">
                   Pekerjaan
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Masukkan Pekerjaan"
-                    className="w-full rounded-[20px] border border-[#D2D2D1] p-2"
+                    className="w-full rounded-[20px] border border-[#c9c9c9] p-2"
                     {...field}
                   />
                 </FormControl>
@@ -308,13 +308,13 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#414141]">
+                <FormLabel className="mb-1 block text-[12px] font-[400] text-[#181818]">
                   Alamat Lengkap <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Masukkan alamat lengkap"
-                    className="min-h-[80px] w-full resize-none rounded-[20px] border border-[#D2D2D1] p-2"
+                    className="min-h-[80px] w-full resize-none rounded-[20px] border border-[#c9c9c9] p-2"
                     {...field}
                   />
                 </FormControl>

@@ -52,7 +52,7 @@ const SuccessModal = ({
                     width={56}
                     height={56}
                     alt="check icon"
-                    className="rounded-full bg-[#FFF2CC] p-2"
+                    className="rounded-full bg-[#fff1e3] p-2"
                   />
                   <div>
                     <h1 className=" text-[16px] font-bold text-gray-800">
@@ -67,7 +67,7 @@ const SuccessModal = ({
               </div>
 
               {/* Details Card */}
-              <div className="mx-4 rounded-2xl border border-[#E8E8E8] bg-white p-4 ">
+              <div className="mx-4 rounded-2xl border border-[#e5e5e5] bg-white p-4 ">
                 {/* Details */}
                 <div className="mt-4 space-y-4">
                   <div>
@@ -150,7 +150,7 @@ const SuccessModal = ({
               width={106}
               height={106}
               alt="check icon"
-              className="mr-2 rounded rounded-[200px] bg-[#FFF2CC]"
+              className="mr-2 rounded rounded-[200px] bg-[#fff1e3]"
             />
           </div>
           {/* </div> */}

@@ -61,7 +61,7 @@ const SearchMobileUmroh: React.FC = () => {
         </p>
       )}
 
-      <div className="my-3 h-px w-full bg-[#E8E8E8]" />
+      <div className="my-3 h-px w-full bg-[#e5e5e5]" />
 
       {/* Content that was previously in drawer */}
       <p className="text-xs-medium mb-4 text-neutral-500">
@@ -70,7 +70,7 @@ const SearchMobileUmroh: React.FC = () => {
 
       <ProgramCards />
 
-      <div className="my-3 h-px w-full bg-[#E8E8E8]" />
+      <div className="my-3 h-px w-full bg-[#e5e5e5]" />
 
       {/* Search history component */}
       <SearchHistory />

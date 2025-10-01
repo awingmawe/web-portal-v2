@@ -131,7 +131,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
       {/* Transportasi */}
       {(!isEmpty(existingTransportation) || !isEmpty(newTransportation)) && (
         <LayoutPerItem
-          icon={<CarIcon size={24} color="#8E8E8B" />}
+          icon={<CarIcon size={24} color="#424242" />}
           titleItem="Transportasi"
           isAvailable={IS_AVAILABLE_TRANSPORTATION}
         >
@@ -171,7 +171,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
                 </div>
               </div>
               <div className="mx-auto flex items-center gap-2">
-                <RefreshCw size={12} color="#777774" />
+                <RefreshCw size={12} color="#2b2b2b" />
                 <p className="text-xs-regular text-neutral-600">
                   Digantikan dengan
                 </p>
@@ -197,7 +197,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
 
       {/* Maskapai Keberangkatan */}
       <LayoutPerItem
-        icon={<PlaneTakeoff size={24} color="#8E8E8B" />}
+        icon={<PlaneTakeoff size={24} color="#424242" />}
         titleItem="Maskapai Keberangkatan"
         isAvailable={IS_AVAILABLE_DEPARTURE}
       >
@@ -236,7 +236,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <RefreshCw size={12} color="#777774" />
+              <RefreshCw size={12} color="#2b2b2b" />
               <p className="text-xs-regular text-neutral-600">
                 Digantikan dengan
               </p>
@@ -262,7 +262,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
 
       {/* Maskapai Kepulangan */}
       <LayoutPerItem
-        icon={<PlaneLanding size={24} color="#8E8E8B" />}
+        icon={<PlaneLanding size={24} color="#424242" />}
         titleItem="Maskapai Kepulangan"
         isAvailable={IS_AVAILABLE_ARRIVAL}
       >
@@ -300,7 +300,7 @@ const OfferDetailDialogContent: React.FC<OfferDetailDialogContentProps> = ({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <RefreshCw size={12} color="#777774" />
+              <RefreshCw size={12} color="#2b2b2b" />
               <p className="text-xs-regular text-neutral-600">
                 Digantikan dengan
               </p>

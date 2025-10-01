@@ -5,7 +5,7 @@ const VariantsNotAvailable: React.FC = () => {
   return (
     <Fragment>
       {/* Divider */}
-      <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
+      <div className="h-[1px] w-full bg-[#c9c9c9] max-lg:hidden" />
       <div className="bg-primary-100 border-primary-500 flex items-center gap-1 rounded-xl border p-2">
         <WarningIconInfo size={20} />
         <p className="text-xs-regular">

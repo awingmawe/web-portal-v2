@@ -42,7 +42,7 @@ const ReferralSection = ({
       </div>
 
       {/* Divider */}
-      <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
+      <div className="h-[1px] w-full bg-[#c9c9c9] max-lg:hidden" />
       <div className="lg:p-4">
         <p className="text-m-regular mb-5 max-lg:text-xs max-lg:leading-4">
           Apakah kamu punya kode referal? pakai kode tersebut untuk dapetin
@@ -65,7 +65,7 @@ const ReferralSection = ({
             disabled={wukalaSetting}
           />
           <button
-            className="cursor-pointer rounded-full bg-[#FFC100] px-6 py-2 text-sm font-semibold text-[#30302F] transition hover:opacity-90"
+            className="cursor-pointer rounded-full bg-[#ffc14b] px-6 py-2 text-sm font-semibold text-[#131313] transition hover:opacity-90"
             onClick={
               wukalaSetting ? handleRemoveReferralCode : handleCheckReferral
             }

@@ -59,7 +59,7 @@ export default function TransactionDetailProduct({
             className="mr-2 rounded-md p-1"
             style={{
               background:
-                'linear-gradient(134.15deg, #FFC100 17.72%, #FFA500 104.07%, #9D7A42 128.84%, #4D2B17 195.91%, #785214 236.89%)',
+                'linear-gradient(134.15deg, #ffc14b 17.72%, #FFA500 104.07%, #9D7A42 128.84%, #4D2B17 195.91%, #785214 236.89%)',
             }}
           >
             <BriefCaseIcon className="text-white" />

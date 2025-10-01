@@ -114,7 +114,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                           'relative flex flex-1 cursor-not-allowed items-center gap-2 rounded-full border-1 px-2 py-2.5 max-lg:mt-3',
                           field.value === JOURNEY_TYPES.UMRAH_PLUS_TRIP
                             ? 'border-primary-500'
-                            : 'border-[#D2D2D150] bg-white'
+                            : 'border-[#c9c9c950] bg-white'
                         )}
                       >
                         <p className="bg-error-500 text-xs-regular absolute -top-4.5 left-5 flex w-[88px] justify-center rounded-tl-lg rounded-tr-lg px-1 py-[2px] text-white shadow-[inset_0px_-3px_4px_0px_rgba(0,0,0,0.25)]">
@@ -124,7 +124,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                           value={JOURNEY_TYPES.UMRAH_PLUS_TRIP}
                           disabled={true}
                         />
-                        <p className="text-s-regular text-[#30302F50]">
+                        <p className="text-s-regular text-[#13131350]">
                           {JOURNEY_TYPE_LABELS[JOURNEY_TYPES.UMRAH_PLUS_TRIP]}
                         </p>
                       </label>
@@ -231,11 +231,11 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                           'flex flex-1 cursor-not-allowed items-center gap-2 rounded-full border-1 px-2 py-2.5 ',
                           !field.value
                             ? 'border-primary-500'
-                            : 'border-[#D2D2D150] bg-white'
+                            : 'border-[#c9c9c950] bg-white'
                         )}
                       >
                         <RadioGroupItem value="false" disabled={true} />
-                        <p className="text-s-regular text-[#30302F50]">
+                        <p className="text-s-regular text-[#13131350]">
                           Tidak Perlu Visa
                         </p>
                       </label>
@@ -281,11 +281,11 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                           'flex flex-1 cursor-not-allowed items-center gap-2 rounded-full border-1 px-2 py-2.5',
                           !field.value
                             ? 'border-primary-500'
-                            : 'border-[#D2D2D150] bg-white'
+                            : 'border-[#c9c9c950] bg-white'
                         )}
                       >
                         <RadioGroupItem value="false" disabled={true} />
-                        <p className="text-s-regular text-[#30302F50]">
+                        <p className="text-s-regular text-[#13131350]">
                           Tidak perlu menggunakan proteksi asuransi perjalanan
                         </p>
                       </label>
@@ -326,7 +326,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                               })
                             : 'Pilih tanggal berangkat'}
                           {!field.value && (
-                            <Calendar3 size={16} color="#8E8E8B" />
+                            <Calendar3 size={16} color="#424242" />
                           )}
                         </p>
                       }
@@ -398,7 +398,7 @@ const Step1JourneyInfo: React.FC<Step1JourneyInfoProps> = ({ form }) => {
                                 })
                               : 'Pilih tanggal pulang'}
                             {!field.value && (
-                              <Calendar3 size={16} color="#8E8E8B" />
+                              <Calendar3 size={16} color="#424242" />
                             )}
                           </p>
                         }

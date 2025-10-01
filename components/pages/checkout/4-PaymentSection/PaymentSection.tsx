@@ -117,7 +117,7 @@ const PaymentSection = ({
       </div>
 
       {/* Divider */}
-      <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
+      <div className="h-[1px] w-full bg-[#c9c9c9] max-lg:hidden" />
 
       {/* Description */}
       <div className="lg:p-4">

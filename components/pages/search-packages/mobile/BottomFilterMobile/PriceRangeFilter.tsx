@@ -185,7 +185,7 @@ export const PriceDrawer = ({
             onChange={handleMinInputChange}
             placeholder={`Rp ${formatNumberCurrency(minValue.toString())}`}
           />
-          <div className="h-px w-5 flex-none bg-[#D2D2D1] sm:mx-5 xl:mx-10" />
+          <div className="h-px w-5 flex-none bg-[#c9c9c9] sm:mx-5 xl:mx-10" />
           <Input
             value={localHargaMax}
             className="rounded-lg border-[0.5px] border-neutral-200 p-2 text-right"

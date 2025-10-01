@@ -179,7 +179,7 @@ const TravelDates: React.FC<TravelDatesProps> = ({
   if (packageType === PACKAGE_TYPE.HAJJ) {
     return (
       <Fragment>
-        <div className="h-[0.5px] bg-[#D2D2D1] max-lg:hidden" />
+        <div className="h-[0.5px] bg-[#c9c9c9] max-lg:hidden" />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1">
             <p className="text-s-medium text-neutral-500">

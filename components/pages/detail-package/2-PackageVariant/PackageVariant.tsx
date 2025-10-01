@@ -337,7 +337,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       />
 
       {/* Divider */}
-      <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
+      <div className="h-[1px] w-full bg-[#c9c9c9] max-lg:hidden" />
 
       {/* Hotel selection with Popover */}
       {variants.length > 0 && (

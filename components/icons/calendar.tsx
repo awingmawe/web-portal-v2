@@ -98,7 +98,7 @@ export const Calendar2: React.FC<IconProps> = ({
 export const Calendar3: React.FC<IconProps> = ({
   size,
   className = '',
-  color = '#30302F',
+  color = '#131313',
   ...props
 }) => {
   return (
@@ -198,7 +198,7 @@ export const CalendarIconFilterMobile: React.FC<{ size?: any }> = ({
     >
       <path
         d="M6.6665 1.66663V4.16663"
-        stroke="#8E8E8B"
+        stroke="#424242"
         strokeWidth="1.25"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -206,7 +206,7 @@ export const CalendarIconFilterMobile: React.FC<{ size?: any }> = ({
       />
       <path
         d="M13.3335 1.66663V4.16663"
-        stroke="#8E8E8B"
+        stroke="#424242"
         strokeWidth="1.25"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -214,7 +214,7 @@ export const CalendarIconFilterMobile: React.FC<{ size?: any }> = ({
       />
       <path
         d="M2.9165 7.57495H17.0832"
-        stroke="#8E8E8B"
+        stroke="#424242"
         strokeWidth="1.25"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -222,7 +222,7 @@ export const CalendarIconFilterMobile: React.FC<{ size?: any }> = ({
       />
       <path
         d="M17.5 7.08329V14.1666C17.5 16.6666 16.25 18.3333 13.3333 18.3333H6.66667C3.75 18.3333 2.5 16.6666 2.5 14.1666V7.08329C2.5 4.58329 3.75 2.91663 6.66667 2.91663H13.3333C16.25 2.91663 17.5 4.58329 17.5 7.08329Z"
-        stroke="#8E8E8B"
+        stroke="#424242"
         strokeWidth="1.25"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -230,42 +230,42 @@ export const CalendarIconFilterMobile: React.FC<{ size?: any }> = ({
       />
       <path
         d="M13.0791 11.4167H13.0866"
-        stroke="#FFC100"
+        stroke="#ffc14b"
         strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M13.0791 13.9167H13.0866"
-        stroke="#FFC100"
+        stroke="#ffc14b"
         strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M9.99607 11.4167H10.0036"
-        stroke="#FFC100"
+        stroke="#ffc14b"
         strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M9.99607 13.9167H10.0036"
-        stroke="#FFC100"
+        stroke="#ffc14b"
         strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M6.91209 11.4167H6.91957"
-        stroke="#FFC100"
+        stroke="#ffc14b"
         strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M6.91209 13.9167H6.91957"
-        stroke="#FFC100"
+        stroke="#ffc14b"
         strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"

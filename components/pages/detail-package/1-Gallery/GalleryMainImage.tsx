@@ -57,14 +57,14 @@ const GalleryMainImage = () => {
             <>
               <button
                 onClick={goToPreviousImage}
-                className="absolute top-1/2 left-2 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#4141414D] p-2.5 backdrop-blur-[5px]"
+                className="absolute top-1/2 left-2 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#1818184D] p-2.5 backdrop-blur-[5px]"
                 aria-label="Previous image"
               >
                 <ChevronIcon className="text-neutral-0 rotate-90" size={24} />
               </button>
               <button
                 onClick={goToNextImage}
-                className="absolute top-1/2 right-2 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#4141414D] p-2.5 backdrop-blur-[5px]"
+                className="absolute top-1/2 right-2 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#1818184D] p-2.5 backdrop-blur-[5px]"
                 aria-label="Next image"
               >
                 <ChevronIcon className="text-neutral-0 rotate-270" size={24} />

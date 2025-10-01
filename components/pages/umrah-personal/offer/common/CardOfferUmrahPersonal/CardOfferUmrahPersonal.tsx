@@ -181,7 +181,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
               <p className="text-m-regular text-neutral-500 line-through">
                 {selectedMeccaHotel.name}
               </p>
-              <RefreshCw size={16} color="#30302F" />
+              <RefreshCw size={16} color="#131313" />
               <p className="text-m-regular">{meccaHotel.selectedHotel.name}</p>
             </>
           ) : (
@@ -213,7 +213,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
                 <p className="text-m-regular text-neutral-500 line-through">
                   {selectedMedinaHotel?.name}
                 </p>
-                <RefreshCw size={16} color="#30302F" />
+                <RefreshCw size={16} color="#131313" />
                 <p className="text-m-regular">
                   {medinaHotel?.selectedHotel?.name}
                 </p>
@@ -249,7 +249,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
                   {departure.airline.name}
                 </p>
               </div>
-              <RefreshCw size={16} color="#30302F" />
+              <RefreshCw size={16} color="#131313" />
               <div className="flex items-center gap-2">
                 <Image
                   src={logoAirlineDeparture || Placeholder}
@@ -306,7 +306,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
                   {arrival.airline.name}
                 </p>
               </div>
-              <RefreshCw size={16} color="#30302F" />
+              <RefreshCw size={16} color="#131313" />
               <div className="flex items-center gap-2">
                 <Image
                   src={logoAirlineArrival || Placeholder}
@@ -354,7 +354,7 @@ const CardOfferUmrahPersonal: React.FC<UmrahPersonalOfferProps> = ({
                 <p className="text-m-regular capitalize line-through">
                   1x {transportation?.vehicle?.name}
                 </p>
-                <RefreshCw size={16} color="#30302F" />
+                <RefreshCw size={16} color="#131313" />
                 <p className="text-m-regular capitalize">
                   1x {offerTransportation?.vehicle?.name}
                 </p>

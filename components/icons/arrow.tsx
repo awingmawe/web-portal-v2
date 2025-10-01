@@ -64,7 +64,7 @@ export const ArrowLongIcon: React.FC<IconProps> = () => {
     >
       <path
         d="M56.3223 4.94751L60.8748 9.50001L56.3223 14.0525"
-        stroke="#BBBBB9"
+        stroke="#969696"
         strokeWidth="1.125"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -72,7 +72,7 @@ export const ArrowLongIcon: React.FC<IconProps> = () => {
       />
       <path
         d="M1 9.5L61 9.50001"
-        stroke="#BBBBB9"
+        stroke="#969696"
         strokeWidth="1.125"
         strokeMiterlimit="10"
         strokeLinecap="round"

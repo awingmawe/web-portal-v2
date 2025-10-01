@@ -18,11 +18,11 @@ const SearchFilters: React.FC = () => {
       <div className="container mx-auto flex items-center justify-between">
         {/* Departure Date Filter */}
         <DateFilter colorIcon="primary-500" whatPage="filter_search" />
-        <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+        <div className="mx-6 h-10 w-px bg-[#c9c9c9]" />
 
         {/* Airport Filter */}
         <AirportFilter colorIcon="primary-500" whatPage="filter_search" />
-        <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+        <div className="mx-6 h-10 w-px bg-[#c9c9c9]" />
 
         {/* Airline Filter */}
         <AirlineFilter colorIcon="text-primary-500" whatPage="filter_search" />

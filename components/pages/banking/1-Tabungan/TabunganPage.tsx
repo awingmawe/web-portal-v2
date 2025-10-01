@@ -323,7 +323,7 @@ const TabunganPage = () => {
                 <div className="w-1/3 border-r border-gray-200">
                   <div className="p-0">
                     <div
-                      className={`flex cursor-pointer items-center rounded-tl-3xl border-b border-[#E8E8E8] bg-yellow-50 p-6 transition`}
+                      className={`flex cursor-pointer items-center rounded-tl-3xl border-b border-[#e5e5e5] bg-yellow-50 p-6 transition`}
                     >
                       <div className="relative flex h-12 w-12 items-center justify-center">
                         <div

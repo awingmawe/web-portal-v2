@@ -63,7 +63,7 @@ const AirportSearch: React.FC<AirportSearchProps> = ({
               <AirportSkeletonList count={5} />
             </div>
           </div>
-          <div className="mx-6 border border-[#E8E8E8]" />
+          <div className="mx-6 border border-[#e5e5e5]" />
           <div className="w-full flex-1">
             <p className="text-l-semibold text-neutral-900">
               Bandara Kedatangan
@@ -156,7 +156,7 @@ const AirportSearch: React.FC<AirportSearchProps> = ({
         </div>
 
         {/* Divider */}
-        <div className="mx-6 border border-[#E8E8E8]" />
+        <div className="mx-6 border border-[#e5e5e5]" />
 
         {/* Bandara Kedatangan List */}
         <div className="flex-1">

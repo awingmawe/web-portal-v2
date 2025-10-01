@@ -57,7 +57,7 @@ const FacilityRow = React.memo(
         ))}
       </div>
       {/* Add divider after each row except the last */}
-      {!isLastRow && <div className="my-6 h-[1px] w-full bg-[#E8E8E8]" />}
+      {!isLastRow && <div className="my-6 h-[1px] w-full bg-[#e5e5e5]" />}
     </div>
   )
 )
