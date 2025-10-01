@@ -69,19 +69,19 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ type }) => {
     <div className="flex w-full items-center justify-between">
       {/* Hotel Stars Filter */}
       <RatingFilter />
-      <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+      <div className="mx-6 h-10 w-px bg-[#c9c9c9]" />
 
       {/* Departure Date Filter */}
       {type === 'umrah' && (
         <Fragment>
           <DateFilter whatPage="homepage" />
-          <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+          <div className="mx-6 h-10 w-px bg-[#c9c9c9]" />
         </Fragment>
       )}
 
       {/* Airport Filter */}
       <AirportFilter whatPage="homepage" />
-      <div className="mx-6 h-10 w-px bg-[#D2D2D1]" />
+      <div className="mx-6 h-10 w-px bg-[#c9c9c9]" />
 
       {/* Airline Filter */}
       <AirlineFilter whatPage="homepage" />

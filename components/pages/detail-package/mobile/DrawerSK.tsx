@@ -34,7 +34,7 @@ const DrawerSK = React.memo(
               </div>
             </DrawerHeader>
 
-            <div className="h-[1px] w-full bg-[#D2D2D1] max-lg:hidden" />
+            <div className="h-[1px] w-full bg-[#c9c9c9] max-lg:hidden" />
             <div className="mt-4 p-2 text-sm text-neutral-700">
               Terakhir diperbarui:{' '}
               {dayjs(dataSk?.modifiedAt).format('DD MMMM YYYY')}

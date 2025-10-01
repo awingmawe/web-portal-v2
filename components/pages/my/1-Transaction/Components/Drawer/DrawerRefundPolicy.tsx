@@ -78,7 +78,7 @@ const DrawerRefundPolicy = React.memo(
               </DrawerHeader>
 
               <div className="mt-4 max-h-[440px] overflow-y-auto pr-1">
-                <div className="text-[14px] leading-relaxed font-[400] text-[#8E8E8B]">
+                <div className="text-[14px] leading-relaxed font-[400] text-[#424242]">
                   {renderHTML(dataRefundPolicy?.content || '')}
                 </div>
 

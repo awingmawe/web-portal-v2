@@ -33,7 +33,7 @@ const DrawerSukses = React.memo(
             {/* </div> */}
           </DrawerHeader>
           <div className="mt-4 max-h-[440px] overflow-y-auto pr-1">
-            <div className="text-center text-[14px] font-[400] text-[#5F5F5D]">
+            <div className="text-center text-[14px] font-[400] text-[#1f1f1f]">
               Pesanan kamu sebelumnya berhasil dibatalkan, kamu dapat
               melanjutkan proses pengembalian dana atau dapat mengganti paket
               lain.

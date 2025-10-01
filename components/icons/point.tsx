@@ -23,7 +23,7 @@ export const PointIcon = ({ size = 24, className = '', ...props }) => {
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#EDDD88" />
-          <stop offset="1" stopColor="#FFC100" />
+          <stop offset="1" stopColor="#ffc14b" />
         </linearGradient>
       </defs>
     </svg>

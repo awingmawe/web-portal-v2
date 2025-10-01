@@ -56,7 +56,7 @@ const DrawerCheckAvailibility = React.memo(
                         width={24}
                         height={24}
                         alt="check icon"
-                        className="bg-[#FFF2CC]"
+                        className="bg-[#fff1e3]"
                       />
                     </div>
                   ) : (
@@ -66,7 +66,7 @@ const DrawerCheckAvailibility = React.memo(
                         width={24}
                         height={24}
                         alt="check icon"
-                        className="mr-2 bg-[#FFF2CC]"
+                        className="mr-2 bg-[#fff1e3]"
                       />
                       Cek Kuota
                     </div>
@@ -97,7 +97,7 @@ const DrawerCheckAvailibility = React.memo(
                 <div className="flex gap-3">
                   <Button
                     // variant="outline"
-                    className="flex-1 rounded-full border-[#FFC100] bg-[#FFC100] font-medium"
+                    className="flex-1 rounded-full border-[#ffc14b] bg-[#ffc14b] font-medium"
                     onClick={handleClick}
                   >
                     Tutup
@@ -117,13 +117,13 @@ const DrawerCheckAvailibility = React.memo(
                 <div className="flex gap-3">
                   <Button
                     variant="outline"
-                    className="flex-1 rounded-full border-[#FFC100] font-medium"
+                    className="flex-1 rounded-full border-[#ffc14b] font-medium"
                     onClick={handleClick}
                   >
                     Batal
                   </Button>
                   <Button
-                    className="flex-1 rounded-full bg-[#FFC100] font-medium hover:bg-amber-600"
+                    className="flex-1 rounded-full bg-[#ffc14b] font-medium hover:bg-amber-600"
                     onClick={handleSubmit}
                   >
                     Kirim

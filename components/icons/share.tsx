@@ -16,7 +16,7 @@ const ShareIcon: React.FC<IconProps> = ({
     className={className}
     {...props}
   >
-    <rect x="0.5" y="0.5" width="27" height="27" rx="6.75" fill="#FFC100" />
+    <rect x="0.5" y="0.5" width="27" height="27" rx="6.75" fill="#ffc14b" />
     <path
       d="M19.0625 10.625C20.4605 10.625 21.5938 9.49172 21.5938 8.09375C21.5938 6.69578 20.4605 5.5625 19.0625 5.5625C17.6645 5.5625 16.5312 6.69578 16.5312 8.09375C16.5312 9.49172 17.6645 10.625 19.0625 10.625Z"
       stroke="white"

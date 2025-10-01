@@ -7,10 +7,10 @@ import { UsersIcon } from '@/components/icons/user'
 import TransactionSkeletonLoading from '@/components/pages/my/1-Transaction/Components/TransactionSkeletonLoading'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
-import { getbankCredit } from '@/services/banking-service'
-import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
-import { talanganService } from '@/services/talangan-service'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
+import { getbankCredit } from '@/services/banking-service'
+import { talanganService } from '@/services/talangan-service'
+import { getPackageById, getPackageVariantById } from '@/services/umrah-service'
 import dayjs from 'dayjs'
 import 'dayjs/locale/id'
 import { BedDouble } from 'lucide-react'
@@ -29,28 +29,39 @@ const BankingPageDetail: React.FC = () => {
   const getDataPengajuan = async () => {
     try {
       setLoading(true)
-      
+
       // Try to get talangan applications from API first
       const talanganResponse = await talanganService.getUserApplications(1, 50)
-      
-      if (talanganResponse.success && talanganResponse.data?.applications?.length > 0) {
-        console.log('Found API talangan applications:', talanganResponse.data.applications)
+
+      if (
+        talanganResponse.success &&
+        talanganResponse.data?.applications?.length > 0
+      ) {
+        console.log(
+          'Found API talangan applications:',
+          talanganResponse.data.applications
+        )
         setLocalApplications(talanganResponse.data.applications)
         setViewMode('list')
         setLoading(false)
         return
       }
-      
+
       // Check localStorage as fallback for testing
       if (typeof window !== 'undefined') {
-        const localApplicationsData = localStorage.getItem('talanganApplications')
-        
+        const localApplicationsData = localStorage.getItem(
+          'talanganApplications'
+        )
+
         if (localApplicationsData) {
           try {
             const applications = JSON.parse(localApplicationsData)
-            
+
             if (applications && applications.length > 0) {
-              console.log('Found localStorage applications (fallback):', applications)
+              console.log(
+                'Found localStorage applications (fallback):',
+                applications
+              )
               setLocalApplications(applications)
               setViewMode('list') // Use list layout for localStorage data
               setLoading(false)
@@ -61,7 +72,7 @@ const BankingPageDetail: React.FC = () => {
           }
         }
       }
-      
+
       // Fallback to API if no localStorage data
       const res = await getbankCredit()
       if (res !== '') {
@@ -100,7 +111,6 @@ const BankingPageDetail: React.FC = () => {
   useEffect(() => {
     getDataPengajuan()
   }, [])
-
 
   const statusPengajuan = (status: string) => {
     switch (status) {
@@ -193,7 +203,6 @@ const BankingPageDetail: React.FC = () => {
     }
   }
 
-
   const formatTanggal3 = (tanggal: string) => {
     const date = new Date(tanggal)
     return date.toLocaleString('id-ID', {
@@ -285,7 +294,7 @@ const BankingPageDetail: React.FC = () => {
       </div>
 
       {/* Desktop Header - Only visible on desktop */}
-      <div className="top-0 z-10 hidden md:block md:border-b md:border-[#E8E8E8]">
+      <div className="top-0 z-10 hidden md:block md:border-b md:border-[#e5e5e5]">
         <div className="flex items-center justify-between px-4 py-4">
           <h1 className="text-xl font-semibold text-gray-800">
             Detail Pengajuan
@@ -306,7 +315,7 @@ const BankingPageDetail: React.FC = () => {
       <div className="pb-10 ">
         <div className="mt-0 grid grid-cols-1 gap-4 shadow-[0_4px_4px_-2px_rgba(0,0,0,0.1)] md:gap-6 lg:grid-cols-3">
           {/* Main Content */}
-          <div className="space-y-4 md:space-y-6 md:border-r md:border-[#E8E8E8] lg:col-span-2">
+          <div className="space-y-4 md:space-y-6 md:border-r md:border-[#e5e5e5] lg:col-span-2">
             {/* Status Banner */}
 
             {/* Application Details */}
@@ -627,7 +636,7 @@ const BankingPageDetail: React.FC = () => {
                       >
                         {/* Tanggal di kanan */}
                         <span
-                          className={`mt-1 w-24 text-right text-sm font-medium ${isOlderStatus ? 'text-gray-400' : 'text-[#8E8E8B]'}`}
+                          className={`mt-1 w-24 text-right text-sm font-medium ${isOlderStatus ? 'text-gray-400' : 'text-[#424242]'}`}
                         >
                           {formatTanggal3(historyItem.createdAt)}
                         </span>
@@ -693,7 +702,7 @@ const BankingPageDetail: React.FC = () => {
               target="_blank"
               className="hidden lg:block"
             >
-              <button className="mt-5 w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+              <button className="mt-5 w-full rounded-[100px] border border-[#ffc14b] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
                 Bantuan
               </button>
             </Link>
@@ -713,7 +722,7 @@ const BankingPageDetail: React.FC = () => {
               target="_blank"
             >
               <div className="fixed right-0 bottom-0 left-0 bg-white p-4 shadow-[0_-4px_6px_rgba(0,0,0,0.1)] md:hidden">
-                <button className="w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+                <button className="w-full rounded-[100px] border border-[#ffc14b] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
                   Bantuan
                 </button>
               </div>
@@ -726,7 +735,9 @@ const BankingPageDetail: React.FC = () => {
 }
 
 // List Layout Component for localStorage applications
-const TalanganListLayout: React.FC<{ applications: any[] }> = ({ applications }) => {
+const TalanganListLayout: React.FC<{ applications: any[] }> = ({
+  applications,
+}) => {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredApplications, setFilteredApplications] = useState(applications)
   const [currentPage, setCurrentPage] = useState(1)
@@ -735,10 +746,15 @@ const TalanganListLayout: React.FC<{ applications: any[] }> = ({ applications })
   useEffect(() => {
     let filtered = applications
     if (searchQuery) {
-      filtered = applications.filter(app => 
-        app.personalData?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.packageData?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.id?.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = applications.filter(
+        (app) =>
+          app.personalData?.fullName
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          app.packageData?.title
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          app.id?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     }
     setFilteredApplications(filtered)
@@ -760,11 +776,20 @@ const TalanganListLayout: React.FC<{ applications: any[] }> = ({ applications })
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'submitted':
-        return { text: 'Dalam Proses Pengajuan', color: 'bg-yellow-100 text-yellow-800' }
+        return {
+          text: 'Dalam Proses Pengajuan',
+          color: 'bg-yellow-100 text-yellow-800',
+        }
       case 'in_review':
-        return { text: '1 Penawaran Talangan Tersedia', color: 'bg-blue-100 text-blue-800' }
+        return {
+          text: '1 Penawaran Talangan Tersedia',
+          color: 'bg-blue-100 text-blue-800',
+        }
       case 'approved':
-        return { text: 'Pengajuan Disetujui', color: 'bg-green-100 text-green-800' }
+        return {
+          text: 'Pengajuan Disetujui',
+          color: 'bg-green-100 text-green-800',
+        }
       case 'rejected':
         return { text: 'Pengajuan Ditolak', color: 'bg-red-100 text-red-800' }
       default:
@@ -777,7 +802,7 @@ const TalanganListLayout: React.FC<{ applications: any[] }> = ({ applications })
       return new Date(dateString).toLocaleDateString('id-ID', {
         day: '2-digit',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
       })
     } catch {
       return dateString
@@ -788,7 +813,7 @@ const TalanganListLayout: React.FC<{ applications: any[] }> = ({ applications })
     try {
       return new Date(dateString).toLocaleTimeString('id-ID', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
       })
     } catch {
       return ''
@@ -797,141 +822,167 @@ const TalanganListLayout: React.FC<{ applications: any[] }> = ({ applications })
 
   const safeParsePrice = (price: any): number => {
     if (!price) return 0
-    const parsed = typeof price === 'string' ? parseInt(price.replace(/\D/g, '')) : parseInt(price.toString())
+    const parsed =
+      typeof price === 'string'
+        ? parseInt(price.replace(/\D/g, ''))
+        : parseInt(price.toString())
     return isNaN(parsed) ? 0 : parsed
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
-            {/* Search Bar */}
-            <div className="bg-white rounded-lg p-4 shadow-sm mb-6">
-              <div className="flex items-center gap-4">
-                <div className="flex-1 relative">
-                  <input
-                    type="text"
-                    placeholder="Cari berdasarkan ID / Travel / Personan"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+      <div className="container mx-auto max-w-6xl px-4 py-6">
+        {/* Search Bar */}
+        <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Cari berdasarkan ID / Travel / Personan"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-yellow-500"
+              />
+              <span className="absolute top-1/2 right-3 -translate-y-1/2 transform text-gray-400">
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
-                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </span>
-                </div>
-                <select className="px-4 py-2 border border-gray-300 rounded-lg">
-                  <option>Semua Produk</option>
-                </select>
-              </div>
+                </svg>
+              </span>
             </div>
+            <select className="rounded-lg border border-gray-300 px-4 py-2">
+              <option>Semua Produk</option>
+            </select>
+          </div>
+        </div>
 
-            {/* Applications List */}
-            <div className="space-y-4">
-              {currentApplications.map((app) => {
-                const statusInfo = getStatusBadge(app.status)
-                return (
-                  <div key={app.id} className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-start justify-between">
-                      {/* Left - Package Info */}
-                      <div className="flex gap-4 flex-1">
-                        <div className="w-20 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                          {app.packageData?.src ? (
-                            <img 
-                              src={app.packageData.src} 
-                              alt={app.packageData.title}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gray-300"></div>
-                          )}
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="text-sm text-gray-500 mb-1">
-                            Umroh / ID : {app.id}
-                          </div>
-                          <h3 className="font-semibold text-gray-900 mb-2 uppercase text-sm">
-                            {app.packageData?.title || 'Package Title'}
-                          </h3>
-                          
-                          <div className="flex items-center text-sm text-gray-600 mb-1">
-                            <span>{app.packageData?.departureDate} → {app.packageData?.arrivalDate}</span>
-                          </div>
-                          
-                          <div className="flex items-center text-sm text-gray-600 mb-2">
-                            <span>3 Jamaah</span>
-                          </div>
-                          
-                          <div className="text-sm text-gray-500">
-                            Dibuat pada {formatDate(app.submittedAt)}, {formatTime(app.submittedAt)}
-                          </div>
-                        </div>
+        {/* Applications List */}
+        <div className="space-y-4">
+          {currentApplications.map((app) => {
+            const statusInfo = getStatusBadge(app.status)
+            return (
+              <div key={app.id} className="rounded-lg bg-white p-6 shadow-sm">
+                <div className="flex items-start justify-between">
+                  {/* Left - Package Info */}
+                  <div className="flex flex-1 gap-4">
+                    <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200">
+                      {app.packageData?.src ? (
+                        <img
+                          src={app.packageData.src}
+                          alt={app.packageData.title}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-gray-300"></div>
+                      )}
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="mb-1 text-sm text-gray-500">
+                        Umroh / ID : {app.id}
+                      </div>
+                      <h3 className="mb-2 text-sm font-semibold text-gray-900 uppercase">
+                        {app.packageData?.title || 'Package Title'}
+                      </h3>
+
+                      <div className="mb-1 flex items-center text-sm text-gray-600">
+                        <span>
+                          {app.packageData?.departureDate} →{' '}
+                          {app.packageData?.arrivalDate}
+                        </span>
                       </div>
 
-                      {/* Right - Status and Actions */}
-                      <div className="flex flex-col items-end gap-3 ml-4">
-                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${statusInfo.color}`}>
-                          {statusInfo.text}
-                        </div>
-                        
-                        <div className="text-right">
-                          <div className="text-sm text-gray-500">Jumlah Talangan</div>
-                          <div className="text-lg font-bold text-gray-900">
-                            Rp{safeParsePrice(app.financing?.requestedAmount).toLocaleString('id-ID')}
-                          </div>
-                        </div>
-                        
-                        <div className="text-right">
-                          <div className="text-sm text-gray-500">Tenor</div>
-                          <div className="font-semibold text-gray-900">{app.financing?.tenor || 24} Bulan</div>
-                        </div>
-                        
-                        <button className="text-sm text-gray-600 hover:text-gray-800 border border-gray-300 px-3 py-1 rounded">
-                          Lihat Detail Pesanan
-                        </button>
+                      <div className="mb-2 flex items-center text-sm text-gray-600">
+                        <span>3 Jamaah</span>
+                      </div>
+
+                      <div className="text-sm text-gray-500">
+                        Dibuat pada {formatDate(app.submittedAt)},{' '}
+                        {formatTime(app.submittedAt)}
                       </div>
                     </div>
                   </div>
-                )
-              })}
-            </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center mt-8 space-x-2">
-                <button 
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`p-2 ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-600'}`}
-                >
-                  ←
-                </button>
-                
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button 
-                    key={page}
-                    onClick={() => goToPage(page)}
-                    className={`w-8 h-8 rounded font-medium ${
-                      page === currentPage 
-                        ? 'bg-yellow-500 text-white' 
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-                
-                <button 
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className={`p-2 ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-600'}`}
-                >
-                  →
-                </button>
+                  {/* Right - Status and Actions */}
+                  <div className="ml-4 flex flex-col items-end gap-3">
+                    <div
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${statusInfo.color}`}
+                    >
+                      {statusInfo.text}
+                    </div>
+
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500">
+                        Jumlah Talangan
+                      </div>
+                      <div className="text-lg font-bold text-gray-900">
+                        Rp
+                        {safeParsePrice(
+                          app.financing?.requestedAmount
+                        ).toLocaleString('id-ID')}
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500">Tenor</div>
+                      <div className="font-semibold text-gray-900">
+                        {app.financing?.tenor || 24} Bulan
+                      </div>
+                    </div>
+
+                    <button className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-600 hover:text-gray-800">
+                      Lihat Detail Pesanan
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}
+            )
+          })}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center space-x-2">
+            <button
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`p-2 ${currentPage === 1 ? 'cursor-not-allowed text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              ←
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`h-8 w-8 rounded font-medium ${
+                  page === currentPage
+                    ? 'bg-yellow-500 text-white'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`p-2 ${currentPage === totalPages ? 'cursor-not-allowed text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
+            >
+              →
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

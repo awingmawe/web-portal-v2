@@ -433,7 +433,7 @@ export default function ContentArticle({
                     eventCategory="article-detail"
                   />
                   {idx !== otherArticles.length - 1 && (
-                    <div className="my-2.5 h-px w-full bg-[#D2D2D1] max-lg:hidden" />
+                    <div className="my-2.5 h-px w-full bg-[#c9c9c9] max-lg:hidden" />
                   )}
                 </Fragment>
               )

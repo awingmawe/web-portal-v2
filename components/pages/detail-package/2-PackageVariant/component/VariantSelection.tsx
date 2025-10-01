@@ -33,7 +33,7 @@ const VariantSelection: React.FC<VariantSelectionProps> = ({
 
   return (
     <Fragment>
-      <div className="mb-2 h-[0.5px] bg-[#D2D2D1] max-lg:hidden" />
+      <div className="mb-2 h-[0.5px] bg-[#c9c9c9] max-lg:hidden" />
 
       <div className="text-s-regular text-neutral-800 max-lg:hidden">
         Varian

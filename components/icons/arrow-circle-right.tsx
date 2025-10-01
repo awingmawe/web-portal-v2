@@ -19,7 +19,7 @@ export const ArrowCircleRight: React.FC<IconProps> = ({
     >
       <path
         d="M7.00008 12.8337C10.2217 12.8337 12.8334 10.222 12.8334 7.00033C12.8334 3.77866 10.2217 1.16699 7.00008 1.16699C3.77842 1.16699 1.16675 3.77866 1.16675 7.00033C1.16675 10.222 3.77842 12.8337 7.00008 12.8337Z"
-        stroke="#30302F"
+        stroke="#131313"
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"
@@ -27,7 +27,7 @@ export const ArrowCircleRight: React.FC<IconProps> = ({
       />
       <path
         d="M6.26489 9.05876L8.31823 6.9996L6.26489 4.94043"
-        stroke="#30302F"
+        stroke="#131313"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"

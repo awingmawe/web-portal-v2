@@ -40,7 +40,7 @@ const ModalSuccessCanceled = ({
           Pesanan Berhasil Dibatalkan
         </div>
 
-        <div className="text-center text-[14px] font-[400] text-[#5F5F5D]">
+        <div className="text-center text-[14px] font-[400] text-[#1f1f1f]">
           Pesanan kamu sebelumnya berhasil dibatalkan, kamu dapat melanjutkan
           proses pengembalian dana atau dapat mengganti paket lain.
         </div>

@@ -228,7 +228,7 @@ const SavingPageDetail: React.FC = () => {
         />
       </div>
       {/* Desktop Header - Only visible on desktop */}
-      <div className="top-0 z-10 hidden md:block md:border-b md:border-[#E8E8E8]">
+      <div className="top-0 z-10 hidden md:block md:border-b md:border-[#e5e5e5]">
         <div className="flex items-center justify-between px-4 py-4">
           <h1 className="text-xl font-semibold text-gray-800">
             Detail Pengajuan
@@ -249,7 +249,7 @@ const SavingPageDetail: React.FC = () => {
       <div className="">
         <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-3">
           {/* Main Content */}
-          <div className="space-y-4 md:space-y-6 md:border-r md:border-[#E8E8E8] lg:col-span-2">
+          <div className="space-y-4 md:space-y-6 md:border-r md:border-[#e5e5e5] lg:col-span-2">
             {/* Status Banner */}
 
             {/* Application Details */}
@@ -303,7 +303,7 @@ const SavingPageDetail: React.FC = () => {
                       >
                         {/* Tanggal di kanan */}
                         <span
-                          className={`mt-1 w-24 text-right text-sm font-medium ${isOlderStatus ? 'text-gray-400' : 'text-[#8E8E8B]'}`}
+                          className={`mt-1 w-24 text-right text-sm font-medium ${isOlderStatus ? 'text-gray-400' : 'text-[#424242]'}`}
                         >
                           {formatTanggal3(historyItem.createdAt)}
                         </span>
@@ -369,7 +369,7 @@ const SavingPageDetail: React.FC = () => {
               target="_blank"
               className="hidden lg:block"
             >
-              <button className="mt-5 w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+              <button className="mt-5 w-full rounded-[100px] border border-[#ffc14b] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
                 Bantuan
               </button>
             </Link>
@@ -389,7 +389,7 @@ const SavingPageDetail: React.FC = () => {
               target="_blank"
             >
               <div className="fixed right-0 bottom-0 left-0 bg-white p-4 shadow-[0_-4px_6px_rgba(0,0,0,0.1)] md:hidden">
-                <button className="w-full rounded-[100px] border border-[#FFC100] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
+                <button className="w-full rounded-[100px] border border-[#ffc14b] px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:bg-yellow-500 md:text-base">
                   Bantuan
                 </button>
               </div>

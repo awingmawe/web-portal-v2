@@ -739,7 +739,7 @@ export const PembiayaanFormStep2 = forwardRef<
               />
 
               {/* Simulasi Pendanaan */}
-              <div className="space-y-2 rounded-2xl border border-[#E8E8E8] p-4">
+              <div className="space-y-2 rounded-2xl border border-[#e5e5e5] p-4">
                 <h4 className="text-s-regular-medium  text-neutral-900">
                   Simulasi Pendanaan
                 </h4>
