@@ -1,6 +1,11 @@
 'use client'
 
-import { API_URL, HMAC_SECRET, LOCAL_STORAGE_UTM } from '@/constant/env'
+import {
+  API_URL,
+  HMAC_SECRET,
+  LOCAL_STORAGE_USERID,
+  LOCAL_STORAGE_UTM,
+} from '@/constant/env'
 import { getMyProfile } from '@/contexts/auth/shared/api'
 import { Profile } from '@/contexts/auth/shared/type'
 import { EventTrackerContext } from '@/contexts/event-tracker/context'
@@ -239,12 +244,18 @@ export function EventTrackerProvider({
   }
 
   async function execute(payload: any, backgroundProcess?: boolean) {
+    let localUserId = localStorage.getItem(LOCAL_STORAGE_USERID)
+    if (localUserId == null || localUserId === 'null' || localUserId === '') {
+      localUserId = uuid()
+      localStorage.setItem(LOCAL_STORAGE_USERID, localUserId)
+    }
+
     payload.user = {
       sessionId,
-      userId: profile?.id,
+      userId: profile?.id || localUserId,
       email: profile?.email,
       role: profile?.role,
-      fullName: profile?.name,
+      fullName: profile?.name || 'guest',
       username: profile?.username,
       joinDate: profile?.createdAt,
       ...(payload.event.category === 'umrah-personal'
