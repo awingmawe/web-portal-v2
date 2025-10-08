@@ -66,6 +66,7 @@ export default function AuthProvider({
         Array.from(searchParams?.entries() ?? [])
       )
       updatedParams.delete('accessToken')
+      updatedParams.delete('refreshToken')
       updatedParams.delete('exp')
       toast.success('Login Berhasil', { id: 'login-success' })
       refetchPermissions()
