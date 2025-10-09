@@ -11,16 +11,16 @@ import React from 'react'
 
 interface PromoDrawerProps {
   dataTagPackages: TagPackages[]
-  toggleDrawer: (id: number) => void
+  toggleDrawerAction: (id: number) => void
   itemId: number
-  applyFilters: (id: number) => void
+  applyFiltersAction: (id: number) => void
 }
 
 export const PromoDrawer: React.FC<PromoDrawerProps> = ({
   dataTagPackages,
-  toggleDrawer,
+  toggleDrawerAction,
   itemId,
-  applyFilters,
+  applyFiltersAction,
 }) => {
   const { filters, setTagSlug, isLoadingSkeleton } = useFilterProduct()
   const { isItemSelected, handleSelectionChange, onSaveFacilityFilter } =
@@ -55,14 +55,14 @@ export const PromoDrawer: React.FC<PromoDrawerProps> = ({
         <Button
           variant="outline"
           className="border-primary-500 w-full py-3"
-          onClick={() => toggleDrawer(itemId)}
+          onClick={() => toggleDrawerAction(itemId)}
         >
           Batal
         </Button>
         <Button
           onClick={() => {
             onSaveFacilityFilter()
-            applyFilters(itemId)
+            applyFiltersAction(itemId)
           }}
           className="w-full py-3"
         >

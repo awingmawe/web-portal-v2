@@ -209,11 +209,11 @@ export default function BottomNavigation({
       case 3:
         return (
           <SortDrawer
-            applyFilters={applyFilters}
+            applyFiltersAction={applyFilters}
             itemId={itemId}
-            toggleDrawer={toggleDrawer}
+            toggleDrawerAction={toggleDrawer}
             selectedSort={selectedSort}
-            setSelectedSort={setSelectedSort}
+            setSelectedSortAction={setSelectedSort}
           />
         )
       case 4:
@@ -229,8 +229,8 @@ export default function BottomNavigation({
         return (
           <PromoDrawer
             dataTagPackages={dataTagPackages}
-            applyFilters={applyFilters}
-            toggleDrawer={toggleDrawer}
+            applyFiltersAction={applyFilters}
+            toggleDrawerAction={toggleDrawer}
             itemId={itemId}
           />
         )
