@@ -1,333 +1,484 @@
-'use client'
+// 'use client'
 
-import { DiscountIcon, DiscountIconPrimary } from '@/components/icons/discount'
-import { GiftIcon, GiftIconPrimary } from '@/components/icons/gift'
-import { MoneysIconBlack, MoneysIconPrimary } from '@/components/icons/moneys'
-import { SortIcon, SortIconPrimary } from '@/components/icons/sort'
-import { FacilityDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/FacilityFilter'
-import { PriceDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PriceRangeFilter'
-import { PromoDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PromoFilter'
-import { SectionDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SectionFilter'
-import { SortDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SortFilter'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
-import { useFilterProduct } from '@/contexts/filter-product-context'
-import { easeInOut, motion } from 'framer-motion'
-import { useSearchParams } from 'next/navigation'
-import { useMemo, useState } from 'react'
+// import {
+//   Drawer,
+//   DrawerContent,
+//   DrawerHeader,
+//   DrawerTitle,
+// } from '@/components/ui/drawer'
+// import { useEffect, useRef, useState } from 'react'
 
-export interface NavItem {
-  id: number
-  name: string
-  icon: React.ReactElement
-  badge?: number
-  activeIcon: React.ReactElement
-}
+// // Mock data
+// const facilitiesData = [
+//   'Air Zamzam',
+//   'Asuransi selama di Saudi',
+//   'Bagasi 23 kg x 2',
+//   'Al Baik',
+//   'Kereta Cepat',
+//   'City Tour',
+//   'Wifi Portable',
+//   'Hotel Bintang 5',
+// ]
 
-const navItems: NavItem[] = [
-  {
-    id: 1,
-    name: 'Harga',
-    icon: <MoneysIconBlack />,
-    activeIcon: <MoneysIconPrimary />,
-  },
-  {
-    id: 2,
-    name: 'Fasilitas',
-    icon: <GiftIcon />,
-    activeIcon: <GiftIconPrimary />,
-  },
-  {
-    id: 3,
-    name: 'Urutkan',
-    icon: <SortIcon />,
-    activeIcon: <SortIconPrimary />,
-  },
-  {
-    id: 4,
-    name: 'Tipe Paket',
-    icon: <DiscountIcon />,
-    activeIcon: <DiscountIconPrimary />,
-  },
-]
+// const packageTypesData = [
+//   'Paket Umroh Plus',
+//   'Paket Promo',
+//   'Paket Reguler',
+//   'Paket Premium',
+// ]
 
-export default function BottomNavigation({
-  dataMinMax,
-  dataFacility,
-  dataTagPackages,
-  dataSection,
-  dpMinMax,
-  forceMobile = false,
-}: {
-  dataMinMax: any
-  dataFacility: any
-  dataTagPackages: any
-  dataSection: any
-  dpMinMax?: any
-  forceMobile?: boolean
-}) {
-  const { filters, resetFilter, setFilters } = useFilterProduct()
-  const searchParams = useSearchParams()
-  const [open, setOpen] = useState<Record<number, boolean>>({})
-  // Get current sort from URL or use default
-  const [selectedSort, setSelectedSort] = useState<string>(
-    searchParams.get('sort') || 'price-low'
-  )
+// const promosData = [
+//   'Semua Promo',
+//   'Wawan Mencari Diskon',
+//   'Promo Ramadhan',
+//   'Promo Mencari Berkah',
+//   'Promo Spesial',
+//   'Diskon Akhir Tahun',
+// ]
 
-  // Calculate total active packages for badge
-  const totalActivePackages = useMemo(() => {
-    if (!dataTagPackages || !dataTagPackages.length) return 0
+// // Filter Section Component
+// const FilterSection = ({
+//   icon,
+//   title,
+//   children,
+//   showViewAll,
+//   onViewAll,
+//   actionText,
+// }) => {
+//   return (
+//     <div className="mb-6">
+//       <div className="mb-3 flex items-center justify-between">
+//         <div className="flex items-center gap-2">
+//           <span className="text-xl">{icon}</span>
+//           <h3 className="font-semibold text-gray-800">{title}</h3>
+//         </div>
+//         {showViewAll && (
+//           <button
+//             onClick={onViewAll}
+//             className="text-sm font-medium text-amber-500"
+//           >
+//             {actionText || 'Lihat Semua'}
+//           </button>
+//         )}
+//       </div>
+//       {children}
+//     </div>
+//   )
+// }
 
-    return dataTagPackages.reduce(
-      (total: number, tag: any) =>
-        total + parseInt(tag.activePackageCount || '0', 10),
-      0
-    )
-  }, [dataTagPackages])
+// // Tag Button Component
+// const TagButton = ({ label, isSelected, onClick }) => {
+//   return (
+//     <button
+//       onClick={onClick}
+//       className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+//         isSelected
+//           ? 'border-amber-500 bg-amber-50 text-amber-600'
+//           : 'border-gray-300 bg-white text-gray-700 hover:border-amber-300'
+//       }`}
+//     >
+//       {label}
+//     </button>
+//   )
+// }
 
-  // Create the promo item with the calculated badge count
-  const promoItem = useMemo(
-    () => ({
-      id: 5,
-      name: 'Promo',
-      icon: <DiscountIcon />,
-      activeIcon: <DiscountIconPrimary />,
-      badge: totalActivePackages || 0,
-    }),
-    [totalActivePackages]
-  )
+// // Price Range Component
+// const PriceRange = ({ min, max, valueMin, valueMax, onChange }) => {
+//   return (
+//     <div>
+//       <div className="mb-2 flex justify-between text-sm text-gray-600">
+//         <span>From</span>
+//         <span>To</span>
+//       </div>
+//       <div className="mb-4 flex gap-4">
+//         <div className="flex-1">
+//           <input
+//             type="text"
+//             value={`Rp ${valueMin.toLocaleString('id-ID')}`}
+//             readOnly
+//             className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+//           />
+//         </div>
+//         <div className="flex-1">
+//           <input
+//             type="text"
+//             value={`Rp ${valueMax.toLocaleString('id-ID')}`}
+//             readOnly
+//             className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+//           />
+//         </div>
+//       </div>
+//       <div className="relative mb-2">
+//         <input
+//           type="range"
+//           min={min}
+//           max={max}
+//           value={valueMin}
+//           onChange={(e) => onChange(parseInt(e.target.value), valueMax)}
+//           className="pointer-events-none absolute z-10 w-full appearance-none bg-transparent"
+//           style={{
+//             background: 'transparent',
+//           }}
+//         />
+//         <input
+//           type="range"
+//           min={min}
+//           max={max}
+//           value={valueMax}
+//           onChange={(e) => onChange(valueMin, parseInt(e.target.value))}
+//           className="w-full appearance-none bg-transparent"
+//         />
+//         <div className="h-2 rounded-full bg-gray-200">
+//           <div
+//             className="h-2 rounded-full bg-amber-500"
+//             style={{
+//               marginLeft: `${((valueMin - min) / (max - min)) * 100}%`,
+//               width: `${((valueMax - valueMin) / (max - min)) * 100}%`,
+//             }}
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 
-  const toggleDrawer = (id: number) => {
-    setOpen((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }))
-  }
+// // Main Filter Panel Component
+// export default function FilterPanel() {
+//   const [priceRange, setPriceRange] = useState({ min: 40000000, max: 80000000 })
+//   const [selectedFacilities, setSelectedFacilities] = useState([])
+//   const [selectedPackageTypes, setSelectedPackageTypes] = useState([])
+//   const [selectedPromos, setSelectedPromos] = useState([])
+//   const [selectedLocations, setSelectedLocations] = useState([])
 
-  const applyFilters = (id: number) => {
-    // Close the drawer
-    setOpen((prev) => ({
-      ...prev,
-      [id]: false,
-    }))
-  }
+//   const [drawerState, setDrawerState] = useState({
+//     facilities: false,
+//     packageTypes: false,
+//     promos: false,
+//     locations: false,
+//   })
 
-  const resetSingleFilter = (id: number) => {
-    // Map drawer IDs to filter keys
-    const filterKeyMap: Record<number, string> = {
-      1: 'priceRange',
-      2: 'facilityCode',
-      3: 'sort',
-      4: 'section',
-      5: 'tagSlug',
-      6: 'dpRange',
-    }
+//   const [showViewAll, setShowViewAll] = useState({
+//     facilities: false,
+//     packageTypes: false,
+//     promos: false,
+//     locations: false,
+//   })
 
-    if (filterKeyMap[id] === 'sort') {
-      setSelectedSort('')
-      return
-    }
+//   const facilitiesRef = useRef(null)
+//   const packageTypesRef = useRef(null)
+//   const promosRef = useRef(null)
 
-    // Reset the appropriate filter in context
-    if (filterKeyMap[id] === 'priceRange') {
-      setFilters({
-        ...filters,
-        priceRange: {
-          hargaMin: dataMinMax.min,
-          hargaMax: dataMinMax.max,
-        },
-      })
+//   const MAX_HEIGHT = 100 // Maximum height in pixels before showing "Lihat Semua"
 
-      return
-    }
+//   useEffect(() => {
+//     // Check if content exceeds max height
+//     const checkHeight = (ref, key) => {
+//       if (ref.current) {
+//         const height = ref.current.scrollHeight
+//         setShowViewAll((prev) => ({ ...prev, [key]: height > MAX_HEIGHT }))
+//       }
+//     }
 
-    // Reset the appropriate filter in context
-    if (filterKeyMap[id] === 'dpRange') {
-      setFilters({
-        ...filters,
-        dpRange: {
-          dpMin: dpMinMax.min,
-          dpMax: dpMinMax.max,
-        },
-      })
+//     checkHeight(facilitiesRef, 'facilities')
+//     checkHeight(packageTypesRef, 'packageTypes')
+//     checkHeight(promosRef, 'promos')
+//   }, [])
 
-      return
-    }
+//   const toggleSelection = (item, selectedArray, setSelectedArray) => {
+//     if (selectedArray.includes(item)) {
+//       setSelectedArray(selectedArray.filter((i) => i !== item))
+//     } else {
+//       setSelectedArray([...selectedArray, item])
+//     }
+//   }
 
-    if (filterKeyMap[id]) {
-      resetFilter(filterKeyMap[id] as any)
-    }
-  }
+//   const toggleDrawer = (key) => {
+//     setDrawerState((prev) => ({ ...prev, [key]: !prev[key] }))
+//   }
 
-  // Function to determine if a filter is applied
-  const isFilterApplied = (id: number) => {
-    switch (id) {
-      case 1: // Price
-        return !!searchParams.get('prMin') || !!searchParams.get('prMax')
-      case 2: // Facility
-        return !!searchParams.get('fC')
-      case 3: // Sort
-        // Check if sort parameter exists in URL
-        return !!searchParams.get('sort')
-      case 4: // Section
-        return !!searchParams.get('section')
-      case 5: // Promo
-        return !!searchParams.get('tS')
-      case 6: // DP
-        return !!searchParams.get('dpMin') || !!searchParams.get('dpMax')
-      default:
-        return false
-    }
-  }
+//   const resetFilters = () => {
+//     setPriceRange({ min: 40000000, max: 80000000 })
+//     setSelectedFacilities([])
+//     setSelectedPackageTypes([])
+//     setSelectedPromos([])
+//     setSelectedLocations([])
+//   }
 
-  // Function to render drawer content based on item id
-  const renderDrawerContent = (itemId: number) => {
-    switch (itemId) {
-      case 1:
-        return (
-          <PriceDrawer
-            applyFilters={applyFilters}
-            toggleDrawer={toggleDrawer}
-            dataMinMax={dataMinMax}
-            itemId={itemId}
-          />
-        )
-      case 2:
-        return (
-          <FacilityDrawer
-            applyFilters={applyFilters}
-            itemId={itemId}
-            toggleDrawer={toggleDrawer}
-            dataFacility={dataFacility}
-          />
-        )
-      case 3:
-        return (
-          <SortDrawer
-            applyFiltersAction={applyFilters}
-            itemId={itemId}
-            toggleDrawerAction={toggleDrawer}
-            selectedSort={selectedSort}
-            setSelectedSortAction={setSelectedSort}
-          />
-        )
-      case 4:
-        return (
-          <SectionDrawer
-            dataSection={dataSection}
-            applyFilters={applyFilters}
-            toggleDrawer={toggleDrawer}
-            itemId={itemId}
-          />
-        )
-      case 5:
-        return (
-          <PromoDrawer
-            dataTagPackages={dataTagPackages}
-            applyFiltersAction={applyFilters}
-            toggleDrawerAction={toggleDrawer}
-            itemId={itemId}
-          />
-        )
-      default:
-        return <div className="py-4">Content not available</div>
-    }
-  }
+//   const applyFilters = () => {
+//     console.log('Filters applied:', {
+//       priceRange,
+//       selectedFacilities,
+//       selectedPackageTypes,
+//       selectedPromos,
+//       selectedLocations,
+//     })
+//   }
 
-  // Framer Motion animation variants for the badge
-  const badgeAnimationVariants = {
-    animate: {
-      y: [0, -4, 0],
-      transition: {
-        duration: 1,
-        repeat: Infinity,
-        ease: easeInOut,
-      },
-    },
-  }
+//   return (
+//     <div className="mx-auto max-w-md rounded-lg bg-white p-4 shadow-lg">
+//       {/* Header */}
+//       <div className="mb-4 flex items-center justify-between">
+//         <h2 className="text-lg font-bold">Filter</h2>
+//         <button
+//           onClick={resetFilters}
+//           className="text-sm font-medium text-red-500"
+//         >
+//           Reset Filter
+//         </button>
+//       </div>
 
-  // Function to render a navigation item with its drawer
-  const renderNavItem = (
-    item: (typeof navItems)[0] | typeof promoItem,
-    isPromo = false
-  ) => {
-    // Check if filter is applied
-    const filterApplied = isFilterApplied(item.id)
+//       {/* Price Range */}
+//       <FilterSection icon="💰" title="Harga">
+//         <PriceRange
+//           min={10000000}
+//           max={100000000}
+//           valueMin={priceRange.min}
+//           valueMax={priceRange.max}
+//           onChange={(min, max) => setPriceRange({ min, max })}
+//         />
+//       </FilterSection>
 
-    // Use either the active or inactive icon based on filter state
-    const currentIcon = filterApplied ? item.activeIcon : item.icon
+//       {/* Facilities */}
+//       <Drawer
+//         open={drawerState.facilities}
+//         onOpenChange={() => toggleDrawer('facilities')}
+//       >
+//         <FilterSection
+//           icon="🎁"
+//           title="Fasilitas"
+//           showViewAll={showViewAll.facilities}
+//           onViewAll={() => toggleDrawer('facilities')}
+//         >
+//           <div
+//             ref={facilitiesRef}
+//             className="flex flex-wrap gap-2"
+//             style={{
+//               maxHeight: showViewAll.facilities ? `${MAX_HEIGHT}px` : 'none',
+//               overflow: 'hidden',
+//             }}
+//           >
+//             {facilitiesData.slice(0, 4).map((facility) => (
+//               <TagButton
+//                 key={facility}
+//                 label={facility}
+//                 isSelected={selectedFacilities.includes(facility)}
+//                 onClick={() =>
+//                   toggleSelection(
+//                     facility,
+//                     selectedFacilities,
+//                     setSelectedFacilities
+//                   )
+//                 }
+//               />
+//             ))}
+//           </div>
+//         </FilterSection>
 
-    return (
-      <Drawer
-        key={item.id}
-        open={open[item.id]}
-        onOpenChange={() => toggleDrawer(item.id)}
-      >
-        <DrawerTrigger asChild>
-          <button
-            className={`relative flex flex-1 flex-col items-center justify-center px-1 py-2 
-              ${isPromo ? 'relative min-w-[80px]' : 'min-w-[80px]'}
-            `}
-          >
-            <div className="relative">
-              {currentIcon}
-              {/* Badge with animation - only show if has badge count */}
-              {item.badge && item.badge > 0 ? (
-                <motion.div
-                  className="bg-error-500 absolute -top-2 -right-3 flex h-5 w-5 items-center justify-center rounded-full text-xs font-medium text-white"
-                  variants={badgeAnimationVariants}
-                  animate="animate"
-                >
-                  {item.badge > 9 ? '9+' : item.badge}
-                </motion.div>
-              ) : null}
-            </div>
-            <span className="mt-1 text-xs">{item.name}</span>
-          </button>
-        </DrawerTrigger>
-        <DrawerContent className="px-4">
-          <DrawerHeader className="px-0 pb-0">
-            <DrawerTitle className="flex items-center justify-between px-0">
-              <span className="flex items-center gap-2">
-                {currentIcon}
-                {item.name}
-              </span>
-              {filterApplied && (
-                <p
-                  className="h-8 text-red-500"
-                  onClick={() => resetSingleFilter(item.id)}
-                >
-                  Reset {item.name}
-                </p>
-              )}
-            </DrawerTitle>
-          </DrawerHeader>
+//         <DrawerContent className="px-4">
+//           <DrawerHeader className="px-0 pb-0">
+//             <DrawerTitle className="flex items-center justify-between px-0">
+//               <span className="flex items-center gap-2">
+//                 <span className="text-xl">🎁</span>
+//                 Fasilitas
+//               </span>
+//               {selectedFacilities.length > 0 && (
+//                 <button
+//                   className="text-sm text-red-500"
+//                   onClick={() => setSelectedFacilities([])}
+//                 >
+//                   Reset Fasilitas
+//                 </button>
+//               )}
+//             </DrawerTitle>
+//           </DrawerHeader>
+//           <div className="py-4">
+//             <div className="flex flex-wrap gap-2">
+//               {facilitiesData.map((facility) => (
+//                 <TagButton
+//                   key={facility}
+//                   label={facility}
+//                   isSelected={selectedFacilities.includes(facility)}
+//                   onClick={() =>
+//                     toggleSelection(
+//                       facility,
+//                       selectedFacilities,
+//                       setSelectedFacilities
+//                     )
+//                   }
+//                 />
+//               ))}
+//             </div>
+//           </div>
+//         </DrawerContent>
+//       </Drawer>
 
-          {renderDrawerContent(item.id)}
-        </DrawerContent>
-      </Drawer>
-    )
-  }
+//       {/* Package Types */}
+//       <Drawer
+//         open={drawerState.packageTypes}
+//         onOpenChange={() => toggleDrawer('packageTypes')}
+//       >
+//         <FilterSection
+//           icon="📦"
+//           title="Tipe Paket"
+//           showViewAll={showViewAll.packageTypes}
+//           onViewAll={() => toggleDrawer('packageTypes')}
+//         >
+//           <div
+//             ref={packageTypesRef}
+//             className="flex flex-wrap gap-2"
+//             style={{
+//               maxHeight: showViewAll.packageTypes ? `${MAX_HEIGHT}px` : 'none',
+//               overflow: 'hidden',
+//             }}
+//           >
+//             {packageTypesData.map((type) => (
+//               <TagButton
+//                 key={type}
+//                 label={type}
+//                 isSelected={selectedPackageTypes.includes(type)}
+//                 onClick={() =>
+//                   toggleSelection(
+//                     type,
+//                     selectedPackageTypes,
+//                     setSelectedPackageTypes
+//                   )
+//                 }
+//               />
+//             ))}
+//           </div>
+//         </FilterSection>
 
-  return (
-    <div
-      className={`fixed right-0 bottom-0 left-0 z-50 flex border-t border-gray-200 bg-white shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] ${forceMobile ? 'mx-auto w-full max-w-xl' : 'lg:hidden'}`}
-    >
-      {/* Scrollable container for regular nav items */}
-      <div className="scrollbar-hide flex flex-1 overflow-x-auto">
-        {navItems.map((item) => renderNavItem(item))}
-      </div>
+//         <DrawerContent className="px-4">
+//           <DrawerHeader className="px-0 pb-0">
+//             <DrawerTitle className="flex items-center justify-between px-0">
+//               <span className="flex items-center gap-2">
+//                 <span className="text-xl">📦</span>
+//                 Tipe Paket
+//               </span>
+//               {selectedPackageTypes.length > 0 && (
+//                 <button
+//                   className="text-sm text-red-500"
+//                   onClick={() => setSelectedPackageTypes([])}
+//                 >
+//                   Reset Tipe Paket
+//                 </button>
+//               )}
+//             </DrawerTitle>
+//           </DrawerHeader>
+//           <div className="py-4">
+//             <div className="flex flex-wrap gap-2">
+//               {packageTypesData.map((type) => (
+//                 <TagButton
+//                   key={type}
+//                   label={type}
+//                   isSelected={selectedPackageTypes.includes(type)}
+//                   onClick={() =>
+//                     toggleSelection(
+//                       type,
+//                       selectedPackageTypes,
+//                       setSelectedPackageTypes
+//                     )
+//                   }
+//                 />
+//               ))}
+//             </div>
+//           </div>
+//         </DrawerContent>
+//       </Drawer>
 
-      {/* Fixed promo filter on the right with gradient overlay */}
-      <div className="relative z-[99] min-w-[80px] border-l border-neutral-200 bg-white before:pointer-events-none before:absolute before:top-0 before:left-[-144px] before:z-1 before:h-14 before:w-36 before:bg-gradient-to-r before:from-white/0 before:to-white">
-        <div className="absolute top-0 left-0 h-14 w-36 bg-gradient-to-r from-white/0 to-neutral-200" />
-        {renderNavItem(promoItem, true)}
-      </div>
-    </div>
-  )
-}
+//       {/* Travel Location - Placeholder */}
+//       <FilterSection
+//         icon="📍"
+//         title="Lokasi Travel"
+//         showViewAll={false}
+//         actionText="Lihat Semua"
+//       >
+//         <div className="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6 text-center">
+//           <p className="text-sm text-gray-500">API belum tersedia</p>
+//         </div>
+//       </FilterSection>
+
+//       {/* Promos */}
+//       <Drawer
+//         open={drawerState.promos}
+//         onOpenChange={() => toggleDrawer('promos')}
+//       >
+//         <FilterSection
+//           icon="🏷️"
+//           title="Promo & Diskon"
+//           showViewAll={showViewAll.promos}
+//           onViewAll={() => toggleDrawer('promos')}
+//         >
+//           <div
+//             ref={promosRef}
+//             className="flex flex-wrap gap-2"
+//             style={{
+//               maxHeight: showViewAll.promos ? `${MAX_HEIGHT}px` : 'none',
+//               overflow: 'hidden',
+//             }}
+//           >
+//             {promosData.slice(0, 4).map((promo) => (
+//               <TagButton
+//                 key={promo}
+//                 label={promo}
+//                 isSelected={selectedPromos.includes(promo)}
+//                 onClick={() =>
+//                   toggleSelection(promo, selectedPromos, setSelectedPromos)
+//                 }
+//               />
+//             ))}
+//           </div>
+//         </FilterSection>
+
+//         <DrawerContent className="px-4">
+//           <DrawerHeader className="px-0 pb-0">
+//             <DrawerTitle className="flex items-center justify-between px-0">
+//               <span className="flex items-center gap-2">
+//                 <span className="text-xl">🏷️</span>
+//                 Promo & Diskon
+//               </span>
+//               {selectedPromos.length > 0 && (
+//                 <button
+//                   className="text-sm text-red-500"
+//                   onClick={() => setSelectedPromos([])}
+//                 >
+//                   Reset Promo & Diskon
+//                 </button>
+//               )}
+//             </DrawerTitle>
+//           </DrawerHeader>
+//           <div className="py-4">
+//             <div className="flex flex-wrap gap-2">
+//               {promosData.map((promo) => (
+//                 <TagButton
+//                   key={promo}
+//                   label={promo}
+//                   isSelected={selectedPromos.includes(promo)}
+//                   onClick={() =>
+//                     toggleSelection(promo, selectedPromos, setSelectedPromos)
+//                   }
+//                 />
+//               ))}
+//             </div>
+//           </div>
+//         </DrawerContent>
+//       </Drawer>
+
+//       {/* Action Buttons */}
+//       <div className="mt-6 flex gap-3">
+//         <button
+//           onClick={resetFilters}
+//           className="flex-1 rounded-full border-2 border-amber-500 py-3 font-semibold text-amber-500 transition-colors hover:bg-amber-50"
+//         >
+//           Batal
+//         </button>
+//         <button
+//           onClick={applyFilters}
+//           className="flex-1 rounded-full bg-amber-500 py-3 font-semibold text-white transition-colors hover:bg-amber-600"
+//         >
+//           Simpan
+//         </button>
+//       </div>
+//     </div>
+//   )
+// }

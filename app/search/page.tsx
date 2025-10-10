@@ -3,6 +3,7 @@ import SearchTopbar from '@/components/pages/search-packages/1-SearchTopbar/Sear
 import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
 import HorizontalFilterBar from '@/components/pages/search-packages/mobile/UT-TopbarFilter/TopbarTrigger'
+import ScrollShadowWrapper from '@/components/pages/search-packages/ScrollWrapperShadow'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { NODE_ENV, URL } from '@/constant/env'
@@ -182,11 +183,12 @@ export default async function SearchGeneral({
       <SearchTopbar />
       <main className="my-7.5 max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-dvh max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
         <MobileTopbar variant="filter" showBackButton />
-        <section className="scrollbar-hide container mx-auto mt-25 grid grid-cols-12 gap-5 overflow-x-hidden max-lg:absolute max-lg:top-[55px] max-lg:bottom-0 max-lg:z-11 max-lg:mt-0 max-lg:h-full max-lg:w-full max-lg:max-w-full max-lg:gap-0 max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:pb-20 max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
-          {/* Mobile Horizontal Filter */}
-          <div className="sticky top-0 z-30 col-span-12 bg-white ps-4 pb-2 lg:hidden ">
+        <ScrollShadowWrapper
+          // Mobile Horizontal Filter
+          mobileTopbarFilter={
             <HorizontalFilterBar dataTagPackages={dataTagPackages} />
-          </div>
+          }
+        >
           <div className="col-span-4 max-lg:hidden max-lg:px-4">
             <FilterLeftbar
               dataMinMax={dataMinMax}
@@ -198,7 +200,7 @@ export default async function SearchGeneral({
           <div className="col-span-8 max-lg:col-span-12 max-lg:px-4">
             <PackageResults />
           </div>
-        </section>
+        </ScrollShadowWrapper>
       </main>
       {/* <BottomNavigation
         dataMinMax={dataMinMax}
