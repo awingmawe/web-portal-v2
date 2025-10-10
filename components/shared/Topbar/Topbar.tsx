@@ -234,7 +234,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
                 <Fragment>
                   {/* Register */}
                   <Link
-                    href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${redirectUri}`}
+                    href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`}
                     className="text-m-regular text-neutral-900"
                   >
                     Daftar
@@ -245,7 +245,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
 
                   {/* Login */}
                   <Link
-                    href={`${ACCOUNT_URL}/auth/login?redirectUri=${redirectUri}`}
+                    href={`${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(redirectUri as string)}`}
                     className="text-m-regular text-neutral-900"
                   >
                     Masuk
