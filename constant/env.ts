@@ -7,6 +7,9 @@ export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 export const ACCOUNT_URL = process.env.NEXT_PUBLIC_ACCOUNT_URL
 export const HMAC_SECRET = process.env.NEXT_PUBLIC_HMAC_SECRET
 export const CALL_CENTER = process.env.NEXT_PUBLIC_CALL_CENTER
+export const CHAT_BOT_SOURCE = process.env.NEXT_PUBLIC_CHAT_BOT_SOURCE
+export const CHAT_BOT_CLIENT_ID = process.env.NEXT_PUBLIC_CHAT_BOT_CLIENT_ID
+export const HIDE_QONTAK = Boolean(process.env.NEXT_PUBLIC_HIDE_QONTAK)
 export const QONTAK_WIDGET_CHAT_ID =
   process.env.NEXT_PUBLIC_QONTAK_WIDGET_CHAT_ID
 export const QONTAK_WIDGET_CHAT_SCRIPT =
