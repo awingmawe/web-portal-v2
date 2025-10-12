@@ -1,17 +1,18 @@
 'use client'
 
-import { Fragment } from 'react'
+import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import Topbar from '@/components/shared/Topbar'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
-import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
-import { TalanganPackageResults } from './components/TalanganPackageResults'
-import { ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
-import { FilterProductProvider } from '@/contexts/filter-product-context'
-import { PriceParams } from '@/constant/types/PackageProps'
-import { TagPackages } from '@/constant/types/TagPackageProps'
 import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
+import { City } from '@/constant/types/LocationProps'
+import { PriceParams } from '@/constant/types/PackageProps'
+import { TagPackages } from '@/constant/types/TagPackageProps'
+import { FilterProductProvider } from '@/contexts/filter-product-context'
+import { ChevronLeft } from 'lucide-react'
+import Link from 'next/link'
+import { Fragment } from 'react'
+import { TalanganPackageResults } from './components/TalanganPackageResults'
 
 interface TalanganPackageSelectionProps {
   token: string
@@ -19,6 +20,7 @@ interface TalanganPackageSelectionProps {
   dataTagPackages: TagPackages[]
   dataFacility: GenericResponse<Facility>
   dataSection: TagPackages[]
+  dataKota: GenericResponse<City>
 }
 
 export default function TalanganPackageSelection({
@@ -27,23 +29,31 @@ export default function TalanganPackageSelection({
   dataTagPackages,
   dataFacility,
   dataSection,
+  dataKota,
 }: TalanganPackageSelectionProps) {
   return (
     <FilterProductProvider>
       <Fragment>
         <Topbar token={token} scrolled />
-        
+
         {/* Custom Header for Talangan */}
-        <div className="bg-white border-b">
+        <div className="border-b bg-white">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center">
-              <Link href="/banking/credit/form" className="flex items-center text-gray-800 hover:text-gray-600 mr-4">
+              <Link
+                href="/banking/credit/form"
+                className="mr-4 flex items-center text-gray-800 hover:text-gray-600"
+              >
                 <ChevronLeft size={24} className="mr-2" />
                 <span className="font-medium">Kembali ke Form</span>
               </Link>
               <div className="border-l pl-4">
-                <h1 className="text-xl font-semibold text-gray-900">Pilih Paket Umroh</h1>
-                <p className="text-sm text-gray-600">Pilih paket yang sesuai untuk pengajuan talangan Anda</p>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  Pilih Paket Umroh
+                </h1>
+                <p className="text-sm text-gray-600">
+                  Pilih paket yang sesuai untuk pengajuan talangan Anda
+                </p>
               </div>
             </div>
           </div>
@@ -58,6 +68,7 @@ export default function TalanganPackageSelection({
                 dataTagPackages={dataTagPackages}
                 dataFacility={dataFacility}
                 dataSection={dataSection}
+                dataKota={dataKota}
               />
             </div>
             <div className="col-span-8 max-lg:col-span-12">

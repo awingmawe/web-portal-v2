@@ -22,10 +22,10 @@ export function LocationDrawer({
   applyFiltersAction,
   dataKota,
 }: LocationDrawerProps) {
-  const { filters, setSection } = useFilterProduct()
+  const { filters, setLocationFilter } = useFilterProduct()
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: filters.organizationInstanceCity,
-    onSelectionChange: setSection,
+    onSelectionChange: setLocationFilter,
     paramName: 'lC',
   })
 

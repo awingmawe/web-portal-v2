@@ -2,6 +2,7 @@ import { metadata } from '@/app/shared-metadata'
 import TalanganPackageSelection from '@/components/pages/banking/TalanganForm/TalanganPackageSelection'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
+import { getKota } from '@/services/identity-service'
 import {
   getMinMaxPrice,
   getSectionEnum,
@@ -22,12 +23,13 @@ export default async function TalanganPilihPaketPage() {
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
-  const [priceParams, dataTagPackages, dataFacility, dataSection] =
+  const [priceParams, dataTagPackages, dataFacility, dataSection, dataKota] =
     await Promise.all([
       getMinMaxPrice(),
       getTagPackagesEnum(),
       getFacilityEnum('umrah-facility'),
       getSectionEnum(),
+      getKota({ page: 1, size: 100, orderBy: 'name', order: 'desc' }),
     ])
 
   // Keep priceParams as PriceParams for FilterLeftbar compatibility
@@ -45,6 +47,7 @@ export default async function TalanganPilihPaketPage() {
       dataTagPackages={transformedTagPackages}
       dataFacility={transformedFacilities}
       dataSection={transformedSections}
+      dataKota={dataKota}
     />
   )
 }

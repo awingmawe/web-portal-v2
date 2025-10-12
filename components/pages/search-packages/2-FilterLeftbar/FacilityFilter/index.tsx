@@ -46,7 +46,7 @@ const FacilityFilter: React.FC<FacilityFilterProps> = ({ dataFacility }) => {
         <FacilityOptions
           dataFacility={dataFacility}
           selectedFacility={filters.facilityCode}
-          onFacilityChange={setFacilityCode}
+          onFacilityChangeAction={setFacilityCode}
           isLoadingSkeleton={isLoadingSkeleton}
         />
       </AccordionContent>

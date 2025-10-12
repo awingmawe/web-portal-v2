@@ -113,7 +113,6 @@ export default function FilterPanel({
   // Calculate active filter count
   const activeFilterCount = useMemo(() => {
     let count = 0
-    console.log(filters.priceRange?.hargaMin, filters.priceRange?.hargaMax)
 
     // Check price range (count as 1 if different from default)
     const isPriceFiltered =

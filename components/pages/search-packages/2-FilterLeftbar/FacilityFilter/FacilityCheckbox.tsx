@@ -10,19 +10,19 @@ import React from 'react'
 interface FacilityOptionsProps {
   dataFacility: GenericResponse<Facility>
   selectedFacility?: string
-  onFacilityChange: (facilityCode: string) => void
+  onFacilityChangeAction: (facilityCode: string) => void
   isLoadingSkeleton?: boolean
 }
 
 export const FacilityOptions: React.FC<FacilityOptionsProps> = ({
   dataFacility,
   selectedFacility,
-  onFacilityChange,
+  onFacilityChangeAction,
   isLoadingSkeleton,
 }) => {
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: selectedFacility,
-    onSelectionChange: onFacilityChange,
+    onSelectionChange: onFacilityChangeAction,
     paramName: 'fC',
   })
 

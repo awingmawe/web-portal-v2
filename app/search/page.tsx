@@ -205,6 +205,7 @@ export default async function SearchGeneral({
               dataTagPackages={dataTagPackages}
               dataFacility={dataFacility}
               dataSection={dataSection}
+              dataKota={dataKota}
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12 max-lg:px-4">

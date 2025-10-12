@@ -1,6 +1,7 @@
 'use client'
 
 import FacilityFilter from '@/components/pages/search-packages/2-FilterLeftbar/FacilityFilter'
+import LocationFilter from '@/components/pages/search-packages/2-FilterLeftbar/LocationFilter'
 import PriceRangeFilter from '@/components/pages/search-packages/2-FilterLeftbar/PriceRangeFilter'
 import RatingHotelFilter from '@/components/pages/search-packages/2-FilterLeftbar/RatingHotelFilter'
 import SectionFilter from '@/components/pages/search-packages/2-FilterLeftbar/SectionFilter'
@@ -9,6 +10,7 @@ import { Accordion } from '@/components/ui/accordion'
 import { Input } from '@/components/ui/input'
 import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
+import { City } from '@/constant/types/LocationProps'
 import { PriceParams } from '@/constant/types/PackageProps'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
@@ -21,6 +23,7 @@ interface FilterLeftbarProps {
   dataTagPackages: TagPackages[]
   dataFacility: GenericResponse<Facility>
   dataSection: TagPackages[]
+  dataKota: GenericResponse<City>
 }
 
 // Custom debounce hook
@@ -61,6 +64,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
   dataTagPackages,
   dataFacility,
   dataSection,
+  dataKota,
 }) => {
   const { searchQuery, setSearchQuery, resetFilter } = useFilterProduct()
   const updateQueryParams = useUpdateQueryParams()
@@ -121,7 +125,14 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
       </div>
       <Accordion
         type="multiple"
-        defaultValue={['item-1', 'item-2', 'item-3', 'item-4', 'item-5']}
+        defaultValue={[
+          'item-1',
+          'item-2',
+          'item-3',
+          'item-4',
+          'item-5',
+          'item-6',
+        ]}
         className="flex w-full flex-col gap-6"
       >
         <PriceRangeFilter dataMinMax={dataMinMax} />
@@ -129,6 +140,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
         <FacilityFilter dataFacility={dataFacility} />
         <SectionFilter dataSectionPackage={dataSection} />
         <TagPackageFilter dataTagPackage={dataTagPackages} />
+        <LocationFilter dataKota={dataKota} />
       </Accordion>
     </Fragment>
   )

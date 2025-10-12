@@ -172,7 +172,7 @@ export const FilterProductProvider: React.FC<{
           filterName: null,
           priceRange: null,
           dpRange: null,
-          organizationInstanceCity: null,
+          organizationInstanceCity: 'lC',
         }
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
