@@ -2,12 +2,14 @@ import { metadata } from '@/app/shared-metadata'
 import SearchTopbar from '@/components/pages/search-packages/1-SearchTopbar/SearchTopbar'
 import FilterLeftbar from '@/components/pages/search-packages/2-FilterLeftbar'
 import { PackageResults } from '@/components/pages/search-packages/3-PackageList/PackageList'
-import BottomNavigation from '@/components/pages/search-packages/mobile/BottomFilterMobile/BottomFilter'
+import HorizontalFilterBar from '@/components/pages/search-packages/mobile/UT-TopbarFilter/TopbarTrigger'
+import ScrollShadowWrapper from '@/components/pages/search-packages/ScrollWrapperShadow'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { NODE_ENV, URL } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
+import { getKota } from '@/services/identity-service'
 import {
   getMinMaxPrice,
   getPackageList,
@@ -41,12 +43,13 @@ export default async function SearchGeneral({
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   const awaitedParams = await searchParams
 
-  const [dataMinMax, dataTagPackages, dataFacility, dataSection] =
+  const [dataMinMax, dataTagPackages, dataFacility, dataSection, dataKota] =
     await Promise.all([
       getMinMaxPrice(),
       getTagPackagesEnum(awaitedParams.type || 'umrah'),
       getFacilityEnum(`${awaitedParams.type || 'umrah'}-facility`),
       getSectionEnum(awaitedParams.type || 'umrah'),
+      getKota({ page: 1, size: 100, orderBy: 'name', order: 'desc' }),
     ])
 
   const page = parseInt(awaitedParams.page || '1', 10)
@@ -66,6 +69,7 @@ export default async function SearchGeneral({
   const minDpAmount = awaitedParams.dpMin || undefined
   const maxDpAmount = awaitedParams.dpMax || undefined
   const packageType = awaitedParams.packageType || 'umrah'
+  const organizationInstanceCity = awaitedParams.lC || undefined
 
   // Order Filter
   // Handle sorting options
@@ -109,6 +113,7 @@ export default async function SearchGeneral({
     minDpAmount,
     maxDpAmount,
     packageType,
+    organizationInstanceCity,
   })
 
   // --- JSON-LD for CollectionPage/WebPage Schema ---
@@ -182,26 +187,38 @@ export default async function SearchGeneral({
       <SearchTopbar />
       <main className="my-7.5 max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-dvh max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
         <MobileTopbar variant="filter" showBackButton />
-        <section className="scrollbar-hide container mx-auto mt-25 grid grid-cols-12 gap-5 max-lg:absolute max-lg:top-[55px] max-lg:bottom-0 max-lg:z-11 max-lg:mt-0 max-lg:h-full max-lg:w-full max-lg:max-w-full max-lg:overflow-y-auto max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:px-4 max-lg:py-7.5 max-lg:pb-[130px] max-lg:shadow-[0px_-6px_24px_0px_rgba(0,0,0,0.25)]">
-          <div className="col-span-4 max-lg:hidden">
+        <ScrollShadowWrapper
+          // Mobile Horizontal Filter
+          mobileTopbarFilter={
+            <HorizontalFilterBar
+              dataTagPackages={dataTagPackages}
+              dataFacility={dataFacility}
+              dataMinMax={dataMinMax}
+              dataSection={dataSection}
+              dataKota={dataKota}
+            />
+          }
+        >
+          <div className="col-span-4 max-lg:hidden max-lg:px-4">
             <FilterLeftbar
               dataMinMax={dataMinMax}
               dataTagPackages={dataTagPackages}
               dataFacility={dataFacility}
               dataSection={dataSection}
+              dataKota={dataKota}
             />
           </div>
-          <div className="col-span-8 max-lg:col-span-12">
+          <div className="col-span-8 max-lg:col-span-12 max-lg:px-4">
             <PackageResults />
           </div>
-        </section>
+        </ScrollShadowWrapper>
       </main>
-      <BottomNavigation
+      {/* <BottomNavigation
         dataMinMax={dataMinMax}
         dataFacility={dataFacility}
         dataTagPackages={dataTagPackages}
         dataSection={dataSection}
-      />
+      /> */}
     </Fragment>
   )
 }

@@ -1,0 +1,37 @@
+import { IconProps } from '@/constant/types/IconProps'
+import { cn } from '@/lib/utils'
+import React from 'react'
+
+export const LocationLinear: React.FC<IconProps> = ({
+  className = '',
+  size = 20,
+  color,
+  ...props
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      className={cn(className)}
+      {...props}
+    >
+      <path
+        d="M3.01675 7.07508C4.65842 -0.141583 15.3501 -0.13325 16.9834 7.08342C17.9417 11.3167 15.3084 14.9001 13.0001 17.1167C11.3251 18.7334 8.67508 18.7334 6.99175 17.1167C4.69175 14.9001 2.05842 11.3084 3.01675 7.07508Z"
+        fill={color || '#FFC14B'}
+        stroke="white"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z"
+        fill={color || '#FFC14B'}
+        stroke="white"
+        strokeWidth="1.5"
+      />
+    </svg>
+  )
+}
+
+export default LocationLinear

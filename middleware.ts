@@ -39,7 +39,6 @@ export async function middleware(request: NextRequest) {
     const loginToken = url.searchParams.get('accessToken')
     const refreshToken = url.searchParams.get('refreshToken')
 
-    console.log('Params : ' + url)
     // const refreshToken = url.searchParams.get('refreshToken')
 
     if (!token && loginToken) {

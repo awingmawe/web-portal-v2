@@ -37,10 +37,6 @@ const BankingPageDetail: React.FC = () => {
         talanganResponse.success &&
         talanganResponse.data?.applications?.length > 0
       ) {
-        console.log(
-          'Found API talangan applications:',
-          talanganResponse.data.applications
-        )
         setLocalApplications(talanganResponse.data.applications)
         setViewMode('list')
         setLoading(false)

@@ -191,8 +191,8 @@ export default function BottomNavigation({
       case 1:
         return (
           <PriceDrawer
-            applyFilters={applyFilters}
-            toggleDrawer={toggleDrawer}
+            applyFiltersAction={applyFilters}
+            toggleDrawerAction={toggleDrawer}
             dataMinMax={dataMinMax}
             itemId={itemId}
           />
@@ -200,28 +200,28 @@ export default function BottomNavigation({
       case 2:
         return (
           <FacilityDrawer
-            applyFilters={applyFilters}
+            applyFiltersAction={applyFilters}
             itemId={itemId}
-            toggleDrawer={toggleDrawer}
+            toggleDrawerAction={toggleDrawer}
             dataFacility={dataFacility}
           />
         )
       case 3:
         return (
           <SortDrawer
-            applyFilters={applyFilters}
+            applyFiltersAction={applyFilters}
             itemId={itemId}
-            toggleDrawer={toggleDrawer}
+            toggleDrawerAction={toggleDrawer}
             selectedSort={selectedSort}
-            setSelectedSort={setSelectedSort}
+            setSelectedSortAction={setSelectedSort}
           />
         )
       case 4:
         return (
           <SectionDrawer
             dataSection={dataSection}
-            applyFilters={applyFilters}
-            toggleDrawer={toggleDrawer}
+            applyFiltersAction={applyFilters}
+            toggleDrawerAction={toggleDrawer}
             itemId={itemId}
           />
         )
@@ -229,8 +229,8 @@ export default function BottomNavigation({
         return (
           <PromoDrawer
             dataTagPackages={dataTagPackages}
-            applyFilters={applyFilters}
-            toggleDrawer={toggleDrawer}
+            applyFiltersAction={applyFilters}
+            toggleDrawerAction={toggleDrawer}
             itemId={itemId}
           />
         )
