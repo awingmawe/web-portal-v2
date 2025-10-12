@@ -229,7 +229,7 @@ export const LocationCheckboxFilter: React.FC<LocationFilterProps> = ({
                       className="flex flex-col gap-2"
                     >
                       <p className="text-m-regular">{letter}</p>
-                      <div className="grid grid-cols-3 space-y-2.5">
+                      <div className="grid grid-cols-3">
                         {groupedLocations[letter].map((location) => (
                           <Checkbox
                             className="col-span-1"
