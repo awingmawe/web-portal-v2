@@ -39,6 +39,8 @@ interface FilterProductContextType {
   setSection: (section: string) => void
   setTagSlug: (slug: string) => void
   setFilterName: (filterName: string) => void
+  setDpRange: (range: any) => void
+  setLocationFilter: (locationFilter: string) => void
 
   // Reset filter state - full and individual
   resetFilters: (filters?: typeof initialFilterState) => void
@@ -129,6 +131,13 @@ export const FilterProductProvider: React.FC<{
     setFilters((prev) => ({ ...prev, filterName }))
   }, [])
 
+  const setLocationFilter = useCallback((locationFilter: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      organizationInstanceCity: locationFilter,
+    }))
+  }, [])
+
   const setDpRange = useCallback((filterName: string) => {
     setFilters((prev) => ({ ...prev, filterName }))
   }, [])
@@ -163,6 +172,7 @@ export const FilterProductProvider: React.FC<{
           filterName: null,
           priceRange: null,
           dpRange: null,
+          organizationInstanceCity: null,
         }
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
@@ -227,6 +237,7 @@ export const FilterProductProvider: React.FC<{
         updatedFilters.section = params.get('section') || ''
         updatedFilters.tagSlug = params.get('tS') || ''
         updatedFilters.type = params.get('type') || 'umrah'
+        updatedFilters.organizationInstanceCity = params.get('lC') || ''
 
         // Handle complex objects that need async fetching
         const promises = []
@@ -380,6 +391,9 @@ export const FilterProductProvider: React.FC<{
       if (params.has('type')) {
         queryObject.type = params.get('type')
       }
+      if (params.has('lC')) {
+        queryObject.type = params.get('lC')
+      }
 
       return queryObject
     },
@@ -522,6 +536,7 @@ export const FilterProductProvider: React.FC<{
     setSection,
     setTagSlug,
     setFilterName,
+    setLocationFilter,
     setDpRange,
     // Reset filter state - full and individual
     resetFilters,

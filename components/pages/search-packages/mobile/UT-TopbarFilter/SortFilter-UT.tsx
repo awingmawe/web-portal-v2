@@ -47,7 +47,7 @@ const SortFilterComponent = () => {
             </span>
             {!!selectedSort && (
               <p
-                className="h-8 text-red-500"
+                className="text-s-medium text-red-500"
                 onClick={() => setSelectedSort('')}
               >
                 Reset Urutkan

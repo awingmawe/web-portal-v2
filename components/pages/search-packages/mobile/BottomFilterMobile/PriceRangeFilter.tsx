@@ -12,16 +12,20 @@ import React, { useEffect, useState } from 'react'
 
 interface PriceDrawerProps {
   dataMinMax: { min: number; max: number }
-  toggleDrawer: (id: number) => void
+  toggleDrawerAction: (id: number) => void
   itemId: number
-  applyFilters: (id: number) => void
+  applyFiltersAction: (id: number) => void
+  footer?: boolean
+  resetFilters?: () => void
 }
 
 export const PriceDrawer = ({
   dataMinMax,
-  applyFilters,
-  toggleDrawer,
+  applyFiltersAction,
+  toggleDrawerAction,
   itemId,
+  footer = true,
+  resetFilters,
 }: PriceDrawerProps) => {
   const { filters, setFilters } = useFilterProduct()
   const updateQueryParams = useUpdateQueryParams()
@@ -61,6 +65,7 @@ export const PriceDrawer = ({
     filters.priceRange?.hargaMax,
     minValue,
     maxValue,
+    resetFilters,
   ])
 
   // Handler for slider change
@@ -68,88 +73,102 @@ export const PriceDrawer = ({
     if (value.length === 2) {
       setRange(value as [number, number])
 
+      const formattedMin = formatNumberCurrency(value[0].toString())
+      const formattedMax = formatNumberCurrency(value[1].toString())
+
       // Update local input values
-      setLocalHargaMin(formatNumberCurrency(value[0].toString()))
-      setLocalHargaMax(formatNumberCurrency(value[1].toString()))
+      setLocalHargaMin(formattedMin)
+      setLocalHargaMax(formattedMax)
+
+      // Update context filters immediately
+      setFilters({
+        ...filters,
+        priceRange: {
+          hargaMin: formattedMin,
+          hargaMax: formattedMax,
+        },
+      })
     }
   }
 
   // Handler for min price input change
   const handleMinInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value
-
-    // Remove any non-numeric characters first (keep only digits)
     const numericString = inputValue.replace(/\D/g, '')
 
     if (numericString === '') {
-      // Handle empty input
       setLocalHargaMin('')
       return
     }
 
-    // Convert to number for comparison and validation
     const numericValue = parseInt(numericString, 10)
-
-    // Apply bounds - ensure the value doesn't exceed max
     const boundedValue = Math.min(numericValue, maxValue)
-
-    // Format with thousand separators and update state with formatted value
     const formattedValue = formatNumberCurrency(boundedValue.toString())
+
     setLocalHargaMin(formattedValue)
 
-    // If min exceeds current max, update max as well
+    const newMin = boundedValue
+    let newMax = range[1]
+    let formattedMax = localHargaMax
+
     if (boundedValue > range[1]) {
+      newMax = boundedValue
+      formattedMax = formattedValue
       setLocalHargaMax(formattedValue)
-      setRange([boundedValue, boundedValue])
-    } else {
-      // Otherwise just update the min value in the range
-      setRange([boundedValue, range[1]])
     }
+
+    setRange([newMin, newMax])
+
+    // Update context filters immediately
+    setFilters({
+      ...filters,
+      priceRange: {
+        hargaMin: formattedValue,
+        hargaMax: formattedMax,
+      },
+    })
   }
 
   // Handler for max price input change
   const handleMaxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value
-
-    // Remove any non-numeric characters first (keep only digits)
     const numericString = inputValue.replace(/\D/g, '')
 
     if (numericString === '') {
-      // Handle empty input
       setLocalHargaMax('')
       return
     }
 
-    // Convert to number for comparison and validation
     const numericValue = parseInt(numericString, 10)
-
-    // Apply bounds - ensure the value doesn't exceed max
     const boundedValue = Math.min(numericValue, maxValue)
-
-    // Format with thousand separators and update state with formatted value
     const formattedValue = formatNumberCurrency(boundedValue.toString())
+
     setLocalHargaMax(formattedValue)
 
-    // If max is less than current min, update min as well
+    let newMin = range[0]
+    const newMax = boundedValue
+    let formattedMin = localHargaMin
+
     if (boundedValue < range[0]) {
+      newMin = boundedValue
+      formattedMin = formattedValue
       setLocalHargaMin(formattedValue)
-      setRange([boundedValue, boundedValue])
-    } else {
-      // Otherwise just update the max value in the range
-      setRange([range[0], boundedValue])
     }
+
+    setRange([newMin, newMax])
+
+    // Update context filters immediately
+    setFilters({
+      ...filters,
+      priceRange: {
+        hargaMin: formattedMin,
+        hargaMax: formattedValue,
+      },
+    })
   }
 
   // Handler for save button - updates global filter state and URL params
   const handleSaveFilter = () => {
-    // Update context state with new values
-    setFilters({
-      ...filters,
-      priceRange: {
-        hargaMin: localHargaMin,
-        hargaMax: localHargaMax,
-      },
-    })
     const parsedUrl = queryString.parseUrl(window.location.href)
     const query = parsedUrl.query
 
@@ -167,12 +186,12 @@ export const PriceDrawer = ({
     )
 
     // Close drawer and apply filters
-    applyFilters(itemId)
+    applyFiltersAction(itemId)
   }
 
   return (
     <>
-      <div className="py-4">
+      <div className="flex flex-col">
         <div className="mb-2 flex justify-between">
           <p className="text-m-regular text-neutral-500">Dari</p>
           <p className="text-m-regular text-right text-neutral-500">Hingga</p>
@@ -181,14 +200,14 @@ export const PriceDrawer = ({
         <div className="flex items-center justify-between self-stretch">
           <Input
             value={localHargaMin}
-            className="rounded-lg border-[0.5px] border-neutral-200 p-2"
+            className="rounded-full border-[0.5px] border-neutral-200 p-2"
             onChange={handleMinInputChange}
             placeholder={`Rp ${formatNumberCurrency(minValue.toString())}`}
           />
           <div className="h-px w-5 flex-none bg-[#c9c9c9] sm:mx-5 xl:mx-10" />
           <Input
             value={localHargaMax}
-            className="rounded-lg border-[0.5px] border-neutral-200 p-2 text-right"
+            className="rounded-full border-[0.5px] border-neutral-200 p-2 text-right"
             align="text-right"
             onChange={handleMaxInputChange}
             placeholder={`Rp ${formatNumberCurrency(maxValue.toString())}`}
@@ -215,18 +234,20 @@ export const PriceDrawer = ({
           </p>
         </div>
       </div>
-      <DrawerFooter className="mb-4 flex flex-row gap-2 p-0">
-        <Button
-          variant="outline"
-          className="border-primary-500 w-full py-3"
-          onClick={() => toggleDrawer(itemId)}
-        >
-          Batal
-        </Button>
-        <Button onClick={handleSaveFilter} className="w-full py-3">
-          Simpan
-        </Button>
-      </DrawerFooter>
+      {footer && (
+        <DrawerFooter className="mb-4 flex flex-row gap-2 p-0">
+          <Button
+            variant="outline"
+            className="border-primary-500 w-full py-3"
+            onClick={() => toggleDrawerAction(itemId)}
+          >
+            Batal
+          </Button>
+          <Button onClick={handleSaveFilter} className="w-full py-3">
+            Simpan
+          </Button>
+        </DrawerFooter>
+      )}
     </>
   )
 }

@@ -9,6 +9,7 @@ import Topbar from '@/components/shared/Topbar'
 import { NODE_ENV, URL } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
+import { getKota } from '@/services/identity-service'
 import {
   getMinMaxPrice,
   getPackageList,
@@ -42,12 +43,13 @@ export default async function SearchGeneral({
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   const awaitedParams = await searchParams
 
-  const [dataMinMax, dataTagPackages, dataFacility, dataSection] =
+  const [dataMinMax, dataTagPackages, dataFacility, dataSection, dataKota] =
     await Promise.all([
       getMinMaxPrice(),
       getTagPackagesEnum(awaitedParams.type || 'umrah'),
       getFacilityEnum(`${awaitedParams.type || 'umrah'}-facility`),
       getSectionEnum(awaitedParams.type || 'umrah'),
+      getKota({ page: 1, size: 100, orderBy: 'name', order: 'desc' }),
     ])
 
   const page = parseInt(awaitedParams.page || '1', 10)
@@ -67,6 +69,7 @@ export default async function SearchGeneral({
   const minDpAmount = awaitedParams.dpMin || undefined
   const maxDpAmount = awaitedParams.dpMax || undefined
   const packageType = awaitedParams.packageType || 'umrah'
+  const organizationInstanceCity = awaitedParams.lC || undefined
 
   // Order Filter
   // Handle sorting options
@@ -110,6 +113,7 @@ export default async function SearchGeneral({
     minDpAmount,
     maxDpAmount,
     packageType,
+    organizationInstanceCity,
   })
 
   // --- JSON-LD for CollectionPage/WebPage Schema ---
@@ -186,7 +190,13 @@ export default async function SearchGeneral({
         <ScrollShadowWrapper
           // Mobile Horizontal Filter
           mobileTopbarFilter={
-            <HorizontalFilterBar dataTagPackages={dataTagPackages} />
+            <HorizontalFilterBar
+              dataTagPackages={dataTagPackages}
+              dataFacility={dataFacility}
+              dataMinMax={dataMinMax}
+              dataSection={dataSection}
+              dataKota={dataKota}
+            />
           }
         >
           <div className="col-span-4 max-lg:hidden max-lg:px-4">

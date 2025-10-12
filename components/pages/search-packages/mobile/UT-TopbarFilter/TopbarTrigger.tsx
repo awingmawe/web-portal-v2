@@ -1,36 +1,75 @@
 'use client'
 
-import { FilterBold } from '@/components/icons/filter'
+import FilterPanel from '@/components/pages/search-packages/mobile/UT-TopbarFilter/FilterContent'
 import PromoTagFilter from '@/components/pages/search-packages/mobile/UT-TopbarFilter/PromoFilter-UT'
 import SortFilterComponent from '@/components/pages/search-packages/mobile/UT-TopbarFilter/SortFilter-UT'
+import { GenericResponse } from '@/constant/types/GeneralProps'
+import { City } from '@/constant/types/LocationProps'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 
+// Skeleton Component
+const HorizontalFilterSkeleton = () => {
+  return (
+    <div className="flex items-center gap-1 pt-3">
+      {/* Filter Button Skeleton */}
+      <div className="relative flex animate-pulse flex-col items-center justify-center px-1">
+        <div className="h-6 w-6 rounded bg-neutral-200" />
+        <div className="mt-1 h-3 w-10 rounded bg-neutral-200" />
+      </div>
+
+      {/* Sort Button Skeleton */}
+      <div className="relative flex animate-pulse flex-col items-center justify-center px-1">
+        <div className="h-6 w-6 rounded bg-neutral-200" />
+        <div className="mt-1 h-3 w-12 rounded bg-neutral-200" />
+      </div>
+
+      {/* Divider */}
+      <div className="w-px self-stretch border border-[#e5e5e5]" />
+
+      {/* Dynamic Filter Tags Skeleton */}
+      <div className="flex items-center gap-1 overflow-hidden">
+        {[1, 2, 3, 4].map((index) => (
+          <div
+            key={index}
+            className="h-8 w-24 animate-pulse rounded-full bg-neutral-200"
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const HorizontalFilterBar = ({
   dataTagPackages,
+  dataMinMax,
+  dataFacility,
+  dataSection,
+  dataKota,
 }: {
   dataTagPackages: TagPackages[]
+  dataMinMax: any
+  dataFacility: any
+  dataSection: any
+  dataKota: GenericResponse<City>
 }) => {
-  const { setTagSlug, filters } = useFilterProduct()
+  const { isLoadingSkeleton } = useFilterProduct()
 
-  // Get count of active filters for badge
-  const activeFilterCount = filters?.tagSlug
-    ? filters.tagSlug.split(',').filter(Boolean).length
-    : 0
+  // Show skeleton while loading
+  if (isLoadingSkeleton) {
+    return <HorizontalFilterSkeleton />
+  }
 
   return (
     <div className="flex items-center gap-1 pt-3">
       {/* Filter Button */}
-      <div className="relative flex cursor-pointer flex-col items-center justify-center px-1">
-        <FilterBold />
-        <p className="text-s-regular">Filter</p>
-        {/* Notification Badge - shows active filter count */}
-        {activeFilterCount > 0 && (
-          <span className="bg-primary-500 text-xs-regular absolute -top-2 right-0 flex h-4 w-4 items-center justify-center rounded-full text-white">
-            {activeFilterCount}
-          </span>
-        )}
-      </div>
+      <FilterPanel
+        dataMinMax={dataMinMax}
+        dataFacility={dataFacility}
+        dataSection={dataSection}
+        dataTagPackages={dataTagPackages}
+        dataKota={dataKota}
+      />
 
       {/* Sort Button */}
       <SortFilterComponent />
@@ -41,13 +80,7 @@ const HorizontalFilterBar = ({
       {/* Dynamic Filter Tags */}
       <div className="scrollbar-hide flex items-center gap-1 overflow-visible overflow-x-auto whitespace-nowrap">
         {dataTagPackages.map((tag) => (
-          <PromoTagFilter
-            key={tag.id}
-            label={tag.name}
-            slug={tag.slug}
-            setTagSlug={setTagSlug}
-            filters={filters}
-          />
+          <PromoTagFilter key={tag.id} label={tag.name} slug={tag.slug} />
         ))}
       </div>
     </div>

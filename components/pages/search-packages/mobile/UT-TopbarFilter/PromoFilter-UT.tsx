@@ -1,17 +1,16 @@
 import { Button } from '@/components/ui/button'
+import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 
 const PromoTagFilter = ({
   label = '',
-  setTagSlug,
-  filters,
   slug,
 }: {
   label?: string
-  setTagSlug: (tagSlug: string) => void
-  filters: any
   slug: string
 }) => {
+  const { setTagSlug, filters } = useFilterProduct()
+
   const updateQueryParams = useUpdateQueryParams()
 
   // Handle tag click - toggle active state
