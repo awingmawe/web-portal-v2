@@ -14,7 +14,7 @@ import { PriceDrawer } from '@/components/pages/search-packages/mobile/BottomFil
 import { PromoDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PromoFilter'
 import { SectionDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SectionFilter'
 import FilterSection from '@/components/pages/search-packages/mobile/UT-TopbarFilter/FilterContent/FilterSection'
-import TagButton from '@/components/pages/search-packages/mobile/UT-TopbarFilter/FilterContent/TagButton'
+import TagButton from '@/components/pages/search-packages/mobile/UT-TopbarFilter/TagButton'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -87,12 +87,15 @@ export default function FilterPanel({
     useState<ExpandableSection | null>(null)
 
   // Mapping data untuk setiap section
-  const dataMapping = {
-    facilities: dataFacility.results,
-    sections: dataSection || [],
-    locations: dataKota.results,
-    promos: dataTagPackages || [],
-  }
+  const dataMapping = useMemo(
+    () => ({
+      facilities: dataFacility.results,
+      sections: dataSection || [],
+      locations: dataKota.results,
+      promos: dataTagPackages || [],
+    }),
+    [dataFacility.results, dataSection, dataKota.results, dataTagPackages]
+  )
 
   // Mapping setter function
   const setterMapping = {
@@ -103,12 +106,66 @@ export default function FilterPanel({
   }
 
   // Mapping field name untuk data
-  const fieldMapping = {
-    facilities: { name: 'name', code: 'code' },
-    sections: { name: 'name', code: 'slug' },
-    locations: { name: 'name', code: 'id' },
-    promos: { name: 'name', code: 'slug' },
-  }
+  const fieldMapping = useMemo(
+    () => ({
+      facilities: { name: 'name', code: 'code' },
+      sections: { name: 'name', code: 'slug' },
+      locations: { name: 'name', code: 'id' },
+      promos: { name: 'name', code: 'slug' },
+    }),
+    []
+  )
+
+  // Function untuk sorting data - yang aktif di depan
+  const sortedDataMapping = useMemo(() => {
+    const getSortedData = (sectionKey: ExpandableSection) => {
+      const data = dataMapping[sectionKey]
+      if (!data || data.length === 0) return []
+
+      const fields = fieldMapping[sectionKey]
+      let activeValues: string[] = []
+
+      // Ambil active values berdasarkan section
+      switch (sectionKey) {
+        case 'facilities':
+          activeValues = filters.facilityCode
+            ? filters.facilityCode.split(',')
+            : []
+          break
+        case 'sections':
+          activeValues = filters.section ? filters.section.split(',') : []
+          break
+        case 'locations':
+          activeValues = filters.organizationInstanceCity
+            ? filters.organizationInstanceCity.split(',')
+            : []
+          break
+        case 'promos':
+          activeValues = filters.tagSlug ? filters.tagSlug.split(',') : []
+          break
+      }
+
+      if (activeValues.length === 0) return data
+
+      // Pisahkan active dan inactive items
+      const activeItems = data.filter((item: any) =>
+        activeValues.includes(String(item[fields.code]))
+      )
+      const inactiveItems = data.filter(
+        (item: any) => !activeValues.includes(String(item[fields.code]))
+      )
+
+      // Gabungkan: active first, then inactive
+      return [...activeItems, ...inactiveItems]
+    }
+
+    return {
+      facilities: getSortedData('facilities'),
+      sections: getSortedData('sections'),
+      locations: getSortedData('locations'),
+      promos: getSortedData('promos'),
+    }
+  }, [dataMapping, fieldMapping, filters])
 
   // Calculate active filter count
   const activeFilterCount = useMemo(() => {
@@ -337,9 +394,9 @@ export default function FilterPanel({
     },
   ]
 
-  // Render FilterSection berdasarkan config
+  // Render FilterSection berdasarkan config - DENGAN DATA YANG SUDAH DISORT
   const renderFilterSection = (config: SectionConfig) => {
-    const data = dataMapping[config.key]
+    const data = sortedDataMapping[config.key] // Gunakan sorted data
     if (!data || data.length === 0) return null
 
     const fields = fieldMapping[config.key]
@@ -429,7 +486,7 @@ export default function FilterPanel({
             </span>
           )}
         </div>
-        <DrawerContent className="px-4">
+        <DrawerContent className="!max-h-[95vh] px-4">
           <DialogTitle className="hidden">Filter</DialogTitle>
           <DrawerHeader className="px-0 pb-0">
             <div className="mb-5 flex items-center justify-between">
@@ -443,7 +500,7 @@ export default function FilterPanel({
             </div>
           </DrawerHeader>
 
-          <div className="flex flex-col gap-4 overflow-y-auto">
+          <div className="scrollbar-hide flex flex-col gap-4 overflow-y-auto">
             {/* Price Range */}
             <FilterSection icon={<MoneysIconPrimary />} title="Harga">
               <PriceDrawer
@@ -458,7 +515,7 @@ export default function FilterPanel({
 
             <div className="h-px border border-[#e5e5e5]" />
 
-            {/* Render semua sections */}
+            {/* Render semua sections dengan data yang sudah di-sort */}
             {sectionsConfig.map((config) => renderFilterSection(config))}
           </div>
 
