@@ -6,8 +6,10 @@ import { Fragment } from 'react'
 const TitleKurs = ({ currency }: { currency: string }) => {
   return (
     <p className="heading-3-bold text-center max-lg:text-sm max-lg:leading-5 max-lg:font-semibold">
-      Pahami Alur Transaksi Haji Harga{' '}
-      {currency === 'IDR' ? 'Rupiah' : 'Dollar'} Sebelum Kamu Checkout!
+      {currency !== 'Personal'
+        ? `Pahami Alur Transaksi Haji Harga${' '}
+        ${currency === 'IDR' ? 'Rupiah' : 'Dollar'} Sebelum Kamu Checkout!`
+        : 'Pahami Alur Transaksi Umroh Kamu!'}
     </p>
   )
 }
@@ -62,8 +64,50 @@ const steps: Step[] = [
   },
 ]
 
+const stepsPersonal: Step[] = [
+  {
+    id: 1,
+    image: '/illustration/step-1-kurs.svg',
+    description: 'Lakukan pembayaran DP sesuai dengan ketentuan minimum',
+  },
+  {
+    arrow: true,
+    image: '/illustration/arrow-line.svg',
+  },
+  {
+    id: 2,
+    image: '/illustration/step-2-kurs.svg',
+    description:
+      'Tunggu konfirmasi travel selama 1x24 Jam terkait ketersediaan kuota',
+  },
+  {
+    arrow: true,
+    image: '/illustration/arrow-line.svg',
+  },
+  {
+    id: 3,
+    image: '/illustration/step-3-kurs.svg',
+    description: 'Lakukan pengisian data jemaah dan lunasi sisa pembayaran ',
+    subDescription: '*Lengkapi satu bulan sebelum keberangkatan',
+  },
+  {
+    arrow: true,
+    image: '/illustration/arrow-line.svg',
+  },
+  {
+    id: 4,
+    image: '/illustration/step-4-kurs.svg',
+    description: 'Kamu siap untuk berangkat umroh!',
+  },
+]
+
 const ContentKurs = ({ currency }: { currency: string }) => {
-  const filteredSteps = currency === 'IDR' ? steps.slice(2) : steps
+  const filteredSteps =
+    currency === 'IDR'
+      ? steps.slice(2)
+      : currency === 'Personal'
+        ? stepsPersonal
+        : steps
 
   return (
     <Fragment>
