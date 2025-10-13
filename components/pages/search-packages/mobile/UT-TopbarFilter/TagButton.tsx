@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 
 interface TagButtonProps {
   label: string
@@ -6,6 +7,8 @@ interface TagButtonProps {
   filters: any
   name: string
   setFilters: (filter: string) => void
+  shouldUpdate?: boolean
+  paramName?: string
 }
 
 // Tag Button Component
@@ -15,7 +18,10 @@ const TagButton: React.FC<TagButtonProps> = ({
   filters,
   setFilters,
   name,
+  shouldUpdate = false,
+  paramName,
 }) => {
+  const updateQueryParams = useUpdateQueryParams()
   // Handle tag click - toggle active state
   const handleTagClick = (code: string) => {
     // Get current active tags from context
@@ -37,6 +43,15 @@ const TagButton: React.FC<TagButtonProps> = ({
 
     // Update context
     setFilters(itemsString)
+
+    if (shouldUpdate && paramName) {
+      if (itemsString) {
+        updateQueryParams([paramName, 'page'], [itemsString, 1])
+      } else {
+        // If no items selected, remove the parameter from URL
+        updateQueryParams([paramName], [''])
+      }
+    }
   }
 
   // Helper function to check if a tag is active

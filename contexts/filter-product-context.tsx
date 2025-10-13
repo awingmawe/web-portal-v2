@@ -392,7 +392,7 @@ export const FilterProductProvider: React.FC<{
         queryObject.type = params.get('type')
       }
       if (params.has('lC')) {
-        queryObject.type = params.get('lC')
+        queryObject.organizationInstanceCity = params.get('lC')
       }
 
       return queryObject
