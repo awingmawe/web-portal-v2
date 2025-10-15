@@ -38,7 +38,7 @@ export default function ScrollShadowWrapper({
       ref={scrollContainerRef}
     >
       <div
-        className={`sticky top-0 z-30 col-span-12 bg-white ps-4 pb-2 transition-shadow duration-200 lg:hidden ${
+        className={`sticky top-0 z-30 col-span-12 bg-white px-4 pb-2 transition-shadow duration-200 lg:hidden ${
           isScrolled ? 'shadow-[0_6px_20px_0_rgba(0,0,0,0.15)]' : ''
         }`}
       >

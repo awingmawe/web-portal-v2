@@ -7,6 +7,7 @@ import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
+import { formatCurrencyIndonesia } from '@/lib/utils'
 import { useMemo } from 'react'
 
 // Skeleton Component
@@ -61,17 +62,61 @@ const HorizontalFilterBar = ({
     setSection,
     setTagSlug,
     setLocationFilter,
+    setPriceRange,
   } = useFilterProduct()
+
+  // Price Range
+  const prMinParam = filters.priceRange?.hargaMin
+  const prMaxParam = filters.priceRange?.hargaMax
+
   // Generate active filter tags dari semua filter types
   const activeFilterTags = useMemo(() => {
     const tags: Array<{
-      type: 'facility' | 'section' | 'location' | 'promo'
+      type: 'price' | 'facility' | 'section' | 'location' | 'promo'
       label: string
       code: string
       filterName: string
       setter: any
       paramName: string
     }> = []
+
+    // Price Range - cek dari params apakah berbeda dari default
+    if (prMinParam || prMaxParam) {
+      // Cek apakah berbeda dari default
+      const isDifferentFromDefault =
+        (prMinParam && Number(prMinParam) !== dataMinMax.min) ||
+        (prMaxParam && Number(prMaxParam) !== dataMinMax.max)
+
+      if (isDifferentFromDefault) {
+        // Format untuk display
+        const minFormatted = prMinParam
+          ? formatCurrencyIndonesia(prMinParam)
+          : formatCurrencyIndonesia(String(dataMinMax.min))
+
+        const maxFormatted = prMaxParam
+          ? formatCurrencyIndonesia(prMaxParam)
+          : formatCurrencyIndonesia(String(dataMinMax.max))
+
+        let label = ''
+
+        if (prMinParam && prMaxParam) {
+          label = `Rp${minFormatted} - Rp${maxFormatted}`
+        } else if (prMinParam) {
+          label = `Min Rp${minFormatted}`
+        } else if (prMaxParam) {
+          label = `Max Rp${maxFormatted}`
+        }
+
+        tags.push({
+          type: 'price',
+          label: label,
+          code: 'price-range',
+          filterName: 'priceRange',
+          setter: setPriceRange,
+          paramName: 'price',
+        })
+      }
+    }
 
     // Active Facilities
     if (filters.facilityCode) {
@@ -151,10 +196,13 @@ const HorizontalFilterBar = ({
 
     return tags
   }, [
+    prMinParam,
+    prMaxParam,
     filters.facilityCode,
     filters.section,
     filters.organizationInstanceCity,
     filters.tagSlug,
+    dataMinMax,
     dataFacility,
     dataSection,
     dataKota,
@@ -163,6 +211,7 @@ const HorizontalFilterBar = ({
     setSection,
     setLocationFilter,
     setTagSlug,
+    setPriceRange,
   ])
 
   // Hitung apakah ada filter aktif
