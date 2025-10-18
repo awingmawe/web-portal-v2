@@ -49,3 +49,13 @@ export async function getbankCredit(): Promise<any> {
     throw error
   }
 }
+
+export async function getProvider(): Promise<any> {
+  try {
+    const response = await apiWithAuth.get(`/banking/v2/credit/providers`)
+    return response.data
+  } catch (error) {
+    console.error('Error get providers:', error)
+    throw error
+  }
+}

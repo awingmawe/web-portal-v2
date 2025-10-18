@@ -1,5 +1,6 @@
 import { metadata } from '@/app/shared-metadata'
-import PembiayaanPage from '@/components/pages/banking/2-Pembiayaan/PembiayaanPage'
+import PembiayaanLanding from '@/components/pages/banking/credit/landing/1-LandingPembiayaan'
+import StepByStepPembiayaan from '@/components/pages/banking/credit/landing/2-StepPembiayaan'
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
@@ -18,7 +19,7 @@ export default async function SearchGeneral() {
 
   return (
     <Fragment>
-      <Topbar shadow scrolled token={token} />
+      <Topbar scrolled token={token} />
 
       {/* Mobile (tanpa wrapper) */}
       <MobileTopbar
@@ -26,14 +27,16 @@ export default async function SearchGeneral() {
         showBackButton
         title="Pembiayaan Umroh"
       />
-      <div className="mx-auto block lg:container lg:hidden">
-        <PembiayaanPage />
-      </div>
+      <main className="my-6 max-lg:mt-17.5">
+        <PembiayaanLanding />
 
-      {/* Desktop (dengan wrapper) */}
-      <div className="container mx-auto hidden lg:block">
-        <PembiayaanPage />
-      </div>
+        <StepByStepPembiayaan />
+
+        <p className="text-xs-regular text-center text-neutral-300 max-md:px-4">
+          *Jika berhasil disetujui, kamu harus menyelesaikan administrasi
+          tergantung mitra dan travel dipilih.
+        </p>
+      </main>
 
       <Footer type="compact" className="hidden lg:block" />
     </Fragment>
