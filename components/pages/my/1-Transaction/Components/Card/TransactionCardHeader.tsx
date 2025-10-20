@@ -1,3 +1,4 @@
+import ButtonInfoTrans from '@/components/pages/detail-package/2-PackageVariant/component/ButtonInfoTrans'
 import { STATUS_BOOKING } from '@/constant/env'
 import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
 import { addHours, format } from 'date-fns'
@@ -11,6 +12,7 @@ export interface TransactionCardHeader {
   packageType: string
   modifiedAt?: string
   variantType?: string
+  currency: string
 }
 
 export default function TransactionCardHeader({
@@ -20,6 +22,7 @@ export default function TransactionCardHeader({
   isPaidOff,
   modifiedAt,
   variantType,
+  currency,
 }: TransactionCardHeader) {
   const { isCompletedHajjKhusus, isCompletedHajjRegular, isCompletedUmrah } =
     useGetStatusValidation({
@@ -87,9 +90,16 @@ export default function TransactionCardHeader({
     <div
       className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor()}`}
     >
-      <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
-        {renderStatusText()}
-      </h3>
+      <div className="flex justify-between">
+        <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
+          {renderStatusText()}
+        </h3>
+        <ButtonInfoTrans
+          currency={currency}
+          packageType={packageType}
+          title={''}
+        />
+      </div>
     </div>
   )
 }

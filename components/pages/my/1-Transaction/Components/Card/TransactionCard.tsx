@@ -5,6 +5,7 @@ import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
 import { TimerIcon } from '@/components/icons/timer'
 import { UsersIcon } from '@/components/icons/user'
+import ButtonInfoTrans from '@/components/pages/detail-package/2-PackageVariant/component/ButtonInfoTrans'
 import TransactionCardFooter from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardFooter'
 import TransactionCardHeader from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardHeader'
 import TransactionCardPayment from '@/components/pages/my/1-Transaction/Components/Card/TransactionCardPayment'
@@ -435,6 +436,7 @@ export default function TransactionCard({
             modifiedAt={transactionData.modifiedAt}
             packageType={transactionData.packageType}
             variantType={transactionData.variantType}
+            currency={transactionData.currency}
           />
         )}
       </ConditionalLink>
@@ -459,6 +461,14 @@ export default function TransactionCard({
                   .locale('id')
                   .format('DD MMM YYYY')}
             </p>
+
+            {!lg && (
+              <ButtonInfoTrans
+                currency={transactionData.currency}
+                packageType={transactionData.packageType}
+                title={transactionData.variantType}
+              />
+            )}
           </div>
 
           <div className="flex items-center">

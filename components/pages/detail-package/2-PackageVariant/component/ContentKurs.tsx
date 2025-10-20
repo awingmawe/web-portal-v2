@@ -1,15 +1,28 @@
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { CircleChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { Fragment } from 'react'
 
 const TitleKurs = ({ currency }: { currency: string }) => {
+  const title = [
+    { key: 'personal', title: 'Pahami Alur Transaksi Umroh Personal Kamu!' },
+    { key: 'umrah', title: 'Pahami Alur Transaksi Umroh Kamu!' },
+  ] as const
+
+  const matched = title.find(
+    (t) => t.key.toLowerCase() === currency.toLowerCase()
+  )
+
+  const displayTitle =
+    matched?.title ??
+    `Pahami Alur Transaksi Haji Harga ${
+      currency === 'IDR' ? 'Rupiah' : 'Dollar'
+    } Sebelum Kamu Checkout!`
+
   return (
     <p className="heading-3-bold text-center max-lg:text-sm max-lg:leading-5 max-lg:font-semibold">
-      {currency !== 'Personal'
-        ? `Pahami Alur Transaksi Haji Harga${' '}
-        ${currency === 'IDR' ? 'Rupiah' : 'Dollar'} Sebelum Kamu Checkout!`
-        : 'Pahami Alur Transaksi Umroh Kamu!'}
+      {displayTitle}
     </p>
   )
 }
@@ -67,6 +80,54 @@ const steps: Step[] = [
 const stepsPersonal: Step[] = [
   {
     id: 1,
+    image: '/illustration/step-2-kurs.svg',
+    description:
+      'Tunggu maks. 2x24 jam untuk penawaran travel sesuai permintaan kamu',
+  },
+  {
+    arrow: true,
+    image: '/illustration/arrow-line.svg',
+  },
+  {
+    id: 2,
+    image: '/illustration/step-personal-2.svg',
+    description:
+      'Pilih penawaran dari travel yang sesuai dengan permintaan kamu',
+  },
+  {
+    arrow: true,
+    image: '/illustration/arrow-line.svg',
+  },
+  {
+    id: 3,
+    image: '/illustration/step-1-kurs.svg',
+    description: 'Lakukan pembayaran DP sesuai dengan nominal yang diminta',
+  },
+  {
+    arrow: true,
+    image: '/illustration/arrow-line.svg',
+  },
+  {
+    id: 4,
+    image: '/illustration/step-3-kurs.svg',
+    description: 'Lakukan pengisian data jemaah dan lunasi sisa pembayaran',
+  },
+  {
+    arrow: true,
+    image: '/illustration/arrow-line.svg',
+  },
+  {
+    id: 5,
+    image: '/illustration/step-4-kurs.svg',
+    description: 'Kamu siap untuk berangkat umroh!',
+    subDescription:
+      '*Kamu akan dihubungi langsung oleh travel untuk detail lainnya',
+  },
+]
+
+const stepsUmrah: Step[] = [
+  {
+    id: 1,
     image: '/illustration/step-1-kurs.svg',
     description: 'Lakukan pembayaran DP sesuai dengan ketentuan minimum',
   },
@@ -102,12 +163,16 @@ const stepsPersonal: Step[] = [
 ]
 
 const ContentKurs = ({ currency }: { currency: string }) => {
-  const filteredSteps =
-    currency === 'IDR'
-      ? steps.slice(2)
-      : currency === 'Personal'
-        ? stepsPersonal
-        : steps
+  let filteredSteps
+  if (currency === 'umrah') {
+    filteredSteps = stepsUmrah
+  } else if (currency === 'personal') {
+    filteredSteps = stepsPersonal
+  } else if (currency === 'IDR') {
+    filteredSteps = steps.slice(2)
+  } else {
+    filteredSteps = steps
+  }
 
   return (
     <Fragment>
@@ -152,19 +217,23 @@ const FooterKurs = ({
   onCheckout,
   checked,
   onCheckedChange,
+  disabledCheck,
 }: {
   onCheckout: () => void
   checked?: boolean
   onCheckedChange?: (checked: boolean) => void
+  disabledCheck?: boolean
 }) => {
   return (
     <div className="flex w-full flex-col items-center gap-4">
-      <Checkbox
-        label="Jangan tampilkan informasi ini lagi"
-        classNameParent="[&_label]:text-xs [&_label]:font-regular !p-0 [&_label]:text-neutral-500"
-        checked={checked}
-        onCheckedChange={onCheckedChange}
-      />
+      {!disabledCheck && (
+        <Checkbox
+          label="Jangan tampilkan informasi ini lagi"
+          classNameParent="[&_label]:text-xs [&_label]:font-regular !p-0 [&_label]:text-neutral-500"
+          checked={checked}
+          onCheckedChange={onCheckedChange}
+        />
+      )}
       <Button
         className="w-full rounded-full py-3"
         variant="default"
@@ -173,6 +242,7 @@ const FooterKurs = ({
         onClick={onCheckout}
       >
         Lanjut Checkout
+        <CircleChevronRight className="w-[14px]" />
       </Button>
     </div>
   )

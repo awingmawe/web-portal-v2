@@ -183,7 +183,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
           }}
           checked={isChecked}
           onCheckedChange={onCheckedChange}
-          currency="Personal"
+          currency="personal"
         />
       </form>
     </Form>

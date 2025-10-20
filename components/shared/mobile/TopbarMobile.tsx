@@ -3,6 +3,7 @@
 
 import { ArrowIcon } from '@/components/icons/arrow'
 import { CallCenterIcon } from '@/components/icons/call-center'
+import ButtonInfoTrans from '@/components/pages/detail-package/2-PackageVariant/component/ButtonInfoTrans'
 import ShareDrawer from '@/components/pages/detail-package/mobile/DrawerShare'
 import FilterDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/FilterDrawerMobile'
 import QuestionDrawer from '@/components/pages/search-packages/mobile/TopFilterMobile/QuestionDrawer'
@@ -59,6 +60,12 @@ interface MobileTopbarProps {
   searchValue?: string
   onCancelSearch?: () => void
   onFilterChange?: () => void
+  messageInfo?: boolean
+  messageInfoParam?: {
+    packageType: string
+    currency: string
+    title: string
+  }
 }
 
 const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
@@ -75,6 +82,12 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
     titleLink = '',
     token,
     packageId,
+    messageInfo = false,
+    messageInfoParam = {
+      packageType: '',
+      currency: '',
+      title: '',
+    },
   }) => {
     const { filters } = useFilterProduct()
     const { goBack } = useCustomNavigation()
@@ -413,6 +426,16 @@ const MobileTopbar: React.FC<MobileTopbarProps> = React.memo(
         {renderContent()}
 
         {renderActionButton()}
+
+        {messageInfo && (
+          <div>
+            <ButtonInfoTrans
+              currency={messageInfoParam.currency}
+              packageType={messageInfoParam.packageType}
+              title={messageInfoParam.title}
+            />
+          </div>
+        )}
 
         {showNotification && !searchQuery && (
           <div className={`relative ml-auto ${dissolve}`}>
