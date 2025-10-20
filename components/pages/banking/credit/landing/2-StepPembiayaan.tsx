@@ -20,7 +20,7 @@ const StepByStepPembiayaan = () => {
     },
   ]
   return (
-    <section className="scrollbar-hide mx-auto py-6 max-lg:py-4 max-md:overflow-x-auto max-md:ps-4 md:container  lg:max-w-4xl xl:max-w-5xl">
+    <section className="scrollbar-hide mx-auto py-6 max-lg:py-4 max-md:overflow-x-auto max-md:ps-4 md:container lg:max-w-4xl xl:max-w-5xl">
       <div className="flex gap-4 overflow-visible whitespace-nowrap md:grid md:grid-cols-4">
         {dataStepByStep.map((item, index) => (
           <div

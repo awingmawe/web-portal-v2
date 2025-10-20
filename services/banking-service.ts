@@ -1,4 +1,8 @@
-import { apiWithAuth } from '@/services/common/http'
+import { GetListQuery } from '@/constant/types/GeneralProps'
+import { ResponseProvider } from '@/constant/types/Providers'
+import { api, apiWithAuth } from '@/services/common/http'
+import { AxiosResponse } from 'axios'
+import qs from 'query-string'
 
 export async function postSaving(payload: any): Promise<any> {
   try {
@@ -50,12 +54,8 @@ export async function getbankCredit(): Promise<any> {
   }
 }
 
-export async function getProvider(): Promise<any> {
-  try {
-    const response = await apiWithAuth.get(`/banking/v2/credit/providers`)
-    return response.data
-  } catch (error) {
-    console.error('Error get providers:', error)
-    throw error
-  }
+export async function getProvider(
+  query: GetListQuery
+): Promise<AxiosResponse<ResponseProvider>> {
+  return api.get(`/public/banking/v2/credit/providers?${qs.stringify(query)}`)
 }
