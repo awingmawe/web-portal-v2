@@ -58,7 +58,8 @@ interface FilterProductContextType {
     searchParamsString: any,
     sortValue: any,
     type: string,
-    page: number
+    page: number,
+    supportedProvider?: string
   ) => any
   initializeFiltersFromURL: (needLoading?: boolean) => void
   fetchPackageData: (params?: any) => void
@@ -317,7 +318,8 @@ export const FilterProductProvider: React.FC<{
       searchParamsString: string,
       sortValue: string = 'price-low',
       type: string = 'umrah',
-      page: number = 1
+      page: number = 1,
+      supportedProvider?: string
     ) => {
       const params = new URLSearchParams(searchParamsString)
       const queryObject: Record<string, any> = {
@@ -393,6 +395,11 @@ export const FilterProductProvider: React.FC<{
       }
       if (params.has('lC')) {
         queryObject.organizationInstanceCity = params.get('lC')
+      }
+
+      // Extract for pembiayaan
+      if (supportedProvider) {
+        queryObject.organizationInstanceId = supportedProvider
       }
 
       return queryObject

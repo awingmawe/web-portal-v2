@@ -1,10 +1,16 @@
 import { metadata } from '@/app/shared-metadata'
-import PembiayaanPage from '@/components/pages/banking/2-Pembiayaan/PembiayaanPage'
+import PembiayaanLanding from '@/components/pages/banking/credit/landing/1-LandingPembiayaan'
+import StepByStepPembiayaan from '@/components/pages/banking/credit/landing/2-StepPembiayaan'
+import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
+import { mapProductsToCardData } from '@/lib/utils'
+import { getProvider } from '@/services/banking-service'
 import { cookieNames } from '@/services/common/cookie'
+import { getPackageList } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
+import Link from 'next/link'
 import { Fragment } from 'react'
 export async function generateMetadata() {
   return {
@@ -16,9 +22,26 @@ export default async function SearchGeneral() {
   const token = (await cookieStore).get(cookieNames.USER_ACCESS_TOKEN)
     ?.value as string
 
+  const dataProvider = await getProvider({ page: 1, size: 10 })
+
+  const uniqueSupportedOrgs = [
+    ...new Set(
+      dataProvider?.data?.data?.flatMap(
+        (provider) => provider.supported_organizations
+      )
+    ),
+  ]
+
+  const dataPackageProvider = await getPackageList({
+    page: 1,
+    size: 12,
+    packageType: 'umrah',
+    ['organizationInstanceId:in']: uniqueSupportedOrgs.join(','),
+  })
+
   return (
     <Fragment>
-      <Topbar shadow scrolled token={token} />
+      <Topbar scrolled token={token} />
 
       {/* Mobile (tanpa wrapper) */}
       <MobileTopbar
@@ -26,14 +49,29 @@ export default async function SearchGeneral() {
         showBackButton
         title="Pembiayaan Umroh"
       />
-      <div className="mx-auto block lg:container lg:hidden">
-        <PembiayaanPage />
-      </div>
+      <main className="my-6 max-lg:mt-17.5">
+        <PembiayaanLanding />
 
-      {/* Desktop (dengan wrapper) */}
-      <div className="container mx-auto hidden lg:block">
-        <PembiayaanPage />
-      </div>
+        <StepByStepPembiayaan />
+
+        <p className="text-xs-regular text-center text-neutral-300 max-md:px-4">
+          *Jika berhasil disetujui, kamu harus menyelesaikan administrasi
+          tergantung mitra dan travel dipilih.
+        </p>
+
+        <PackageListEvent
+          dataPembiayaan={mapProductsToCardData(dataPackageProvider)}
+          eventCategory="pembiayaan"
+          className="container mx-auto flex flex-col space-y-6 max-lg:space-y-4"
+        />
+
+        <Link
+          href={`/search?package=pembiayaan`}
+          className="bg-primary-500 text-s-regular hover:bg-primary-700 mx-auto mt-6 flex w-fit rounded-full px-10 py-4 text-center transition-all duration-300"
+        >
+          Cari Paket Lain
+        </Link>
+      </main>
 
       <Footer type="compact" className="hidden lg:block" />
     </Fragment>

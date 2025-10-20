@@ -30,26 +30,30 @@ export const HeaderPackageList = memo(function HeaderPackageList({
         </p>
         <p className="text-m-regular max-lg:text-xs max-lg:leading-4">{desc}</p>
       </div>
-      <Link
-        href={`/search?${params}=${type}`}
-        id={`link-see-all-${type}`}
-        className="max-sm:hidden"
-        onClick={() => {
-          pushEvent({
-            name: 'click_more',
-            category: 'home',
-            topic: packageType,
-            data: {
-              section: type,
-            },
-          })
-        }}
-      >
-        <Button className="items-center gap-1 px-3 py-2" size="xs">
-          <p className="text-m-regular text-neutral-900">Lihat Paket Lainnya</p>
-          <ArrowDiagonalIcon size={24} />
-        </Button>
-      </Link>
+      {type && (
+        <Link
+          href={`/search?${params}=${type}`}
+          id={`link-see-all-${type}`}
+          className="max-sm:hidden"
+          onClick={() => {
+            pushEvent({
+              name: 'click_more',
+              category: 'home',
+              topic: packageType,
+              data: {
+                section: type,
+              },
+            })
+          }}
+        >
+          <Button className="items-center gap-1 px-3 py-2" size="xs">
+            <p className="text-m-regular text-neutral-900">
+              Lihat Paket Lainnya
+            </p>
+            <ArrowDiagonalIcon size={24} />
+          </Button>
+        </Link>
+      )}
     </div>
   )
 })

@@ -16,18 +16,20 @@ import { CardData } from '@/constant/types/PackageProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { ChevronRightCircle } from 'lucide-react'
 import Link from 'next/link'
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import { Fragment, useCallback, useMemo } from 'react'
 
 interface PackageListEventProps {
   dataPromo?: CardData[]
   dataRegular?: CardData[]
   dataPlus?: CardData[]
   dataHaji?: CardData[]
+  dataPembiayaan?: CardData[]
   dataCustom?: PackageTagSlug
   isLoading?: boolean
   eventCategory?: string
   header?: boolean
   params?: string
+  className?: string
 }
 
 interface PackageSectionProps {
@@ -99,7 +101,7 @@ const PackageSection = ({
           >
             <CarouselContent className="-ml-4.5 px-2 max-lg:ml-0">
               {isLoading ? renderSkeletonItems(4, true) : packageItems}
-              {lg && (
+              {lg && type && (
                 <CarouselItem
                   className="mx-4.5 hidden basis-4/5 flex-col items-center
               justify-center rounded-2xl border border-neutral-200 max-lg:flex md:basis-1/2 lg:basis-1/4"
@@ -131,33 +133,14 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   dataRegular,
   dataPlus,
   dataHaji,
+  dataPembiayaan,
   dataCustom,
-  isLoading: externalLoading,
+  isLoading,
   eventCategory,
   header,
   params,
+  className,
 }) => {
-  // Internal loading states
-  const [isPromoLoading, setIsPromoLoading] = useState(true)
-  const [isRegularLoading, setIsRegularLoading] = useState(true)
-  const [isPlusLoading, setIsPlusLoading] = useState(true)
-  const [isHajiLoading, setIsHajiLoading] = useState(true)
-
-  // Use either external or internal loading state - memoize this computation
-  const loading = useMemo(
-    () =>
-      externalLoading !== undefined
-        ? externalLoading
-        : isPromoLoading || isRegularLoading || isPlusLoading || isHajiLoading,
-    [
-      externalLoading,
-      isPromoLoading,
-      isRegularLoading,
-      isPlusLoading,
-      isHajiLoading,
-    ]
-  )
-
   // Create the skeleton carousel items with useCallback
   const renderSkeletonItems = useCallback(
     (count: number, isLoading: boolean) => {
@@ -173,24 +156,6 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
     []
   )
 
-  // Simulate loading or respect the external loading state
-  useEffect(() => {
-    if (externalLoading !== undefined) return
-
-    // Simulate staggered loading for different sections
-    const promoTimer = setTimeout(() => setIsPromoLoading(false), 1)
-    const regularTimer = setTimeout(() => setIsRegularLoading(false), 1)
-    const plusTimer = setTimeout(() => setIsPlusLoading(false), 1)
-    const hajiTimer = setTimeout(() => setIsHajiLoading(false), 1)
-
-    return () => {
-      clearTimeout(promoTimer)
-      clearTimeout(regularTimer)
-      clearTimeout(plusTimer)
-      clearTimeout(hajiTimer)
-    }
-  }, [externalLoading])
-
   // Package section configurations
   const sections = [
     {
@@ -198,7 +163,6 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       description: 'Promo menarik Muslim101 untukmu',
       type: 'promo' as const,
       data: dataPromo,
-      isLoading: isPromoLoading || loading,
       packageType: 'umrah',
       header: header,
       eventCategory,
@@ -209,7 +173,6 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
         'Umroh tanpa khawatir, tinggal berangkat dan ibadah dengan nyaman!',
       type: 'regular' as const,
       data: dataRegular,
-      isLoading: isRegularLoading || loading,
       packageType: 'umrah',
       header: header,
       eventCategory,
@@ -219,7 +182,6 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       description: 'Umroh istimewa plus jalan-jalan ke destinasi pilihan!',
       type: 'plus' as const,
       data: dataPlus || [],
-      isLoading: isPlusLoading || loading,
       packageType: 'umrah',
       header: header,
       eventCategory,
@@ -229,12 +191,20 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
       description: 'Pilihan paket terbaik untuk perjalanan suci kamu!',
       type: 'hajj' as const,
       data: dataHaji || [],
-      isLoading: isHajiLoading || loading,
       header: header,
       packageType: 'hajj',
       params: 'type',
       eventCategory,
     },
+    {
+      title: 'Paket Pembiayaan',
+      description: 'Paket pilihan yang sudah tersedia pembiayaan',
+      data: dataPembiayaan || [],
+      header: header,
+      packageType: 'umrah',
+      eventCategory,
+    },
+
     {
       title: 'Paket Promo Ini!',
       type: dataCustom?.slug,
@@ -246,7 +216,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
   ]
 
   return (
-    <section className="flex flex-col">
+    <section className={`${className} flex flex-col`}>
       {sections.map((section) => (
         <Fragment key={section.title}>
           <PackageSection
@@ -257,7 +227,7 @@ export const PackageListEvent: React.FC<PackageListEventProps> = ({
             type={section.type ?? ''}
             header={section.header ?? true}
             data={section.data ?? []}
-            isLoading={section.isLoading}
+            isLoading={isLoading}
             eventCategory={section.eventCategory}
             params={section.params}
             renderSkeletonItems={renderSkeletonItems}
