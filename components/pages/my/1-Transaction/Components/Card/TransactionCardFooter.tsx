@@ -7,6 +7,7 @@ import { TransactionDetail } from '@/components/pages/my/1-Transaction/Component
 import DrawerPaymentLinkAja from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerPaymentLinkAja'
 import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
 import { BatalkanPesanan } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesanan'
+import { BatalkanPesananInfo } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesananInfo'
 
 import ModalPengembalianDanaDetail from '@/components/pages/my/1-Transaction/Components/Modal/modalPengembalianDanaDetail'
 import ModalSuccessCanceled from '@/components/pages/my/1-Transaction/Components/Modal/modalSukses'
@@ -20,7 +21,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import {
-  CALL_CENTER,
   MIDTRANS_CLIENT_KEY,
   PACKAGE_TYPE,
   SNAP_URL,
@@ -80,6 +80,9 @@ export default function TransactionCardFooter({
   const isLinkAja = sessionStorage.getItem('isLinkAja') === 'true'
   const packageType =
     transaction?.packageSnapshot?.snapshot?.package?.packageType
+  const packageTitle = transaction.packageSnapshot.snapshot.package.title
+  const travelName =
+    transaction.packageSnapshot.snapshot.package.organizationInstance.name
   const { lg } = useTailwindBreakpoint()
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
@@ -94,6 +97,8 @@ export default function TransactionCardFooter({
     setOpen,
     openBatalkan,
     setOpenBatalkan,
+    openBatalkanInfo,
+    setOpenBatalkanInfo,
     openModalRefund,
     setOpenModalRefund,
     openModalSukses,
@@ -401,15 +406,24 @@ export default function TransactionCardFooter({
                 Batalkan Pesanan
               </p>
             ) : (
-              <Link
-                href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
-                className="cursor-pointer p-3 hover:bg-gray-50"
-                target="_blank"
+              <p
+                className="text-m-regular text-error-500 cursor-pointer p-3 hover:bg-gray-50"
+                onClick={() => {
+                  console.log(transaction)
+                  setOpenBatalkanInfo(true)
+                }}
               >
-                <p className="text-m-regular text-error-500">
-                  Batalkan Pesanan
-                </p>
-              </Link>
+                Batalkan Pesanan
+              </p>
+              // <Link
+              //   href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
+              //   className="cursor-pointer p-3 hover:bg-gray-50"
+              //   target="_blank"
+              // >
+              //   <p className="text-m-regular text-error-500">
+              //     Batalkan Pesanan
+              //   </p>
+              // </Link>
             )}
           </div>
         </PopoverContent>
@@ -711,6 +725,16 @@ export default function TransactionCardFooter({
           setOpenBatalkan={setOpenBatalkan}
           paymentLink={paymentLink}
           paymentToken={paymentToken}
+        />
+      )}
+
+      {openBatalkanInfo && (
+        <BatalkanPesananInfo
+          open={openBatalkanInfo}
+          bookingId={bookingId}
+          onOpenChange={setOpenBatalkanInfo}
+          packageTitle={packageTitle}
+          travelName={travelName}
         />
       )}
 

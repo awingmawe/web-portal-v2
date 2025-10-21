@@ -1,5 +1,6 @@
 import ButtonInfoTrans from '@/components/pages/detail-package/2-PackageVariant/component/ButtonInfoTrans'
 import { STATUS_BOOKING } from '@/constant/env'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
 import { addHours, format } from 'date-fns'
 import { id } from 'date-fns/locale'
@@ -32,6 +33,8 @@ export default function TransactionCardHeader({
       variantType,
       packageType,
     })
+
+  const { lg } = useTailwindBreakpoint()
 
   const renderStatusColor = () => {
     // if user has paid off and has completed manifest
@@ -94,11 +97,13 @@ export default function TransactionCardHeader({
         <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
           {renderStatusText()}
         </h3>
-        <ButtonInfoTrans
-          currency={currency}
-          packageType={packageType}
-          title={''}
-        />
+        {lg && (
+          <ButtonInfoTrans
+            currency={currency}
+            packageType={packageType}
+            title={''}
+          />
+        )}
       </div>
     </div>
   )
