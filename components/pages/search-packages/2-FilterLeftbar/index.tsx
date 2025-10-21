@@ -79,10 +79,6 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
     setSearchQuery(value)
   }, 500) // 500ms delay
 
-  React.useEffect(() => {
-    updateQueryParams(['query', 'page'], [searchQuery, 1])
-  }, [searchQuery, updateQueryParams])
-
   // Sync input value with search query when reset
   React.useEffect(() => {
     setInputValue(searchQuery)

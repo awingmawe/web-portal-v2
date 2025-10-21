@@ -24,6 +24,13 @@ const TagButton: React.FC<TagButtonProps> = ({
   const updateQueryParams = useUpdateQueryParams()
   // Handle tag click - toggle active state
   const handleTagClick = (code: string) => {
+    if (code === 'price-range') {
+      setFilters('')
+
+      updateQueryParams(['prMin', 'prMax', 'page'], ['', '', 1])
+      return
+    }
+
     // Get current active tags from context
     const currentTags = filters?.[name]
       ? filters?.[name].split(',').filter(Boolean)
@@ -56,6 +63,7 @@ const TagButton: React.FC<TagButtonProps> = ({
 
   // Helper function to check if a tag is active
   const isTagActive = (code: string) => {
+    if (code === 'price-range') return true
     if (!filters?.[name]) return false
     const activeTags = filters?.[name].split(',').filter(Boolean)
     return activeTags.includes(code)
