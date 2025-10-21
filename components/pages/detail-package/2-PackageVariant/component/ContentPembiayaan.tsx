@@ -162,7 +162,7 @@ const ContentPembiayaan = ({
 
           {/* Checkout Buttons */}
           <div
-            className={`bg-neutral-0 z-10 col-span-12 ml-auto items-center px-4 py-3 max-lg:fixed max-lg:bottom-0 max-lg:left-0 max-lg:w-full max-lg:px-4 ${dissolve}`}
+            className={`bg-neutral-0 z-10 col-span-12 ml-auto items-center border-none px-4 py-3 max-lg:fixed max-lg:bottom-0 max-lg:left-0 max-lg:w-full max-lg:px-4 ${dissolve}`}
           >
             <div className="flex gap-1.5">
               <Button
