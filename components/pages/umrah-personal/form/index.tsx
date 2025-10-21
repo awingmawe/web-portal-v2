@@ -1,5 +1,6 @@
 'use client'
 
+import ModalKurs from '@/components/pages/detail-package/2-PackageVariant/modal/ModalKurs'
 import Step1JourneyInfo from '@/components/pages/umrah-personal/form/1-InformasiPerjalanan'
 import Step2FlightInfo from '@/components/pages/umrah-personal/form/2-MaskapaiBerangkat'
 import Step3MeccaHotel from '@/components/pages/umrah-personal/form/3-PenginapanHotel/Step3Mecca'
@@ -7,6 +8,7 @@ import Step4MadinahHotel from '@/components/pages/umrah-personal/form/3-Penginap
 import Step5Transportation from '@/components/pages/umrah-personal/form/4-Transportasi'
 import Step6Review from '@/components/pages/umrah-personal/form/5-Review'
 import { Form } from '@/components/ui/form'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { ACTIVITY_TYPES } from '@/constant/schema/umrah-personal-schema/constant'
 import {
   defaultUmrahPersonalForm,
@@ -21,6 +23,7 @@ import { useUmrahPersonal } from '@/contexts/umrah-personal/context'
 import { umrahPersonalRegister } from '@/services/umrah-service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface UmrahPersonalFormSectionProps {
@@ -32,6 +35,10 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
 }) => {
   const { currentStep } = useUmrahPersonal()
   const { pushEvent } = useEventTracker()
+  const [isKursModalOpen, setIsKursModalOpen] = useState(false)
+  const [isChecked, setIsChecked] = useState(false)
+  const [isInfo, setIsInfo] = useState(false)
+
   const router = useRouter()
   const form = useForm<UmrahPersonalFormType>({
     resolver: zodResolver(umrahPersonalFormSchema),
@@ -39,8 +46,29 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
     mode: 'onChange',
   })
 
+  const onCheckedChange = (checked: boolean) => {
+    setIsChecked(checked)
+    if (checked) {
+      localStorage.setItem(PACKAGE_TYPE.UMRAH_PERSONAL, 'true')
+    }
+  }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsChecked(localStorage.getItem(PACKAGE_TYPE.UMRAH_PERSONAL) === 'true')
+    }
+  }, [])
+
   // Final form submission
-  const onSubmit = async (data: UmrahPersonalFormType) => {
+  const onSubmit = async (
+    data: UmrahPersonalFormType,
+    skipInfoCheck = false
+  ) => {
+    if (!skipInfoCheck && !isInfo && !isChecked) {
+      setIsKursModalOpen(true)
+      return
+    }
+
     const payload: RequestFormUmrahPersonal = {
       // Journey Information
       journeyType: data.journeyInformation.journeyType,
@@ -77,7 +105,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
       if (result) {
         pushEvent({
           name: 'submit_create_umroh_personal',
-          category: 'umrah-personal',
+          category: PACKAGE_TYPE.UMRAH_PERSONAL,
           topic: 'umrah',
           data: {
             packageType: payload.journeyType,
@@ -107,7 +135,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
         })
         pushEvent({
           name: 'click_next_umroh_personal',
-          category: 'umrah-personal',
+          category: PACKAGE_TYPE.UMRAH_PERSONAL,
           topic: 'umrah',
           data: {
             stepName: 'Review Pilihan',
@@ -120,11 +148,10 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
     }
   }
 
-  // it should be implement here
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((data) => onSubmit(data))}
         className="max-lg:mt-[54px] lg:pb-[100px]"
       >
         {/* Step 1: Journey Information */}
@@ -145,6 +172,20 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
 
         {/* Step 6: Review */}
         <Step6Review form={form} />
+
+        {/* ✅ Modal confirmation */}
+        <ModalKurs
+          open={isKursModalOpen}
+          setOpen={setIsKursModalOpen}
+          onCheckout={() => {
+            setIsInfo(true)
+            setIsKursModalOpen(false)
+            form.handleSubmit((data) => onSubmit(data, true))()
+          }}
+          checked={isChecked}
+          onCheckedChange={onCheckedChange}
+          currency="personal"
+        />
       </form>
     </Form>
   )

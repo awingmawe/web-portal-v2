@@ -13,6 +13,7 @@ import PriceBreakdown from '@/components/pages/checkout/component/PriceBreakdown
 import ModalCheckout from '@/components/pages/checkout/modal/ModalCheckout'
 import ModalPengembalianDana from '@/components/pages/checkout/modal/ModalPengembalianDana'
 import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
+import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
 import { MIDTRANS_CLIENT_KEY, PACKAGE_TYPE, SNAP_URL } from '@/constant/env'
 import { useCheckoutLogic } from '@/hooks/checkout-hooks/useCheckoutLogic'
@@ -117,15 +118,30 @@ const CheckoutPage = () => {
 
   return (
     <>
+      <MobileTopbar
+        title="Checkout"
+        variant="plain"
+        backgroundColor="bg-white"
+        showBackButton
+        messageInfo={true}
+        messageInfoParam={{
+          packageType: detailVariant?.package.packageType,
+          currency: detailVariant?.package.currency,
+          title: '',
+        }}
+      />
       {/* Main content */}
       <main className="max-lg:mt-[50px] max-lg:pb-[50px]">
         <div className="container mx-auto py-6 lg:px-4">
-          {/* Back button */}
-          <CheckoutHeader />
-
           <div className="flex flex-col gap-5 max-lg:gap-4 lg:flex-row">
             {/* Left section */}
             <div className="w-full space-y-5 max-lg:order-2 max-lg:space-y-4 lg:w-2/3">
+              {/* Back button */}
+              <CheckoutHeader
+                packageType={detailVariant?.package.packageType}
+                currency={detailVariant?.package.currency}
+                title={title}
+              />
               {/* Divider */}
               <div className="h-1 w-full bg-neutral-100 lg:hidden" />
 

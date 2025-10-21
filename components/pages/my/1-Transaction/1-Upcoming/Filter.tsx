@@ -217,7 +217,7 @@ export const SearchAndFilterMobile = ({
         return 'Semua Produk'
       case 'umrah':
         return 'Umroh'
-      case 'umrah-personal':
+      case PACKAGE_TYPE.UMRAH_PERSONAL:
         return 'Umroh Personal'
       case PACKAGE_TYPE.HAJJ:
         return 'Haji'

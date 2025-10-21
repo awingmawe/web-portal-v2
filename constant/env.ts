@@ -37,6 +37,7 @@ export const PACKAGE_TYPE = {
   HAJJ_DAKHILI: 'hajj-dakhili',
   HAJJ: 'hajj',
   UMRAH: 'umrah',
+  UMRAH_PERSONAL: 'umrah-personal',
 }
 
 export const STATUS_BOOKING = {
