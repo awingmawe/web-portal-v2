@@ -250,7 +250,7 @@ export default function FinancingSimulation({
                     </span>
                   </AccordionTrigger>
                   <span className="text-m-semibold text-right">
-                    {formatCurrency(data.totalAmount)}
+                    {formatCurrency(data.loan_amount)}
                   </span>
                 </div>
                 <AccordionContent className="py-2">
