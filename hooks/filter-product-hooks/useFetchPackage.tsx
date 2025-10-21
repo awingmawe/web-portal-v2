@@ -48,7 +48,8 @@ export function useFetchPackage() {
         maxDpAmount: queryParams.maxDp,
         packageType: queryParams.type,
         organizationInstanceCity: queryParams.organizationInstanceCity,
-        ['organizationInstanceId:in']: queryParams.organizationInstanceId,
+        ['organizationInstanceId:in']:
+          queryParams.organizationInstanceId || undefined,
       }
 
       const response = await getPackageList(apiParams)

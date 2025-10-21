@@ -114,7 +114,6 @@ const CheckoutDrawerMobile = React.memo(
       formattedArrival,
       formattedDeparture,
       getTotalQty,
-      availableRoomTypes,
     } = usePackageVariant()
 
     const handleWhatsAppShare = () => {
@@ -357,11 +356,9 @@ const CheckoutDrawerMobile = React.memo(
                         variant="default"
                         disabled={
                           isEmptyRoomType &&
-                          availableRoomTypes.double &&
-                          availableRoomTypes.triple &&
-                          availableRoomTypes.quad
-                            ? true
-                            : false
+                          Object.values(selectedRoomType || {}).every(
+                            (value) => value === 0
+                          )
                         }
                         onClick={handleLocalStorage}
                       >

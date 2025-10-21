@@ -1,10 +1,10 @@
 'use client'
 
-import { useGetProvider } from '@/hooks/filter-product-hooks/useGetProvider'
+import { useGetProvider } from '@/services/hooks/banking-service/credits-api'
 import { useMemo } from 'react'
 
 export const useUniqueSupportedProviders = (isPaused: boolean) => {
-  const { data: dataProviders } = useGetProvider(
+  const { data: dataProviders, isLoading } = useGetProvider(
     {
       page: 1,
       size: 10,
@@ -28,5 +28,9 @@ export const useUniqueSupportedProviders = (isPaused: boolean) => {
     [dataProviders]
   )
 
-  return uniqueSupportedProviders.join(',')
+  return {
+    isLoading,
+    dataProviders,
+    uniqueSupportedProviders: uniqueSupportedProviders.join(','),
+  }
 }

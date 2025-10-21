@@ -70,7 +70,6 @@ export default async function SearchGeneral({
   const maxDpAmount = awaitedParams.dpMax || undefined
   const packageType = awaitedParams.packageType || 'umrah'
   const organizationInstanceCity = awaitedParams.lC || undefined
-  const packagePembiayaan = awaitedParams.package || undefined
 
   // Order Filter
   // Handle sorting options
@@ -186,8 +185,7 @@ export default async function SearchGeneral({
 
       <Topbar token={token} scrolled />
 
-      {/* Ini untuk pembiayaan dihilangkan */}
-      {packagePembiayaan !== 'pembiayaan' && <SearchTopbar />}
+      <SearchTopbar />
       <main className="my-7.5 max-lg:fixed max-lg:mt-auto max-lg:mb-0 max-lg:h-dvh max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent">
         <MobileTopbar variant="filter" showBackButton />
         <ScrollShadowWrapper
@@ -195,19 +193,18 @@ export default async function SearchGeneral({
           mobileTopbarFilter={
             <HorizontalFilterBar
               dataTagPackages={dataTagPackages}
-              dataFacility={dataFacility}
+              dataFacility={dataFacility.data}
               dataMinMax={dataMinMax}
               dataSection={dataSection}
               dataKota={dataKota}
             />
           }
-          packagePembiayaan={packagePembiayaan}
         >
           <div className="col-span-4 max-lg:hidden max-lg:px-4">
             <FilterLeftbar
               dataMinMax={dataMinMax}
               dataTagPackages={dataTagPackages}
-              dataFacility={dataFacility}
+              dataFacility={dataFacility.data}
               dataSection={dataSection}
               dataKota={dataKota}
             />
@@ -217,6 +214,8 @@ export default async function SearchGeneral({
           </div>
         </ScrollShadowWrapper>
       </main>
+
+      {/* Sementar dibiarkan dulu, karena takutnya dari tim produk mau up lagi */}
       {/* <BottomNavigation
         dataMinMax={dataMinMax}
         dataFacility={dataFacility}

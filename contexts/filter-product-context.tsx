@@ -398,7 +398,7 @@ export const FilterProductProvider: React.FC<{
       }
 
       // Extract for pembiayaan
-      if (supportedProvider) {
+      if (params.has('package') && supportedProvider) {
         queryObject.organizationInstanceId = supportedProvider
       }
 

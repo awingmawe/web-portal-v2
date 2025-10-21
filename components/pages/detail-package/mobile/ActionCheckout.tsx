@@ -2,14 +2,15 @@
 
 import WhatsappIcon from '@/components/icons/whatsapp'
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
+import PembiayaanDrawerMobile from '@/components/pages/detail-package/mobile/DrawerPembiayaan'
 import { Button } from '@/components/ui/button'
 import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
+import { Facility } from '@/constant/types/FacilityProps'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
-import Link from 'next/link'
 import { Fragment, useEffect, useMemo } from 'react'
 
 interface ActionCheckoutProps {
@@ -21,6 +22,7 @@ interface ActionCheckoutProps {
   packageType: string
   currency: string
   variantType: string
+  dataTenor: Facility[]
 }
 
 export default function ActionCheckoutMobile({
@@ -32,6 +34,7 @@ export default function ActionCheckoutMobile({
   thumbnail,
   token,
   currency,
+  dataTenor,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
   const { isLoading, selectedVariant, setVariants, availableRoomTypes } =
@@ -90,16 +93,24 @@ export default function ActionCheckoutMobile({
             <WhatsappIcon size={48} />
           </div>
           {packageType === PACKAGE_TYPE.UMRAH && (
-            <Link href={`/banking/credit`} className="w-full">
+            <PembiayaanDrawerMobile
+              title={title}
+              packageType={packageType}
+              variants={variants}
+              currency={currency}
+              image={thumbnail}
+              variantType={variantType}
+              dataTenor={dataTenor}
+            >
               <Button
                 variant="outline"
                 className="border-primary-500 w-full rounded-full"
                 size="md"
                 id="btn-pay-later-mobile"
               >
-                <p className="text-xs-semibold">Bayar Nanti</p>
+                <p className="text-xs-semibold">Ajukan Pembiayaan</p>
               </Button>
-            </Link>
+            </PembiayaanDrawerMobile>
           )}
           <CheckoutDrawerMobile
             title={title}

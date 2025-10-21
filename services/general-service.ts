@@ -77,18 +77,13 @@ export async function getAirline(
 
 export async function getFacilityEnum(
   type?: string
-): Promise<GenericResponse<Facility>> {
-  try {
-    const response = await api.get(`/public/general/v1/reference?size=1000`, {
-      params: {
-        type,
-      },
-    })
-    return response.data
-  } catch (error) {
-    console.error('Error fetching facility:', error)
-    throw error
-  }
+): Promise<AxiosResponse<GenericResponse<Facility>>> {
+  return await api.get(`/public/general/v1/reference`, {
+    params: {
+      type,
+      size: 1000,
+    },
+  })
 }
 
 export async function getGalleryHotel(

@@ -37,7 +37,7 @@ export default async function TalanganPilihPaketPage() {
 
   // Keep original data structure since FilterLeftbar expects it
   const transformedTagPackages = dataTagPackages
-  const transformedFacilities = dataFacility
+  const transformedFacilities = dataFacility.data
   const transformedSections = dataSection
 
   return (

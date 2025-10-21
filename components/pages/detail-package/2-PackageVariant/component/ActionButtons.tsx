@@ -1,7 +1,6 @@
 import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
 import { Button } from '@/components/ui/button'
 import { PACKAGE_TYPE } from '@/constant/env'
-import Link from 'next/link'
 import React, { Fragment } from 'react'
 
 interface ActionButtonsProps {
@@ -16,7 +15,7 @@ interface ActionButtonsProps {
   currency: string
   onCheckout: () => void
   handlePushEvent: (name: string, withVariant?: boolean) => void
-  selectedVariant?: any
+  setIsPembiayaanModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
@@ -26,7 +25,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   token,
   onCheckout,
   handlePushEvent,
-  selectedVariant,
+  setIsPembiayaanModalOpen,
 }) => {
   if (variants.length > 0) {
     return (
@@ -50,28 +49,25 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
         {packageType === PACKAGE_TYPE.UMRAH && (
           <Fragment>
-            <div className="text-s-regular text-center text-neutral-500 max-lg:hidden">
-              atau
-            </div>
-            <Link
-              href={`/banking/credit`}
+            <div
               onClick={() => {
+                setIsPembiayaanModalOpen(true)
                 handlePushEvent('click_paylater')
-                sessionStorage.setItem(
-                  'variantPaylater',
-                  JSON.stringify(selectedVariant)
-                )
               }}
+              className="relative mt-1 max-lg:hidden"
             >
+              <p className="bg-success-500 text-s-semibold absolute bottom-7.5 left-0 rounded-full px-1.5 py-1 text-white">
+                Opsi Pembiayaan Tersedia
+              </p>
               <Button
-                className="border-primary-500 text-primary-500 w-full rounded-full py-3 max-lg:hidden"
+                className="border-success-500 w-full rounded-full border-2 py-3"
                 variant="outline"
                 size="lg"
                 id="btn-pay-later-desktop"
               >
-                Pesan Sekarang, Bayar Nanti
+                Ajukan Pembiayaan
               </Button>
-            </Link>
+            </div>
             <CheckAvailibility
               token={token}
               handlePushEvent={handlePushEvent}
