@@ -24,7 +24,9 @@ export default async function UmrahPersonalForm() {
 
   return (
     <LayoutUmrahPersonalForm token={token}>
-      <UmrahPersonalFormSection dataEnumVehicle={dataEnumVehicle.results} />
+      <UmrahPersonalFormSection
+        dataEnumVehicle={dataEnumVehicle.data.results}
+      />
       <EventTrackerImpression
         id="umrah_personal_form"
         nameDidMount="impression_umrah_personal_form"

@@ -20,9 +20,7 @@ export interface PackageVariant {
   originalPriceQuad: number
   originalPriceDouble: number
   originalPriceTriple: number
-  package: {
-    dpAmount: number
-  }
+  package: Package
   tripDuration: number
   waitingPeriod: string | null
 }
@@ -65,6 +63,7 @@ export interface CardData {
   arrival: TravelRoute
   tripDuration: number
   waitingPeriod: string | null
+  organizationInstanceId: number
 }
 
 export interface PackageDetail {

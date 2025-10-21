@@ -189,7 +189,7 @@ export default async function SearchGeneral({
             <FilterLeftbar
               dataMinMax={dataMinMax}
               dataTagPackages={dataTagPackages}
-              dataFacility={dataFacility}
+              dataFacility={dataFacility.data}
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12">

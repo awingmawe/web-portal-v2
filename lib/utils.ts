@@ -1,6 +1,5 @@
 import { PACKAGE_TYPE } from '@/constant/env'
-import { GenericResponse } from '@/constant/types/GeneralProps'
-import { CardData, Package } from '@/constant/types/PackageProps'
+import { Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
 import { addYears, differenceInDays } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
@@ -216,51 +215,6 @@ export const isValidImage = (fileName: any) => {
   const extension = fileName?.split('.').pop().toLowerCase()
 
   return allowedFormats.includes(extension)
-}
-
-export function mapProductsToCardData(
-  products: GenericResponse<Package>
-): CardData[] {
-  return (
-    products?.results?.map((product: Package) => ({
-      id: product?.id ?? 0,
-      src: product.thumbnail || '',
-      discount: product.packageVariant?.discountAmount ?? '0',
-      discountType: product.packageVariant?.discountType,
-      title: product.title || 'No Title',
-      location: product.organizationInstance?.city?.name || 'Unknown',
-      locationId: product.organizationInstance.cityId,
-      district: product.organizationInstance?.city?.name || 'Unknown',
-      province: product.organizationInstance?.province.name || 'Unknown',
-      provinceId: product.organizationInstance?.provinceId,
-      organizationName: product.organizationInstance?.name || 'Unknown',
-      variant: product.packageVariant || [],
-      originalPrice: product.packageVariant
-        ? formatCurrency(product.originalPrice, product.currency || 'IDR')
-        : formatCurrency(0, product.currency || 'IDR'),
-      price: product.packageVariant
-        ? formatCurrency(product.price, product.currency || 'IDR')
-        : formatCurrency(0, product.currency || 'IDR'),
-      rating: getHotelRating(product),
-      slugOrganization: product.organizationInstance?.slug || '',
-      slugPackage: product.slug || '',
-      isLastCall: product.packageVariant?.isLastCall,
-      isPlus: product.isPlus,
-      codeCountry: product?.additionalCountry ?? undefined,
-      departureDate: product?.packageVariant?.departureDate,
-      arrivalDate: product?.packageVariant?.arrivalDate,
-      releasedAt: product?.packageVariant?.releasedAt,
-      packageType: product?.packageType || 'umrah',
-      meccaHotel: product?.meccaHotel,
-      medinaHotel: product?.medinaHotel,
-      departure: product?.departure,
-      arrival: product?.arrival,
-      currency: product?.currency,
-      variantType: product?.variantType,
-      tripDuration: product?.packageVariant?.tripDuration,
-      waitingPeriod: product?.packageVariant?.waitingPeriod || null,
-    })) || []
-  )
 }
 
 export const ellipsis = (str: string, maxLength: number) => {
@@ -572,3 +526,6 @@ export function timeSince(createdAt: string): string {
   if (diffHours < 24) return `${diffHours} j`
   return `${diffDays} h`
 }
+
+// For refactoring utils files, do this if there's new file
+export * from './data-formatter'

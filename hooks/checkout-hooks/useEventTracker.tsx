@@ -1,7 +1,7 @@
-import { getHotelRating, getTripDuration } from '@/lib/utils'
 import { DetailVariant, SelectedVariant } from '@/constant/types/CheckoutProps'
-import { PreBookingResponse } from '@/constant/types/PaymentCheckout'
 import { Package } from '@/constant/types/PackageProps'
+import { PreBookingResponse } from '@/constant/types/PaymentCheckout'
+import { getHotelRating, getTripDuration } from '@/lib/utils'
 
 interface UseEventTrackerProps {
   pushEvent: (event: any) => void

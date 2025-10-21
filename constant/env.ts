@@ -30,6 +30,7 @@ export const LOCAL_STORAGE_KURS_OPEN_USD = 'isKursUSDShowAgain'
 export const LOCAL_STORAGE_UTM = 'utm'
 export const LOCAL_STORAGE_UTM_EXPIRED = 'utmExpired'
 export const LOCAL_STORAGE_USERID = 'userId'
+export const LOCAL_STORAGE_PEMBIAYAAN = 'pembiayaan'
 
 export const PACKAGE_TYPE = {
   HAJJ_SPECIAL: 'hajj-special',
