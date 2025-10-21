@@ -1,5 +1,6 @@
 'use client'
 
+import { PACKAGE_TYPE } from '@/constant/env'
 import { ACTIVITY_TYPES } from '@/constant/schema/umrah-personal-schema/constant'
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -179,7 +180,7 @@ export const UmrahPersonalProvider: React.FC<{
 
     pushEvent({
       name: 'click_next_umroh_personal',
-      category: 'umrah-personal',
+      category: PACKAGE_TYPE.UMRAH_PERSONAL,
       topic: 'umrah',
       data: {
         stepName: titleStepName,

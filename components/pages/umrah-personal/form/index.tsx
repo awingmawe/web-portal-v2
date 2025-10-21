@@ -8,6 +8,7 @@ import Step4MadinahHotel from '@/components/pages/umrah-personal/form/3-Penginap
 import Step5Transportation from '@/components/pages/umrah-personal/form/4-Transportasi'
 import Step6Review from '@/components/pages/umrah-personal/form/5-Review'
 import { Form } from '@/components/ui/form'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { ACTIVITY_TYPES } from '@/constant/schema/umrah-personal-schema/constant'
 import {
   defaultUmrahPersonalForm,
@@ -48,13 +49,13 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
   const onCheckedChange = (checked: boolean) => {
     setIsChecked(checked)
     if (checked) {
-      localStorage.setItem('umrah-personal', 'true')
+      localStorage.setItem(PACKAGE_TYPE.UMRAH_PERSONAL, 'true')
     }
   }
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsChecked(localStorage.getItem('umrah-personal') === 'true')
+      setIsChecked(localStorage.getItem(PACKAGE_TYPE.UMRAH_PERSONAL) === 'true')
     }
   }, [])
 
@@ -104,7 +105,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
       if (result) {
         pushEvent({
           name: 'submit_create_umroh_personal',
-          category: 'umrah-personal',
+          category: PACKAGE_TYPE.UMRAH_PERSONAL,
           topic: 'umrah',
           data: {
             packageType: payload.journeyType,
@@ -134,7 +135,7 @@ const UmrahPersonalFormSection: React.FC<UmrahPersonalFormSectionProps> = ({
         })
         pushEvent({
           name: 'click_next_umroh_personal',
-          category: 'umrah-personal',
+          category: PACKAGE_TYPE.UMRAH_PERSONAL,
           topic: 'umrah',
           data: {
             stepName: 'Review Pilihan',

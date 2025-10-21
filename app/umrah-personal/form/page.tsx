@@ -1,6 +1,7 @@
 import { metadata } from '@/app/shared-metadata'
 import UmrahPersonalFormSection from '@/components/pages/umrah-personal/form'
 import LayoutUmrahPersonalForm from '@/components/pages/umrah-personal/form/layout'
+import { PACKAGE_TYPE } from '@/constant/env'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { TYPE_FILTER_REFERENCE } from '@/contexts/umrah-personal/constant'
 import { cookieNames } from '@/services/common/cookie'
@@ -29,7 +30,7 @@ export default async function UmrahPersonalForm() {
         nameDidMount="impression_umrah_personal_form"
         nameDidUnmount="exit_umrah_personal_form"
         topic="umrah"
-        category="umrah-personal"
+        category={PACKAGE_TYPE.UMRAH_PERSONAL}
       />
     </LayoutUmrahPersonalForm>
   )
