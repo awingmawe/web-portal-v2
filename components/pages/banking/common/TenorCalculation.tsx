@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Facility } from '@/constant/types/FacilityProps'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, parseCurrency } from '@/lib/utils'
 import { useCalculateFinancing } from '@/services/hooks/banking-service/credits-api'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
@@ -114,8 +114,9 @@ export default function FinancingSimulation({
   // Trigger calculation when tenor or down payment changes
   useEffect(() => {
     if (selectedTenor && (price || totalAmount)) {
+      const numericAmount = price || parseCurrency(totalAmount)
       create({
-        totalAmount: price || totalAmount,
+        totalAmount: numericAmount,
         tenor: Number(selectedTenor),
       })
     }

@@ -3,6 +3,7 @@ import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/comp
 import TravelDates from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
 import BadgePromo from '@/components/shared/Badge'
 import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/sonner'
 import { LOCAL_STORAGE_PEMBIAYAAN, PACKAGE_TYPE } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PackageVariant } from '@/constant/types/PackageProps'
@@ -12,6 +13,7 @@ import { dissolve } from '@/lib/animation-setup'
 import { mapSelectedPackagePembiayaan } from '@/lib/data-formatter'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { Fragment } from 'react'
 
 interface ContentPembiayaanProps {
@@ -33,6 +35,7 @@ const ContentPembiayaan = ({
   variantType,
   dataTenor,
 }: ContentPembiayaanProps) => {
+  const router = useRouter()
   const {
     getPrice,
     selectedVariant,
@@ -54,7 +57,7 @@ const ContentPembiayaan = ({
   const handleNextPembiayaan = () => {
     // make sure selectedVariant exist
     if (!selectedVariant) {
-      console.error('No variant selected')
+      toast.error('No variant selected')
       return
     }
 
@@ -81,8 +84,7 @@ const ContentPembiayaan = ({
       localStorageUtils.setJSON(LOCAL_STORAGE_PEMBIAYAAN, pembiayaanData)
     }
 
-    // Navigate to next page
-    window.location.href = '/banking/credit' // Uncomment when ready
+    router.push('/banking/credit')
   }
 
   return (
@@ -162,7 +164,7 @@ const ContentPembiayaan = ({
 
           {/* Checkout Buttons */}
           <div
-            className={`bg-neutral-0 z-10 col-span-12 ml-auto items-center border-none px-4 py-3 max-lg:fixed max-lg:bottom-0 max-lg:left-0 max-lg:w-full max-lg:px-4 ${dissolve}`}
+            className={`z-10 col-span-12 ml-auto items-center border-none px-4 py-3 max-lg:fixed max-lg:bottom-0 max-lg:left-0 max-lg:w-full max-lg:bg-white max-lg:px-4 ${dissolve}`}
           >
             <div className="flex gap-1.5">
               <Button
