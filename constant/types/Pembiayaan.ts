@@ -1,4 +1,4 @@
-// types/SelectedPackage.ts
+import { RoomType } from '@/contexts/package-variant-context'
 
 export interface SelectedPackage {
   // Organization Info
@@ -6,9 +6,11 @@ export interface SelectedPackage {
   organizationCity: string
   organizationProvince: string
   organizationLocation: string
+  organizationThumbnail: string
 
   // Package Info
   packageName: string
+  packageThumbnail: string
 
   // Schedule Info
   departureDate: string
@@ -45,4 +47,11 @@ export type FinancingCalculationResponse = {
   admin_fee: number
   upfront_payment: number
   monthly_payment: number
+}
+
+export type PembiayaanDataLocalStorage = {
+  selectedPackage: SelectedPackage
+  selectedRoomType: RoomType
+  totalQty: number
+  price: number
 }

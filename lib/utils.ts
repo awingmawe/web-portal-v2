@@ -527,5 +527,12 @@ export function timeSince(createdAt: string): string {
   return `${diffDays} h`
 }
 
+export const parseCurrency = (currencyString: string | number): number => {
+  if (typeof currencyString === 'number') return currencyString
+
+  const numericString = currencyString.replace(/[^\d]/g, '')
+  return Number(numericString) || 0
+}
+
 // For refactoring utils files, do this if there's new file
 export * from './data-formatter'

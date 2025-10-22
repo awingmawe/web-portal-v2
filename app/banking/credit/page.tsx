@@ -1,13 +1,12 @@
 import { metadata } from '@/app/shared-metadata'
 import PembiayaanLanding from '@/components/pages/banking/credit/landing/1-LandingPembiayaan'
 import StepByStepPembiayaan from '@/components/pages/banking/credit/landing/2-StepPembiayaan'
-import CariPaketButton from '@/components/pages/banking/credit/landing/3-ButtonCariPaket'
-import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
+import PackagePembiayaan from '@/components/pages/banking/credit/landing/3-PackagePembiayaan'
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
-import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
+import { getFacilityEnum } from '@/services/general-service'
 import { getPackageList } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
@@ -31,12 +30,15 @@ export default async function SearchGeneral() {
   //   ),
   // ]
 
-  const dataPackageProvider = await getPackageList({
-    page: 1,
-    size: 12,
-    packageType: 'umrah',
-    // ['organizationInstanceId:in']: uniqueSupportedOrgs.join(','),
-  })
+  const [dataPackageProvider, dataTenor] = await Promise.all([
+    getPackageList({
+      page: 1,
+      size: 12,
+      packageType: 'umrah',
+      // ['organizationInstanceId:in']: uniqueSupportedOrgs.join(','),
+    }),
+    getFacilityEnum('credit_tenor'),
+  ])
 
   return (
     <Fragment>
@@ -58,13 +60,10 @@ export default async function SearchGeneral() {
           tergantung mitra dan travel dipilih.
         </p>
 
-        <PackageListEvent
-          dataPembiayaan={mapProductsToCardData(dataPackageProvider)}
-          eventCategory="pembiayaan"
-          className="container mx-auto flex flex-col space-y-6 max-lg:space-y-4"
+        <PackagePembiayaan
+          dataPackageProvider={dataPackageProvider}
+          dataTenor={dataTenor.data.results}
         />
-
-        <CariPaketButton />
       </main>
 
       <Footer type="compact" className="hidden lg:block" />

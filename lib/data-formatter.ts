@@ -10,6 +10,7 @@ import {
   formatDateToDDMMYYYY,
   getHotelRating,
 } from '@/lib/utils'
+import Placeholder from '@/public/thumbnail.png'
 
 export function mapProductsToCardData(
   products: GenericResponse<Package>
@@ -71,9 +72,12 @@ export function mapSelectedPackagePembiayaan(
       data?.package?.organizationInstance?.province
         ? `${data.package.organizationInstance.city.name}, ${data.package.organizationInstance.province.name}`
         : '-',
+    organizationThumbnail:
+      data?.package?.organizationInstance?.thumbnail || Placeholder.src,
 
     // Package Info
     packageName: data?.package?.title || '-',
+    packageThumbnail: data?.package?.thumbnail || Placeholder.src,
 
     // Schedule Info
     departureDate: formatDateToDDMMYYYY(new Date(data?.departureDate)),
