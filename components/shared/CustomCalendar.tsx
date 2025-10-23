@@ -350,7 +350,7 @@ export const CustomCalendarView = ({
               >
                 <p
                   className={`
-                  ${!day.currentMonth ? 'text-[#A4A4A2]' : ''} 
+                  ${!day.currentMonth ? 'text-[#686868]' : ''} 
                     `}
                 >
                   {day.day}

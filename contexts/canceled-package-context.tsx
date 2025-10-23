@@ -7,6 +7,7 @@ export const CanceledContext = createContext<any>(null)
 export const CanceledProvider = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false)
   const [openBatalkan, setOpenBatalkan] = useState(false)
+  const [openBatalkanInfo, setOpenBatalkanInfo] = useState(false)
   const [openModalRefund, setOpenModalRefund] = useState<any>(false)
   const [openModalSukses, setOpenModalSukses] = useState<any>(false)
   const [dataRefundPolicy, setDataRefundPolicy] = useState<any>()
@@ -24,6 +25,8 @@ export const CanceledProvider = ({ children }: { children: ReactNode }) => {
     setOpen,
     openBatalkan,
     setOpenBatalkan,
+    openBatalkanInfo,
+    setOpenBatalkanInfo,
     openModalRefund,
     setOpenModalRefund,
     openModalSukses,

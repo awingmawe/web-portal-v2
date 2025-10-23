@@ -7,6 +7,7 @@ import PhoneNumberNotVerified from '@/components/pages/umrah-personal/landing/di
 import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth/context'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useAuthNavigation } from '@/hooks/umrah-personal/landing/useAuthNavigation'
 import { usePhoneVerification } from '@/hooks/umrah-personal/landing/usePhoneNumberVerification'
 import Frame from '@/public/images/frame-umrah-personal.png'
@@ -19,6 +20,7 @@ interface UmrohLandingSectionProps {
 
 const UmrohLandingSection: React.FC<UmrohLandingSectionProps> = ({ token }) => {
   const { profile } = useAuth()
+  const { pushEvent } = useEventTracker()
 
   const [open, setOpen] = React.useState(false)
   const features: string[] = [
@@ -31,7 +33,14 @@ const UmrohLandingSection: React.FC<UmrohLandingSectionProps> = ({ token }) => {
   const onClickLearnMore = () => {
     // Look for the first learn more section
     const element = document.getElementById('section-learn-more-1')
-
+    pushEvent({
+      name: 'click_umroh_personal_learn_more',
+      category: 'umrah_personal',
+      topic: 'umrah',
+      data: {
+        validUserPhone: profile?.phonenumberVerified,
+      },
+    })
     if (!element) {
       console.warn('Target section not found')
       return

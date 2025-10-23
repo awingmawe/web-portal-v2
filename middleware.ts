@@ -32,13 +32,21 @@ export async function middleware(request: NextRequest) {
 
   if (pathname.startsWith('/my')) {
     const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value
+    const refreshtoken = cookieStore.get(cookieNames.USER_REFRESH_TOKEN)?.value
 
     // Parse the current URL
     const url = new URL(request.url)
     const loginToken = url.searchParams.get('accessToken')
+    const refreshToken = url.searchParams.get('refreshToken')
+
+    // const refreshToken = url.searchParams.get('refreshToken')
 
     if (!token && loginToken) {
       cookieStore.set(cookieNames.USER_ACCESS_TOKEN, loginToken)
+    }
+
+    if (!refreshtoken && refreshToken) {
+      cookieStore.set(cookieNames.USER_REFRESH_TOKEN, refreshToken)
     }
 
     // If no token, redirect to login page
@@ -50,7 +58,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next()
+  // return NextResponse.next()
 }
 
 export const config = {

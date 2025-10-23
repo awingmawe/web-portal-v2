@@ -142,7 +142,7 @@ const NavLink = React.memo<NavLinkProps>(
                   fill="none"
                   aria-hidden="true"
                 >
-                  <circle cx="2" cy="2" r="2" fill="#FFC100" />
+                  <circle cx="2" cy="2" r="2" fill="#ffc14b" />
                 </svg>
               </div>
             )}
@@ -163,7 +163,7 @@ const NavLink = React.memo<NavLinkProps>(
                   fill="none"
                   aria-hidden="true"
                 >
-                  <circle cx="2" cy="2" r="2" fill="#FFC100" />
+                  <circle cx="2" cy="2" r="2" fill="#ffc14b" />
                 </svg>
               </motion.div>
             )}
@@ -241,7 +241,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
                   </Link>
 
                   {/* Divider */}
-                  <div className="h-5 border border-[#D2D2D1]" />
+                  <div className="h-5 border border-[#c9c9c9]" />
 
                   {/* Login */}
                   <Link
@@ -280,7 +280,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
                 </Fragment>
               ) : (
                 <Fragment>
-                  <div className="h-5 border border-[#D2D2D1]"></div>
+                  <div className="h-5 border border-[#c9c9c9]"></div>
                   <Popover>
                     <PopoverTrigger asChild>
                       <div className="flex items-center gap-2">

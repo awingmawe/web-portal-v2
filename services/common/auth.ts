@@ -5,8 +5,17 @@ export function setAccessToken(token: string, expiresIn?: number) {
   setCookie(cookieNames.USER_ACCESS_TOKEN, token, options)
 }
 
+export function setRefreshToken(token: string, expiresIn?: number) {
+  const options = expiresIn ? { maxAge: expiresIn } : {}
+  setCookie(cookieNames.USER_REFRESH_TOKEN, token, options)
+}
+
 export function getAccessToken(): string {
   return getCookie(cookieNames.USER_ACCESS_TOKEN)
+}
+
+export function getRefreshToken(): string {
+  return getCookie(cookieNames.USER_REFRESH_TOKEN)
 }
 
 export function setUserAccount(accountData: string) {

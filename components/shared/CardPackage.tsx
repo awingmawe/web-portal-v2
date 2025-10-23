@@ -6,6 +6,7 @@ import { StoreIcon } from '@/components/icons/store'
 import BadgePromo from '@/components/shared/Badge'
 import { PACKAGE_TYPE } from '@/constant/env'
 import { CardData } from '@/constant/types/PackageProps'
+import { Provider } from '@/constant/types/Providers'
 import { useEventTracker } from '@/contexts/event-tracker/context'
 import {
   capitalizeText,
@@ -24,14 +25,17 @@ interface CardPackageProps {
   data: CardData
   section?: string
   eventCategory?: string
+  dataProviders?: Provider[] // khusus untuk flow pembiayaan saja
 }
 
 export const CardPackage = memo(function CardPackage({
   data,
   section = '',
   eventCategory = 'home',
+  dataProviders,
 }: CardPackageProps) {
   const elem = useRef<HTMLDivElement>(null)
+
   const { observe, pushEvent } = useEventTracker()
   const {
     src,
@@ -132,6 +136,17 @@ export const CardPackage = memo(function CardPackage({
       />
     ))
   }, [codeCountry, isPlus])
+
+  // Memoize the matched providers
+  const matchedProviders = useMemo(() => {
+    if (!dataProviders || !organizationInstanceId) return []
+
+    return dataProviders.filter((provider) =>
+      provider.supported_organizations.includes(
+        organizationInstanceId.toString()
+      )
+    )
+  }, [dataProviders, organizationInstanceId])
 
   useEffect(() => {
     if (elem.current) {
@@ -244,6 +259,34 @@ export const CardPackage = memo(function CardPackage({
           </div>
         )}
 
+        {/* Providers */}
+        {matchedProviders.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {matchedProviders.slice(0, 2).map((provider) => (
+              <div
+                key={provider.id}
+                className="bg-primary-100 inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+              >
+                {provider.logo && (
+                  <Image
+                    src={provider.logo}
+                    alt={provider.name}
+                    width={16}
+                    height={16}
+                    className="rounded"
+                  />
+                )}
+                <span className="text-s-semibold">{provider.name}</span>
+              </div>
+            ))}
+
+            {matchedProviders.length > 2 && (
+              <span className="text-s-semibold bg-primary-100 inline-flex items-center rounded-full px-2.5 py-1">
+                +{matchedProviders.length - 2}
+              </span>
+            )}
+          </div>
+        )}
         {/* Title */}
         <h3 className="text-l-regular line-clamp-2 break-words text-neutral-900 uppercase max-sm:text-sm max-sm:leading-5">
           {title}

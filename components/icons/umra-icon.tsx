@@ -79,7 +79,7 @@ const UmraIcon: React.FC<UmraIconProps> = ({
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#F8CB3E" />
-          <stop offset="1" stopColor="#FFF2CC" />
+          <stop offset="1" stopColor="#fff1e3" />
         </linearGradient>
       </defs>
     </svg>

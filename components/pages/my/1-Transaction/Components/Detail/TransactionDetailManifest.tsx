@@ -83,7 +83,7 @@ export default function TransactionDetailManifest({
                 marginTop: '-40px',
                 paddingTop: '110px',
                 borderRadius: '1.5rem',
-                border: '1px solid #E8E8E8',
+                border: '1px solid #e5e5e5',
               }}
             >
               <div className="relative z-20 -mt-20 space-y-2 bg-neutral-50 p-6 max-lg:px-3">

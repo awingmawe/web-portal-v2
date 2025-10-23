@@ -83,7 +83,7 @@ export default function BankAccountResponsive({
   useEffect(() => {
     const fetchBanks = async () => {
       const banks = await getFacilityEnum('bank')
-      setBanks(banks.results)
+      setBanks(banks.data.results)
     }
     fetchBanks()
   }, [])

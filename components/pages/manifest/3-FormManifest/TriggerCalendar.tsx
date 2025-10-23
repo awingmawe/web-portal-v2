@@ -51,7 +51,7 @@ const TriggerCalendar = ({ field }: { field: any }) => {
               minYear={1890}
               maxYear={new Date().getFullYear()}
             />
-            <DrawerTrigger>
+            <DrawerTrigger asChild>
               <div className="max-lg:bg-neutral-0 hidden max-lg:fixed max-lg:right-0 max-lg:bottom-0 max-lg:left-0 max-lg:z-50 max-lg:block max-lg:p-4 max-lg:shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.10)]">
                 <Button className="w-full">Simpan</Button>
               </div>

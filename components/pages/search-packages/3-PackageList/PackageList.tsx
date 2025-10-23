@@ -10,6 +10,7 @@ import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
+import { useUniqueSupportedProviders } from '@/hooks/pembiayaan/useGetSupportedProvider'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
@@ -52,6 +53,12 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
   const itemsPerPage = 9 // Define your items per page constant
+  const packagePembiayaan = searchParams.get('package')
+  const {
+    dataProviders,
+    uniqueSupportedProviders,
+    isLoading: isLoadingSupportedProviders,
+  } = useUniqueSupportedProviders(packagePembiayaan !== 'pembiayaan')
 
   // First, initialize filters from URL
   useEffect(() => {
@@ -59,7 +66,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   }, [])
 
   useEffect(() => {
-    if (!isLoadingSkeleton) {
+    if (!isLoadingSkeleton && !isLoadingSupportedProviders) {
       const currentSort = searchParams.get('sort') || 'price-low'
       const page = parseInt(searchParams.get('page') || '1', 10)
       const type = searchParams.get('type') || PACKAGE_TYPE.UMRAH
@@ -69,7 +76,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         searchParams.toString(),
         currentSort,
         type,
-        page
+        page,
+        uniqueSupportedProviders
       )
 
       initializeFiltersFromURL(false)
@@ -80,7 +88,13 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         fetchPackageData(paramsFilter)
       }
     }
-  }, [isLoadingSkeleton, currentSort, searchParams, isMobile])
+  }, [
+    isLoadingSkeleton,
+    currentSort,
+    searchParams,
+    isMobile,
+    uniqueSupportedProviders,
+  ])
 
   // Improved loadMoreData function that checks loading/hasMore status first
   const loadMoreData = useCallback(() => {
@@ -95,21 +109,22 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       searchParams.toString(),
       currentSort,
       type,
-      page
+      page,
+      uniqueSupportedProviders
     )
 
     loadMore(paramsFilter)
-  }, [searchParams, loadMore, loading, hasMore, buildQueryParams])
+  }, [loading, hasMore, searchParams, uniqueSupportedProviders])
 
   // Function to reset all filters
   const resetAllFilters = useCallback(() => {
     // 1. Reset the internal state to default values
     resetFilters()
 
-    // 2. Clear all search params except type
+    // 2. Clear all search params except type and package
     const params = new URLSearchParams(window.location.search)
     for (const key of Array.from(params.keys())) {
-      if (key !== 'type') {
+      if (key !== 'type' && key !== 'package') {
         params.delete(key)
       }
     }
@@ -178,7 +193,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   return (
     <div className="flex flex-col gap-6">
       {/* Results info - Show skeleton or actual header */}
-      {isLoadingSkeleton ? (
+      {isLoadingSkeleton || isLoadingSupportedProviders ? (
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
@@ -190,7 +205,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       )}
 
       {/* Package grid */}
-      {isLoadingSkeleton || isLoading ? (
+      {isLoadingSkeleton || isLoading || isLoadingSupportedProviders ? (
         <PackageGridSkeleton />
       ) : (
         <div
@@ -207,7 +222,11 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
                       eventCategory="search"
                     />
                   ) : (
-                    <CardPackage data={packageData} eventCategory="search" />
+                    <CardPackage
+                      data={packageData}
+                      eventCategory="search"
+                      dataProviders={packagePembiayaan ? dataProviders : []}
+                    />
                   )}
                 </Fragment>
               ))}
@@ -229,7 +248,11 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
                     eventCategory="search"
                   />
                 ) : (
-                  <CardPackage data={packageData} eventCategory="search" />
+                  <CardPackage
+                    data={packageData}
+                    eventCategory="search"
+                    dataProviders={packagePembiayaan ? dataProviders : []}
+                  />
                 )}
               </Fragment>
             ))
@@ -238,7 +261,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       )}
 
       {/* Pagination - Show skeleton or actual pagination (only on desktop) */}
-      {isLoadingSkeleton ? (
+      {isLoadingSkeleton || isLoadingSupportedProviders ? (
         <PaginationSkeleton />
       ) : (
         !isMobile && (

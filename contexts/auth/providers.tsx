@@ -4,6 +4,7 @@ import {
   clearAuth,
   getAccessToken,
   setAccessToken,
+  setRefreshToken,
 } from '@/services/common/auth'
 
 import { toast } from '@/components/ui/sonner'
@@ -21,6 +22,7 @@ export default function AuthProvider({
   const searchParams = useSearchParams()
   const router = useRouter()
   const token = searchParams?.get('accessToken')
+  const refreshToken = searchParams?.get('refreshToken')
   const exp = searchParams?.get('exp')
   const [state, setState] = useState<any>({})
   const [isMobile, setIsMobile] = useState(false)
@@ -57,9 +59,10 @@ export default function AuthProvider({
   }
 
   useEffect(() => {
-    if (token) {
+    if (token && refreshToken) {
       // Save the token to cookies
       setAccessToken(token, Number(exp))
+      setRefreshToken(refreshToken, Number(exp))
 
       // Remove the `token` parameter from the URL
       const updatedParams = new URLSearchParams(
@@ -76,7 +79,7 @@ export default function AuthProvider({
       router.replace(`${window.location.pathname}?${updatedParams.toString()}`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token])
+  }, [token, refreshToken])
 
   function handleLogout(isRedirect?: boolean, redirectUri?: string) {
     clearAuth()

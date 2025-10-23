@@ -1,4 +1,9 @@
-import { apiWithAuth } from '@/services/common/http'
+import { GetListQuery } from '@/constant/types/GeneralProps'
+import { FinancingCalculationResponse } from '@/constant/types/Pembiayaan'
+import { ResponseProvider } from '@/constant/types/Providers'
+import { api, apiWithAuth } from '@/services/common/http'
+import { AxiosResponse } from 'axios'
+import qs from 'query-string'
 
 export async function postSaving(payload: any): Promise<any> {
   try {
@@ -48,4 +53,23 @@ export async function getbankCredit(): Promise<any> {
     console.error('Error create credit:', error)
     throw error
   }
+}
+
+export async function getProvider(
+  query: GetListQuery
+): Promise<AxiosResponse<ResponseProvider>> {
+  return api.get(`/public/banking/v2/credit/providers?${qs.stringify(query)}`)
+}
+
+export async function createCalculateFinancing({
+  totalAmount,
+  tenor,
+}: {
+  totalAmount: number
+  tenor: number
+}): Promise<AxiosResponse<FinancingCalculationResponse>> {
+  return api.post(`/public/banking/v2/credit/calculate-financing`, {
+    totalAmount,
+    tenor,
+  })
 }

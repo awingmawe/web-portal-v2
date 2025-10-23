@@ -1,6 +1,5 @@
 import { PACKAGE_TYPE } from '@/constant/env'
-import { GenericResponse } from '@/constant/types/GeneralProps'
-import { CardData, Package } from '@/constant/types/PackageProps'
+import { Package } from '@/constant/types/PackageProps'
 import { clsx, type ClassValue } from 'clsx'
 import { addYears, differenceInDays } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
@@ -574,3 +573,13 @@ export function timeSince(createdAt: string): string {
   if (diffHours < 24) return `${diffHours} j`
   return `${diffDays} h`
 }
+
+export const parseCurrency = (currencyString: string | number): number => {
+  if (typeof currencyString === 'number') return currencyString
+
+  const numericString = currencyString.replace(/[^\d]/g, '')
+  return Number(numericString) || 0
+}
+
+// For refactoring utils files, do this if there's new file
+export * from './data-formatter'

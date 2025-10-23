@@ -102,8 +102,8 @@ export default function TransactionUpcoming() {
 
       if (statusFilterType === 'umrah') {
         queryParams['packageType'] = 'umrah'
-      } else if (statusFilterType === 'umrah-personal') {
-        queryParams['packageType'] = 'umrah-personal'
+      } else if (statusFilterType === PACKAGE_TYPE.UMRAH_PERSONAL) {
+        queryParams['packageType'] = PACKAGE_TYPE.UMRAH_PERSONAL
       } else if (statusFilterType === PACKAGE_TYPE.HAJJ) {
         queryParams['packageType'] = PACKAGE_TYPE.HAJJ
       } else if (

@@ -57,7 +57,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           />
           {dataGallery[0] && (
             <div
-              className={`color-[#30302F] flex items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
+              className={`color-[#131313] flex items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-1 text-[12px]' : 'text-[28px] leading-[32px]'}`}
             >
               {dataGallery[0]?.title} <br />
@@ -80,7 +80,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           />
           {dataGallery[2] && (
             <div
-              className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
+              className={`color-[#131313] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
             >
               {dataGallery[1]?.title} <br />
@@ -103,7 +103,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           />
           {dataGallery[2] && (
             <div
-              className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
+              className={`color-[#131313] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px] max-sm:w-[233px]'}`}
             >
               {dataGallery[2]?.title} <br />
@@ -127,7 +127,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           />
           {dataGallery[3] && (
             <div
-              className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
+              className={`color-[#131313] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
             >
               {dataGallery[3]?.title} <br />
@@ -150,7 +150,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           />
           {dataGallery[4] && (
             <div
-              className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
+              className={`color-[#131313] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
             >
               {dataGallery[4]?.title} <br />
@@ -173,7 +173,7 @@ const TravelImageSection: React.FC<TravelImageSectionProps> = ({
           />
           {dataGallery[5] && (
             <div
-              className={`color-[#30302F] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
+              className={`color-[#131313] flex flex-auto items-center justify-center py-2 text-center font-[Playball] max-lg:text-sm max-lg:leading-[16px]
             ${isMobile ? 'py-3 text-lg leading-6' : 'text-[28px] leading-[32px]'}`}
             >
               {dataGallery[5]?.title} <br />

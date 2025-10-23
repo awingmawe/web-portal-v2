@@ -78,7 +78,7 @@ export function BatalkanPesanan({
               width={56}
               height={56}
               alt="check icon"
-              className="mr-2 bg-[#FFF2CC]"
+              className="mr-2 bg-[#fff1e3]"
             />
             <div>
               <p className="text-[24px] font-semibold">Batalkan pesanan</p>
@@ -124,26 +124,26 @@ export function BatalkanPesanan({
         {/* Refund Info Box */}
         {/* Stil dont know what is this for, but keep it first for now */}
         {/* <div className="mt-6 rounded-[12px] border border-gray-200 bg-gray-50 px-4 py-3 text-sm">
-          <p className="font-[14px] font-[500] text-[#30302F]">
+          <p className="font-[14px] font-[500] text-[#131313]">
             Estimasi Dana yang Dapat Dikembalikan
           </p>
           <div className="mt-2 flex items-center justify-between">
-            <p className="font-[12px] font-[400] text-[#8E8E8B]">
+            <p className="font-[12px] font-[400] text-[#424242]">
               Total dana kamu
             </p>
-            <p className="font-[14px] font-[600] text-[#30302F]">
+            <p className="font-[14px] font-[600] text-[#131313]">
               Rp{dataPre?.totalPayment.toLocaleString()}
             </p>
           </div>
           <div className="mt-1 flex items-center justify-between">
-            <p className="font-[12px] font-[400] text-[#8E8E8B]">
+            <p className="font-[12px] font-[400] text-[#424242]">
               Pengembalian {dataPre?.totalPercentage}%
             </p>
-            <p className="font-[14px] font-[600] text-[#30302F]">
+            <p className="font-[14px] font-[600] text-[#131313]">
               Rp{dataPre?.totalRefund.toLocaleString()}
             </p>
           </div>
-          <p className="mt-2 text-center font-[12px] font-[400] text-[#8E8E8B]">
+          <p className="mt-2 text-center font-[12px] font-[400] text-[#424242]">
             *Perhitungan ini hanya simulasi dan dapat berubah sesuai dengan
             ketentuan mitra terkait.
           </p>

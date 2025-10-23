@@ -138,11 +138,11 @@ const HotelPersonalDisplay: React.FC<HotelPersonalDisplayProps> = ({
             {hotelGallery.length > 1 && !loading && (
               <>
                 <CarouselPrevious
-                  className="left-1 h-[20px] w-[20px] bg-[#4141414D] p-4 backdrop-blur-[5px] max-lg:hidden"
+                  className="left-1 h-[20px] w-[20px] bg-[#1818184D] p-4 backdrop-blur-[5px] max-lg:hidden"
                   iconColor="stroke-neutral-0"
                 />
                 <CarouselNext
-                  className="right-1 h-[20px] w-[20px] bg-[#4141414D] p-4 backdrop-blur-[5px] max-lg:hidden"
+                  className="right-1 h-[20px] w-[20px] bg-[#1818184D] p-4 backdrop-blur-[5px] max-lg:hidden"
                   iconColor="stroke-neutral-0"
                 />
               </>

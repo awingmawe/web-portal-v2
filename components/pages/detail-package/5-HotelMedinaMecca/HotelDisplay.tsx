@@ -300,11 +300,11 @@ const HotelDisplay: React.FC<HotelDisplayProps> = ({
               ))}
             </CarouselContent>
             <CarouselPrevious
-              className="left-5 bg-[#4141414D] p-2.5 backdrop-blur-[5px] max-lg:hidden"
+              className="left-5 bg-[#1818184D] p-2.5 backdrop-blur-[5px] max-lg:hidden"
               iconColor="stroke-neutral-0"
             />
             <CarouselNext
-              className="right-5 bg-[#4141414D] p-2.5 backdrop-blur-[5px] max-lg:hidden"
+              className="right-5 bg-[#1818184D] p-2.5 backdrop-blur-[5px] max-lg:hidden"
               iconColor="stroke-neutral-0"
             />
           </Carousel>

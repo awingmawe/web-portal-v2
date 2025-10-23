@@ -1,0 +1,116 @@
+import { GenericResponse } from '@/constant/types/GeneralProps'
+import {
+  CardData,
+  Package,
+  PackageVariant,
+} from '@/constant/types/PackageProps'
+import { SelectedPackage } from '@/constant/types/Pembiayaan'
+import {
+  formatCurrency,
+  formatDateToDDMMYYYY,
+  getHotelRating,
+} from '@/lib/utils'
+import Placeholder from '@/public/thumbnail.png'
+
+export function mapProductsToCardData(
+  products: GenericResponse<Package>
+): CardData[] {
+  return (
+    products?.results?.map((product: Package) => ({
+      id: product?.id ?? 0,
+      src: product.thumbnail || '',
+      discount: product.packageVariant?.discountAmount ?? '0',
+      discountType: product.packageVariant?.discountType,
+      title: product.title || 'No Title',
+      location: product.organizationInstance?.city?.name || 'Unknown',
+      locationId: product.organizationInstance.cityId,
+      district: product.organizationInstance?.city?.name || 'Unknown',
+      province: product.organizationInstance?.province.name || 'Unknown',
+      provinceId: product.organizationInstance?.provinceId,
+      organizationName: product.organizationInstance?.name || 'Unknown',
+      variant: product.packageVariant || [],
+      originalPrice: product.packageVariant
+        ? formatCurrency(product.originalPrice, product.currency || 'IDR')
+        : formatCurrency(0, product.currency || 'IDR'),
+      price: product.packageVariant
+        ? formatCurrency(product.price, product.currency || 'IDR')
+        : formatCurrency(0, product.currency || 'IDR'),
+      rating: getHotelRating(product),
+      slugOrganization: product.organizationInstance?.slug || '',
+      slugPackage: product.slug || '',
+      isLastCall: product.packageVariant?.isLastCall,
+      isPlus: product.isPlus,
+      codeCountry: product?.additionalCountry ?? undefined,
+      departureDate: product?.packageVariant?.departureDate,
+      arrivalDate: product?.packageVariant?.arrivalDate,
+      releasedAt: product?.packageVariant?.releasedAt,
+      packageType: product?.packageType || 'umrah',
+      meccaHotel: product?.meccaHotel,
+      medinaHotel: product?.medinaHotel,
+      departure: product?.departure,
+      arrival: product?.arrival,
+      currency: product?.currency,
+      variantType: product?.variantType,
+      tripDuration: product?.packageVariant?.tripDuration,
+      waitingPeriod: product?.packageVariant?.waitingPeriod || null,
+      organizationInstanceId: product?.organizationInstanceId || 0,
+    })) || []
+  )
+}
+
+export function mapSelectedPackagePembiayaan(
+  data: PackageVariant
+): SelectedPackage {
+  return {
+    // Organization Info
+    organizationName: data?.package?.organizationInstanceName || '-',
+    organizationCity: data?.package?.organizationInstance?.city?.name || '-',
+    organizationProvince:
+      data?.package?.organizationInstance?.province?.name || '-',
+    organizationLocation:
+      data?.package?.organizationInstance?.city &&
+      data?.package?.organizationInstance?.province
+        ? `${data.package.organizationInstance.city.name}, ${data.package.organizationInstance.province.name}`
+        : '-',
+    organizationThumbnail:
+      data?.package?.organizationInstance?.thumbnail || Placeholder.src,
+
+    // Package Info
+    packageName: data?.package?.title || '-',
+    packageThumbnail: data?.package?.thumbnail || Placeholder.src,
+
+    // Schedule Info
+    departureDate: formatDateToDDMMYYYY(new Date(data?.departureDate)),
+    arrivalDate: formatDateToDDMMYYYY(new Date(data?.arrivalDate)),
+
+    // Departure Airport Info
+    departureAirportName: data?.package?.departure?.from?.airport?.name || '-',
+    destinationAirportName: data?.package?.departure?.to?.airport?.name || '-',
+
+    // Arrival Airport Info
+    arrivalOriginAirportName:
+      data?.package?.arrival?.from?.airport?.name || '-',
+    arrivalDestinationAirportName:
+      data?.package?.arrival?.to?.airport?.name || '-',
+
+    // Airline Info
+    departureAirlineName: data?.package?.departure?.airline?.name || '-',
+    arrivalAirlineName: data?.package?.arrival?.airline?.name || '-',
+
+    // Hotel Info - Mecca
+    meccaHotelName: data?.package?.meccaHotel?.name || '-',
+    meccaHotelCity: data?.package?.meccaHotel?.cityName || '-',
+    meccaHotelLocation:
+      data?.package?.meccaHotel?.name && data?.package?.meccaHotel?.cityName
+        ? `${data.package.meccaHotel.name}, ${data.package.meccaHotel.cityName}`
+        : '-',
+
+    // Hotel Info - Medina
+    medinaHotelName: data?.package?.medinaHotel?.name || '-',
+    medinaHotelCity: data?.package?.medinaHotel?.cityName || '-',
+    medinaHotelLocation:
+      data?.package?.medinaHotel?.name && data?.package?.medinaHotel?.cityName
+        ? `${data.package.medinaHotel.name}, ${data.package.medinaHotel.cityName}`
+        : '-',
+  }
+}

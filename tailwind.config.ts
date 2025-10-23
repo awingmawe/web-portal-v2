@@ -18,28 +18,28 @@ const config: Config = {
         // Neutral colors
         neutral: {
           0: '#FFFFFF',
-          100: '#E8E8E8', // 100
-          200: '#D2D2D1', // 200
-          300: '#BBBBB9', // 300
-          400: '#A4A4A2', // 400
-          500: '#8E8E8B', // 500
-          600: '#777774', // 600
-          700: '#5F5F5D', // 700
-          800: '#414141', // 800
-          900: '#30302F', // 900
+          100: '#e5e5e5', // 100
+          200: '#c9c9c9', // 200
+          300: '#969696', // 300
+          400: '#686868', // 400
+          500: '#424242', // 500
+          600: '#2b2b2b', // 600
+          700: '#1f1f1f', // 700
+          800: '#181818', // 800
+          900: '#131313', // 900
         },
 
         // Primary / Brand colors
         primary: {
-          100: '#FFF2CC', // Surface
-          200: '#FFE699', // Border
-          300: '#FFD966', // Main lighter
-          400: '#FFCC33', // Main light
-          500: '#FFC100', // Main
+          100: '#fff1e3', // Surface
+          200: '#ffe7cc', // Border
+          300: '#ffdaaa', // Main lighter
+          400: '#ffcc7f', // Main light
+          500: '#ffc14b', // Main
           600: '#CC9900', // Hover light
-          700: '#997400', // Hover
+          700: '#976d00', // Hover
           800: '#664D00 ', // Pressed
-          900: '#332700',
+          900: '#362500',
         },
 
         // Secondary / Brand colors
@@ -48,7 +48,7 @@ const config: Config = {
           200: '#FFF8CC', // Border
           300: '#FFF5B3', // Main lighter
           400: '#FFF094', // Main light
-          500: '#FFED7C', // Main
+          500: '#ffbe6a', // Main
           600: '#FFE32E', // Hover light
           700: '#E6C700', // Hover
           800: '#998500 ', // Pressed

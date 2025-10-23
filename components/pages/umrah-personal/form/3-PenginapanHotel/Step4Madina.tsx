@@ -254,7 +254,7 @@ const Step4MadinahHotel = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="text-m-regular"
-          endIcon={<Search size={16} color="#30302F" />}
+          endIcon={<Search size={16} color="#131313" />}
         />
       }
       sortingDropdown={
@@ -297,7 +297,7 @@ const Step4MadinahHotel = ({
                   <Star
                     key={index}
                     size={18}
-                    color="#FFC100"
+                    color="#ffc14b"
                     className="fill-primary-500"
                   />
                 ))}
@@ -317,7 +317,7 @@ const Step4MadinahHotel = ({
                   <Star
                     key={index}
                     size={18}
-                    color="#FFC100"
+                    color="#ffc14b"
                     className="fill-primary-500"
                   />
                 ))}
@@ -337,7 +337,7 @@ const Step4MadinahHotel = ({
                   <Star
                     key={index}
                     size={18}
-                    color="#FFC100"
+                    color="#ffc14b"
                     className="fill-primary-500"
                   />
                 ))}

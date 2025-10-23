@@ -102,7 +102,7 @@ const LayoutUmrahPersonalForm: React.FC<FormUmrahPersonal> = ({
       className="sticky top-8 inline-flex cursor-pointer items-center gap-1.5 max-lg:hidden"
       onClick={handlePrevious}
     >
-      <ChevronLeftCircle color="#30302F" width={14} height={14} />
+      <ChevronLeftCircle color="#131313" width={14} height={14} />
       <p className="text-s-semibold">Kembali</p>
     </div>
   )

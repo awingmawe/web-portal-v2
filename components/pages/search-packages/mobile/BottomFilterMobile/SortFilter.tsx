@@ -14,19 +14,19 @@ interface SortOption {
 }
 
 interface SortDrawerProps {
-  toggleDrawer: (id: number) => void
+  toggleDrawerAction: (id: number) => void
   itemId: number
-  applyFilters: (id: number) => void
+  applyFiltersAction: (id: number) => void
   selectedSort: string
-  setSelectedSort: (sort: string) => void
+  setSelectedSortAction: (sort: string) => void
 }
 
 export function SortDrawer({
-  toggleDrawer,
+  toggleDrawerAction,
   itemId,
-  applyFilters,
+  applyFiltersAction,
   selectedSort,
-  setSelectedSort,
+  setSelectedSortAction,
 }: SortDrawerProps) {
   const searchParams = useSearchParams()
   const updateQueryParams = useUpdateQueryParams()
@@ -41,13 +41,13 @@ export function SortDrawer({
   useEffect(() => {
     const currentSort = searchParams.get('sort')
     if (currentSort) {
-      setSelectedSort(currentSort)
+      setSelectedSortAction(currentSort)
     }
   }, [searchParams])
 
   // Handle sort selection
   const handleSortChange = (value: string) => {
-    setSelectedSort(value)
+    setSelectedSortAction(value)
   }
 
   // Apply sort filter and update URL
@@ -56,7 +56,7 @@ export function SortDrawer({
     updateQueryParams(['sort'], [selectedSort])
 
     // Close drawer and apply filters
-    applyFilters(itemId)
+    applyFiltersAction(itemId)
   }
 
   return (
@@ -93,7 +93,7 @@ export function SortDrawer({
         <Button
           variant="outline"
           className="border-primary-500 w-full py-3"
-          onClick={() => toggleDrawer(itemId)}
+          onClick={() => toggleDrawerAction(itemId)}
         >
           Batal
         </Button>

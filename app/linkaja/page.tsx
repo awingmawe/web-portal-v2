@@ -41,7 +41,7 @@ export default async function LinkAja() {
         <LandingLinkAja
           dataMinMax={dataMinMax}
           dataTagPackages={dataTagPackages}
-          dataFacility={dataFacility}
+          dataFacility={dataFacility.data}
           dataSection={dataSection}
           dpMinMax={dpMinMax}
           token={token}

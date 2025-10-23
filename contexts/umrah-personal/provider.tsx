@@ -1,5 +1,6 @@
 'use client'
 
+import { PACKAGE_TYPE } from '@/constant/env'
 import { ACTIVITY_TYPES } from '@/constant/schema/umrah-personal-schema/constant'
 import { UmrahPersonalFormType } from '@/constant/schema/umrah-personal-schema/umrah-personal'
 import { useEventTracker } from '@/contexts/event-tracker/context'
@@ -109,29 +110,38 @@ export const UmrahPersonalProvider: React.FC<{
   ) => {
     let isValid = false
     let currentStepKey = ''
+    let titleStepName = ''
 
     form.clearErrors()
 
     switch (currentStep) {
       case 1:
         currentStepKey = STEP_1
+        titleStepName = 'Informasi Perjalanan'
         isValid = await trigger(STEP_1)
         break
       case 2:
         currentStepKey = STEP_2
+        titleStepName = 'Detail Keberangkatan'
         isValid = await trigger(STEP_2)
         break
       case 3:
         currentStepKey = STEP_3
+        titleStepName = 'Penginapan Makkah'
         break
       case 4:
         currentStepKey =
           form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA
             ? STEP_5
             : STEP_4
+        titleStepName =
+          form.getValues(`${STEP_1}.activity`) === ACTIVITY_TYPES.MECCA
+            ? 'Transportasi'
+            : 'Penginapan Madinah'
         break
       case 5:
         currentStepKey = STEP_5
+        titleStepName = 'Transportasi'
         isValid = true
         break
     }
@@ -170,10 +180,10 @@ export const UmrahPersonalProvider: React.FC<{
 
     pushEvent({
       name: 'click_next_umroh_personal',
-      category: 'umrah-personal',
+      category: PACKAGE_TYPE.UMRAH_PERSONAL,
       topic: 'umrah',
       data: {
-        stepName: currentStepKey,
+        stepName: titleStepName,
       },
     })
 

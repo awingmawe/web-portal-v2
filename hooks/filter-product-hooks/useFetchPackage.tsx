@@ -1,4 +1,3 @@
-// hooks/filter-product-hooks/useFetchPackage.ts
 import { getPackageList } from '@/services/umrah-service'
 import { useCallback } from 'react'
 
@@ -48,6 +47,9 @@ export function useFetchPackage() {
         minDpAmount: queryParams.minDp,
         maxDpAmount: queryParams.maxDp,
         packageType: queryParams.type,
+        organizationInstanceCity: queryParams.organizationInstanceCity,
+        ['organizationInstanceId:in']:
+          queryParams.organizationInstanceId || undefined,
       }
 
       const response = await getPackageList(apiParams)

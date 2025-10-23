@@ -1,10 +1,18 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'
 import { redirect } from 'next/navigation'
-import { getAccessToken, getWukalaReferral } from './auth'
+import {
+  clearAuth,
+  getAccessToken,
+  getRefreshToken,
+  getWukalaReferral,
+  setAccessToken,
+  setRefreshToken,
+} from './auth'
 import { ACCOUNT_URL, API_URL } from '@/constant/env'
 import { getLocalReferralCode } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { toast } from '@/components/ui/sonner'
+import { refreshToken } from '@/contexts/auth/shared/token'
 
 // More specific header type
 interface RequestHeaders {
@@ -13,6 +21,9 @@ interface RequestHeaders {
   Accept?: string
   [key: string]: string | undefined
 }
+
+let isRefreshing = false
+let refreshPromise: Promise<string | null> | null = null
 
 class HeadersManager {
   private headers: RequestHeaders = {}
@@ -48,24 +59,53 @@ async function getServerReferralCode(): Promise<string | undefined> {
   return wukalaCookie?.value
 }
 
+async function refreshAccessToken(): Promise<string | null> {
+  if (isRefreshing && refreshPromise) {
+    return refreshPromise
+  }
+
+  let refreshtoken: string | undefined
+
+  if (typeof window !== 'undefined') {
+    refreshtoken = getRefreshToken()
+  } else {
+    const { cookies } = await import('next/headers')
+    const cookieStore = await cookies()
+    refreshtoken = cookieStore.get(cookieNames.USER_REFRESH_TOKEN)?.value
+  }
+
+  if (!refreshtoken) {
+    return null
+  }
+
+  isRefreshing = true
+  refreshPromise = (async () => {
+    try {
+      const resp = await refreshToken(refreshtoken as string)
+      const newToken = resp.data?.accessToken
+      const newRefreshToken = resp.data?.refreshToken
+      const exp = resp.data?.expiresIn
+
+      if (newToken) {
+        setRefreshToken(newRefreshToken, Number(exp))
+        setAccessToken(newToken, Number(exp))
+        return newToken
+      }
+      return null
+    } catch (e) {
+      clearAuth()
+      return null
+    } finally {
+      isRefreshing = false
+      refreshPromise = null
+    }
+  })()
+
+  return refreshPromise
+}
+
 function handleApiError(error: AxiosError<ApiErrorResponse>): never {
   const { response } = error
-
-  // Handle authentication errors
-  if (response?.status === 401) {
-    const currentUrl =
-      typeof window !== 'undefined'
-        ? window.location.href
-        : response.config?.url || '/'
-
-    const redirectUrl = `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(currentUrl)}&logout=1`
-
-    if (typeof window !== 'undefined') {
-      window.location.href = redirectUrl
-    } else {
-      redirect(redirectUrl)
-    }
-  }
 
   if (response?.status === 500) {
     toast.error('Terjadi kesalahan, silakan coba lagi nanti.')
@@ -150,21 +190,18 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
       ...headersManager.getHeaders(),
     }
 
-    // Add auth token if needed
+    // Add referral code
     let wukalaReferral: string | undefined
-
     if (typeof window !== 'undefined') {
-      // Client side
       wukalaReferral = getWukalaReferral() ?? getLocalReferralCode()
     } else {
-      // Server side
       wukalaReferral = await getServerReferralCode()
     }
-
     if (wukalaReferral) {
       config.headers['X-Wukalla-Referral'] = wukalaReferral
     }
 
+    // Add auth token if needed
     if (useAuth) {
       const token = getAccessToken()
       if (token) {
@@ -178,7 +215,39 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
   // Response interceptor
   instance.interceptors.response.use(
     (response) => response,
-    (error: AxiosError<ApiErrorResponse>) => handleApiError(error)
+    async (error: AxiosError<ApiErrorResponse>) => {
+      const { response, config } = error
+
+      if (response?.status === 401 && config) {
+        try {
+          const newToken = await refreshAccessToken()
+          if (newToken) {
+            config.headers = config.headers ?? {}
+            config.headers['Authorization'] = `Bearer ${newToken}`
+            return instance(config) // retry original request
+          }
+        } catch (e) {
+          clearAuth()
+        }
+
+        // If refresh failed → redirect to login
+        const currentUrl =
+          typeof window !== 'undefined'
+            ? window.location.href
+            : config?.url || '/'
+        const redirectUrl = `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(
+          currentUrl
+        )}&logout=1`
+
+        if (typeof window !== 'undefined') {
+          window.location.href = redirectUrl
+        } else {
+          redirect(redirectUrl)
+        }
+      }
+
+      return handleApiError(error)
+    }
   )
 
   return instance

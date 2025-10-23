@@ -74,11 +74,11 @@ const HotelImageCarousel: React.FC<HotelImageCarouselProps> = ({
           <>
             <CarouselPrevious
               type="button"
-              className="left-1 h-[18px] w-[18px] bg-[#4141414D] p-1 backdrop-blur-[5px] max-lg:h-[10px] max-lg:w-[10px]"
+              className="left-1 h-[18px] w-[18px] bg-[#1818184D] p-1 backdrop-blur-[5px] max-lg:h-[10px] max-lg:w-[10px]"
               iconColor="stroke-neutral-0"
             />
             <CarouselNext
-              className="right-1 h-[18px] w-[18px] bg-[#4141414D] p-1 backdrop-blur-[5px] max-lg:h-[10px] max-lg:w-[10px]"
+              className="right-1 h-[18px] w-[18px] bg-[#1818184D] p-1 backdrop-blur-[5px] max-lg:h-[10px] max-lg:w-[10px]"
               type="button"
               iconColor="stroke-neutral-0"
             />

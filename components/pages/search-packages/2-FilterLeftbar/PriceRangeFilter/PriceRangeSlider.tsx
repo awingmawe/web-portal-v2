@@ -302,7 +302,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
       </div>
       <div className="flex items-center justify-between self-stretch">
         {isLoadingSkeleton ? minPriceSkeleton : minPriceInput}
-        <div className="h-px w-5 flex-none bg-[#D2D2D1] sm:mx-5 xl:mx-10" />
+        <div className="h-px w-5 flex-none bg-[#c9c9c9] sm:mx-5 xl:mx-10" />
         {isLoadingSkeleton ? maxPriceSkeleton : maxPriceInput}
       </div>
       {/* Price Range Slider */}
