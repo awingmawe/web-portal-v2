@@ -1,8 +1,15 @@
 import { toast } from '@/components/ui/sonner'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import {
+  ErrorSubmissionPembiayaan,
+  RequestPrePembiayaan,
+  RequestSubmissionPembiayaan,
+} from '@/constant/types/Pembiayaan'
+import {
   createCalculateFinancing,
   getProvider,
+  preCreatePembiayaan,
+  submissionPembiayaan,
 } from '@/services/banking-service'
 import {
   useSWRFetcher,
@@ -56,23 +63,78 @@ export function useCalculateFinancing(config?: {
   const { showErrorToast = true } = config || {}
 
   const { trigger, data, error, isMutating } = useSWRMutationFetcher(
-    'create-provider',
+    'calculate-pembiayaan',
     (data) =>
       createCalculateFinancing({
         totalAmount: data.totalAmount,
         tenor: data.tenor,
       }),
     {
-      onSuccess: () => {
-        mutate(
-          (key) => typeof key === 'string' && key.includes('credit-providers')
-        )
-      },
       onError: (err) => {
         if (showErrorToast) {
           toast.error('Gagal menghitung kalkulasi pembiayaan', {
             description: err?.message || 'Terjadi kesalahan',
           })
+        }
+      },
+    }
+  )
+
+  return {
+    create: trigger, // Trigger function
+    data,
+    error,
+    isLoading: isMutating,
+  }
+}
+
+export function useCreateSubmissionPembiayaan(config?: {
+  showSuccessToast?: boolean
+  showErrorToast?: boolean
+}) {
+  const { showErrorToast = true } = config || {}
+
+  const { trigger, data, error, isMutating } = useSWRMutationFetcher(
+    'create-submission',
+    (data: RequestSubmissionPembiayaan) => submissionPembiayaan(data),
+    {
+      onSuccess: () => {
+        mutate(
+          (key) => typeof key === 'string' && key.includes('create-submission')
+        )
+      },
+      onError: (err: ErrorSubmissionPembiayaan) => {
+        if (showErrorToast) {
+          toast.error(err.message)
+        }
+      },
+    }
+  )
+
+  return {
+    create: trigger, // Trigger function
+    data,
+    error,
+    isLoading: isMutating,
+  }
+}
+
+export function usePreCreatePembiayaan(config?: {
+  showSuccessToast?: boolean
+  showErrorToast?: boolean
+}) {
+  const { showErrorToast = true } = config || {}
+
+  const { trigger, data, error, isMutating } = useSWRMutationFetcher(
+    'create-pre',
+    (data: RequestPrePembiayaan) => preCreatePembiayaan(data),
+    {
+      onSuccess: () => {
+        mutate((key) => typeof key === 'string' && key.includes('create-pre'))
+      },
+      onError: (err: ErrorSubmissionPembiayaan) => {
+        if (showErrorToast) {
+          toast.error(err.message)
         }
       },
     }

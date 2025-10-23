@@ -10,7 +10,7 @@ import {
   formatDateToDDMMYYYY,
   getHotelRating,
 } from '@/lib/utils'
-import Placeholder from '@/public/thumbnail.png'
+import Placeholder from '@/public/images/no-image-placeholder.png'
 
 export function mapProductsToCardData(
   products: GenericResponse<Package>
@@ -63,6 +63,7 @@ export function mapSelectedPackagePembiayaan(
 ): SelectedPackage {
   return {
     // Organization Info
+    organizationId: data?.package?.organizationInstanceId || 0,
     organizationName: data?.package?.organizationInstanceName || '-',
     organizationCity: data?.package?.organizationInstance?.city?.name || '-',
     organizationProvince:
@@ -76,6 +77,8 @@ export function mapSelectedPackagePembiayaan(
       data?.package?.organizationInstance?.thumbnail || Placeholder.src,
 
     // Package Info
+    packageId: data?.package?.id || 0,
+    packageVariantId: data?.id || 0,
     packageName: data?.package?.title || '-',
     packageThumbnail: data?.package?.thumbnail || Placeholder.src,
 
@@ -86,16 +89,27 @@ export function mapSelectedPackagePembiayaan(
     // Departure Airport Info
     departureAirportName: data?.package?.departure?.from?.airport?.name || '-',
     destinationAirportName: data?.package?.departure?.to?.airport?.name || '-',
+    departureAirpotCode: data?.package?.departure?.from?.airport?.code || '-',
+    departureDestinationAirportCode:
+      data?.package?.departure?.to?.airport?.code || '-',
 
     // Arrival Airport Info
     arrivalOriginAirportName:
       data?.package?.arrival?.from?.airport?.name || '-',
     arrivalDestinationAirportName:
       data?.package?.arrival?.to?.airport?.name || '-',
+    arrivalOriginAirportCode:
+      data?.package?.arrival?.from?.airport?.code || '-',
+    arrivalDestinationAirportCode:
+      data?.package?.arrival?.to?.airport?.code || '-',
 
     // Airline Info
     departureAirlineName: data?.package?.departure?.airline?.name || '-',
+    departureAirlineThumbnail:
+      data?.package?.departure?.airline?.logo || Placeholder.src,
     arrivalAirlineName: data?.package?.arrival?.airline?.name || '-',
+    arrivalAirlineThumbnail:
+      data?.package?.arrival?.airline?.logo || Placeholder.src,
 
     // Hotel Info - Mecca
     meccaHotelName: data?.package?.meccaHotel?.name || '-',

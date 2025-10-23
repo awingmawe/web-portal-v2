@@ -58,9 +58,24 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  if (pathname.startsWith('/banking/credit/form')) {
+    const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value
+    if (!token) {
+      const loginUrl = new URL(
+        `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(request.nextUrl.toString())}`
+      )
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
   // return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/my(.*)', '/article(.*)', '/linkaja(.*)'],
+  matcher: [
+    '/my(.*)',
+    '/article(.*)',
+    '/linkaja(.*)',
+    '/banking/credit/form(.*)',
+  ],
 }

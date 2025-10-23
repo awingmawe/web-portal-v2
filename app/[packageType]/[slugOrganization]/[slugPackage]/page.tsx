@@ -321,7 +321,7 @@ export default async function DetailPackage({
               <PackageVariant
                 dataTenor={dataTenor?.data?.results}
                 titlePackage={detailData?.title}
-                variants={packageVariants.results}
+                variants={packageVariants?.data?.results}
                 organization={detailData?.organizationInstance}
                 package={detailData}
                 packageVariantId={detailData?.packageVariant?.id}
@@ -336,7 +336,7 @@ export default async function DetailPackage({
           title={detailData?.title}
           currency={detailData?.currency}
           packageType={detailData?.packageType}
-          variants={packageVariants.results}
+          variants={packageVariants?.data?.results}
           organization={detailData?.organizationInstance}
           thumbnail={detailData?.thumbnail}
           variantType={detailData?.variantType}

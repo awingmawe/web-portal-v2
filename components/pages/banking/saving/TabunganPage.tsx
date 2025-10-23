@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Tambahkan debugging dan perbaikan untuk desktop view
 'use client'
-import SuccessModal from '@/components/pages/banking/1-Tabungan/SuccessModal '
 import DrawerAlreadyHave from '@/components/pages/banking/mobile/DrawerAlreadyHave'
 import ModalAlreadyHave from '@/components/pages/banking/modal/modalAlreadyHave'
+import SuccessModal from '@/components/pages/banking/saving/SuccessModal '
 import { Button } from '@/components/ui/button'
 import { getSaving, postSaving } from '@/services/banking-service'
 import { updateProfile } from '@/services/identity-service'

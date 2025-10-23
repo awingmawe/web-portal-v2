@@ -6,16 +6,17 @@ import { Calendar2 } from '@/components/icons/calendar'
 import { PeopleIcon } from '@/components/icons/people'
 import FinancingSimulation from '@/components/pages/banking/common/TenorCalculation'
 import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/PackageListEvent'
-import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
+import { Button } from '@/components/ui/button'
+import { ACCOUNT_URL, LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { Package } from '@/constant/types/PackageProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
-import { localStorageUtils } from '@/hooks/common/useLocalStorage'
+import { useLocalStorageListener } from '@/hooks/common/useLocalStorageListener'
 import { mapProductsToCardData } from '@/lib/data-formatter'
 import { isEmpty } from '@/lib/utils'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 // Skeleton Component
@@ -71,12 +72,18 @@ const PackagePembiayaanSkeleton = () => {
 const PackagePembiayaan = ({
   dataPackageProvider,
   dataTenor,
+  token,
 }: {
   dataPackageProvider: GenericResponse<Package>
   dataTenor: Facility[]
+  token: string
 }) => {
-  const [dataPembiayaan, setDataPembiayaan] =
-    useState<PembiayaanDataLocalStorage | null>(null)
+  const router = useRouter()
+
+  const [dataPembiayaan] = useLocalStorageListener<PembiayaanDataLocalStorage>(
+    LOCAL_STORAGE_PEMBIAYAAN
+  )
+
   const [linkPembiayaan, setLinkPembiayaan] = useState<{
     link: string
     label: string
@@ -84,26 +91,26 @@ const PackagePembiayaan = ({
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate loading and get data from localStorage
-    const loadData = () => {
-      try {
-        const data = localStorageUtils.getJSON(
-          LOCAL_STORAGE_PEMBIAYAAN
-        ) as PembiayaanDataLocalStorage
-        setDataPembiayaan(data)
-        setLinkPembiayaan({
-          link: '/banking/credit/form',
-          label: 'Lanjutkan Pengisian Permohonan',
-        })
-      } catch (error) {
-        console.error('Error loading pembiayaan data:', error)
-      } finally {
-        setIsLoading(false)
-      }
+    if (dataPembiayaan) {
+      setLinkPembiayaan({
+        link: '/banking/credit/form',
+        label: 'Lanjutkan Pengisian Permohonan',
+      })
     }
 
-    loadData()
-  }, [])
+    setIsLoading(false)
+  }, [dataPembiayaan])
+
+  const onClickLinkPembiayaan = () => {
+    // Kalo sudah memilih paket pengajuan pembiaayan tetapi belum login
+    // Lempar ke halaman login
+    if (dataPembiayaan && !token) {
+      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${window.location.href}`
+      return
+    }
+
+    router.push(linkPembiayaan.link)
+  }
 
   // Show skeleton while loading
   if (isLoading) {
@@ -265,12 +272,12 @@ const PackagePembiayaan = ({
         </section>
       )}
 
-      <Link
-        href={linkPembiayaan?.link}
-        className="bg-primary-500 text-s-regular hover:bg-primary-700 mx-auto mt-6 flex w-fit rounded-full px-10 py-4 text-center transition-all duration-300"
+      <Button
+        onClick={onClickLinkPembiayaan}
+        className="text-s-regular mx-auto mt-6 !flex w-fit rounded-full px-10 py-4 text-center transition-all duration-300"
       >
         {linkPembiayaan?.label}
-      </Link>
+      </Button>
     </>
   )
 }

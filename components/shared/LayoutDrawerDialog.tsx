@@ -19,10 +19,11 @@ interface LayoutDrawerDialogProps {
   trigger: React.ReactNode
   title: React.ReactNode
   content: React.ReactNode
-  footerContent: React.ReactNode
+  footerContent?: React.ReactNode
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
   preventClose?: boolean
+  sizeDialog?: 'wide' | 'large' | 'medium' | 'default'
   hideCloseButton?: boolean
   onCloseAttempt?: () => void
 }
@@ -34,6 +35,7 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
   isOpen,
   footerContent,
   setIsOpen,
+  sizeDialog = 'default',
   preventClose = false,
   hideCloseButton = false,
   onCloseAttempt,
@@ -46,6 +48,13 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
       return
     }
     setIsOpen(newOpen)
+  }
+
+  const size = {
+    wide: '!max-w-3/4',
+    large: '!max-w-2/3',
+    medium: '!max-w-1/2',
+    default: 'w-full',
   }
 
   const preventCloseEvents = preventClose
@@ -69,14 +78,16 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent
-        className={`rounded-[20px] px-8 py-4 ${
+        className={`${size[sizeDialog || 'default']} rounded-[20px] px-8 py-4 ${
           hideCloseButton ? '[&>button]:hidden' : ''
         }`}
         {...preventCloseEvents}
       >
         <DialogTitle>{title}</DialogTitle>
         {content}
-        <DialogFooter className="pt-3">{footerContent}</DialogFooter>
+        {footerContent && (
+          <DialogFooter className="pt-3">{footerContent}</DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   ) : (
@@ -90,7 +101,9 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
         <div className="w-full px-4 pt-2.5 max-lg:overflow-y-auto">
           {content}
         </div>
-        <DrawerFooter className="pt-3">{footerContent}</DrawerFooter>
+        {footerContent && (
+          <DrawerFooter className="pt-3">{footerContent}</DrawerFooter>
+        )}
       </DrawerContent>
     </Drawer>
   )

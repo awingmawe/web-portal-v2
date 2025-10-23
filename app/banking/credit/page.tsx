@@ -63,6 +63,7 @@ export default async function SearchGeneral() {
         <PackagePembiayaan
           dataPackageProvider={dataPackageProvider}
           dataTenor={dataTenor.data.results}
+          token={token}
         />
       </main>
 
