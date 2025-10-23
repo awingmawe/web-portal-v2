@@ -43,7 +43,6 @@ export interface CardData {
   provinceId: string
   organizationName: string
   organizationId: string
-  organizationInstanceId: number
   originalPrice: string
   price: string
   rating: string | number
