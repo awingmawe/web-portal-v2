@@ -259,6 +259,8 @@ export function mapProductsToCardData(
       variantType: product?.variantType,
       tripDuration: product?.packageVariant?.tripDuration,
       waitingPeriod: product?.packageVariant?.waitingPeriod || null,
+      organizationId: product?.organizationId,
+      organizationInstanceId: product?.organizationInstanceId,
     })) || []
   )
 }

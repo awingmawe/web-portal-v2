@@ -58,6 +58,8 @@ export const CardPackage = memo(function CardPackage({
     isLastCall,
     variantType,
     waitingPeriod,
+    organizationId,
+    organizationInstanceId,
   } = data
 
   // Memoize complex calculations
@@ -153,6 +155,8 @@ export const CardPackage = memo(function CardPackage({
             section,
             lastCall: isLastCall,
             price,
+            organizationId,
+            organizationInstanceId,
           },
         })
       })
