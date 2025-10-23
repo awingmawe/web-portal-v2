@@ -54,6 +54,8 @@ export const CardPackageCompact = memo(function CardPackageCompact({
     medinaHotel,
     departure,
     arrival,
+    organizationId,
+    organizationInstanceId,
   } = data
 
   // Memoize complex calculations
@@ -140,6 +142,8 @@ export const CardPackageCompact = memo(function CardPackageCompact({
             section,
             lastCall: isLastCall,
             price,
+            organizationId,
+            organizationInstanceId,
           },
         })
       })
