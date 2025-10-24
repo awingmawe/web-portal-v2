@@ -8,6 +8,18 @@
  * localStorageUtils.mergeJSON('user', { email: 'new@example.com' })
  * localStorageUtils.remove('user')
  */
+
+// ✅ Helper function untuk dispatch event
+const dispatchStorageEvent = (key: string, value: any) => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('localStorageUpdate', {
+        detail: { key, value },
+      })
+    )
+  }
+}
+
 export const localStorageUtils = {
   /**
    * Get JSON from localStorage
@@ -42,6 +54,9 @@ export const localStorageUtils = {
       const valueToStore = isObject ? JSON.stringify(value) : String(value)
 
       localStorage.setItem(key, valueToStore)
+
+      dispatchStorageEvent(key, value)
+
       return true
     } catch (error) {
       console.error(`Error setting localStorage key "${key}":`, error)
@@ -65,6 +80,7 @@ export const localStorageUtils = {
         return false
       }
       const newValue = updater(currentValue)
+
       return localStorageUtils.setJSON(key, newValue)
     } catch (error) {
       console.error(`Error updating localStorage key "${key}":`, error)
@@ -93,6 +109,7 @@ export const localStorageUtils = {
       }
 
       const mergedValue = { ...currentValue, ...partialValue }
+
       return localStorageUtils.setJSON(key, mergedValue)
     } catch (error) {
       console.error(`Error merging localStorage key "${key}":`, error)
@@ -130,6 +147,7 @@ export const localStorageUtils = {
       }
 
       current[pathArray[pathArray.length - 1]] = value
+
       return localStorageUtils.setJSON(key, newValue)
     } catch (error) {
       console.error(
@@ -147,6 +165,8 @@ export const localStorageUtils = {
   remove: (key: string): void => {
     if (typeof window === 'undefined') return
     localStorage.removeItem(key)
+
+    dispatchStorageEvent(key, null)
   },
 
   /**
@@ -156,6 +176,8 @@ export const localStorageUtils = {
   clear: (): void => {
     if (typeof window === 'undefined') return
     localStorage.clear()
+
+    dispatchStorageEvent('*', null)
   },
 
   /**

@@ -6,8 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import KotaAsalCombobox from '@/components/pages/banking/1-Tabungan/KotaAsal'
-import ProvinsiAsalCombobox from '@/components/pages/banking/1-Tabungan/ProvinsiAsal'
+import KotaAsalCombobox from '@/components/pages/banking/saving/KotaAsal'
+import ProvinsiAsalCombobox from '@/components/pages/banking/saving/ProvinsiAsal'
 import TriggerCalendar from '@/components/pages/manifest/3-FormManifest/TriggerCalendar'
 import { Button } from '@/components/ui/button'
 import {

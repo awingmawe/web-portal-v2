@@ -14,7 +14,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
+import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
+import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { formatCurrency, parseCurrency } from '@/lib/utils'
 import { useCalculateFinancing } from '@/services/hooks/banking-service/credits-api'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -38,6 +41,20 @@ export default function FinancingSimulation({
 
   // Debounce timer reference
   const debounceTimer = useRef<NodeJS.Timeout | null>(null)
+
+  // On change select tenor
+  const handleTenorChange = (value: string) => {
+    setSelectedTenor(value)
+    localStorageUtils.updateJSON(LOCAL_STORAGE_PEMBIAYAAN, (prev) => {
+      if (prev && typeof prev === 'object') {
+        return {
+          ...prev,
+          tenor: value,
+        }
+      }
+      return value
+    })
+  }
 
   const handleChange = (e: any) => {
     const inputValue = e.target.value
@@ -105,11 +122,18 @@ export default function FinancingSimulation({
 
   // Set default value when data is loaded
   useEffect(() => {
-    if (tenorOptions.length > 0 && !selectedTenor) {
-      const value = tenorOptions[0]?.value || ''
-      setSelectedTenor(String(value))
+    if (tenorOptions.length === 0 || selectedTenor) return
+
+    const dataPembiayaan = localStorageUtils.getJSON(
+      LOCAL_STORAGE_PEMBIAYAAN
+    ) as PembiayaanDataLocalStorage
+
+    const defaultValue = dataPembiayaan?.tenor || tenorOptions[0]?.value
+
+    if (defaultValue) {
+      setSelectedTenor(String(defaultValue))
     }
-  }, [tenorOptions, selectedTenor])
+  }, [selectedTenor, tenorOptions])
 
   // Trigger calculation when tenor or down payment changes
   useEffect(() => {
@@ -151,7 +175,7 @@ export default function FinancingSimulation({
         <Select
           disabled={tenorOptions.length === 0 || isLoading}
           value={selectedTenor}
-          onValueChange={setSelectedTenor}
+          onValueChange={handleTenorChange}
         >
           <SelectTrigger className="w-full rounded-full border-1 border-neutral-200 px-4 py-2.5">
             <SelectValue placeholder="Pilih tenor" />

@@ -2,7 +2,7 @@
 'use client'
 
 import { SearchIcon } from '@/components/icons/search'
-import { tabunganFormSchema } from '@/components/pages/banking/1-Tabungan/TabunganForm'
+import { tabunganFormSchema } from '@/components/pages/banking/saving/TabunganForm'
 import { FormLabel, FormMessage } from '@/components/ui/form'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
 import { Input } from '@/components/ui/input'
