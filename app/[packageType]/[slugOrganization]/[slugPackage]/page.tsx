@@ -32,7 +32,7 @@ import {
   getTripDuration,
 } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
-import { getGalleryHotel } from '@/services/general-service'
+import { getFacilityEnum, getGalleryHotel } from '@/services/general-service'
 import {
   getGalleryPackage,
   getPackageDetail,
@@ -84,7 +84,7 @@ export default async function DetailPackage({
   const idDetailPackage = detailData.id
   const medinaIdHotel = detailData.medinaHotel.id ?? 0
   const meccaIdHotel = detailData.meccaHotel.id ?? 0
-  const [galleryData, packageVariants, galleryMedina, galleryMecca] =
+  const [galleryData, packageVariants, galleryMedina, galleryMecca, dataTenor] =
     await Promise.all([
       getGalleryPackage(idDetailPackage),
       getPackageVariantList({
@@ -108,6 +108,7 @@ export default async function DetailPackage({
         },
         meccaIdHotel
       ),
+      getFacilityEnum('credit_tenor'),
     ])
 
   // Map gallery data to the format expected by GalleryList
@@ -318,8 +319,9 @@ export default async function DetailPackage({
                 mobile={true}
               />
               <PackageVariant
+                dataTenor={dataTenor?.data?.results}
                 titlePackage={detailData?.title}
-                variants={packageVariants.results}
+                variants={packageVariants?.data?.results}
                 organization={detailData?.organizationInstance}
                 package={detailData}
                 packageVariantId={detailData?.packageVariant?.id}
@@ -334,11 +336,12 @@ export default async function DetailPackage({
           title={detailData?.title}
           currency={detailData?.currency}
           packageType={detailData?.packageType}
-          variants={packageVariants.results}
+          variants={packageVariants?.data?.results}
           organization={detailData?.organizationInstance}
           thumbnail={detailData?.thumbnail}
           variantType={detailData?.variantType}
           token={token}
+          dataTenor={dataTenor?.data?.results}
         />
       </GalleryProvider>
       <EventTrackerImpression

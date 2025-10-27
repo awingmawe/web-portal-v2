@@ -1,5 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
-import TabunganPage from '@/components/pages/banking/1-Tabungan/TabunganPage'
+import TabunganPage from '@/components/pages/banking/saving/TabunganPage'
 import Footer from '@/components/shared/Footer'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'

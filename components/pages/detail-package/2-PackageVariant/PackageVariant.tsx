@@ -34,6 +34,8 @@ import { useEffect, useState } from 'react'
 
 // Import the new components
 import ModalKurs from '@/components/pages/detail-package/2-PackageVariant/modal/ModalKurs'
+import ModalPembiayaan from '@/components/pages/detail-package/2-PackageVariant/modal/ModalPembiayaan'
+import { Facility } from '@/constant/types/FacilityProps'
 import ActionButtons from './component/ActionButtons'
 import BottomActions from './component/BottomActions'
 import PackageVariantHeader from './component/PackageVariantHeader'
@@ -50,6 +52,7 @@ interface PackageVariantComponentProps {
   token?: string
   packageVariantId: number
   referralCodeParams?: string
+  dataTenor: Facility[]
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
@@ -59,6 +62,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   token,
   packageVariantId,
   referralCodeParams,
+  dataTenor,
 }) => {
   const [isLinkAja, setIsLinkAja] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
@@ -110,6 +114,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const [isLiked, setIsLiked] = useState(false)
   const [isSelectHotelModalOpen, setIsSelectHotelModalOpen] = useState(false)
   const [isKursModalOpen, setIsKursModalOpen] = useState(false)
+  const [isPembiayaanModalOpen, setIsPembiayaanModalOpen] = useState(false)
 
   const statusLike = async () => {
     const statusLike = await getStatusLiked(pkg?.id as number)
@@ -362,12 +367,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <ActionButtons
         variants={variants}
         availableRoomTypes={availableRoomTypes}
-        selectedVariant={selectedVariant}
         packageType={pkg.packageType}
         token={token || ''}
         onCheckout={handleCheckout}
         currency={pkg.currency}
         handlePushEvent={handlePushEvent}
+        setIsPembiayaanModalOpen={setIsPembiayaanModalOpen}
       />
 
       {/* Bottom actions */}
@@ -399,6 +404,19 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         open={isSelectHotelModalOpen}
         onOpenChange={setIsSelectHotelModalOpen}
         onSubmit={handleCheckout}
+      />
+
+      {/* Modal for pembiayaan */}
+      <ModalPembiayaan
+        open={isPembiayaanModalOpen}
+        setOpen={setIsPembiayaanModalOpen}
+        title={titlePackage}
+        variants={variants}
+        image={pkg?.thumbnail}
+        currency={pkg.currency}
+        packageType={pkg.packageType}
+        variantType={pkg.variantType}
+        dataTenor={dataTenor}
       />
     </div>
   )

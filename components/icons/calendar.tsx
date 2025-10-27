@@ -1,4 +1,5 @@
 import { IconProps } from '@/constant/types/IconProps'
+import { cn } from '@/lib/utils'
 import React from 'react'
 
 export const Calendar: React.FC<IconProps> = ({
@@ -35,7 +36,7 @@ export const Calendar2: React.FC<IconProps> = ({
       height={size || 60}
       viewBox="0 0 20 21"
       fill="none"
-      className={className}
+      className={cn('stroke-current', className)}
       {...props}
     >
       <path

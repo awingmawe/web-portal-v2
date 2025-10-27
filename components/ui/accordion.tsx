@@ -33,23 +33,25 @@ function AccordionTrigger({
   className,
   children,
   noSeparator = false,
+  sizeChevron = 24,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
   noSeparator?: boolean
+  sizeChevron?: number
 }) {
   return (
     <AccordionPrimitive.Header className="flex flex-col">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          'flex w-full flex-1 cursor-pointer items-start justify-between gap-4 rounded-md py-3 text-left text-sm font-medium transition-all outline-none focus-visible:outline-0 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>#chevron]:rotate-180',
+          'flex w-full flex-1 cursor-pointer items-center justify-between gap-4 rounded-md py-3 text-left text-sm font-medium transition-all outline-none focus-visible:outline-0 disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>#chevron]:rotate-180',
           className
         )}
         {...props}
       >
-        <div className="w-11/12">{children}</div>
-        <div className="w-1/12" id="chevron">
-          <ChevronIcon size={24} className="m-auto" />
+        <div>{children}</div>
+        <div id="chevron">
+          <ChevronIcon size={sizeChevron} className="m-auto" />
         </div>
       </AccordionPrimitive.Trigger>
       {!noSeparator && <Separator color="#B5B5B5" className="h-[0.5px]" />}

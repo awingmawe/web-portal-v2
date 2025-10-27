@@ -81,17 +81,11 @@ export async function getPackageList(
   }
 }
 export async function getPackageVariantList(
-  query: any
-): Promise<GenericResponse<PackageVariant>> {
-  try {
-    const response = await api.get(
-      `/public/umrah/v1/package-variant?${qs.stringify(query)}`
-    )
-    return response.data
-  } catch (error) {
-    console.error('Error fetching package variant data list:', error)
-    throw error
-  }
+  query: GetListQuery
+): Promise<AxiosResponse<GenericResponse<PackageVariant>>> {
+  return await api.get(
+    `/public/umrah/v1/package-variant?${qs.stringify(query)}`
+  )
 }
 
 export async function getPackageDetail(slug: string): Promise<Package> {

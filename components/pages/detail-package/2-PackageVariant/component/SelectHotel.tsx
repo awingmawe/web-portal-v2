@@ -125,9 +125,7 @@ export default function SelectHotel({
     <Fragment>
       <div className={`${!isMobile && 'max-lg:hidden'}`}>
         {variant == 'normal' && (
-          <div className="text-s-regular mb-2 max-lg:text-sm max-lg:font-medium">
-            {titleText}
-          </div>
+          <div className="text-s-regular mb-2">{titleText}</div>
         )}
         <div className={cn('flex gap-2 max-xl:flex-col', className)}>
           <Card

@@ -1,4 +1,11 @@
 import { GetListQuery } from '@/constant/types/GeneralProps'
+import {
+  FinancingCalculationResponse,
+  RequestPrePembiayaan,
+  RequestSubmissionPembiayaan,
+  ResponsePrePembiayaan,
+  ResponseSubmissionPembiayaan,
+} from '@/constant/types/Pembiayaan'
 import { ResponseProvider } from '@/constant/types/Providers'
 import { api, apiWithAuth } from '@/services/common/http'
 import { AxiosResponse } from 'axios'
@@ -58,4 +65,29 @@ export async function getProvider(
   query: GetListQuery
 ): Promise<AxiosResponse<ResponseProvider>> {
   return api.get(`/public/banking/v2/credit/providers?${qs.stringify(query)}`)
+}
+
+export async function createCalculateFinancing({
+  totalAmount,
+  tenor,
+}: {
+  totalAmount: number
+  tenor: number
+}): Promise<AxiosResponse<FinancingCalculationResponse>> {
+  return api.post(`/public/banking/v2/credit/calculate-financing`, {
+    totalAmount,
+    tenor,
+  })
+}
+
+export async function preCreatePembiayaan(
+  data: RequestPrePembiayaan
+): Promise<AxiosResponse<ResponsePrePembiayaan>> {
+  return apiWithAuth.post(`/banking/v2/credit/pre-create`, data)
+}
+
+export async function submissionPembiayaan(
+  data: RequestSubmissionPembiayaan
+): Promise<AxiosResponse<ResponseSubmissionPembiayaan>> {
+  return apiWithAuth.post(`/banking/v2/credit/submissions`, data)
 }

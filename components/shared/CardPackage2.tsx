@@ -49,6 +49,8 @@ export const CardPackage2 = memo(function CardPackage({
     packageType,
     id: packageId,
     isLastCall,
+    organizationId,
+    organizationInstanceId,
   } = data
 
   // Memoize complex calculations
@@ -128,6 +130,8 @@ export const CardPackage2 = memo(function CardPackage({
             section,
             lastCall: isLastCall,
             price,
+            organizationId,
+            organizationInstanceId,
           },
         })
       })

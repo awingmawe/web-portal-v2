@@ -1,20 +1,22 @@
 'use client'
 
+import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import React from 'react'
 
 const PembiayaanLanding: React.FC = () => {
+  const { goBack } = useCustomNavigation()
+
   return (
     <section className="container mx-auto flex flex-col space-y-6 max-lg:space-y-4 max-lg:px-4">
-      <Link
-        href="/"
+      <p
+        onClick={() => goBack()}
         className="heading-3-semibold inline-flex w-fit cursor-pointer items-center gap-1 max-lg:hidden"
       >
         <ChevronLeft size={24} />
         Kembali
-      </Link>
+      </p>
       {/* Banner for mobile */}
       <Image
         src="/images/banner-pembiayaan-mobile.svg"
