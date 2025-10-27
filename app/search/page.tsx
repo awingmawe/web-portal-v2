@@ -196,7 +196,7 @@ export default async function SearchGeneral({
               dataFacility={dataFacility.data}
               dataMinMax={dataMinMax}
               dataSection={dataSection}
-              dataKota={dataKota}
+              dataKota={dataKota.data}
             />
           }
         >
@@ -206,7 +206,7 @@ export default async function SearchGeneral({
               dataTagPackages={dataTagPackages}
               dataFacility={dataFacility.data}
               dataSection={dataSection}
-              dataKota={dataKota}
+              dataKota={dataKota.data}
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12 max-lg:px-4">

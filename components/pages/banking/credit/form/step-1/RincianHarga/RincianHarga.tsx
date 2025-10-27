@@ -1,4 +1,4 @@
-import RincianHargaSkeleton from '@/components/pages/banking/credit/form/1-Step1/RincianHarga/SkeletonRincianHarga'
+import RincianHargaSkeleton from '@/components/pages/banking/credit/form/step-1/RincianHarga/SkeletonRincianHarga'
 import { Separator } from '@/components/ui/separator'
 import { SelectedPackage } from '@/constant/types/Pembiayaan'
 import { RoomType } from '@/contexts/package-variant-context'

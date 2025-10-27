@@ -1,4 +1,4 @@
-import { SubmissionStep1Data } from '@/constant/schema/pembiayaan-schema/pembiayaan'
+import { SubmissionStep1FormValues } from '@/constant/schema/pembiayaan-schema/pembiayaan'
 import { RoomType } from '@/contexts/package-variant-context'
 
 // --------------------------------------- SELECTED PACKAGE ------------------------------------ //
@@ -70,7 +70,7 @@ export type PembiayaanDataLocalStorage = {
   totalQty: number
   price: number
   tenor: string
-  formData?: SubmissionStep1Data
+  formData?: SubmissionStep1FormValues
 }
 // --------------------------------------- END OF PEMBIAYAAN DATA LOCAL STORAGE ------------------------------------ //
 
