@@ -13,10 +13,17 @@ export async function generateMetadata() {
 }
 
 export default async function TalanganFormStep1() {
-  const dataTenor = await getFacilityEnum('credit_tenor')
+  const [dataTenor, dataPekerjaan] = await Promise.all([
+    getFacilityEnum('credit_tenor'),
+    getFacilityEnum('work'),
+  ])
+
   return (
     <Fragment>
-      <Step1Layout dataTenor={dataTenor.data.results} />
+      <Step1Layout
+        dataTenor={dataTenor.data.results}
+        dataPekerjaan={dataPekerjaan.data.results}
+      />
     </Fragment>
   )
 }

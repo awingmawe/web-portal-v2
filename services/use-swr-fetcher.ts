@@ -2,7 +2,9 @@ import { AxiosResponse } from 'axios'
 import useSWR, { SWRConfiguration } from 'swr'
 import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation'
 import useSWRInfinite, { SWRInfiniteConfiguration } from 'swr/infinite'
+import { useCallback } from 'react'
 
+export const PAGE_SIZE = 20
 type SWRHookFn<T> = (params: any) => Promise<AxiosResponse<T, any>>
 
 /**
@@ -59,7 +61,7 @@ export function useSWRInfiniteFetcher<T>(
   fetcherFunction: (key: any) => Promise<AxiosResponse<T>>,
   config?: SWRInfiniteConfiguration
 ) {
-  const { data, error, isLoading, isValidating, mutate, size, setSize } =
+  const { data, error, isLoading, isValidating, size, setSize } =
     useSWRInfinite(
       getKey,
       async (key) => {
@@ -84,14 +86,21 @@ export function useSWRInfiniteFetcher<T>(
   const isEmpty = data?.[0]?.results?.length === 0
   const isReachingEnd =
     isEmpty ||
-    (data && data[data.length - 1]?.results?.length < (data[0]?.size || 10))
+    (data &&
+      data[data.length - 1]?.results?.length < (data[0]?.size || PAGE_SIZE))
 
   // Get total count
   const total = data?.[0]?.total || 0
+  const loadMore = useCallback(() => {
+    // Tambahkan penjaga agar tidak memanggil setSize
+    // jika sedang loading atau sudah mencapai akhir.
+    if (isLoadingMore || isReachingEnd) return
+
+    setSize((s) => s + 1)
+  }, [setSize, isLoadingMore, isReachingEnd])
 
   return {
     data: flattenedData, // All data flattened
-    pages: data, // Original pages data
     total,
     error,
     isLoading, // Initial loading
@@ -101,7 +110,6 @@ export function useSWRInfiniteFetcher<T>(
     isEmpty,
     size, // Current page count
     setSize, // Function to load more
-    loadMore: () => setSize(size + 1), // Helper to load next page
-    refresh: mutate,
+    loadMore, // Helper to load next page
   }
 }

@@ -57,7 +57,7 @@ const Checkbox = React.forwardRef<
             {label && (
               <label
                 htmlFor={props.id || id}
-                className="text-m-regular cursor-pointer text-neutral-900 capitalize"
+                className="text-m-regular cursor-pointer text-neutral-900"
               >
                 {label}
               </label>

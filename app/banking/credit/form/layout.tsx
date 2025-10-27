@@ -1,3 +1,4 @@
+import StepperIndicator from '@/components/pages/banking/common/StepperIndicator'
 import Footer from '@/components/shared/Footer'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
@@ -17,6 +18,7 @@ export default async function FormPembiayaanLayout({
     <div className="flex min-h-[100dvh] flex-col">
       <Topbar scrolled token={token} />
       <main className="my-6 flex flex-col gap-8 max-lg:my-0 max-lg:gap-6">
+        <StepperIndicator />
         {children}
       </main>
       <Footer type="compact" className="mt-auto hidden lg:block" />

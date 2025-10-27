@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // hooks/identity/useGetProvince.ts
 import { toast } from '@/components/ui/sonner'
-import { GetListQuery } from '@/constant/types/GeneralProps'
+import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
+import { SubdistrictPostalCode } from '@/constant/types/LocationProps'
 import {
   getDistrict,
   getKota,
@@ -8,6 +10,7 @@ import {
   getSubDistrictAndPostal,
 } from '@/services/identity-service'
 import { useSWRInfiniteFetcher } from '@/services/use-swr-fetcher'
+import { AxiosResponse } from 'axios'
 import { useEffect } from 'react'
 import { SWRInfiniteConfiguration } from 'swr/infinite'
 
@@ -36,7 +39,6 @@ export function useGetProvinceInfinite(
 
   const {
     data,
-    pages,
     total,
     error,
     isLoading,
@@ -44,7 +46,6 @@ export function useGetProvinceInfinite(
     isReachingEnd,
     isEmpty,
     loadMore,
-    refresh,
   } = useSWRInfiniteFetcher(
     getKey,
     ([_, query]) => getProvince(query),
@@ -57,15 +58,13 @@ export function useGetProvinceInfinite(
         description: error.code,
         action: {
           label: 'Coba Lagi',
-          onClick: () => refresh(),
         },
       })
     }
-  }, [error, showErrorToast, refresh])
+  }, [error, showErrorToast])
 
   return {
     data, // Flattened array of all provinces
-    pages, // Original pages data
     total,
     isLoading,
     isLoadingMore,
@@ -73,7 +72,6 @@ export function useGetProvinceInfinite(
     isEmpty,
     error,
     loadMore,
-    refresh,
   }
 }
 
@@ -86,6 +84,9 @@ export function useGetCityInfinite(
   const { showErrorToast = true, ...swrConfig } = config || {}
 
   const getKey = (pageIndex: number, previousPageData: any) => {
+    if (!baseQuery.provinceId) {
+      return null
+    }
     if (previousPageData && !previousPageData.results.length) return null
     return [
       'get-city-infinite',
@@ -98,7 +99,6 @@ export function useGetCityInfinite(
 
   const {
     data,
-    pages,
     total,
     error,
     isLoading,
@@ -106,7 +106,6 @@ export function useGetCityInfinite(
     isReachingEnd,
     isEmpty,
     loadMore,
-    refresh,
   } = useSWRInfiniteFetcher(getKey, ([_, query]) => getKota(query), swrConfig)
 
   useEffect(() => {
@@ -115,15 +114,13 @@ export function useGetCityInfinite(
         description: error.code,
         action: {
           label: 'Coba Lagi',
-          onClick: () => refresh(),
         },
       })
     }
-  }, [error, showErrorToast, refresh])
+  }, [error, showErrorToast])
 
   return {
     data,
-    pages,
     total,
     isLoading,
     isLoadingMore,
@@ -131,7 +128,6 @@ export function useGetCityInfinite(
     isEmpty,
     error,
     loadMore,
-    refresh,
   }
 }
 
@@ -144,6 +140,9 @@ export function useGetDistrictInfinite(
   const { showErrorToast = true, ...swrConfig } = config || {}
 
   const getKey = (pageIndex: number, previousPageData: any) => {
+    if (!baseQuery.cityId) {
+      return null
+    }
     if (previousPageData && !previousPageData.results.length) return null
     return [
       'get-district-infinite',
@@ -156,7 +155,6 @@ export function useGetDistrictInfinite(
 
   const {
     data,
-    pages,
     total,
     error,
     isLoading,
@@ -164,7 +162,6 @@ export function useGetDistrictInfinite(
     isReachingEnd,
     isEmpty,
     loadMore,
-    refresh,
   } = useSWRInfiniteFetcher(
     getKey,
     ([_, query]) => getDistrict(query),
@@ -177,15 +174,13 @@ export function useGetDistrictInfinite(
         description: error.code,
         action: {
           label: 'Coba Lagi',
-          onClick: () => refresh(),
         },
       })
     }
-  }, [error, showErrorToast, refresh])
+  }, [error, showErrorToast])
 
   return {
     data,
-    pages,
     total,
     isLoading,
     isLoadingMore,
@@ -193,7 +188,6 @@ export function useGetDistrictInfinite(
     isEmpty,
     error,
     loadMore,
-    refresh,
   }
 }
 
@@ -206,6 +200,9 @@ export function useGetSubDistrictInfinite(
   const { showErrorToast = true, ...swrConfig } = config || {}
 
   const getKey = (pageIndex: number, previousPageData: any) => {
+    if (!baseQuery.districtId) {
+      return null
+    }
     if (previousPageData && !previousPageData.results.length) return null
     return [
       'get-subdistrict-infinite',
@@ -216,9 +213,32 @@ export function useGetSubDistrictInfinite(
     ]
   }
 
+  const fetchAndNormalize = async (
+    key: any // key dari SWR
+  ): Promise<AxiosResponse<GenericResponse<SubdistrictPostalCode>>> => {
+    const query = key[1] // Ambil parameter query dari key
+
+    // 1. Panggil fungsi API asli
+    const response = await getSubDistrictAndPostal(query) // Ini mengembalikan AxiosResponse<PostalCodeResponse>
+
+    // 2. Ambil data asli (PostalCodeResponse)
+    const originalData = response.data
+
+    // 3. Buat objek data yang dinormalisasi (GenericResponse)
+    const normalizedData: GenericResponse<SubdistrictPostalCode> = {
+      total: originalData.total,
+      results: originalData.data, // ⬅️ INI DIA! Ubah `data` menjadi `results`
+    }
+
+    // 4. Kembalikan AxiosResponse yang baru dengan data yang sudah dinormalisasi
+    return {
+      ...response, // Salin status, headers, dll.
+      data: normalizedData, // Timpa `data` dengan versi normalisasi kita
+    }
+  }
+
   const {
     data,
-    pages,
     total,
     error,
     isLoading,
@@ -226,12 +246,7 @@ export function useGetSubDistrictInfinite(
     isReachingEnd,
     isEmpty,
     loadMore,
-    refresh,
-  } = useSWRInfiniteFetcher(
-    getKey,
-    ([_, query]) => getSubDistrictAndPostal(query),
-    swrConfig
-  )
+  } = useSWRInfiniteFetcher(getKey, fetchAndNormalize, swrConfig)
 
   useEffect(() => {
     if (error && showErrorToast) {
@@ -239,15 +254,13 @@ export function useGetSubDistrictInfinite(
         description: error.code,
         action: {
           label: 'Coba Lagi',
-          onClick: () => refresh(),
         },
       })
     }
-  }, [error, showErrorToast, refresh])
+  }, [error, showErrorToast])
 
   return {
     data,
-    pages,
     total,
     isLoading,
     isLoadingMore,
@@ -255,6 +268,5 @@ export function useGetSubDistrictInfinite(
     isEmpty,
     error,
     loadMore,
-    refresh,
   }
 }

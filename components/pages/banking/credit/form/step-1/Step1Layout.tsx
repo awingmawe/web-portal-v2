@@ -1,6 +1,5 @@
 'use client'
 
-import StepperIndicator from '@/components/pages/banking/common/StepperIndicator'
 import DetailPackagePembiayaan from '@/components/pages/banking/credit/form/step-1/DetailPackage/DetailPackage'
 import EmptyDataPembiayaan from '@/components/pages/banking/credit/form/step-1/EmptyDataPembiayaan'
 import SubmissionStep1 from '@/components/pages/banking/credit/form/step-1/MainForm'
@@ -10,7 +9,13 @@ import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
 import { useLocalStorageListener } from '@/hooks/common/useLocalStorageListener'
 import { Fragment } from 'react'
 
-const Step1Layout = ({ dataTenor }: { dataTenor: Facility[] }) => {
+const Step1Layout = ({
+  dataTenor,
+  dataPekerjaan,
+}: {
+  dataTenor: Facility[]
+  dataPekerjaan: Facility[]
+}) => {
   const [dataPembiayaan, isLoading] =
     useLocalStorageListener<PembiayaanDataLocalStorage>(
       LOCAL_STORAGE_PEMBIAYAAN
@@ -21,13 +26,16 @@ const Step1Layout = ({ dataTenor }: { dataTenor: Facility[] }) => {
 
   return (
     <Fragment>
-      <StepperIndicator />
       <DetailPackagePembiayaan
         isLoading={isLoading}
         dataPembiayaan={dataPembiayaan}
         dataTenor={dataTenor}
       />
-      <SubmissionStep1 dataPembiayaan={dataPembiayaan} />
+      <SubmissionStep1
+        dataPembiayaan={dataPembiayaan}
+        dataPekerjaan={dataPekerjaan}
+        loading={isLoading}
+      />
     </Fragment>
   )
 }

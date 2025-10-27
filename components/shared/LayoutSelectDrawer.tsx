@@ -18,7 +18,7 @@ import {
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { cn } from '@/lib/utils'
 import { Check, ChevronDown, Loader2 } from 'lucide-react'
-import { useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 
 export interface SelectOption {
   value: string
@@ -42,7 +42,9 @@ interface SelectWithInfiniteScrollProps {
   isLoadingMore?: boolean
   onLoadMore?: () => void
   searchValue?: string
-  onSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onSearchChangeAction?: (value: string) => void
+  hasSearch?: boolean
+  header?: React.ReactNode
 }
 
 export function LayoutSelectDrawer({
@@ -61,7 +63,9 @@ export function LayoutSelectDrawer({
   isLoadingMore = false,
   onLoadMore,
   searchValue,
-  onSearchChange,
+  onSearchChangeAction,
+  hasSearch = true,
+  header,
 }: SelectWithInfiniteScrollProps) {
   const { lg: isMobile } = useTailwindBreakpoint()
   const [open, setOpen] = useState(false)
@@ -70,89 +74,115 @@ export function LayoutSelectDrawer({
   const selectedOption = options.find((option) => option.value === value)
   const displayValue = selectedOption?.label || placeholder
 
-  const handleSelect = (selectedValue: string) => {
-    const option = options.find((opt) => opt.value === selectedValue)
-    onChangeAction(selectedValue, option)
-    setOpen(false)
-  }
+  const handleSelect = useCallback(
+    (selectedValue: string) => {
+      const option = options.find((opt) => opt.value === selectedValue)
+      onChangeAction(selectedValue, option)
+      setOpen(false)
+    },
+    [onChangeAction, options]
+  )
 
   // Default option renderer
   const defaultRenderOption = (option: SelectOption, isSelected: boolean) => (
     <div className="flex w-full items-center justify-between">
-      <span>{option.label}</span>
+      <span className="text-m-regular">{option.label}</span>
       {isSelected && <Check className="h-4 w-4" />}
     </div>
   )
 
   // Default empty state renderer
-  const defaultRenderEmpty = () => (
-    <div className="grid h-60 min-w-[320px] place-content-center p-3 text-center text-neutral-500">
-      {searchValue ? emptyText : placeholder}
-    </div>
+  const defaultRenderEmpty = useCallback(
+    () => (
+      <div className="grid h-60 min-w-[320px] place-content-center p-3 text-center text-neutral-500">
+        {searchValue ? emptyText : placeholder}
+      </div>
+    ),
+    [searchValue, emptyText, placeholder]
   )
 
   // Select Content (shared between Drawer and Popover)
-  const SelectContent = () => (
-    <div className={cn('flex max-w-[320px] flex-col', className)}>
-      {/* Search Input */}
-      <div className="border-b p-3">
-        <Input
-          placeholder={searchPlaceholder}
-          value={searchValue}
-          onChange={onSearchChange}
-          className="w-full"
-        />
-      </div>
-
-      {/* Options List */}
-      <div
-        ref={scrollContainerRef}
-        className="scrollbar-hide max-h-[300px] overflow-y-auto"
-        style={{ scrollBehavior: 'auto' }}
-      >
-        {loading && options.length === 0 ? (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="text-muted-foreground h-6 w-6 animate-spin" />
-          </div>
-        ) : options.length > 0 ? (
-          <InfiniteScroll
-            isLoading={isLoadingMore}
-            hasMore={hasMore}
-            next={onLoadMore || (() => {})}
-            threshold={0.8}
-          >
-            {options.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => handleSelect(option.value)}
-                disabled={disabled}
-                className={cn(
-                  'w-full border-b border-neutral-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-neutral-100',
-                  value === option.value && 'bg-primary-100',
-                  disabled && 'cursor-not-allowed opacity-50'
-                )}
-              >
-                {defaultRenderOption(option, value === option.value)}
-              </button>
-            ))}
-          </InfiniteScroll>
-        ) : (
-          defaultRenderEmpty()
-        )}
-
-        {/* Loading More Indicator */}
-        {isLoadingMore && hasMore && (
-          <div className="flex items-center justify-center border-t py-4">
-            <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
-            <span className="text-muted-foreground ml-2 text-sm">
-              Memuat lebih banyak...
-            </span>
+  const SelectContent = useMemo(() => {
+    return (
+      <div className={cn('flex w-[300px] flex-col', className)}>
+        {header && <div className="px-4 py-3">{header}</div>}
+        {hasSearch && onSearchChangeAction && (
+          <div className="border-b px-4 py-3">
+            <Input
+              placeholder={searchPlaceholder}
+              value={searchValue}
+              onChange={(e) => onSearchChangeAction(e.target.value)}
+              className="w-full"
+            />
           </div>
         )}
+
+        {/* Options List */}
+        <div
+          ref={scrollContainerRef}
+          className="scrollbar-hide max-h-[300px] overflow-y-auto"
+          style={{ scrollBehavior: 'auto' }}
+        >
+          {loading && options.length === 0 ? (
+            <div className="flex h-[300px] w-[300px] items-center justify-center py-8">
+              <Loader2 className="text-muted-foreground h-6 w-6 animate-spin" />
+            </div>
+          ) : options.length > 0 ? (
+            <InfiniteScroll
+              isLoading={isLoadingMore}
+              hasMore={hasMore}
+              next={onLoadMore || (() => {})}
+              threshold={0.8}
+            >
+              {options.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleSelect(option.value)}
+                  disabled={disabled}
+                  className={cn(
+                    'w-full border-b border-neutral-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-neutral-100',
+                    value === option.value && 'bg-primary-100',
+                    disabled && 'cursor-not-allowed opacity-50'
+                  )}
+                >
+                  {defaultRenderOption(option, value === option.value)}
+                </button>
+              ))}
+            </InfiniteScroll>
+          ) : (
+            defaultRenderEmpty()
+          )}
+
+          {/* Loading More Indicator */}
+          {isLoadingMore && hasMore && (
+            <div className="flex items-center justify-center border-t py-4">
+              <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+              <span className="text-muted-foreground ml-2 text-sm">
+                Memuat lebih banyak...
+              </span>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }, [
+    className,
+    header,
+    hasSearch,
+    onSearchChangeAction,
+    searchPlaceholder,
+    searchValue,
+    loading,
+    options,
+    isLoadingMore,
+    hasMore,
+    onLoadMore,
+    defaultRenderEmpty,
+    disabled,
+    value,
+    handleSelect,
+  ])
 
   // Mobile: Drawer
   if (isMobile) {
@@ -162,7 +192,7 @@ export function LayoutSelectDrawer({
           <button
             type="button"
             className={cn(
-              'flex w-full items-center justify-between rounded-full border border-neutral-200 px-4 py-2.5 text-left transition-colors',
+              'flex w-full items-center justify-between overflow-hidden rounded-full border border-neutral-200 px-4 py-3.5 text-left transition-colors',
               disabled || loading
                 ? 'cursor-not-allowed bg-neutral-50 text-neutral-400'
                 : 'hover:border-neutral-300',
@@ -180,12 +210,10 @@ export function LayoutSelectDrawer({
           </button>
         </DrawerTrigger>
         <DrawerContent className={cn('max-h-[85vh]', contentClassName)}>
-          <DrawerHeader className="border-b border-gray-200 px-4 py-3">
-            <DrawerTitle className="text-lg font-medium">
-              {placeholder}
-            </DrawerTitle>
+          <DrawerHeader className="border-b border-neutral-200 px-4 py-3">
+            <DrawerTitle className="text-m-medium">{placeholder}</DrawerTitle>
           </DrawerHeader>
-          <SelectContent />
+          {SelectContent}
           <div className="border-t p-4">
             <DrawerTrigger asChild>
               <Button className="w-full">Tutup</Button>
@@ -203,7 +231,7 @@ export function LayoutSelectDrawer({
         <button
           type="button"
           className={cn(
-            'flex w-full items-center justify-between rounded-full border border-neutral-200 px-4 py-2.5 text-left transition-colors',
+            'flex w-full items-center justify-between overflow-hidden rounded-full border border-neutral-200 px-4 py-3.5 text-left transition-colors',
             disabled || loading
               ? 'cursor-not-allowed bg-neutral-50 text-neutral-400'
               : 'hover:border-neutral-300',
@@ -227,7 +255,7 @@ export function LayoutSelectDrawer({
         )}
         align="start"
       >
-        <SelectContent />
+        {SelectContent}
       </PopoverContent>
     </Popover>
   )

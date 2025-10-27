@@ -17,13 +17,21 @@ import { format } from 'date-fns'
 import { id } from 'date-fns/locale'
 import { CalendarDays } from 'lucide-react'
 
-const TriggerCalendar = ({ field }: { field: any }) => {
+const TriggerCalendar = ({
+  field,
+  className,
+}: {
+  field: any
+  className?: string
+}) => {
   const { lg: isMobile } = useTailwindBreakpoint()
 
   if (isMobile) {
     return (
       <Drawer>
-        <DrawerTrigger className="flex w-full items-center justify-between rounded-full border border-neutral-200 px-4 py-2.5 text-left">
+        <DrawerTrigger
+          className={`flex w-full items-center justify-between rounded-full border border-neutral-200 px-4 py-2.5 text-left ${className}`}
+        >
           <span
             className={`text-m-regular w-full text-left ${!field.value && 'text-neutral-400'}`}
           >
@@ -66,7 +74,7 @@ const TriggerCalendar = ({ field }: { field: any }) => {
   return (
     <Popover>
       <PopoverTrigger
-        className={`flex w-full items-center justify-between rounded-full border border-neutral-200 px-4 py-2.5 text-left`}
+        className={`flex w-full items-center justify-between rounded-full border border-neutral-200 px-4 py-2.5 text-left ${className}`}
       >
         <span
           className={`text-m-regular w-full text-left ${!field.value && 'text-neutral-400'}`}

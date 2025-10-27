@@ -1,6 +1,7 @@
 // components/FormLokasi.tsx
 'use client'
 
+import { FormMessageErrorLayout } from '@/components/pages/banking/credit/form/step-1/MainForm'
 import {
   LayoutSelectDrawer,
   SelectOption,
@@ -10,7 +11,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form'
 import {
   City,
@@ -18,15 +18,33 @@ import {
   Province,
   SubdistrictPostalCode,
 } from '@/constant/types/LocationProps'
+import { capitalizeText, isEmpty } from '@/lib/utils'
 import {
   useGetCityInfinite,
   useGetDistrictInfinite,
   useGetProvinceInfinite,
   useGetSubDistrictInfinite,
 } from '@/services/hooks/identity/location-api'
+import { PAGE_SIZE } from '@/services/use-swr-fetcher'
 
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+
+const useDebounce = (value: any, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
 
 interface FormLokasiProps {
   form: UseFormReturn<any>
@@ -39,6 +57,16 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
   const cityId = form.watch('cityId')
   const districtId = form.watch('districtId')
 
+  const [inputProvince, setInputProvince] = useState('')
+  const [inputCity, setInputCity] = useState('')
+  const [inputDistrict, setInputDistrict] = useState('')
+  const [inputSubDistrict, setInputSubDistrict] = useState('')
+
+  const debouncedProvince = useDebounce(inputProvince, 500)
+  const debouncedCity = useDebounce(inputCity, 500)
+  const debouncedDistrict = useDebounce(inputDistrict, 500)
+  const debouncedSubDistrict = useDebounce(inputSubDistrict, 500)
+
   const {
     data: provinces,
     isLoading: loadingProvinces,
@@ -46,7 +74,12 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
     isReachingEnd: provinceReachingEnd,
     loadMore: loadMoreProvinces,
   } = useGetProvinceInfinite(
-    { size: 20 }, // 20 items per page
+    {
+      size: PAGE_SIZE,
+      ['name:likeLower']: isEmpty(debouncedProvince)
+        ? undefined
+        : `%${debouncedProvince}%`,
+    },
     { showErrorToast: false }
   )
 
@@ -57,10 +90,15 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
     isReachingEnd: cityReachingEnd,
     loadMore: loadMoreCities,
   } = useGetCityInfinite(
-    { size: 20, provinceId },
+    {
+      size: 20,
+      provinceId,
+      ['name:likeLower']: isEmpty(debouncedCity)
+        ? undefined
+        : `%${debouncedCity}%`,
+    },
     {
       showErrorToast: false,
-      isPaused: () => !provinceId,
     }
   )
 
@@ -71,10 +109,15 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
     isReachingEnd: districtReachingEnd,
     loadMore: loadMoreDistricts,
   } = useGetDistrictInfinite(
-    { size: 20, cityId },
+    {
+      size: 20,
+      cityId,
+      ['name:likeLower']: isEmpty(debouncedDistrict)
+        ? undefined
+        : `%${debouncedDistrict}%`,
+    },
     {
       showErrorToast: false,
-      isPaused: () => !cityId,
     }
   )
 
@@ -85,14 +128,18 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
     isReachingEnd: subDistrictReachingEnd,
     loadMore: loadMoreSubDistricts,
   } = useGetSubDistrictInfinite(
-    { size: 20, districtId },
+    {
+      size: 20,
+      districtId,
+      ['name:likeLower']: isEmpty(debouncedSubDistrict)
+        ? undefined
+        : `%${debouncedSubDistrict}%`,
+    },
     {
       showErrorToast: false,
-      isPaused: () => !districtId,
     }
   )
 
-  // Reset cascade fields ketika parent berubah
   useEffect(() => {
     if (provinceId) {
       form.setValue('cityId', '')
@@ -100,6 +147,9 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
       form.setValue('districtId', '')
       form.setValue('districtName', '')
       form.setValue('postalCode', '')
+      setInputCity('') // Reset search kota
+      setInputDistrict('') // Reset search kecamatan
+      setInputSubDistrict('') // Reset search kodepos
     }
   }, [provinceId, form])
 
@@ -108,53 +158,57 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
       form.setValue('districtId', '')
       form.setValue('districtName', '')
       form.setValue('postalCode', '')
+      setInputDistrict('') // Reset search kecamatan
+      setInputSubDistrict('') // Reset search kodepos
     }
   }, [cityId, form])
 
   useEffect(() => {
     if (districtId) {
       form.setValue('postalCode', '')
+      setInputSubDistrict('') // Reset search kodepos
     }
   }, [districtId, form])
 
-  // Transform data ke format SelectOption
   const provinceOptions: SelectOption[] =
     provinces?.map((province: Province) => ({
       value: province.id,
-      label: province.name,
+      label: capitalizeText(province.name),
       ...province,
     })) || []
 
   const cityOptions: SelectOption[] =
     cities?.map((city: City) => ({
       value: city.id,
-      label: city.name,
+      label: capitalizeText(city.name),
       ...city,
     })) || []
 
   const districtOptions: SelectOption[] =
     districts?.map((district: District) => ({
       value: district.id,
-      label: district.name,
+      label: capitalizeText(district.name),
       ...district,
     })) || []
 
   const subDistrictOptions: SelectOption[] =
     subDistricts?.map((subDistrict: SubdistrictPostalCode) => ({
       value: subDistrict.postalCode,
-      label: subDistrict.postalCode,
+      label: capitalizeText(subDistrict.postalCode),
       ...subDistrict,
     })) || []
 
   return (
     <Fragment>
-      {/* Provinsi */}
+      {/* --- Provinsi --- */}
       <FormField
         control={form.control}
         name="provinceId"
         render={({ field }) => (
           <FormItem className="col-span-1 max-lg:col-span-1">
-            <FormLabel>Provinsi *</FormLabel>
+            <FormLabel>
+              Provinsi <span className="text-red-500">*</span>
+            </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
                 value={field.value}
@@ -168,24 +222,27 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
                 emptyText="Provinsi tidak ditemukan"
                 disabled={disabled}
                 loading={loadingProvinces}
-                // ✅ Infinite scroll props
                 hasMore={!provinceReachingEnd}
                 isLoadingMore={loadingMoreProvinces}
                 onLoadMore={loadMoreProvinces}
+                searchValue={inputProvince}
+                onSearchChangeAction={setInputProvince}
               />
             </FormControl>
-            <FormMessage />
+            <FormMessageErrorLayout />
           </FormItem>
         )}
       />
 
-      {/* Kabupaten/Kota */}
+      {/* --- Kabupaten/Kota --- */}
       <FormField
         control={form.control}
         name="cityId"
         render={({ field }) => (
           <FormItem className="col-span-1 max-lg:col-span-1">
-            <FormLabel>Kabupaten/Kota *</FormLabel>
+            <FormLabel>
+              Kabupaten/Kota <span className="text-red-500">*</span>
+            </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
                 value={field.value}
@@ -203,24 +260,27 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
                 emptyText="Kabupaten/kota tidak ditemukan"
                 disabled={disabled || !provinceId}
                 loading={loadingCities}
-                // ✅ Infinite scroll props
                 hasMore={!cityReachingEnd}
                 isLoadingMore={loadingMoreCities}
                 onLoadMore={loadMoreCities}
+                searchValue={inputCity}
+                onSearchChangeAction={setInputCity}
               />
             </FormControl>
-            <FormMessage />
+            <FormMessageErrorLayout />
           </FormItem>
         )}
       />
 
-      {/* Kecamatan */}
+      {/* --- Kecamatan --- */}
       <FormField
         control={form.control}
         name="districtId"
         render={({ field }) => (
           <FormItem className="col-span-1 max-lg:col-span-1">
-            <FormLabel>Kecamatan *</FormLabel>
+            <FormLabel>
+              Kecamatan <span className="text-red-500">*</span>
+            </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
                 value={field.value}
@@ -238,30 +298,33 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
                 emptyText="Kecamatan tidak ditemukan"
                 disabled={disabled || !cityId}
                 loading={loadingDistricts}
-                // ✅ Infinite scroll props
                 hasMore={!districtReachingEnd}
                 isLoadingMore={loadingMoreDistricts}
                 onLoadMore={loadMoreDistricts}
+                searchValue={inputDistrict}
+                onSearchChangeAction={setInputDistrict}
               />
             </FormControl>
-            <FormMessage />
+            <FormMessageErrorLayout />
           </FormItem>
         )}
       />
 
-      {/* Kode Pos (Kelurahan/Desa) */}
+      {/* --- Kode Pos (Kelurahan/Desa) --- */}
       <FormField
         control={form.control}
         name="postalCode"
         render={({ field }) => (
           <FormItem className="col-span-1 max-lg:col-span-1">
-            <FormLabel>Kode Pos *</FormLabel>
+            <FormLabel>
+              Kode Pos <span className="text-red-500">*</span>
+            </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
                 value={field.value}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
-                  form.setValue('subDistrictName', option?.name || '')
+                  form.setValue('subDistrictName', option?.label)
                 }}
                 options={subDistrictOptions}
                 placeholder={
@@ -273,13 +336,14 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
                 emptyText="Kelurahan tidak ditemukan"
                 disabled={disabled || !districtId}
                 loading={loadingSubDistricts}
-                // ✅ Infinite scroll props
                 hasMore={!subDistrictReachingEnd}
                 isLoadingMore={loadingMoreSubDistricts}
                 onLoadMore={loadMoreSubDistricts}
+                searchValue={inputSubDistrict}
+                onSearchChangeAction={setInputSubDistrict}
               />
             </FormControl>
-            <FormMessage />
+            <FormMessageErrorLayout />
           </FormItem>
         )}
       />

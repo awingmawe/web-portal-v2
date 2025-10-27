@@ -1,32 +1,62 @@
 'use client'
 
 import { DataDiriFields } from '@/components/pages/banking/credit/form/step-1/DataDiri/DataDiri'
-import { Form } from '@/components/ui/form'
+import { DataManifestFields } from '@/components/pages/banking/credit/form/step-1/DataManifest/DataManifest'
+import { Button } from '@/components/ui/button'
+import { Form, FormMessage } from '@/components/ui/form'
 import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import {
   SubmissionStep1FormValues,
   submissionStep1Schema,
 } from '@/constant/schema/pembiayaan-schema/pembiayaan'
+import { Facility } from '@/constant/types/FacilityProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
 import { useAuth } from '@/contexts/auth/context'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+export const FormMessageErrorLayout = () => {
+  return (
+    <div className="mt-[-8px] min-h-3">
+      <FormMessage />
+    </div>
+  )
+}
+
 export default function SubmissionStep1({
   dataPembiayaan,
+  dataPekerjaan,
+  loading,
 }: {
   dataPembiayaan?: PembiayaanDataLocalStorage | null
+  dataPekerjaan: Facility[]
+  loading: boolean
 }) {
   const router = useRouter()
   const { lg: isMobile } = useTailwindBreakpoint()
-  const { profile } = useAuth()
+  const { profile, isLoadingProfile } = useAuth()
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
+
+  const totalQty = dataPembiayaan?.totalQty || 1
+
+  const existingManifest = dataPembiayaan?.formData?.manifest
+
+  // Buat array baru dengan panjang yang PASTI SAMA dengan totalQty
+  const initialManifest = Array.from({ length: totalQty }, (_, index) => {
+    //    Isi array: Gunakan data yang ada JIKA ada,
+    //    jika tidak, isi dengan default value
+    if (existingManifest && existingManifest[index]) {
+      return existingManifest[index]
+    }
+    // Ini memastikan RHF + Zod punya struktur data yang benar untuk divalidasi
+    return { name: '', phoneNumber: '' }
+  })
 
   const form = useForm<SubmissionStep1FormValues>({
     resolver: zodResolver(submissionStep1Schema),
@@ -34,51 +64,20 @@ export default function SubmissionStep1({
       name: profile?.name || '',
       email: profile?.email || '',
       phone_number: profile?.persona?.phoneNumber || '',
-      born: '',
-      gender: 'L',
-      job: '',
-      provinceId: '',
-      provinceName: '',
-      cityId: '',
-      cityName: '',
-      districtId: '',
-      districtName: '',
-      postalCode: '',
-      address: '',
-      manifest: [{ name: '', phoneNumber: '' }],
+      born: dataPembiayaan?.formData?.born || '',
+      gender: dataPembiayaan?.formData?.gender || 'L',
+      job: dataPembiayaan?.formData?.job || '',
+      provinceId: dataPembiayaan?.formData?.provinceId || '',
+      provinceName: dataPembiayaan?.formData?.provinceName || '',
+      cityId: dataPembiayaan?.formData?.cityId || '',
+      cityName: dataPembiayaan?.formData?.cityName || '',
+      districtId: dataPembiayaan?.formData?.districtId || '',
+      districtName: dataPembiayaan?.formData?.districtName || '',
+      postalCode: dataPembiayaan?.formData?.postalCode || '',
+      address: dataPembiayaan?.formData?.address || '',
+      manifest: initialManifest,
     },
   })
-
-  // Load data dari localStorage saat component mount
-  useEffect(() => {
-    try {
-      // Jika sudah ada formData dari Step 1 sebelumnya, populate form
-      if (dataPembiayaan?.formData) {
-        form.reset({
-          name: dataPembiayaan.formData.name,
-          email: dataPembiayaan.formData.email || '',
-          phone_number: dataPembiayaan.formData.phone_number,
-          born: dataPembiayaan.formData.born,
-          gender: dataPembiayaan.formData.gender,
-          job: dataPembiayaan.formData.job,
-          provinceId: dataPembiayaan.formData.provinceId,
-          provinceName: dataPembiayaan.formData.provinceName,
-          cityId: dataPembiayaan.formData.cityId,
-          cityName: dataPembiayaan.formData.cityName,
-          districtId: dataPembiayaan.formData.districtId,
-          districtName: dataPembiayaan.formData.districtName,
-          postalCode: dataPembiayaan.formData.postalCode,
-          address: dataPembiayaan.formData.address,
-        })
-      }
-    } catch (error) {
-      console.error('Error parsing localStorage data:', error)
-      toast.error('Data pembiayaan tidak valid')
-    } finally {
-      setIsLoading(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const handleSubmit = async (values: SubmissionStep1FormValues) => {
     if (!dataPembiayaan) {
@@ -86,7 +85,7 @@ export default function SubmissionStep1({
       return
     }
 
-    setIsLoading(true)
+    setIsLoadingSubmit(true)
 
     try {
       // Update localStorage dengan data Step 1
@@ -108,16 +107,16 @@ export default function SubmissionStep1({
       console.error('Error saving data:', error)
       toast.error('Gagal menyimpan data')
     } finally {
-      setIsLoading(false)
+      setIsLoadingSubmit(false)
     }
   }
 
   const handleReset = () => {
     // Reset form ke default values
     form.reset({
-      name: '',
-      email: '',
-      phone_number: '',
+      name: profile?.name || '',
+      email: profile?.email || '',
+      phone_number: profile?.persona?.phoneNumber || '',
       born: '',
       gender: 'L',
       job: '',
@@ -134,32 +133,61 @@ export default function SubmissionStep1({
 
   if (!isMobile) {
     return (
-      <div className="container mx-auto flex flex-col gap-4 max-lg:px-4">
-        <div className="flex flex-wrap items-end justify-between max-lg:gap-1">
-          {/* Reset Button dengan Konfirmasi */}
-          <p className="heading-4-semibold max-lg:text-[14px] max-lg:leading-5 max-lg:font-semibold">
-            Data Pemohon
-          </p>
-          <p
-            onClick={handleReset}
-            className="text-s-medium text-error-500 text-right"
-          >
-            Reset
-          </p>
-          <p className="text-s-regular w-full text-neutral-500">
-            Pemohon adalah orang yang akan bertanggung jawab atas pengajuan
-            pembiayaan ini.
-          </p>
-        </div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="grid grid-cols-4 gap-4 rounded-2xl border-1 border-neutral-200 px-6 py-4 max-lg:gap-2 max-lg:border-none max-lg:p-0"
-          >
-            <DataDiriFields form={form} disabled={isLoading} />
-          </form>
-        </Form>
-      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          {/* --- Bagian Data Diri --- */}
+          <div className="container mx-auto flex flex-col gap-4 max-lg:px-4">
+            <div className="flex flex-wrap items-end justify-between max-lg:gap-1">
+              {/* Reset Button dengan Konfirmasi */}
+              <p className="heading-4-semibold max-lg:text-[14px] max-lg:leading-5 max-lg:font-semibold">
+                Data Pemohon
+              </p>
+              <p
+                onClick={handleReset}
+                className="text-s-medium text-error-500 cursor-pointer text-right"
+              >
+                Reset
+              </p>
+              <p className="text-s-regular w-full text-neutral-500">
+                Pemohon adalah orang yang akan bertanggung jawab atas pengajuan
+                pembiayaan ini.
+              </p>
+            </div>
+            <div className="grid grid-cols-4 gap-4 rounded-2xl border-1 border-neutral-200 p-6 max-lg:grid-cols-1">
+              <DataDiriFields
+                form={form}
+                dataPekerjaan={dataPekerjaan}
+                profile={profile}
+                disabled={isLoadingSubmit}
+                isLoading={loading || isLoadingProfile}
+              />
+            </div>
+          </div>
+
+          {/* --- Bagian Data Manifest --- */}
+          <div className="container mx-auto mt-8 flex flex-col gap-4 max-lg:px-4">
+            <div className="flex flex-wrap items-end justify-between max-lg:gap-1">
+              <p className="heading-4-semibold">Data Manifest</p>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              <DataManifestFields
+                form={form}
+                disabled={isLoadingSubmit}
+                isLoading={loading || isLoadingProfile}
+                size={dataPembiayaan?.totalQty || 0}
+                profile={profile}
+              />
+            </div>
+          </div>
+
+          {/* --- Tombol Submit Utama --- */}
+          <div className="container mx-auto my-6">
+            <Button type="submit" disabled={isLoadingSubmit}>
+              Simpan dan Lanjut ke Step 2
+            </Button>
+          </div>
+        </form>
+      </Form>
     )
   }
 
