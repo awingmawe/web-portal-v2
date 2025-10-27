@@ -220,11 +220,13 @@ const FooterKurs = ({
   checked,
   onCheckedChange,
   disabledCheck,
+  disableCheckout,
 }: {
   onCheckout: () => void
   checked?: boolean
   onCheckedChange?: (checked: boolean) => void
   disabledCheck?: boolean
+  disableCheckout?: boolean
 }) => {
   return (
     <div className="flex w-full flex-col items-center gap-4">
@@ -236,16 +238,18 @@ const FooterKurs = ({
           onCheckedChange={onCheckedChange}
         />
       )}
-      <Button
-        className="w-full rounded-full py-3"
-        variant="default"
-        size="lg"
-        id="btn-checkout-desktop-kurs"
-        onClick={onCheckout}
-      >
-        Lanjut Checkout
-        <CircleChevronRight className="w-[14px]" />
-      </Button>
+      {!disableCheckout && (
+        <Button
+          className="w-full rounded-full py-3"
+          variant="default"
+          size="lg"
+          id="btn-checkout-desktop-kurs"
+          onClick={onCheckout}
+        >
+          Lanjut Checkout
+          <CircleChevronRight className="w-[14px]" />
+        </Button>
+      )}
     </div>
   )
 }

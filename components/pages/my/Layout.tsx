@@ -39,7 +39,7 @@ export default async function LayoutMy({
         {/* End of Circle Background for Mobile */}
 
         <section className="scrollbar-hide top-20 container mx-auto mb-5 max-lg:relative max-lg:bottom-0 max-lg:mb-20 max-lg:h-[90%] max-lg:min-h-screen max-lg:w-full max-lg:max-w-full max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:shadow-[0px_-20px_24px_-15px_rgba(0,0,0,0.25)]">
-          <div className="container mx-auto flex gap-5 pt-0 pb-5 lg:pt-8 ">
+          <div className="container mx-auto mt-[40px] flex gap-5 pt-0 pb-5  lg:pt-8">
             <Sidebar />
             <div className="w-full ">{children}</div>
           </div>
