@@ -64,16 +64,16 @@ export default function MitraModal({ title }: SuccessModalProps) {
         </div>
         <div className="grid grid-cols-2 gap-4">
           {menuMitra.map((menu) => (
-            <div className="grid gap-4">
+            <div key={menu.title} className="grid gap-4">
               <Card
                 onClick={() => handleGoTo(menu.url)}
-                className={`border-primary-300 hover:border-primary-500 w-full min-w-[52px] cursor-pointer border-1 bg-white px-1 py-3 shadow-sm hover:shadow-none`}
+                className="border-primary-300 hover:border-primary-500 w-full min-w-[52px] cursor-pointer border-1 bg-white px-1 py-3 shadow-sm hover:shadow-none"
               >
                 <CardContent className="flex h-full flex-col items-start justify-between px-2 max-lg:flex-row max-lg:items-center">
-                  <div className={`flex items-center gap-4`}>
+                  <div className="flex items-center gap-4">
                     <Image
                       src={`/images/${menu.image}.png`}
-                      alt="mitra-travel"
+                      alt={menu.title}
                       width={48}
                       height={48}
                       className="h-[48px]"
