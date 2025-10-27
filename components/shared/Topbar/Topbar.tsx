@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/popover'
 import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { dissolve, springTransition } from '@/lib/animation-setup'
 import { cn, ellipsis, isEmpty } from '@/lib/utils'
 import { AnimatePresence, easeInOut, easeOut, motion } from 'framer-motion'
@@ -442,7 +443,8 @@ const Topbar: React.FC<TopbarProps> = ({
         ],
       },
       { title: 'Mitra', href: '/travel/list' },
-      { title: 'About Us', href: '/about-us' },
+      // { title: 'About Us', href: '/about-us' },
+      { title: 'Artikel', href: '/article' },
     ],
     []
   )
@@ -504,6 +506,8 @@ const Topbar: React.FC<TopbarProps> = ({
     ]
   )
 
+  const { lg } = useTailwindBreakpoint()
+
   return (
     <Fragment>
       {type === 'homepage' && (
@@ -534,14 +538,18 @@ const Topbar: React.FC<TopbarProps> = ({
                   className
                 )}
               >
-                <section className="flex h-[28px] w-full items-center gap-[60px] bg-(--neutral-100)">
-                  <div className="container m-auto w-full items-center px-4">
-                    <SubTopBar />
-                  </div>
-                </section>
-                <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
-                  <TopbarContent {...topbarContentProps} />
-                </section>
+                {lg && (
+                  <>
+                    <section className="flex h-[28px] w-full items-center gap-[60px] bg-(--neutral-100)">
+                      <div className="container m-auto w-full items-center px-4">
+                        <SubTopBar />
+                      </div>
+                    </section>
+                    <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
+                      <TopbarContent {...topbarContentProps} />
+                    </section>
+                  </>
+                )}
               </motion.header>
             )}
           </AnimatePresence>
@@ -565,7 +573,7 @@ const Topbar: React.FC<TopbarProps> = ({
         </header>
       )}
       {/* add space divider for top if scrolled is active */}
-      {scrolled && <div className="h-[72px] w-full px-4 max-lg:hidden"></div>}
+      {scrolled && <div className="h-[100px] w-full px-4 max-lg:hidden"></div>}
     </Fragment>
   )
 }

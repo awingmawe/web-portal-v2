@@ -4,6 +4,7 @@ import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useGetStatusValidation } from '@/hooks/my-hooks/common/useGetStatusValidation'
 import { addHours, format } from 'date-fns'
 import { id } from 'date-fns/locale'
+import Link from 'next/link'
 
 export interface TransactionCardHeader {
   status: string
@@ -14,6 +15,7 @@ export interface TransactionCardHeader {
   modifiedAt?: string
   variantType?: string
   currency: string
+  url?: string
 }
 
 export default function TransactionCardHeader({
@@ -24,6 +26,7 @@ export default function TransactionCardHeader({
   modifiedAt,
   variantType,
   currency,
+  url,
 }: TransactionCardHeader) {
   const { isCompletedHajjKhusus, isCompletedHajjRegular, isCompletedUmrah } =
     useGetStatusValidation({
@@ -89,19 +92,40 @@ export default function TransactionCardHeader({
     }
   }
 
+  const ConditionalLink = ({
+    condition,
+    href,
+    children,
+  }: {
+    condition: boolean
+    href: string
+    children: React.ReactNode
+  }) => {
+    return condition ? (
+      <Link href={href}>{children}</Link>
+    ) : (
+      <div>{children}</div>
+    )
+  }
+
   return (
     <div
       className={`rounded-t-3xl px-4 pt-4 pb-8 max-lg:px-3  ${renderStatusColor()}`}
     >
       <div className="flex justify-between">
-        <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
-          {renderStatusText()}
-        </h3>
+        <ConditionalLink condition={lg} href={url ?? '#'}>
+          <h3 className="text-l-medium leading-[16px] text-inherit max-lg:text-xs">
+            {renderStatusText()}
+          </h3>
+        </ConditionalLink>
+
         {lg && (
           <ButtonInfoTrans
             currency={currency}
             packageType={packageType}
             title={''}
+            disableCheckout={true}
+            hideCloseButton={true}
           />
         )}
       </div>

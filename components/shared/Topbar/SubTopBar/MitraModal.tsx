@@ -26,7 +26,7 @@ export default function MitraModal({ title }: SuccessModalProps) {
       title: 'Travel',
       image: 'mitra-travel',
       subtitle: 'Travel Umroh, Haji, dan Umroh Private!',
-      url: '/travel/list',
+      url: '/travel',
     },
     {
       title: 'Wukala',

@@ -5,8 +5,10 @@ import {
 } from '@/components/pages/detail-package/2-PackageVariant/component/ContentKurs'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
 import {
@@ -17,6 +19,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
+import { X } from 'lucide-react'
 import React from 'react'
 
 interface LayoutDrawerDialogProps {
@@ -53,6 +56,14 @@ const ModalKurs: React.FC<LayoutDrawerDialogProps> = ({
             hideCloseButton ? '[&>button]:hidden' : ''
           }`}
         >
+          <DialogHeader>
+            <DialogClose asChild>
+              <X
+                size={30}
+                className="absolute -top-10 -right-6 cursor-pointer rounded-full bg-white p-1 text-(--primary-500) hover:text-gray-600"
+              />
+            </DialogClose>
+          </DialogHeader>
           <DialogTitle>
             <TitleKurs currency={currency} />
           </DialogTitle>
