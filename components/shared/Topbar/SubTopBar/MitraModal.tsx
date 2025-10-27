@@ -50,9 +50,10 @@ export default function MitraModal({ title }: SuccessModalProps) {
           <div className="flex items-center justify-between">
             <DialogTitle>Jadi Mitra Muslim101</DialogTitle>
             <DialogClose asChild>
-              <button className="absolute top-4 right-4 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
-                <X size={20} />
-              </button>
+              <X
+                size={30}
+                className="absolute top-4 right-4 cursor-pointer rounded-full bg-neutral-100 p-1 text-gray-400 hover:text-gray-600"
+              />
             </DialogClose>
           </div>
         </DialogHeader>

@@ -534,7 +534,7 @@ const Topbar: React.FC<TopbarProps> = ({
                   className
                 )}
               >
-                <section className="flex h-[28px] w-full items-center gap-[60px] bg-[#FAFAFA]">
+                <section className="flex h-[28px] w-full items-center gap-[60px] bg-(--neutral-100)">
                   <div className="container m-auto w-full items-center px-4">
                     <SubTopBar />
                   </div>
