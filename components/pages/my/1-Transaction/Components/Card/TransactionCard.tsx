@@ -467,6 +467,7 @@ export default function TransactionCard({
                 currency={transactionData.currency}
                 packageType={transactionData.packageType}
                 title={transactionData.variantType}
+                disableCheckout={true}
               />
             )}
           </div>

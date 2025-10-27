@@ -7,10 +7,12 @@ const ButtonInfoTrans = ({
   currency,
   packageType,
   title,
+  disableCheckout = false,
 }: {
   currency: string
   packageType: string
   title: string
+  disableCheckout?: boolean
 }) => {
   {
   }
@@ -35,6 +37,7 @@ const ButtonInfoTrans = ({
         }}
         currency={packageType === PACKAGE_TYPE.HAJJ ? currency : packageType}
         disabledCheck={true}
+        disableCheckout={disableCheckout}
       />
       <button
         onClick={() => {

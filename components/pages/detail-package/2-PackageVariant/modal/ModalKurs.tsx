@@ -28,6 +28,7 @@ interface LayoutDrawerDialogProps {
   setOpen: (open: boolean) => void
   onCheckout: () => void
   disabledCheck?: boolean
+  disableCheckout?: boolean
 }
 
 const ModalKurs: React.FC<LayoutDrawerDialogProps> = ({
@@ -39,6 +40,7 @@ const ModalKurs: React.FC<LayoutDrawerDialogProps> = ({
   setOpen,
   onCheckout,
   disabledCheck = false,
+  disableCheckout = false,
 }) => {
   const { lg } = useTailwindBreakpoint()
 
@@ -61,6 +63,7 @@ const ModalKurs: React.FC<LayoutDrawerDialogProps> = ({
               checked={checked}
               onCheckedChange={onCheckedChange}
               disabledCheck={disabledCheck}
+              disableCheckout={disableCheckout}
             />
           </DialogFooter>
         </DialogContent>
@@ -93,6 +96,7 @@ const ModalKurs: React.FC<LayoutDrawerDialogProps> = ({
                 checked={checked}
                 onCheckedChange={onCheckedChange}
                 disabledCheck={disabledCheck}
+                disableCheckout={disableCheckout}
               />
             </DrawerClose>
           </div>

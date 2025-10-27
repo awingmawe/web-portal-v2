@@ -6,6 +6,7 @@ import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Muslim101Logo } from '@/components/icons/muslim101'
 import { ReceiptItemIcon } from '@/components/icons/receipt-item'
 import { DialogConfirm } from '@/components/shared/DialogConfirm'
+import SubTopBar from '@/components/shared/Topbar/SubTopBar'
 import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
 import TopbarSearch from '@/components/shared/Topbar/TopbarSearch'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -48,7 +49,14 @@ interface NavLinkProps {
 }
 
 interface TopbarContentProps {
-  navLinks: Array<{ title: string; href: string }>
+  navLinks: Array<{
+    title: string
+    href: string
+    subMenu?: Array<{
+      title: string
+      href: string
+    }>
+  }>
   type: string
   token?: string
   redirectUri: string | null
@@ -225,6 +233,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
 
               {token && (
                 <Fragment>
+                  <div className="h-5 border border-[#c9c9c9]"></div>
                   <TopbarNotif token={token} />
                 </Fragment>
               )}
@@ -280,7 +289,6 @@ const TopbarContent = React.memo<TopbarContentProps>(
                 </Fragment>
               ) : (
                 <Fragment>
-                  <div className="h-5 border border-[#c9c9c9]"></div>
                   <Popover>
                     <PopoverTrigger asChild>
                       <div className="flex items-center gap-2">
@@ -397,7 +405,42 @@ const Topbar: React.FC<TopbarProps> = ({
   // Memoize navigation links to prevent recreating on each render
   const navLinks = useMemo(
     () => [
-      { title: 'Home', href: '/' },
+      {
+        title: 'Produk',
+        href: '#produk',
+        subMenu: [
+          {
+            title: 'Umroh',
+            href: '',
+          },
+          {
+            title: 'Umroh Personal',
+            href: '',
+          },
+          {
+            title: 'Haji',
+            href: '',
+          },
+        ],
+      },
+      {
+        title: 'Program',
+        href: '#program',
+        subMenu: [
+          {
+            title: 'Pembiayaan Umroh',
+            href: '',
+          },
+          {
+            title: 'Pembiayaan Haji',
+            href: '',
+          },
+          {
+            title: 'Tabungan Umroh',
+            href: '',
+          },
+        ],
+      },
       { title: 'Mitra', href: '/travel/list' },
       { title: 'About Us', href: '/about-us' },
     ],
@@ -487,11 +530,16 @@ const Topbar: React.FC<TopbarProps> = ({
                 animate="visible"
                 exit="hidden"
                 className={cn(
-                  'fixed top-0 left-1/2 z-50 h-[72px] w-screen -translate-x-1/2 bg-white px-4 py-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden',
+                  'fixed top-0 left-1/2 z-50 h-[100px] w-screen -translate-x-1/2 bg-white pb-7 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)] max-lg:hidden',
                   className
                 )}
               >
-                <section className="container m-auto flex h-full w-full items-center gap-[60px]">
+                <section className="flex h-[28px] w-full items-center gap-[60px] bg-[#FAFAFA]">
+                  <div className="container m-auto w-full items-center px-4">
+                    <SubTopBar />
+                  </div>
+                </section>
+                <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
                   <TopbarContent {...topbarContentProps} />
                 </section>
               </motion.header>
@@ -502,11 +550,16 @@ const Topbar: React.FC<TopbarProps> = ({
       {(type === 'normal' || type === 'plain') && (
         <header
           className={cn(
-            `h-[72px] w-full bg-white px-4 py-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
+            `h-[100px] w-full bg-white pb-7 max-lg:hidden ${shadow ? 'shadow-lg' : 'border-b-1 border-neutral-300'} ${scrolled ? 'fixed top-0 z-50' : ''} `,
             className
           )}
         >
-          <section className="container m-auto flex h-full w-full items-center gap-[60px]">
+          <section className="flex h-[28px] w-full items-center gap-[60px]  bg-[#FAFAFA]">
+            <div className="container m-auto w-full items-center px-4 ">
+              <SubTopBar />
+            </div>
+          </section>
+          <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
             <TopbarContent {...topbarContentProps} />
           </section>
         </header>
