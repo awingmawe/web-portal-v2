@@ -169,18 +169,6 @@ const TabunganPage = () => {
             <h1 className="text-[14px] font-[600] text-neutral-900">
               Program Tabungan Umrah
             </h1>
-            <div className="mt-4 flex items-center text-xs text-gray-500">
-              <span className="text-[12px] font-[400] text-neutral-500">
-                Didukung oleh
-              </span>
-              <Image
-                src="/images/logo-permata.svg"
-                width={129}
-                height={32}
-                alt="Permata Bank"
-                className="ml-6"
-              />
-            </div>
           </div>
         </div>
       )}
@@ -233,16 +221,6 @@ const TabunganPage = () => {
             <h1 className="text-3xl font-semibold text-gray-800">
               Program Tabungan Umrah
             </h1>
-            <div className="flex items-center">
-              <span className="mr-2 text-xs text-gray-500">Didukung oleh</span>
-              <Image
-                src="/images/logo-permata.svg"
-                width={129}
-                height={32}
-                alt="Permata Bank"
-                className="ml-4"
-              />
-            </div>
           </div>
         </div>
       )}
@@ -263,7 +241,7 @@ const TabunganPage = () => {
 
         <div className="mb-3 md:mb-6">
           <p className="text-[12px] font-[400] text-[black] md:text-sm">
-            Bersama PermataBank, kami hadir untuk mempermudah umat Muslim
+            Bersama Muslim101, kami hadir untuk mempermudah umat Muslim
             mewujudkan impiannya dalam melaksanakan ibadah ke Tanah Suci.
             Manfaatkan program tabungan syariah untuk ibadah Umroh dan Haji
             dengan paket apa pun melalui akad Wadiah Yad Dhamanah.
