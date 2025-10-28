@@ -11,6 +11,11 @@ import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
 import TopbarSearch from '@/components/shared/Topbar/TopbarSearch'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card'
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -213,18 +218,58 @@ const TopbarContent = React.memo<TopbarContentProps>(
         ) : (
           <Fragment>
             {/* Navigation Links */}
+
             <nav className="flex h-[18px] shrink grow basis-0 items-center gap-[60px]">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.href}
-                  href={link.href}
-                  title={link.title}
-                  pathname={pathname}
-                  hoveredLink={hoveredLink}
-                  onMouseEnter={onMouseEnter}
-                  onMouseLeave={onMouseLeave}
-                />
-              ))}
+              {navLinks.map((link) =>
+                link.subMenu && link.subMenu?.length > 0 ? (
+                  // === Hover dropdown for items with submenu ===
+                  <HoverCard key={link.title} openDelay={0} closeDelay={100}>
+                    <HoverCardTrigger asChild>
+                      {/* Wrap NavLink in div to ensure ref compatibility */}
+                      <div>
+                        <NavLink
+                          href={link.href}
+                          title={link.title}
+                          pathname={pathname}
+                          hoveredLink={hoveredLink}
+                          onMouseEnter={onMouseEnter}
+                          onMouseLeave={onMouseLeave}
+                        />
+                      </div>
+                    </HoverCardTrigger>
+
+                    <HoverCardContent
+                      side="bottom"
+                      align="start"
+                      alignOffset={10}
+                      className="z-50 -ms-5 mt-2 w-56 rounded-md border-0 bg-white p-3 shadow-md"
+                    >
+                      <div className="flex flex-col space-y-5">
+                        {link.subMenu &&
+                          link.subMenu.map((sub) => (
+                            <Link
+                              className="hover:text-primary-500"
+                              href={sub.href}
+                            >
+                              {sub.title}
+                            </Link>
+                          ))}
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                ) : (
+                  // === Regular link ===
+                  <NavLink
+                    key={link.href}
+                    href={link.href}
+                    title={link.title}
+                    pathname={pathname}
+                    hoveredLink={hoveredLink}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                  />
+                )
+              )}
             </nav>
 
             {/* Right Side Actions */}
@@ -412,15 +457,15 @@ const Topbar: React.FC<TopbarProps> = ({
         subMenu: [
           {
             title: 'Umroh',
-            href: '',
+            href: '/search?type=umrah',
           },
           {
             title: 'Umroh Personal',
-            href: '',
+            href: '/umrah-personal/landing',
           },
           {
             title: 'Haji',
-            href: '',
+            href: '/search?type=hajj',
           },
         ],
       },
@@ -430,15 +475,15 @@ const Topbar: React.FC<TopbarProps> = ({
         subMenu: [
           {
             title: 'Pembiayaan Umroh',
-            href: '',
+            href: '/banking/credit',
           },
-          {
-            title: 'Pembiayaan Haji',
-            href: '',
-          },
+          // {
+          //   title: 'Pembiayaan Haji',
+          //   href: '',
+          // },
           {
             title: 'Tabungan Umroh',
-            href: '',
+            href: '/banking/saving',
           },
         ],
       },
@@ -538,18 +583,18 @@ const Topbar: React.FC<TopbarProps> = ({
                   className
                 )}
               >
-                {lg && (
+                {!lg && (
                   <>
                     <section className="flex h-[28px] w-full items-center gap-[60px] bg-(--neutral-100)">
                       <div className="container m-auto w-full items-center px-4">
                         <SubTopBar />
                       </div>
                     </section>
-                    <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
-                      <TopbarContent {...topbarContentProps} />
-                    </section>
                   </>
                 )}
+                <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
+                  <TopbarContent {...topbarContentProps} />
+                </section>
               </motion.header>
             )}
           </AnimatePresence>
@@ -562,7 +607,7 @@ const Topbar: React.FC<TopbarProps> = ({
             className
           )}
         >
-          <section className="flex h-[28px] w-full items-center gap-[60px]  bg-[#FAFAFA]">
+          <section className="flex h-[28px] w-full items-center gap-[60px] bg-(--neutral-100)">
             <div className="container m-auto w-full items-center px-4 ">
               <SubTopBar />
             </div>

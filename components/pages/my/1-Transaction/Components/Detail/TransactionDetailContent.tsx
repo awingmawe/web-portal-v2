@@ -9,6 +9,7 @@ import TransactionDetailManifest from '@/components/pages/my/1-Transaction/Compo
 import TransactionDetailPayment from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailPayment'
 import TransactionDetailProduct from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailProduct'
 import TransactionDetailSkeleton from '@/components/pages/my/1-Transaction/Components/Detail/TransactionDetailSkeleton'
+import { BatalkanPesananInfo } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesananInfo'
 import TransactionActionButtonHajj from '@/components/pages/my/1-Transaction/Components/PriceConfirmationHajj/ActionButtonHajj'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { Button } from '@/components/ui/button'
@@ -70,6 +71,11 @@ export default function TransactionDetailContent({
   const [isSnapInitialized, setIsSnapInitialized] = useState(false)
   const router = useRouter()
   const [statusTahapan, setStatusTahapan] = useState('Akan Datang')
+  const [openBatalkanInfo, setOpenBatalkanInfo] = useState(false)
+
+  const packageTitle = transaction?.packageSnapshot.snapshot.package.title
+  const travelName =
+    transaction?.packageSnapshot.snapshot.package.organizationInstance.name
 
   const { isCompletedHajjKhusus } = useGetStatusValidation({
     status: transaction?.status,
@@ -695,6 +701,17 @@ export default function TransactionDetailContent({
                   </Link>
                 )}
 
+                {openBatalkanInfo && (
+                  <BatalkanPesananInfo
+                    open={openBatalkanInfo}
+                    bookingId={bookingId}
+                    onOpenChange={setOpenBatalkanInfo}
+                    packageTitle={packageTitle ?? ''}
+                    travelName={travelName ?? ''}
+                    status={transaction?.status.slug}
+                  />
+                )}
+
                 {transaction?.status.slug !== 'canceled-by-user' &&
                   transaction?.status.slug !== 'canceled-by-travel' &&
                   transaction?.status.slug !== 'expired' &&
@@ -714,20 +731,31 @@ export default function TransactionDetailContent({
                       </span>
                     </Button>
                   ) : (
-                    <Link
-                      href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                      target="_blank"
-                      className="w-full"
+                    <Button
+                      variant="outline"
+                      className="border-error-500  block w-full border-2"
+                      onClick={() => {
+                        setOpenBatalkanInfo(true)
+                      }}
                     >
-                      <Button
-                        variant="outline"
-                        className="border-error-500  block w-full border-2"
-                      >
-                        <span className="text-error-500 font-medium">
-                          Batalkan Pesanan
-                        </span>
-                      </Button>
-                    </Link>
+                      <span className="text-error-500 font-medium">
+                        Batalkan Pesanan
+                      </span>
+                    </Button>
+                    // <Link
+                    //   href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                    //   target="_blank"
+                    //   className="w-full"
+                    // >
+                    //   <Button
+                    //     variant="outline"
+                    //     className="border-error-500  block w-full border-2"
+                    //   >
+                    //     <span className="text-error-500 font-medium">
+                    //       Batalkan Pesanan
+                    //     </span>
+                    //   </Button>
+                    // </Link>
                   ))}
                 <div className="relative mt-auto">
                   <Image
