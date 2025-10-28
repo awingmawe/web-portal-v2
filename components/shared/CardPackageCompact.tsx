@@ -319,6 +319,8 @@ export const CardPackageCompact = memo(function CardPackageCompact({
                   section,
                   lastCall: isLastCall,
                   price,
+                  organizationId,
+                  organizationInstanceId,
                 },
               })
             }}
