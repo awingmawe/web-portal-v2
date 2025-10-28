@@ -2,7 +2,6 @@
 
 import FormLokasi from '@/components/pages/banking/credit/form/step-1/DataDiri/DataLokasi'
 import FormPekerjaan from '@/components/pages/banking/credit/form/step-1/DataDiri/DataPekerjaan'
-import { DataDiriFieldsSkeleton } from '@/components/pages/banking/credit/form/step-1/DataDiri/SkeletonDataDiri'
 import { FormMessageErrorLayout } from '@/components/pages/banking/credit/form/step-1/MainForm'
 import TriggerCalendar from '@/components/pages/manifest/3-FormManifest/TriggerCalendar'
 import {
@@ -25,7 +24,6 @@ interface DataDiriFieldsProps {
   disabled?: boolean
   dataPekerjaan: Facility[]
   profile?: Profile | null
-  isLoading?: boolean
 }
 
 export function DataDiriFields({
@@ -33,13 +31,7 @@ export function DataDiriFields({
   disabled = false,
   dataPekerjaan,
   profile,
-  isLoading,
 }: DataDiriFieldsProps) {
-  const isNameDisabled = disabled || !!profile?.name
-  const isPhoneDisabled = disabled || !!profile?.persona?.phoneNumber
-  const isEmailDisabled = disabled || !!profile?.email
-
-  if (isLoading) return <DataDiriFieldsSkeleton />
   return (
     <Fragment>
       {/* Row 1: Nama and No Telp */}
@@ -57,7 +49,7 @@ export function DataDiriFields({
                 {...field}
                 model="normal"
                 className="rounded-full"
-                disabled={isNameDisabled}
+                disabled={disabled || !!profile?.name}
               />
             </FormControl>
             <FormMessageErrorLayout />
@@ -80,7 +72,7 @@ export function DataDiriFields({
                 placeholder="+62"
                 {...field}
                 className="rounded-full"
-                disabled={isPhoneDisabled}
+                disabled={disabled || !!profile?.persona?.phoneNumber}
               />
             </FormControl>
             <FormMessageErrorLayout />
@@ -104,7 +96,7 @@ export function DataDiriFields({
                 placeholder="Masukkan email"
                 {...field}
                 className="rounded-full"
-                disabled={isEmailDisabled}
+                disabled={disabled || !!profile?.email}
               />
             </FormControl>
             <FormMessageErrorLayout />

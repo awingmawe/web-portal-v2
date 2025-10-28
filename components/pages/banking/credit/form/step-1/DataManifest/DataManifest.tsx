@@ -17,7 +17,6 @@ interface DataManifestFieldsProps {
   form: UseFormReturn<any>
   disabled?: boolean
   size: number
-  isLoading: boolean
   profile?: Profile | null
 }
 
@@ -25,7 +24,6 @@ export function DataManifestFields({
   form,
   disabled = false,
   size,
-  isLoading,
   profile,
 }: DataManifestFieldsProps) {
   const [checked, setChecked] = useState<boolean>(false)
@@ -43,15 +41,14 @@ export function DataManifestFields({
     }
   }, [checked, form, profile?.name, profile?.persona?.phoneNumber])
 
-  if (isLoading) return 'loading'
   return (
     <Fragment>
       {Array.from({ length: size }, (_, index) => (
         <div
           key={index}
-          className="col-span-1 rounded-[20px] border border-neutral-200"
+          className="col-span-1 max-lg:not-last:border-b max-lg:not-last:border-b-neutral-200 lg:rounded-[20px] lg:border lg:border-neutral-200"
         >
-          <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
+          <div className="flex justify-between gap-3 max-lg:flex-col lg:items-center lg:border-b lg:border-neutral-200 lg:px-4 lg:py-3">
             <p className="text-m-semibold">Data Jamaah {index + 1}</p>
             {index === 0 && (
               <Checkbox
@@ -62,7 +59,7 @@ export function DataManifestFields({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4 p-4">
+          <div className="grid grid-cols-2 gap-4 max-lg:gap-3 max-lg:py-3 lg:p-4">
             <FormField
               control={form.control}
               name={`manifest.${index}.name`}
@@ -74,6 +71,7 @@ export function DataManifestFields({
                   <FormControl>
                     <Input
                       placeholder="Masukkan nama lengkap"
+                      model="normal"
                       {...field}
                       className="rounded-full"
                       disabled={disabled}
@@ -95,6 +93,7 @@ export function DataManifestFields({
                   <FormControl>
                     <Input
                       type="tel"
+                      model="normal"
                       placeholder="+62 08123456789"
                       {...field}
                       className="rounded-full"

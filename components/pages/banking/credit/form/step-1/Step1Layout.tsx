@@ -31,11 +31,13 @@ const Step1Layout = ({
         dataPembiayaan={dataPembiayaan}
         dataTenor={dataTenor}
       />
+      {/* Divider Mobile */}
       <SubmissionStep1
         dataPembiayaan={dataPembiayaan}
         dataPekerjaan={dataPekerjaan}
         loading={isLoading}
       />
+      <div className="h-1.5 w-full self-stretch bg-neutral-100 lg:hidden" />
     </Fragment>
   )
 }

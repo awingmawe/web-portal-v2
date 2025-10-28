@@ -87,7 +87,7 @@ const DetailPackagePembiayaan = ({
     return <DetailPackagePembiayaanSkeleton />
 
   return (
-    <section className="container mx-auto flex flex-col gap-4 max-lg:px-4">
+    <div className="container mx-auto flex flex-col gap-4 max-lg:px-4">
       <p className="heading-4-semibold max-lg:hidden">Paket Pilihan</p>
       <div className="flex flex-col gap-4 rounded-2xl border-1 border-neutral-200 px-6 py-4 max-lg:gap-2 max-lg:border-none max-lg:p-0">
         {/* Ubah and Title Rincian Paket */}
@@ -263,7 +263,7 @@ const DetailPackagePembiayaan = ({
           </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
 

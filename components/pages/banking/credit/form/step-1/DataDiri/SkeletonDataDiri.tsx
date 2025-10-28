@@ -1,7 +1,6 @@
 'use client'
 
 import { Skeleton } from '@/components/ui/skeleton'
-import { Fragment } from 'react'
 
 const SkeletonField = ({
   className,
@@ -20,7 +19,7 @@ const SkeletonField = ({
 
 export function DataDiriFieldsSkeleton() {
   return (
-    <Fragment>
+    <div className="grid grid-cols-4 gap-4 rounded-2xl border-1 border-neutral-200 p-6 max-lg:hidden">
       {/* --- Row 1: Nama and No Telp --- */}
       {/* col-span-2, h-10 (input standar) */}
       <SkeletonField
@@ -86,6 +85,6 @@ export function DataDiriFieldsSkeleton() {
         {/* Skeleton untuk Textarea (h-[90px] rounded-[20px]) */}
         <Skeleton className="h-[90px] w-full rounded-[20px]" />
       </div>
-    </Fragment>
+    </div>
   )
 }

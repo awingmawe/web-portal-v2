@@ -2,8 +2,12 @@
 
 import { DataDiriFields } from '@/components/pages/banking/credit/form/step-1/DataDiri/DataDiri'
 import { DataManifestFields } from '@/components/pages/banking/credit/form/step-1/DataManifest/DataManifest'
+import DrawerDataDiri from '@/components/pages/banking/credit/form/step-1/mobile/DrawerDataDiri'
+import DrawerDataManifest from '@/components/pages/banking/credit/form/step-1/mobile/DrawerDataManifest'
+import { SubmissionStep1Skeleton } from '@/components/pages/banking/credit/form/step-1/mobile/SkeletonDrawerMobile'
 import { Button } from '@/components/ui/button'
 import { Form, FormMessage } from '@/components/ui/form'
+import { toast } from '@/components/ui/sonner'
 import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import {
   SubmissionStep1FormValues,
@@ -18,7 +22,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 export const FormMessageErrorLayout = () => {
   return (
@@ -44,6 +47,8 @@ export default function SubmissionStep1({
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
 
   const totalQty = dataPembiayaan?.totalQty || 1
+
+  const isLoading = loading || isLoadingProfile
 
   const existingManifest = dataPembiayaan?.formData?.manifest
 
@@ -88,21 +93,15 @@ export default function SubmissionStep1({
     setIsLoadingSubmit(true)
 
     try {
-      // Update localStorage dengan data Step 1
-      const updatedData: PembiayaanDataLocalStorage = {
-        ...dataPembiayaan,
-        formData: values,
-      }
-
       localStorageUtils.updateJSON(LOCAL_STORAGE_PEMBIAYAAN, (prev) => ({
         ...(prev as PembiayaanDataLocalStorage),
-        formData: updatedData,
+        formData: values,
       }))
 
       toast.success('Data berhasil disimpan')
 
       // Redirect ke Step 2
-      router.push('/pembiayaan/submission/step-2')
+      // router.push('/pembiayaan/submission/step-2')
     } catch (error) {
       console.error('Error saving data:', error)
       toast.error('Gagal menyimpan data')
@@ -131,59 +130,41 @@ export default function SubmissionStep1({
     })
   }
 
-  if (!isMobile) {
+  // Skeleton loading
+  if (isLoading) {
+    return <SubmissionStep1Skeleton totalQty={totalQty} />
+  }
+
+  if (isMobile) {
     return (
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          {/* --- Bagian Data Diri --- */}
-          <div className="container mx-auto flex flex-col gap-4 max-lg:px-4">
-            <div className="flex flex-wrap items-end justify-between max-lg:gap-1">
-              {/* Reset Button dengan Konfirmasi */}
-              <p className="heading-4-semibold max-lg:text-[14px] max-lg:leading-5 max-lg:font-semibold">
-                Data Pemohon
-              </p>
-              <p
-                onClick={handleReset}
-                className="text-s-medium text-error-500 cursor-pointer text-right"
-              >
-                Reset
-              </p>
-              <p className="text-s-regular w-full text-neutral-500">
-                Pemohon adalah orang yang akan bertanggung jawab atas pengajuan
-                pembiayaan ini.
-              </p>
-            </div>
-            <div className="grid grid-cols-4 gap-4 rounded-2xl border-1 border-neutral-200 p-6 max-lg:grid-cols-1">
-              <DataDiriFields
-                form={form}
-                dataPekerjaan={dataPekerjaan}
-                profile={profile}
-                disabled={isLoadingSubmit}
-                isLoading={loading || isLoadingProfile}
-              />
-            </div>
-          </div>
-
-          {/* --- Bagian Data Manifest --- */}
-          <div className="container mx-auto mt-8 flex flex-col gap-4 max-lg:px-4">
-            <div className="flex flex-wrap items-end justify-between max-lg:gap-1">
-              <p className="heading-4-semibold">Data Manifest</p>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              <DataManifestFields
-                form={form}
-                disabled={isLoadingSubmit}
-                isLoading={loading || isLoadingProfile}
-                size={dataPembiayaan?.totalQty || 0}
-                profile={profile}
-              />
-            </div>
-          </div>
-
-          {/* --- Tombol Submit Utama --- */}
-          <div className="container mx-auto my-6">
-            <Button type="submit" disabled={isLoadingSubmit}>
-              Simpan dan Lanjut ke Step 2
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="flex flex-col gap-6 lg:hidden"
+        >
+          <div className="h-1.5 w-full self-stretch bg-neutral-100" />
+          <DrawerDataDiri
+            form={form}
+            handleResetAction={handleReset}
+            dataPekerjaan={dataPekerjaan}
+            profile={profile}
+            isLoadingSubmit={isLoadingSubmit}
+          />
+          <div className="h-1.5 w-full self-stretch bg-neutral-100" />
+          <DrawerDataManifest
+            form={form}
+            profile={profile}
+            isLoadingSubmit={isLoadingSubmit}
+            totalQty={totalQty}
+          />
+          <div className="fixed right-0 bottom-0 left-0 z-10 w-full bg-white p-4 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+            <Button
+              type="submit"
+              size="md"
+              className="w-full"
+              disabled={isLoadingSubmit}
+            >
+              Lanjut
             </Button>
           </div>
         </form>
@@ -191,5 +172,75 @@ export default function SubmissionStep1({
     )
   }
 
-  return <p>ini mobile</p>
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="max-lg:hidden"
+      >
+        {/* --- Bagian Data Diri --- */}
+        <div className="container mx-auto flex flex-col gap-4">
+          <div className="flex flex-wrap items-end justify-between">
+            {/* Reset Button dengan Konfirmasi */}
+            <p className="heading-4-semibold">Data Pemohon</p>
+            <p
+              onClick={handleReset}
+              className="text-s-medium text-error-500 cursor-pointer text-right"
+            >
+              Reset
+            </p>
+            <p className="text-s-regular w-full text-neutral-500">
+              Pemohon adalah orang yang akan bertanggung jawab atas pengajuan
+              pembiayaan ini.
+            </p>
+          </div>
+          <div className="grid grid-cols-4 gap-4 rounded-2xl border-1 border-neutral-200 p-6">
+            <DataDiriFields
+              form={form}
+              dataPekerjaan={dataPekerjaan}
+              profile={profile}
+              disabled={isLoadingSubmit}
+            />
+          </div>
+        </div>
+
+        {/* --- Bagian Data Manifest --- */}
+        <div className="container mx-auto mt-8 flex flex-col gap-4">
+          <div className="flex flex-wrap items-end justify-between">
+            <p className="heading-4-semibold">Data Manifest</p>
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            <DataManifestFields
+              form={form}
+              disabled={isLoadingSubmit}
+              size={totalQty}
+              profile={profile}
+            />
+          </div>
+        </div>
+
+        {/* --- Tombol Submit Utama --- */}
+        <div className="container mx-auto mt-6 w-full">
+          <div className="flex items-center justify-end gap-4">
+            <Button
+              variant="outline"
+              size="md"
+              className="border-primary-500 border-2 px-10"
+              disabled={isLoadingSubmit}
+            >
+              Batal
+            </Button>
+            <Button
+              type="submit"
+              size="md"
+              className="px-10"
+              disabled={isLoadingSubmit}
+            >
+              Lanjut
+            </Button>
+          </div>
+        </div>
+      </form>
+    </Form>
+  )
 }
