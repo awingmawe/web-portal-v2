@@ -30,8 +30,11 @@ export function DataManifestFields({
 
   useEffect(() => {
     if (checked) {
-      form.setValue('manifest.0.name', profile?.name)
-      form.setValue('manifest.0.phoneNumber', profile?.persona?.phoneNumber)
+      form.setValue('manifest.0.name', profile?.name || '')
+      form.setValue(
+        'manifest.0.phoneNumber',
+        profile?.persona?.phoneNumber || ''
+      )
 
       form.clearErrors('manifest.0.name')
       form.clearErrors('manifest.0.phoneNumber')

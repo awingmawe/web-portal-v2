@@ -2,6 +2,7 @@
 
 import FinancingSimulation from '@/components/pages/banking/common/TenorCalculation'
 import EmptyDataPembiayaan from '@/components/pages/banking/credit/form/step-1/EmptyDataPembiayaan'
+import ProviderList from '@/components/pages/banking/credit/form/step-2/ProviderList/ProviderList'
 import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
@@ -26,6 +27,7 @@ const Step2Layout = ({ dataTenor }: { dataTenor: Facility[] }) => {
           price={dataPembiayaan?.price}
         />
       </div>
+      <ProviderList dataPembiayaan={dataPembiayaan} isLoading={isLoading} />
     </Fragment>
   )
 }
