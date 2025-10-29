@@ -211,6 +211,7 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
             </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
+                ref={field.ref}
                 value={field.value}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
@@ -245,10 +246,11 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
             </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
+                ref={field.ref}
                 value={field.value}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
-                  form.setValue('cityName', option?.label || '')
+                  form.setValue('cityName', option?.label)
                 }}
                 options={cityOptions}
                 placeholder={
@@ -283,10 +285,11 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
             </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
+                ref={field.ref}
                 value={field.value}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
-                  form.setValue('districtName', option?.label || '')
+                  form.setValue('districtName', option?.label)
                 }}
                 options={districtOptions}
                 placeholder={
@@ -321,10 +324,11 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
             </FormLabel>
             <FormControl>
               <LayoutSelectDrawer
+                ref={field.ref}
                 value={field.value}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
-                  form.setValue('subDistrictName', option?.label)
+                  form.setValue('postalCode', option?.value)
                 }}
                 options={subDistrictOptions}
                 placeholder={

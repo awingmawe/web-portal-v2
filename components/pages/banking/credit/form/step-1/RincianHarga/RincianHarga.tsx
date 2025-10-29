@@ -33,7 +33,7 @@ const RincianHarga = ({
   if (isLoadingPreCreate) return <RincianHargaSkeleton />
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 max-lg:container max-lg:mx-auto max-lg:px-4">
       <h4 className="text-l-semibold max-lg:text-sm max-lg:leading-5 max-lg:font-semibold">
         Rincian Pembayaran
       </h4>

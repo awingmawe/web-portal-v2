@@ -23,7 +23,7 @@ export function SubmissionStep1Skeleton({
         <div className="h-1.5 w-full self-stretch bg-neutral-100" />
         <div className="container mx-auto flex flex-col gap-6 px-4 lg:hidden">
           {/* --- Skeleton Card Data Pemohon --- */}
-          <div className="flex flex-col gap-4 rounded-2xl border border-neutral-200 p-4">
+          <div className="flex flex-col gap-4">
             {/* Header section */}
             <div className="flex items-start justify-between">
               {/* Left side (Title/Subtitle) */}
@@ -42,7 +42,7 @@ export function SubmissionStep1Skeleton({
         <div className="h-1.5 w-full self-stretch bg-neutral-100" />
         <div className="container mx-auto flex flex-col gap-6 px-4 lg:hidden">
           {/* --- Skeleton Card Data Jemaah --- */}
-          <div className="flex flex-col gap-4 rounded-2xl border border-neutral-200 p-4">
+          <div className="flex flex-col gap-4 ">
             {/* Header section */}
             <div className="flex items-start justify-between">
               {/* Left side (Title/Subtitle) */}

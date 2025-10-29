@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
+import { SubmissionStep1FormValues } from '@/constant/schema/pembiayaan-schema/pembiayaan'
 import { Facility } from '@/constant/types/FacilityProps'
 import { Profile } from '@/contexts/auth/shared/type'
 import { cn } from '@/lib/utils'
@@ -20,7 +21,7 @@ import { Fragment } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface DataDiriFieldsProps {
-  form: UseFormReturn<any>
+  form: UseFormReturn<SubmissionStep1FormValues>
   disabled?: boolean
   dataPekerjaan: Facility[]
   profile?: Profile | null
@@ -188,7 +189,7 @@ export function DataDiriFields({
             <FormControl>
               <Textarea
                 placeholder="Masukkan alamat lengkap"
-                className="h-[90px] resize-none rounded-[20px] px-4 py-2.5"
+                className="h-[90px] resize-none rounded-[20px] px-4 py-2.5 text-[14px] leading-5 font-normal"
                 {...field}
                 disabled={disabled}
               />

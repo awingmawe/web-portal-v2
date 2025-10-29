@@ -9,7 +9,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { Profile } from '@/contexts/auth/shared/type'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface SubmissionStep1MobileProps {
@@ -17,6 +17,8 @@ interface SubmissionStep1MobileProps {
   profile?: Profile | null
   isLoadingSubmit: boolean
   totalQty: number
+  isJemaahOpen: boolean
+  setIsJemaahOpen: (open: boolean) => void
 }
 
 const DrawerDataManifest = ({
@@ -24,12 +26,53 @@ const DrawerDataManifest = ({
   totalQty,
   profile,
   isLoadingSubmit,
+  isJemaahOpen,
+  setIsJemaahOpen,
 }: SubmissionStep1MobileProps) => {
-  const { manifest } = form.watch()
+  const {
+    watch,
+    formState: { errors },
+  } = form
+  useEffect(() => {
+    // Ini adalah type guard yang memberi tahu TypeScript
+    // bahwa kita HANYA mau melanjutkan jika errors.manifest adalah sebuah array.
+    if (isJemaahOpen && errors.manifest && Array.isArray(errors.manifest)) {
+      let firstErrorField: string | null = null
+
+      // errors.manifest adalah array. Kita cari error pertama.
+      for (let i = 0; i < totalQty; i++) {
+        const manifestError = errors.manifest[i]
+
+        if (manifestError) {
+          // Cek error 'name' dulu
+          if (manifestError.name) {
+            firstErrorField = `manifest.${i}.name`
+            break // Hentikan loop, kita sudah temukan error pertama
+          }
+          // Jika 'name' aman, cek 'phoneNumber'
+          if (manifestError.phoneNumber) {
+            firstErrorField = `manifest.${i}.phoneNumber`
+            break // Hentikan loop
+          }
+        }
+      }
+
+      if (firstErrorField) {
+        // Beri jeda 100ms agar animasi drawer selesai
+        setTimeout(() => {
+          // Kita perlu ini karena 'firstErrorField' adalah string dinamis
+          // (contoh: "manifest.0.name") dan TypeScript tidak bisa
+          // memvalidasi string dinamis sebagai 'Path' yang valid.
+          form.setFocus(firstErrorField as any)
+        }, 100)
+      }
+    }
+    // Tambahkan 'errors.manifest' sebagai dependency
+  }, [isJemaahOpen, errors, errors.manifest, form, totalQty])
+  const manifest = watch('manifest')
   const jemaahFilledCount =
     manifest?.filter((item: any) => !!item.name && !!item.phoneNumber).length ||
     0
-  const [isJemaahOpen, setIsJemaahOpen] = useState(false)
   const isJemaahEmpty = jemaahFilledCount === 0
 
   return (

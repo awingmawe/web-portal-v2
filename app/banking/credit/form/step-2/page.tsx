@@ -1,5 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
-import Step1Layout from '@/components/pages/banking/credit/form/step-1/Step1Layout'
+import Step2Layout from '@/components/pages/banking/credit/form/step-2/Step2Layout'
 import { getFacilityEnum } from '@/services/general-service'
 import { Fragment } from 'react'
 
@@ -13,17 +13,11 @@ export async function generateMetadata() {
 }
 
 export default async function TalanganFormStep2() {
-  const [dataTenor, dataPekerjaan] = await Promise.all([
-    getFacilityEnum('credit_tenor'),
-    getFacilityEnum('work'),
-  ])
+  const [dataTenor] = await Promise.all([getFacilityEnum('credit_tenor')])
 
   return (
     <Fragment>
-      <Step1Layout
-        dataTenor={dataTenor.data.results}
-        dataPekerjaan={dataPekerjaan.data.results}
-      />
+      <Step2Layout dataTenor={dataTenor.data.results} />
     </Fragment>
   )
 }

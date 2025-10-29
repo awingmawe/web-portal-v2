@@ -3,6 +3,7 @@
 import DetailPackagePembiayaan from '@/components/pages/banking/credit/form/step-1/DetailPackage/DetailPackage'
 import EmptyDataPembiayaan from '@/components/pages/banking/credit/form/step-1/EmptyDataPembiayaan'
 import SubmissionStep1 from '@/components/pages/banking/credit/form/step-1/MainForm'
+import RincianHarga from '@/components/pages/banking/credit/form/step-1/RincianHarga/RincianHarga'
 import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
@@ -31,13 +32,17 @@ const Step1Layout = ({
         dataPembiayaan={dataPembiayaan}
         dataTenor={dataTenor}
       />
-      {/* Divider Mobile */}
       <SubmissionStep1
         dataPembiayaan={dataPembiayaan}
         dataPekerjaan={dataPekerjaan}
         loading={isLoading}
       />
-      <div className="h-1.5 w-full self-stretch bg-neutral-100 lg:hidden" />
+      <div className="mb-25 lg:hidden">
+        <RincianHarga
+          selectedPackage={dataPembiayaan?.selectedPackage}
+          selectedRoomType={dataPembiayaan?.selectedRoomType}
+        />
+      </div>
     </Fragment>
   )
 }

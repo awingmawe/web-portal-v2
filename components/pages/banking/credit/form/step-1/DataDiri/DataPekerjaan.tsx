@@ -38,6 +38,7 @@ const FormPekerjaan = ({
           </FormLabel>
           <FormControl>
             <LayoutSelectDrawer
+              ref={field.ref}
               value={field.value}
               onChangeAction={(value, option) => {
                 field.onChange(value)

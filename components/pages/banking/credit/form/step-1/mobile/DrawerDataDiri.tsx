@@ -2,6 +2,7 @@
 
 import { Edit3Icon } from '@/components/icons/edit'
 import { DataDiriFields } from '@/components/pages/banking/credit/form/step-1/DataDiri/DataDiri'
+import { dataDiriFields } from '@/components/pages/banking/credit/form/step-1/MainForm'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -12,7 +13,7 @@ import {
 } from '@/components/ui/drawer'
 import { Facility } from '@/constant/types/FacilityProps'
 import { Profile } from '@/contexts/auth/shared/type'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 
 interface DrawerDataDiriProps {
@@ -21,6 +22,8 @@ interface DrawerDataDiriProps {
   dataPekerjaan: Facility[]
   profile?: Profile | null
   isLoadingSubmit: boolean
+  isPemohonOpen: boolean
+  setIsPemohonOpen: (open: boolean) => void
 }
 
 const DrawerDataDiri = ({
@@ -29,11 +32,34 @@ const DrawerDataDiri = ({
   dataPekerjaan,
   profile,
   isLoadingSubmit,
+  isPemohonOpen,
+  setIsPemohonOpen,
 }: DrawerDataDiriProps) => {
-  const [isPemohonOpen, setIsPemohonOpen] = useState(false)
-
   // Watch nilai form untuk menampilkan summary
   const { name, email, phone_number } = form.watch()
+
+  const {
+    formState: { errors },
+  } = form
+
+  // --- 2. TAMBAHKAN LOGIKA EFEK INI ---
+  useEffect(() => {
+    // Hanya jalankan jika drawer TERBUKA
+    if (isPemohonOpen) {
+      // Cari field pertama dari daftar kita yang memiliki error
+      const firstErrorField = dataDiriFields.find((field) => errors[field])
+
+      if (firstErrorField) {
+        // Gunakan setTimeout untuk memberi waktu pada drawer
+        // untuk menyelesaikan animasi 'slide-in'
+        // dan memastikan input-nya ada di DOM.
+        setTimeout(() => {
+          form.setFocus(firstErrorField)
+        }, 100) // 100ms biasanya cukup
+      }
+    }
+    // Jalankan efek ini setiap kali drawer dibuka atau state error berubah
+  }, [isPemohonOpen, errors, form])
 
   const isPemohonFilled = !!name && !!email && !!phone_number
 
