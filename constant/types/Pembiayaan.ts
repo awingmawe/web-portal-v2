@@ -63,6 +63,15 @@ export type FinancingCalculationResponse = {
 }
 // --------------------------------------- END OF FINANCING CALCULATION ------------------------------------ //
 
+// --------------------------------------- PROVIDER LOCAL STORAGE ------------------------------------ //
+export type ProvidersLocaStorage = {
+  id: number
+  providerName: string
+  logo: string
+  tenor: number
+}
+// --------------------------------------- END OF FINANCING CALCULATION ------------------------------------ //
+
 // --------------------------------------- PEMBIAYAAN DATA LOCAL STORAGE ------------------------------------ //
 export type PembiayaanDataLocalStorage = {
   selectedPackage: SelectedPackage
@@ -71,6 +80,7 @@ export type PembiayaanDataLocalStorage = {
   price: number
   tenor: string
   formData?: SubmissionStep1FormValues
+  provider?: ProvidersLocaStorage[]
 }
 // --------------------------------------- END OF PEMBIAYAAN DATA LOCAL STORAGE ------------------------------------ //
 

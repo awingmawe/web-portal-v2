@@ -1,12 +1,15 @@
 import CardProvider from '@/components/pages/banking/credit/form/step-2/ProviderList/CardProvider'
 import SkeletonCardProvider from '@/components/pages/banking/credit/form/step-2/ProviderList/SkeletonCardProvider'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   PembiayaanDataLocalStorage,
+  ProvidersLocaStorage,
   ProviderSubmission,
 } from '@/constant/types/Pembiayaan'
 import { Provider } from '@/constant/types/Providers'
 import { useGetProviderPublic } from '@/services/hooks/banking-service/credits-api'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
 const ProviderList = ({
@@ -16,6 +19,7 @@ const ProviderList = ({
   dataPembiayaan?: PembiayaanDataLocalStorage | null
   isLoading: boolean
 }) => {
+  const router = useRouter()
   const [selectedProviders, setSelectedProviders] = useState<
     ProviderSubmission[]
   >([])
@@ -56,17 +60,19 @@ const ProviderList = ({
       return categorized
     }, [dataProvider, dataPembiayaan])
 
-  const handleSelectProvider = (providerId: number, isChecked: boolean) => {
+  const handleSelectProvider = (provider: Provider, isChecked: boolean) => {
     if (dataPembiayaan?.tenor) {
       setSelectedProviders((prev) => {
         if (isChecked) {
-          const newSelection: ProviderSubmission = {
-            id: providerId,
+          const newSelection: ProvidersLocaStorage = {
+            id: provider.id,
             tenor: Number(dataPembiayaan.tenor),
+            providerName: provider.name,
+            logo: provider.logo,
           }
           return [...prev, newSelection]
         } else {
-          return prev.filter((item) => item.id !== providerId)
+          return prev.filter((item) => item.id !== provider.id)
         }
       })
     }
@@ -79,6 +85,8 @@ const ProviderList = ({
           (p) => ({
             id: p.id,
             tenor: Number(dataPembiayaan.tenor),
+            providerName: p.name,
+            logo: p.logo,
           })
         )
         setSelectedProviders(allSupportedSubmissions)
@@ -124,7 +132,7 @@ const ProviderList = ({
                   (item) => item.id === provider.id
                 )}
                 onCheckedChange={(isChecked) =>
-                  handleSelectProvider(provider.id, isChecked)
+                  handleSelectProvider(provider, isChecked)
                 }
                 supportType="supported"
                 description={provider.description}
@@ -163,6 +171,26 @@ const ProviderList = ({
           </div>
         </div>
       )}
+
+      {/* --- Tombol Submit Utama --- */}
+      <div className="ml-auto flex min-w-[300px] items-center gap-4 max-lg:hidden">
+        <Button
+          variant="outline"
+          size="md"
+          className="border-primary-500 flex-1 border-2 px-10"
+          onClick={() => router.push('/banking/credit/form/step-1')}
+        >
+          Kembali
+        </Button>
+        <Button
+          type="submit"
+          size="md"
+          className="flex-1 px-10"
+          disabled={selectedProviders.length === 0}
+        >
+          Kirim
+        </Button>
+      </div>
     </div>
   )
 }

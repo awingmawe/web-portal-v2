@@ -3,6 +3,7 @@ import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Checkbox } from '@/components/ui/checkbox'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 
 type SupportType = 'supported' | 'not-supported-location' | 'not-supported-org'
@@ -75,24 +76,35 @@ const CardProvider = ({
         {!isSupported && (
           <p className="text-error-500 text-m-medium">
             {textNotSupported()}
-            <LayoutDrawerDialog
-              isOpen={isLocationOpen}
-              setIsOpen={setIsLocationOpen}
-              trigger={
-                <span className="text-info-500 cursor-pointer underline">
-                  {triggerNotSupported()}
-                </span>
-              }
-              content={
-                <ListCoverageContent
-                  providerName={providerName}
-                  providerId={providerId || 0}
-                />
-              }
-              title={
-                <p className="text-l-medium">Area Jangkauan {providerName}</p>
-              }
-            />
+            {supportType === 'not-supported-org' ? (
+              <Link
+                href="/search?package=pembiayaan"
+                className="text-info-500 cursor-pointer underline"
+              >
+                {triggerNotSupported()}
+              </Link>
+            ) : (
+              <LayoutDrawerDialog
+                isOpen={isLocationOpen}
+                setIsOpen={setIsLocationOpen}
+                trigger={
+                  <span className="text-info-500 cursor-pointer underline">
+                    {triggerNotSupported()}
+                  </span>
+                }
+                content={
+                  <ListCoverageContent
+                    providerName={providerName}
+                    providerId={providerId || 0}
+                  />
+                }
+                title={
+                  <p className="text-l-medium max-lg:p-4">
+                    Area Jangkauan {providerName}
+                  </p>
+                }
+              />
+            )}
           </p>
         )}
         <p className="text-m-semibold">Ketentuan</p>
