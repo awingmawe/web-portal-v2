@@ -17,7 +17,7 @@ export default async function FormPembiayaanLayout({
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
-      <Topbar scrolled token={token} />
+      <Topbar scrolled token={token} shadow />
       <main className="py-6 max-lg:fixed max-lg:my-0 max-lg:mt-auto max-lg:mb-0 max-lg:h-dvh max-lg:w-full max-lg:overflow-hidden max-lg:bg-transparent max-lg:py-0">
         <TopbarMobilePembiayaan />
         <StepperIndicator />

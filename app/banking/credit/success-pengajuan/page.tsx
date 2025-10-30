@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default async function SuccessPengajuan() {
   return (
-    <div className="relative grid min-h-screen place-content-center">
+    <div className="relative grid min-h-screen place-content-center py-4">
       <Image
         src={'/images/mosque.png'}
         alt="mosque"

@@ -42,7 +42,7 @@ export default async function SearchGeneral() {
 
   return (
     <Fragment>
-      <Topbar scrolled token={token} />
+      <Topbar scrolled shadow token={token} />
 
       {/* Mobile (tanpa wrapper) */}
       <MobileTopbar

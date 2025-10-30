@@ -105,6 +105,9 @@ export interface RequestSubmissionPembiayaan {
   job: string
   providers: ProviderSubmission[]
   organization_instance_id: string
+  district_name: string
+  district_id: string
+  address: string
   total_price: number
   jumlah_jemaah: number
   package_name: string

@@ -9,6 +9,7 @@ import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
 import { useLocalStorageListener } from '@/hooks/common/useLocalStorageListener'
 import { formatCurrency, isEmpty } from '@/lib/utils'
+import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -195,6 +196,23 @@ const PackageSelection = () => {
       <div className="flex w-full items-center justify-between">
         <p className="text-s-regular">Total Harga Paket</p>
         <p className="text-m-medium">{formatCurrency(dataPembiayaan.price)}</p>
+      </div>
+      <p className="text-m-semibold">Mitra Pembiayaan</p>
+      <div className="flew-wrap flex gap-4">
+        {dataPembiayaan.provider?.map((provider, index) => (
+          <div
+            className="flex items-center justify-center gap-2 rounded-full border border-neutral-200 p-2"
+            key={`${provider.providerName}-${index}`}
+          >
+            <Image
+              src={provider.logo || Placeholder}
+              alt={provider.providerName}
+              width={20}
+              height={20}
+            />
+            <p className="text-s-medium">{provider.providerName}</p>
+          </div>
+        ))}
       </div>
     </div>
   )

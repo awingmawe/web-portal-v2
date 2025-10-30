@@ -19,7 +19,6 @@ import { useAuth } from '@/contexts/auth/context'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -57,7 +56,6 @@ export default function SubmissionStep1({
   const [isPemohonOpen, setIsPemohonOpen] = useState(false)
   const [isJemaahOpen, setIsJemaahOpen] = useState(false)
 
-  const router = useRouter()
   const { lg: isMobile } = useTailwindBreakpoint()
   const { profile, isLoadingProfile } = useAuth()
 
@@ -114,7 +112,7 @@ export default function SubmissionStep1({
         formData: values,
       }))
       toast.success('Data berhasil disimpan')
-      router.push('/banking/credit/form/step-2')
+      window.location.href = '/banking/credit/form/step-2'
     } catch (error) {
       console.error('Error saving data:', error)
       toast.error('Gagal menyimpan data')
