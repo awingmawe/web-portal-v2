@@ -248,6 +248,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
                         {link.subMenu &&
                           link.subMenu.map((sub) => (
                             <Link
+                              key={sub.href}
                               className="hover:text-primary-500"
                               href={sub.href}
                             >
@@ -585,7 +586,7 @@ const Topbar: React.FC<TopbarProps> = ({
               >
                 {!lg && (
                   <>
-                    <section className="flex h-[28px] w-full items-center gap-[60px] bg-(--neutral-100)">
+                    <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50">
                       <div className="container m-auto w-full items-center px-4">
                         <SubTopBar />
                       </div>
@@ -607,7 +608,7 @@ const Topbar: React.FC<TopbarProps> = ({
             className
           )}
         >
-          <section className="flex h-[28px] w-full items-center gap-[60px] bg-(--neutral-100)">
+          <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50">
             <div className="container m-auto w-full items-center px-4 ">
               <SubTopBar />
             </div>

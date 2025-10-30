@@ -31,7 +31,6 @@ export function BatalkanPesananInfo({
   bookingId,
   packageTitle,
   travelName,
-  status,
 }: TransactionDetailProps) {
   const { profile } = useAuth()
   const { lg } = useTailwindBreakpoint()
@@ -40,13 +39,6 @@ export function BatalkanPesananInfo({
   const bantuan = `Assalamualaikum, saya ${profile?.name}. Saya calon jemaah haji ${packageTitle} dari travel ${travelName}. Saya ingin membatalkan pesanan haji saya dengan kode ${bookingId} dikarenakan (Silahkan isi alasan kamu)`
 
   const closeRef = useRef<HTMLButtonElement>(null)
-
-  const handleBuka = () => {
-    onOpenChange(false) // tutup drawer refund
-    setTimeout(() => {
-      onOpenChange(true) // buka drawer sukses
-    }, 300)
-  }
 
   const content = (
     <>
