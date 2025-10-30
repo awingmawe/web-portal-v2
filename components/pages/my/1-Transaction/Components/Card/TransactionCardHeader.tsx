@@ -101,11 +101,7 @@ export default function TransactionCardHeader({
     href: string
     children: React.ReactNode
   }) => {
-    return condition ? (
-      <Link href={href}>{children}</Link>
-    ) : (
-      <div>{children}</div>
-    )
+    return condition ? <Link href={href}>{children}</Link> : <>{children}</>
   }
 
   return (

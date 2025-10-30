@@ -14,7 +14,6 @@ import { useAuth } from '@/contexts/auth/context'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { CircleX } from 'lucide-react'
-import { useRef } from 'react'
 
 interface TransactionDetailProps {
   open: boolean
@@ -37,8 +36,6 @@ export function BatalkanPesananInfo({
 
   const hubungiCS = `Assalamualaikum, saya ${profile?.name}. Saya calon jemaah haji ${packageTitle} dengan kode ${bookingId} via Muslim101. Saya ingin membatalkan pesanan haji saya dengan kode ${bookingId} dikarenakan (Silahkan isi alasan kamu)`
   const bantuan = `Assalamualaikum, saya ${profile?.name}. Saya calon jemaah haji ${packageTitle} dari travel ${travelName}. Saya ingin membatalkan pesanan haji saya dengan kode ${bookingId} dikarenakan (Silahkan isi alasan kamu)`
-
-  const closeRef = useRef<HTMLButtonElement>(null)
 
   const content = (
     <>
@@ -123,10 +120,8 @@ export function BatalkanPesananInfo({
         <DrawerContent className="z-[999] border-0 outline-0">
           <DrawerHeader className="p-3">
             <DrawerTitle className="flex items-center">
-              <DrawerClose ref={closeRef} className="hidden" />
-              <p className="text-m-semibold ml-2 font-semibold">
-                Membatalkan Pesanan Haji
-              </p>
+              <DrawerClose className="hidden" />
+              <p className="ml-2 font-semibold">Membatalkan Pesanan Haji</p>
             </DrawerTitle>
           </DrawerHeader>
 

@@ -275,8 +275,6 @@ export const TransactionDetailMobileAction = ({
           className="border-error-500 w-full py-2"
           variant="outline"
           onClick={() => {
-            console.log('Status')
-            console.log(transaction)
             setOpenBatalkanInfo(true)
           }}
         >

@@ -60,7 +60,7 @@ const ModalKurs: React.FC<LayoutDrawerDialogProps> = ({
             <DialogClose asChild>
               <X
                 size={30}
-                className="absolute -top-10 -right-6 cursor-pointer rounded-full bg-white p-1 text-(--primary-500) hover:text-gray-600"
+                className="text-primary-500 absolute -top-10 -right-6 cursor-pointer rounded-full bg-white p-1 hover:text-gray-600"
               />
             </DialogClose>
           </DialogHeader>
