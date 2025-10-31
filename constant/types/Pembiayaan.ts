@@ -79,6 +79,7 @@ export type PembiayaanDataLocalStorage = {
   totalQty: number
   price: number
   tenor: string
+  isSubmitted: boolean
   formData?: SubmissionStep1FormValues
   provider?: ProvidersLocaStorage[]
 }

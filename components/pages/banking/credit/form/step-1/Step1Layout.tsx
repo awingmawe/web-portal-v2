@@ -1,5 +1,6 @@
 'use client'
 
+import StepperIndicator from '@/components/pages/banking/common/StepperIndicator'
 import DetailPackagePembiayaan from '@/components/pages/banking/credit/form/step-1/DetailPackage/DetailPackage'
 import EmptyDataPembiayaan from '@/components/pages/banking/credit/form/step-1/EmptyDataPembiayaan'
 import SubmissionStep1 from '@/components/pages/banking/credit/form/step-1/MainForm'
@@ -27,6 +28,7 @@ const Step1Layout = ({
 
   return (
     <Fragment>
+      <StepperIndicator />
       <DetailPackagePembiayaan
         isLoading={isLoading}
         dataPembiayaan={dataPembiayaan}

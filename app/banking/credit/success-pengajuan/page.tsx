@@ -1,4 +1,4 @@
-import PackageSelection from '@/components/pages/banking/credit/success-pengajuan/1-PackageSelection'
+import PackageSelection from '@/components/pages/banking/credit/success-pengajuan/PackageSelection'
 import IconSukses from '@/public/images/Icon-sukses.svg'
 import Image from 'next/image'
 import Link from 'next/link'

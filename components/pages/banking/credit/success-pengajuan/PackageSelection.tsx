@@ -5,70 +5,63 @@ import { BedIcon2, BedIcon3 } from '@/components/icons/bed'
 import { Calendar2 } from '@/components/icons/calendar'
 import { ChevronRightIcon } from '@/components/icons/chevron'
 import { PeopleIcon } from '@/components/icons/people'
+import PackagePembiayaanSkeleton from '@/components/pages/banking/credit/success-pengajuan/SkeletonPackageSelection'
 import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
-import { useLocalStorageListener } from '@/hooks/common/useLocalStorageListener'
+import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { formatCurrency, isEmpty } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-
-// Skeleton Component
-const PackagePembiayaanSkeleton = () => {
-  return (
-    <>
-      {/* Financing Simulation Skeleton */}
-      <section className="mx-auto mt-4 flex flex-col space-y-6 max-lg:space-y-4 max-lg:px-4 lg:max-w-4xl xl:max-w-5xl">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
-          {/* Title Skeleton */}
-          <div className="mb-6 h-8 w-48 animate-pulse rounded bg-neutral-200" />
-
-          {/* Input Fields Skeleton */}
-          <div className="space-y-4">
-            <div className="h-12 w-full animate-pulse rounded-lg bg-neutral-200" />
-            <div className="h-12 w-full animate-pulse rounded-lg bg-neutral-200" />
-            <div className="h-12 w-full animate-pulse rounded-lg bg-neutral-200" />
-          </div>
-
-          {/* Result Card Skeleton */}
-          <div className="mt-6 rounded-xl bg-neutral-50 p-4">
-            <div className="space-y-3">
-              <div className="h-6 w-3/4 animate-pulse rounded bg-neutral-200" />
-              <div className="h-6 w-1/2 animate-pulse rounded bg-neutral-200" />
-              <div className="h-6 w-2/3 animate-pulse rounded bg-neutral-200" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Package Card Skeleton */}
-      <section className="mx-auto mt-4 flex flex-col space-y-6 max-lg:space-y-4 max-lg:px-4 lg:max-w-4xl xl:max-w-5xl">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-4">
-          <div className="flex items-center space-x-4">
-            <div className="h-32 w-32 animate-pulse rounded-lg bg-neutral-200" />
-            <div className="flex-1 space-y-3">
-              <div className="h-6 w-3/4 animate-pulse rounded bg-neutral-200" />
-              <div className="h-4 w-1/2 animate-pulse rounded bg-neutral-200" />
-              <div className="h-4 w-2/3 animate-pulse rounded bg-neutral-200" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Button Skeleton */}
-      <div className="mx-auto mt-6 flex w-fit">
-        <div className="h-12 w-40 animate-pulse rounded-full bg-neutral-200" />
-      </div>
-    </>
-  )
-}
+import { useEffect, useState } from 'react'
 
 const PackageSelection = () => {
   const router = useRouter()
-  const [dataPembiayaan, isLoading] =
-    useLocalStorageListener<PembiayaanDataLocalStorage>(
-      LOCAL_STORAGE_PEMBIAYAAN
-    )
+  const [dataPembiayaan, setDataPembiayaan] =
+    useState<PembiayaanDataLocalStorage | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Pastikan kode ini hanya berjalan di client-side
+    if (typeof window !== 'undefined') {
+      const storedData = localStorage.getItem(LOCAL_STORAGE_PEMBIAYAAN)
+
+      if (storedData) {
+        try {
+          const parsedData: PembiayaanDataLocalStorage = JSON.parse(storedData)
+
+          // Cek apakah pengajuan sudah berhasil disubmit
+          if (!parsedData.isSubmitted) {
+            console.warn(
+              'Akses ke halaman sukses tanpa pengajuan yang valid. Mengarahkan kembali ke langkah 1.'
+            )
+            router.replace('/banking/credit/form/step-1') // Arahkan kembali ke step 1
+            return // Hentikan eksekusi lebih lanjut
+          }
+
+          // Jika isSubmitted true, simpan data ke state
+          setDataPembiayaan(parsedData)
+
+          // Hancurkan data dari localStorage setelah berhasil ditampilkan
+          // Ini mencegah halaman sukses diakses lagi tanpa pengajuan baru
+          localStorageUtils.remove(LOCAL_STORAGE_PEMBIAYAAN)
+        } catch (error) {
+          console.error('Gagal parse data pembiayaan:', error)
+          // Jika data korup, anggap tidak ada dan redirect
+          router.replace('/banking/credit') // Ganti dengan URL step 1 Anda
+        }
+      } else {
+        // C. SAFETY NET: Jika data tidak ada (user refresh/akses langsung)
+        // Arahkan kembali ke halaman awal stepper
+        console.warn('Data pembiayaan tidak ditemukan, mengarahkan kembali...')
+        router.replace('/banking/credit') // Ganti dengan URL step 1 Anda
+      }
+
+      // Selesai loading
+      setIsLoading(false)
+    }
+  }, [router]) // tambahkan router sebagai dependency
+
   if (isEmpty(dataPembiayaan) && !isLoading) router.push('/banking/credit')
 
   // Show skeleton while loading

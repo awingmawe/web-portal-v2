@@ -164,6 +164,7 @@ const ProviderList = ({
         localStorageUtils.updateJSON(LOCAL_STORAGE_PEMBIAYAAN, (prev) => ({
           ...(prev as PembiayaanDataLocalStorage),
           provider: selectedProviders,
+          isSubmitted: true,
         }))
         router.push('/banking/credit/success-pengajuan')
       })
