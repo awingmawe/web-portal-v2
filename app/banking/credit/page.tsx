@@ -20,7 +20,7 @@ export default async function SearchGeneral() {
   const token = (await cookieStore).get(cookieNames.USER_ACCESS_TOKEN)
     ?.value as string
 
-  // const dataProvider = await getProvider({ page: 1, size: 10 })
+  // const dataProvider = await getProviderPublic({ page: 1, size: 10 })
 
   // const uniqueSupportedOrgs = [
   //   ...new Set(
@@ -42,7 +42,7 @@ export default async function SearchGeneral() {
 
   return (
     <Fragment>
-      <Topbar scrolled token={token} />
+      <Topbar scrolled shadow token={token} />
 
       {/* Mobile (tanpa wrapper) */}
       <MobileTopbar

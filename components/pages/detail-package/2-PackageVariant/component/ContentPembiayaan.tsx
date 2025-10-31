@@ -68,6 +68,7 @@ const ContentPembiayaan = ({
       selectedRoomType: selectedRoomType,
       totalQty: getTotalQty(),
       price: getPrice(),
+      isSubmitted: false,
     }
 
     if (localStorageUtils.has(LOCAL_STORAGE_PEMBIAYAAN)) {

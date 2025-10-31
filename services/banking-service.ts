@@ -6,7 +6,7 @@ import {
   ResponsePrePembiayaan,
   ResponseSubmissionPembiayaan,
 } from '@/constant/types/Pembiayaan'
-import { ResponseProvider } from '@/constant/types/Providers'
+import { CoverageResponse, ResponseProvider } from '@/constant/types/Providers'
 import { api, apiWithAuth } from '@/services/common/http'
 import { AxiosResponse } from 'axios'
 import qs from 'query-string'
@@ -61,7 +61,7 @@ export async function getbankCredit(): Promise<any> {
   }
 }
 
-export async function getProvider(
+export async function getProviderPublic(
   query: GetListQuery
 ): Promise<AxiosResponse<ResponseProvider>> {
   return api.get(`/public/banking/v2/credit/providers?${qs.stringify(query)}`)
@@ -90,4 +90,19 @@ export async function submissionPembiayaan(
   data: RequestSubmissionPembiayaan
 ): Promise<AxiosResponse<ResponseSubmissionPembiayaan>> {
   return apiWithAuth.post(`/banking/v2/credit/submissions`, data)
+}
+
+export async function getProviders(
+  query: GetListQuery
+): Promise<AxiosResponse<ResponseProvider>> {
+  return apiWithAuth.post(`/banking/v2/credit/providers?${qs.stringify(query)}`)
+}
+
+export async function getProviderByCoverage(
+  providerId: number,
+  query: GetListQuery
+): Promise<AxiosResponse<CoverageResponse>> {
+  return apiWithAuth.get(
+    `/banking/v2/provider-coverage/by-provider/${providerId}?${qs.stringify(query)}`
+  )
 }

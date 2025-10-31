@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 /**
  * Custom hook untuk listen localStorage changes
  * @example
- * const [user, refreshUser] = useLocalStorageListener<User>('user')
+ * const [user, loading, refreshUser] = useLocalStorageListener<User>('user')
  */
 export function useLocalStorageListener<T>(
   key: string,
   initialValue?: T
-): [T | null, () => void] {
+): [T | null, boolean, () => void] {
   const [data, setData] = useState<T | null>(initialValue ?? null)
-
+  const [loading, setLoading] = useState(true)
   // Function untuk manual refresh
   const refreshData = () => {
     if (typeof window === 'undefined') return
@@ -26,6 +26,8 @@ export function useLocalStorageListener<T>(
     } catch (error) {
       console.error(`Error reading ${key} from localStorage:`, error)
       setData(null)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -63,9 +65,10 @@ export function useLocalStorageListener<T>(
         handleStorageChange as any
       )
       window.removeEventListener('storage', refreshData)
+      setLoading(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key])
 
-  return [data, refreshData]
+  return [data, loading, refreshData]
 }

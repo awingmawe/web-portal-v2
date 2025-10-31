@@ -70,17 +70,23 @@ export const submissionStep1Schema = z.object({
     .min(10, 'Alamat minimal 10 karakter')
     .max(200, 'Alamat maksimal 200 karakter')
     .trim(),
+
+  manifest: z
+    .array(
+      z.object({
+        name: z.string().min(1, 'Nama wajib diisi'),
+        phoneNumber: z
+          .string()
+          .trim()
+          .regex(
+            PHONE_REGEX,
+            'Format nomor telepon tidak valid (contoh: 081234567890)'
+          )
+          .min(10, 'Nomor telepon minimal 10 digit')
+          .max(15, 'Nomor telepon maksimal 15 digit'),
+      })
+    )
+    .min(1, 'Minimal 1 jamaah'),
 })
 
 export type SubmissionStep1FormValues = z.infer<typeof submissionStep1Schema>
-
-// Type untuk data yang akan disimpan di localStorage setelah Step 1 berhasil
-export interface SubmissionStep1Data extends SubmissionStep1FormValues {
-  // Data dari localStorage PembiayaanDataLocalStorage
-  organization_instance_id: string
-  total_price: number
-  jumlah_jemaah: number
-  package_name: string
-  package_id: number
-  package_variant_id: number
-}

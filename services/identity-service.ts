@@ -2,8 +2,13 @@ import { api, apiWithAuth } from '@/services/common/http'
 import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
 import qs from 'query-string'
 import { Organization, Travel } from '@/constant/types/TravelProps'
-import { City } from '@/constant/types/LocationProps'
+import {
+  City,
+  District,
+  PostalCodeResponse,
+} from '@/constant/types/LocationProps'
 import { Profile } from '@/contexts/auth/shared/type'
+import { AxiosResponse } from 'axios'
 
 export async function getTravels(
   query: GetListQuery
@@ -31,32 +36,30 @@ export async function getTravelById(id: number): Promise<Organization> {
   }
 }
 
+export async function getSubDistrictAndPostal(
+  query: GetListQuery
+): Promise<AxiosResponse<PostalCodeResponse>> {
+  return api.get(
+    `/public/identity/location/subdistrict/postal-codes?${qs.stringify(query)}`
+  )
+}
+export async function getDistrict(
+  query: GetListQuery
+): Promise<AxiosResponse<GenericResponse<District>>> {
+  return api.get(`/public/identity/location/district?${qs.stringify(query)}`)
+}
 export async function getKota(
   query: GetListQuery
-): Promise<GenericResponse<City>> {
-  try {
-    const response = await api.get(
-      `/public/identity/location/city?${qs.stringify(query)}`
-    )
-    return response.data
-  } catch (error) {
-    console.error('Error fetching kota:', error)
-    throw error
-  }
+): Promise<AxiosResponse<GenericResponse<City>>> {
+  return api.get(`/public/identity/location/city?${qs.stringify(query)}`)
 }
+
 export async function getProvince(
   query: GetListQuery
-): Promise<GenericResponse<any>> {
-  try {
-    const response = await api.get(
-      `/public/identity/location/province?${qs.stringify(query)}`
-    )
-    return response.data
-  } catch (error) {
-    console.error('Error fetching kota:', error)
-    throw error
-  }
+): Promise<AxiosResponse<GenericResponse<any>>> {
+  return api.get(`/public/identity/location/province?${qs.stringify(query)}`)
 }
+
 export async function updateProfile(payload: Profile): Promise<Profile> {
   try {
     const response = await apiWithAuth.put(`/identity/my-profile`, payload)

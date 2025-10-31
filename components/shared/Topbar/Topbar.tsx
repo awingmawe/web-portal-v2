@@ -565,7 +565,7 @@ const Topbar: React.FC<TopbarProps> = ({
         </header>
       )}
       {/* add space divider for top if scrolled is active */}
-      {scrolled && <div className="h-[72px] w-full px-4 max-lg:hidden"></div>}
+      {scrolled && <div className="h-[100px] w-full px-4 max-lg:hidden"></div>}
     </Fragment>
   )
 }

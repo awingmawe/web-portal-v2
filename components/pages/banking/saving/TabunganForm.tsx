@@ -205,8 +205,8 @@ export const TabunganForm = forwardRef<TabunganFormRef, TabunganFormProps>(
                         })
                         // Store the value without the prefix in the form
                         field.onChange(value)
-                      }}
-                      value={field.value.replace(/^\+?62/, '')}
+                      }} // Ensure field.value is a string before calling replace
+                      value={(field.value || '').replace(/^\+?62/, '')}
                       onBlur={field.onBlur}
                       name={field.name}
                       ref={field.ref}

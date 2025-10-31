@@ -32,7 +32,7 @@ const Checkbox = React.forwardRef<
 
     return (
       <div
-        className={`${classNameParent} flex items-center gap-2 ${border && 'border-b-1 border-b-neutral-100'} pb-2`}
+        className={`flex items-center gap-2 ${border && 'border-b-1 border-b-neutral-100'} pb-2 ${classNameParent}`}
       >
         <CheckboxPrimitive.Root
           id={props.id || id}
@@ -57,7 +57,7 @@ const Checkbox = React.forwardRef<
             {label && (
               <label
                 htmlFor={props.id || id}
-                className="text-m-regular cursor-pointer text-neutral-900 capitalize"
+                className="text-m-regular cursor-pointer text-neutral-900"
               >
                 {label}
               </label>

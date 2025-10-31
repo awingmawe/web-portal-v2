@@ -49,7 +49,7 @@ function AccordionTrigger({
         )}
         {...props}
       >
-        <div>{children}</div>
+        <div className="w-full">{children}</div>
         <div id="chevron">
           <ChevronIcon size={sizeChevron} className="m-auto" />
         </div>

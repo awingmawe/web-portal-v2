@@ -1,4 +1,4 @@
-import { SubmissionStep1Data } from '@/constant/schema/pembiayaan-schema/pembiayaan'
+import { SubmissionStep1FormValues } from '@/constant/schema/pembiayaan-schema/pembiayaan'
 import { RoomType } from '@/contexts/package-variant-context'
 
 // --------------------------------------- SELECTED PACKAGE ------------------------------------ //
@@ -63,6 +63,15 @@ export type FinancingCalculationResponse = {
 }
 // --------------------------------------- END OF FINANCING CALCULATION ------------------------------------ //
 
+// --------------------------------------- PROVIDER LOCAL STORAGE ------------------------------------ //
+export type ProvidersLocaStorage = {
+  id: number
+  providerName: string
+  logo: string
+  tenor: number
+}
+// --------------------------------------- END OF FINANCING CALCULATION ------------------------------------ //
+
 // --------------------------------------- PEMBIAYAAN DATA LOCAL STORAGE ------------------------------------ //
 export type PembiayaanDataLocalStorage = {
   selectedPackage: SelectedPackage
@@ -70,7 +79,9 @@ export type PembiayaanDataLocalStorage = {
   totalQty: number
   price: number
   tenor: string
-  formData?: SubmissionStep1Data
+  isSubmitted: boolean
+  formData?: SubmissionStep1FormValues
+  provider?: ProvidersLocaStorage[]
 }
 // --------------------------------------- END OF PEMBIAYAAN DATA LOCAL STORAGE ------------------------------------ //
 
@@ -95,6 +106,9 @@ export interface RequestSubmissionPembiayaan {
   job: string
   providers: ProviderSubmission[]
   organization_instance_id: string
+  district_name: string
+  district_id: string
+  address: string
   total_price: number
   jumlah_jemaah: number
   package_name: string

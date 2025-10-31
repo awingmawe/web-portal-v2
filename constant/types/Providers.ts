@@ -14,7 +14,7 @@ interface ProviderOrganizationInstance {
 export interface Provider {
   id: number
   name: string
-  logo: string | null
+  logo: string
   description: string
   provider_type: 'Bank' | 'Leasing' | string // Add more types as needed
   provider_credit: boolean
@@ -31,6 +31,7 @@ export interface Provider {
   supported_organizations: string[]
   available_tenors: number[]
   simulation: Simulation[]
+  coverage_area: boolean
 }
 
 // Pagination metadata
@@ -40,4 +41,29 @@ export interface ResponseProvider {
   size: number
   totalPages: number
   data: Provider[]
+}
+
+export interface ProviderCoverage {
+  id: number
+  name: string
+  logo: string
+  provider_type: string
+}
+
+export interface Coverage {
+  id: number
+  provider_id: number
+  city_id: string
+  city_name: string
+  district_id: string
+  district_name: string
+  createdAt: string
+  modifiedAt: string
+  provider: ProviderCoverage
+}
+
+export interface CoverageResponse {
+  provider: Provider
+  coverages: Coverage[]
+  total: number
 }
