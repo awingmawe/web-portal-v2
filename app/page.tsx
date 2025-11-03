@@ -244,11 +244,11 @@ export default async function Home() {
 
       {/* FAQ */}
       <div className="container mx-auto mt-10 mb-10 max-xl:px-0">
-        <Card className="border-0 bg-neutral-50 p-8 shadow-none">
+        <Card className="border-0 bg-neutral-50 p-8 shadow-none max-md:bg-white max-md:p-2">
           <CardContent>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
               <div>
-                <h2 className="text-4xl font-bold">
+                <h2 className="text-4xl font-bold max-md:text-2xl">
                   Pertanyaan yang Sering Ditanyakan
                 </h2>
                 <Link
@@ -257,7 +257,7 @@ export default async function Home() {
                 >
                   Lihat lebih banyak <MoveRight />
                 </Link>
-                <div className="flex justify-center">
+                <div className="flex justify-center max-md:hidden">
                   <Image
                     className="mx-auto mt-4"
                     src={FaqImage}

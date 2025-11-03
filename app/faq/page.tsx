@@ -1,14 +1,11 @@
 import { metadata } from '@/app/shared-metadata'
-import Breadcrumb from '@/components/pages/faq/Breadcumb'
 import FaqContent from '@/components/pages/faq/FaqContent'
-import Footer from '@/components/shared/Footer'
+import LayoutFaq from '@/components/pages/faq/Layout'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
-import Topbar from '@/components/shared/Topbar'
 import { Input } from '@/components/ui/input'
 import { cookieNames } from '@/services/common/cookie'
 import { Search } from 'lucide-react'
 import { cookies } from 'next/headers'
-import { Fragment } from 'react'
 
 export async function generateMetadata() {
   return {
@@ -28,13 +25,27 @@ export default async function Faq({
   const page = Number(resolved?.page) || 1
 
   return (
-    <Fragment>
-      <Topbar shadow scrolled token={token} />
-      <MobileTopbar variant="plain" showBackButton />
-      <Breadcrumb />
+    <LayoutFaq>
+      <MobileTopbar variant={'plain'} title="FAQ" showBackButton />
+      {/* SEARCH MOBILE */}
+      <div className="scrollbar-hide flex gap-2 overflow-x-hidden pl-5 lg:hidden">
+        <div className={`pr-t absolute -top-19 left-3.5 w-11/12 md:w-10/12 `}>
+          <h4 className="heading-4-medium mb-2 text-center">
+            Halo, Apa yang bisa kami bantu?
+          </h4>
+          <Input
+            model="expended"
+            startIcon={<Search size={16} className="text-neutral-300" />}
+            placeholder="Cari Pertanyaan"
+            className="w-full py-1.5"
+            value={''}
+          />
+        </div>
+      </div>
 
-      <div className="container mx-auto mt-5 mb-10">
-        <section className="mt-8 max-lg:px-4">
+      {/* SEARCH DESKTOP */}
+      <div className="container mx-auto mb-10">
+        <section className="mt-8 max-lg:px-4 max-md:hidden">
           <div className="rounded-xl bg-gradient-to-r from-[#FFEAAC] to-[#FFC101] px-8 pt-2 pb-5 max-lg:px-4">
             <div className="text-center">
               <h2 className="mt-4 mb-4 text-3xl max-lg:text-base">
@@ -55,7 +66,6 @@ export default async function Faq({
           <FaqContent page={page} limit={2} type="list" pagination={true} />
         </section>
       </div>
-      <Footer />
-    </Fragment>
+    </LayoutFaq>
   )
 }
