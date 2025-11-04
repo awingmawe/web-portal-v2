@@ -534,5 +534,10 @@ export const parseCurrency = (currencyString: string | number): number => {
   return Number(numericString) || 0
 }
 
+export function truncateWord(str: string, maxLength: number): string {
+  if (!str) return ''
+  return str.length > maxLength ? str.slice(0, maxLength) + '...' : str
+}
+
 // For refactoring utils files, do this if there's new file
 export * from './data-formatter'

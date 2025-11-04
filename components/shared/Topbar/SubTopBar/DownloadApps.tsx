@@ -14,7 +14,8 @@ import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
 
 export default function DownloadApps() {
-  const [qrCode, setQrCode] = useState('') // start empty
+  const [qrCode, setQrCode] = useState('')
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const generateQR = async () => {
@@ -29,14 +30,22 @@ export default function DownloadApps() {
   }, [])
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button className="text-s-regular flex items-center gap-2">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        asChild
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
+        <button className="text-s-regular flex h-[30px] items-center gap-2 pt-1 pb-2">
           <Smartphone className="h-4 w-4" />
           Lebih nyaman di aplikasi
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 bg-white p-4">
+      <PopoverContent
+        className="-mt-2 w-80 bg-white p-4"
+        onMouseEnter={() => setOpen(true)} // keep open when hovering content
+        onMouseLeave={() => setOpen(false)} // close when leaving
+      >
         <div className="grid gap-2 text-center">
           <p className="text-m-regular">
             Scan untuk unduh Muslim101 & Nikmati kenyamanannya!

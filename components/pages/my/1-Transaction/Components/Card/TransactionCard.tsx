@@ -424,7 +424,7 @@ export default function TransactionCard({
   return (
     <div className="mt-6 rounded-3xl border border-neutral-200">
       <ConditionalLink
-        condition={lg}
+        condition={false}
         href={`/my/transaction/${transactionData.bookingId}`}
       >
         {!noHeader && (
@@ -437,6 +437,7 @@ export default function TransactionCard({
             packageType={transactionData.packageType}
             variantType={transactionData.variantType}
             currency={transactionData.currency}
+            url={`/my/transaction/${transactionData.bookingId}`}
           />
         )}
       </ConditionalLink>
@@ -468,6 +469,7 @@ export default function TransactionCard({
                 packageType={transactionData.packageType}
                 title={transactionData.variantType}
                 disableCheckout={true}
+                hideCloseButton={true}
               />
             )}
           </div>

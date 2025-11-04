@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import FaqContent from '@/components/pages/faq/FaqContent'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
 import { CarouselTravel } from '@/components/pages/homepage/3-Travels/Travels'
@@ -13,16 +14,19 @@ import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
 import Topbar from '@/components/shared/Topbar'
 import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
+import { Card, CardContent } from '@/components/ui/card'
 import { NODE_ENV, URL } from '@/constant/env'
 import EventTrackerImpression from '@/contexts/event-tracker/components/EventTrackerImpression'
 import { mapProductsToCardData } from '@/lib/utils'
+import FaqImage from '@/public/images/faq-homepage.png'
 import { getArticleList } from '@/services/article-service'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
-import { Search } from 'lucide-react'
+import { MoveRight, Search } from 'lucide-react'
 import { cookies } from 'next/headers'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment } from 'react'
 
@@ -237,6 +241,41 @@ export default async function Home() {
           )}
         </Fragment>
       )}
+
+      {/* FAQ */}
+      <div className="container mx-auto mt-10 mb-10 max-xl:px-0">
+        <Card className="border-0 bg-neutral-50 p-8 shadow-none max-md:bg-white max-md:p-2">
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
+              <div>
+                <h2 className="text-4xl font-bold max-md:text-2xl">
+                  Pertanyaan yang Sering Ditanyakan
+                </h2>
+                <Link
+                  href={'/faq'}
+                  className="hover:text-primary-500 mt-4 flex items-center gap-2"
+                >
+                  Lihat lebih banyak <MoveRight />
+                </Link>
+                <div className="flex justify-center max-md:hidden">
+                  <Image
+                    className="mx-auto mt-4"
+                    src={FaqImage}
+                    alt="illustration-not-found"
+                    width={400}
+                    height={400}
+                    style={{ width: '278px' }}
+                  />
+                </div>
+              </div>
+              <div>
+                <FaqContent highlight={true} limit={5} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <BottomNavigation />
       <Footer className="footer relative z-10  max-lg:mb-0 max-lg:pb-[108px]" />
       <EventTrackerImpression

@@ -1,5 +1,6 @@
 'use client'
 import { ChevronRightIcon } from '@/components/icons/chevron'
+import { FaqIcon } from '@/components/icons/faqIcon'
 import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { MoneysIcon } from '@/components/icons/moneys'
@@ -160,6 +161,15 @@ export const SidebarMobileProfile = () => {
           isActive={false}
           loading={profile ? false : true}
         />
+
+        <MenuItem
+          icon={<FaqIcon />}
+          label="Pusat Bantuan"
+          href="/faq"
+          isActive={false}
+          loading={profile ? false : true}
+        />
+
         <DialogConfirm
           title="Apakah kamu yakin ingin keluar?"
           icon={

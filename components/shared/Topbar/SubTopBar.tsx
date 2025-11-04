@@ -25,12 +25,13 @@ const SubTopBar: React.FC<TopbarProps> = ({
       <div className="flex items-center justify-between">
         <DownloadApps />
         <nav className="flex gap-[20px]">
+          <MitraModal title="Jadi Mitra" />
+
           {navLinks.map((link) => (
             <Link key={link.href} className="text-s-regular" href={link.href}>
               {link.title}
             </Link>
           ))}
-          <MitraModal title="Jadi Mitra" />
         </nav>
       </div>
     </Fragment>

@@ -4,6 +4,7 @@ import {
   Category,
   Comment,
 } from '@/constant/types/ArticleProps'
+import { ApiFaqResponse, Faq } from '@/constant/types/FaqProps'
 import { GetListQuery } from '@/constant/types/GeneralProps'
 import { api, apiWithAuth, createServerApiClient } from '@/services/common/http'
 import qs from 'query-string'
@@ -108,6 +109,45 @@ export async function postComment(payload: {
     return response.data.results
   } catch (error) {
     console.error('Error post comment article:', error)
+    throw error
+  }
+}
+
+export async function getFaq({
+  highlight,
+  slug,
+  page = 1,
+  limit = 10,
+  order = 'asc',
+  orderBy = 'level',
+  likeLower,
+}: {
+  highlight?: boolean
+  slug?: string
+  page?: number
+  limit?: number
+  order?: string
+  orderBy?: string
+  likeLower?: string
+}): Promise<ApiFaqResponse<Faq>> {
+  try {
+    const params = new URLSearchParams()
+
+    if (highlight) params.set('highlight', 'true')
+    if (slug) params.set('slug', slug)
+    if (page) params.set('page', String(page))
+    if (limit) params.set('size', String(limit))
+    if (orderBy) params.append('orderBy', String(orderBy))
+    if (order) params.append('order', String(order))
+    if (likeLower)
+      params.append('title:likeLower', `%${decodeURIComponent(likeLower)}%`)
+
+    const response = await api.get(
+      `/public/general/v1/faq?${params.toString()}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching FAQ list:', error)
     throw error
   }
 }

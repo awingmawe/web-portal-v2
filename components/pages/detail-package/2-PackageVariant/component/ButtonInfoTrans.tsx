@@ -8,18 +8,18 @@ const ButtonInfoTrans = ({
   packageType,
   title,
   disableCheckout = false,
+  hideCloseButton = false,
 }: {
   currency: string
   packageType: string
   title: string
   disableCheckout?: boolean
+  hideCloseButton?: boolean
 }) => {
   {
   }
   const [showAlurInfo, setAlurInfo] = useState<boolean>(false)
   const handleShowAlurInfo = (param: boolean) => {
-    console.log(currency)
-    console.log(packageType)
     setAlurInfo(param)
   }
 
@@ -38,6 +38,7 @@ const ButtonInfoTrans = ({
         currency={packageType === PACKAGE_TYPE.HAJJ ? currency : packageType}
         disabledCheck={true}
         disableCheckout={disableCheckout}
+        hideCloseButton={hideCloseButton}
       />
       <button
         onClick={() => {

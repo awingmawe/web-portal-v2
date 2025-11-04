@@ -108,7 +108,9 @@ function handleApiError(error: AxiosError<ApiErrorResponse>): never {
   const { response } = error
 
   if (response?.status === 500) {
-    toast.error('Terjadi kesalahan, silakan coba lagi nanti.')
+    if (typeof window !== 'undefined') {
+      toast.error('Terjadi kesalahan, silakan coba lagi nanti.')
+    }
   }
 
   // Format error message

@@ -2,11 +2,12 @@
 import DrawerBatalkan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerBatalkan'
 import DrawerPaymentLinkAja from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerPaymentLinkAja'
 import { ModalFormRefund } from '@/components/pages/my/1-Transaction/Components/FormRefund'
+import { BatalkanPesananInfo } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesananInfo'
 import TransactionActionButtonHajj from '@/components/pages/my/1-Transaction/Components/PriceConfirmationHajj/ActionButtonHajj'
 import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
 import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
-import { CALL_CENTER, PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
+import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -33,6 +34,12 @@ export const TransactionDetailMobileAction = ({
   const [isLinkAja, setIsLinkAja] = useState(false)
   const [openDrawerPaymentLinkAja, setOpenDrawerPaymentLinkAja] =
     useState(false)
+  const [openBatalkanInfo, setOpenBatalkanInfo] = useState(false)
+  const packageTitle = transaction?.packageSnapshot.snapshot.package.title
+  const travelName =
+    transaction?.packageSnapshot.snapshot.package.organizationInstance.name
+  const packageType =
+    transaction?.packageSnapshot?.snapshot?.package?.packageType
 
   const {
     openFormRefund,
@@ -263,31 +270,44 @@ export const TransactionDetailMobileAction = ({
 
   const renderCancelButton = () => (
     <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
-      <DrawerBatalkan
-        bookingId={bookingId}
-        idOrganisasi={idOrganisasi}
-        id={transaction?.bookingCode}
-        status={transaction?.status?.slug}
-      >
-        <Button className="border-error-500 w-full py-2" variant="outline">
+      {packageType === PACKAGE_TYPE.HAJJ ? (
+        <Button
+          className="border-error-500 w-full py-2"
+          variant="outline"
+          onClick={() => {
+            setOpenBatalkanInfo(true)
+          }}
+        >
           Batalkan Pesanan
         </Button>
-      </DrawerBatalkan>
+      ) : (
+        <DrawerBatalkan
+          bookingId={bookingId}
+          idOrganisasi={idOrganisasi}
+          id={transaction?.bookingCode}
+          status={transaction?.status?.slug}
+        >
+          <Button className="border-error-500 w-full py-2" variant="outline">
+            Batalkan Pesanan
+          </Button>
+        </DrawerBatalkan>
+      )}
     </div>
   )
 
   const renderHajjActions = () => {
     return (
       <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
-        <Link
-          href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-          target="_blank"
-          className="w-full"
+        <Button
+          className="border-error-500 w-full py-2"
+          variant="outline"
+          onClick={() => {
+            setOpenBatalkanInfo(true)
+          }}
         >
-          <Button className="border-error-500 w-full py-2" variant="outline">
-            Batalkan Pesanan
-          </Button>
-        </Link>
+          Batalkan Pesanan
+        </Button>
+
         {paymentLink ? (
           <Button
             className="w-full py-2"
@@ -318,6 +338,16 @@ export const TransactionDetailMobileAction = ({
 
   return (
     <div className="hidden max-lg:block">
+      {openBatalkanInfo && (
+        <BatalkanPesananInfo
+          open={openBatalkanInfo}
+          bookingId={bookingId}
+          onOpenChange={setOpenBatalkanInfo}
+          packageTitle={packageTitle ?? ''}
+          travelName={travelName ?? ''}
+          status={transaction?.status?.slug}
+        />
+      )}
       {isLinkAja && JSON.stringify(isLinkAja)}
 
       {shouldShowMainActionButtons() && renderMainActionButtons()}
