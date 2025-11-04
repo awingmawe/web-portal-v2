@@ -120,6 +120,7 @@ export async function getFaq({
   limit = 10,
   order = 'asc',
   orderBy = 'level',
+  likeLower,
 }: {
   highlight?: boolean
   slug?: string
@@ -127,6 +128,7 @@ export async function getFaq({
   limit?: number
   order?: string
   orderBy?: string
+  likeLower?: string
 }): Promise<ApiFaqResponse<Faq>> {
   try {
     const params = new URLSearchParams()
@@ -137,10 +139,13 @@ export async function getFaq({
     if (limit) params.set('size', String(limit))
     if (orderBy) params.append('orderBy', String(orderBy))
     if (order) params.append('order', String(order))
+    if (likeLower)
+      params.append('title:likeLower', `%${decodeURIComponent(likeLower)}%`)
 
     const response = await api.get(
       `/public/general/v1/faq?${params.toString()}`
     )
+    console.log(params.toString())
     return response.data
   } catch (error) {
     console.error('Error fetching FAQ list:', error)

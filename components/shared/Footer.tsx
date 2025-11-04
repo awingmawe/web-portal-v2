@@ -139,6 +139,30 @@ export default function Footer({
                   </li>
                 </ul>
               </div>
+
+              {/* <div className="space-y-4">
+                <h3 className="text-m-semibold text-neutral-800">
+                  Kontak Kami
+                </h3>
+                <ul className="list-none space-y-2">
+                  <li>
+                    <Link
+                      href="https://www.instagram.com/muslim101.id/"
+                      className="text-m-regular flex items-center gap-2 text-neutral-900"
+                    >
+                      <Mail /> cs@
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="https://www.instagram.com/muslim101.id/"
+                      className="text-m-regular flex items-center gap-2 text-neutral-900"
+                    >
+                      <Mail /> Mail
+                    </Link>
+                  </li>
+                </ul>
+              </div> */}
             </div>
 
             {/* Divider */}

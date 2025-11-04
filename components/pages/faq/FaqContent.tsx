@@ -1,3 +1,4 @@
+import { EmptyFaqIcon } from '@/components/icons/empty-faq'
 import {
   Accordion,
   AccordionContent,
@@ -25,6 +26,7 @@ export default async function FaqContent({
   type = 'accordion',
   pagination = false,
   slug,
+  likeLower,
 }: {
   highlight?: boolean
   page?: number
@@ -34,6 +36,7 @@ export default async function FaqContent({
   type?: string
   pagination?: boolean
   slug?: string
+  likeLower?: string
 }) {
   const faqLists = await getFaq({
     highlight,
@@ -42,19 +45,27 @@ export default async function FaqContent({
     order,
     orderBy,
     slug,
+    likeLower,
   })
+
+  console.log(faqLists)
+
   const contentFaq = (
-    <Accordion type="single" collapsible className="w-full space-y-4">
+    <Accordion
+      type="single"
+      collapsible
+      className="w-full space-y-4 max-lg:space-y-2"
+    >
       {faqLists.results.map((faq) => (
         <AccordionItem key={faq.slug} value={faq.slug}>
           <AccordionTrigger>
-            <h4 className="heading-4-medium max-md:text-s-regular">
+            <h4 className="heading-4-medium max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5 ">
               {faq.title}
             </h4>
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 pt-2 text-balance">
             <div
-              className="prose text-m-regular"
+              className="prose text-m-regular max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5 "
               dangerouslySetInnerHTML={{ __html: faq.body }}
             />
           </AccordionContent>
@@ -64,18 +75,34 @@ export default async function FaqContent({
   )
 
   const contentFaqList = (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-lg:gap-2">
       {faqLists.results.map((faq) => (
         <Link
           href={`/faq/${faq.slug}`}
-          className="flex justify-between border-b-1 border-neutral-100 pt-2 pb-7"
+          className="flex justify-between border-b-1 border-neutral-100 pt-2 pb-7 max-lg:pb-3"
         >
-          <h4 className="heading-4-medium">{faq.title}</h4>
+          <h4 className="heading-4-medium max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5">
+            {faq.title}
+          </h4>
           <ChevronRight />
         </Link>
       ))}
     </div>
   )
+
+  if (faqLists.results.length == 0) {
+    return (
+      <div className="mt-20 flex flex-col items-center gap-2 max-lg:gap-2">
+        <EmptyFaqIcon />
+        <h6 className="text-l-medium">
+          Tidak Ada Pertanyaan Umum Untuk Saat Ini
+        </h6>
+        <p className="text-m-regular mt-2 mb-0 text-neutral-400">
+          Jika kamu butuh bantuan, harap menghubungi CS Muslim101!
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8">

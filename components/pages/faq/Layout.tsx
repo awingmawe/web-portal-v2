@@ -51,13 +51,13 @@ export default async function LayoutFaq({
           width={0}
           height={0}
           sizes="100vw"
-          className="absolute bottom-0 -z-1 -mb-5 h-auto w-full"
+          className="absolute bottom-0 -z-1 -mb-5 h-auto w-full max-lg:z-1 max-lg:-mb-20 max-lg:h-[280px]"
         />
 
         <section
           className={`scrollbar-hide container mx-auto mb-5 ${
             variant === 'details' ? 'top-13.5' : 'top-32'
-          } max-lg:relative max-lg:bottom-0 max-lg:mb-20 max-lg:h-[90%] max-lg:min-h-screen max-lg:w-full max-lg:max-w-full max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:shadow-[0px_-20px_24px_-15px_rgba(0,0,0,0.25)]`}
+          } max-lg:relative max-lg:bottom-0 max-lg:-mb-15 max-lg:h-[100%] max-lg:min-h-screen max-lg:w-full max-lg:max-w-full max-lg:rounded-tl-3xl max-lg:rounded-tr-3xl max-lg:bg-white max-lg:shadow-[0px_-20px_24px_-15px_rgba(0,0,0,0.25)]`}
         >
           <div className="container mx-auto flex gap-5 pt-0 pb-5 lg:pt-6">
             <div className="w-full ">{children}</div>
@@ -65,9 +65,9 @@ export default async function LayoutFaq({
         </section>
 
         <section
-          className={`container mx-auto mb-5 min-h-[200px] max-lg:relative max-lg:mb-20 max-lg:w-full max-lg:max-w-full`}
+          className={`container mx-auto mb-5 min-h-[200px] max-lg:relative max-lg:z-1 max-lg:mb-20 max-lg:min-h-[100px] max-lg:w-full max-lg:max-w-full`}
         >
-          <div className="container mx-auto flex flex-col items-center">
+          <div className="container mx-auto flex flex-col items-center max-md:mt-4">
             <h6 className="text-l-medium">Merasa masih kebingungan?</h6>
             <p className="text-m-regular mt-2 mb-0 text-neutral-400">
               Hubungi kami sekarang!
@@ -80,9 +80,9 @@ export default async function LayoutFaq({
 
             <Link
               href={'#'}
-              className="text-m-regular mt-5 max-h-min rounded-xl border-1 border-neutral-100 bg-white px-5 py-3"
+              className="mt-5 max-h-min rounded-xl border-1 border-neutral-100 bg-white px-5 py-3"
             >
-              <div className="flex items-center gap-2 ">
+              <div className="text-s-regular max-lg:text-xs-regular max-sm:text-xs-regular flex items-center gap-2 max-lg:leading-3.5 max-sm:leading-4">
                 <WhatsappIcon size={24} />
                 Chat langsung dengan customer service
               </div>
@@ -92,6 +92,7 @@ export default async function LayoutFaq({
       </main>
 
       <Footer />
+      {/* <Footer type="compact" className="md:block lg:hidden" /> */}
     </Fragment>
   )
 }
