@@ -13,7 +13,6 @@ export default function FaqSearch() {
   const handleSearch = () => {
     if (!searchTerm.trim()) return router.push(`/faq`)
 
-    console.log('Searching for:', searchTerm)
     router.push(`/faq?search=${encodeURIComponent(searchTerm)}`)
   }
 

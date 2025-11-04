@@ -145,7 +145,6 @@ export async function getFaq({
     const response = await api.get(
       `/public/general/v1/faq?${params.toString()}`
     )
-    console.log(params.toString())
     return response.data
   } catch (error) {
     console.error('Error fetching FAQ list:', error)

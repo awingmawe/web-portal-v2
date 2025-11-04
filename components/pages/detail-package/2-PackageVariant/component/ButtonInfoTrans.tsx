@@ -20,8 +20,6 @@ const ButtonInfoTrans = ({
   }
   const [showAlurInfo, setAlurInfo] = useState<boolean>(false)
   const handleShowAlurInfo = (param: boolean) => {
-    console.log(currency)
-    console.log(packageType)
     setAlurInfo(param)
   }
 

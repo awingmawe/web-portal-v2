@@ -48,8 +48,6 @@ export default async function FaqContent({
     likeLower,
   })
 
-  console.log(faqLists)
-
   const contentFaq = (
     <Accordion
       type="single"
