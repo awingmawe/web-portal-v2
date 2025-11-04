@@ -76,13 +76,14 @@ export default async function FaqContent({
     <div className="flex flex-col gap-4 max-lg:gap-2">
       {faqLists.results.map((faq) => (
         <Link
+          key={faq.slug}
           href={`/faq/${faq.slug}`}
-          className="flex justify-between border-b-1 border-neutral-100 pt-2 pb-7 max-lg:pb-3"
+          className="flex justify-between gap-2 border-b-1 border-neutral-100 pt-2 pb-7 max-lg:pb-3"
         >
           <h4 className="heading-4-medium max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5">
             {faq.title}
           </h4>
-          <ChevronRight />
+          <ChevronRight className="min-w-[24px]" />
         </Link>
       ))}
     </div>

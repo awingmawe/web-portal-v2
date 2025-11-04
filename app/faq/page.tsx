@@ -3,8 +3,6 @@ import FaqContent from '@/components/pages/faq/FaqContent'
 import FaqSearch from '@/components/pages/faq/FaqSearch'
 import LayoutFaq from '@/components/pages/faq/Layout'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
-import { cookieNames } from '@/services/common/cookie'
-import { cookies } from 'next/headers'
 
 export async function generateMetadata() {
   return {
@@ -15,13 +13,11 @@ export async function generateMetadata() {
 export default async function Faq({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined }
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const cookieStore = await cookies()
-  const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
-
-  const page = Number(searchParams?.page) || 1
-  const likeLower = searchParams?.search as string | undefined
+  const params = await searchParams
+  const page = Number(params?.page) || 1
+  const likeLower = params?.search as string | undefined
 
   return (
     <LayoutFaq>
