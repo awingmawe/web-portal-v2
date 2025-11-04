@@ -1,6 +1,7 @@
 import { AppStoreIcon } from '@/components/icons/appstore'
+import { CallSolidIcon } from '@/components/icons/call-solid'
+import { MailSolidIcon } from '@/components/icons/mail-solid'
 import { PlaystoreIcon } from '@/components/icons/playstore'
-import { CALL_CENTER } from '@/constant/env'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { Fragment } from 'react'
@@ -21,7 +22,38 @@ export default function Footer({
       <section className="container mx-auto max-lg:px-4">
         {type == 'normal' && (
           <Fragment>
-            <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-7">
+              <div className="col-span-2 space-y-4 max-lg:mb-5">
+                <h3 className="text-m-semibold text-neutral-800">
+                  Kontak Kami
+                </h3>
+                <ul className="list-none space-y-2">
+                  <li>
+                    <Link
+                      href="https://www.instagram.com/muslim101.id/"
+                      className="text-m-regular flex items-center gap-2 text-neutral-900"
+                    >
+                      <MailSolidIcon /> cs@muslim101.id
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="https://www.instagram.com/muslim101.id/"
+                      className="text-m-regular flex items-center gap-2 text-neutral-900"
+                    >
+                      <CallSolidIcon /> +62 888‑8551‑101
+                    </Link>
+                  </li>
+                </ul>
+                <h3 className="text-m-semibold text-neutral-800">
+                  Jam Operasional
+                </h3>
+                <ul className="text-m-regular list-none space-y-2">
+                  <li>Senin-Sabtu: 09.00-18.00 WIB</li>
+                  <li>Minggu & Tanggal Merah: Libur</li>
+                </ul>
+              </div>
+
               {/* Column 1 */}
               <div className="space-y-4">
                 <h3 className="text-m-semibold text-neutral-800">Muslim101</h3>
@@ -34,35 +66,45 @@ export default function Footer({
                       Tentang Kami
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link
                       href={`https://wa.me/${CALL_CENTER}`}
                       className="text-m-regular text-neutral-900"
                     >
                       Bantuan
                     </Link>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
 
               {/* Column 2 */}
               <div className="space-y-4">
-                <h3 className="text-m-semibold text-neutral-800">101</h3>
+                <h3 className="text-m-semibold text-neutral-800">
+                  Produk Kami
+                </h3>
                 <ul className="list-none space-y-2">
                   <li>
                     <Link
-                      href="https://www.instagram.com/growat101"
-                      className="text-m-regular text-neutral-900 italic"
+                      href="/travel/list"
+                      className="text-m-regular text-neutral-900"
                     >
-                      Grow at 101
+                      Umroh
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href="/article"
+                      href="/wukala"
                       className="text-m-regular text-neutral-900"
                     >
-                      Artikel
+                      Umroh Personal
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/wukala"
+                      className="text-m-regular text-neutral-900"
+                    >
+                      Haji
                     </Link>
                   </li>
                 </ul>
@@ -140,29 +182,27 @@ export default function Footer({
                 </ul>
               </div>
 
-              {/* <div className="space-y-4">
-                <h3 className="text-m-semibold text-neutral-800">
-                  Kontak Kami
-                </h3>
+              <div className="space-y-4">
+                <h3 className="text-m-semibold text-neutral-800">Lainnya</h3>
                 <ul className="list-none space-y-2">
                   <li>
                     <Link
-                      href="https://www.instagram.com/muslim101.id/"
-                      className="text-m-regular flex items-center gap-2 text-neutral-900"
+                      href="https://www.instagram.com/growat101"
+                      className="text-m-regular text-neutral-900 italic"
                     >
-                      <Mail /> cs@
+                      Grow at 101
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href="https://www.instagram.com/muslim101.id/"
-                      className="text-m-regular flex items-center gap-2 text-neutral-900"
+                      href="/article"
+                      className="text-m-regular text-neutral-900"
                     >
-                      <Mail /> Mail
+                      Artikel
                     </Link>
                   </li>
                 </ul>
-              </div> */}
+              </div>
             </div>
 
             {/* Divider */}
