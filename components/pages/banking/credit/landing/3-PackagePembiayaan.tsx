@@ -93,7 +93,7 @@ const PackagePembiayaan = ({
   useEffect(() => {
     if (dataPembiayaan) {
       setLinkPembiayaan({
-        link: '/banking/credit/form',
+        link: '/banking/credit/form/step-1',
         label: 'Lanjutkan Pengisian Permohonan',
       })
     }

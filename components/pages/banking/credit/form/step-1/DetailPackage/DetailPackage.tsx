@@ -3,9 +3,9 @@ import { BuildingIcon } from '@/components/icons/building'
 import { Calendar2 } from '@/components/icons/calendar'
 import { Edit2Icon, Edit3Icon } from '@/components/icons/edit'
 import { ChangePembiayaanContent } from '@/components/pages/banking/common/ChangePembiayaan'
-import ItemsInformation from '@/components/pages/banking/credit/form/1-Step1/DetailPackage/ItemsInformation'
-import DetailPackagePembiayaanSkeleton from '@/components/pages/banking/credit/form/1-Step1/DetailPackage/SkeletonDetailPackage'
-import RincianHarga from '@/components/pages/banking/credit/form/1-Step1/RincianHarga/RincianHarga'
+import ItemsInformation from '@/components/pages/banking/credit/form/step-1/DetailPackage/ItemsInformation'
+import DetailPackagePembiayaanSkeleton from '@/components/pages/banking/credit/form/step-1/DetailPackage/SkeletonDetailPackage'
+import RincianHarga from '@/components/pages/banking/credit/form/step-1/RincianHarga/RincianHarga'
 import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Button } from '@/components/ui/button'
 import { Facility } from '@/constant/types/FacilityProps'
@@ -87,7 +87,7 @@ const DetailPackagePembiayaan = ({
     return <DetailPackagePembiayaanSkeleton />
 
   return (
-    <section className="container mx-auto flex flex-col gap-3 max-lg:px-4">
+    <div className="container mx-auto flex flex-col gap-4 max-lg:px-4">
       <p className="heading-4-semibold max-lg:hidden">Paket Pilihan</p>
       <div className="flex flex-col gap-4 rounded-2xl border-1 border-neutral-200 px-6 py-4 max-lg:gap-2 max-lg:border-none max-lg:p-0">
         {/* Ubah and Title Rincian Paket */}
@@ -263,7 +263,7 @@ const DetailPackagePembiayaan = ({
           </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }
 

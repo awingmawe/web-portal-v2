@@ -1,4 +1,4 @@
-import RincianHargaSkeleton from '@/components/pages/banking/credit/form/1-Step1/RincianHarga/SkeletonRincianHarga'
+import RincianHargaSkeleton from '@/components/pages/banking/credit/form/step-1/RincianHarga/SkeletonRincianHarga'
 import { Separator } from '@/components/ui/separator'
 import { SelectedPackage } from '@/constant/types/Pembiayaan'
 import { RoomType } from '@/contexts/package-variant-context'
@@ -33,7 +33,7 @@ const RincianHarga = ({
   if (isLoadingPreCreate) return <RincianHargaSkeleton />
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 max-lg:container max-lg:mx-auto max-lg:px-4">
       <h4 className="text-l-semibold max-lg:text-sm max-lg:leading-5 max-lg:font-semibold">
         Rincian Pembayaran
       </h4>

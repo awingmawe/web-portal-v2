@@ -1,3 +1,5 @@
+'use client'
+
 import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { Check, ChevronLeft } from 'lucide-react'
 import { usePathname } from 'next/navigation'

@@ -32,7 +32,7 @@ export function ManifestProvider({ children }: ManifestProviderProps) {
           [`name:likeLower`]: searchQuery ? `%${searchQuery}%` : undefined,
           ...(countryId && { countryId }),
         })
-        return data
+        return data.data
       } catch (error) {
         console.error('Error fetching city:', error)
         return null

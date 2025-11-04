@@ -1,10 +1,10 @@
 'use client'
 
-import { useGetProvider } from '@/services/hooks/banking-service/credits-api'
+import { useGetProviderPublic } from '@/services/hooks/banking-service/credits-api'
 import { useMemo } from 'react'
 
 export const useUniqueSupportedProviders = (isPaused: boolean) => {
-  const { data: dataProviders, isLoading } = useGetProvider(
+  const { data: dataProviders, isLoading } = useGetProviderPublic(
     {
       page: 1,
       size: 10,

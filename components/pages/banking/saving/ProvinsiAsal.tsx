@@ -73,7 +73,7 @@ export default function ProvinsiAsalCombobox({
           order: 'desc',
           [`name:likeLower`]: searchQuery ? `%${searchQuery}%` : undefined,
         })
-        return data
+        return data.data
       } catch (error) {
         console.error('Error fetching city:', error)
         return null

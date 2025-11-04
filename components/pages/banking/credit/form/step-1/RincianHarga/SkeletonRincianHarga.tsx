@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const RincianHargaSkeleton = () => {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 max-lg:container max-lg:mx-auto max-lg:px-4">
       <Skeleton className="h-6 w-48" />
       <div className="space-y-3">
         {[1, 2, 3, 4, 5].map((item) => (
