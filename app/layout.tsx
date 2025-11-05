@@ -33,7 +33,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
-      {CHAT_BOT_CLIENT_ID && CHAT_BOT_SOURCE && (
+      {CHAT_BOT_CLIENT_ID && CHAT_BOT_SOURCE && !isWebview && (
         <Script
           src={CHAT_BOT_SOURCE}
           data-client-id={CHAT_BOT_CLIENT_ID}

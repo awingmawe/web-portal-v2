@@ -2,7 +2,9 @@ import { metadata } from '@/app/shared-metadata'
 import FaqContent from '@/components/pages/faq/FaqContent'
 import FaqSearch from '@/components/pages/faq/FaqSearch'
 import LayoutFaq from '@/components/pages/faq/Layout'
-import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
+import TopbarMobileFaq from '@/components/pages/faq/TopbarMobile'
+import { cookieNames } from '@/services/common/cookie'
+import { cookies } from 'next/headers'
 
 export async function generateMetadata() {
   return {
@@ -18,10 +20,15 @@ export default async function Faq({
   const params = await searchParams
   const page = Number(params?.page) || 1
   const likeLower = params?.search as string | undefined
+  const cookieStore = await cookies()
+  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string
 
   return (
     <LayoutFaq>
-      <MobileTopbar variant={'plain'} title="FAQ" showBackButton />
+      <TopbarMobileFaq
+        href={isWebview ? '/close-web-view' : 'back'}
+        isWebview={isWebview == 'true'}
+      />
 
       <FaqSearch />
 

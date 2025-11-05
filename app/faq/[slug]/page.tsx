@@ -1,9 +1,11 @@
 import { metadata } from '@/app/shared-metadata'
 import LayoutFaq from '@/components/pages/faq/Layout'
-import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
+import TopbarMobileFaq from '@/components/pages/faq/TopbarMobile'
 import { truncateWord } from '@/lib/utils'
 import { getFaq } from '@/services/article-service'
+import { cookieNames } from '@/services/common/cookie'
 import { ChevronLeft } from 'lucide-react'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 
 /**
@@ -29,13 +31,15 @@ export default async function FaqPage({
 
   const faqLists = await getFaq({ slug })
   const faqContent = faqLists?.results?.[0]
+  const cookieStore = await cookies()
+  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string
 
   return (
     <LayoutFaq variant="details">
-      <MobileTopbar
-        variant="plain"
+      <TopbarMobileFaq
         title={truncateWord(faqContent?.title, 25)}
-        showBackButton
+        href={'back'}
+        isWebview={isWebview == 'true'}
       />
 
       <div className="container mx-auto mt-5 mb-30">

@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   const cookieStore = await cookies()
   const pathname = request.nextUrl.pathname
 
-  if (pathname.startsWith('/article')) {
+  if (pathname.startsWith('/web-view-access')) {
     const tokenFromHeader = (await headers()).get('single-use-token') || ''
     const sessionId = (await headers()).get('session-id') || ''
     const isWebView = (await headers()).get('is-web-view') || ''
@@ -68,7 +68,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // return NextResponse.next()
+  return NextResponse.next()
 }
 
 export const config = {
@@ -76,6 +76,8 @@ export const config = {
     '/my(.*)',
     '/article(.*)',
     '/linkaja(.*)',
+    '/faq(.*)',
     '/banking/credit/form(.*)',
+    '/web-view-access(.*)',
   ],
 }
