@@ -18,12 +18,13 @@ export default async function LayoutFaq({
 }>) {
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
+  const isWebview =
+    (cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string) || false
 
   return (
     <Fragment>
       <Topbar shadow scrolled token={token} />
       {variant !== 'details' && <Breadcrumb />}
-
       <main className="max-lg:bg-primary-500 relative mt-7.5 mb-0 max-lg:mt-auto max-lg:min-h-screen lg:my-0">
         {/* Circle Background for mobile */}
         <Image
@@ -90,8 +91,9 @@ export default async function LayoutFaq({
           </div>
         </section>
       </main>
-
-      <Footer />
+      <Footer
+        className={`max-lg:mb-0 ${isWebview === 'true' ? 'max-lg:hidden' : ''}`}
+      />
       {/* <Footer type="compact" className="md:block lg:hidden" /> */}
     </Fragment>
   )

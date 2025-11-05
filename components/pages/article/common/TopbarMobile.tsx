@@ -21,7 +21,7 @@ export default function TopbarMobileArticle({
       showBackButton={true}
       onBackClick={() => {
         if (href == 'back') {
-          goBack(isWebview ? '/article/web-view-access' : '/')
+          goBack(isWebview ? '/web-view-access' : '/')
           return
         }
 
