@@ -129,7 +129,7 @@ export interface RequestSubmissionPembiayaan {
   package_id: string
   package_variant_id: string
   tenor: number
-  manifest: ManifestItem[]
+  manifests: ManifestItem[]
 }
 
 // Response Success Types
