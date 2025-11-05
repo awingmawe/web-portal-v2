@@ -21,11 +21,8 @@ export async function middleware(request: NextRequest) {
       cookieStore.set(cookieNames.SESSION_ID, sessionId)
     }
 
-    console.log((await headers()).get('is-web-view'))
-    console.log('isWebView', isWebView)
     if (isWebView) {
       cookieStore.set(cookieNames.IS_WEBVIEW, isWebView)
-      console.log('isWebView2', isWebView)
     }
   }
 
