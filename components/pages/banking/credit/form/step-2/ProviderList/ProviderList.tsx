@@ -136,7 +136,7 @@ const ProviderList = ({
       born: dataPembiayaan.formData.born,
       gender: dataPembiayaan.formData.gender,
       job: dataPembiayaan.formData.job,
-      manifest: dataPembiayaan.formData.manifest.map((item) => ({
+      manifests: dataPembiayaan.formData.manifest.map((item) => ({
         name: item.name || '',
         phone_number: item.phoneNumber || '',
       })),
