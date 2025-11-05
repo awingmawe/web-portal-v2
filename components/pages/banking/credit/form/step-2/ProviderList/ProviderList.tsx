@@ -126,7 +126,10 @@ const ProviderList = ({
     setIsSubmitting(true)
 
     const payload: RequestSubmissionPembiayaan = {
-      // Data dari form step 1
+      providers: selectedProviders.map((provider) => ({
+        id: provider.id,
+        tenor: provider.tenor,
+      })),
       name: dataPembiayaan.formData.name,
       email: dataPembiayaan.formData.email || '',
       phone_number: dataPembiayaan.formData.phone_number,
@@ -134,25 +137,42 @@ const ProviderList = ({
       gender: dataPembiayaan.formData.gender,
       job: dataPembiayaan.formData.job,
       manifest: dataPembiayaan.formData.manifest.map((item) => ({
-        name: item.name,
-        phone_number: item.phoneNumber,
+        name: item.name || '',
+        phone_number: item.phoneNumber || '',
       })),
 
       // Data lokasi
+      province_name: dataPembiayaan.formData.provinceName,
+      province_id: dataPembiayaan.formData.provinceId,
+      city_name: dataPembiayaan.formData.cityName,
+      city_id: dataPembiayaan.formData.cityId,
+      postcode: dataPembiayaan.formData.postalCode,
       district_name: dataPembiayaan.formData.districtName,
       district_id: dataPembiayaan.formData.districtId,
       address: dataPembiayaan.formData.address,
 
       // Data dari local storage & state
-      providers: selectedProviders,
       total_price: dataPembiayaan.price,
       jumlah_jemaah: dataPembiayaan.totalQty,
       tenor: Number(dataPembiayaan.tenor),
 
+      // Data dari rincian paket & kamar
+      room_type: null, // Sesuai permintaan
+      room_type_quantity: {
+        double: dataPembiayaan.selectedRoomType?.double || 0,
+        triple: dataPembiayaan.selectedRoomType?.triple || 0,
+        quad: dataPembiayaan.selectedRoomType?.quad || 0,
+      },
+      packagePrice: dataPembiayaan.price, // Menggunakan 'price' dari local storage
+      discountAmount: 0, // Placeholder, bisa disesuaikan jika ada data diskon
+      downPaymentPerPerson: 0, // Placeholder, bisa disesuaikan jika ada data DP
+
       // Data dari paket yang dipilih
       package_name: dataPembiayaan.selectedPackage.packageName,
-      package_id: dataPembiayaan.selectedPackage.packageId,
-      package_variant_id: dataPembiayaan.selectedPackage.packageVariantId,
+      package_id: String(dataPembiayaan.selectedPackage.packageId),
+      package_variant_id: String(
+        dataPembiayaan.selectedPackage.packageVariantId
+      ),
       organization_instance_id: String(
         dataPembiayaan.selectedPackage.organizationId
       ),
@@ -160,7 +180,7 @@ const ProviderList = ({
 
     submitPembiayaan(payload)
       .then((res) => {
-        toast.success(res.message)
+        toast.success(res.message || 'Berhasil mengajukan pembiayaan')
         localStorageUtils.updateJSON(LOCAL_STORAGE_PEMBIAYAAN, (prev) => ({
           ...(prev as PembiayaanDataLocalStorage),
           provider: selectedProviders,

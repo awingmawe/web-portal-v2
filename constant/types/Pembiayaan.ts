@@ -105,15 +105,29 @@ export interface RequestSubmissionPembiayaan {
   gender: 'L' | 'P' // L = Laki-laki, P = Perempuan
   job: string
   providers: ProviderSubmission[]
+  province_name: string
+  province_id: string
+  city_name: string
+  city_id: string
   organization_instance_id: string
   district_name: string
   district_id: string
+  postcode: string
   address: string
+  room_type: null
+  room_type_quantity: {
+    double: number
+    triple: number
+    quad: number
+  } | null
+  packagePrice: number
+  discountAmount: number
+  downPaymentPerPerson: number
   total_price: number
   jumlah_jemaah: number
   package_name: string
-  package_id: number
-  package_variant_id: number
+  package_id: string
+  package_variant_id: string
   tenor: number
   manifest: ManifestItem[]
 }
