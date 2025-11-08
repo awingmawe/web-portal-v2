@@ -7,20 +7,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { LINK_APPSTORE, LINK_PLAYSTORE, QRCODE_APPS } from '@/constant/env'
 import { Smartphone } from 'lucide-react'
 import Link from 'next/link'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
 
-export default function DownloadApps() {
+export default function DownloadApps({ qrApp }: { qrApp: string }) {
   const [qrCode, setQrCode] = useState('')
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const generateQR = async () => {
       try {
-        const url = await QRCode.toDataURL(QRCODE_APPS)
+        const url = await QRCode.toDataURL(qrApp)
         setQrCode(url)
       } catch (err) {
         console.error(err)
@@ -55,10 +54,14 @@ export default function DownloadApps() {
           </div>
           <p className="text-m-regular my-1">atau unduh disini</p>
           <div className="mt-4 flex justify-between gap-2">
-            <Link href={LINK_PLAYSTORE}>
+            <Link
+              href={`https://play.google.com/store/apps/details?id=com.muslim101.muslimapp`}
+            >
               <PlaystoreIcon />
             </Link>
-            <Link href={LINK_APPSTORE}>
+            <Link
+              href={`https://apps.apple.com/id/app/muslim-app/id6742533171`}
+            >
               <AppStoreIcon />
             </Link>
           </div>

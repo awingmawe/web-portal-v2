@@ -243,37 +243,39 @@ export default async function Home() {
       )}
 
       {/* FAQ */}
-      <div className="container mx-auto mt-10 mb-10 max-xl:px-0">
-        <Card className="border-0 bg-neutral-50 p-8 shadow-none max-md:bg-white max-md:p-2">
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
-              <div>
-                <h2 className="text-4xl font-bold max-md:text-2xl">
-                  Pertanyaan yang Sering Ditanyakan
-                </h2>
-                <Link
-                  href={'/faq'}
-                  className="hover:text-primary-500 mt-4 flex items-center gap-2"
-                >
-                  Lihat lebih banyak <MoveRight />
-                </Link>
-                <div className="flex justify-center max-md:hidden">
-                  <Image
-                    className="mx-auto mt-4"
-                    src={FaqImage}
-                    alt="illustration-not-found"
-                    width={400}
-                    height={400}
-                    style={{ width: '278px' }}
-                  />
+      <div className="bg-neutral-0 relative z-6 w-full pt-[70px] pb-[70px] max-xl:px-0">
+        <div className="container mx-auto">
+          <Card className="border-0 bg-neutral-50 p-8 shadow-none max-md:bg-white max-md:p-2">
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
+                <div>
+                  <h2 className="text-4xl font-bold max-md:text-2xl">
+                    Pertanyaan yang Sering Ditanyakan
+                  </h2>
+                  <Link
+                    href={'/faq'}
+                    className="hover:text-primary-500 mt-4 flex items-center gap-2"
+                  >
+                    Lihat lebih banyak <MoveRight />
+                  </Link>
+                  <div className="flex justify-center max-md:hidden">
+                    <Image
+                      className="mx-auto mt-4"
+                      src={FaqImage}
+                      alt="illustration-not-found"
+                      width={400}
+                      height={400}
+                      style={{ width: '278px' }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <FaqContent highlight={true} limit={5} />
                 </div>
               </div>
-              <div>
-                <FaqContent highlight={true} limit={5} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       <BottomNavigation />
