@@ -14,10 +14,8 @@ import {
 } from '@/constant/types/Pembiayaan'
 import { Provider } from '@/constant/types/Providers'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
-import {
-  useCreateSubmissionPembiayaan,
-  useGetProviderPublic,
-} from '@/services/hooks/banking-service/credits-api'
+import { useGetProviderPublic } from '@/services/hooks/banking-service/credits-api'
+import { useCreateSubmissionPembiayaan } from '@/services/hooks/banking-service/submission-credits-api'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
@@ -169,10 +167,8 @@ const ProviderList = ({
 
       // Data dari paket yang dipilih
       package_name: dataPembiayaan.selectedPackage.packageName,
-      package_id: String(dataPembiayaan.selectedPackage.packageId),
-      package_variant_id: String(
-        dataPembiayaan.selectedPackage.packageVariantId
-      ),
+      package_id: dataPembiayaan.selectedPackage.packageId,
+      package_variant_id: dataPembiayaan.selectedPackage.packageVariantId,
       organization_instance_id: String(
         dataPembiayaan.selectedPackage.organizationId
       ),

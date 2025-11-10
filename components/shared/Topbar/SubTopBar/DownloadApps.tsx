@@ -8,6 +8,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Smartphone } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import QRCode from 'qrcode'
 import { useEffect, useState } from 'react'
@@ -17,6 +18,8 @@ export default function DownloadApps({ qrApp }: { qrApp: string }) {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
+    if (!qrApp) return
+
     const generateQR = async () => {
       try {
         const url = await QRCode.toDataURL(qrApp)
@@ -26,7 +29,7 @@ export default function DownloadApps({ qrApp }: { qrApp: string }) {
       }
     }
     generateQR()
-  }, [])
+  }, [qrApp])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -50,7 +53,9 @@ export default function DownloadApps({ qrApp }: { qrApp: string }) {
             Scan untuk unduh Muslim101 & Nikmati kenyamanannya!
           </p>
           <div className="flex justify-center">
-            {qrCode && <img src={qrCode} alt="QR Code" />}
+            {qrCode && (
+              <Image src={qrCode} alt="QR Code" width={200} height={200} />
+            )}
           </div>
           <p className="text-m-regular my-1">atau unduh disini</p>
           <div className="mt-4 flex justify-between gap-2">
