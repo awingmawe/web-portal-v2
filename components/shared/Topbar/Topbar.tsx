@@ -318,19 +318,34 @@ const TopbarContent = React.memo<TopbarContentProps>(
                   </Button>
 
                   {/* Register */}
-                  <Button
-                    className="w-[120px] rounded-full py-3 max-lg:hidden"
-                    variant="default"
-                    size="lg"
-                    id="btn-checkout-desktop"
-                    onClick={() => {
-                      window.location.href = `${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`
-                    }}
+                  <Link
+                    href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`}
                   >
-                    Daftar
-                  </Button>
+                    <Button
+                      className="w-[120px] rounded-full py-3 max-lg:hidden"
+                      variant="default"
+                      size="lg"
+                      id="btn-register-desktop"
+                    >
+                      Daftar
+                    </Button>
+                  </Link>
 
                   {/* Login */}
+                  <Link
+                    href={`${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(
+                      redirectUri as string
+                    )}`}
+                  >
+                    <Button
+                      className="border-primary-500 hover:bg-primary-500 w-[120px] rounded-full border-2 py-3 max-lg:hidden"
+                      variant="outline"
+                      size="lg"
+                      id="btn-login-desktop"
+                    >
+                      Masuk
+                    </Button>
+                  </Link>
 
                   {/* Partner Button */}
                   {/* Temporary Takut masih butuh */}
