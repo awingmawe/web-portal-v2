@@ -81,6 +81,7 @@ export default async function DetailPackage({
   }
 
   const detailData = await getPackageDetail(slugPackage)
+  console.log(detailData)
   const idDetailPackage = detailData.id
   const medinaIdHotel = detailData.medinaHotel.id ?? 0
   const meccaIdHotel = detailData.meccaHotel.id ?? 0
@@ -247,6 +248,7 @@ export default async function DetailPackage({
                 meccaHotel={detailData?.meccaHotel?.name}
                 madinahHotel={detailData?.medinaHotel?.name}
                 type={namePackageType()}
+                variantType={detailData.variantType}
               />
 
               <PacakgeDescription

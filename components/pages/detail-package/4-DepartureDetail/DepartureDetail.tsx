@@ -3,11 +3,13 @@
 import { AirlineIcon } from '@/components/icons/airline'
 import { BuildingIcon } from '@/components/icons/building'
 import { KabbahIcon } from '@/components/icons/kabbah'
+import DetailPackageModal from '@/components/pages/detail-package/10-DetailModal/DetailModal'
+import { Button } from '@/components/ui/button'
 import { TravelRoute } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
-import { PlaneLanding, PlaneTakeoff } from 'lucide-react'
-import React from 'react'
+import { CircleAlert, PlaneLanding, PlaneTakeoff } from 'lucide-react'
+import React, { useState } from 'react'
 
 interface DetailDepartureProps {
   departure: TravelRoute
@@ -15,6 +17,8 @@ interface DetailDepartureProps {
   meccaHotel?: string
   madinahHotel?: string
   type: string
+  variantType: string
+  isPlus: boolean
 }
 
 const DepartureDetail: React.FC<DetailDepartureProps> = ({
@@ -23,6 +27,8 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   meccaHotel,
   madinahHotel,
   type,
+  variantType,
+  isPlus,
 }) => {
   const { isLoading } = usePackageVariant()
 
@@ -33,6 +39,10 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
   const arrivelAirportTo = arrival?.to?.airport?.code || '-'
   const airlineName = departure?.airline?.name || '-'
 
+  const [dialogDetailPackage, setOpenDetailPackage] = useState(false)
+  const [detailType, setDetailType] = useState<string>('')
+  const [variant, setVariant] = useState<string>('')
+
   // Left column items
   const leftColumnItems = [
     {
@@ -40,6 +50,8 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
       title: 'Tipe Perjalanan',
       value: `${type}`,
       orderForMobile: 1,
+      details: true,
+      variantType: isPlus ? 'plus' : variantType,
     },
     {
       icon: <PlaneTakeoff size={24} />,
@@ -125,32 +137,57 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
           {item.value}
         </p>
       </div>
+
+      {item.details && (
+        <>
+          <Button
+            onClick={() => {
+              setDetailType(item.value)
+              setVariant(item.variantType)
+              setOpenDetailPackage(true)
+              console.log(variant)
+            }}
+            className="text-s-regular flex w-min gap-2 rounded-full px-2 py-1"
+          >
+            Pelajari
+            <CircleAlert />
+          </Button>
+        </>
+      )}
     </div>
   )
 
   return (
-    <div
-      className={`grid grid-cols-12 flex-col border-b border-b-neutral-200 pb-4 max-lg:flex max-lg:gap-2 ${dissolve}`}
-    >
-      {/* className={`flex flex-col border-b border-b-neutral-200 pb-4 max-lg:gap-2 ${dissolve}`} */}
+    <>
+      <DetailPackageModal
+        title={detailType}
+        open={dialogDetailPackage}
+        onOpenChange={setOpenDetailPackage}
+        variant={variant}
+      />
+      <div
+        className={`grid grid-cols-12 flex-col border-b border-b-neutral-200 pb-4 max-lg:flex max-lg:gap-2 ${dissolve}`}
+      >
+        {/* className={`flex flex-col border-b border-b-neutral-200 pb-4 max-lg:gap-2 ${dissolve}`} */}
 
-      {/* Left Column */}
-      <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
-        {leftColumnItems.map(renderItem)}
-      </div>
+        {/* Left Column */}
+        <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
+          {leftColumnItems.map(renderItem)}
+        </div>
 
-      {/* Right Column */}
-      <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
-        {rightColumnItems.map(renderItem)}
-      </div>
+        {/* Right Column */}
+        <div className="col-span-6 flex flex-col gap-4 max-lg:hidden max-lg:gap-2">
+          {rightColumnItems.map(renderItem)}
+        </div>
 
-      <div className=" hidden flex-col gap-3 max-lg:flex">
-        {leftColumnItems.map(renderItem)}
-        {rightColumnItems.map(renderItem)}
+        <div className=" hidden flex-col gap-3 max-lg:flex">
+          {leftColumnItems.map(renderItem)}
+          {rightColumnItems.map(renderItem)}
+        </div>
+        {/* predefined tailwindscsss */}
+        <div className="order-1 order-2 order-3 order-4 order-5 order-6 order-7 order-8 order-9"></div>
       </div>
-      {/* predefined tailwindscsss */}
-      <div className="order-1 order-2 order-3 order-4 order-5 order-6 order-7 order-8 order-9"></div>
-    </div>
+    </>
   )
 }
 
