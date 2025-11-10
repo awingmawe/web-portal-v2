@@ -303,20 +303,6 @@ const TopbarContent = React.memo<TopbarContentProps>(
                   {/* Divider */}
                   <div className="h-5 border border-[#c9c9c9]" />
 
-                  <Button
-                    className="border-primary-500 hover:bg-primary-500 w-[120px] rounded-full border-2 py-3 max-lg:hidden"
-                    variant="outline"
-                    size="lg"
-                    id="btn-checkout-desktop"
-                    onClick={() => {
-                      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(
-                        redirectUri as string
-                      )}`
-                    }}
-                  >
-                    Masuk
-                  </Button>
-
                   {/* Register */}
                   <Link
                     href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`}
