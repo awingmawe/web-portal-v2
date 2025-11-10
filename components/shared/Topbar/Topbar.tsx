@@ -303,20 +303,6 @@ const TopbarContent = React.memo<TopbarContentProps>(
                   {/* Divider */}
                   <div className="h-5 border border-[#c9c9c9]" />
 
-                  {/* Register */}
-                  <Link
-                    href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`}
-                  >
-                    <Button
-                      className="w-[120px] rounded-full py-3 max-lg:hidden"
-                      variant="default"
-                      size="lg"
-                      id="btn-register-desktop"
-                    >
-                      Daftar
-                    </Button>
-                  </Link>
-
                   {/* Login */}
                   <Link
                     href={`${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(
@@ -330,6 +316,20 @@ const TopbarContent = React.memo<TopbarContentProps>(
                       id="btn-login-desktop"
                     >
                       Masuk
+                    </Button>
+                  </Link>
+
+                  {/* Register */}
+                  <Link
+                    href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`}
+                  >
+                    <Button
+                      className="w-[120px] rounded-full py-3 max-lg:hidden"
+                      variant="default"
+                      size="lg"
+                      id="btn-register-desktop"
+                    >
+                      Daftar
                     </Button>
                   </Link>
 
