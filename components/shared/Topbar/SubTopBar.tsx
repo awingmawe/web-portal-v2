@@ -11,6 +11,7 @@ interface TopbarProps {
   shadow?: boolean
   scrolled?: boolean
   type?: 'normal' | 'homepage' | 'plain'
+  qrApp?: string
   navLinks?: Array<{ title: string; href: string }>
 }
 
@@ -19,11 +20,12 @@ const SubTopBar: React.FC<TopbarProps> = ({
     // { title: 'Jadi Mitra', href: '#' },
     { title: 'Tentang Kami', href: '/about-us' },
   ],
+  qrApp,
 }) => {
   return (
     <Fragment>
       <div className="flex items-center justify-between">
-        <DownloadApps />
+        <DownloadApps qrApp={qrApp as string} />
         <nav className="flex gap-[20px]">
           <MitraModal title="Jadi Mitra" />
 

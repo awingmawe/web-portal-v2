@@ -343,7 +343,7 @@ const CheckoutDrawerMobile = React.memo(
                         <Link href={`/banking/credit`} className="w-full">
                           <Button
                             variant="outline"
-                            className="border-primary-500 w-full rounded-full"
+                            className="border-success-500 w-full rounded-full"
                             size="md"
                             id="btn-pay-later-mobile"
                           >
