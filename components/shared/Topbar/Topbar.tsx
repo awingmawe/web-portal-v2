@@ -546,7 +546,7 @@ const Topbar: React.FC<TopbarProps> = ({
     return () => {
       window.removeEventListener('scroll', updateFixedHeader)
     }
-  }, [updateFixedHeader, data])
+  }, [updateFixedHeader])
 
   // Memoized handler for hover events
   const handleMouseEnter = useCallback((href: string) => {
