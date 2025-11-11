@@ -474,8 +474,7 @@ const Topbar: React.FC<TopbarProps> = ({
   const [redirectUri, setRedirectUri] = useState<string | null>(null)
   const { profile, logout } = useAuth()
   const [loadingLogout, setLoadingLogout] = useState(false)
-  const [qrApp, setQrApp] = useState<string>('')
-  const reference = useGetReference('qr_app')
+  const { data: qrApp } = useGetReference('qr_app')
 
   // Memoize navigation links to prevent recreating on each render
   const navLinks = useMemo(
@@ -534,14 +533,10 @@ const Topbar: React.FC<TopbarProps> = ({
     updateFixedHeader()
     setRedirectUri(window.location.href)
 
-    if (reference.data && reference.data.length > 0) {
-      setQrApp(reference.data[0].name)
-    }
-
     return () => {
       window.removeEventListener('scroll', updateFixedHeader)
     }
-  }, [updateFixedHeader, reference, qrApp])
+  }, [updateFixedHeader])
 
   // Memoized handler for hover events
   const handleMouseEnter = useCallback((href: string) => {
@@ -615,7 +610,7 @@ const Topbar: React.FC<TopbarProps> = ({
               >
                 <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50 max-lg:hidden">
                   <div className="container m-auto w-full items-center px-4">
-                    <SubTopBar qrApp={qrApp} />
+                    <SubTopBar qrApp={qrApp?.[0].name || ''} />
                   </div>
                 </section>
 
@@ -636,7 +631,7 @@ const Topbar: React.FC<TopbarProps> = ({
         >
           <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50">
             <div className="container m-auto w-full items-center px-4 ">
-              <SubTopBar />
+              <SubTopBar qrApp={qrApp?.[0].name || ''} />
             </div>
           </section>
           <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">

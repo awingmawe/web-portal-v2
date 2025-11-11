@@ -34,7 +34,7 @@ export function useTailwindBreakpoint() {
     }
   }
 
-  return { xs, sm, md, lg, xl, xxl }
+  return { mounted, xs, sm, md, lg, xl, xxl }
 }
 
 /**
