@@ -81,8 +81,8 @@ function CardTransactionBankingComponent({
       {/* HEADER: Nama Travel & Nama Paket */}
       <CardHeader className="flex justify-between border-b-1 border-neutral-200 px-4 py-3 lg:items-center">
         <div className="flex items-center gap-1.5 max-lg:flex-col max-lg:items-start max-lg:gap-0">
-          <p className="text-m-semibold max-lg:text-xs max-lg:leading-4 max-lg:font-medium">
-            Pembiayaan
+          <p className="text-m-semibold capitalize max-lg:text-xs max-lg:leading-4 max-lg:font-medium">
+            {packageBase.packageType}
           </p>
           <p className="text-m-medium max-lg:hidden">/</p>
           <p className="text-m-medium max-lg:hidden">{idSubmission}</p>

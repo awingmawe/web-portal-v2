@@ -56,7 +56,26 @@ export function CardTransactionBankingActions({
         )
 
       case 'waiting-payment':
+        return (
+          <Button className="p-3 max-lg:w-full max-lg:py-2">
+            <NextLink
+              href={`/umrah/${organizationSlug}/${packageId}?change_submission=${submissionId}`}
+            >
+              Lanjutkan Pembayaran
+            </NextLink>
+          </Button>
+        )
+      // Button Lihat Transaksi cuman ada di mobile di desktop tidak ada
       case 'view-transaction':
+        return (
+          <Button className="p-3 max-lg:w-full max-lg:py-2 lg:hidden">
+            <NextLink
+              href={`/umrah/${organizationSlug}/${packageId}?change_submission=${submissionId}`}
+            >
+              Lihat Transaksi
+            </NextLink>
+          </Button>
+        )
       case null:
       default:
         return null
@@ -65,6 +84,7 @@ export function CardTransactionBankingActions({
 
   const primaryCta = renderPrimaryCta()
 
+  // Kalo di mobile jangan munculin footernya kalo button yang harusnya muncul tidak ada
   if (isMobile && !primaryCta) return null
 
   return (
@@ -76,6 +96,7 @@ export function CardTransactionBankingActions({
       </div>
       {/* Action Buttons Container */}
       <div className="flex w-full flex-col items-center gap-3 lg:w-auto lg:flex-row">
+        {/* Lihat detail akan selalu ada di desktop kalo di mobile tidak ada */}
         {renderDetailButton()}
         {primaryCta}
       </div>

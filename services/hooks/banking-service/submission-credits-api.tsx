@@ -29,7 +29,7 @@ export function useGetSubmissionList(
   const fetcher = async () => {
     return await listSubmissionPembiayaan(query)
   }
-  const swrKey = `get-providers-public`
+  const swrKey = `get-submission`
   const {
     data,
     error,
