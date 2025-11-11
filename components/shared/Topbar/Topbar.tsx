@@ -23,7 +23,6 @@ import {
 } from '@/components/ui/popover'
 import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
-import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { springTransition } from '@/lib/animation-setup'
 import { cn, ellipsis, isEmpty } from '@/lib/utils'
 import { useGetReference } from '@/services/hooks/general/reference'
@@ -587,8 +586,6 @@ const Topbar: React.FC<TopbarProps> = ({
       handleMouseLeave,
     ]
   )
-
-  const { lg } = useTailwindBreakpoint()
 
   return (
     <Fragment>

@@ -36,7 +36,7 @@ export default function FinancingSimulation({
     price ? formatCurrency(price) : ''
   )
   const [displayValue, setDisplayValue] = useState(
-    price ? formatCurrency(price) : ''
+    price ? formatCurrency(price) : '30000000'
   )
 
   // Debounce timer reference
@@ -96,7 +96,7 @@ export default function FinancingSimulation({
 
   useEffect(() => {
     // Sync dengan prop price dari luar
-    const formatted = price ? formatCurrency(price) : ''
+    const formatted = price ? formatCurrency(price) : formatCurrency(30000000)
     setTotalAmount(formatted)
     setDisplayValue(formatted)
   }, [price])
@@ -148,6 +148,7 @@ export default function FinancingSimulation({
 
   return (
     <div className="mx-auto flex w-full flex-col gap-4">
+      <p className="text-l-semibold">Tenor & Estimasi Pembiayaan</p>
       {/* Down Payment Input */}
       {showInput && (
         <div className={`relative space-y-1`}>
@@ -230,12 +231,6 @@ export default function FinancingSimulation({
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-4 w-24" />
                 </div>
-
-                {/* Item 3: Biaya Admin */}
-                <div className="flex items-center justify-between border-l-2 border-neutral-200 pl-2">
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-4 w-24" />
-                </div>
               </div>
             </div>
 
@@ -297,14 +292,14 @@ export default function FinancingSimulation({
                         (-) {formatCurrency(data.down_payment)}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between border-l-2 border-neutral-200 pl-2">
+                    {/* <div className="flex items-center justify-between border-l-2 border-neutral-200 pl-2">
                       <span className="text-s-regular text-neutral-500">
                         Biaya Admin
                       </span>
                       <span className="text-m-medium text-right text-neutral-500">
                         (+) {formatCurrency(data.admin_fee || 0)}
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                 </AccordionContent>
               </AccordionItem>

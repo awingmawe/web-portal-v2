@@ -27,6 +27,7 @@ interface TriggerCalendarProps {
 const TriggerCalendar = forwardRef<HTMLButtonElement, TriggerCalendarProps>(
   ({ field, className }, ref) => {
     const { lg: isMobile } = useTailwindBreakpoint()
+    console.log(field)
 
     if (isMobile) {
       return (

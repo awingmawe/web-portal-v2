@@ -50,7 +50,7 @@ export function DataDiriFields({
                 {...field}
                 model="normal"
                 className="rounded-full"
-                disabled={disabled || !!profile?.name}
+                disabled={disabled}
               />
             </FormControl>
             <FormMessageErrorLayout />
@@ -70,9 +70,19 @@ export function DataDiriFields({
               <Input
                 type="tel"
                 model="normal"
-                placeholder="+62"
+                placeholder="Masukan Nomor Telepon"
                 {...field}
                 className="rounded-full"
+                onChange={(e) => {
+                  // Ambil nilai input
+                  const value = e.target.value
+
+                  // Hapus semua karakter yang BUKAN angka (0-9)
+                  const numericValue = value.replace(/[^0-9]/g, '')
+
+                  // Set nilai yang sudah bersih ke form
+                  field.onChange(numericValue)
+                }}
                 disabled={disabled || !!profile?.persona?.phoneNumber}
               />
             </FormControl>
@@ -92,12 +102,12 @@ export function DataDiriFields({
             </FormLabel>
             <FormControl>
               <Input
+                className="rounded-full"
                 type="email"
                 model="normal"
                 placeholder="Masukkan email"
                 {...field}
-                className="rounded-full"
-                disabled={disabled || !!profile?.email}
+                disabled={disabled}
               />
             </FormControl>
             <FormMessageErrorLayout />
@@ -189,7 +199,7 @@ export function DataDiriFields({
             <FormControl>
               <Textarea
                 placeholder="Masukkan alamat lengkap"
-                className="h-[90px] resize-none rounded-[20px] px-4 py-2.5 text-[14px] leading-5 font-normal"
+                className="h-[90px] resize-none rounded-[20px] border-1 border-neutral-200 px-4 py-2.5 text-[14px] leading-5 font-normal"
                 {...field}
                 disabled={disabled}
               />
