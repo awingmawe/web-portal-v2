@@ -73,13 +73,13 @@ const DepartureDetail: React.FC<DetailDepartureProps> = ({
       icon: <AirlineIcon size={24} />,
       title: 'Maskapai Penerbangan',
       value: airlineName,
-      orderForMobile: 4,
+      orderForMobile: 3,
     },
     {
       icon: <PlaneLanding size={24} />,
       title: 'Kepulangan',
       value: `${arrivelAirportFrom} → ${arrivelAirportTo}`,
-      orderForMobile: 3,
+      orderForMobile: 4,
     },
     {
       icon: <BuildingIcon size={24} color="neutral-900" />,
