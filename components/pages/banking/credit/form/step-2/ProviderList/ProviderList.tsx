@@ -57,10 +57,23 @@ const ProviderList = ({
       const orgId = String(dataPembiayaan.selectedPackage.organizationId)
 
       dataProvider.forEach((provider) => {
-        const isOrgSupported = provider.supported_organizations.includes(orgId)
-        const isAreaSupported = provider.coverage_area
+        // Pengecekan disini ada beberapa kondisi:
+        // 1. Ambil semua provider berdasarkan kecamatan yang user pilih sebelumnya ada di baris 36-41
+        // 2. Cek provider dulu apakah aktif providernya
+        // 3. Cek juga kalo provider tersebut menyediakan credit atau tidak
+        // 4. Cek spesifik travel dari provider tersebut, kalo true lakukan pengecekan lagi dari paket travel tersebut apakah supported providernya atau tidak, kalo spesifik travel false tidak usah ada pengecekan langsung jadi true
+        // 5. Cek area dari provider tersebut, kalo true lakukan pengecekan lagi dari coverage area providernya, kalo by coverage areanya false tidak usah ada pengecekan langsung jadi true
+        // 6. Semua kondisi dari 2-5 harus true untuk mendapatkan data provider supported
+        const isActive = provider.isActive
+        const isProviderCredit = provider.provider_credit
+        const isOrgSupported = provider.specific_travel
+          ? provider.supported_organizations.includes(orgId)
+          : true
+        const isAreaSupported = provider.by_coverage_area
+          ? provider.coverage_area
+          : true
 
-        if (isOrgSupported && isAreaSupported) {
+        if (isOrgSupported && isAreaSupported && isActive && isProviderCredit) {
           categorized.supported.push(provider)
         } else if (isOrgSupported && !isAreaSupported) {
           categorized.notSupportedByLocation.push(provider)
@@ -73,36 +86,32 @@ const ProviderList = ({
     }, [dataProvider, dataPembiayaan])
 
   const handleSelectProvider = (provider: Provider, isChecked: boolean) => {
-    if (dataPembiayaan?.tenor) {
-      setSelectedProviders((prev) => {
-        if (isChecked) {
-          const newSelection: ProvidersLocaStorage = {
-            id: provider.id,
-            tenor: Number(dataPembiayaan.tenor),
-            providerName: provider.name,
-            logo: provider.logo,
-          }
-          return [...prev, newSelection]
-        } else {
-          return prev.filter((item) => item.id !== provider.id)
+    setSelectedProviders((prev) => {
+      if (isChecked) {
+        const newSelection: ProvidersLocaStorage = {
+          id: provider.id,
+          tenor: Number(dataPembiayaan?.tenor),
+          providerName: provider.name,
+          logo: provider.logo,
         }
-      })
-    }
+        return [...prev, newSelection]
+      } else {
+        return prev.filter((item) => item.id !== provider.id)
+      }
+    })
   }
 
   const handleSelectAll = (isChecked: boolean) => {
     if (isChecked) {
-      if (dataPembiayaan?.tenor) {
-        const allSupportedSubmissions: ProviderSubmission[] = supported.map(
-          (p) => ({
-            id: p.id,
-            tenor: Number(dataPembiayaan.tenor),
-            providerName: p.name,
-            logo: p.logo,
-          })
-        )
-        setSelectedProviders(allSupportedSubmissions)
-      }
+      const allSupportedSubmissions: ProviderSubmission[] = supported.map(
+        (p) => ({
+          id: p.id,
+          tenor: Number(dataPembiayaan?.tenor),
+          providerName: p.name,
+          logo: p.logo,
+        })
+      )
+      setSelectedProviders(allSupportedSubmissions)
     } else {
       setSelectedProviders([])
     }
@@ -300,7 +309,7 @@ const ProviderList = ({
               <div className="bg-warning-100 rounded-lg p-2.5 max-lg:hidden">
                 <MessageQuestionIcon size={36} />
               </div>
-              <p className="text-m-semibold">
+              <p className="heading-3-semibold max-lg:text-[14px] max-lg:leading-5 max-lg:font-semibold">
                 Apakah kamu yakin untuk mengajukan pembiayaan?
               </p>
             </div>

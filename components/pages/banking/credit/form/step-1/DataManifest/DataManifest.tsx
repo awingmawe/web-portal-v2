@@ -95,11 +95,21 @@ export function DataManifestFields({
                   </FormLabel>
                   <FormControl>
                     <Input
+                      className="rounded-full"
                       type="tel"
                       model="normal"
-                      placeholder="+62 08123456789"
+                      placeholder="Masukan Nomor Telepon"
                       {...field}
-                      className="rounded-full"
+                      onChange={(e) => {
+                        // Ambil nilai input
+                        const value = e.target.value
+
+                        // Hapus semua karakter yang BUKAN angka (0-9)
+                        const numericValue = value.replace(/[^0-9]/g, '')
+
+                        // Set nilai yang sudah bersih ke form
+                        field.onChange(numericValue)
+                      }}
                       disabled={disabled}
                     />
                   </FormControl>

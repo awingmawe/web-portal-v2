@@ -21,7 +21,7 @@ export default function ListSubmissionPembiayaan() {
   const [page, setPage] = useState(1)
   const { goBack } = useCustomNavigation()
   const debounceSearch = useDebounce(search, 500)
-  const { lg: isDesktop } = useTailwindBreakpoint()
+  const { lg: isMobile, mounted } = useTailwindBreakpoint()
 
   // --- PAGINATION LOGIC (DESKTOP) ---
   const { data: paginatedData, isLoading: isPaginatedLoading } =
@@ -31,7 +31,7 @@ export default function ListSubmissionPembiayaan() {
         size: 10,
         search: debounceSearch[0],
       },
-      { isPaused: () => isDesktop } // Hanya aktifkan hook ini di desktop
+      { isPaused: () => !mounted || isMobile } // Hanya aktifkan hook ini di desktop
     )
 
   // --- INFINITE SCROLL LOGIC (MOBILE) ---
@@ -46,8 +46,18 @@ export default function ListSubmissionPembiayaan() {
       size: 10,
       search: debounceSearch[0],
     },
-    { isPaused: () => !isDesktop }
+    { isPaused: () => !mounted || !isMobile }
   ) // Hanya aktifkan hook ini di mobile
+
+  if (!mounted) {
+    return (
+      <div className="flex flex-col gap-4 max-lg:p-4">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <CardTransactionBankingSkeleton key={index} />
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-4 max-lg:p-4">
@@ -68,36 +78,33 @@ export default function ListSubmissionPembiayaan() {
           }}
         />
       </div>
-
       {/* --- SKELETON LOADER --- */}
-      {(isPaginatedLoading || isInfiniteLoading) &&
+      {isMobile &&
+        isInfiniteLoading &&
         Array.from({ length: 3 }).map((_, index) => (
           <CardTransactionBankingSkeleton key={index} />
         ))}
 
-      {/* --- DESKTOP: PAGINATED LIST --- */}
-      {!isDesktop &&
-        !isPaginatedLoading &&
-        paginatedData?.data.map((res) => (
-          <CardTransactionBanking key={res.id} data={res} />
+      {!isMobile &&
+        isPaginatedLoading &&
+        Array.from({ length: 3 }).map((_, index) => (
+          <CardTransactionBankingSkeleton key={index} />
         ))}
 
-      {/* --- MOBILE: INFINITE SCROLL LIST --- */}
-      {isDesktop && !isInfiniteLoading && (
-        <InfiniteScroll
-          isLoading={isInfiniteLoading}
-          hasMore={!isReachingEnd}
-          next={loadMore}
-          threshold={0.8}
-        >
-          {infiniteData?.map((res) => (
-            <CardTransactionBanking key={res.id} data={res} />
-          ))}
-        </InfiniteScroll>
-      )}
-
-      {/* --- DESKTOP: PAGINATION COMPONENT --- */}
-      {isDesktop && paginatedData && paginatedData?.totalPages > 1 && (
+      {isMobile &&
+        !isInfiniteLoading && ( // Tampil jika INI mobile
+          <InfiniteScroll
+            isLoading={isInfiniteLoading}
+            hasMore={!isReachingEnd}
+            next={loadMore}
+            threshold={0.8}
+          >
+            {infiniteData?.map((res) => (
+              <CardTransactionBanking key={res.id} data={res} />
+            ))}
+          </InfiniteScroll>
+        )}
+      {!isMobile && paginatedData && paginatedData?.totalPages > 1 && (
         <CustomPagination
           currentPage={page}
           totalPages={paginatedData.totalPages}

@@ -185,14 +185,14 @@ const PackagePembiayaan = ({
                 <div className="flex items-center gap-2">
                   <Calendar2 size={20} className="text-neutral-500" />
                   <div className="flex items-center gap-1">
-                    <p className="text-m-regular text-neutral-500">
+                    <p className="text-m-regular text-neutral-500 max-lg:text-xs max-lg:leading-4">
                       {dataPembiayaan.selectedPackage.departureDate}
                     </p>
                     <ArrowIcon
                       size={18}
                       className="inline-flex text-neutral-500"
                     />
-                    <p className="text-m-regular text-neutral-500">
+                    <p className="text-m-regular text-neutral-500 max-lg:text-xs max-lg:leading-4">
                       {dataPembiayaan.selectedPackage.arrivalDate}
                     </p>
                   </div>
@@ -201,13 +201,13 @@ const PackagePembiayaan = ({
                 {/* Quantity Jemaah */}
                 <div className="flex items-center gap-2">
                   <PeopleIcon size={20} className="text-neutral-500" />
-                  <p className="text-m-regular text-neutral-500">
+                  <p className="text-m-regular text-neutral-500 max-lg:text-xs max-lg:leading-4">
                     {dataPembiayaan.totalQty} Jemaah
                   </p>
                 </div>
 
                 {/* Room Type Information */}
-                <div className="flex items-center justify-between gap-4 max-lg:w-full">
+                <div className="flex flex-wrap items-center justify-between gap-4 max-lg:w-full max-lg:gap-2">
                   {/* Double */}
                   {!isEmpty(dataPembiayaan?.selectedRoomType?.double) && (
                     <div className="flex items-center gap-2">
@@ -219,7 +219,7 @@ const PackagePembiayaan = ({
                         <p className="text-s-regular text-neutral-500">
                           Double
                         </p>
-                        <p className="text-m-medium text-neutral-500">
+                        <p className="text-m-medium text-neutral-500 max-lg:text-xs max-lg:leading-4 max-lg:font-medium">
                           {dataPembiayaan?.selectedRoomType?.double} Jemaah
                         </p>
                       </div>
@@ -240,7 +240,7 @@ const PackagePembiayaan = ({
                         <p className="text-s-regular text-neutral-500">
                           Triple
                         </p>
-                        <p className="text-m-medium text-neutral-500">
+                        <p className="text-m-medium text-neutral-500 max-lg:text-xs max-lg:leading-4 max-lg:font-medium">
                           {dataPembiayaan?.selectedRoomType?.triple} Jemaah
                         </p>
                       </div>
@@ -259,7 +259,7 @@ const PackagePembiayaan = ({
                       />
                       <div className="flex flex-col">
                         <p className="text-s-regular text-neutral-500">Quad</p>
-                        <p className="text-m-medium text-neutral-500">
+                        <p className="text-m-medium text-neutral-500 max-lg:text-xs max-lg:leading-4 max-lg:font-medium">
                           {dataPembiayaan?.selectedRoomType?.quad} Jemaah
                         </p>
                       </div>

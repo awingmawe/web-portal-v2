@@ -14,6 +14,7 @@ interface ProviderOrganizationInstance {
 export interface Provider {
   id: number
   name: string
+  isActive: boolean
   logo: string
   description: string
   provider_type: 'Bank' | 'Leasing' | string // Add more types as needed

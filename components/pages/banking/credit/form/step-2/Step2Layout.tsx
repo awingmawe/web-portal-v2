@@ -23,7 +23,6 @@ const Step2Layout = ({ dataTenor }: { dataTenor: Facility[] }) => {
     <Fragment>
       <StepperIndicator />
       <div className="container mx-auto flex flex-col gap-3 max-lg:px-4">
-        <p className="text-l-semibold">Tenor & Estimasi Pembiayaan</p>
         <FinancingSimulation
           dataTenor={dataTenor}
           price={dataPembiayaan?.price}
