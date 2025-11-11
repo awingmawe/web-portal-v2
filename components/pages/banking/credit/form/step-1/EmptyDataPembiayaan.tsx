@@ -43,7 +43,7 @@ const EmptyDataPembiayaan = () => {
             className="border-primary-500 w-full border-2"
             size="sm"
             variant="outline"
-            onClick={() => router.back()}
+            onClick={() => router.replace('/banking/credit')}
           >
             Kembali
           </Button>

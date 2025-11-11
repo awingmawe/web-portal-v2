@@ -126,8 +126,8 @@ export interface RequestSubmissionPembiayaan {
   total_price: number
   jumlah_jemaah: number
   package_name: string
-  package_id: string
-  package_variant_id: string
+  package_id: number
+  package_variant_id: number
   tenor: number
   manifests: ManifestItem[]
 }
