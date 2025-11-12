@@ -1,5 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
-import { ArrowRight } from '@/components/icons/arrow-right'
+import { ArrowIcon } from '@/components/icons/arrow'
 import FaqContent from '@/components/pages/faq/FaqContent'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
@@ -258,7 +258,7 @@ export default async function Home() {
                     className="max-lg:text-m-regular mt-4 flex items-center gap-2 max-lg:leading-5 max-sm:text-sm max-sm:leading-5"
                   >
                     Lihat lebih banyak
-                    <ArrowRight size={24} className="max-lg:hidden" />
+                    <ArrowIcon className="max-lg:hidden" size={24} />
                     <CircleChevronRight className="lg:hidden" size={14} />
                   </Link>
                   <div className="flex justify-center max-md:hidden">
