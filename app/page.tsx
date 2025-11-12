@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import { ArrowRight } from '@/components/icons/arrow-right'
 import FaqContent from '@/components/pages/faq/FaqContent'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
@@ -24,7 +25,7 @@ import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
-import { CircleChevronRight, MoveRight, Search } from 'lucide-react'
+import { CircleChevronRight, Search } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -254,10 +255,10 @@ export default async function Home() {
                   </h2>
                   <Link
                     href="/faq"
-                    className="hover:text-primary-500 max-lg:text-m-regular mt-4 flex items-center gap-2 max-lg:leading-5 max-sm:text-sm max-sm:leading-5"
+                    className="max-lg:text-m-regular mt-4 flex items-center gap-2 max-lg:leading-5 max-sm:text-sm max-sm:leading-5"
                   >
                     Lihat lebih banyak
-                    <MoveRight className="max-lg:hidden" />
+                    <ArrowRight size={24} className="max-lg:hidden" />
                     <CircleChevronRight className="lg:hidden" size={14} />
                   </Link>
                   <div className="flex justify-center max-md:hidden">
