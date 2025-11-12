@@ -2,11 +2,7 @@ import { IconProps } from '@/constant/types/IconProps'
 import { cn } from '@/lib/utils'
 import React from 'react'
 
-export const ArrowDown: React.FC<IconProps> = ({
-  className = '',
-  size,
-  ...props
-}) => {
+export const ArrowDown: React.FC<IconProps> = ({ size, ...props }) => {
   return (
     <svg
       width={size}
