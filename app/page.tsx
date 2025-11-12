@@ -247,10 +247,10 @@ export default async function Home() {
       <div className="bg-neutral-0 relative z-6 w-full pt-[70px] pb-[70px] max-xl:px-0">
         <div className="container mx-auto">
           <Card className="rounded-md border-0 bg-neutral-50 p-8 shadow-none max-md:bg-white max-md:p-2">
-            <CardContent>
+            <CardContent className="max-lg:px-3">
               <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
                 <div>
-                  <h2 className="text-4xl font-bold max-md:text-3xl">
+                  <h2 className="text-4xl font-bold max-lg:text-[32px] max-lg:leading-10 max-sm:text-[32px] max-sm:leading-10">
                     Pertanyaan yang Sering Ditanyakan
                   </h2>
                   <Link
