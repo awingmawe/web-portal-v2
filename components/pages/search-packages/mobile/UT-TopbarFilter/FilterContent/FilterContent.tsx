@@ -63,7 +63,7 @@ export default function FilterPanel({
   dataFacility: GenericResponse<Facility>
   dataSection: any
   dataTagPackages: any
-  dataKota: GenericResponse<City>
+  dataKota: City[]
 }) {
   const {
     setFilters,
@@ -91,10 +91,10 @@ export default function FilterPanel({
     () => ({
       facilities: dataFacility.results,
       sections: dataSection || [],
-      locations: dataKota.results,
+      locations: dataKota,
       promos: dataTagPackages || [],
     }),
-    [dataFacility.results, dataSection, dataKota.results, dataTagPackages]
+    [dataFacility.results, dataSection, dataKota, dataTagPackages]
   )
 
   // Mapping setter function
@@ -220,7 +220,7 @@ export default function FilterPanel({
     setShowViewAll({
       facilities: checkIfNeedsViewAll(dataFacility.results.length),
       sections: checkIfNeedsViewAll(dataSection?.length || 0),
-      locations: checkIfNeedsViewAll(dataKota?.results?.length),
+      locations: checkIfNeedsViewAll(dataKota?.length),
       promos: checkIfNeedsViewAll(dataTagPackages?.length || 0),
     })
   }, [dataFacility, dataSection, dataTagPackages, dataKota])

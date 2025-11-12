@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
@@ -313,7 +312,7 @@ export default function TransactionCard({
           {!noFooter && (
             <Fragment>
               {orderPaymentLoading ? (
-                <div className="flex hidden items-center justify-between p-4 max-lg:block">
+                <div className="hidden items-center justify-between p-4 max-lg:block">
                   <div className="flex items-center gap-2">
                     <Skeleton className="h-5 w-24" />
                     <Skeleton className="h-5 w-32" />

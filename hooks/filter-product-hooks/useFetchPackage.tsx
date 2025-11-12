@@ -1,4 +1,4 @@
-import { getPackageList } from '@/services/umrah-service'
+import { getPackageListV2 } from '@/services/product-service'
 import { useCallback } from 'react'
 
 export function useFetchPackage() {
@@ -32,7 +32,7 @@ export function useFetchPackage() {
         orderBy,
         filterPrice,
         order,
-        [`search`]: queryParams.query ? `%${queryParams.query}%` : undefined,
+        search: queryParams.query ? queryParams.query : undefined,
         startDate: queryParams.startDate,
         endDate: queryParams.endDate,
         departureFromAirportCode: queryParams.departureFromAirportCode,
@@ -48,11 +48,10 @@ export function useFetchPackage() {
         maxDpAmount: queryParams.maxDp,
         packageType: queryParams.type,
         organizationInstanceCity: queryParams.organizationInstanceCity,
-        ['organizationInstanceId:in']:
-          queryParams.organizationInstanceId || undefined,
+        organizationInstanceId: queryParams.organizationInstanceId || undefined,
       }
 
-      const response = await getPackageList(apiParams)
+      const response = await getPackageListV2(apiParams)
       return response
     } catch (err) {
       throw new Error(

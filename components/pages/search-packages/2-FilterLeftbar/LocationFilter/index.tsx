@@ -6,13 +6,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import React from 'react'
 
 interface LocationFilterProps {
-  dataKota: GenericResponse<City>
+  dataKota: City[]
 }
 
 const LocationFilter: React.FC<LocationFilterProps> = ({ dataKota }) => {

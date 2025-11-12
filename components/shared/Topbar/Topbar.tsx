@@ -481,9 +481,8 @@ const Topbar: React.FC<TopbarProps> = ({
   useEffect(() => {
     if (data && data.length > 0) {
       setQrApp(data[0].name)
-      console.log(qrApp)
     }
-  }, [data])
+  }, [data, qrApp])
 
   // Memoize navigation links to prevent recreating on each render
   const navLinks = useMemo(

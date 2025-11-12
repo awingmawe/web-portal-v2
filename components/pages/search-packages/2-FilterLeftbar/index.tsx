@@ -23,7 +23,7 @@ interface FilterLeftbarProps {
   dataTagPackages: TagPackages[]
   dataFacility: GenericResponse<Facility>
   dataSection: TagPackages[]
-  dataKota: GenericResponse<City>
+  dataKota: City[]
 }
 
 // Custom debounce hook
@@ -71,13 +71,13 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
   const [inputValue, setInputValue] = useState(searchQuery)
 
   // Debounced function to update search query
-  const {
-    debouncedCallback: debouncedSetSearchQuery,
-    debounceTimer,
-    setDebounceTimer,
-  } = useDebounce((value: string) => {
-    setSearchQuery(value)
-  }, 500) // 500ms delay
+  const { debouncedCallback, debounceTimer, setDebounceTimer } = useDebounce(
+    (value: string) => {
+      setSearchQuery(value)
+      updateQueryParams(['query', 'page'], [value, 1])
+    },
+    500
+  ) // 500ms delay
 
   // Sync input value with search query when reset
   React.useEffect(() => {
@@ -87,7 +87,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setInputValue(value)
-    debouncedSetSearchQuery(value)
+    debouncedCallback(value)
   }
 
   const handleReset = () => {

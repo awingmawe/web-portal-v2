@@ -414,11 +414,11 @@ export const FilterProductProvider: React.FC<{
         // Fetch data using the hook
         const data = await fetchPackage(params)
 
-        const mappedData = mapProductsToCardData(data)
+        const mappedData = mapProductsToCardData(data.data)
 
         // Update state
         setPackages(mappedData)
-        setTotalPackages(data.total)
+        setTotalPackages(data.data.total)
       } catch (err) {
         console.error('Error fetching packages:', err)
         toast.error('Failed to load packages. Please try again.')

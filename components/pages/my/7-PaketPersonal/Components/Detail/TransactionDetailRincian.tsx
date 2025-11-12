@@ -194,6 +194,7 @@ export default function TransactionDetailRincian({
 
   useEffect(() => {
     fetchHotelDestinations()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

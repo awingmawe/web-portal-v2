@@ -9,10 +9,9 @@ import Topbar from '@/components/shared/Topbar'
 import { NODE_ENV, URL } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
-import { getKota } from '@/services/identity-service'
+import { getKotaV2, getPackageListV2 } from '@/services/product-service'
 import {
   getMinMaxPrice,
-  getPackageList,
   getSectionEnum,
   getTagPackagesEnum,
 } from '@/services/umrah-service'
@@ -49,7 +48,7 @@ export default async function SearchGeneral({
       getTagPackagesEnum(awaitedParams.type || 'umrah'),
       getFacilityEnum(`${awaitedParams.type || 'umrah'}-facility`),
       getSectionEnum(awaitedParams.type || 'umrah'),
-      getKota({ page: 1, size: 100, orderBy: 'name', order: 'desc' }),
+      getKotaV2({ page: 1, size: 100 }),
     ])
 
   const page = parseInt(awaitedParams.page || '1', 10)
@@ -92,7 +91,7 @@ export default async function SearchGeneral({
     order = 'desc'
   }
 
-  const dataPackage = await getPackageList({
+  const dataPackage = await getPackageListV2({
     page,
     size,
     orderBy,
@@ -126,7 +125,7 @@ export default async function SearchGeneral({
     mainEntity: {
       '@type': 'ItemList',
       itemListElement:
-        dataPackage?.results?.map((pkg, index) => ({
+        dataPackage?.data?.responseObject?.map((pkg, index) => ({
           '@type': 'ListItem',
           position: index + 1,
           item: {
@@ -196,7 +195,7 @@ export default async function SearchGeneral({
               dataFacility={dataFacility.data}
               dataMinMax={dataMinMax}
               dataSection={dataSection}
-              dataKota={dataKota.data}
+              dataKota={dataKota.data.responseObject}
             />
           }
         >
@@ -206,7 +205,7 @@ export default async function SearchGeneral({
               dataTagPackages={dataTagPackages}
               dataFacility={dataFacility.data}
               dataSection={dataSection}
-              dataKota={dataKota.data}
+              dataKota={dataKota.data.responseObject}
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12 max-lg:px-4">
@@ -214,7 +213,6 @@ export default async function SearchGeneral({
           </div>
         </ScrollShadowWrapper>
       </main>
-
       {/* Sementar dibiarkan dulu, karena takutnya dari tim produk mau up lagi */}
       {/* <BottomNavigation
         dataMinMax={dataMinMax}

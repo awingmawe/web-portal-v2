@@ -3,7 +3,6 @@
 import FilterPanel from '@/components/pages/search-packages/mobile/UT-TopbarFilter/FilterContent'
 import SortFilterComponent from '@/components/pages/search-packages/mobile/UT-TopbarFilter/SortFilter-UT'
 import TagButton from '@/components/pages/search-packages/mobile/UT-TopbarFilter/TagButton'
-import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
@@ -53,7 +52,7 @@ const HorizontalFilterBar = ({
   dataMinMax: any
   dataFacility: any
   dataSection: any
-  dataKota: GenericResponse<City>
+  dataKota: City[]
 }) => {
   const {
     isLoadingSkeleton,
@@ -160,9 +159,7 @@ const HorizontalFilterBar = ({
     if (filters.organizationInstanceCity) {
       const activeLocationIds = filters.organizationInstanceCity.split(',')
       activeLocationIds.forEach((id) => {
-        const location = dataKota?.results?.find(
-          (l: any) => String(l.id) === id
-        )
+        const location = dataKota?.find((l: any) => String(l.id) === id)
         if (location) {
           tags.push({
             type: 'location',

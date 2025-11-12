@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/dialog'
 import { DrawerFooter } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
-import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { useCheckboxSelection } from '@/hooks/filter-product-hooks/useCheckboxSelection'
@@ -20,7 +19,7 @@ import { X } from 'lucide-react'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 
 interface LocationFilterProps {
-  dataLocations: GenericResponse<City>
+  dataLocations: City[]
   selectedLocation?: string
   onLocationChangeAction: (locationCode: string) => void
   maxInitialDisplay?: number
@@ -81,7 +80,7 @@ export const LocationCheckboxFilter: React.FC<LocationFilterProps> = ({
 
   // Group locations by alphabet
   const groupedLocations = useMemo(() => {
-    const locations = dataLocations.results.filter((loc) =>
+    const locations = dataLocations.filter((loc) =>
       loc.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
@@ -106,7 +105,7 @@ export const LocationCheckboxFilter: React.FC<LocationFilterProps> = ({
         },
         {} as { [key: string]: City[] }
       )
-  }, [dataLocations.results, searchQuery])
+  }, [dataLocations, searchQuery])
 
   const alphabets = Object.keys(groupedLocations)
   const topLocations = useMemo(() => {
@@ -114,18 +113,18 @@ export const LocationCheckboxFilter: React.FC<LocationFilterProps> = ({
 
     // Case 1: No selected items
     if (selectedIds.length === 0) {
-      return dataLocations.results.slice(0, maxInitialDisplay)
+      return dataLocations.slice(0, maxInitialDisplay)
     }
 
     // Case 2: Has selected items
 
     // Step 1: Get selected locations (convert IDs to objects)
     const selectedLocs = selectedIds
-      .map((id) => dataLocations.results.find((loc) => loc.id === id))
+      .map((id) => dataLocations.find((loc) => loc.id === id))
       .filter(Boolean) as City[]
 
     // Step 2: Get non-selected locations
-    const nonSelectedLocs = dataLocations.results.filter(
+    const nonSelectedLocs = dataLocations.filter(
       (loc) => !selectedIds.includes(loc.id)
     )
 
@@ -134,7 +133,7 @@ export const LocationCheckboxFilter: React.FC<LocationFilterProps> = ({
 
     // Step 4: Return up to maxInitialDisplay items
     return combined.slice(0, maxInitialDisplay)
-  }, [dataLocations.results, selectedLocation, maxInitialDisplay])
+  }, [dataLocations, selectedLocation, maxInitialDisplay])
 
   // Get temp selected locations data (convert IDs to location objects)
   const tempSelectedLocationsData = useMemo(() => {
@@ -142,11 +141,11 @@ export const LocationCheckboxFilter: React.FC<LocationFilterProps> = ({
 
     return tempSelectedLocations
       .map((id) => {
-        const location = dataLocations.results.find((loc) => loc.id === id)
+        const location = dataLocations.find((loc) => loc.id === id)
         return location
       })
       .filter(Boolean) as City[]
-  }, [tempSelectedLocations, dataLocations.results])
+  }, [tempSelectedLocations, dataLocations])
 
   // Handle dialog open
   const handleOpenDialog = useCallback(() => {
@@ -233,7 +232,7 @@ export const LocationCheckboxFilter: React.FC<LocationFilterProps> = ({
         ))}
       </div>
 
-      {dataLocations.results.length > maxInitialDisplay && (
+      {dataLocations.length > maxInitialDisplay && (
         <p
           onClick={handleOpenDialog}
           className="text-s-medium flex cursor-pointer items-center gap-1 text-neutral-500 hover:text-neutral-900"
