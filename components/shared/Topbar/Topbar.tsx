@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowDown } from '@/components/icons/arrow-down'
 import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Muslim101Logo } from '@/components/icons/muslim101'
@@ -229,14 +230,14 @@ const TopbarContent = React.memo<TopbarContentProps>(
           <Fragment>
             {/* Navigation Links */}
 
-            <nav className="flex h-[18px] shrink grow basis-0 items-center gap-[60px]">
+            <nav className="flex h-[18px] shrink grow basis-0 items-center gap-[40px]">
               {navLinks.map((link) =>
                 link.subMenu && link.subMenu?.length > 0 ? (
                   // === Hover dropdown for items with submenu ===
                   <HoverCard key={link.title} openDelay={0} closeDelay={100}>
                     <HoverCardTrigger asChild>
                       {/* Wrap NavLink in div to ensure ref compatibility */}
-                      <div>
+                      <div className="flex items-center gap-2">
                         <NavLink
                           href={link.href}
                           title={link.title}
@@ -244,8 +245,8 @@ const TopbarContent = React.memo<TopbarContentProps>(
                           hoveredLink={hoveredLink}
                           onMouseEnter={onMouseEnter}
                           onMouseLeave={onMouseLeave}
-                          disableLink={true}
                         />
+                        <ArrowDown size={12} />
                       </div>
                     </HoverCardTrigger>
 
@@ -253,14 +254,14 @@ const TopbarContent = React.memo<TopbarContentProps>(
                       side="bottom"
                       align="start"
                       alignOffset={10}
-                      className="z-50 -ms-5 mt-2 w-56 rounded-md border-0 bg-white p-3 shadow-[0px_6px_24px_0px_rgba(0,0,0,0.15)]"
+                      className="z-50 -ms-5 mt-2 w-56 overflow-hidden rounded-md border-0 bg-white p-0 shadow-md"
                     >
-                      <div className="flex flex-col space-y-5">
+                      <div className="flex flex-col">
                         {link.subMenu &&
                           link.subMenu.map((sub) => (
                             <Link
                               key={sub.href}
-                              className="hover:text-primary-500 text-m-regular text-neutral-400"
+                              className="focus:bg-primary-200 text-m-regular p-3 text-neutral-400 hover:bg-neutral-50"
                               href={sub.href}
                             >
                               {sub.title}
@@ -474,7 +475,15 @@ const Topbar: React.FC<TopbarProps> = ({
   const [redirectUri, setRedirectUri] = useState<string | null>(null)
   const { profile, logout } = useAuth()
   const [loadingLogout, setLoadingLogout] = useState(false)
-  const { data: qrApp } = useGetReference('qr_app')
+  const [qrApp, setQrApp] = useState<string>('')
+  const { data } = useGetReference('qr_app')
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setQrApp(data[0].name)
+      console.log(qrApp)
+    }
+  }, [data])
 
   // Memoize navigation links to prevent recreating on each render
   const navLinks = useMemo(
@@ -610,7 +619,7 @@ const Topbar: React.FC<TopbarProps> = ({
               >
                 <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50 max-lg:hidden">
                   <div className="container m-auto w-full items-center px-4">
-                    <SubTopBar qrApp={qrApp?.[0].name || ''} />
+                    {qrApp && <SubTopBar qrApp={qrApp} />}
                   </div>
                 </section>
 
@@ -631,7 +640,7 @@ const Topbar: React.FC<TopbarProps> = ({
         >
           <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50">
             <div className="container m-auto w-full items-center px-4 ">
-              <SubTopBar qrApp={qrApp?.[0].name || ''} />
+              {qrApp && <SubTopBar qrApp={qrApp} />}
             </div>
           </section>
           <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
