@@ -66,7 +66,7 @@ export function useGetSubmissionListInfinite(
   const { showErrorToast = true, ...swrConfig } = config || {}
 
   const getKey = (pageIndex: number, previousPageData: any) => {
-    if (previousPageData && !previousPageData.data.length) return null
+    if (previousPageData && !previousPageData.results.length) return null
     return [
       'get-submission-infinite',
       {
@@ -79,24 +79,20 @@ export function useGetSubmissionListInfinite(
   const fetchAndNormalize = async (
     key: any // key dari SWR
   ): Promise<AxiosResponse<GenericResponse<SubmissionCredit>>> => {
-    const query = key[1] // Ambil parameter query dari key
+    const query = key[1]
 
-    // 1. Panggil fungsi API asli
-    const response = await listSubmissionPembiayaan(query) // Ini mengembalikan AxiosResponse<PostalCodeResponse>
+    const response = await listSubmissionPembiayaan(query)
 
-    // 2. Ambil data asli (PostalCodeResponse)
     const originalData = response.data
 
-    // 3. Buat objek data yang dinormalisasi (GenericResponse)
     const normalizedData: GenericResponse<SubmissionCredit> = {
       total: originalData.total,
       results: originalData.data,
     }
 
-    // 4. Kembalikan AxiosResponse yang baru dengan data yang sudah dinormalisasi
     return {
-      ...response, // Salin status, headers, dll.
-      data: normalizedData, // Timpa `data` dengan versi normalisasi kita
+      ...response,
+      data: normalizedData,
     }
   }
 

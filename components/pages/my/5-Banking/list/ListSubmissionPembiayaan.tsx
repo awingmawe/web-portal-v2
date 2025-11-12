@@ -4,7 +4,6 @@ import { CardTransactionBanking } from '@/components/pages/my/5-Banking/common/C
 import { CardTransactionBankingSkeleton } from '@/components/pages/my/5-Banking/common/SkeletonCardPembiayaan'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { useGetSubmissionList } from '@/services/hooks/banking-service/submission-credits-api'
-import { useRouter } from 'next/navigation'
 import { Fragment, useState } from 'react'
 
 export default function ListSubmissionPembiayaan({
@@ -12,7 +11,6 @@ export default function ListSubmissionPembiayaan({
 }: {
   search: string
 }) {
-  const router = useRouter()
   const [page, setPage] = useState(1)
 
   // --- PAGINATION LOGIC (DESKTOP) ---
@@ -23,8 +21,8 @@ export default function ListSubmissionPembiayaan({
       search,
     })
   const setPagePagination = (goPage: number) => {
-    router.replace('/my/banking', { scroll: true })
     setPage(goPage)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
   if (isPaginatedLoading)
     return Array.from({ length: 3 }).map((_, index) => (

@@ -57,7 +57,7 @@ const ListCoverageContent = ({
         ) : listLocation && listLocation.length > 0 ? (
           <InfiniteScroll
             isLoading={isLoadingMore || false}
-            hasMore={isReachingEnd || false}
+            hasMore={!isReachingEnd}
             next={loadMore}
             threshold={0.8}
           >
