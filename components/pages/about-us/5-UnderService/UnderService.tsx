@@ -58,7 +58,7 @@ export default function UnderService() {
           {/* Image 3 */}
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:h-[350px] lg:h-[400px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait.png"
+              src="https://storage.googleapis.com/m101-prods/about-us/POIN%20C.jpg"
               alt="Safari Media ke JTV"
               fill
               className="object-cover transition-transform duration-500"

@@ -63,9 +63,9 @@ export default function Moment() {
           <CardMoment
             title="Kumpul Keluarga"
             images={[
-              'https://storage.googleapis.com/m101-prods/about-us/Folder%204%20-%20Curhatin%202.0/IIE%201.png',
-              'https://storage.googleapis.com/m101-prods/about-us/Folder%204%20-%20Curhatin%202.0/IIE%202.png',
-              'https://storage.googleapis.com/m101-prods/about-us/Folder%204%20-%20Curhatin%202.0/IIE%203.png',
+              'https://storage.googleapis.com/m101-prods/about-us/POIN%20S.jpg',
+              'https://storage.googleapis.com/m101-prods/about-us/POIN%20S.jpg',
+              'https://storage.googleapis.com/m101-prods/about-us/POIN%20S.jpg',
             ]}
             date="12 Desember 2024"
             content={`Muslim101 hadir di acara Kumpul Keluarga pada tanggal 23 Februari 2025, memberikan konsultasi, informasi, dan penawaran seputar ibadah menuju Tanah Suci.`}
