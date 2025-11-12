@@ -56,16 +56,20 @@ export default async function FaqContent({
     >
       {faqLists.results.map((faq) => (
         <AccordionItem key={faq.slug} value={faq.slug}>
-          <AccordionTrigger>
-            <h4 className="heading-4-medium max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5 ">
+          <AccordionTrigger
+            noSeparator
+            className="transition-all data-[state=closed]:rounded-b-none data-[state=closed]:border-b-1 data-[state=closed]:border-neutral-100 data-[state=open]:border-none"
+          >
+            <h4 className="heading-4-medium max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5">
               {faq.title}
             </h4>
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 pt-2 text-balance">
             <div
-              className="prose text-m-regular max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5 "
+              className="prose text-m-regular max-sm:text-m-regular max-lg:text-l-regular max-lg:leading-6.5 max-sm:leading-6"
               dangerouslySetInnerHTML={{ __html: faq.body }}
             />
+            <hr className="border-neutral-100" />
           </AccordionContent>
         </AccordionItem>
       ))}

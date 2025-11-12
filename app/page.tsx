@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import { ArrowIcon } from '@/components/icons/arrow'
 import FaqContent from '@/components/pages/faq/FaqContent'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
@@ -24,7 +25,7 @@ import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
 import { getBanner, getPackageList } from '@/services/umrah-service'
-import { CircleChevronRight, MoveRight, Search } from 'lucide-react'
+import { CircleChevronRight, Search } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -246,18 +247,18 @@ export default async function Home() {
       <div className="bg-neutral-0 relative z-6 w-full pt-[70px] pb-[70px] max-xl:px-0">
         <div className="container mx-auto">
           <Card className="rounded-md border-0 bg-neutral-50 p-8 shadow-none max-md:bg-white max-md:p-2">
-            <CardContent>
+            <CardContent className="max-lg:px-3">
               <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
                 <div>
-                  <h2 className="text-4xl font-bold max-md:text-3xl">
+                  <h2 className="text-4xl font-bold max-lg:text-[32px] max-lg:leading-10 max-sm:text-[32px] max-sm:leading-10">
                     Pertanyaan yang Sering Ditanyakan
                   </h2>
                   <Link
                     href="/faq"
-                    className="hover:text-primary-500 max-lg:text-m-regular mt-4 flex items-center gap-2 max-lg:leading-5 max-sm:text-sm max-sm:leading-5"
+                    className="max-lg:text-m-regular mt-4 flex items-center gap-2 max-lg:leading-5 max-sm:text-sm max-sm:leading-5"
                   >
                     Lihat lebih banyak
-                    <MoveRight className="max-lg:hidden" />
+                    <ArrowIcon className="max-lg:hidden" size={24} />
                     <CircleChevronRight className="lg:hidden" size={14} />
                   </Link>
                   <div className="flex justify-center max-md:hidden">
