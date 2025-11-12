@@ -19,12 +19,12 @@ const PembiayaanLanding: React.FC = () => {
       </p>
       {/* Banner for mobile */}
       <Image
-        src="/images/banner-pembiayaan-mobile.svg"
+        src="/images/banner-pembiayaan-mobile.png"
         alt="Banner Pembiayaan"
         width={0}
         height={0}
         sizes="100vw"
-        className="h-auto w-full rounded-[20px] object-contain md:hidden"
+        className="h-[250px] w-full rounded-[20px] object-cover object-center md:hidden"
       />
       {/* Banner for desktop */}
       <Image
@@ -43,9 +43,9 @@ const PembiayaanLanding: React.FC = () => {
 
         <p className="text-l-regular">
           Panggilan ke Baitullah adalah impian setiap Muslim. Jangan biarkan
-          waktu dan biaya menjadi penghalang. Melalui Program Pembiayaan Umroh
-          Syariah, Anda bisa mewujudkan perjalanan ibadah lebih cepat, lebih
-          ringan, dan tetap sesuai dengan prinsip syariah.
+          waktu dan biaya menjadi penghalang langkahmu menuju Tanah Suci. Setiap
+          niat suci untuk beribadah adalah anugerah, dan kini saatnya kamu
+          mewujudkannya dengan hati yang mantap dan penuh harap.
         </p>
 
         <div className="flex gap-4 max-lg:flex-col max-lg:gap-5">
@@ -84,10 +84,9 @@ const PembiayaanLanding: React.FC = () => {
         </div>
 
         <p className="text-l-regular">
-          Setiap panggilan ke Tanah Suci adalah anugerah. Jangan tunda niat baik
-          Anda hanya karena kendala biaya. Dengan pembiayaan yang ringan dan
-          proses yang mudah, Anda bisa segera menunaikan ibadah dengan penuh
-          rasa syukur.
+          Cukup pilih paket umrah yang cocok untuk kamu, lengkapi data yang
+          dibutuhkan, dan pengajuanmu akan segera diproses hingga siap berangkat
+          dengan penuh rasa syukur.
         </p>
       </div>
       {/* 

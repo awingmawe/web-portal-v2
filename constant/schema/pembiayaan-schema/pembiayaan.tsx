@@ -36,19 +36,15 @@ export const submissionStep1Schema = z.object({
 
   born: z
     .string()
-    .regex(DATE_REGEX, 'Format tanggal harus YYYY-MM-DD')
-    .min(1, 'Tanggal lahir wajib diisi'),
+    .min(1, 'Tanggal lahir wajib diisi')
+    .regex(DATE_REGEX, 'Format tanggal harus YYYY-MM-DD'),
 
   gender: z.enum(['L', 'P'], {
     required_error: 'Jenis kelamin wajib dipilih',
     invalid_type_error: 'Jenis kelamin harus L (Laki-laki) atau P (Perempuan)',
   }),
 
-  job: z
-    .string()
-    .min(2, 'Pekerjaan minimal 2 karakter')
-    .max(50, 'Pekerjaan maksimal 50 karakter')
-    .trim(),
+  job: z.string().min(1, 'Pekerjaan wajib diisi').trim(),
 
   // Location fields
   provinceId: z.string().min(1, 'Provinsi wajib diisi'),
@@ -63,11 +59,12 @@ export const submissionStep1Schema = z.object({
   postalCode: z
     .string()
     .trim()
+    .min(1, 'Kode pos wajib diisi')
     .regex(POSTAL_CODE_REGEX, 'Kode pos harus 5 digit angka'),
 
   address: z
     .string()
-    .min(10, 'Alamat minimal 10 karakter')
+    .min(1, 'Alamat wajib diisi')
     .max(200, 'Alamat maksimal 200 karakter')
     .trim(),
 

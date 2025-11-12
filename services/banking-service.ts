@@ -7,6 +7,7 @@ import {
   ResponseSubmissionPembiayaan,
 } from '@/constant/types/Pembiayaan'
 import { CoverageResponse, ResponseProvider } from '@/constant/types/Providers'
+import { SubmissionListResponse } from '@/constant/types/SubmissionPembiayaan'
 import { api, apiWithAuth } from '@/services/common/http'
 import { AxiosResponse } from 'axios'
 import qs from 'query-string'
@@ -90,6 +91,14 @@ export async function submissionPembiayaan(
   data: RequestSubmissionPembiayaan
 ): Promise<AxiosResponse<ResponseSubmissionPembiayaan>> {
   return apiWithAuth.post(`/banking/v2/credit/submissions`, data)
+}
+
+export async function listSubmissionPembiayaan(
+  query: GetListQuery
+): Promise<AxiosResponse<SubmissionListResponse>> {
+  return apiWithAuth.get(
+    `/banking/v2/credit/submissions?${qs.stringify(query)}`
+  )
 }
 
 export async function getProviders(

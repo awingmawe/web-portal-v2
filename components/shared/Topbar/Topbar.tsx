@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowDown } from '@/components/icons/arrow-down'
 import { LogoutIcon } from '@/components/icons/logout'
 import { MessageQuestionIcon } from '@/components/icons/message-question'
 import { Muslim101Logo } from '@/components/icons/muslim101'
@@ -22,9 +23,9 @@ import {
 } from '@/components/ui/popover'
 import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
-import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { springTransition } from '@/lib/animation-setup'
 import { cn, ellipsis, isEmpty } from '@/lib/utils'
+import { useGetReference } from '@/services/hooks/general/reference'
 import { AnimatePresence, easeInOut, easeOut, motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
@@ -52,6 +53,7 @@ interface NavLinkProps {
   hoveredLink: string | null
   onMouseEnter: (href: string) => void
   onMouseLeave: () => void
+  disableLink?: boolean
 }
 
 interface TopbarContentProps {
@@ -118,7 +120,15 @@ const fixedTopbarVariants = {
 
 // NavLink component moved outside and memoized
 const NavLink = React.memo<NavLinkProps>(
-  ({ href, title, pathname, hoveredLink, onMouseEnter, onMouseLeave }) => {
+  ({
+    href,
+    title,
+    pathname,
+    hoveredLink,
+    onMouseEnter,
+    onMouseLeave,
+    disableLink,
+  }) => {
     const isActive = pathname === href
     const isHovered = hoveredLink === href
 
@@ -126,6 +136,7 @@ const NavLink = React.memo<NavLinkProps>(
     // 1. The link is active but not being hovered (persistent dot)
     // 2. The link is being hovered but not active (hover dot)
     const showDot = isActive || isHovered
+    const isDisable = disableLink ?? false
 
     return (
       <div className="flex flex-col items-center gap-1">
@@ -137,7 +148,7 @@ const NavLink = React.memo<NavLinkProps>(
             isActive
               ? 'text-m-medium text-neutral-900'
               : 'text-m-regular text-neutral-600'
-          }`}
+          } ${isDisable ? 'pointer-events-none cursor-default' : ''}`}
         >
           {title}
 
@@ -219,14 +230,14 @@ const TopbarContent = React.memo<TopbarContentProps>(
           <Fragment>
             {/* Navigation Links */}
 
-            <nav className="flex h-[18px] shrink grow basis-0 items-center gap-[60px]">
+            <nav className="flex h-[18px] shrink grow basis-0 items-center gap-[40px]">
               {navLinks.map((link) =>
                 link.subMenu && link.subMenu?.length > 0 ? (
                   // === Hover dropdown for items with submenu ===
                   <HoverCard key={link.title} openDelay={0} closeDelay={100}>
                     <HoverCardTrigger asChild>
                       {/* Wrap NavLink in div to ensure ref compatibility */}
-                      <div>
+                      <div className="flex items-center gap-2">
                         <NavLink
                           href={link.href}
                           title={link.title}
@@ -235,6 +246,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
                           onMouseEnter={onMouseEnter}
                           onMouseLeave={onMouseLeave}
                         />
+                        <ArrowDown size={12} />
                       </div>
                     </HoverCardTrigger>
 
@@ -242,14 +254,14 @@ const TopbarContent = React.memo<TopbarContentProps>(
                       side="bottom"
                       align="start"
                       alignOffset={10}
-                      className="z-50 -ms-5 mt-2 w-56 rounded-md border-0 bg-white p-3 shadow-md"
+                      className="z-50 -ms-5 mt-2 w-56 overflow-hidden rounded-md border-0 bg-white p-0 shadow-md"
                     >
-                      <div className="flex flex-col space-y-5">
+                      <div className="flex flex-col">
                         {link.subMenu &&
                           link.subMenu.map((sub) => (
                             <Link
                               key={sub.href}
-                              className="hover:text-primary-500"
+                              className="focus:bg-primary-200 text-m-regular p-3 text-neutral-400 hover:bg-neutral-50"
                               href={sub.href}
                             >
                               {sub.title}
@@ -291,33 +303,35 @@ const TopbarContent = React.memo<TopbarContentProps>(
                   {/* Divider */}
                   <div className="h-5 border border-[#c9c9c9]" />
 
-                  {/* Register */}
-                  <Button
-                    className="w-[120px] rounded-full py-3 max-lg:hidden"
-                    variant="default"
-                    size="lg"
-                    id="btn-checkout-desktop"
-                    onClick={() => {
-                      window.location.href = `${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`
-                    }}
-                  >
-                    Daftar
-                  </Button>
-
                   {/* Login */}
-                  <Button
-                    className="border-primary-500 hover:bg-primary-500 w-[120px] rounded-full border-2 py-3 max-lg:hidden"
-                    variant="outline"
-                    size="lg"
-                    id="btn-checkout-desktop"
-                    onClick={() => {
-                      window.location.href = `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(
-                        redirectUri as string
-                      )}`
-                    }}
+                  <Link
+                    href={`${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(
+                      redirectUri as string
+                    )}`}
                   >
-                    Masuk
-                  </Button>
+                    <Button
+                      className="border-primary-500 hover:bg-primary-500 w-[120px] rounded-full border-2 py-3 max-lg:hidden"
+                      variant="outline"
+                      size="lg"
+                      id="btn-login-desktop"
+                    >
+                      Masuk
+                    </Button>
+                  </Link>
+
+                  {/* Register */}
+                  <Link
+                    href={`${ACCOUNT_URL}/auth/sign-up?redirectUri=${encodeURIComponent(redirectUri as string)}`}
+                  >
+                    <Button
+                      className="w-[120px] rounded-full py-3 max-lg:hidden"
+                      variant="default"
+                      size="lg"
+                      id="btn-register-desktop"
+                    >
+                      Daftar
+                    </Button>
+                  </Link>
 
                   {/* Partner Button */}
                   {/* Temporary Takut masih butuh */}
@@ -461,6 +475,15 @@ const Topbar: React.FC<TopbarProps> = ({
   const [redirectUri, setRedirectUri] = useState<string | null>(null)
   const { profile, logout } = useAuth()
   const [loadingLogout, setLoadingLogout] = useState(false)
+  const [qrApp, setQrApp] = useState<string>('')
+  const { data } = useGetReference('qr_app')
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setQrApp(data[0].name)
+      console.log(qrApp)
+    }
+  }, [data])
 
   // Memoize navigation links to prevent recreating on each render
   const navLinks = useMemo(
@@ -564,8 +587,6 @@ const Topbar: React.FC<TopbarProps> = ({
     ]
   )
 
-  const { lg } = useTailwindBreakpoint()
-
   return (
     <Fragment>
       {type === 'homepage' && (
@@ -596,15 +617,12 @@ const Topbar: React.FC<TopbarProps> = ({
                   className
                 )}
               >
-                {!lg && (
-                  <>
-                    <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50">
-                      <div className="container m-auto w-full items-center px-4">
-                        <SubTopBar />
-                      </div>
-                    </section>
-                  </>
-                )}
+                <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50 max-lg:hidden">
+                  <div className="container m-auto w-full items-center px-4">
+                    {qrApp && <SubTopBar qrApp={qrApp} />}
+                  </div>
+                </section>
+
                 <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
                   <TopbarContent {...topbarContentProps} />
                 </section>
@@ -622,7 +640,7 @@ const Topbar: React.FC<TopbarProps> = ({
         >
           <section className="flex h-[28px] w-full items-center gap-[60px] bg-neutral-50">
             <div className="container m-auto w-full items-center px-4 ">
-              <SubTopBar />
+              {qrApp && <SubTopBar qrApp={qrApp} />}
             </div>
           </section>
           <section className="container m-auto flex h-full w-full items-center gap-[60px] px-4">
