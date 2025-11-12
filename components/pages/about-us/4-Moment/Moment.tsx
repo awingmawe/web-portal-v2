@@ -40,9 +40,9 @@ export default function Moment() {
           <CardMoment
             title="Mini Travel Fair: Jelajahi Negeri Impian at PermataBank Syariah"
             images={[
-              'https://storage.googleapis.com/m101-prods/about-us/Folder%202%20-%20Mini%20Travel%20Fair/IIE%201.png',
-              'https://storage.googleapis.com/m101-prods/about-us/Folder%202%20-%20Mini%20Travel%20Fair/IIE%202.png',
-              'https://storage.googleapis.com/m101-prods/about-us/Folder%202%20-%20Mini%20Travel%20Fair/IIE%203.png',
+              'https://storage.googleapis.com/m101-prods/about-us/POIN%20X.JPG',
+              'https://storage.googleapis.com/m101-prods/about-us/POIN%20X.JPG',
+              'https://storage.googleapis.com/m101-prods/about-us/POIN%20X.JPG',
             ]}
             date="3-14 Februari 2025"
             content={`Bersama PermataBank Syariah, Muslim101 berhasil menyelenggarakan acara Mini Travel Fair yang bertemakan "Jelajahi Negeri Impian" selama dua pekan, mulai dari tanggal 3–7 hingga 10–14 Februari 2025. Diikuti para mitra travel Muslim101, yaitu Aqobah, Sahid Tour, Goldy, Annisa, Tazkia, Syawal, Al-Azhar, dan Mulia Tour.`}

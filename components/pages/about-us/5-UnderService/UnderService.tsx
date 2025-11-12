@@ -26,15 +26,15 @@ export default function UnderService() {
           {/* Image 1 */}
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:h-[350px] lg:h-[400px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-2.png"
-              alt="BnB101: Masak Bersama"
+              src="https://storage.googleapis.com/m101-prods/about-us/POIN%20A.jpeg"
+              alt="Podcast bersama Radio PRFM"
               fill
               className="object-cover transition-transform duration-500"
             />
             <div className="absolute bottom-0 left-0 h-[100px] w-full bg-gradient-to-t from-black to-transparent duration-300 lg:h-0 lg:group-hover:h-[150px]" />
             <div className="absolute bottom-0 left-0 p-4 text-white lg:max-h-0 lg:overflow-hidden lg:opacity-0 lg:duration-1000 lg:group-hover:max-h-[150px] lg:group-hover:opacity-100">
               <h3 className="lg:heading-4-bold text-lg font-bold text-white sm:text-xl md:text-2xl">
-                BnB101: Masak Bersama
+                Podcast bersama Radio PRFM
               </h3>
             </div>
           </div>
@@ -42,15 +42,15 @@ export default function UnderService() {
           {/* Image 2 */}
           <div className="group relative h-[250px] overflow-hidden rounded-lg md:h-[275px] lg:h-[300px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square.png"
-              alt="Majelis101: Kajian Mingguan"
+              src="https://storage.googleapis.com/m101-prods/about-us/POIN%20B.jpeg"
+              alt="Talkshow bersama Suara Muslim TV"
               fill
               className="object-cover transition-transform duration-500"
             />
             <div className="absolute bottom-0 left-0 h-[100px] w-full bg-gradient-to-t from-black to-transparent duration-300 lg:h-0 lg:group-hover:h-[150px]" />
             <div className="absolute bottom-0 left-0 p-4 text-white lg:max-h-0 lg:overflow-hidden lg:opacity-0 lg:duration-1000 lg:group-hover:max-h-[150px] lg:group-hover:opacity-100">
               <h3 className="lg:heading-4-bold text-lg font-bold text-white sm:text-xl md:text-2xl">
-                Majelis101: Kajian Mingguan
+                Talkshow bersama Suara Muslim TV
               </h3>
             </div>
           </div>
@@ -59,14 +59,14 @@ export default function UnderService() {
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:h-[350px] lg:h-[400px]">
             <Image
               src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait.png"
-              alt="Event101: Bestie till Jannah"
+              alt="Safari Media ke JTV"
               fill
               className="object-cover transition-transform duration-500"
             />
             <div className="absolute bottom-0 left-0 h-[100px] w-full bg-gradient-to-t from-black to-transparent duration-300 lg:h-0 lg:group-hover:h-[150px]" />
             <div className="absolute bottom-0 left-0 p-4 text-white lg:max-h-0 lg:overflow-hidden lg:opacity-0 lg:duration-1000 lg:group-hover:max-h-[150px] lg:group-hover:opacity-100">
               <h3 className="lg:heading-4-bold text-lg font-bold text-white sm:text-xl md:text-2xl">
-                Event101: Bestie till Jannah
+                Safari Media ke JTV
               </h3>
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function UnderService() {
           {/* Image 5 */}
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:-mt-[75px] md:h-[350px] lg:-mt-[100px] lg:h-[400px]">
             <Image
-              src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-1.png"
+              src="https://storage.googleapis.com/m101-prods/about-us/POIN%20D.JPG"
               alt="BnB101: Silaturahmi Tim"
               fill
               className="object-cover transition-transform duration-500"
@@ -98,7 +98,7 @@ export default function UnderService() {
             <div className="absolute bottom-0 left-0 h-[100px] w-full bg-gradient-to-t from-black to-transparent duration-300 lg:h-0 lg:group-hover:h-[150px]" />
             <div className="absolute bottom-0 left-0 p-4 text-white lg:max-h-0 lg:overflow-hidden lg:opacity-0 lg:duration-1000 lg:group-hover:max-h-[150px] lg:group-hover:opacity-100">
               <h3 className="lg:heading-4-bold text-lg font-bold text-white sm:text-xl md:text-2xl">
-                BnB101: Silaturahmi Tim
+                Konsultasi Produk dan Layanan
               </h3>
             </div>
           </div>
