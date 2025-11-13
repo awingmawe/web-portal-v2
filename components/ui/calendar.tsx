@@ -107,7 +107,7 @@ function Calendar({
           cellClassName?.day_disabled
         ),
         day_range_middle: cn(
-          'aria-selected:bg-primaryy aria-selected:text-accent-foreground',
+          'aria-selected:bg-primary-100 aria-selected:text-accent-foreground aria-selected:rounded-none',
           cellClassName?.day_range_middle
         ),
         day_hidden: cn('invisible', cellClassName?.day_hidden),
