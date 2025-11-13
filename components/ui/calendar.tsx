@@ -39,11 +39,13 @@ function Calendar({
   className,
   classNames,
   cellClassName,
+  onMonthChange,
   showOutsideDays = true,
   ...props
 }: React.ComponentProps<typeof DayPicker> & { cellClassName?: CalendarProps }) {
   return (
     <DayPicker
+      onMonthChange={onMonthChange}
       showOutsideDays={showOutsideDays}
       className={cn('p-4', className)}
       classNames={{

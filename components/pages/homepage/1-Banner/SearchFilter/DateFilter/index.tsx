@@ -10,15 +10,27 @@ import {
 } from '@/components/ui/popover'
 import { OtherProps } from '@/constant/types/GeneralProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
+import DisableDate from '@/hooks/disable-date-hooks'
 import { formatDateRangeShort } from '@/lib/utils'
 import { id } from 'date-fns/locale'
-import React from 'react'
+import React, { useState } from 'react'
 
 const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
   const { filters, setDateRange, isDisabled, isLoadingSkeleton } =
     useFilterProduct()
 
   const dateRange = filters.dateRange
+
+  // GET DISABLED DATE
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
+  const currentYear = currentMonth.getFullYear().toString()
+  const handleMonthChange = (month: Date) => {
+    setCurrentMonth(month)
+  }
+
+  // CALL DISALBE DATE HOOKS
+  const disabledRanges = DisableDate({ year: currentYear })
+  // END OF DISABLE DATE
 
   if (whatPage === 'filter_search' && isLoadingSkeleton) {
     return <DateSkeleton />
@@ -60,6 +72,8 @@ const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
           numberOfMonths={2}
           locale={id}
           fromDate={new Date()}
+          disabled={disabledRanges}
+          onMonthChange={handleMonthChange}
         />
       </PopoverContent>
     </Popover>
