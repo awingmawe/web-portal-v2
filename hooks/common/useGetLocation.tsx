@@ -17,7 +17,7 @@ interface GeolocationState {
 // Opsi untuk getCurrentPosition
 const GEOLOCATION_OPTIONS: PositionOptions = {
   enableHighAccuracy: true,
-  timeout: 5000,
+  timeout: 999999, // Naikkan timeout menjadi 15 detik
   maximumAge: 0,
 }
 

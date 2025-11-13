@@ -100,7 +100,7 @@ export default async function Home() {
     }),
     getGalleryHomepage({
       page: 1,
-      size: 6,
+      size: 100,
       [`category:likeLower`]: 'testi_landing',
     }),
     getArticleList({
