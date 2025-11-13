@@ -2,6 +2,7 @@ import WhatsappIcon from '@/components/icons/whatsapp'
 import Breadcrumb from '@/components/pages/faq/Breadcumb'
 import Footer from '@/components/shared/Footer'
 import Topbar from '@/components/shared/Topbar/Topbar'
+import { CALL_CENTER } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
@@ -80,7 +81,7 @@ export default async function LayoutFaq({
             </Card> */}
 
             <Link
-              href={'#'}
+              href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+bertanya`}
               className="mt-5 max-h-min rounded-xl border-1 border-neutral-100 bg-white px-5 py-3"
             >
               <div className="text-s-regular max-lg:text-xs-regular max-sm:text-xs-regular flex items-center gap-2 max-lg:leading-3.5 max-sm:leading-4">
