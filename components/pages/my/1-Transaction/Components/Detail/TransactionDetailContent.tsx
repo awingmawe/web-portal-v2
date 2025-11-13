@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 import { ChecklistCircleActive } from '@/components/icons/checkbox'
 import { InfoCircleIcon } from '@/components/icons/info-circle'
@@ -189,7 +188,7 @@ export default function TransactionDetailContent({
         },
       })
     },
-    [router, isSnapInitialized]
+    [isSnapInitialized]
   )
 
   const fetchPaymentStatement = useCallback(
@@ -220,6 +219,7 @@ export default function TransactionDetailContent({
         setLoading(false)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleSnapPayment, isSnapInitialized]
   )
 
@@ -237,6 +237,7 @@ export default function TransactionDetailContent({
       console.error('No payment token available')
       setLoading(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleSnapPayment, isSnapInitialized])
   const roomTypeMapping: Record<
     RoomType,

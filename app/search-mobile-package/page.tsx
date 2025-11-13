@@ -3,7 +3,7 @@ import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/Pack
 import SearchMobileUmroh from '@/components/pages/search-mobile/SearchPackageMobile'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { mapProductsToCardData } from '@/lib/utils'
-import { getPackageList } from '@/services/umrah-service'
+import { getPackageListV2 } from '@/services/product-service'
 import { Fragment } from 'react'
 
 export async function generateMetadata({
@@ -21,7 +21,7 @@ export async function generateMetadata({
 }
 
 export default async function SearchPackageMobile() {
-  const dataPromo = await getPackageList({
+  const dataPromo = await getPackageListV2({
     page: 1,
     size: 12,
     section: 'promo',
@@ -41,7 +41,7 @@ export default async function SearchPackageMobile() {
 
           {/* Package list */}
           <PackageListEvent
-            dataPromo={mapProductsToCardData(dataPromo)}
+            dataPromo={mapProductsToCardData(dataPromo.data)}
             header={false}
           />
         </section>

@@ -780,7 +780,7 @@ export default function TransactionCardFooter({
       {openFormRefund && (
         <ModalFormRefund
           open={openFormRefund}
-          onOpenChange={setOpenFormRefund}
+          onOpenChangeAction={setOpenFormRefund}
           setOpenVerifikasiEmail={setOpenVerifikasiEmail}
           setSelectedBank={setSelectedBank}
           selectedBank={selectedBank}

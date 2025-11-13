@@ -7,7 +7,7 @@ import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
-import { getPackageList } from '@/services/umrah-service'
+import { getPackageListV2 } from '@/services/product-service'
 import { cookies } from 'next/headers'
 import { Fragment } from 'react'
 export async function generateMetadata() {
@@ -31,7 +31,7 @@ export default async function SearchGeneral() {
   // ]
 
   const [dataPackageProvider, dataTenor] = await Promise.all([
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       packageType: 'umrah',
@@ -61,7 +61,7 @@ export default async function SearchGeneral() {
         </p>
 
         <PackagePembiayaan
-          dataPackageProvider={dataPackageProvider}
+          dataPackageProvider={dataPackageProvider.data}
           dataTenor={dataTenor.data.results}
           token={token}
         />

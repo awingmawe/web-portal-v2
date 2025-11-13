@@ -3,7 +3,7 @@ import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 
 interface TagButtonProps {
   label: string
-  code: string
+  code: string | number
   filters: any
   name: string
   setFilters: (filter: string) => void
@@ -14,7 +14,7 @@ interface TagButtonProps {
 // Tag Button Component
 const TagButton: React.FC<TagButtonProps> = ({
   label,
-  code,
+  code: rawCode,
   filters,
   setFilters,
   name,
@@ -22,6 +22,8 @@ const TagButton: React.FC<TagButtonProps> = ({
   paramName,
 }) => {
   const updateQueryParams = useUpdateQueryParams()
+  const code = String(rawCode) // Ensure code is always a string
+
   // Handle tag click - toggle active state
   const handleTagClick = (code: string) => {
     if (code === 'price-range') {
@@ -66,7 +68,7 @@ const TagButton: React.FC<TagButtonProps> = ({
     if (code === 'price-range') return true
     if (!filters?.[name]) return false
     const activeTags = filters?.[name].split(',').filter(Boolean)
-    return activeTags.includes(code)
+    return activeTags.includes(String(code))
   }
   return (
     <Button

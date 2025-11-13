@@ -130,6 +130,7 @@ const TransactionActionButtonHajj = ({
       setPreBookingLoading(false)
       console.log(e)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transaction?.id, selectedRoomType])
 
   useEffect(() => {

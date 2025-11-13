@@ -59,8 +59,8 @@ const ModalKurs: React.FC<LayoutDrawerDialogProps> = ({
           <DialogHeader>
             <DialogClose asChild>
               <X
-                size={30}
-                className="text-primary-500 absolute -top-10 -right-6 cursor-pointer rounded-full bg-white p-1 hover:text-gray-600"
+                size={46}
+                className="text-primary-500 absolute -top-12 -right-10 cursor-pointer rounded-full bg-white p-1 p-2 hover:text-gray-600"
               />
             </DialogClose>
           </DialogHeader>

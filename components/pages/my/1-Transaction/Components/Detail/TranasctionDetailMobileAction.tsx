@@ -158,6 +158,7 @@ export const TransactionDetailMobileAction = ({
       console.error('Error fetching transactions:', err)
     } finally {
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Render functions
@@ -361,7 +362,7 @@ export const TransactionDetailMobileAction = ({
       {openFormRefund && (
         <ModalFormRefund
           open={openFormRefund}
-          onOpenChange={setOpenFormRefund}
+          onOpenChangeAction={setOpenFormRefund}
           setOpenVerifikasiEmail={setOpenVerifikasiEmail}
           setSelectedBank={setSelectedBank}
           selectedBank={selectedBank}

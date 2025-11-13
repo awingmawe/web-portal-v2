@@ -25,20 +25,9 @@ const journeySteps = [
     content: {
       title: 'Akuisisi Kemitraan',
       description:
-        'Muslim101 memulai dengan produk berupa beragam paket Umroh, bermitra dengan beragam travel tepercaya di seluruh wilayah Indonesia yang memiliki lisensi PPIU dan PIHK. Hingga Februari 2025, kami telah menjalin kerja sama B2B dengan 143 mitra.',
+        'Muslim101 memulai dengan produk berupa beragam paket Umroh, bermitra dengan beragam travel tepercaya di seluruh wilayah Indonesia yang memiliki lisensi PPIU dan PIHK. Hingga Oktober 2025, kami telah menjalin kerja sama lebih dari 200 mitra.',
       image:
         'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-1.png',
-    },
-  },
-  {
-    id: 'akuisisi-keagenan',
-    title: 'Akuisisi Keagenan',
-    content: {
-      title: 'Akuisisi Keagenan',
-      description:
-        'Muslim101 memiliki jaringan keagenan yang disebut Wukala (wakil). Sebanyak lebih dari 700 Wukala yang berbasis affiliate marketing tersebar di 6 kota besar Indonesia.',
-      image:
-        'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-2.png',
     },
   },
   {
@@ -58,7 +47,7 @@ const journeySteps = [
     content: {
       title: 'Event',
       description:
-        'Muslim101 telah sukses terlibat dalam berbagai event di berbagai wilayah Indonesia. Salah satunya, pada pameran besar International Islamic Expo (IIE) yang bertemakan Umrah-Hajj & Islamic Tourism. Di sana, Muslim101 menjalankan promosi dan partnership B2B2C langsung dengan para calon mitra terbaru.',
+        'Muslim101 telah sukses terlibat dalam berbagai event di berbagai wilayah Indonesia. Dimulai dari pameran-pameran International Islamic Expo (IIE) 2024 yang bertemakan Umrah-Hajj & Islamic Tourism, Permata Bank, Antam, dan akan terus mendatang. Di sana, Muslim101 memperkenalkan mitra-mitra tepercaya kepada para calon jemaah yang ingin bepergian Umroh maupun Haji.',
       image:
         'https://storage.googleapis.com/m101-prods/about-us/Milestone/Frame%201000007196-4.png',
     },

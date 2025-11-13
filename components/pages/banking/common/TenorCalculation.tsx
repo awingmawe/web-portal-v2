@@ -128,10 +128,10 @@ export default function FinancingSimulation({
       LOCAL_STORAGE_PEMBIAYAAN
     ) as PembiayaanDataLocalStorage
 
-    const defaultValue = dataPembiayaan?.tenor || tenorOptions[0]?.value
+    const defaultValue = dataPembiayaan?.tenor || tenorOptions[1]?.value
 
     if (defaultValue) {
-      setSelectedTenor(String(defaultValue))
+      handleTenorChange(String(defaultValue))
     }
   }, [selectedTenor, tenorOptions])
 
