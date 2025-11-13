@@ -36,6 +36,7 @@ import { useEffect, useState } from 'react'
 import ModalKurs from '@/components/pages/detail-package/2-PackageVariant/modal/ModalKurs'
 import ModalPembiayaan from '@/components/pages/detail-package/2-PackageVariant/modal/ModalPembiayaan'
 import { Facility } from '@/constant/types/FacilityProps'
+import { findVariantWithLowestPrice } from '@/hooks/package-variant-hooks'
 import ActionButtons from './component/ActionButtons'
 import BottomActions from './component/BottomActions'
 import PackageVariantHeader from './component/PackageVariantHeader'
@@ -189,9 +190,9 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   // Set into first variant when first load
   useEffect(() => {
     if (variants.length > 0) {
-      const variant = variants.find((v) => v.id === packageVariantId)
-      setSelectedVariant(variant || variants[0])
-      setSelectedVariantId(packageVariantId)
+      const cheapestVariant = findVariantWithLowestPrice(variants)
+      setSelectedVariant(cheapestVariant || variants[0])
+      setSelectedVariantId(cheapestVariant?.id || packageVariantId)
     }
     setTimeout(() => {
       setIsLoading(false)

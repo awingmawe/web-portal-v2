@@ -1,4 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
+import { ArrowIcon } from '@/components/icons/arrow'
 import FaqContent from '@/components/pages/faq/FaqContent'
 import Banner from '@/components/pages/homepage/1-Banner/Banner'
 import { CarouselBanner } from '@/components/pages/homepage/2-Carousel/Carousel'
@@ -8,6 +9,7 @@ import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/Ani
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ArtikelSection from '@/components/pages/homepage/7-Artikel/ArtikelSection'
 import UmrahPersonalBanner from '@/components/pages/homepage/8-UmrahPersonalBanner'
+import LocationPermissionSection from '@/components/pages/homepage/9-LocationPermission/LocationPersmissionSection'
 import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
@@ -23,8 +25,9 @@ import { getArticleList } from '@/services/article-service'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
-import { getBanner, getPackageList } from '@/services/umrah-service'
-import { CircleChevronRight, MoveRight, Search } from 'lucide-react'
+import { getPackageListV2 } from '@/services/product-service'
+import { getBanner } from '@/services/umrah-service'
+import { CircleChevronRight, Search } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -66,7 +69,7 @@ export default async function Home() {
       order: 'desc',
       orderBy: 'organizationInstance.createdAt',
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       section: 'promo',
@@ -74,7 +77,7 @@ export default async function Home() {
       orderBy: 'package.createdAt',
       packageType: 'umrah',
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       section: 'plus',
@@ -82,7 +85,7 @@ export default async function Home() {
       orderBy: 'package.createdAt',
       packageType: 'umrah',
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       section: 'regular',
@@ -97,14 +100,14 @@ export default async function Home() {
     }),
     getGalleryHomepage({
       page: 1,
-      size: 6,
+      size: 100,
       [`category:likeLower`]: 'testi_landing',
     }),
     getArticleList({
       page: 1,
       size: 4,
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       order: 'desc',
@@ -203,6 +206,7 @@ export default async function Home() {
       <Banner />
       <main className="relative">
         <div className="container mx-auto max-xl:px-0">
+          <LocationPermissionSection />
           <ProgramCards className="absolute -top-19 left-0 z-99 px-4 py-3" />
           <SubmenuCards />
           <UmrahPersonalBanner />
@@ -217,9 +221,9 @@ export default async function Home() {
           </div>
 
           <PackageListEvent
-            dataPromo={mapProductsToCardData(dataPromo)}
-            dataRegular={mapProductsToCardData(dataRegular)}
-            dataPlus={mapProductsToCardData(dataPlus)}
+            dataPromo={mapProductsToCardData(dataPromo.data)}
+            dataRegular={mapProductsToCardData(dataRegular.data)}
+            dataPlus={mapProductsToCardData(dataPlus.data)}
             eventCategory="home"
           />
         </div>
@@ -228,7 +232,7 @@ export default async function Home() {
         className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-lg:mt-0`}
       >
         <PackageListEvent
-          dataHaji={mapProductsToCardData(dataHaji)}
+          dataHaji={mapProductsToCardData(dataHaji.data)}
           eventCategory="home"
         />
       </main>
@@ -246,18 +250,18 @@ export default async function Home() {
       <div className="bg-neutral-0 relative z-6 w-full pt-[70px] pb-[70px] max-xl:px-0">
         <div className="container mx-auto">
           <Card className="rounded-md border-0 bg-neutral-50 p-8 shadow-none max-md:bg-white max-md:p-2">
-            <CardContent>
+            <CardContent className="max-lg:px-3">
               <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
                 <div>
-                  <h2 className="text-4xl font-bold max-md:text-3xl">
+                  <h2 className="text-4xl font-bold max-lg:text-[32px] max-lg:leading-10 max-sm:text-[32px] max-sm:leading-10">
                     Pertanyaan yang Sering Ditanyakan
                   </h2>
                   <Link
                     href="/faq"
-                    className="hover:text-primary-500 max-lg:text-m-regular mt-4 flex items-center gap-2 max-lg:leading-5 max-sm:text-sm max-sm:leading-5"
+                    className="max-lg:text-m-regular mt-4 flex items-center gap-2 max-lg:leading-5 max-sm:text-sm max-sm:leading-5"
                   >
                     Lihat lebih banyak
-                    <MoveRight className="max-lg:hidden" />
+                    <ArrowIcon className="max-lg:hidden" size={24} />
                     <CircleChevronRight className="lg:hidden" size={14} />
                   </Link>
                   <div className="flex justify-center max-md:hidden">

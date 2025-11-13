@@ -41,6 +41,7 @@ interface FilterProductContextType {
   setFilterName: (filterName: string) => void
   setDpRange: (range: any) => void
   setLocationFilter: (locationFilter: string) => void
+  setProviderId: (id: string) => void
 
   // Reset filter state - full and individual
   resetFilters: (filters?: typeof initialFilterState) => void
@@ -59,6 +60,7 @@ interface FilterProductContextType {
     sortValue: any,
     type: string,
     page: number,
+    organizationInstanceId?: string,
     supportedProvider?: string
   ) => any
   initializeFiltersFromURL: (needLoading?: boolean) => void
@@ -139,8 +141,15 @@ export const FilterProductProvider: React.FC<{
     }))
   }, [])
 
+  const setProviderId = useCallback((id: string) => {
+    setFilters((prev) => ({ ...prev, providerId: id }))
+  }, [])
+
   const setDpRange = useCallback((filterName: string) => {
-    setFilters((prev) => ({ ...prev, filterName }))
+    setFilters((prev) => ({
+      ...prev,
+      filterName,
+    }))
   }, [])
 
   // Reset all filters
@@ -174,6 +183,7 @@ export const FilterProductProvider: React.FC<{
           priceRange: null,
           dpRange: null,
           organizationInstanceCity: 'lC',
+          providerId: 'pV',
         }
         if (filterKey === 'dateRange') {
           // Remove both start and end date params
@@ -239,6 +249,7 @@ export const FilterProductProvider: React.FC<{
         updatedFilters.tagSlug = params.get('tS') || ''
         updatedFilters.type = params.get('type') || 'umrah'
         updatedFilters.organizationInstanceCity = params.get('lC') || ''
+        updatedFilters.providerId = params.get('pV') || ''
 
         // Handle complex objects that need async fetching
         const promises = []
@@ -319,7 +330,8 @@ export const FilterProductProvider: React.FC<{
       sortValue: string = 'price-low',
       type: string = 'umrah',
       page: number = 1,
-      supportedProvider?: string
+      supportedProvider?: string,
+      organizationInstanceId?: string
     ) => {
       const params = new URLSearchParams(searchParamsString)
       const queryObject: Record<string, any> = {
@@ -327,7 +339,9 @@ export const FilterProductProvider: React.FC<{
         type,
         page,
       }
-
+      const organizationInstanceIdFiltered = params.has('pV')
+        ? organizationInstanceId
+        : supportedProvider
       // Extract query/search term
       if (params.has('query')) {
         queryObject.query = params.get('query')
@@ -397,9 +411,19 @@ export const FilterProductProvider: React.FC<{
         queryObject.organizationInstanceCity = params.get('lC')
       }
 
+      if (params.has('pV')) {
+        // Gunakan nilai yang diteruskan sebagai argumen, bukan dari state
+        queryObject.organizationInstanceId = organizationInstanceIdFiltered
+      }
+
+      // Extract coordinates for location sort
+      if (params.has('coordinates')) {
+        queryObject.coordinates = params.get('coordinates')
+      }
+
       // Extract for pembiayaan
       if (params.has('package') && supportedProvider) {
-        queryObject.organizationInstanceId = supportedProvider
+        queryObject.organizationInstanceId = organizationInstanceIdFiltered
       }
 
       return queryObject
@@ -410,15 +434,16 @@ export const FilterProductProvider: React.FC<{
   const fetchPackageData = useCallback(
     async (params?: any) => {
       setIsLoading(true)
+
       try {
         // Fetch data using the hook
-        const data = await fetchPackage(params)
+        const data = await fetchPackage(params, 9)
 
-        const mappedData = mapProductsToCardData(data)
+        const mappedData = mapProductsToCardData(data.data)
 
         // Update state
         setPackages(mappedData)
-        setTotalPackages(data.total)
+        setTotalPackages(data.data.total)
       } catch (err) {
         console.error('Error fetching packages:', err)
         toast.error('Failed to load packages. Please try again.')
@@ -545,6 +570,8 @@ export const FilterProductProvider: React.FC<{
     setFilterName,
     setLocationFilter,
     setDpRange,
+    setProviderId,
+
     // Reset filter state - full and individual
     resetFilters,
     resetFilter,

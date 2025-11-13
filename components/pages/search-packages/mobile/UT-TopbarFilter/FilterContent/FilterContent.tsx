@@ -8,10 +8,12 @@ import { FilterBold } from '@/components/icons/filter'
 import { GiftIconPrimary } from '@/components/icons/gift'
 import LocationLinear from '@/components/icons/locations'
 import { MoneysIconPrimary } from '@/components/icons/moneys'
+import { Profile2User } from '@/components/icons/people'
 import { FacilityDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/FacilityFilter'
 import { LocationDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/LocationFilter'
 import { PriceDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PriceRangeFilter'
 import { PromoDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/PromoFilter'
+import { ProviderDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/ProviderFilter'
 import { SectionDrawer } from '@/components/pages/search-packages/mobile/BottomFilterMobile/SectionFilter'
 import FilterSection from '@/components/pages/search-packages/mobile/UT-TopbarFilter/FilterContent/FilterSection'
 import TagButton from '@/components/pages/search-packages/mobile/UT-TopbarFilter/TagButton'
@@ -27,6 +29,7 @@ import {
 import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
+import { Provider } from '@/constant/types/Providers'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { isEmpty } from '@/lib/utils'
@@ -37,7 +40,12 @@ const MAX_HEIGHT = 60
 const ITEM_HEIGHT = 26
 const ITEMS_PER_ROW = 2
 
-type ExpandableSection = 'facilities' | 'sections' | 'promos' | 'locations'
+type ExpandableSection =
+  | 'facilities'
+  | 'sections'
+  | 'promos'
+  | 'locations'
+  | 'provider'
 
 // Konfigurasi untuk setiap section
 interface SectionConfig {
@@ -58,12 +66,14 @@ export default function FilterPanel({
   dataSection,
   dataTagPackages,
   dataKota,
+  dataProvider,
 }: {
   dataMinMax: any
   dataFacility: GenericResponse<Facility>
   dataSection: any
   dataTagPackages: any
-  dataKota: GenericResponse<City>
+  dataKota: City[]
+  dataProvider: Provider[]
 }) {
   const {
     setFilters,
@@ -72,6 +82,7 @@ export default function FilterPanel({
     setSection,
     setTagSlug,
     setLocationFilter,
+    setProviderId,
     filters,
   } = useFilterProduct()
 
@@ -80,6 +91,7 @@ export default function FilterPanel({
     sections: false,
     locations: false,
     promos: false,
+    provider: false,
   })
 
   const [isMainDrawerOpen, setIsMainDrawerOpen] = useState(false)
@@ -91,10 +103,11 @@ export default function FilterPanel({
     () => ({
       facilities: dataFacility.results,
       sections: dataSection || [],
-      locations: dataKota.results,
+      locations: dataKota,
       promos: dataTagPackages || [],
+      provider: dataProvider || [],
     }),
-    [dataFacility.results, dataSection, dataKota.results, dataTagPackages]
+    [dataFacility.results, dataSection, dataKota, dataTagPackages, dataProvider]
   )
 
   // Mapping setter function
@@ -103,6 +116,7 @@ export default function FilterPanel({
     sections: setSection,
     locations: setLocationFilter,
     promos: setTagSlug,
+    provider: setProviderId,
   }
 
   // Mapping field name untuk data
@@ -112,6 +126,7 @@ export default function FilterPanel({
       sections: { name: 'name', code: 'slug' },
       locations: { name: 'name', code: 'id' },
       promos: { name: 'name', code: 'slug' },
+      provider: { name: 'name', code: 'id' },
     }),
     []
   )
@@ -143,6 +158,8 @@ export default function FilterPanel({
         case 'promos':
           activeValues = filters.tagSlug ? filters.tagSlug.split(',') : []
           break
+        case 'provider':
+          activeValues = filters.providerId ? filters.providerId.split(',') : []
       }
 
       if (activeValues.length === 0) return data
@@ -164,6 +181,7 @@ export default function FilterPanel({
       sections: getSortedData('sections'),
       locations: getSortedData('locations'),
       promos: getSortedData('promos'),
+      provider: getSortedData('provider'),
     }
   }, [dataMapping, fieldMapping, filters])
 
@@ -194,6 +212,11 @@ export default function FilterPanel({
       count += filters.organizationInstanceCity.split(',').length
     }
 
+    // Check provider
+    if (filters.providerId) {
+      count += filters.providerId.split(',').length
+    }
+
     // Check tag slugs (promos)
     if (filters.tagSlug) {
       count += filters.tagSlug.split(',').length
@@ -201,10 +224,12 @@ export default function FilterPanel({
 
     return count
   }, [
-    filters.priceRange,
+    filters.priceRange?.hargaMin,
+    filters.priceRange?.hargaMax,
     filters.facilityCode,
     filters.section,
     filters.organizationInstanceCity,
+    filters.providerId,
     filters.tagSlug,
     dataMinMax.min,
     dataMinMax.max,
@@ -220,10 +245,17 @@ export default function FilterPanel({
     setShowViewAll({
       facilities: checkIfNeedsViewAll(dataFacility.results.length),
       sections: checkIfNeedsViewAll(dataSection?.length || 0),
-      locations: checkIfNeedsViewAll(dataKota?.results?.length),
+      locations: checkIfNeedsViewAll(dataKota?.length),
       promos: checkIfNeedsViewAll(dataTagPackages?.length || 0),
+      provider: checkIfNeedsViewAll(dataProvider?.length || 0),
     })
-  }, [dataFacility, dataSection, dataTagPackages, dataKota])
+  }, [
+    dataFacility,
+    dataSection,
+    dataTagPackages,
+    dataKota,
+    dataProvider?.length,
+  ])
 
   const updateQueryParams = useUpdateQueryParams()
 
@@ -239,6 +271,7 @@ export default function FilterPanel({
     resetFilter('section')
     resetFilter('tagSlug')
     resetFilter('organizationInstanceCity')
+    resetFilter('providerId')
   }
 
   const applyFilters = () => {
@@ -309,6 +342,15 @@ export default function FilterPanel({
       valuesToUpdate.push(null)
     }
 
+    if (filters.providerId && filters.providerId.length > 0) {
+      // Panggil fungsi untuk mengupdate organizationInstanceId sebelum update URL
+      paramsToUpdate.push('pV')
+      valuesToUpdate.push(filters.providerId)
+    } else {
+      paramsToUpdate.push('pV')
+      valuesToUpdate.push(null)
+    }
+
     // Update URL with all filters (including removed ones)
     updateQueryParams(paramsToUpdate, valuesToUpdate)
 
@@ -359,6 +401,21 @@ export default function FilterPanel({
           itemId={1}
           toggleDrawerAction={closeDrawer}
           dataSection={dataSection}
+        />
+      ),
+    },
+    {
+      key: 'provider',
+      title: 'Mitra Pembiayaan',
+      icon: <Profile2User className="text-primary-500" />,
+      filterName: 'providerId',
+      resetLabel: 'Reset Mitra Pembiayaan',
+      content: (closeDrawer, applyAndClose) => (
+        <ProviderDrawer
+          dataProvider={dataProvider}
+          applyFiltersAction={applyAndClose}
+          toggleDrawerAction={closeDrawer}
+          itemId={1}
         />
       ),
     },
@@ -423,7 +480,7 @@ export default function FilterPanel({
                 label={item[fields.name]}
                 name={config.filterName}
                 setFilters={setter}
-                code={item[fields.code]}
+                code={String(item[fields.code])}
                 filters={filters}
               />
             ))}

@@ -1,4 +1,4 @@
-import { GenericResponse } from '@/constant/types/GeneralProps'
+import { GenericResponseV2 } from '@/constant/types/GeneralProps'
 import {
   CardData,
   Package,
@@ -13,10 +13,10 @@ import {
 import Placeholder from '@/public/images/no-image-placeholder.png'
 
 export function mapProductsToCardData(
-  products: GenericResponse<Package>
+  products: GenericResponseV2<Package>
 ): CardData[] {
   return (
-    products?.results?.map((product: Package) => ({
+    products?.responseObject?.map((product: Package) => ({
       id: product?.id ?? 0,
       src: product.thumbnail || '',
       discount: product.packageVariant?.discountAmount ?? '0',

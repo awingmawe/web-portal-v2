@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { CardData } from '@/constant/types/PackageProps'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { memo } from 'react'
 import { CardPackage } from './CardPackage'
@@ -53,9 +54,12 @@ export const CardPackageTalangan = memo(function CardPackageTalangan({
     <div className="group relative overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:shadow-lg">
       {/* Package Image */}
       <div className="relative h-48 w-full overflow-hidden">
-        <img
+        <Image
           src={data.src || '/images/no-image-placeholder.png'}
           alt={data.title}
+          width={0}
+          height={0}
+          sizes="100vw"
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 

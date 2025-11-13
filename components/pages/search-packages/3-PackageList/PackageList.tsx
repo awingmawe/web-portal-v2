@@ -5,12 +5,14 @@ import { CardPackage } from '@/components/shared/CardPackage'
 import { CardPackageCompact } from '@/components/shared/CardPackageCompact'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { CustomInfiniteScroll } from '@/components/shared/InfiniteScroll'
-import { PACKAGE_TYPE } from '@/constant/env'
+import { LOCATION_STORAGE_KEY, PACKAGE_TYPE } from '@/constant/env'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCustomInfiniteScroll } from '@/hooks/common/useInfiniteScroll'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
+import { useGetOrganizationIdFromProviders } from '@/hooks/pembiayaan/useGetMitraPembiayaan'
 import { useUniqueSupportedProviders } from '@/hooks/pembiayaan/useGetSupportedProvider'
+import { isEmpty } from '@/lib/utils'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
@@ -48,11 +50,18 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     packages: infinitePackages,
   } = useCustomInfiniteScroll()
 
-  const { lg: isMobile } = useTailwindBreakpoint()
+  const { lg: isMobile, mounted } = useTailwindBreakpoint()
   const updateQueryParams = useUpdateQueryParams()
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
   const itemsPerPage = 9 // Define your items per page constant
+
+  // Untuk filter dari provider yang berbeda
+  const providerFilter = searchParams.get('pV')
+  const { isLoading: isLoadingProvider, organizationInstanceId } =
+    useGetOrganizationIdFromProviders(providerFilter, isEmpty(providerFilter))
+
+  // Untuk menampilkan paket hanya jika pencarian dari pembiayaan
   const packagePembiayaan = searchParams.get('package')
   const {
     dataProviders,
@@ -66,7 +75,12 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   }, [])
 
   useEffect(() => {
-    if (!isLoadingSkeleton && !isLoadingSupportedProviders) {
+    if (
+      !isLoadingSkeleton &&
+      !isLoadingSupportedProviders &&
+      !isLoadingProvider &&
+      mounted
+    ) {
       const currentSort = searchParams.get('sort') || 'price-low'
       const page = parseInt(searchParams.get('page') || '1', 10)
       const type = searchParams.get('type') || PACKAGE_TYPE.UMRAH
@@ -77,7 +91,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
         currentSort,
         type,
         page,
-        uniqueSupportedProviders
+        uniqueSupportedProviders,
+        organizationInstanceId
       )
 
       initializeFiltersFromURL(false)
@@ -94,6 +109,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     searchParams,
     isMobile,
     uniqueSupportedProviders,
+    organizationInstanceId,
+    mounted,
   ])
 
   // Improved loadMoreData function that checks loading/hasMore status first
@@ -110,11 +127,18 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       currentSort,
       type,
       page,
-      uniqueSupportedProviders
+      uniqueSupportedProviders,
+      organizationInstanceId
     )
 
     loadMore(paramsFilter)
-  }, [loading, hasMore, searchParams, uniqueSupportedProviders])
+  }, [
+    loading,
+    hasMore,
+    searchParams,
+    uniqueSupportedProviders,
+    organizationInstanceId,
+  ])
 
   // Function to reset all filters
   const resetAllFilters = useCallback(() => {
@@ -139,6 +163,18 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   const createSortUrl = useCallback(
     (sortValue: string) => {
       const params = new URLSearchParams(searchParams.toString())
+
+      if (sortValue === 'organization.location') {
+        const storedLocation = localStorage.getItem(LOCATION_STORAGE_KEY)
+        if (storedLocation) {
+          const { latitude, longitude } = JSON.parse(storedLocation)
+          params.set('coordinates', `${latitude},${longitude}`)
+        }
+      } else {
+        // Hapus parameter coordinates jika sortir bukan berdasarkan lokasi
+        params.delete('coordinates')
+      }
+
       params.set('sort', sortValue)
       params.set('page', '1') // Reset to page 1 when sorting changes
       return `${pathname}?${params.toString()}`
@@ -185,15 +221,23 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   // Get the actual package data based on the current view mode
   const displayPackages = isMobile ? infinitePackages : packageDataCSR
 
+  // Combined loading state to prevent glitch
+  const isStillLoading =
+    isLoadingSkeleton ||
+    isLoading ||
+    isLoadingProvider ||
+    isLoadingSupportedProviders ||
+    loading
+
   // Render no results component if there are no packages and not loading
-  if (displayPackages.length === 0 && !isLoadingSkeleton && !isLoading) {
+  if (displayPackages.length === 0 && !isStillLoading) {
     return <NoResults resetAllFiltersAction={resetAllFilters} />
   }
 
   return (
     <div className="flex flex-col gap-6">
       {/* Results info - Show skeleton or actual header */}
-      {isLoadingSkeleton || isLoadingSupportedProviders ? (
+      {isStillLoading ? (
         <ResultsHeaderSkeleton />
       ) : (
         <ResultsSummary
@@ -205,7 +249,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       )}
 
       {/* Package grid */}
-      {isLoadingSkeleton || isLoading || isLoadingSupportedProviders ? (
+      {isStillLoading ? (
         <PackageGridSkeleton />
       ) : (
         <div
@@ -261,7 +305,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       )}
 
       {/* Pagination - Show skeleton or actual pagination (only on desktop) */}
-      {isLoadingSkeleton || isLoadingSupportedProviders ? (
+      {isStillLoading ? (
         <PaginationSkeleton />
       ) : (
         !isMobile && (

@@ -1,7 +1,7 @@
 import { Package } from '@/constant/types/PackageProps'
 import { useSearchQuery } from '@/hooks/common/useSearchQuery'
 import { mapProductsToCardData } from '@/lib/utils'
-import { getPackageList } from '@/services/umrah-service'
+import { getPackageListV2 } from '@/services/product-service'
 import { easeIn, easeOut } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
@@ -64,13 +64,13 @@ export const useTopbarSearch = () => {
     if (query.length >= 3) {
       setIsLoadingResults(true)
       try {
-        const response = await getPackageList({
+        const response = await getPackageListV2({
           page: 1,
           size: 5,
           search: `%${query}%`,
           packageType: activeSlug,
         })
-        setSearchResults(response.results)
+        setSearchResults(response?.data?.responseObject)
         setShowSuggestions(true)
       } catch (error) {
         console.error('Error fetching search suggestions:', error)
@@ -208,8 +208,8 @@ export const useTopbarSearch = () => {
 
   // Map packages to card data
   const cardData = mapProductsToCardData({
-    results: searchResults,
-    total: searchResults.length,
+    responseObject: searchResults,
+    total: searchResults?.length,
   })
 
   return {

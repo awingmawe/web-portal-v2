@@ -71,7 +71,7 @@ const DrawerPaymentLinkAja = memo(
           setLoadingPayment(false)
         }
       },
-      [selectedPayment]
+      []
     )
 
     return (
@@ -151,7 +151,7 @@ const DrawerPaymentLinkAja = memo(
             Bayar Sekarang
           </Button>
           <Button
-            className="border-primary-500 mx-4 mt-4 border border-2 py-2"
+            className="border-primary-500 mx-4 mt-4 border-2 py-2"
             variant={'outline'}
             disabled={loadingPayment}
             onClick={() => {

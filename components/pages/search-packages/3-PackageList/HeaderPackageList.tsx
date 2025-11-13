@@ -44,7 +44,7 @@ export const ResultsSummary: React.FC<ResultsSummaryProps> = ({
         <p className="text-m-regular text-neutral-900">Urutkan Berdasarkan</p>
         <SortingDropdown
           currentSort={currentSort}
-          createSortUrl={createSortUrlAction}
+          createSortUrlAction={createSortUrlAction}
         />
       </div>
     </div>

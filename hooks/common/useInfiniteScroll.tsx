@@ -37,11 +37,11 @@ export const useCustomInfiniteScroll = (pageSize = 9) => {
           page: 1,
         }
         const result = await fetchPackage(initialPageParams, pageSize)
-        const mappedData = mapProductsToCardData(result)
+        const mappedData = mapProductsToCardData(result.data)
 
         setItems(mappedData)
-        setTotalItems(result.total)
-        setHasMore(mappedData.length < result.total)
+        setTotalItems(result.data.total)
+        setHasMore(mappedData.length < result.data.total)
         setCurrentPage(2) // Set to page 2 for next load
       } catch (error) {
         console.error('Error loading initial items:', error)
@@ -68,17 +68,17 @@ export const useCustomInfiniteScroll = (pageSize = 9) => {
         }
 
         const result = await fetchPackage(nextPageParams, pageSize)
-        const mappedData = mapProductsToCardData(result)
+        const mappedData = mapProductsToCardData(result.data)
 
         // Append new items to existing items
         setItems((prevItems) => [...prevItems, ...mappedData])
 
         // Check if we've loaded all available items
         const newTotalLoaded = items.length + mappedData.length
-        setHasMore(newTotalLoaded < result.total)
+        setHasMore(newTotalLoaded < result.data.total)
 
         // Update total and increment page number
-        setTotalItems(result.total)
+        setTotalItems(result.data.total)
         setCurrentPage((prev) => prev + 1)
       } catch (error) {
         console.error('Error loading more items:', error)

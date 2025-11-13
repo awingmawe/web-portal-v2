@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
@@ -150,7 +149,7 @@ const SuccessModal = ({
               width={106}
               height={106}
               alt="check icon"
-              className="mr-2 rounded rounded-[200px] bg-[#fff1e3]"
+              className="mr-2 rounded-[200px] bg-[#fff1e3]"
             />
           </div>
           {/* </div> */}

@@ -28,6 +28,7 @@ export interface FilterState {
   tagSlug: string
   query: string | ''
   organizationInstanceCity: string
+  providerId: string
 }
 
 // Initial filter state
@@ -46,4 +47,5 @@ export const initialFilterState: FilterState = {
   query: '',
   filterName: undefined,
   organizationInstanceCity: '',
+  providerId: '',
 }

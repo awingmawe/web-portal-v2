@@ -9,7 +9,7 @@ import { PackageListEvent } from '@/components/pages/homepage/4-PackageList/Pack
 import { Button } from '@/components/ui/button'
 import { ACCOUNT_URL, LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
-import { GenericResponse } from '@/constant/types/GeneralProps'
+import { GenericResponseV2 } from '@/constant/types/GeneralProps'
 import { Package } from '@/constant/types/PackageProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
 import { useLocalStorageListener } from '@/hooks/common/useLocalStorageListener'
@@ -74,7 +74,7 @@ const PackagePembiayaan = ({
   dataTenor,
   token,
 }: {
-  dataPackageProvider: GenericResponse<Package>
+  dataPackageProvider: GenericResponseV2<Package>
   dataTenor: Facility[]
   token: string
 }) => {
