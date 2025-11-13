@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import DrawerSukses from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerSukses'
 import { Button } from '@/components/ui/button'
 import {

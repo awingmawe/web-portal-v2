@@ -30,7 +30,7 @@ const TagPackagesFilter: React.FC<TagPackageFilterProps> = ({
   }
 
   return (
-    <AccordionItem value="item-5">
+    <AccordionItem value="item-6">
       <AccordionTrigger>
         <div className="flex w-full items-center justify-between">
           <p className="text-l-medium text-neutral-900">Promo & Diskon</p>

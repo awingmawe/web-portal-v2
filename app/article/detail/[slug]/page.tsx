@@ -14,7 +14,8 @@ import {
 } from '@/services/article-service'
 import { cookieNames } from '@/services/common/cookie'
 import { getUserById } from '@/services/identity-service'
-import { getBanner, getPackageList, getTagById } from '@/services/umrah-service'
+import { getPackageListV2 } from '@/services/product-service'
+import { getBanner, getTagById } from '@/services/umrah-service'
 import { cookies } from 'next/headers'
 
 export async function generateMetadata({ params }: any) {
@@ -72,7 +73,7 @@ export default async function ArtilceDetail({ params }: any) {
 
       // Only call getPackageList if we have a valid tag with slug
       if (tag?.slug) {
-        dataPerTag = await getPackageList({
+        dataPerTag = await getPackageListV2({
           page: 1,
           size: 12,
           ['tagPackage.tagSlug']: tag.slug,
@@ -82,7 +83,7 @@ export default async function ArtilceDetail({ params }: any) {
 
         dataPackageSlug = {
           slug: tag.slug,
-          data: mapProductsToCardData(dataPerTag),
+          data: mapProductsToCardData(dataPerTag.data),
         }
       }
     } catch (error) {

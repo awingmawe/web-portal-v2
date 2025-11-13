@@ -56,4 +56,6 @@ export const CATEGORIES_FILTER_SEARCH = [
   { name: 'Haji', slug: 'hajj' },
 ]
 
+export const LOCATION_STORAGE_KEY = 'user_location'
+
 export const WEBSOCKET_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL

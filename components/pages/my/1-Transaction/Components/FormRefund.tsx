@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react'
 
 interface FormRefundProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChangeAction: (open: boolean) => void
   setOpenVerifikasiEmail: any
   setSelectedBank: any
   selectedBank: any
@@ -35,7 +35,7 @@ interface FormRefundProps {
 
 export function ModalFormRefund({
   open,
-  onOpenChange,
+  onOpenChangeAction,
   setOpenVerifikasiEmail,
   setSelectedBank,
   selectedBank,
@@ -80,6 +80,7 @@ export function ModalFormRefund({
     } else {
       setIsEditing(true)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasExistingBankData, profile, savedBankData])
 
   const handleEdit = () => {
@@ -116,7 +117,7 @@ export function ModalFormRefund({
       setAccountName('')
     }
 
-    onOpenChange(false)
+    onOpenChangeAction(false)
   }
 
   const handleClose = () => {
@@ -125,7 +126,7 @@ export function ModalFormRefund({
     setAccountName('')
     setIsEditing(false)
     setSavedBankData(null)
-    onOpenChange(false)
+    onOpenChangeAction(false)
   }
 
   const handleSubmit = async () => {
@@ -174,7 +175,7 @@ export function ModalFormRefund({
     try {
       await verifyEmailOtpBookingCanceled()
       // Handle success - maybe close modal or show success message
-      onOpenChange(false)
+      onOpenChangeAction(false)
       setOpenVerifikasiEmail(true)
     } catch (error) {
       console.error('Error processing refund:', error)
@@ -315,7 +316,7 @@ export function ModalFormRefund({
 
   if (lg) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer open={open} onOpenChange={onOpenChangeAction}>
         <DrawerContent className=" z-[999] px-4 ">
           <DrawerHeader className="gap-3 px-0 pb-2">
             <div className="flex items-center">
@@ -342,7 +343,7 @@ export function ModalFormRefund({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="w-[640px] gap-0 overflow-hidden rounded-2xl border-0 bg-white px-6 py-4 text-black">
         <DialogTitle asChild>
           <div className="relative flex items-center gap-3 pb-3">

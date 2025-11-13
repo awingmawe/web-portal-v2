@@ -9,9 +9,9 @@ import { NODE_ENV, URL } from '@/constant/env'
 import { mapProductsToCardData } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
+import { getPackageListV2 } from '@/services/product-service'
 import {
   getMinMaxPrice,
-  getPackageList,
   getSectionEnum,
   getTagPackagesEnum,
 } from '@/services/umrah-service'
@@ -89,7 +89,7 @@ export default async function SearchGeneral({
     order = 'desc'
   }
 
-  const dataPackage = await getPackageList({
+  const dataPackage = await getPackageListV2({
     page,
     size,
     orderBy,
@@ -122,7 +122,7 @@ export default async function SearchGeneral({
     mainEntity: {
       '@type': 'ItemList',
       itemListElement:
-        dataPackage?.results?.map((pkg, index) => ({
+        dataPackage?.data?.responseObject?.map((pkg, index) => ({
           '@type': 'ListItem',
           position: index + 1,
           item: {
@@ -194,8 +194,8 @@ export default async function SearchGeneral({
           </div>
           <div className="col-span-8 max-lg:col-span-12">
             <PackageResults
-              total={dataPackage?.total}
-              dataPackages={mapProductsToCardData(dataPackage)}
+              total={dataPackage?.data?.responseObject?.length}
+              dataPackages={mapProductsToCardData(dataPackage.data)}
               currentPage={page}
               pageSize={size}
             />

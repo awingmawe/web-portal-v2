@@ -2,7 +2,11 @@ import { IconProps } from '@/constant/types/IconProps'
 import { cn } from '@/lib/utils'
 import React from 'react'
 
-export const ArrowDown: React.FC<IconProps> = ({ size, ...props }) => {
+export const ArrowDown: React.FC<IconProps> = ({
+  size,
+  className,
+  ...props
+}) => {
   return (
     <svg
       width={size}
@@ -10,6 +14,7 @@ export const ArrowDown: React.FC<IconProps> = ({ size, ...props }) => {
       viewBox="0 0 14 14"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={cn('strokecurrent', className)}
       {...props}
     >
       <path

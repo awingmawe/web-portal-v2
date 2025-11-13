@@ -41,6 +41,7 @@ const CheckoutDrawerFormJamaah = React.memo(
           setNoTlpn('')
         }
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen])
 
     return (

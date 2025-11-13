@@ -1,17 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
+import { SORT_OPTIONS } from '@/components/pages/search-packages/constants'
 import { Button } from '@/components/ui/button'
 import { DrawerFooter } from '@/components/ui/drawer'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { LOCATION_STORAGE_KEY } from '@/constant/env'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
-
-interface SortOption {
-  value: string
-  label: string
-}
+import { useEffect, useMemo, useState } from 'react'
 
 interface SortDrawerProps {
   toggleDrawerAction: (id: number) => void
@@ -30,12 +27,21 @@ export function SortDrawer({
 }: SortDrawerProps) {
   const searchParams = useSearchParams()
   const updateQueryParams = useUpdateQueryParams()
-  const SORT_OPTIONS: SortOption[] = [
-    { value: 'price-low', label: 'Harga Terendah' },
-    { value: 'price-high', label: 'Harga Tertinggi' },
-    { value: 'depart-early', label: 'Berangkat paling cepat (Awal Bulan)' },
-    { value: 'depart-late', label: 'Berangkat paling lama (Akhir Bulan)' },
-  ]
+  const [isLocationAvailable, setIsLocationAvailable] = useState(false)
+
+  useEffect(() => {
+    // Cek ketersediaan lokasi di client-side
+    const location = localStorage.getItem(LOCATION_STORAGE_KEY)
+    setIsLocationAvailable(!!location)
+  }, [])
+
+  const filteredSortOptions = useMemo(() => {
+    if (isLocationAvailable) {
+      return SORT_OPTIONS
+    }
+    // Jika lokasi tidak tersedia, filter keluar opsi 'Lokasi Terdekat'
+    return SORT_OPTIONS.filter((opt) => opt.value !== 'organization.location')
+  }, [isLocationAvailable])
 
   // Update local state if URL parameters change
   useEffect(() => {
@@ -52,8 +58,26 @@ export function SortDrawer({
 
   // Apply sort filter and update URL
   const handleApplySort = () => {
-    // Update URL with selected sort option
-    updateQueryParams(['sort'], [selectedSort])
+    const paramsToUpdate: { key: string; value: string }[] = [
+      { key: 'sort', value: selectedSort },
+    ]
+
+    if (selectedSort === 'organization.location') {
+      const storedLocation = localStorage.getItem(LOCATION_STORAGE_KEY)
+      const { latitude, longitude } = JSON.parse(storedLocation!)
+      paramsToUpdate.push({
+        key: 'coordinates',
+        value: `${latitude},${longitude}`,
+      })
+    } else {
+      // Jika sortir BUKAN berdasarkan lokasi, pastikan parameter coordinates dihapus
+      paramsToUpdate.push({ key: 'coordinates', value: '' })
+    }
+
+    updateQueryParams(
+      paramsToUpdate.map((p) => p.key),
+      paramsToUpdate.map((p) => p.value)
+    )
 
     // Close drawer and apply filters
     applyFiltersAction(itemId)
@@ -67,10 +91,10 @@ export function SortDrawer({
           onValueChange={handleSortChange}
           className="space-y-2"
         >
-          {SORT_OPTIONS.map((option, index) => (
+          {filteredSortOptions.map((option, index) => (
             <div
               key={option.value}
-              className={`flex cursor-pointer items-center gap-2 pb-2 ${index !== SORT_OPTIONS.length - 1 && 'border-b-1 border-b-neutral-100'}`}
+              className={`flex cursor-pointer items-center gap-2 pb-2 ${index !== filteredSortOptions.length - 1 && 'border-b-1 border-b-neutral-100'}`}
               onClick={() => handleSortChange(option.value)}
             >
               <RadioGroupItem
