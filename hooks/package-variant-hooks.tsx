@@ -1,3 +1,4 @@
+import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useCallback, useMemo } from 'react'
 
@@ -78,4 +79,52 @@ export const usePricing = () => {
     discountType: selectedVariant?.discountType,
     discountAmount: selectedVariant?.discountAmount,
   }
+}
+
+/**
+ * Menemukan harga positif (non-nol) terendah dari sebuah variant.
+ * @param variant - Objek PackageVariant
+ * @returns Harga positif terendah, atau Infinity jika semua harga 0
+ */
+const getLowestPositivePriceInVariant = (variant: PackageVariant): number => {
+  // 1. Kumpulkan semua harga
+  const prices = [variant.priceQuad, variant.priceDouble, variant.priceTriple]
+
+  // 2. Filter harga yang lebih besar dari 0
+  const positivePrices = prices.filter((price) => price > 0)
+
+  // 3. Jika tidak ada harga positif
+  if (positivePrices.length === 0) {
+    return Infinity
+  }
+
+  // 4. Kembalikan nilai minimum dari harga positif
+  return Math.min(...positivePrices)
+}
+
+/**
+ * Mencari variant tunggal dengan harga paling murah (non-nol) dari semua variant.
+ * @param variants - Array PackageVariant[]
+ * @returns PackageVariant | null - Variant dengan harga terendah, atau null jika tidak ada.
+ */
+export const findVariantWithLowestPrice = (
+  variants: PackageVariant[]
+): PackageVariant | null => {
+  if (!variants || variants.length === 0) {
+    return null
+  }
+
+  let lowestPriceSoFar = Infinity
+  let variantWithLowestPrice: PackageVariant | null = null
+
+  for (const variant of variants) {
+    const lowestPriceInCurrentVariant = getLowestPositivePriceInVariant(variant)
+
+    if (lowestPriceInCurrentVariant < lowestPriceSoFar) {
+      lowestPriceSoFar = lowestPriceInCurrentVariant
+      variantWithLowestPrice = variant
+    }
+  }
+
+  return variantWithLowestPrice
 }

@@ -3,6 +3,14 @@ export type GenericResponse<T> = {
   total: number
 }
 
+export type GenericResponseV2<T> = {
+  success?: boolean
+  message?: string
+  responseObject: T[]
+  statusCode?: number
+  total: number
+}
+
 export type GetListQuery = {
   page: number
   size: number

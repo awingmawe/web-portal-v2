@@ -6,7 +6,8 @@ import { SearchAndFilterWishlist } from '@/components/pages/my/3-Wishlist/TopFil
 import { CardPackage } from '@/components/shared/CardPackage'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import InfiniteScroll from '@/components/ui/infinite-scroll'
-import { CardData } from '@/constant/types/PackageProps'
+import { GenericResponseV2 } from '@/constant/types/GeneralProps'
+import { CardData, Package } from '@/constant/types/PackageProps'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { mapProductsToCardData } from '@/lib/utils'
 import { getWishlistList } from '@/services/umrah-service'
@@ -82,8 +83,11 @@ export default function Wishlist() {
           //   [`search`]: query ? `%${query}%` : undefined,
           // Add any other parameters you might need
         })
-
-        const mappedData = mapProductsToCardData(response)
+        const responseFilter: GenericResponseV2<Package> = {
+          responseObject: response.results,
+          total: response.total,
+        }
+        const mappedData = mapProductsToCardData(responseFilter)
 
         if (isNewSearch || pageNum === 1 || !lg) {
           setWishlistItems(mappedData)

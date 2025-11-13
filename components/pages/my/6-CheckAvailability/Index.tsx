@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import type React from 'react'
@@ -66,7 +65,7 @@ export default function CheckAvailability() {
       console.error('Error fetching transactions:', err)
       setError('Failed to load transactions. Please try again.')
     }
-  }, [currentPage, searchQuery, productFilter, lg, router])
+  }, [currentPage, searchQuery, lg])
 
   // Handle page change
   const goToPage = useCallback((page: number) => {

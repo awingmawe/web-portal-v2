@@ -106,6 +106,7 @@ async function refreshAccessToken(): Promise<string | null> {
 
 function handleApiError(error: AxiosError<ApiErrorResponse>): never {
   const { response } = error
+  console.log(error)
 
   if (response?.status === 500) {
     if (typeof window !== 'undefined') {

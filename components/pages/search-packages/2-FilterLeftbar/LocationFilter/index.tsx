@@ -6,13 +6,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import React from 'react'
 
 interface LocationFilterProps {
-  dataKota: GenericResponse<City>
+  dataKota: City[]
 }
 
 const LocationFilter: React.FC<LocationFilterProps> = ({ dataKota }) => {
@@ -29,7 +28,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ dataKota }) => {
   }
 
   return (
-    <AccordionItem value="item-6">
+    <AccordionItem value="item-7">
       <AccordionTrigger>
         <div className="flex w-full items-center justify-between">
           <p className="text-l-medium text-neutral-900">Lokasi Travel</p>

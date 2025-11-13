@@ -3,6 +3,7 @@
 import FacilityFilter from '@/components/pages/search-packages/2-FilterLeftbar/FacilityFilter'
 import LocationFilter from '@/components/pages/search-packages/2-FilterLeftbar/LocationFilter'
 import PriceRangeFilter from '@/components/pages/search-packages/2-FilterLeftbar/PriceRangeFilter'
+import ProviderFilter from '@/components/pages/search-packages/2-FilterLeftbar/ProviderFilter'
 import RatingHotelFilter from '@/components/pages/search-packages/2-FilterLeftbar/RatingHotelFilter'
 import SectionFilter from '@/components/pages/search-packages/2-FilterLeftbar/SectionFilter'
 import TagPackageFilter from '@/components/pages/search-packages/2-FilterLeftbar/TagPackageFilter'
@@ -12,6 +13,7 @@ import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
 import { PriceParams } from '@/constant/types/PackageProps'
+import { Provider } from '@/constant/types/Providers'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
@@ -23,7 +25,8 @@ interface FilterLeftbarProps {
   dataTagPackages: TagPackages[]
   dataFacility: GenericResponse<Facility>
   dataSection: TagPackages[]
-  dataKota: GenericResponse<City>
+  dataKota: City[]
+  dataProviders: Provider[]
 }
 
 // Custom debounce hook
@@ -65,19 +68,20 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
   dataFacility,
   dataSection,
   dataKota,
+  dataProviders,
 }) => {
   const { searchQuery, setSearchQuery, resetFilter } = useFilterProduct()
   const updateQueryParams = useUpdateQueryParams()
   const [inputValue, setInputValue] = useState(searchQuery)
 
   // Debounced function to update search query
-  const {
-    debouncedCallback: debouncedSetSearchQuery,
-    debounceTimer,
-    setDebounceTimer,
-  } = useDebounce((value: string) => {
-    setSearchQuery(value)
-  }, 500) // 500ms delay
+  const { debouncedCallback, debounceTimer, setDebounceTimer } = useDebounce(
+    (value: string) => {
+      setSearchQuery(value)
+      updateQueryParams(['query', 'page'], [value, 1])
+    },
+    500
+  ) // 500ms delay
 
   // Sync input value with search query when reset
   React.useEffect(() => {
@@ -87,7 +91,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setInputValue(value)
-    debouncedSetSearchQuery(value)
+    debouncedCallback(value)
   }
 
   const handleReset = () => {
@@ -128,6 +132,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
           'item-4',
           'item-5',
           'item-6',
+          'item-7',
         ]}
         className="flex w-full flex-col gap-6"
       >
@@ -135,6 +140,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
         <RatingHotelFilter />
         <FacilityFilter dataFacility={dataFacility} />
         <SectionFilter dataSectionPackage={dataSection} />
+        <ProviderFilter dataProvider={dataProviders} />
         <TagPackageFilter dataTagPackage={dataTagPackages} />
         <LocationFilter dataKota={dataKota} />
       </Accordion>

@@ -9,6 +9,7 @@ import OverscrollTracker from '@/components/pages/homepage/5-ScrollAnimation/Ani
 import TestimoniSection from '@/components/pages/homepage/6-Testimoni/TestimoniSection'
 import ArtikelSection from '@/components/pages/homepage/7-Artikel/ArtikelSection'
 import UmrahPersonalBanner from '@/components/pages/homepage/8-UmrahPersonalBanner'
+import LocationPermissionSection from '@/components/pages/homepage/9-LocationPermission/LocationPersmissionSection'
 import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
@@ -24,7 +25,8 @@ import { getArticleList } from '@/services/article-service'
 import { cookieNames } from '@/services/common/cookie'
 import { getGalleryHomepage } from '@/services/general-service'
 import { getTravels } from '@/services/identity-service'
-import { getBanner, getPackageList } from '@/services/umrah-service'
+import { getPackageListV2 } from '@/services/product-service'
+import { getBanner } from '@/services/umrah-service'
 import { CircleChevronRight, Search } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
@@ -67,7 +69,7 @@ export default async function Home() {
       order: 'desc',
       orderBy: 'organizationInstance.createdAt',
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       section: 'promo',
@@ -75,7 +77,7 @@ export default async function Home() {
       orderBy: 'package.createdAt',
       packageType: 'umrah',
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       section: 'plus',
@@ -83,7 +85,7 @@ export default async function Home() {
       orderBy: 'package.createdAt',
       packageType: 'umrah',
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       section: 'regular',
@@ -105,7 +107,7 @@ export default async function Home() {
       page: 1,
       size: 4,
     }),
-    getPackageList({
+    getPackageListV2({
       page: 1,
       size: 12,
       order: 'desc',
@@ -204,6 +206,7 @@ export default async function Home() {
       <Banner />
       <main className="relative">
         <div className="container mx-auto max-xl:px-0">
+          <LocationPermissionSection />
           <ProgramCards className="absolute -top-19 left-0 z-99 px-4 py-3" />
           <SubmenuCards />
           <UmrahPersonalBanner />
@@ -218,9 +221,9 @@ export default async function Home() {
           </div>
 
           <PackageListEvent
-            dataPromo={mapProductsToCardData(dataPromo)}
-            dataRegular={mapProductsToCardData(dataRegular)}
-            dataPlus={mapProductsToCardData(dataPlus)}
+            dataPromo={mapProductsToCardData(dataPromo.data)}
+            dataRegular={mapProductsToCardData(dataRegular.data)}
+            dataPlus={mapProductsToCardData(dataPlus.data)}
             eventCategory="home"
           />
         </div>
@@ -229,7 +232,7 @@ export default async function Home() {
         className={`${!token && 'sticky top-0 max-lg:top-0'} container mx-auto mb-8 max-lg:mt-0`}
       >
         <PackageListEvent
-          dataHaji={mapProductsToCardData(dataHaji)}
+          dataHaji={mapProductsToCardData(dataHaji.data)}
           eventCategory="home"
         />
       </main>
