@@ -12,23 +12,21 @@ const LocationPermissionSection = () => {
 
   // State internal untuk mengontrol visibilitas toast
   const [isOpen, setIsOpen] = useState(false)
+  const [isOpenOnce, setIsOpenOnce] = useState(false)
 
   // Tampilkan toast HANYA jika status izin adalah 'prompt'
   // dan sembunyikan jika status berubah (granted/denied)
   useEffect(() => {
-    if (permissionStatus === 'prompt' && !loading) {
-      // Beri sedikit jeda agar tidak terlalu mendadak
-      const timer = setTimeout(() => {
-        setIsOpen(true)
-      }, 1500) // Tampil setelah 1.5 detik
-      return () => clearTimeout(timer)
+    if (permissionStatus === 'prompt' && !loading && !isOpenOnce) {
+      setIsOpen(true)
+      setIsOpenOnce(true)
     }
 
     // Jika status bukan 'prompt' (mis. granted/denied), pastikan toast tertutup
     if (permissionStatus !== 'prompt' || loading) {
       setIsOpen(false)
     }
-  }, [loading, permissionStatus])
+  }, [isOpenOnce, loading, permissionStatus])
 
   const handleActivate = () => {
     requestLocation()
