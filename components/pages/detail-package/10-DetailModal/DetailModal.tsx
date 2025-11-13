@@ -1,5 +1,6 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -8,6 +9,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -54,36 +63,86 @@ export default function DetailPackageModal({
 }: DetailModalProps) {
   const router = useRouter()
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="gap-0 p-0 sm:max-w-[640px]">
-        <DialogHeader className="mb-0 px-8 py-4">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="heading-4-semibold mb-0">
-              {title}
-            </DialogTitle>
-            <DialogClose asChild>
+  const { lg } = useTailwindBreakpoint()
+
+  // DESKTOP
+  if (!lg) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="gap-0 p-0 sm:max-w-[640px]">
+          <DialogHeader className="mb-0 px-8 py-4">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="heading-4-semibold mb-0">
+                {title}
+              </DialogTitle>
+              <DialogClose asChild>
+                <X
+                  size={30}
+                  className="text-newutral-900 cursor-pointer rounded-full bg-none p-1 hover:text-gray-600"
+                />
+              </DialogClose>
+            </div>
+          </DialogHeader>
+          <hr className="border-neutral-100" />
+          <div className="mt-2 mb-2 grid px-8 py-4">
+            <p className="text-l-regular">
+              {disclaimer.find((c) => c.slug === variant)?.content ??
+                'No disclaimer found'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4"></div>
+
+          <DialogFooter>
+            <DialogClose asChild></DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    )
+  } else {
+    // MOBILE
+    return (
+      <Drawer open={open}>
+        {/* <DrawerTrigger asChild>
+          <button className="text-s-regular flex items-center gap-0.5 rounded-full bg-neutral-100 px-2 py-1 text-nowrap text-neutral-700">
+            <ChevronIcon />
+          </button>
+        </DrawerTrigger> */}
+        <DrawerContent className="z-100 border-0 outline-0">
+          <DrawerHeader className="flex flex-row items-center justify-between p-3">
+            <DrawerTitle className="text-m-semibold">{title}</DrawerTitle>
+            <DrawerClose
+              asChild
+              onClick={() => {
+                onOpenChange(false)
+              }}
+            >
               <X
-                size={30}
+                size={28}
                 className="text-newutral-900 cursor-pointer rounded-full bg-none p-1 hover:text-gray-600"
               />
-            </DialogClose>
+            </DrawerClose>
+          </DrawerHeader>
+          <div className="space-y-2 overflow-y-auto px-4 pb-4 text-sm">
+            <p className="text-m-regular">
+              {disclaimer.find((c) => c.slug === variant)?.content ??
+                'No disclaimer found'}
+            </p>
           </div>
-        </DialogHeader>
-        <hr className="border-neutral-100" />
-        <div className="mt-2 mb-2 grid px-8 py-4">
-          <p className="text-l-regular">
-            {disclaimer.find((c) => c.slug === variant)?.content ??
-              'No disclaimer found'}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4"></div>
-
-        <DialogFooter>
-          <DialogClose asChild></DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
+          <div className="flex w-full px-3 pt-3 pb-5">
+            <DrawerClose className="w-full" asChild>
+              <Button
+                onClick={() => {
+                  onOpenChange(false)
+                }}
+                className="border-primary-500 text-s-regular w-100 border-2 bg-white px-4 py-3"
+              >
+                Tutup
+              </Button>
+            </DrawerClose>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    )
+  }
 }
