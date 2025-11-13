@@ -47,11 +47,9 @@ export default function BreadCrumb() {
             {/* Mission Points */}
             <div className="space-y-3 lg:space-y-6">
               {[
-                `Menyediakan informasi digital terkait Umroh, Haji, Halal Trip,
-              serta produk dan jasa lainnya secara lengkap`,
+                `Menyediakan informasi digital terkait Umroh, Haji, Muslim Trip, serta produk dan jasa lainnya secara lengkap.`,
                 `Kemudahan akses informasi oleh siapa saja dan dari mana saja`,
-                `Media pemasaran digital produk dan jasa pelaku usaha B2B2C,
-              B2C2C, B2B, dan B2C`,
+                `Memberikan wadah untuk para pelaku usaha khususnya wisata perjalanan untuk melakukan pemasaran produk digital melalui Muslim101`,
                 `Penerapan dan pelaksanaan prinsip-prinsip syariah dalam
               seluruh aktivitas dan transaksi`,
               ].map((each, i: number) => (

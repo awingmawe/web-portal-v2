@@ -10,19 +10,19 @@ export default function Journey() {
           </h1>
           <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
             Muslim101 merupakan digital platform, marketplace, e-commerce, dan
-            ekosistem muamalah muslim yang berbasis web dan mobile apps yang
-            saling terintegrasi. Salah satu layanannya adalah marketplace Umroh,
-            Haji, dan Halal Trip, yang menjembatani pilihan paket perjalanan
-            dari berbagai mitra travel tepercaya dengan para calon jemaah yang
-            tersebar di seluruh Indonesia.
+            ekosistem muamalah Muslim yang berbasis web dan mobile apps yang
+            saling terintegrasi. Salah satu layanan Muslim101 adalah fitur
+            Umroh, Haji, dan Muslim Trip, yang menjembatani pilihan paket
+            perjalanan dari berbagai mitra travel tepercaya dengan para calon
+            jemaah yang tersebar di seluruh Indonesia.
           </p>
           <br></br>
 
           <p className="text-primary-900 lg:text-l-regular text-sm sm:text-base">
             Layaknya rumah bertumbuh, bukan hanya terbatas pada ekosistem bisnis
             Umroh dan Haji, melainkan juga akan memfasilitasi kebutuhan
-            transaksi keuangan syariah, halal market, serta aktivitas muslim
-            lainnya yang jauh lebih luas.
+            transaksi keuangan syariah, market yang halal, serta aktivitas
+            Muslim lainnya yang jauh lebih luas.
           </p>
           <JourneyTimeline />
         </div>
