@@ -3,6 +3,7 @@
 import FacilityFilter from '@/components/pages/search-packages/2-FilterLeftbar/FacilityFilter'
 import LocationFilter from '@/components/pages/search-packages/2-FilterLeftbar/LocationFilter'
 import PriceRangeFilter from '@/components/pages/search-packages/2-FilterLeftbar/PriceRangeFilter'
+import ProviderFilter from '@/components/pages/search-packages/2-FilterLeftbar/ProviderFilter'
 import RatingHotelFilter from '@/components/pages/search-packages/2-FilterLeftbar/RatingHotelFilter'
 import SectionFilter from '@/components/pages/search-packages/2-FilterLeftbar/SectionFilter'
 import TagPackageFilter from '@/components/pages/search-packages/2-FilterLeftbar/TagPackageFilter'
@@ -12,6 +13,7 @@ import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponse } from '@/constant/types/GeneralProps'
 import { City } from '@/constant/types/LocationProps'
 import { PriceParams } from '@/constant/types/PackageProps'
+import { Provider } from '@/constant/types/Providers'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
@@ -24,6 +26,7 @@ interface FilterLeftbarProps {
   dataFacility: GenericResponse<Facility>
   dataSection: TagPackages[]
   dataKota: City[]
+  dataProviders: Provider[]
 }
 
 // Custom debounce hook
@@ -65,6 +68,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
   dataFacility,
   dataSection,
   dataKota,
+  dataProviders,
 }) => {
   const { searchQuery, setSearchQuery, resetFilter } = useFilterProduct()
   const updateQueryParams = useUpdateQueryParams()
@@ -128,6 +132,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
           'item-4',
           'item-5',
           'item-6',
+          'item-7',
         ]}
         className="flex w-full flex-col gap-6"
       >
@@ -135,6 +140,7 @@ const FilterLeftbar: React.FC<FilterLeftbarProps> = ({
         <RatingHotelFilter />
         <FacilityFilter dataFacility={dataFacility} />
         <SectionFilter dataSectionPackage={dataSection} />
+        <ProviderFilter dataProvider={dataProviders} />
         <TagPackageFilter dataTagPackage={dataTagPackages} />
         <LocationFilter dataKota={dataKota} />
       </Accordion>

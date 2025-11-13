@@ -1,6 +1,7 @@
 'use client'
 
 import { ChevronIcon } from '@/components/icons/chevron'
+import { SORT_OPTIONS } from '@/components/pages/search-packages/constants'
 import {
   Popover,
   PopoverContent,
@@ -11,26 +12,14 @@ import { CheckIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useCallback, useMemo } from 'react'
 
-export interface SortOption {
-  value: string
-  label: string
-}
-
 interface SortingDropdownProps {
   currentSort: string
-  createSortUrl: (sortValue: string) => string
+  createSortUrlAction: (sortValue: string) => string
 }
-
-const SORT_OPTIONS: SortOption[] = [
-  { value: 'price-low', label: 'Harga Terendah' },
-  { value: 'price-high', label: 'Harga Tertinggi' },
-  { value: 'depart-early', label: 'Berangkat paling cepat (Awal Bulan)' },
-  { value: 'depart-late', label: 'Berangkat paling lama (Akhir Bulan)' },
-]
 
 export const SortingDropdown: React.FC<SortingDropdownProps> = ({
   currentSort,
-  createSortUrl,
+  createSortUrlAction,
 }) => {
   // Function to determine if a sort option is active
   const isActive = useCallback(
@@ -63,7 +52,7 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
           <div key={`sortBy-${option.value}-${index}`}>
             {index > 0 && <div className="mx-1 h-px bg-neutral-100" />}
             <Link
-              href={createSortUrl(option.value)}
+              href={createSortUrlAction(option.value)}
               className={`text-m-regular flex w-full cursor-pointer items-center justify-between px-3 py-2.5 hover:bg-neutral-100 ${dissolve} ${isActive(option.value) ? 'bg-primary-50 text-primary-600 font-medium' : ''}`}
             >
               <span>{option.label}</span>

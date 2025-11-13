@@ -4,6 +4,7 @@ import FilterPanel from '@/components/pages/search-packages/mobile/UT-TopbarFilt
 import SortFilterComponent from '@/components/pages/search-packages/mobile/UT-TopbarFilter/SortFilter-UT'
 import TagButton from '@/components/pages/search-packages/mobile/UT-TopbarFilter/TagButton'
 import { City } from '@/constant/types/LocationProps'
+import { Provider } from '@/constant/types/Providers'
 import { TagPackages } from '@/constant/types/TagPackageProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { formatCurrencyIndonesia } from '@/lib/utils'
@@ -47,12 +48,14 @@ const HorizontalFilterBar = ({
   dataFacility,
   dataSection,
   dataKota,
+  dataProviders,
 }: {
   dataTagPackages: TagPackages[]
   dataMinMax: any
   dataFacility: any
   dataSection: any
   dataKota: City[]
+  dataProviders: Provider[]
 }) => {
   const {
     isLoadingSkeleton,
@@ -62,6 +65,7 @@ const HorizontalFilterBar = ({
     setTagSlug,
     setLocationFilter,
     setPriceRange,
+    setProviderId,
   } = useFilterProduct()
 
   // Price Range
@@ -71,7 +75,7 @@ const HorizontalFilterBar = ({
   // Generate active filter tags dari semua filter types
   const activeFilterTags = useMemo(() => {
     const tags: Array<{
-      type: 'price' | 'facility' | 'section' | 'location' | 'promo'
+      type: 'price' | 'facility' | 'section' | 'location' | 'promo' | 'provider'
       label: string
       code: string
       filterName: string
@@ -155,6 +159,26 @@ const HorizontalFilterBar = ({
       })
     }
 
+    // Provider Filter
+    if (filters.providerId) {
+      const activeProviderIds = filters.providerId.split(',')
+      activeProviderIds.forEach((id) => {
+        const provider = dataProviders?.find(
+          (p: Provider) => String(p.id) === id
+        )
+        if (provider) {
+          tags.push({
+            type: 'provider',
+            label: provider.name,
+            code: String(provider.id), // Gunakan ID provider sebagai code unik
+            filterName: 'providerId',
+            setter: setProviderId,
+            paramName: 'pV',
+          })
+        }
+      })
+    }
+
     // Active Locations
     if (filters.organizationInstanceCity) {
       const activeLocationIds = filters.organizationInstanceCity.split(',')
@@ -197,18 +221,22 @@ const HorizontalFilterBar = ({
     prMaxParam,
     filters.facilityCode,
     filters.section,
+    filters.providerId,
     filters.organizationInstanceCity,
     filters.tagSlug,
-    dataMinMax,
-    dataFacility,
-    dataSection,
-    dataKota,
-    dataTagPackages,
-    setFacilityCode,
-    setSection,
-    setLocationFilter,
-    setTagSlug,
+    dataMinMax.min,
+    dataMinMax.max,
     setPriceRange,
+    dataFacility?.results,
+    setFacilityCode,
+    dataSection,
+    setSection,
+    dataProviders,
+    setProviderId,
+    dataKota,
+    setLocationFilter,
+    dataTagPackages,
+    setTagSlug,
   ])
 
   // Hitung apakah ada filter aktif
@@ -244,6 +272,7 @@ const HorizontalFilterBar = ({
         dataSection={dataSection}
         dataTagPackages={dataTagPackages}
         dataKota={dataKota}
+        dataProvider={dataProviders}
       />
 
       {/* Sort Button */}

@@ -28,7 +28,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ dataKota }) => {
   }
 
   return (
-    <AccordionItem value="item-6">
+    <AccordionItem value="item-7">
       <AccordionTrigger>
         <div className="flex w-full items-center justify-between">
           <p className="text-l-medium text-neutral-900">Lokasi Travel</p>

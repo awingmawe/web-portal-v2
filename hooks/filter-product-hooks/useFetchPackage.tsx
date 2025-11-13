@@ -23,6 +23,12 @@ export function useFetchPackage() {
       } else if (sortParam === 'depart-late') {
         orderBy = 'packageVariant.departureDate'
         order = 'desc'
+      } else if (sortParam === 'recommendation') {
+        orderBy = 'recommendation'
+        order = 'asc'
+      } else if (sortParam === 'package.createdAt') {
+        orderBy = 'package.createdAt'
+        order = 'asc'
       }
 
       // Prepare API parameters

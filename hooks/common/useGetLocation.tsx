@@ -1,10 +1,8 @@
 'use client'
 
 import { toast } from '@/components/ui/sonner'
+import { LOCATION_STORAGE_KEY } from '@/constant/env'
 import { useCallback, useEffect, useState } from 'react'
-
-// Nama key untuk localStorage
-const LOCATION_STORAGE_KEY = 'user_location'
 
 // Tipe data untuk state lokasi
 interface GeolocationState {

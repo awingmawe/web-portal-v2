@@ -1,17 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
+import { SORT_OPTIONS } from '@/components/pages/search-packages/constants'
 import { Button } from '@/components/ui/button'
 import { DrawerFooter } from '@/components/ui/drawer'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
-
-interface SortOption {
-  value: string
-  label: string
-}
 
 interface SortDrawerProps {
   toggleDrawerAction: (id: number) => void
@@ -30,12 +26,6 @@ export function SortDrawer({
 }: SortDrawerProps) {
   const searchParams = useSearchParams()
   const updateQueryParams = useUpdateQueryParams()
-  const SORT_OPTIONS: SortOption[] = [
-    { value: 'price-low', label: 'Harga Terendah' },
-    { value: 'price-high', label: 'Harga Tertinggi' },
-    { value: 'depart-early', label: 'Berangkat paling cepat (Awal Bulan)' },
-    { value: 'depart-late', label: 'Berangkat paling lama (Akhir Bulan)' },
-  ]
 
   // Update local state if URL parameters change
   useEffect(() => {

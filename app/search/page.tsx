@@ -7,6 +7,7 @@ import ScrollShadowWrapper from '@/components/pages/search-packages/ScrollWrappe
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { NODE_ENV, URL } from '@/constant/env'
+import { getProviderPublic } from '@/services/banking-service'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
 import { getKotaV2, getPackageListV2 } from '@/services/product-service'
@@ -42,14 +43,21 @@ export default async function SearchGeneral({
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
   const awaitedParams = await searchParams
 
-  const [dataMinMax, dataTagPackages, dataFacility, dataSection, dataKota] =
-    await Promise.all([
-      getMinMaxPrice(),
-      getTagPackagesEnum(awaitedParams.type || 'umrah'),
-      getFacilityEnum(`${awaitedParams.type || 'umrah'}-facility`),
-      getSectionEnum(awaitedParams.type || 'umrah'),
-      getKotaV2({ page: 1, size: 100 }),
-    ])
+  const [
+    dataMinMax,
+    dataTagPackages,
+    dataFacility,
+    dataSection,
+    dataKota,
+    dataProviders,
+  ] = await Promise.all([
+    getMinMaxPrice(),
+    getTagPackagesEnum(awaitedParams.type || 'umrah'),
+    getFacilityEnum(`${awaitedParams.type || 'umrah'}-facility`),
+    getSectionEnum(awaitedParams.type || 'umrah'),
+    getKotaV2({ page: 1, size: 100 }),
+    getProviderPublic({ page: 1, size: 100 }),
+  ])
 
   const page = parseInt(awaitedParams.page || '1', 10)
   const size = parseInt(awaitedParams.size || '9', 10)
@@ -196,6 +204,7 @@ export default async function SearchGeneral({
               dataMinMax={dataMinMax}
               dataSection={dataSection}
               dataKota={dataKota.data.responseObject}
+              dataProviders={dataProviders.data.data}
             />
           }
         >
@@ -206,6 +215,7 @@ export default async function SearchGeneral({
               dataFacility={dataFacility.data}
               dataSection={dataSection}
               dataKota={dataKota.data.responseObject}
+              dataProviders={dataProviders.data.data}
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12 max-lg:px-4">

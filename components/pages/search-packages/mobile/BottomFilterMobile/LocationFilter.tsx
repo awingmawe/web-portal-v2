@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DrawerFooter } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
+import { City } from '@/constant/types/LocationProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCheckboxSelection } from '@/hooks/filter-product-hooks/useCheckboxSelection'
 import { Search } from 'lucide-react'
@@ -13,7 +14,7 @@ interface LocationDrawerProps {
   toggleDrawerAction: (id: number) => void
   itemId: number
   applyFiltersAction: (id: number) => void
-  dataKota: any
+  dataKota: City[]
 }
 
 export function LocationDrawer({
@@ -34,11 +35,11 @@ export function LocationDrawer({
   // Filter data berdasarkan search query
   const filteredSections = useMemo(() => {
     if (!searchQuery.trim()) {
-      return dataKota.results
+      return dataKota
     }
 
     const query = searchQuery.toLowerCase()
-    return dataKota.results.filter((city: any) =>
+    return dataKota.filter((city: City) =>
       city.name.toLowerCase().includes(query)
     )
   }, [dataKota, searchQuery])
