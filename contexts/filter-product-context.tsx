@@ -416,6 +416,11 @@ export const FilterProductProvider: React.FC<{
         queryObject.organizationInstanceId = organizationInstanceIdFiltered
       }
 
+      // Extract coordinates for location sort
+      if (params.has('coordinates')) {
+        queryObject.coordinates = params.get('coordinates')
+      }
+
       // Extract for pembiayaan
       if (params.has('package') && supportedProvider) {
         queryObject.organizationInstanceId = organizationInstanceIdFiltered

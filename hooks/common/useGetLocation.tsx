@@ -243,5 +243,21 @@ export const useGeolocation = () => {
     )
   }, [state.permissionStatus, handleSuccess, handleError])
 
-  return { ...state, requestLocation }
+  const getLocationFromStorage = useCallback(() => {
+    if (typeof window === 'undefined') {
+      return null
+    }
+    try {
+      const storedLocation = localStorage.getItem(LOCATION_STORAGE_KEY)
+      if (storedLocation) {
+        const { latitude, longitude } = JSON.parse(storedLocation)
+        return { latitude, longitude }
+      }
+    } catch (error) {
+      console.error('Gagal membaca atau parse lokasi dari localStorage:', error)
+    }
+    return null
+  }, [])
+
+  return { ...state, requestLocation, getLocationFromStorage }
 }

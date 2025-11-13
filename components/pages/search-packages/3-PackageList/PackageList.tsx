@@ -162,12 +162,19 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   // Function to create URL with new sort parameter
   const createSortUrl = useCallback(
     (sortValue: string) => {
-      if (sortValue === 'organization.location') {
-        if (!isEmpty(localStorage.getItem(LOCATION_STORAGE_KEY))) {
-        } else {
-        }
-      }
       const params = new URLSearchParams(searchParams.toString())
+
+      if (sortValue === 'organization.location') {
+        const storedLocation = localStorage.getItem(LOCATION_STORAGE_KEY)
+        if (storedLocation) {
+          const { latitude, longitude } = JSON.parse(storedLocation)
+          params.set('coordinates', `${latitude},${longitude}`)
+        }
+      } else {
+        // Hapus parameter coordinates jika sortir bukan berdasarkan lokasi
+        params.delete('coordinates')
+      }
+
       params.set('sort', sortValue)
       params.set('page', '1') // Reset to page 1 when sorting changes
       return `${pathname}?${params.toString()}`

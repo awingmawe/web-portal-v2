@@ -29,6 +29,9 @@ export function useFetchPackage() {
       } else if (sortParam === 'package.createdAt') {
         orderBy = 'package.createdAt'
         order = 'asc'
+      } else if (sortParam === 'organization.location') {
+        orderBy = 'organization.location'
+        order = 'asc' // Asumsi urutan 'asc' untuk lokasi terdekat
       }
 
       // Prepare API parameters
@@ -42,7 +45,7 @@ export function useFetchPackage() {
         startDate: queryParams.startDate,
         endDate: queryParams.endDate,
         departureFromAirportCode: queryParams.departureFromAirportCode,
-        arrivalFromAirportCode: queryParams.arrivalFromAirportCode,
+        departureToAirportCode: queryParams.arrivalFromAirportCode,
         departureAirlineName: queryParams.departureAirlineName,
         minPrice: queryParams.minPrice,
         maxPrice: queryParams.maxPrice,
@@ -55,6 +58,7 @@ export function useFetchPackage() {
         packageType: queryParams.type,
         organizationInstanceCity: queryParams.organizationInstanceCity,
         organizationInstanceId: queryParams.organizationInstanceId || undefined,
+        coordinates: queryParams.coordinates,
       }
 
       const response = await getPackageListV2(apiParams)

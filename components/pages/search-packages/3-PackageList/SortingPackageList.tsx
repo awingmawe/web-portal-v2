@@ -7,10 +7,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { LOCATION_STORAGE_KEY } from '@/constant/env'
 import { dissolve } from '@/lib/animation-setup'
 import { CheckIcon } from 'lucide-react'
 import Link from 'next/link'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface SortingDropdownProps {
   currentSort: string
@@ -21,6 +22,22 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
   currentSort,
   createSortUrlAction,
 }) => {
+  const [isLocationAvailable, setIsLocationAvailable] = useState(false)
+
+  useEffect(() => {
+    // Cek ketersediaan lokasi di client-side
+    const location = localStorage.getItem(LOCATION_STORAGE_KEY)
+    setIsLocationAvailable(!!location)
+  }, [])
+
+  const filteredSortOptions = useMemo(() => {
+    if (isLocationAvailable) {
+      return SORT_OPTIONS
+    }
+    // Jika lokasi tidak tersedia, filter keluar opsi 'Lokasi Terdekat'
+    return SORT_OPTIONS.filter((opt) => opt.value !== 'organization.location')
+  }, [isLocationAvailable])
+
   // Function to determine if a sort option is active
   const isActive = useCallback(
     (sortValue: string) => {
@@ -31,9 +48,11 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
 
   // Get display text for current sort
   const currentSortText = useMemo(() => {
-    const option = SORT_OPTIONS.find((option) => option.value === currentSort)
+    const option = filteredSortOptions.find(
+      (option) => option.value === currentSort
+    )
     return option?.label || 'Harga Terendah'
-  }, [currentSort])
+  }, [currentSort, filteredSortOptions])
 
   return (
     <Popover>
@@ -48,7 +67,7 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" sideOffset={8}>
-        {SORT_OPTIONS.map((option, index) => (
+        {filteredSortOptions.map((option, index) => (
           <div key={`sortBy-${option.value}-${index}`}>
             {index > 0 && <div className="mx-1 h-px bg-neutral-100" />}
             <Link
