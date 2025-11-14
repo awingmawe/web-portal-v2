@@ -1,7 +1,7 @@
 'use client'
 
 import { ArrowIcon } from '@/components/icons/arrow'
-import { CardTransactionBankingSkeleton } from '@/components/pages/my/5-Banking/common/SkeletonCardPembiayaan'
+import { CardTransactionBankingSkeleton } from '@/components/pages/my/5-Banking/list/common/SkeletonCardPembiayaan'
 import ListSubmissionPembiayaan from '@/components/pages/my/5-Banking/list/ListSubmissionPembiayaan'
 import ListSubmissionPembiayaanMobile from '@/components/pages/my/5-Banking/list/mobile/ListSubsmissionPembiayaanMobile'
 import { Input } from '@/components/ui/input'

@@ -1,7 +1,8 @@
 'use client'
 
-import { CardTransactionBanking } from '@/components/pages/my/5-Banking/common/CardPembiayaan'
-import { CardTransactionBankingSkeleton } from '@/components/pages/my/5-Banking/common/SkeletonCardPembiayaan'
+import { CardTransactionBanking } from '@/components/pages/my/5-Banking/list/common/CardPembiayaan'
+import { CardTransactionBankingSkeleton } from '@/components/pages/my/5-Banking/list/common/SkeletonCardPembiayaan'
+import EmptyState from '@/components/pages/my/5-Banking/list/EmptyState'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { useGetSubmissionList } from '@/services/hooks/banking-service/submission-credits-api'
 import { Fragment, useState } from 'react'
@@ -24,6 +25,10 @@ export default function ListSubmissionPembiayaan({
     setPage(goPage)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  if (!isPaginatedLoading && paginatedData?.data.length === 0)
+    return <EmptyState />
+
   if (isPaginatedLoading)
     return Array.from({ length: 3 }).map((_, index) => (
       <CardTransactionBankingSkeleton key={index} />

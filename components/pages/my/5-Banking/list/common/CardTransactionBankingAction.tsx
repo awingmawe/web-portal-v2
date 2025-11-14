@@ -1,11 +1,9 @@
 import { Calendar3 } from '@/components/icons/calendar'
+import { CTA_CONFIG, ViewCta } from '@/components/pages/my/5-Banking/constants'
 import { Button } from '@/components/ui/button'
 import { CardFooter } from '@/components/ui/card'
-import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import NextLink from 'next/link'
-
-type ViewCta = SubmissionCredit['view_cta']
 
 interface CardTransactionBankingActionsProps {
   cta: ViewCta
@@ -32,59 +30,28 @@ export function CardTransactionBankingActions({
   )
 
   const renderPrimaryCta = () => {
-    switch (cta) {
-      case 'ready-to-checkout':
-        return (
-          <Button className="p-3 max-lg:w-full max-lg:py-2">
-            <NextLink
-              href={`/checkout?submission_id=${submissionId}&type=banking`}
-            >
-              Pilih & Checkout
-            </NextLink>
-          </Button>
-        )
+    if (!cta) return null
 
-      case 'change-package':
-        return (
-          <Button className="p-3 max-lg:w-full max-lg:py-2">
-            <NextLink
-              href={`/umrah/${organizationSlug}/${packageId}?change_submission=${submissionId}`}
-            >
-              Ubah Paket
-            </NextLink>
-          </Button>
-        )
+    const config = CTA_CONFIG[cta]?.list
+    if (!config || config.mobile) return null
 
-      case 'waiting-payment':
-        return (
-          <Button className="p-3 max-lg:w-full max-lg:py-2">
-            <NextLink
-              href={`/umrah/${organizationSlug}/${packageId}?change_submission=${submissionId}`}
-            >
-              Lanjutkan Pembayaran
-            </NextLink>
-          </Button>
-        )
-      // Button Lihat Transaksi cuman ada di mobile di desktop tidak ada
-      case 'view-transaction':
-        return (
-          <Button className="p-3 max-lg:w-full max-lg:py-2 lg:hidden">
-            <NextLink
-              href={`/umrah/${organizationSlug}/${packageId}?change_submission=${submissionId}`}
-            >
-              Lihat Transaksi
-            </NextLink>
-          </Button>
-        )
-      case null:
-      default:
-        return null
-    }
+    const href = config.href({
+      submissionId,
+      packageId,
+      organizationSlug,
+    })
+
+    return (
+      <Button className="p-3 max-lg:w-full max-lg:py-2">
+        <NextLink href={href}>{config.text}</NextLink>
+      </Button>
+    )
   }
 
   const primaryCta = renderPrimaryCta()
 
-  // Kalo di mobile jangan munculin footernya kalo button yang harusnya muncul tidak ada
+  // Kalo di mobile jangan munculin footernya
+  // Dan kalo view_cta nya null jangan munculin footernya
   if (isMobile && !primaryCta) return null
 
   return (
