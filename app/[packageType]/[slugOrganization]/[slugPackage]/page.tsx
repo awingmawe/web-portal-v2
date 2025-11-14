@@ -247,6 +247,8 @@ export default async function DetailPackage({
                 meccaHotel={detailData?.meccaHotel?.name}
                 madinahHotel={detailData?.medinaHotel?.name}
                 type={namePackageType()}
+                variantType={detailData.variantType}
+                isPlus={detailData.isPlus}
               />
 
               <PacakgeDescription
