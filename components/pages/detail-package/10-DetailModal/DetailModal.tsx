@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/drawer'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { X } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 interface DetailModalProps {
   title: string
@@ -61,8 +60,6 @@ export default function DetailPackageModal({
   onOpenChange,
   variant,
 }: DetailModalProps) {
-  const router = useRouter()
-
   const { lg } = useTailwindBreakpoint()
 
   // DESKTOP
