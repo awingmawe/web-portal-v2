@@ -82,8 +82,8 @@ export default function TransactionCardFooter({
   const packageType =
     transaction?.packageSnapshot?.snapshot?.package?.packageType
   const packageTitle = transaction?.packageSnapshot.snapshot.package.title
-  const travelName =
-    transaction?.packageSnapshot.snapshot.package.organizationInstance.name
+  const travelData =
+    transaction?.packageSnapshot.snapshot.package.organizationInstance
   const { lg } = useTailwindBreakpoint()
   const [loadingPaymentTransaction, setLoadingPaymentTransaction] =
     useState(false)
@@ -406,7 +406,9 @@ export default function TransactionCardFooter({
               >
                 Batalkan Pesanan
               </p>
-            ) : packageType && packageType === PACKAGE_TYPE.HAJJ ? (
+            ) : packageType &&
+              packageType === PACKAGE_TYPE.HAJJ &&
+              status == 'completed' ? (
               <p
                 className="text-m-regular text-error-500 cursor-pointer p-3 hover:bg-gray-50"
                 onClick={() => {
@@ -733,11 +735,10 @@ export default function TransactionCardFooter({
       {openBatalkanInfo && (
         <BatalkanPesananInfo
           open={openBatalkanInfo}
-          bookingId={bookingId}
+          bookingId={transaction.bookingCode}
           onOpenChange={setOpenBatalkanInfo}
           packageTitle={packageTitle ?? ''}
-          travelName={travelName ?? ''}
-          status={status}
+          travelData={travelData}
         />
       )}
 

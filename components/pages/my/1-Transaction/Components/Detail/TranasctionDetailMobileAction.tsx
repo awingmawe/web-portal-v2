@@ -7,7 +7,7 @@ import TransactionActionButtonHajj from '@/components/pages/my/1-Transaction/Com
 import SuksesDialog from '@/components/pages/my/1-Transaction/Components/SuksesDialog'
 import VerificationDialog from '@/components/pages/my/1-Transaction/Components/VerificationDialog'
 import { Button } from '@/components/ui/button'
-import { PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
+import { CALL_CENTER, PACKAGE_TYPE, STATUS_BOOKING } from '@/constant/env'
 import { useCanceled } from '@/contexts/canceled-package-context'
 import { getPaymentStatement, postNextPayment } from '@/services/umrah-service'
 import dayjs from 'dayjs'
@@ -36,8 +36,8 @@ export const TransactionDetailMobileAction = ({
     useState(false)
   const [openBatalkanInfo, setOpenBatalkanInfo] = useState(false)
   const packageTitle = transaction?.packageSnapshot.snapshot.package.title
-  const travelName =
-    transaction?.packageSnapshot.snapshot.package.organizationInstance.name
+  const travelData =
+    transaction?.packageSnapshot.snapshot.package.organizationInstance
   const packageType =
     transaction?.packageSnapshot?.snapshot?.package?.packageType
 
@@ -250,6 +250,9 @@ export const TransactionDetailMobileAction = ({
           idOrganisasi={idOrganisasi}
           id={transaction?.bookingCode}
           status={transaction?.status?.slug}
+          packageTitle={packageTitle}
+          travelData={travelData}
+          packageType={packageType}
         >
           <Button
             className="!rounded-lg border-2 border-neutral-900 px-1 py-1"
@@ -272,21 +275,24 @@ export const TransactionDetailMobileAction = ({
   const renderCancelButton = () => (
     <div className="fixed right-0 bottom-0 left-0 z-50 flex h-16 items-center gap-2 bg-white px-2 shadow-[0px_-4px_24px_0px_#0000001A]">
       {packageType === PACKAGE_TYPE.HAJJ ? (
-        <Button
-          className="border-error-500 w-full py-2"
-          variant="outline"
-          onClick={() => {
-            setOpenBatalkanInfo(true)
-          }}
+        <Link
+          href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+          target="_blank"
+          className="w-full"
         >
-          Batalkan Pesanan
-        </Button>
+          <Button className="border-error-500 w-full rounded-full border-2 bg-white py-3">
+            Batalkan Pesanan
+          </Button>
+        </Link>
       ) : (
         <DrawerBatalkan
           bookingId={bookingId}
           idOrganisasi={idOrganisasi}
           id={transaction?.bookingCode}
           status={transaction?.status?.slug}
+          packageTitle={packageTitle}
+          travelData={travelData}
+          packageType={packageType}
         >
           <Button className="border-error-500 w-full py-2" variant="outline">
             Batalkan Pesanan
@@ -342,11 +348,10 @@ export const TransactionDetailMobileAction = ({
       {openBatalkanInfo && (
         <BatalkanPesananInfo
           open={openBatalkanInfo}
-          bookingId={bookingId}
+          bookingId={transaction.bookingCode}
           onOpenChange={setOpenBatalkanInfo}
           packageTitle={packageTitle ?? ''}
-          travelName={travelName ?? ''}
-          status={transaction?.status?.slug}
+          travelData={travelData}
         />
       )}
       {isLinkAja && JSON.stringify(isLinkAja)}

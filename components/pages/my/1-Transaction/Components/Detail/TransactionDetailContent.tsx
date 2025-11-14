@@ -73,8 +73,8 @@ export default function TransactionDetailContent({
   const [openBatalkanInfo, setOpenBatalkanInfo] = useState(false)
 
   const packageTitle = transaction?.packageSnapshot.snapshot.package.title
-  const travelName =
-    transaction?.packageSnapshot.snapshot.package.organizationInstance.name
+  const travelData =
+    transaction?.packageSnapshot.snapshot.package.organizationInstance
 
   const { isCompletedHajjKhusus } = useGetStatusValidation({
     status: transaction?.status,
@@ -705,11 +705,10 @@ export default function TransactionDetailContent({
                 {openBatalkanInfo && (
                   <BatalkanPesananInfo
                     open={openBatalkanInfo}
-                    bookingId={bookingId}
+                    bookingId={transaction.bookingCode}
                     onOpenChange={setOpenBatalkanInfo}
                     packageTitle={packageTitle ?? ''}
-                    travelName={travelName ?? ''}
-                    status={transaction?.status.slug}
+                    travelData={travelData}
                   />
                 )}
 
@@ -731,7 +730,9 @@ export default function TransactionDetailContent({
                         Batalkan Pesanan
                       </span>
                     </Button>
-                  ) : (
+                  ) : transaction?.packageSnapshot?.snapshot?.package
+                      ?.packageType === PACKAGE_TYPE.HAJJ &&
+                    transaction?.status.slug === 'completed' ? (
                     <Button
                       variant="outline"
                       className="border-error-500  block w-full border-2"
@@ -743,20 +744,21 @@ export default function TransactionDetailContent({
                         Batalkan Pesanan
                       </span>
                     </Button>
-                    // <Link
-                    //   href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
-                    //   target="_blank"
-                    //   className="w-full"
-                    // >
-                    //   <Button
-                    //     variant="outline"
-                    //     className="border-error-500  block w-full border-2"
-                    //   >
-                    //     <span className="text-error-500 font-medium">
-                    //       Batalkan Pesanan
-                    //     </span>
-                    //   </Button>
-                    // </Link>
+                  ) : (
+                    <Link
+                      href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${transaction?.bookingCode}`}
+                      target="_blank"
+                      className="w-full"
+                    >
+                      <Button
+                        variant="outline"
+                        className="border-error-500  block w-full border-2"
+                      >
+                        <span className="text-error-500 font-medium">
+                          Batalkan Pesanan
+                        </span>
+                      </Button>
+                    </Link>
                   ))}
                 <div className="relative mt-auto">
                   <Image

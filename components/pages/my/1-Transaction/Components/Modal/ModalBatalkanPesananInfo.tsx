@@ -20,8 +20,10 @@ interface TransactionDetailProps {
   onOpenChange: (open: boolean) => void
   bookingId?: any
   packageTitle: string
-  travelName: string
-  status: string
+  travelData: {
+    name: string
+    phoneNumber: string
+  }
 }
 
 export function BatalkanPesananInfo({
@@ -29,13 +31,13 @@ export function BatalkanPesananInfo({
   onOpenChange,
   bookingId,
   packageTitle,
-  travelName,
+  travelData,
 }: TransactionDetailProps) {
   const { profile } = useAuth()
   const { lg } = useTailwindBreakpoint()
 
-  const hubungiCS = `Assalamualaikum, saya ${profile?.name}. Saya calon jemaah haji ${packageTitle} dengan kode ${bookingId} via Muslim101. Saya ingin membatalkan pesanan haji saya dengan kode ${bookingId} dikarenakan (Silahkan isi alasan kamu)`
-  const bantuan = `Assalamualaikum, saya ${profile?.name}. Saya calon jemaah haji ${packageTitle} dari travel ${travelName}. Saya ingin membatalkan pesanan haji saya dengan kode ${bookingId} dikarenakan (Silahkan isi alasan kamu)`
+  const hubungiTravel = `Assalamualaikum, saya ${profile?.name}. Saya calon jemaah haji ${packageTitle} dengan kode ${bookingId} via Muslim101. Saya ingin membatalkan pesanan haji saya dengan kode ${bookingId} dikarenakan (Silahkan isi alasan kamu)`
+  const bantuan = `Assalamualaikum, saya ${profile?.name}. Saya calon jemaah haji ${packageTitle} dari travel ${travelData?.name}. Saya ingin membatalkan pesanan haji saya dengan kode ${bookingId} dikarenakan (Silahkan isi alasan kamu)`
 
   const content = (
     <>
@@ -78,12 +80,12 @@ export function BatalkanPesananInfo({
       <Button
         className="w-1/3 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 max-md:w-full"
         onClick={() => {
-          const encodedMessage = encodeURIComponent(hubungiCS)
-          const waUrl = `https://wa.me/${CALL_CENTER}?text=${encodedMessage}`
+          const encodedMessage = encodeURIComponent(hubungiTravel)
+          const waUrl = `https://wa.me/${travelData.phoneNumber}?text=${encodedMessage}`
           window.open(waUrl, '_blank') // safer than assigning window.location
         }}
       >
-        Hubungi CS
+        Hubungi Travel
       </Button>
     </>
   )
