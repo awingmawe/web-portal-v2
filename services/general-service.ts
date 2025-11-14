@@ -2,7 +2,11 @@ import { api } from '@/services/common/http'
 import { Airline, GetAirlinesParams } from '@/constant/types/AirlineProps'
 
 import { Airport } from '@/constant/types/AirportProps'
-import { GenericResponse, GetListQuery } from '@/constant/types/GeneralProps'
+import {
+  DisableDate,
+  GenericResponse,
+  GetListQuery,
+} from '@/constant/types/GeneralProps'
 import { Facility } from '@/constant/types/FacilityProps'
 import {
   GalleryHomepage,
@@ -203,4 +207,10 @@ export async function getGalleryHotelByHotelId(
   hotelId: number
 ): Promise<AxiosResponse<GenericResponse<HotelGalleryImage>>> {
   return api.get(`/public/general/v1/hotel-gallery/hotel/${hotelId}`)
+}
+
+export async function getDisabledDate(
+  year: string
+): Promise<AxiosResponse<GenericResponse<DisableDate>>> {
+  return api.get(`/public/general/v1/disabled-date?year=${year}`)
 }

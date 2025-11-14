@@ -21,3 +21,21 @@ export type OtherProps = {
   className?: string
   whatPage: string // this is for where's page is used
 }
+
+export type DisableDate = {
+  id: string
+  title: string
+  year: string
+  startDate: string
+  endDate: string
+  reason: string
+  createdAt: string
+  modifiedAt: string
+  createdBy: string
+  modifiedBy: string
+}
+
+export type ReferenceDisableDate = {
+  year: string
+  date: DisableDate[]
+}
