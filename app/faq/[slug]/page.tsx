@@ -43,11 +43,10 @@ export default async function FaqPage({
 
         <section className="mt-8 flex flex-col items-center max-lg:items-start max-lg:px-4">
           <div className="flex max-w-[50%] flex-col items-start gap-4 max-lg:max-w-full">
-            <h1 className="heading-1-semibold max-lg:hidden">
+            <h1 className="heading-1-semibold max-lg:text-base max-lg:leading-5">
               {faqContent?.title}
             </h1>
-            <h1 className="text-l-semibold lg:hidden">{faqContent?.title}</h1>
-            <div className="text-m-regular max-lg:text-s-regular max-sm:text-s-regular max-lg:leading-4 max-sm:leading-4">
+            <div className="text-m-regular max-lg:text-s-regular max-sm:text-s-regular max-lg:leading-5 max-sm:leading-5">
               {renderHTML(faqContent?.body)}
             </div>
           </div>
