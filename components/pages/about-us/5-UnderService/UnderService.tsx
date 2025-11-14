@@ -91,7 +91,7 @@ export default function UnderService() {
           <div className="group relative h-[300px] overflow-hidden rounded-lg md:-mt-[75px] md:h-[350px] lg:-mt-[100px] lg:h-[400px]">
             <Image
               src="https://storage.googleapis.com/m101-prods/about-us/POIN%20D.JPG"
-              alt="BnB101: Silaturahmi Tim"
+              alt="Konsultasi Produk dan Layanan"
               fill
               className="object-cover transition-transform duration-500"
             />
@@ -126,8 +126,8 @@ export default function UnderService() {
             {/* Image 1 */}
             <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-2.png"
-                alt="BnB101: Masak Bersama"
+                src="https://storage.googleapis.com/m101-prods/about-us/POIN%20A.jpeg"
+                alt="Podcast bersama Radio PRFM"
                 fill
                 sizes="100vw"
                 width={0}
@@ -139,8 +139,8 @@ export default function UnderService() {
             {/* Image 2 */}
             <div className="group relative aspect-square overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Square.png"
-                alt="Majelis101: Kajian Mingguan"
+                src="https://storage.googleapis.com/m101-prods/about-us/POIN%20B.jpeg"
+                alt="Talkshow bersama Suara Muslim TV"
                 width={0}
                 height={0}
                 sizes="100vw"
@@ -151,8 +151,8 @@ export default function UnderService() {
             {/* Image 3 */}
             <div className="group relative aspect-[160/212] overflow-hidden rounded-xl">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait.png"
-                alt="Event101: Bestie till Jannah"
+                src="https://storage.googleapis.com/m101-prods/about-us/POIN%20C.jpg"
+                alt="Safari Media ke JTV"
                 width={0}
                 height={0}
                 sizes="100vw"
@@ -174,8 +174,8 @@ export default function UnderService() {
             {/* Image 5 */}
             <div className="group relative aspect-[160/212] overflow-hidden rounded-lg">
               <Image
-                src="https://storage.googleapis.com/m101-prods/about-us/Di%20balik%20layar%20muslim101/Card%20Our%20Culture%20Portrait-1.png"
-                alt="BnB101: Silaturahmi Tim"
+                src="https://storage.googleapis.com/m101-prods/about-us/POIN%20D.JPG"
+                alt="Konsultasi Produk dan Layanan"
                 width={0}
                 height={0}
                 sizes="100vw"
