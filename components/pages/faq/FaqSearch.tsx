@@ -56,7 +56,7 @@ export default function FaqSearch() {
                 Cari Pertanyaanmu Disini
               </h2>
               <div className="flex items-center justify-between gap-2">
-                <div className="flex w-full items-center justify-between gap-2 rounded-full border border-neutral-200 bg-white px-4 py-1">
+                <div className="flex w-full items-center justify-between gap-2 rounded-full border border-neutral-200 bg-white py-1 pe-4">
                   <Input
                     placeholder="Cari Pertanyaan"
                     className="text-m-regular w-full border-0 pr-10"
