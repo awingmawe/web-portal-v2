@@ -1,12 +1,9 @@
 import { metadata } from '@/app/shared-metadata'
 import LayoutFaq from '@/components/pages/faq/Layout'
-import TopbarMobileFaq from '@/components/pages/faq/TopbarMobile'
-import { truncateWord } from '@/lib/utils'
 import { getFaq } from '@/services/article-service'
-import { cookieNames } from '@/services/common/cookie'
 import { ChevronLeft } from 'lucide-react'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
+import renderHTML from 'react-render-html'
 
 /**
  * Generate metadata
@@ -31,18 +28,10 @@ export default async function FaqPage({
 
   const faqLists = await getFaq({ slug })
   const faqContent = faqLists?.results?.[0]
-  const cookieStore = await cookies()
-  const isWebview = cookieStore.get(cookieNames.IS_WEBVIEW)?.value as string
 
   return (
     <LayoutFaq variant="details">
-      <TopbarMobileFaq
-        title={truncateWord(faqContent?.title, 25)}
-        href={'back'}
-        isWebview={isWebview == 'true'}
-      />
-
-      <div className="container mx-auto mt-5 mb-30">
+      <div className="container mx-auto mt-5 mb-30 max-lg:mb-10">
         <Link href="/faq" className="max-md:hidden">
           <div className="bg-white p-4">
             <button className="flex cursor-pointer items-center text-gray-800">
@@ -54,15 +43,13 @@ export default async function FaqPage({
 
         <section className="mt-8 flex flex-col items-center max-lg:items-start max-lg:px-4">
           <div className="flex max-w-[50%] flex-col items-start gap-4 max-lg:max-w-full">
-            <h1 className="max-sm:text-l-semibold mb-2 text-4xl max-lg:text-xl max-lg:leading-6.5 max-sm:leading-6">
+            <h1 className="heading-1-semibold max-lg:hidden">
               {faqContent?.title}
             </h1>
-            <div
-              className="prose text-m-regular text-justify max-lg:text-xl max-lg:leading-6.5 max-sm:text-sm max-sm:leading-5"
-              dangerouslySetInnerHTML={
-                faqContent?.body ? { __html: faqContent.body } : undefined
-              }
-            />
+            <h1 className="text-l-semibold lg:hidden">{faqContent?.title}</h1>
+            <div className="text-m-regular max-lg:text-s-regular max-sm:text-s-regular max-lg:leading-4 max-sm:leading-4">
+              {renderHTML(faqContent?.body)}
+            </div>
           </div>
         </section>
       </div>

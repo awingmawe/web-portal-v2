@@ -1,39 +1,55 @@
 'use client'
-import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
-import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
-import { useRouter } from 'next/navigation'
 
-export default function TopbarMobileFaq({
-  href,
-  applyRouter,
-  isWebview,
-  title = 'FAQ',
-}: {
-  href: string
-  applyRouter?: boolean
-  isWebview?: boolean
-  title?: string
-}) {
-  const router = useRouter()
+import { ArrowIcon } from '@/components/icons/arrow'
+import FaqSearch from '@/components/pages/faq/FaqSearch'
+import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
+import Image from 'next/image'
+
+const TopbarMobileFaq = ({ title }: { title: string }) => {
   const { goBack } = useCustomNavigation()
 
+  // Cari index dari step yang sedang aktif
   return (
-    <MobileTopbar
-      variant="plain"
-      title={title}
-      showBackButton={true}
-      onBackClick={() => {
-        if (href == 'back') {
-          goBack(isWebview ? '/web-view-access' : '/')
-          return
-        }
+    <div className="bg-primary-500 absolute -top-[22px] h-[125px] w-full lg:hidden">
+      <Image
+        src="/images/circle-1.svg"
+        alt="bg-search"
+        width={0}
+        height={0}
+        sizes="100vw"
+        priority
+        className={`absolute right-0 bottom-0 z-9 h-auto w-1/4`}
+      />
+      <Image
+        src="/images/circle-2.svg"
+        alt="bg-search"
+        width={0}
+        height={0}
+        sizes="100vw"
+        priority
+        className={`absolute top-2 left-0 z-9 h-auto w-1/2`}
+      />
+      <div className="relative z-99 h-full">
+        <div className="absolute top-6 flex h-full w-full flex-col items-center justify-center gap-3.5">
+          <div className="flex w-full items-center justify-between px-4">
+            <ArrowIcon
+              size={20}
+              className="rotate-180"
+              onClick={() => goBack()}
+            />
 
-        if (applyRouter) {
-          router.push(href)
-        } else {
-          window.location.href = href
-        }
-      }}
-    />
+            <p className="text-l-semibold">{title}</p>
+
+            {/* Ini hanya untuk mentrigger supaya textnya tetap center */}
+            <ArrowIcon size={20} className="invisible" />
+          </div>
+          <div className="w-full px-3 lg:hidden">
+            <FaqSearch />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
+
+export default TopbarMobileFaq
