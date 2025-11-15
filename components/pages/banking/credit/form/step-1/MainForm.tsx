@@ -19,6 +19,7 @@ import { useAuth } from '@/contexts/auth/context'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -53,6 +54,7 @@ export default function SubmissionStep1({
   dataPekerjaan: Facility[]
   loading: boolean
 }) {
+  const router = useRouter()
   const [isPemohonOpen, setIsPemohonOpen] = useState(false)
   const [isJemaahOpen, setIsJemaahOpen] = useState(false)
 
@@ -264,7 +266,9 @@ export default function SubmissionStep1({
             <Button
               variant="outline"
               size="md"
+              type="button"
               className="border-primary-500 border-2 px-10"
+              onClick={() => router.back()}
               disabled={isLoadingSubmit}
             >
               Batal

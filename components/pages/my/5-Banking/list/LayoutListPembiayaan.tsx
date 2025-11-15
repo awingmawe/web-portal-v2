@@ -1,14 +1,16 @@
 'use client'
 
 import { ArrowIcon } from '@/components/icons/arrow'
+import ListSubmissionPembiayaan from '@/components/pages/my/5-Banking/list/common/ListSubmissionPembiayaan'
 import { CardTransactionBankingSkeleton } from '@/components/pages/my/5-Banking/list/common/SkeletonCardPembiayaan'
-import ListSubmissionPembiayaan from '@/components/pages/my/5-Banking/list/ListSubmissionPembiayaan'
 import ListSubmissionPembiayaanMobile from '@/components/pages/my/5-Banking/list/mobile/ListSubsmissionPembiayaanMobile'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { Search } from 'lucide-react'
+import Script from 'next/script'
 import { useState } from 'react'
 import { useDebounce } from 'use-debounce'
 
@@ -57,6 +59,12 @@ export default function LayoutListSubmissionPembiayaan() {
       ) : (
         <ListSubmissionPembiayaanMobile search={debounceSearch[0]} />
       )}
+      <Script
+        src={SNAP_URL}
+        data-client-key={MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+        onError={() => {}}
+      />
     </div>
   )
 }

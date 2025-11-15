@@ -5,11 +5,13 @@ import { CardTransactionBankingActions } from '@/components/pages/my/5-Banking/l
 import { CardTransactionBankingStatus } from '@/components/pages/my/5-Banking/list/common/CardTransactionTagStatus'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
+import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { formatCurrency, formatDateToDDMMYYYY } from '@/lib/utils'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import { formatInTimeZone } from 'date-fns-tz'
 import { id } from 'date-fns/locale'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useMemo } from 'react'
 interface CardTransactionBankingProps {
   data: SubmissionCredit
@@ -48,6 +50,8 @@ const TotalPrice = ({ total_price }: { total_price: number }) => {
 function CardTransactionBankingComponent({
   data,
 }: CardTransactionBankingProps) {
+  const router = useRouter()
+  const { lg: isMobile } = useTailwindBreakpoint()
   // Menggunakan useMemo untuk mencegah kalkulasi ulang yang tidak perlu
   const {
     idSubmission,
@@ -76,6 +80,9 @@ function CardTransactionBankingComponent({
     }
   }, [data])
 
+  const onClickCard = () => {
+    if (isMobile) return router.push(`/my/banking/${data.id}`)
+  }
   return (
     <Card className="w-full gap-4 overflow-hidden rounded-[20px] border-1 border-neutral-200 py-0 shadow-none">
       {/* HEADER: Nama Travel & Nama Paket */}
@@ -104,12 +111,17 @@ function CardTransactionBankingComponent({
       </CardHeader>
 
       {/* CONTENT: Detail Jemaah, Harga, Tenor */}
-      <CardContent className="flex items-center gap-3 px-4 max-lg:flex-col max-lg:items-start max-lg:gap-1 max-lg:pb-4">
+      <CardContent
+        className="flex items-center gap-3 px-4 max-lg:flex-col max-lg:items-start max-lg:gap-1 max-lg:pb-4"
+        onClick={onClickCard}
+      >
         <div className="flex w-full items-center justify-between lg:hidden">
           <p className="text-s-regular text-neutral-500">{idSubmission}</p>
           <div className="lg:hidden">
             <ProviderWrapper
-              logo={data.applications[0].provider.logo || Placeholder.src}
+              logo={
+                data.applications[0].provider.logo || '/images/logo-koper.svg'
+              }
               name={data.applications[0].provider.name}
             />
           </div>
@@ -180,12 +192,9 @@ function CardTransactionBankingComponent({
       {/* FOOTER: Status & Tombol Aksi */}
       <CardTransactionBankingActions
         cta={data.view_cta}
+        booking_id={data.booking_id}
         submissionId={data.id}
-        packageId={data.package_id}
-        organizationSlug={
-          data.packageSnapshots[0]?.snapshot.package_variant.package
-            .organizationInstance.slug
-        }
+        application={data.applications}
         createdAtWithHours={createdAtWithHours}
       />
     </Card>

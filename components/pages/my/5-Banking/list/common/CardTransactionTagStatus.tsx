@@ -15,7 +15,7 @@ export function CardTransactionBankingStatus({
 
   return (
     <p
-      className={`text-m-medium max-lg:text-xs max-lg:leading-4 max-lg:font-normal ${cn('rounded-full px-4 py-1.5', config.className)}`}
+      className={`text-m-medium text-center max-lg:text-xs max-lg:leading-4 max-lg:font-normal ${cn('rounded-full px-4 py-1.5', config.className)}`}
     >
       {config.text}
     </p>

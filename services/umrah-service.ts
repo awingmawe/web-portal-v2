@@ -36,6 +36,7 @@ import {
 } from '@/constant/types/UmrahPersonalProps'
 import { PaymentMethod } from '@/constant/types/PaymentMethod'
 import { Badge } from '@/constant/types/NotificationProps'
+import { BookingCreateResponse } from '@/constant/types/BookingPembiayaan'
 
 export async function getBanner(
   query: GetListQuery
@@ -689,4 +690,18 @@ export async function getOfferUmrahPersonalById(
   id: number
 ): Promise<AxiosResponse<PackagePersonalData>> {
   return apiWithAuth.get(`/umrah/v2/personal-package/${id}`)
+}
+
+export async function createBookingBanking(
+  id: number
+): Promise<AxiosResponse<BookingCreateResponse>> {
+  return apiWithAuth.post(`/umrah/v2/booking/create-booking-credit`, {
+    submissionId: id,
+  })
+}
+
+export async function changePaymentMethodBookingBanking(
+  id: number
+): Promise<AxiosResponse<PaymentTransaction>> {
+  return apiWithAuth.put(`/umrah/v2/booking/change-payment-method/${id}`)
 }

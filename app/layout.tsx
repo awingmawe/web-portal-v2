@@ -3,8 +3,6 @@ import QontakChatWidget from '@/components/shared/QontakChatWidget'
 import RemoveLocalReferralCode from '@/components/shared/RemoveLocalReferralCode'
 import { Toaster } from '@/components/ui/sonner'
 import {
-  CHAT_BOT_CLIENT_ID,
-  CHAT_BOT_SOURCE,
   FACEBOOK_DOMAIN_VERIFICATION,
   GTM_ID,
   HIDE_QONTAK,
@@ -14,7 +12,6 @@ import { cookieNames } from '@/services/common/cookie'
 import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
-import Script from 'next/script'
 import { Suspense } from 'react'
 import { SWRConfig } from 'swr'
 import './globals.css'
@@ -33,14 +30,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en" translate="no" suppressHydrationWarning>
-      {CHAT_BOT_CLIENT_ID && CHAT_BOT_SOURCE && !isWebview && (
+      {/* {CHAT_BOT_CLIENT_ID && CHAT_BOT_SOURCE && !isWebview && (
         <Script
           src={CHAT_BOT_SOURCE}
           data-client-id={CHAT_BOT_CLIENT_ID}
           data-sender="Jhon"
           data-user-id="xxx-xxx"
         />
-      )}
+      )} */}
       <body>
         <MazeAnalytics />
         <Suspense>

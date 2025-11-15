@@ -13,7 +13,7 @@ import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { useGetOrganizationIdFromProviders } from '@/hooks/pembiayaan/useGetMitraPembiayaan'
 import { useUniqueSupportedProviders } from '@/hooks/pembiayaan/useGetSupportedProvider'
 import { isEmpty } from '@/lib/utils'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useMemo } from 'react'
 import { ResultsSummary } from './HeaderPackageList'
 import { NoResults } from './NoResultPackageList'
@@ -31,6 +31,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 }) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const router = useRouter()
   const {
     isLoadingSkeleton,
     isLoading,
@@ -145,19 +146,24 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     // 1. Reset the internal state to default values
     resetFilters()
 
-    // 2. Clear all search params except type and package
+    // 2. Clear all search params except for essential ones
     const params = new URLSearchParams(window.location.search)
+    const isChangePackageFlow = params.get('package') === 'change_package'
+
     for (const key of Array.from(params.keys())) {
-      if (key !== 'type' && key !== 'package') {
-        params.delete(key)
+      // Always keep 'type' and 'package'
+      if (key === 'type' || key === 'package') {
+        continue
       }
+      // If it's a change_package flow, also keep 'pV'
+      if (isChangePackageFlow && key === 'pV') {
+        continue
+      }
+      // Otherwise, delete the key
+      params.delete(key)
     }
-    window.history.pushState(
-      {},
-      '',
-      `${window.location.pathname}?${params.toString()}`
-    )
-  }, [resetFilters])
+    router.push(`${pathname}?${params.toString()}`)
+  }, [resetFilters, router, pathname])
 
   // Function to create URL with new sort parameter
   const createSortUrl = useCallback(

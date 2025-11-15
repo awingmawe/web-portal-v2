@@ -7,10 +7,12 @@ export default function EmptyState() {
   return (
     <div className="mt-24 flex flex-col items-center justify-center gap-4">
       <EmptyStateMy />
-      <p className="text-l-medium">Tidak Data Pengajuan Pembiayaan</p>
-      <p className="text-m-regular text-neutral-500">
-        Kamu tidak memiliki riwayat data pengajuan pembiayaan
-      </p>
+      <div className="flex flex-col items-center">
+        <p className="text-l-medium">Tidak Data Pengajuan Pembiayaan</p>
+        <p className="text-m-regular text-neutral-500">
+          Kamu tidak memiliki riwayat data pengajuan pembiayaan
+        </p>
+      </div>
       <Button
         className="px-10 py-4"
         size="sm"

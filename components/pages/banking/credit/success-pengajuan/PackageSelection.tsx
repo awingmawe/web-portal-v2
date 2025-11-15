@@ -10,7 +10,6 @@ import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { formatCurrency, isEmpty } from '@/lib/utils'
-import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -198,7 +197,7 @@ const PackageSelection = () => {
             key={`${provider.providerName}-${index}`}
           >
             <Image
-              src={provider.logo || Placeholder}
+              src={provider.logo || '/images/logo-koper.svg'}
               alt={provider.providerName}
               width={20}
               height={20}

@@ -75,7 +75,8 @@ export function mapSelectedPackagePembiayaan(
         ? `${data.package.organizationInstance.city.name}, ${data.package.organizationInstance.province.name}`
         : '-',
     organizationThumbnail:
-      data?.package?.organizationInstance?.thumbnail || Placeholder.src,
+      data?.package?.organizationInstance?.thumbnail ||
+      '/images/logo-koper.svg',
 
     // Package Info
     packageId: data?.package?.id || 0,

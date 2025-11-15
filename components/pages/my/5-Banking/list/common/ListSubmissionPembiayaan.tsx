@@ -1,8 +1,8 @@
 'use client'
 
 import { CardTransactionBanking } from '@/components/pages/my/5-Banking/list/common/CardPembiayaan'
+import EmptyState from '@/components/pages/my/5-Banking/list/common/EmptyState'
 import { CardTransactionBankingSkeleton } from '@/components/pages/my/5-Banking/list/common/SkeletonCardPembiayaan'
-import EmptyState from '@/components/pages/my/5-Banking/list/EmptyState'
 import { CustomPagination } from '@/components/shared/CustomPagination'
 import { useGetSubmissionList } from '@/services/hooks/banking-service/submission-credits-api'
 import { Fragment, useState } from 'react'
