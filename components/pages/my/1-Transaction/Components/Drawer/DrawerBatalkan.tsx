@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { shouldBatalkanByUser } from '@/components/pages/my/1-Transaction/Components/constant'
 import DrawerBatalkanPesanan from '@/components/pages/my/1-Transaction/Components/Drawer/DrawerFormBatalkan'
+import { BatalkanPesananInfo } from '@/components/pages/my/1-Transaction/Components/Modal/ModalBatalkanPesananInfo'
 import { Button } from '@/components/ui/button'
 import {
   Drawer,
@@ -10,7 +11,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { CALL_CENTER } from '@/constant/env'
+import { CALL_CENTER, PACKAGE_TYPE } from '@/constant/env'
 import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 
@@ -21,16 +22,29 @@ const DrawerBatalkan = React.memo(
     idOrganisasi,
     id,
     status,
+    packageTitle,
+    travelData = {
+      name: '',
+      phoneNumber: '',
+    },
+    packageType,
   }: {
     children: React.ReactNode
     bookingId: any
     idOrganisasi: any
     id: any
     status: string
+    packageTitle?: string
+    travelData?: {
+      name: string
+      phoneNumber: string
+    }
+    packageType?: string
   }) => {
     const closeRef = useRef<HTMLButtonElement>(null)
     const [open, setOpen] = useState(false)
     const [openForm, setOpenForm] = useState(false)
+    const [openBatalkanInfo, setOpenBatalkanInfo] = useState(false)
 
     const handleBuka = () => {
       setOpen(false) // tutup drawer refund
@@ -38,6 +52,7 @@ const DrawerBatalkan = React.memo(
         setOpenForm(true) // buka drawer sukses
       }, 300)
     }
+
     return (
       <>
         <Drawer open={open} onOpenChange={setOpen}>
@@ -58,6 +73,15 @@ const DrawerBatalkan = React.memo(
                 >
                   Batalkan Pesanan
                 </Button>
+              ) : packageType === PACKAGE_TYPE.HAJJ && status == 'completed' ? (
+                <Button
+                  onClick={() => {
+                    setOpenBatalkanInfo(true)
+                  }}
+                  className="border-error-500 w-full rounded-full border-2 bg-white py-3"
+                >
+                  Batalkan Pesanan
+                </Button>
               ) : (
                 <Link
                   href={`https://wa.me/${CALL_CENTER}?text=Assalamualaikum,+maaf+saya+ingin+membatalkan+pesanan+saya+dengan+kode+${id}`}
@@ -72,6 +96,15 @@ const DrawerBatalkan = React.memo(
             </div>
           </DrawerContent>
         </Drawer>
+
+        <BatalkanPesananInfo
+          open={openBatalkanInfo}
+          bookingId={bookingId}
+          onOpenChange={setOpenBatalkanInfo}
+          packageTitle={packageTitle ?? ''}
+          travelData={travelData}
+        />
+
         <DrawerBatalkanPesanan
           bookingId={bookingId}
           openForm={openForm}
