@@ -74,8 +74,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     }
   }, [])
   useEffect(() => {
-    console.log('Package')
-    console.log(pkg)
     if (typeof window !== 'undefined') {
       if (pkg.currency === 'IDR') {
         setIsChecked(
