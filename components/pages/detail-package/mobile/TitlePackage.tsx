@@ -5,7 +5,6 @@ import { PACKAGE_TYPE } from '@/constant/env'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { dissolve } from '@/lib/animation-setup'
 import { formatCurrency } from '@/lib/utils'
-import { differenceInDays } from 'date-fns'
 
 interface TitlePackageMobileProps {
   title: string
@@ -43,11 +42,9 @@ export default function TitlePackageMobile({
 
   return (
     <div className={`flex w-full flex-col gap-0.5 lg:hidden ${dissolve}`}>
-      {selectedVariant &&
-        differenceInDays(selectedVariant?.releasedAt as string, new Date()) <=
-          10 && (
-          <BookingReleasedInfo variant={selectedVariant} className="mb-3 " />
-        )}
+      {selectedVariant && (
+        <BookingReleasedInfo variant={selectedVariant} className="mb-3 " />
+      )}
       <h1 className="text-l-semibold break-all text-neutral-900">{title}</h1>
       {selectedVariant && (
         <>
