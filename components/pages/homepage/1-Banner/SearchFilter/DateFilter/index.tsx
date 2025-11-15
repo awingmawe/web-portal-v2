@@ -11,9 +11,11 @@ import {
 import { OtherProps } from '@/constant/types/GeneralProps'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import DisableDate from '@/hooks/disable-date-hooks'
+import { doesRangeCrossDisabled } from '@/hooks/does-date-range'
 import { formatDateRangeShort } from '@/lib/utils'
 import { id } from 'date-fns/locale'
 import React, { useState } from 'react'
+import { DateRange } from 'react-day-picker'
 
 const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
   const { filters, setDateRange, isDisabled, isLoadingSkeleton } =
@@ -34,6 +36,36 @@ const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
 
   if (whatPage === 'filter_search' && isLoadingSkeleton) {
     return <DateSkeleton />
+  }
+
+  const handleSelect = (range: DateRange | undefined) => {
+    if (!range) {
+      setDateRange(range)
+      return
+    }
+
+    // Jika hanya from yang dipilih, boleh lanjut
+    if (range.from && !range.to) {
+      setDateRange(range)
+      return
+    }
+
+    // Jika to dipilih, cek apakah melewati disabled date
+    if (range.from && range.to) {
+      const crossesDisabled = doesRangeCrossDisabled(
+        range.from,
+        range.to,
+        disabledRanges
+      )
+
+      if (crossesDisabled) {
+        // Tidak update dateRange, end date tidak bisa dipilih
+        setDateRange(undefined)
+        return
+      }
+    }
+
+    setDateRange(range)
   }
 
   return (
@@ -68,7 +100,7 @@ const DateFilter: React.FC<OtherProps> = ({ colorIcon, whatPage }) => {
           mode="range"
           defaultMonth={dateRange?.from}
           selected={dateRange}
-          onSelect={setDateRange}
+          onSelect={handleSelect}
           numberOfMonths={2}
           locale={id}
           fromDate={new Date()}
