@@ -5,10 +5,11 @@ import { SORT_OPTIONS } from '@/components/pages/search-packages/constants'
 import { Button } from '@/components/ui/button'
 import { DrawerFooter } from '@/components/ui/drawer'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { LOCATION_STORAGE_KEY } from '@/constant/env'
+import { toast } from '@/components/ui/sonner'
+import { useGeolocation } from '@/hooks/common/useGetLocation'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface SortDrawerProps {
   toggleDrawerAction: (id: number) => void
@@ -27,21 +28,33 @@ export function SortDrawer({
 }: SortDrawerProps) {
   const searchParams = useSearchParams()
   const updateQueryParams = useUpdateQueryParams()
-  const [isLocationAvailable, setIsLocationAvailable] = useState(false)
+  const { latitude, longitude, permissionStatus, requestLocation, resetError } =
+    useGeolocation()
+  const [isWaitingForLocation, setIsWaitingForLocation] = useState(false)
+
+  const applyLocationSort = () => {
+    if (latitude && longitude) {
+      updateQueryParams(
+        ['sort', 'coordinates'],
+        ['organization.location', `${latitude},${longitude}`]
+      )
+      applyFiltersAction(itemId)
+    }
+  }
 
   useEffect(() => {
-    // Cek ketersediaan lokasi di client-side
-    const location = localStorage.getItem(LOCATION_STORAGE_KEY)
-    setIsLocationAvailable(!!location)
-  }, [])
-
-  const filteredSortOptions = useMemo(() => {
-    if (isLocationAvailable) {
-      return SORT_OPTIONS
+    if (isWaitingForLocation) {
+      if (permissionStatus === 'granted' && latitude && longitude) {
+        applyLocationSort()
+        setIsWaitingForLocation(false)
+      } else if (permissionStatus === 'denied') {
+        toast.warning(
+          'Izin lokasi ditolak. Tidak bisa mengurutkan berdasarkan lokasi.'
+        )
+        setIsWaitingForLocation(false)
+      }
     }
-    // Jika lokasi tidak tersedia, filter keluar opsi 'Lokasi Terdekat'
-    return SORT_OPTIONS.filter((opt) => opt.value !== 'organization.location')
-  }, [isLocationAvailable])
+  }, [permissionStatus, latitude, longitude, isWaitingForLocation])
 
   // Update local state if URL parameters change
   useEffect(() => {
@@ -58,29 +71,24 @@ export function SortDrawer({
 
   // Apply sort filter and update URL
   const handleApplySort = () => {
-    const paramsToUpdate: { key: string; value: string }[] = [
-      { key: 'sort', value: selectedSort },
-    ]
-
     if (selectedSort === 'organization.location') {
-      const storedLocation = localStorage.getItem(LOCATION_STORAGE_KEY)
-      const { latitude, longitude } = JSON.parse(storedLocation!)
-      paramsToUpdate.push({
-        key: 'coordinates',
-        value: `${latitude},${longitude}`,
-      })
+      if (permissionStatus === 'granted' && latitude && longitude) {
+        applyLocationSort()
+      } else {
+        resetError()
+        requestLocation()
+        setIsWaitingForLocation(true)
+        if (permissionStatus === 'denied') {
+          toast.warning(
+            'Anda menonaktifkan lokasi, aktifkan Lokasi terlebih dahulu untuk mengurutkan paket berdasarkan lokasi terdekat.'
+          )
+          setIsWaitingForLocation(false)
+        }
+      }
     } else {
-      // Jika sortir BUKAN berdasarkan lokasi, pastikan parameter coordinates dihapus
-      paramsToUpdate.push({ key: 'coordinates', value: '' })
+      updateQueryParams(['sort', 'coordinates'], [selectedSort, ''])
+      applyFiltersAction(itemId)
     }
-
-    updateQueryParams(
-      paramsToUpdate.map((p) => p.key),
-      paramsToUpdate.map((p) => p.value)
-    )
-
-    // Close drawer and apply filters
-    applyFiltersAction(itemId)
   }
 
   return (
@@ -91,10 +99,10 @@ export function SortDrawer({
           onValueChange={handleSortChange}
           className="space-y-2"
         >
-          {filteredSortOptions.map((option, index) => (
+          {SORT_OPTIONS.map((option, index) => (
             <div
               key={option.value}
-              className={`flex cursor-pointer items-center gap-2 pb-2 ${index !== filteredSortOptions.length - 1 && 'border-b-1 border-b-neutral-100'}`}
+              className={`flex cursor-pointer items-center gap-2 pb-2 ${index !== SORT_OPTIONS.length - 1 && 'border-b-1 border-b-neutral-100'}`}
               onClick={() => handleSortChange(option.value)}
             >
               <RadioGroupItem

@@ -297,7 +297,7 @@ export function EventTrackerProvider({
   }
 
   function hasLoggedIn() {
-    return typeof window !== 'undefined' && !!getAccessToken()
+    return !!getAccessToken()
   }
 
   function beforeUnload() {

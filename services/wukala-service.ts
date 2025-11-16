@@ -12,7 +12,7 @@ export type WukalaSetting = {
   modifiedBy: string
   referralCode: string
 }
-export async function checkReferralCode(referralCode: any, aldan) {
+export async function checkReferralCode(referralCode: any) {
   try {
     const response = await apiWithAuth.get<any>(
       `/umrah/v1/wukala-setting/${referralCode}`

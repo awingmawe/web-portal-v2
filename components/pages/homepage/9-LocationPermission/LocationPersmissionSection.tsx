@@ -2,6 +2,7 @@
 
 import { LocationPermissionToast } from '@/components/pages/homepage/9-LocationPermission/RequestLocationPermission'
 import { LocationPermissionDrawer } from '@/components/pages/homepage/mobile/RequestLocationPermissionMobile'
+import { LOCATION_STORAGE_KEY } from '@/constant/env'
 import { useGeolocation } from '@/hooks/common/useGetLocation'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useEffect, useState } from 'react'
@@ -37,6 +38,7 @@ const LocationPermissionSection = () => {
 
   const handleClose = () => {
     setIsOpen(false)
+    localStorage.removeItem(LOCATION_STORAGE_KEY)
     // Opsional: Anda bisa menyimpan preferensi "jangan tanya lagi"
     // di localStorage jika pengguna menutupnya manual.
   }
