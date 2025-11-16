@@ -160,7 +160,11 @@ const ContentPembiayaan = ({
           </div>
 
           <div className="col-span-6 max-lg:col-span-12 max-lg:mb-15">
-            <FinancingSimulation dataTenor={dataTenor} price={getPrice()} />
+            <FinancingSimulation
+              dataTenor={dataTenor}
+              price={getPrice()}
+              showWarningMessage={false}
+            />
           </div>
 
           {/* Checkout Buttons */}

@@ -1,3 +1,4 @@
+import { InfoIcon } from '@/components/icons/info'
 import { ContentPembiayaan } from '@/components/pages/detail-package/2-PackageVariant/component/ContentPembiayaan'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Facility } from '@/constant/types/FacilityProps'
@@ -32,12 +33,24 @@ const ModalPembiayaan: React.FC<LayoutDrawerDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className={`!max-w-3/4 rounded-[20px] px-8 py-4 ${
+        className={`!max-w-3/4 rounded-[20px] p-8 ${
           hideCloseButton ? '[&>button]:hidden' : ''
         }`}
       >
-        <DialogTitle className="text-m-semibold">
+        <DialogTitle className="text-m-semibold flex flex-col gap-4">
           Kalkulasi Pembiayaan
+          <div
+            className={`text-s-regular bg-primary-100 flex items-center rounded-lg p-1`}
+          >
+            <InfoIcon
+              className="stroke-warning-700 mr-2 flex-none stroke-0"
+              size={20}
+            />
+            <p className="text-warning-700">
+              Harga paket dengan metode pembiayaan mengikuti tarif dasar tanpa
+              diskon.
+            </p>
+          </div>
         </DialogTitle>
         <ContentPembiayaan
           title={title}

@@ -26,10 +26,12 @@ export default function FinancingSimulation({
   dataTenor,
   price,
   showInput = false,
+  showWarningMessage = true,
 }: {
   dataTenor: Facility[]
   price?: number
   showInput?: boolean
+  showWarningMessage?: boolean
 }) {
   const [selectedTenor, setSelectedTenor] = useState('')
   const [totalAmount, setTotalAmount] = useState(
@@ -149,6 +151,21 @@ export default function FinancingSimulation({
   return (
     <div className="mx-auto flex w-full flex-col gap-4">
       <p className="text-l-semibold">Tenor & Estimasi Pembiayaan</p>
+      {/* Warning Message */}
+      {showWarningMessage && (
+        <div
+          className={`text-s-regular bg-primary-100 flex items-center rounded-lg p-1`}
+        >
+          <InfoIcon
+            className="stroke-warning-700 mr-2 flex-none stroke-0"
+            size={20}
+          />
+          <p className="text-warning-700">
+            Harga paket dengan metode pembiayaan mengikuti tarif dasar tanpa
+            diskon.
+          </p>
+        </div>
+      )}
       {/* Down Payment Input */}
       {showInput && (
         <div className={`relative space-y-1`}>
@@ -292,14 +309,6 @@ export default function FinancingSimulation({
                         (-) {formatCurrency(data.down_payment)}
                       </span>
                     </div>
-                    {/* <div className="flex items-center justify-between border-l-2 border-neutral-200 pl-2">
-                      <span className="text-s-regular text-neutral-500">
-                        Biaya Admin
-                      </span>
-                      <span className="text-m-medium text-right text-neutral-500">
-                        (+) {formatCurrency(data.admin_fee || 0)}
-                      </span>
-                    </div> */}
                   </div>
                 </AccordionContent>
               </AccordionItem>
