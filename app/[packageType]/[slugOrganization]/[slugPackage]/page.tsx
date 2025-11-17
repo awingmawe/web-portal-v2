@@ -66,7 +66,7 @@ export default async function DetailPackage({
   searchParams: any
 }) {
   const { slugPackage } = await params
-  const { referralCode } = await searchParams
+  const { referralCode, package: searchParamsPackage } = await searchParams
   const cookieStore = await cookies()
   const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value as string
 
@@ -329,6 +329,7 @@ export default async function DetailPackage({
                 packageVariantId={detailData?.packageVariant?.id}
                 token={token}
                 referralCodeParams={responseReferral?.referralCode}
+                isPembiayaan={searchParamsPackage}
               />
             </div>
           </div>
@@ -344,6 +345,7 @@ export default async function DetailPackage({
           variantType={detailData?.variantType}
           token={token}
           dataTenor={dataTenor?.data?.results}
+          isPembiayaan={searchParamsPackage}
         />
       </GalleryProvider>
       <EventTrackerImpression

@@ -1,7 +1,6 @@
 import ListCoverageContent from '@/components/pages/banking/credit/form/step-2/ContentDialog/ListCoverageContent'
 import LayoutDrawerDialog from '@/components/shared/LayoutDrawerDialog'
 import { Checkbox } from '@/components/ui/checkbox'
-import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -54,7 +53,7 @@ const CardProvider = ({
       >
         <div className="flex items-center gap-1">
           <Image
-            src={logo || Placeholder}
+            src={logo || '/images/logo-koper.svg'}
             alt={providerName}
             width={24}
             height={24}

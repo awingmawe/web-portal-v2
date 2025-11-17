@@ -31,6 +31,7 @@ function AccordionItem({
 
 function AccordionTrigger({
   className,
+  classNameHeader,
   children,
   noSeparator = false,
   sizeChevron = 24,
@@ -38,9 +39,10 @@ function AccordionTrigger({
 }: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {
   noSeparator?: boolean
   sizeChevron?: number
+  classNameHeader?: string
 }) {
   return (
-    <AccordionPrimitive.Header className="flex flex-col">
+    <AccordionPrimitive.Header className={`${classNameHeader} flex flex-col`}>
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(

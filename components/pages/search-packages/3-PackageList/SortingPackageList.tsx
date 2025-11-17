@@ -7,10 +7,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { LOCATION_STORAGE_KEY } from '@/constant/env'
+import { toast } from '@/components/ui/sonner'
+import { useGeolocation } from '@/hooks/common/useGetLocation'
 import { dissolve } from '@/lib/animation-setup'
 import { CheckIcon } from 'lucide-react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface SortingDropdownProps {
@@ -22,21 +23,43 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
   currentSort,
   createSortUrlAction,
 }) => {
-  const [isLocationAvailable, setIsLocationAvailable] = useState(false)
+  const router = useRouter()
+  const { latitude, longitude, permissionStatus, requestLocation, resetError } =
+    useGeolocation()
+  const [isWaitingForLocation, setIsWaitingForLocation] = useState(false)
 
   useEffect(() => {
-    // Cek ketersediaan lokasi di client-side
-    const location = localStorage.getItem(LOCATION_STORAGE_KEY)
-    setIsLocationAvailable(!!location)
-  }, [])
-
-  const filteredSortOptions = useMemo(() => {
-    if (isLocationAvailable) {
-      return SORT_OPTIONS
+    if (
+      isWaitingForLocation &&
+      permissionStatus === 'granted' &&
+      latitude &&
+      longitude
+    ) {
+      router.push(createSortUrlAction('organization.location'))
+      setIsWaitingForLocation(false)
+    } else if (isWaitingForLocation && permissionStatus === 'denied') {
+      toast.warning(
+        'Izin lokasi ditolak. Tidak bisa mengurutkan berdasarkan lokasi.'
+      )
+      setIsWaitingForLocation(false)
     }
-    // Jika lokasi tidak tersedia, filter keluar opsi 'Lokasi Terdekat'
-    return SORT_OPTIONS.filter((opt) => opt.value !== 'organization.location')
-  }, [isLocationAvailable])
+
+    if (
+      permissionStatus === 'denied' &&
+      currentSort === 'organization.location'
+    ) {
+      const url = createSortUrlAction('price-low')
+      router.push(url)
+    }
+  }, [
+    permissionStatus,
+    latitude,
+    longitude,
+    currentSort,
+    createSortUrlAction,
+    router,
+    isWaitingForLocation,
+  ])
 
   // Function to determine if a sort option is active
   const isActive = useCallback(
@@ -46,13 +69,33 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
     [currentSort]
   )
 
+  // Handle sort selection
+  const handleSortChange = (option: { value: string; label: string }) => {
+    if (option.value === 'organization.location') {
+      if (latitude && longitude) {
+        router.push(createSortUrlAction(option.value))
+      } else {
+        resetError()
+        requestLocation()
+        setIsWaitingForLocation(true)
+        if (permissionStatus === 'denied') {
+          toast.warning(
+            'Anda menonaktifkan lokasi, aktifkan Lokasi terlebih dahulu untuk mengurutkan paket berdasarkan lokasi terdekat.'
+          )
+          setIsWaitingForLocation(false)
+        }
+      }
+    } else {
+      setIsWaitingForLocation(false)
+      router.push(createSortUrlAction(option.value))
+    }
+  }
+
   // Get display text for current sort
   const currentSortText = useMemo(() => {
-    const option = filteredSortOptions.find(
-      (option) => option.value === currentSort
-    )
+    const option = SORT_OPTIONS.find((option) => option.value === currentSort)
     return option?.label || 'Harga Terendah'
-  }, [currentSort, filteredSortOptions])
+  }, [currentSort])
 
   return (
     <Popover>
@@ -67,16 +110,16 @@ export const SortingDropdown: React.FC<SortingDropdownProps> = ({
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" sideOffset={8}>
-        {filteredSortOptions.map((option, index) => (
+        {SORT_OPTIONS.map((option, index) => (
           <div key={`sortBy-${option.value}-${index}`}>
             {index > 0 && <div className="mx-1 h-px bg-neutral-100" />}
-            <Link
-              href={createSortUrlAction(option.value)}
-              className={`text-m-regular flex w-full cursor-pointer items-center justify-between px-3 py-2.5 hover:bg-neutral-100 ${dissolve} ${isActive(option.value) ? 'bg-primary-50 text-primary-600 font-medium' : ''}`}
+            <button
+              onClick={handleSortChange.bind(null, option)}
+              className={`text-m-regular flex w-full cursor-pointer items-center justify-between px-3 py-2.5 text-left hover:bg-neutral-100 ${dissolve} ${isActive(option.value) ? 'bg-primary-50 text-primary-600 font-medium' : ''}`}
             >
               <span>{option.label}</span>
               {isActive(option.value) && <CheckIcon className="h-4 w-4" />}
-            </Link>
+            </button>
           </div>
         ))}
       </PopoverContent>

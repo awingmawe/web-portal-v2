@@ -29,7 +29,7 @@ interface SubmissionCreditAttachment {
 /**
  * Tipe untuk tabel: submission_credit_application
  */
-interface SubmissionCreditApplication {
+export interface SubmissionCreditApplication {
   id: number
   submission_id: number
   provider_id: number
@@ -45,11 +45,28 @@ interface SubmissionCreditApplication {
   request_tenor: number
   total_checkout: number
   must_checkout: boolean
+  down_payment_percentage: string
+  down_payment_amount: string
+  coverage_amount: string
   /**
    * Relasi ke provider
    */
   provider: Provider
 }
+
+/**
+ * Tipe untuk requested_loan
+ */
+export interface RequestedLoan {
+  admin_fee: number
+  down_payment: number
+  dpPercentage: number
+  loan_amount: number
+  monthly_payment: number
+  totalAmount: number
+  upfront_payment: number
+}
+
 /**
  * Tipe untuk tabel: submission_manifest
  */
@@ -103,10 +120,12 @@ export interface SubmissionCredit {
   status: string
   postcode: string
   organization_instance_name: string
+  organizationInstanceName: string
   createdAt: string
   submission_id: string
   view_status: ViewStatus
   view_cta: ViewCta
+  booking_id: number
   // --- Data yang Digabungkan (Relasi) ---
   /**
    * Relasi ke submission_credit_package_snapshot
@@ -125,6 +144,10 @@ export interface SubmissionCredit {
    * Relasi ke submission_manifest
    */
   manifests: SubmissionManifest[]
+  /**
+   * Relasi ke requested_loan
+   */
+  requested_loan: RequestedLoan
 }
 
 export interface SubmissionListResponse {

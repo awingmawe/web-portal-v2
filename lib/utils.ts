@@ -21,6 +21,12 @@ export const formatDateToDDMMYYYY = (date: Date): any => {
   return formatInTimeZone(date, 'Asia/Jakarta', 'dd MMMM yyyy', { locale: id }) // This converts to YYYY-MM-DD format
 }
 
+export const formatDateToDDMMYYYYHHmm = (date: Date): any => {
+  return formatInTimeZone(date, 'Asia/Jakarta', 'dd MMMM yyyy, HH:mm', {
+    locale: id,
+  }) // This converts to YYYY-MM-DD format
+}
+
 export const formatReadTime = (time: number) => {
   const hours = Math.floor(time / 60)
   const minutes = time % 60

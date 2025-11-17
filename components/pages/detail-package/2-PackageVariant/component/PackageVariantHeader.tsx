@@ -28,12 +28,10 @@ const PackageVariantHeader: React.FC<PackageVariantHeaderProps> = ({
     <div
       className={`flex items-center justify-between ${className || ''} ${packageType === PACKAGE_TYPE.HAJJ && 'max-lg:hidden'}`}
     >
-      <div className="flex w-full flex-col gap-2">
-        <p className="heading-4-medium text-neutral-900 max-lg:hidden">
-          Cek Harga!
-        </p>
+      <div className="flex w-full flex-col gap-2 max-lg:hidden">
+        <p className="heading-4-medium text-neutral-900">Cek Harga!</p>
 
-        <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1 max-lg:hidden">
+        <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1">
           <InfoIcon size={20} className="text-primary-700 stroke-0" />
           <p className="text-s-regular text-primary-700">
             Batas booking {formattedReleasedAt}

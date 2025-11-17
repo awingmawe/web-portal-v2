@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/accordion'
 import { Provider } from '@/constant/types/Providers'
 import { useFilterProduct } from '@/contexts/filter-product-context'
+import { useIsProviderFilterLocked } from '@/hooks/pembiayaan/useIsProviderFilterLocked'
 import React from 'react'
 
 interface ProviderFilterProps {
@@ -15,6 +16,8 @@ interface ProviderFilterProps {
 }
 
 const ProviderFilter: React.FC<ProviderFilterProps> = ({ dataProvider }) => {
+  const isResetDisabled = useIsProviderFilterLocked()
+
   const { filters, setProviderId, resetFilter, isLoadingSkeleton } =
     useFilterProduct()
 
@@ -32,12 +35,14 @@ const ProviderFilter: React.FC<ProviderFilterProps> = ({ dataProvider }) => {
       <AccordionTrigger>
         <div className="flex w-full items-center justify-between">
           <p className="text-l-medium text-neutral-900">Mitra Pembiayaan</p>
-          <span
-            className="text-s-medium text-error-500 cursor-pointer"
-            onClick={handleResetClick}
-          >
-            Reset Mitra Pembiayaan
-          </span>
+          {!isResetDisabled && (
+            <span
+              className="text-s-medium text-error-500 cursor-pointer"
+              onClick={handleResetClick}
+            >
+              Reset Mitra Pembiayaan
+            </span>
+          )}
         </div>
       </AccordionTrigger>
       <AccordionContent>

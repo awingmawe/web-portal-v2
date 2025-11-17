@@ -7,6 +7,7 @@ import ScrollShadowWrapper from '@/components/pages/search-packages/ScrollWrappe
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import Topbar from '@/components/shared/Topbar'
 import { NODE_ENV, URL } from '@/constant/env'
+import { mapProductsToCardData } from '@/lib/data-formatter'
 import { getProviderPublic } from '@/services/banking-service'
 import { cookieNames } from '@/services/common/cookie'
 import { getFacilityEnum } from '@/services/general-service'
@@ -50,6 +51,7 @@ export default async function SearchGeneral({
     dataSection,
     dataKota,
     dataProviders,
+    dataRecommendation,
   ] = await Promise.all([
     getMinMaxPrice(),
     getTagPackagesEnum(awaitedParams.type || 'umrah'),
@@ -57,6 +59,13 @@ export default async function SearchGeneral({
     getSectionEnum(awaitedParams.type || 'umrah'),
     getKotaV2({ page: 1, size: 100 }),
     getProviderPublic({ page: 1, size: 100 }),
+    getPackageListV2({
+      page: 1,
+      size: 6,
+      order: 'asc',
+      orderBy: 'recommendation',
+      packageType: 'umrah',
+    }),
   ])
 
   const page = parseInt(awaitedParams.page || '1', 10)
@@ -219,7 +228,11 @@ export default async function SearchGeneral({
             />
           </div>
           <div className="col-span-8 max-lg:col-span-12 max-lg:px-4">
-            <PackageResults />
+            <PackageResults
+              packageReccomendation={mapProductsToCardData(
+                dataRecommendation.data
+              )}
+            />
           </div>
         </ScrollShadowWrapper>
       </main>

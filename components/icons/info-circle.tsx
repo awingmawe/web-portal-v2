@@ -3,6 +3,7 @@ import React from 'react'
 
 export const InfoCircleIcon: React.FC<IconProps> = ({
   size = 15,
+  className,
   ...props
 }) => {
   return (
@@ -12,6 +13,7 @@ export const InfoCircleIcon: React.FC<IconProps> = ({
       height={size}
       viewBox="0 0 14 15"
       fill="none"
+      className={className}
       {...props}
     >
       <path

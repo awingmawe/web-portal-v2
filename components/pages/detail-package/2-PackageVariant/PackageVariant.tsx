@@ -54,6 +54,7 @@ interface PackageVariantComponentProps {
   packageVariantId: number
   referralCodeParams?: string
   dataTenor: Facility[]
+  isPembiayaan: 'change_package' | 'pembiayaan'
 }
 
 const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
@@ -64,6 +65,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   packageVariantId,
   referralCodeParams,
   dataTenor,
+  isPembiayaan,
 }) => {
   const [isLinkAja, setIsLinkAja] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
@@ -94,6 +96,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
   const {
+    isEmptyRoomType,
     selectedVariant,
     selectedVariantId,
     selectedRoomType,
@@ -369,6 +372,11 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
       {/* Action buttons */}
       <ActionButtons
+        getPrice={getPrice}
+        selectedVariant={selectedVariant}
+        isEmptyRoomType={isEmptyRoomType}
+        selectedRoomType={selectedRoomType}
+        getTotalQty={getTotalQty}
         variants={variants}
         availableRoomTypes={availableRoomTypes}
         packageType={pkg.packageType}
@@ -377,6 +385,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         currency={pkg.currency}
         handlePushEvent={handlePushEvent}
         setIsPembiayaanModalOpen={setIsPembiayaanModalOpen}
+        isPembiayaan={isPembiayaan}
       />
 
       {/* Bottom actions */}

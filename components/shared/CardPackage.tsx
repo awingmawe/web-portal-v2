@@ -26,6 +26,7 @@ interface CardPackageProps {
   section?: string
   eventCategory?: string
   dataProviders?: Provider[] // khusus untuk flow pembiayaan saja
+  isPembiayaan?: string | 'package' | 'change_package' | null
 }
 
 export const CardPackage = memo(function CardPackage({
@@ -33,6 +34,7 @@ export const CardPackage = memo(function CardPackage({
   section = '',
   eventCategory = 'home',
   dataProviders,
+  isPembiayaan,
 }: CardPackageProps) {
   const elem = useRef<HTMLDivElement>(null)
 
@@ -148,6 +150,10 @@ export const CardPackage = memo(function CardPackage({
     )
   }, [dataProviders, organizationInstanceId])
 
+  const redirect = !isEmpty(isPembiayaan)
+    ? `/${packageType}/${slugOrganization}/${slugPackage}?package=${isPembiayaan}`
+    : `/${packageType}/${slugOrganization}/${slugPackage}`
+
   useEffect(() => {
     if (elem.current) {
       observe(elem.current, () => {
@@ -181,7 +187,7 @@ export const CardPackage = memo(function CardPackage({
 
   return (
     <Link
-      href={`/${packageType}/${slugOrganization}/${slugPackage}`}
+      href={redirect}
       onClick={() => {
         pushEvent({
           name: 'click_package_card',

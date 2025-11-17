@@ -32,6 +32,7 @@ import { City } from '@/constant/types/LocationProps'
 import { Provider } from '@/constant/types/Providers'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
+import { useIsProviderFilterLocked } from '@/hooks/pembiayaan/useIsProviderFilterLocked'
 import { isEmpty } from '@/lib/utils'
 import { DialogTitle } from '@radix-ui/react-dialog'
 import { Fragment, useEffect, useMemo, useState } from 'react'
@@ -85,6 +86,7 @@ export default function FilterPanel({
     setProviderId,
     filters,
   } = useFilterProduct()
+  const isProviderFilterLocked = useIsProviderFilterLocked()
 
   const [showViewAll, setShowViewAll] = useState({
     facilities: false,
@@ -510,14 +512,15 @@ export default function FilterPanel({
                 {config.icon}
                 <p className="text-m-semibold">{config.title}</p>
               </div>
-              {hasActiveFilters && (
-                <p
-                  className="text-s-medium text-error-500 cursor-pointer"
-                  onClick={() => resetFilter(config.filterName as any)}
-                >
-                  {config.resetLabel}
-                </p>
-              )}
+              {hasActiveFilters &&
+                !(config.key === 'provider' && isProviderFilterLocked) && (
+                  <p
+                    className="text-s-medium text-error-500 cursor-pointer"
+                    onClick={() => resetFilter(config.filterName as any)}
+                  >
+                    {config.resetLabel}
+                  </p>
+                )}
             </div>
           </DrawerHeader>
           {config.content(closeExpandedDrawer, applyAndCloseExpandedDrawer)}

@@ -1,17 +1,15 @@
 'use client'
 
 import { ArrowIcon } from '@/components/icons/arrow'
-import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { Check } from 'lucide-react'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const STEP_1_ID = 'step-1'
 const STEP_2_ID = 'step-2'
 
 const TopbarMobilePembiayaan = () => {
-  const { goBack } = useCustomNavigation()
-
+  const router = useRouter()
   const pathname = usePathname()
   // Ambil step dari URL (contoh: /bank/credit/form/step-1 -> step-1)
   const currentStep = pathname.split('/').pop() || 'step-1'
@@ -24,6 +22,12 @@ const TopbarMobilePembiayaan = () => {
   // Cari index dari step yang sedang aktif
   const currentStepIndex = steps.findIndex((s) => s.id === currentStep)
 
+  const goBack = () => {
+    if (currentStep === 'step-1') {
+      router.push('/banking/credit')
+    }
+    router.back()
+  }
   return (
     <div className="bg-primary-500 absolute -top-[22px] h-[125px] w-full lg:hidden">
       <Image
@@ -47,11 +51,7 @@ const TopbarMobilePembiayaan = () => {
       <div className="relative z-99 h-full">
         <div className="absolute flex h-full w-full flex-col items-center justify-center gap-3.5">
           <div className="flex w-full items-center justify-between px-4">
-            <ArrowIcon
-              size={20}
-              className="rotate-180"
-              onClick={() => goBack()}
-            />
+            <ArrowIcon size={20} className="rotate-180" onClick={goBack} />
 
             <p className="text-l-semibold">Pembiayaan Umroh</p>
 

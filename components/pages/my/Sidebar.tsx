@@ -137,14 +137,14 @@ export const Sidebar = () => {
             icon={<ReceiptIcon size={24} />}
             label="Transaksi"
             href="/my/transaction"
-            isActive={pathname === '/my/transaction'}
+            isActive={pathname.includes('/my/transaction')}
             loading={profile ? false : true}
           />
           <MenuItem
             icon={<MoneysIcon />}
             label="Pembiayaan Umroh"
             loading={profile ? false : true}
-            isActive={pathname === '/my/banking'}
+            isActive={pathname.includes('/my/banking')}
             href="/my/banking"
           />
           <MenuItem

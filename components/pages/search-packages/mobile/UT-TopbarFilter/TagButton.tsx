@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { useUpdateQueryParams } from '@/hooks/common/useUpdateQuery'
+import { useIsProviderFilterLocked } from '@/hooks/pembiayaan/useIsProviderFilterLocked'
 
 interface TagButtonProps {
   label: string
@@ -9,6 +10,7 @@ interface TagButtonProps {
   setFilters: (filter: string) => void
   shouldUpdate?: boolean
   paramName?: string
+  type?: 'price' | 'facility' | 'section' | 'location' | 'promo' | 'provider'
 }
 
 // Tag Button Component
@@ -19,8 +21,14 @@ const TagButton: React.FC<TagButtonProps> = ({
   setFilters,
   name,
   shouldUpdate = false,
+  type,
   paramName,
 }) => {
+  const isProviderFilterLocked = useIsProviderFilterLocked()
+
+  // Disable the tag button if it's a 'change_package' flow and a provider is pre-selected.
+  const isDisabled = type === 'provider' && isProviderFilterLocked
+
   const updateQueryParams = useUpdateQueryParams()
   const code = String(rawCode) // Ensure code is always a string
 
@@ -74,6 +82,7 @@ const TagButton: React.FC<TagButtonProps> = ({
     <Button
       variant="default"
       onClick={() => handleTagClick(code)}
+      disabled={isDisabled}
       className={`
         active:bg-primary-200 rounded-full border px-2 py-1 whitespace-nowrap transition-colors
         ${

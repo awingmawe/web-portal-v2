@@ -1,5 +1,5 @@
 import { metadata } from '@/app/shared-metadata'
-import ListSubmissionPembiayaan from '@/components/pages/my/5-Banking/list/ListSubmissionPembiayaan'
+import LayoutListSubmissionPembiayaan from '@/components/pages/my/5-Banking/list/LayoutListPembiayaan'
 import LayoutMy from '@/components/pages/my/Layout'
 export async function generateMetadata() {
   return {
@@ -14,7 +14,7 @@ export default async function BankingPage() {
     <LayoutMy>
       <div className="mx-auto max-w-7xl lg:px-4">
         {/* <TransactionUpcoming /> */}
-        <ListSubmissionPembiayaan />
+        <LayoutListSubmissionPembiayaan />
         {/* <BottomNavigation /> */}
       </div>
     </LayoutMy>

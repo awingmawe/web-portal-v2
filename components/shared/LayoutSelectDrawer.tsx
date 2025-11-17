@@ -34,6 +34,7 @@ export interface SelectOption {
 
 interface SelectWithInfiniteScrollProps {
   value?: string
+  selectedLabel?: string
   onChangeAction: (value: string, option?: SelectOption) => void
   options: SelectOption[]
   placeholder?: string
@@ -60,6 +61,7 @@ export const LayoutSelectDrawer = forwardRef<
   (
     {
       value,
+      selectedLabel,
       onChangeAction,
       options = [],
       placeholder = 'Pilih opsi',
@@ -85,7 +87,19 @@ export const LayoutSelectDrawer = forwardRef<
     const scrollContainerRef = useRef<HTMLDivElement>(null)
 
     const selectedOption = options.find((option) => option.value === value)
-    const displayValue = selectedOption?.label || placeholder
+
+    const displayValue = useMemo(() => {
+      // 1. Prioritas utama: label dari 'options' yang sudah di-load
+      if (selectedOption?.label) {
+        return selectedOption.label
+      }
+      // 2. Fallback: 'selectedLabel' yang di-pass dari parent (jika 'value' ada)
+      if (value && selectedLabel) {
+        return selectedLabel
+      }
+      // 3. Fallback terakhir: placeholder
+      return placeholder
+    }, [selectedOption, selectedLabel, value, placeholder])
 
     const handleSelect = useCallback(
       (selectedValue: string) => {
@@ -97,11 +111,14 @@ export const LayoutSelectDrawer = forwardRef<
     )
 
     // Default option renderer
-    const defaultRenderOption = (option: SelectOption, isSelected: boolean) => (
-      <div className="flex w-full items-center justify-between">
-        <span className="text-m-regular">{option.label}</span>
-        {isSelected && <Check className="h-4 w-4" />}
-      </div>
+    const defaultRenderOption = useCallback(
+      (option: SelectOption, isSelected: boolean) => (
+        <div className="flex w-full items-center justify-between">
+          <span className="text-m-regular">{option.label}</span>
+          {isSelected && <Check className="h-4 w-4" />}
+        </div>
+      ),
+      []
     )
 
     // Default empty state renderer
@@ -195,6 +212,7 @@ export const LayoutSelectDrawer = forwardRef<
       disabled,
       value,
       handleSelect,
+      defaultRenderOption,
     ])
 
     // Mobile: Drawer
@@ -210,7 +228,7 @@ export const LayoutSelectDrawer = forwardRef<
                 disabled || loading
                   ? 'cursor-not-allowed bg-neutral-50 text-neutral-400'
                   : 'hover:border-neutral-300',
-                !selectedOption && 'text-neutral-400',
+                !value && 'text-neutral-400',
                 triggerClassName
               )}
             >
@@ -250,7 +268,7 @@ export const LayoutSelectDrawer = forwardRef<
               disabled || loading
                 ? 'cursor-not-allowed bg-neutral-50 text-neutral-400'
                 : 'hover:border-neutral-300',
-              !selectedOption && 'text-neutral-400',
+              !value && 'text-neutral-400',
               triggerClassName
             )}
           >

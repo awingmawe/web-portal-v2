@@ -57,6 +57,11 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
   const cityId = form.watch('cityId')
   const districtId = form.watch('districtId')
 
+  const provinceName = form.watch('provinceName')
+  const cityName = form.watch('cityName')
+  const districtName = form.watch('districtName')
+  const postalCode = form.watch('postalCode')
+
   const [inputProvince, setInputProvince] = useState('')
   const [inputCity, setInputCity] = useState('')
   const [inputDistrict, setInputDistrict] = useState('')
@@ -191,6 +196,7 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
       ...district,
     })) || []
 
+  // label: `${capitalizeText(subDistrict.name)} - ${subDistrict.postalCode}`
   const subDistrictOptions: SelectOption[] =
     subDistricts?.map((subDistrict: SubdistrictPostalCode) => ({
       value: subDistrict.postalCode,
@@ -213,6 +219,7 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
               <LayoutSelectDrawer
                 ref={field.ref}
                 value={field.value}
+                selectedLabel={provinceName}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
                   form.setValue('provinceName', option?.label || '')
@@ -248,6 +255,7 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
               <LayoutSelectDrawer
                 ref={field.ref}
                 value={field.value}
+                selectedLabel={cityName}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
                   form.setValue('cityName', option?.label)
@@ -287,6 +295,7 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
               <LayoutSelectDrawer
                 ref={field.ref}
                 value={field.value}
+                selectedLabel={districtName}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
                   form.setValue('districtName', option?.label)
@@ -326,6 +335,7 @@ const FormLokasi = ({ form, disabled = false }: FormLokasiProps) => {
               <LayoutSelectDrawer
                 ref={field.ref}
                 value={field.value}
+                selectedLabel={postalCode}
                 onChangeAction={(value, option) => {
                   field.onChange(value)
                   form.setValue('postalCode', option?.value)

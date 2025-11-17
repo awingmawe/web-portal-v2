@@ -294,6 +294,7 @@ const HorizontalFilterBar = ({
               setFilters={tag.setter}
               filters={filters}
               shouldUpdate
+              type={tag.type}
               paramName={tag.paramName}
             />
           ))}

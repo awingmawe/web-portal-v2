@@ -1,11 +1,10 @@
 'use client'
 
-import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import { Check, ChevronLeft } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 const StepperIndicator = () => {
-  const { goBack } = useCustomNavigation()
+  const router = useRouter()
   const pathname = usePathname()
 
   // Ambil step dari URL (contoh: /bank/credit/form/step-1 -> step-1)
@@ -16,10 +15,16 @@ const StepperIndicator = () => {
     { id: 'step-2', number: 2, label: 'Pilih Mitra Pembiayaan' },
   ]
 
+  const goBack = () => {
+    if (currentStep === 'step-1') {
+      router.push('/banking/credit')
+    }
+    router.back()
+  }
   return (
     <section className="container mx-auto space-y-10 max-lg:hidden">
       <p
-        onClick={() => goBack()}
+        onClick={goBack}
         className="heading-3-semibold inline-flex w-fit cursor-pointer items-center gap-1 max-lg:hidden"
       >
         <ChevronLeft size={24} />

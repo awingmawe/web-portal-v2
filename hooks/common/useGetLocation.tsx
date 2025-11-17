@@ -187,11 +187,17 @@ export const useGeolocation = () => {
 
     // **LOGIKA BARU**: Simpan ke localStorage
     try {
-      localStorage.setItem(
-        LOCATION_STORAGE_KEY,
-        JSON.stringify({ latitude, longitude })
-      )
-      toast.success('Lokasi berhasil disimpan.')
+      if (typeof window !== 'undefined') {
+        const alreadyHaveLocation = localStorage.getItem(LOCATION_STORAGE_KEY)
+        if (alreadyHaveLocation) {
+          return
+        }
+        localStorage.setItem(
+          LOCATION_STORAGE_KEY,
+          JSON.stringify({ latitude, longitude })
+        )
+        toast.success('Lokasi berhasil disimpan.')
+      }
     } catch (error) {
       console.error('Gagal menyimpan lokasi ke localStorage:', error)
     }
@@ -259,5 +265,12 @@ export const useGeolocation = () => {
     return null
   }, [])
 
-  return { ...state, requestLocation, getLocationFromStorage }
+  const resetError = () => {
+    setState((s) => ({
+      ...s,
+      error: null,
+    }))
+  }
+
+  return { ...state, requestLocation, getLocationFromStorage, resetError }
 }

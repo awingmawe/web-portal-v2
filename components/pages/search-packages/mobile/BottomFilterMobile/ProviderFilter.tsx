@@ -7,8 +7,10 @@ import { Input } from '@/components/ui/input'
 import { Provider } from '@/constant/types/Providers'
 import { useFilterProduct } from '@/contexts/filter-product-context'
 import { useCheckboxSelection } from '@/hooks/filter-product-hooks/useCheckboxSelection'
+import { useIsProviderFilterLocked } from '@/hooks/pembiayaan/useIsProviderFilterLocked'
 import { Search } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
 interface ProviderDrawerProps {
   toggleDrawerAction: (id: number) => void
@@ -24,6 +26,19 @@ export function ProviderDrawer({
   dataProvider,
 }: ProviderDrawerProps) {
   const { filters, setProviderId } = useFilterProduct()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const providerParam = searchParams.get('pV')
+  const isDisabled = useIsProviderFilterLocked()
+
+  // Atur nilai default berdasarkan parameter 'pV' dari URL saat pertama kali dimuat.
+  useEffect(() => {
+    if (providerParam && !filters.providerId) {
+      setProviderId(providerParam)
+    }
+    // Dependensi di bawah ini memastikan efek berjalan saat parameter URL berubah.
+  }, [providerParam, filters.providerId, setProviderId, router])
+
   const { isItemSelected, handleSelectionChange } = useCheckboxSelection({
     selectedValues: filters.providerId,
     onSelectionChange: setProviderId,
@@ -57,6 +72,7 @@ export function ProviderDrawer({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="rounded-full border-neutral-200 py-1.5 pl-10"
+          disabled={isDisabled}
         />
         {searchQuery && (
           <button
@@ -82,6 +98,7 @@ export function ProviderDrawer({
               onCheckedChange={(checked) =>
                 handleSelectionChange(String(option.id), checked as boolean)
               }
+              disabled={isDisabled}
             />
           ))
         ) : (

@@ -7,8 +7,11 @@ import {
   ResponseSubmissionPembiayaan,
 } from '@/constant/types/Pembiayaan'
 import { CoverageResponse, ResponseProvider } from '@/constant/types/Providers'
-import { SubmissionListResponse } from '@/constant/types/SubmissionPembiayaan'
-import { api, apiWithAuth } from '@/services/common/http'
+import {
+  SubmissionCredit,
+  SubmissionListResponse,
+} from '@/constant/types/SubmissionPembiayaan'
+import { api, apiWithAuth, createServerApiClient } from '@/services/common/http'
 import { AxiosResponse } from 'axios'
 import qs from 'query-string'
 
@@ -114,4 +117,13 @@ export async function getProviderByCoverage(
   return apiWithAuth.get(
     `/banking/v2/provider-coverage/by-provider/${providerId}?${qs.stringify(query)}`
   )
+}
+
+export async function submissionPembiayaanDetail(
+  id: number,
+  token: string
+): Promise<AxiosResponse<SubmissionCredit>> {
+  const client = token ? createServerApiClient(token) : apiWithAuth
+
+  return client.get(`/banking/v2/credit/submissions/${id}`)
 }
