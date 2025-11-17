@@ -5,8 +5,18 @@ import FaqSearch from '@/components/pages/faq/FaqSearch'
 import { useCustomNavigation } from '@/hooks/common/useCustomNavigation'
 import Image from 'next/image'
 
-const TopbarMobileFaq = ({ title }: { title: string }) => {
+const TopbarMobileFaq = ({
+  title,
+  isWebview,
+}: {
+  title: string
+  isWebview: boolean
+}) => {
   const { goBack } = useCustomNavigation()
+
+  const handleClose = () => {
+    window.location.href = '/close-web-view'
+  }
 
   // Cari index dari step yang sedang aktif
   return (
@@ -35,7 +45,7 @@ const TopbarMobileFaq = ({ title }: { title: string }) => {
             <ArrowIcon
               size={20}
               className="rotate-180"
-              onClick={() => goBack()}
+              onClick={() => (isWebview ? handleClose() : goBack())}
             />
 
             <p className="text-l-semibold">{title}</p>

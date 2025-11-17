@@ -32,6 +32,7 @@ export default async function LayoutFaq({
         <div className="fixed w-full">
           <TopbarMobileFaq
             title={variant !== 'details' ? 'FAQ' : 'Jawaban Pertanyaan'}
+            isWebview={isWebview === 'true'}
           />
         </div>
         {/* END MOBILE TOPBAR */}
