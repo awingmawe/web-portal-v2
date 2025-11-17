@@ -57,5 +57,6 @@ export const CATEGORIES_FILTER_SEARCH = [
 ]
 
 export const LOCATION_STORAGE_KEY = 'user_location'
+export const LOCATION_STORAGE_CLOSED = 'user_location_closed'
 
 export const WEBSOCKET_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL
