@@ -22,6 +22,7 @@ const PembiayaanDrawerMobile = React.memo(
     packageType,
     variantType,
     dataTenor,
+    isPembiayaan,
   }: {
     children: React.ReactNode
     title: string
@@ -31,6 +32,7 @@ const PembiayaanDrawerMobile = React.memo(
     packageType: string
     variantType: string
     dataTenor: Facility[]
+    isPembiayaan?: 'change_package' | 'pembiayaan'
   }) => {
     return (
       <Drawer>
@@ -57,6 +59,7 @@ const PembiayaanDrawerMobile = React.memo(
               image={image}
               variantType={variantType}
               dataTenor={dataTenor}
+              isPembiayaan={isPembiayaan}
             />
           </DrawerHeader>
         </DrawerContent>

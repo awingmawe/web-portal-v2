@@ -1,6 +1,10 @@
 import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
 import { Button } from '@/components/ui/button'
 import { PACKAGE_TYPE } from '@/constant/env'
+import { PackageVariant } from '@/constant/types/PackageProps'
+import { RoomType } from '@/contexts/package-variant-context'
+import { usePembiayaan } from '@/hooks/pembiayaan/useSaveLocalStoragePembiayaan'
+import { useRouter } from 'next/navigation'
 import React, { Fragment } from 'react'
 
 interface ActionButtonsProps {
@@ -11,8 +15,14 @@ interface ActionButtonsProps {
     quad: boolean
   }
   packageType: string
+  getPrice: () => number
+  selectedVariant?: PackageVariant | null
+  selectedRoomType: RoomType
+  isEmptyRoomType: boolean
+  getTotalQty: () => number
   token: string
   currency: string
+  isPembiayaan: 'change_package' | 'pembiayaan'
   onCheckout: () => void
   handlePushEvent: (name: string, withVariant?: boolean) => void
   setIsPembiayaanModalOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -22,11 +32,56 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   variants,
   availableRoomTypes,
   packageType,
+  getPrice,
+  isEmptyRoomType,
+  selectedVariant,
+  selectedRoomType,
+  getTotalQty,
   token,
+  isPembiayaan,
   onCheckout,
   handlePushEvent,
   setIsPembiayaanModalOpen,
 }) => {
+  const router = useRouter()
+  const { handleNextPembiayaan } = usePembiayaan()
+  const onClickPilihPaket = () => {
+    handleNextPembiayaan({
+      selectedVariant,
+      selectedRoomType,
+      getPrice,
+      getTotalQty,
+      hrefTo: '/banking/credit/form/step-1',
+    })
+  }
+  if (isPembiayaan) {
+    return (
+      <Fragment>
+        <Button
+          className="w-full rounded-full py-3 max-lg:hidden"
+          variant="default"
+          size="lg"
+          disabled={
+            isEmptyRoomType &&
+            Object.values(selectedRoomType || {}).every((value) => value === 0)
+          }
+          onClick={onClickPilihPaket}
+        >
+          Pilih Paket
+        </Button>
+        <p className="text-s-regular text-center max-lg:hidden">atau</p>
+        <Button
+          className="border-primary-500 w-full rounded-full border-2 py-3 max-lg:hidden"
+          variant="outline"
+          size="lg"
+          onClick={() => router.push(`/search?package=${isPembiayaan}`)}
+        >
+          Cari Paket Lain
+        </Button>
+      </Fragment>
+    )
+  }
+
   if (variants.length > 0) {
     return (
       <Fragment>

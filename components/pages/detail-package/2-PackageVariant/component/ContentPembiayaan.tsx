@@ -3,17 +3,14 @@ import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/comp
 import TravelDates from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
 import BadgePromo from '@/components/shared/Badge'
 import { Button } from '@/components/ui/button'
-import { toast } from '@/components/ui/sonner'
-import { LOCAL_STORAGE_PEMBIAYAAN, PACKAGE_TYPE } from '@/constant/env'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
-import { localStorageUtils } from '@/hooks/common/useLocalStorage'
+import { usePembiayaan } from '@/hooks/pembiayaan/useSaveLocalStoragePembiayaan'
 import { dissolve } from '@/lib/animation-setup'
-import { mapSelectedPackagePembiayaan } from '@/lib/data-formatter'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { Fragment } from 'react'
 
 interface ContentPembiayaanProps {
@@ -24,6 +21,7 @@ interface ContentPembiayaanProps {
   packageType: string
   variantType: string
   dataTenor: Facility[]
+  isPembiayaan?: 'change_package' | 'pembiayaan'
 }
 
 const ContentPembiayaan = ({
@@ -34,8 +32,8 @@ const ContentPembiayaan = ({
   currency,
   variantType,
   dataTenor,
+  isPembiayaan,
 }: ContentPembiayaanProps) => {
-  const router = useRouter()
   const {
     getPrice,
     selectedVariant,
@@ -49,45 +47,22 @@ const ContentPembiayaan = ({
     formattedDeparture,
     getTotalQty,
   } = usePackageVariant()
-
+  const { handleNextPembiayaan } = usePembiayaan()
   const variantName =
     selectedVariant?.name ||
     (selectedVariant ? `Varian ${selectedVariant.id}` : '')
-
-  const handleNextPembiayaan = () => {
-    // make sure selectedVariant exist
-    if (!selectedVariant) {
-      toast.error('No variant selected')
-      return
-    }
-
-    const mappedPackage = mapSelectedPackagePembiayaan(selectedVariant)
-
-    const pembiayaanData = {
-      selectedPackage: mappedPackage,
-      selectedRoomType: selectedRoomType,
-      totalQty: getTotalQty(),
-      price: getPrice(),
-      isSubmitted: false,
-    }
-
-    if (localStorageUtils.has(LOCAL_STORAGE_PEMBIAYAAN)) {
-      localStorageUtils.updateJSON(LOCAL_STORAGE_PEMBIAYAAN, (prev) => {
-        if (prev && typeof prev === 'object') {
-          return {
-            ...prev,
-            ...pembiayaanData,
-          }
-        }
-        return pembiayaanData
-      })
-    } else {
-      localStorageUtils.setJSON(LOCAL_STORAGE_PEMBIAYAAN, pembiayaanData)
-    }
-
-    router.push('/banking/credit')
+  const hrefTo = isPembiayaan
+    ? '/banking/credit/form/step-1'
+    : '/banking/credit'
+  const onClickNextPembiayaan = () => {
+    handleNextPembiayaan({
+      selectedVariant,
+      selectedRoomType,
+      getPrice,
+      getTotalQty,
+      hrefTo,
+    })
   }
-
   return (
     <div className="grid grid-cols-12 gap-4">
       {selectedVariant && (
@@ -181,7 +156,7 @@ const ContentPembiayaan = ({
                     (value) => value === 0
                   )
                 }
-                onClick={handleNextPembiayaan}
+                onClick={onClickNextPembiayaan}
               >
                 Lanjutkan Pengajuan Pembiayaan
               </Button>

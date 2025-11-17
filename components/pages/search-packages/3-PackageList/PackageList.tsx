@@ -291,7 +291,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
                     <CardPackage
                       data={packageData}
                       eventCategory="search"
-                      dataProviders={packagePembiayaan ? dataProviders : []}
+                      dataProviders={!isRecommendationShow ? dataProviders : []} // kalo lagi flow pembiayaan maka munculkan data providernya supaya ada tag provider di card componentnya
+                      isPembiayaan={packagePembiayaan}
                     />
                   )}
                 </Fragment>
@@ -317,7 +318,8 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
                   <CardPackage
                     data={packageData}
                     eventCategory="search"
-                    dataProviders={packagePembiayaan ? dataProviders : []}
+                    dataProviders={!isRecommendationShow ? dataProviders : []} // kalo lagi flow pembiayaan maka munculkan data providernya supaya ada tag provider di card componentnya
+                    isPembiayaan={packagePembiayaan}
                   />
                 )}
               </Fragment>

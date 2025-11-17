@@ -11,6 +11,7 @@ import { OrganizationInstance } from '@/constant/types/TravelProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useGallerySharing } from '@/hooks/gallery-package-hooks'
 import { dissolve } from '@/lib/animation-setup'
+import { useRouter } from 'next/navigation'
 import { Fragment, useEffect, useMemo } from 'react'
 
 interface ActionCheckoutProps {
@@ -23,6 +24,7 @@ interface ActionCheckoutProps {
   currency: string
   variantType: string
   dataTenor: Facility[]
+  isPembiayaan: 'change_package' | 'pembiayaan'
 }
 
 export default function ActionCheckoutMobile({
@@ -35,10 +37,12 @@ export default function ActionCheckoutMobile({
   token,
   currency,
   dataTenor,
+  isPembiayaan,
 }: ActionCheckoutProps) {
   const { shareViaWhatsApp } = useGallerySharing()
   const { isLoading, selectedVariant, setVariants, availableRoomTypes } =
     usePackageVariant()
+  const router = useRouter()
 
   // Initialize variants in context when component mounts
   useEffect(() => {
@@ -80,6 +84,42 @@ export default function ActionCheckoutMobile({
     )
   }
 
+  if (isPembiayaan) {
+    return (
+      <div
+        className={`bg-neutral-0 fixed bottom-0 z-10 flex w-full items-center gap-1.5 border-t border-neutral-100 px-4 py-3 shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] lg:hidden ${dissolve}`}
+      >
+        <Button
+          className="border-primary-500 w-full rounded-full border-2"
+          variant="outline"
+          size="sm"
+          onClick={() => router.push(`/search?package=${isPembiayaan}`)}
+        >
+          Cari Paket Lain
+        </Button>
+        <PembiayaanDrawerMobile
+          title={title}
+          packageType={packageType}
+          variants={variants}
+          currency={currency}
+          image={thumbnail}
+          variantType={variantType}
+          dataTenor={dataTenor}
+          isPembiayaan={isPembiayaan}
+        >
+          <Button
+            variant="default"
+            className="w-full rounded-full"
+            size="sm"
+            id="btn-pay-later-mobile"
+          >
+            <p className="text-xs-semibold">Pilih Paket</p>
+          </Button>
+        </PembiayaanDrawerMobile>
+      </div>
+    )
+  }
+
   return (
     <div
       className={`bg-neutral-0 fixed bottom-0 z-10 flex w-full items-center gap-1.5 border-t border-neutral-100 px-1 py-3 shadow-[0px_-4px_24px_0px_rgba(0,0,0,0.15)] lg:hidden ${dissolve}`}
@@ -105,7 +145,7 @@ export default function ActionCheckoutMobile({
               <Button
                 variant="outline"
                 className="border-success-500 w-full rounded-full"
-                size="md"
+                size="sm"
                 id="btn-pay-later-mobile"
               >
                 <p className="text-xs-semibold">Ajukan Pembiayaan</p>
@@ -124,7 +164,7 @@ export default function ActionCheckoutMobile({
             <Button
               variant="default"
               className="w-full rounded-full"
-              size="md"
+              size="sm"
               id="btn-checkout-mobile"
               disabled={!hasAvailableRoomTypes}
             >
@@ -137,7 +177,7 @@ export default function ActionCheckoutMobile({
           className="w-full rounded-full py-3"
           variant="outline"
           disabled
-          size="lg"
+          size="sm"
         >
           Kursi tidak tersedia
         </Button>
