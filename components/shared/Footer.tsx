@@ -66,14 +66,14 @@ export default function Footer({
                       Tentang Kami
                     </Link>
                   </li>
-                  {/* <li>
+                  <li>
                     <Link
-                      href={`https://wa.me/${CALL_CENTER}`}
+                      href="/faq"
                       className="text-m-regular text-neutral-900"
                     >
                       Bantuan
                     </Link>
-                  </li> */}
+                  </li>
                 </ul>
               </div>
 
@@ -149,7 +149,7 @@ export default function Footer({
                   </li>
                   <li>
                     <Link
-                      href="https://www.facebook.com/umroh101com"
+                      href="https://www.facebook.com/muslim101.id"
                       className="text-m-regular text-neutral-900"
                     >
                       Facebook
