@@ -166,8 +166,8 @@ export default function SubmissionStep1({
   }
 
   const handleBatalPembiayaan = () => {
+    router.push('/banking/credit')
     localStorageUtils.remove(LOCAL_STORAGE_PEMBIAYAAN)
-    router.back()
   }
 
   // Skeleton loading

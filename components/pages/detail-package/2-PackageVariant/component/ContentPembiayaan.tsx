@@ -51,18 +51,23 @@ const ContentPembiayaan = ({
   const variantName =
     selectedVariant?.name ||
     (selectedVariant ? `Varian ${selectedVariant.id}` : '')
-  const hrefTo = isPembiayaan
-    ? '/banking/credit/form/step-1'
-    : '/banking/credit'
+  const hrefTo = '/banking/credit/form/step-1'
   const onClickNextPembiayaan = () => {
-    handleNextPembiayaan({
-      selectedVariant,
-      selectedRoomType,
-      getPrice,
-      getTotalQty,
-      hrefTo,
-    })
+    if (isPembiayaan === 'pembiayaan') {
+      handleNextPembiayaan({
+        selectedVariant,
+        selectedRoomType,
+        getPrice,
+        getTotalQty,
+        hrefTo,
+      })
+    }
+    return
   }
+  const textPembiayaan =
+    isPembiayaan === 'change_package'
+      ? 'Lanjut'
+      : 'Lanjutkan Pengajuan Pembiayaan'
   return (
     <div className="grid grid-cols-12 gap-4">
       {selectedVariant && (
@@ -158,7 +163,7 @@ const ContentPembiayaan = ({
                 }
                 onClick={onClickNextPembiayaan}
               >
-                Lanjutkan Pengajuan Pembiayaan
+                {textPembiayaan}
               </Button>
             </div>
           </div>

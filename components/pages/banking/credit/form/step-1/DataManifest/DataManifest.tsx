@@ -96,6 +96,7 @@ export function DataManifestFields({
                   <FormControl>
                     <Input
                       className="rounded-full"
+                      startIcon={'+62'}
                       type="tel"
                       model="normal"
                       placeholder="Masukan Nomor Telepon"
@@ -107,8 +108,16 @@ export function DataManifestFields({
                         // Hapus semua karakter yang BUKAN angka (0-9)
                         const numericValue = value.replace(/[^0-9]/g, '')
 
+                        // Jika dimulai dengan '62', ganti dengan '0'
+                        const formattedValue = numericValue.startsWith('62')
+                          ? `${numericValue.substring(2)}`
+                          : numericValue
+
                         // Set nilai yang sudah bersih ke form
-                        field.onChange(numericValue)
+                        // Tambahkan kondisi agar tidak bisa input jika dimulai dengan '0'
+                        if (!formattedValue.startsWith('0')) {
+                          field.onChange(formattedValue)
+                        }
                       }}
                       disabled={disabled}
                     />
