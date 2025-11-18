@@ -69,6 +69,7 @@ export function DataDiriFields({
             <FormControl>
               <Input
                 type="tel"
+                startIcon={'+62'}
                 model="normal"
                 placeholder="Masukan Nomor Telepon"
                 {...field}
@@ -80,8 +81,16 @@ export function DataDiriFields({
                   // Hapus semua karakter yang BUKAN angka (0-9)
                   const numericValue = value.replace(/[^0-9]/g, '')
 
+                  // Jika dimulai dengan '62', ganti dengan '0'
+                  const formattedValue = numericValue.startsWith('62')
+                    ? `${numericValue.substring(2)}`
+                    : numericValue
+
                   // Set nilai yang sudah bersih ke form
-                  field.onChange(numericValue)
+                  // Tambahkan kondisi agar tidak bisa input jika dimulai dengan '0'
+                  if (!formattedValue.startsWith('0')) {
+                    field.onChange(formattedValue)
+                  }
                 }}
                 disabled={disabled || !!profile?.persona?.phoneNumber}
               />

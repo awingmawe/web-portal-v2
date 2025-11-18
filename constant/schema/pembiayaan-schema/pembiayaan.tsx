@@ -29,7 +29,7 @@ export const submissionStep1Schema = z.object({
     .trim()
     .regex(
       PHONE_REGEX,
-      'Format nomor telepon tidak valid (contoh: 081234567890)'
+      'Format nomor telepon tidak valid (contoh: 81234567890)'
     )
     .min(10, 'Nomor telepon minimal 10 digit')
     .max(15, 'Nomor telepon maksimal 15 digit'),
