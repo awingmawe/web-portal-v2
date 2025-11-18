@@ -50,7 +50,7 @@ const TermsAndCheckout = ({
           checked={termsAccepted}
           onCheckedChange={(e) => setTermsAccepted(e as boolean)}
         />
-        <span className="text-sm text-gray-600">
+        <span className="pb-2 text-sm text-gray-600">
           Dengan memesan, anda menyetujui{' '}
           <span
             className="cursor-pointer text-black underline"
