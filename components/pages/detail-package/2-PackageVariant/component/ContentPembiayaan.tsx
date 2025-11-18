@@ -53,7 +53,7 @@ const ContentPembiayaan = ({
     (selectedVariant ? `Varian ${selectedVariant.id}` : '')
   const hrefTo = '/banking/credit/form/step-1'
   const onClickNextPembiayaan = () => {
-    if (isPembiayaan === 'pembiayaan') {
+    if (isPembiayaan !== 'change_package') {
       handleNextPembiayaan({
         selectedVariant,
         selectedRoomType,

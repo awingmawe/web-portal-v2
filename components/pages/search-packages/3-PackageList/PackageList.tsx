@@ -342,7 +342,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
       )}
 
       {/* Kalo total itemsnya kurang dari 10 munculin package reccomendation dan bukan lagi dalam section pembiayaan*/}
-      {totalCSR < 10 && isRecommendationShow && (
+      {totalCSR < 10 && isRecommendationShow && !isStillLoading && (
         <RecommendationList
           packageReccomendation={packageReccomendation || []}
         />
