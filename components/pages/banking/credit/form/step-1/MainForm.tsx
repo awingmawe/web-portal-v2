@@ -165,6 +165,11 @@ export default function SubmissionStep1({
     })
   }
 
+  const handleBatalPembiayaan = () => {
+    localStorageUtils.remove(LOCAL_STORAGE_PEMBIAYAAN)
+    router.back()
+  }
+
   // Skeleton loading
   if (isLoading) {
     return <SubmissionStep1Skeleton totalQty={totalQty} />
@@ -268,7 +273,7 @@ export default function SubmissionStep1({
               size="md"
               type="button"
               className="border-primary-500 border-2 px-10"
-              onClick={() => router.back()}
+              onClick={handleBatalPembiayaan}
               disabled={isLoadingSubmit}
             >
               Batal
