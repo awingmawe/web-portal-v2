@@ -56,7 +56,7 @@ export function useFetchPackage() {
         minDpAmount: queryParams.minDp,
         maxDpAmount: queryParams.maxDp,
         packageType: queryParams.type,
-        organizationInstanceCity: queryParams.organizationInstanceCity,
+        city: queryParams.organizationInstanceCity,
         organizationInstanceId: queryParams.organizationInstanceId || undefined,
         coordinates: queryParams.coordinates,
       }

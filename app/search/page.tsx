@@ -85,7 +85,7 @@ export default async function SearchGeneral({
   const minDpAmount = awaitedParams.dpMin || undefined
   const maxDpAmount = awaitedParams.dpMax || undefined
   const packageType = awaitedParams.packageType || 'umrah'
-  const organizationInstanceCity = awaitedParams.lC || undefined
+  const city = awaitedParams.lC || undefined
 
   // Order Filter
   // Handle sorting options
@@ -129,7 +129,7 @@ export default async function SearchGeneral({
     minDpAmount,
     maxDpAmount,
     packageType,
-    organizationInstanceCity,
+    city,
   })
 
   // --- JSON-LD for CollectionPage/WebPage Schema ---
