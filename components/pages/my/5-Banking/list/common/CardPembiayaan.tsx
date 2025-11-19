@@ -60,18 +60,24 @@ function CardTransactionBankingComponent({
     createdAt,
     createdAtWithHours,
   } = useMemo(() => {
-    const packageVariant = data.packageSnapshots[0].snapshot.package_variant
+    const packageVariant = data?.packageSnapshots[0]?.snapshot?.package_variant
+    // Handle case where packageVariant might be null or undefined
+    const packageBase = packageVariant?.package || {}
+    const departureDate = packageVariant?.departureDate
+      ? formatDateToDDMMYYYY(new Date(packageVariant.departureDate))
+      : '-'
+    const arrivalDate = packageVariant?.arrivalDate
+      ? formatDateToDDMMYYYY(new Date(packageVariant.arrivalDate))
+      : '-'
     return {
       idSubmission: `ID: ${data.submission_id}`,
-      packageBase: packageVariant.package,
+      packageBase: packageBase,
       packageVariantBase: packageVariant,
-      departureDate: formatDateToDDMMYYYY(
-        new Date(packageVariant.departureDate)
-      ),
-      arrivalDate: formatDateToDDMMYYYY(new Date(packageVariant.arrivalDate)),
-      createdAt: formatDateToDDMMYYYY(new Date(data.createdAt)),
+      departureDate: departureDate,
+      arrivalDate: arrivalDate,
+      createdAt: formatDateToDDMMYYYY(new Date(data?.createdAt)),
       createdAtWithHours: formatInTimeZone(
-        new Date(data.createdAt),
+        new Date(data?.createdAt),
         'Asia/Jakarta',
         'dd MMMM yyyy, HH:mm',
         { locale: id }
@@ -131,7 +137,7 @@ function CardTransactionBankingComponent({
           {/* Package Thumbnail */}
           <div className="flex items-center gap-3">
             <Image
-              src={packageBase.thumbnail}
+              src={packageBase.thumbnail || '/images/default-thumbnail.png'} // Fallback for thumbnail
               alt={data.package_name}
               width={120}
               height={120}
