@@ -1,4 +1,4 @@
-import { ACCOUNT_URL } from '@/constant/env'
+import { ACCOUNT_URL, URL as BASE_URL } from '@/constant/env'
 import { cookieNames } from '@/services/common/cookie'
 import { cookies, headers } from 'next/headers'
 import { NextResponse } from 'next/server'
@@ -52,7 +52,7 @@ export async function middleware(request: NextRequest) {
     // If no token, redirect to login page
     if (!token) {
       const loginUrl = new URL(
-        `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(request.nextUrl.toString())}`
+        `${ACCOUNT_URL}/auth/login?redirectUri=${BASE_URL}${pathname}`
       )
       return NextResponse.redirect(loginUrl)
     }
@@ -62,7 +62,7 @@ export async function middleware(request: NextRequest) {
     const token = cookieStore.get(cookieNames.USER_ACCESS_TOKEN)?.value
     if (!token) {
       const loginUrl = new URL(
-        `${ACCOUNT_URL}/auth/login?redirectUri=${encodeURIComponent(request.nextUrl.toString())}`
+        `${ACCOUNT_URL}/auth/login?redirectUri=${BASE_URL}${pathname}`
       )
       return NextResponse.redirect(loginUrl)
     }
