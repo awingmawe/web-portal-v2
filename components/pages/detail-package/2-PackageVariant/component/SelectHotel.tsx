@@ -32,6 +32,7 @@ export interface SelectHotelProps {
   packageType?: string
   className?: string
   titleText?: string
+  limitQuantity?: number
   onChange?: (roomType: RoomType, price: number) => void
 }
 
@@ -51,6 +52,7 @@ export default function SelectHotel({
   titleText = 'Jumlah Jemaah Per Kamar',
   onChange,
   className,
+  limitQuantity,
 }: SelectHotelProps) {
   const {
     selectedVariant,
@@ -403,6 +405,11 @@ export default function SelectHotel({
           </p>
         )}
       </div>
+      {limitQuantity && (
+        <p className="text-s-regular text-error-500">
+          Harus berjumlah {limitQuantity} jemaah.
+        </p>
+      )}
       {/* Total price */}
       {variant == 'normal' && !hideTotalPrice && (
         <div className="flex items-center justify-between max-lg:hidden">

@@ -7,6 +7,7 @@ import {
 import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
 import {
   listSubmissionPembiayaan,
+  submissionChangePackage,
   submissionPembiayaan,
 } from '@/services/banking-service'
 import {
@@ -143,6 +144,37 @@ export function useCreateSubmissionPembiayaan(config?: {
       onSuccess: () => {
         mutate(
           (key) => typeof key === 'string' && key.includes('create-submission')
+        )
+      },
+      onError: (err: ErrorSubmissionPembiayaan) => {
+        if (showErrorToast) {
+          toast.error(err.message)
+        }
+      },
+    }
+  )
+
+  return {
+    create: trigger, // Trigger function
+    data,
+    error,
+    isLoading: isMutating,
+  }
+}
+
+export function useChangePackagePembiayaan(config?: {
+  showSuccessToast?: boolean
+  showErrorToast?: boolean
+}) {
+  const { showErrorToast = true } = config || {}
+
+  const { trigger, data, error, isMutating } = useSWRMutationFetcher(
+    'put-submission',
+    (data) => submissionChangePackage(data),
+    {
+      onSuccess: () => {
+        mutate(
+          (key) => typeof key === 'string' && key.includes('get-submission')
         )
       },
       onError: (err: ErrorSubmissionPembiayaan) => {

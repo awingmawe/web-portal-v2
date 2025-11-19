@@ -8,12 +8,14 @@ interface PackageVariantHeaderProps {
   className?: string
   packageType: string
   releasedAt: string
+  isPembiayaan: 'change_package' | 'pembiayaan'
 }
 
 const PackageVariantHeader: React.FC<PackageVariantHeaderProps> = ({
   className,
   packageType,
   releasedAt,
+  isPembiayaan,
 }) => {
   const formattedReleasedAt = useMemo(() => {
     try {
@@ -24,12 +26,14 @@ const PackageVariantHeader: React.FC<PackageVariantHeaderProps> = ({
     }
   }, [releasedAt])
 
+  const textTitle = isPembiayaan ? 'Pembiayaan' : 'Cek Harga!'
+
   return (
     <div
       className={`flex items-center justify-between ${className || ''} ${packageType === PACKAGE_TYPE.HAJJ && 'max-lg:hidden'}`}
     >
       <div className="flex w-full flex-col gap-2 max-lg:hidden">
-        <p className="heading-4-medium text-neutral-900">Cek Harga!</p>
+        <p className="heading-4-medium text-neutral-900">{textTitle}</p>
 
         <div className="bg-primary-100 flex items-center gap-[5px] rounded-lg p-1">
           <InfoIcon size={20} className="text-primary-700 stroke-0" />
@@ -38,12 +42,6 @@ const PackageVariantHeader: React.FC<PackageVariantHeaderProps> = ({
           </p>
         </div>
       </div>
-
-      {packageType === PACKAGE_TYPE.UMRAH && (
-        <p className="text-m-semibold text-neutral-900 lg:hidden">
-          Varian Paket
-        </p>
-      )}
     </div>
   )
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { STATUS_CONFIG } from '@/components/pages/my/5-Banking/constants'
 import {
   Accordion,
   AccordionContent,
@@ -8,6 +9,7 @@ import {
 } from '@/components/ui/accordion'
 import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
 import { formatCurrency } from '@/lib/utils'
+import TableComparasion from './TableComparasion'
 // Import Tipe Data
 import Image from 'next/image'
 
@@ -52,11 +54,16 @@ const formatTenor = (value: number | undefined | null) => {
 
 interface DetailDataProviderProps {
   submission: SubmissionCredit
+  isExpired: boolean
 }
 
 export default function DetailDataProvider({
   submission,
+  isExpired,
 }: DetailDataProviderProps) {
+  const config =
+    STATUS_CONFIG[submission.view_status] || STATUS_CONFIG['ongoing']
+
   // --- Data & Kalkulasi ---
   const application = submission.applications[0]
   const requestLoan = submission.requested_loan
@@ -64,14 +71,14 @@ export default function DetailDataProvider({
   const providerThumbnail = providerData.logo || '/images/logo-koper.svg' // Fallback
 
   // 1. Data Pengajuan Kamu (dari submission)
-  const pengajuanJumlah = submission.total_price
+  const pengajuanJumlah = formatCurrency(submission.total_price)
   const pengajuanTenor = submission.tenor
-  const pengajuanAngsuran = requestLoan.monthly_payment || 0
+  const pengajuanAngsuran = formatCurrency(requestLoan.monthly_payment || 0)
 
   // 2. Data Pengajuan Diterima (dari application)
-  const diterimaJumlah = application.approved_total_price
+  const diterimaJumlah = formatCurrency(application.approved_total_price)
   const diterimaTenor = application.approved_tenor
-  const diterimaAngsuran = application.coverage_amount || 0
+  const diterimaAngsuran = formatCurrency(application.coverage_amount || 0)
 
   // 3. Data Rincian (dari application)
   const adminFee = application.admin_fee || 0
@@ -81,6 +88,14 @@ export default function DetailDataProvider({
 
   // Kalkulasi Uang Muka
   const uangMuka = totalCheckout - adminFee - insuranceFee
+
+  // Kondisi memunculkan table
+  const showTable =
+    submission.view_status !== 'rejected'
+      ? config.showTable
+      : isExpired
+        ? true
+        : false
 
   return (
     <div className="mx-auto w-full space-y-4 px-8 max-lg:space-y-3 max-lg:px-4">
@@ -114,106 +129,77 @@ export default function DetailDataProvider({
             </div>
           </AccordionTrigger>
           <AccordionContent className="relative z-0 mt-[-16px] rounded-b-[20px] border-1 border-neutral-100 bg-[#F7F7F7] px-0 pt-0 pb-0">
-            <div className="space-y-4 p-6 pb-4 max-lg:space-y-3 max-lg:px-3 max-lg:pb-3">
-              {/* --- 1. Tabel Perbandingan --- */}
-              <div className="space-y-2">
-                <p className="text-m-semibold max-lg:text-xs max-lg:leading-4">
-                  Rincian Pembiayaan
-                </p>
-                <div className="overflow-hidden rounded-md border border-neutral-200">
-                  <table className="w-full rounded-md bg-white">
-                    {/* Bagian Header Tabel */}
-                    <thead className="bg-[#F7F7F7]">
-                      <tr>
-                        <th className="text-s-semibold border-r border-b border-neutral-200  px-3 py-2.5 text-left first:rounded-tl-md">
-                          Perbandingan
-                        </th>
-                        <th className="text-s-semibold border-r border-b border-neutral-200 px-3 py-2.5 text-center">
-                          Pengajuan Kamu
-                        </th>
-                        <th className="text-s-semibold border-b border-neutral-200 px-3 py-2.5 text-center last:rounded-tr-md">
-                          Pengajuan Diterima
-                        </th>
-                      </tr>
-                    </thead>
-                    {/* Bagian Isi Tabel */}
-                    <tbody>
-                      {/* Baris Jumlah Pembiayaan */}
-                      <tr className="border-b border-neutral-200">
-                        <td className="text-s-regular border-r border-b border-neutral-200 px-3 py-2.5 font-medium text-neutral-900">
-                          Jumlah Pembiayaan
-                        </td>
-                        <td className="text-s-semibold border-r border-b border-neutral-200 px-3 py-2.5 text-center text-neutral-900">
-                          {formatCurrency(pengajuanJumlah)}
-                        </td>
-                        <td className="text-s-semibold border-r border-b border-neutral-200 px-3 py-2.5 text-center text-neutral-900">
-                          {diterimaJumlah
-                            ? formatCurrency(diterimaJumlah)
-                            : 'Sesuai Pengajuan'}
-                        </td>
-                      </tr>
-                      {/* Baris Tenor */}
-                      <tr className="border-b border-neutral-200">
-                        <td className="text-s-regular border-r border-b border-neutral-200 px-3 py-2.5 font-medium text-neutral-900">
-                          Tenor
-                        </td>
-                        <td className="text-s-semibold border-r border-b border-neutral-200 px-3 py-2.5 text-center text-neutral-900">
-                          {formatTenor(pengajuanTenor)}
-                        </td>
-                        <td className="text-s-semibold border-r border-b border-neutral-200 px-3 py-2.5 text-center text-neutral-900">
-                          {diterimaTenor
-                            ? formatTenor(diterimaTenor)
-                            : 'Sesuai Pengajuan'}
-                        </td>
-                      </tr>
-                      {/* Baris Angsuran */}
-                      <tr>
-                        <td className="text-s-regular border-r border-b border-neutral-200 px-3 py-2.5 font-medium text-neutral-900">
-                          Angsuran Per Bulan
-                        </td>
-                        <td className="text-s-semibold border-r border-b border-neutral-200 px-3 py-2.5 text-center text-neutral-900">
-                          {formatCurrency(pengajuanAngsuran)}
-                        </td>
-                        <td className="text-s-semibold border-r border-b border-neutral-200 px-3 py-2.5 text-center text-neutral-900">
-                          {diterimaAngsuran
-                            ? formatCurrency(diterimaAngsuran)
-                            : 'Sesuai Pengajuan'}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* --- 2. Rincian Pembayaran --- */}
-              <div className="space-y-3">
-                <p className="text-m-semibold max-lg:text-xs max-lg:leading-4">
-                  Rincian Pembayaran Di Awal
-                </p>
-                <div className="flex flex-col gap-2">
-                  <InfoRowRincian
-                    label={`Uang Muka ${discountPercentage}%`}
-                    value={formatCurrency(uangMuka)}
-                  />
-                  <InfoRowRincian
-                    label="Biaya Admin"
-                    value={formatCurrency(adminFee)}
-                  />
-                  <InfoRowRincian
-                    label="Asuransi"
-                    value={formatCurrency(insuranceFee)}
+            <div className="space-y-3 p-6 pb-4 max-lg:px-3 max-lg:pb-3">
+              <p className="text-m-semibold max-lg:text-xs max-lg:leading-4">
+                Rincian Pembiayaan
+              </p>
+              {showTable ? (
+                <>
+                  {/* --- 1. Tabel Perbandingan --- */}
+                  <TableComparasion
+                    pengajuanJumlah={pengajuanJumlah}
+                    diterimaJumlah={diterimaJumlah}
+                    pengajuanTenor={formatTenor(pengajuanTenor)}
+                    diterimaTenor={formatTenor(diterimaTenor)}
+                    pengajuanAngsuran={pengajuanAngsuran}
+                    diterimaAngsuran={diterimaAngsuran}
                   />
 
-                  <hr className="border-neutral-200" />
+                  {/* --- 2. Rincian Pembayaran --- */}
+                  <div className="space-y-3">
+                    <p className="text-m-semibold max-lg:text-xs max-lg:leading-4">
+                      Rincian Pembayaran Di Awal
+                    </p>
+                    <div className="flex flex-col gap-2">
+                      <InfoRowRincian
+                        label={`Uang Muka ${discountPercentage}%`}
+                        value={formatCurrency(uangMuka)}
+                      />
+                      <InfoRowRincian
+                        label="Biaya Admin"
+                        value={formatCurrency(adminFee)}
+                      />
+                      <InfoRowRincian
+                        label="Asuransi"
+                        value={formatCurrency(insuranceFee)}
+                      />
 
-                  <InfoRowRincian
-                    label="Total Biaya di Muka"
-                    value={formatCurrency(totalCheckout)}
-                    isTotal
-                    description
-                  />
-                </div>
-              </div>
+                      <hr className="border-neutral-200" />
+
+                      <InfoRowRincian
+                        label="Total Biaya di Muka"
+                        value={formatCurrency(totalCheckout)}
+                        isTotal
+                        description
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-2">
+                    <InfoRowRincian
+                      label={'Pengajuan Pembiayaan Kamu'}
+                      value={pengajuanJumlah}
+                    />
+                    <InfoRowRincian
+                      label={'Pengajuan Tenor'}
+                      value={pengajuanTenor}
+                    />
+                    <hr className="border-neutral-200" />
+                    <div className="flex flex-col gap-2">
+                      <p className="text-m-medium text-center">
+                        Pengajuan Pembiayaan Kamu Sedang Menunggu Penawaran dari
+                        Pihak Mitra
+                      </p>
+                      <p className="text-s-regular text-center">
+                        Kami telah mengirimkan permintaan Kamu ke mitra. Harap
+                        menunggu, penawaran sedang diproses.{' '}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* === END: "Fokus disini" === */}
             </div>

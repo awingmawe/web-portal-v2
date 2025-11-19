@@ -27,9 +27,7 @@ const ListCoverageContent = ({
     isLoadingMore,
     isReachingEnd,
   } = useGetProviderByCoverage(providerId, {
-    'district_name:likeLower': debouncedSearch
-      ? `%${debouncedSearch}%`
-      : undefined,
+    search: debouncedSearch ? debouncedSearch : undefined,
     size: 20,
     page: 1,
   })

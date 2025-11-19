@@ -1,5 +1,6 @@
 import CheckoutDrawerMobile from '@/components/pages/detail-package/mobile/DrawerCheckout'
 import BadgePromo from '@/components/shared/Badge'
+import { PACKAGE_TYPE } from '@/constant/env'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
 import { dissolve } from '@/lib/animation-setup'
 import React, { Fragment } from 'react'
@@ -17,6 +18,7 @@ interface VariantSelectionProps {
     currency: string
   ) => string | null
   handlePushEvent: (name: string, withVariant?: boolean) => void
+  packageType: string
 }
 
 const VariantSelection: React.FC<VariantSelectionProps> = ({
@@ -28,16 +30,23 @@ const VariantSelection: React.FC<VariantSelectionProps> = ({
   onVariantSelect,
   handleBadgePromo,
   handlePushEvent,
+  packageType,
 }) => {
   if (variants.length === 0) return null
 
   return (
     <Fragment>
-      <div className="mb-2 h-[0.5px] bg-[#c9c9c9] max-lg:hidden" />
+      <div className="h-[0.5px] bg-[#c9c9c9] max-lg:hidden" />
 
       <div className="text-s-regular text-neutral-800 max-lg:hidden">
         Varian
       </div>
+
+      {packageType === PACKAGE_TYPE.UMRAH && (
+        <p className="text-m-semibold text-neutral-900 lg:hidden">
+          Varian Paket
+        </p>
+      )}
       <div
         className={`no-scrollbar ${variants.some((e) => e.discountAmount != '0') ? 'max-lg:px-2 lg:mt-5' : ''} flex flex-wrap items-center gap-4 max-lg:flex-nowrap max-lg:overflow-x-auto`}
       >

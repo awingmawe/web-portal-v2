@@ -16,6 +16,7 @@ interface LayoutDrawerDialogProps {
   packageType: string
   variantType: string
   dataTenor: Facility[]
+  isPembiayaan?: 'change_package' | 'pembiayaan'
 }
 
 const ModalPembiayaan: React.FC<LayoutDrawerDialogProps> = ({
@@ -29,6 +30,7 @@ const ModalPembiayaan: React.FC<LayoutDrawerDialogProps> = ({
   packageType,
   variantType,
   dataTenor,
+  isPembiayaan,
 }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -60,6 +62,7 @@ const ModalPembiayaan: React.FC<LayoutDrawerDialogProps> = ({
           image={image}
           variantType={variantType}
           dataTenor={dataTenor}
+          isPembiayaan={isPembiayaan}
         />
       </DialogContent>
     </Dialog>

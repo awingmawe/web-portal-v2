@@ -14,6 +14,7 @@ import {
   LOCAL_STORAGE_KURS_OPEN_USD,
   LOCAL_STORAGE_SELECTED_VARIANT,
   PACKAGE_TYPE,
+  SESSION_STORAGE_CHANGE_PACKAGE,
 } from '@/constant/env'
 import { getLinkAjaTiering } from '@/constant/types/LinkAja'
 import { Package, PackageVariant } from '@/constant/types/PackageProps'
@@ -30,13 +31,16 @@ import {
 } from '@/lib/utils'
 import { getStatusLiked, toggleLike } from '@/services/umrah-service'
 import { differenceInDays } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 
 // Import the new components
+import ModalChangePackagePembiayaan from '@/components/pages/detail-package/2-PackageVariant/modal/ModalChangePackage'
 import ModalKurs from '@/components/pages/detail-package/2-PackageVariant/modal/ModalKurs'
 import ModalPembiayaan from '@/components/pages/detail-package/2-PackageVariant/modal/ModalPembiayaan'
 import { Facility } from '@/constant/types/FacilityProps'
 import { findVariantWithLowestPrice } from '@/hooks/package-variant-hooks'
+import { useUniqueSupportedProviders } from '@/hooks/pembiayaan/useGetSupportedProvider'
+import Image from 'next/image'
 import ActionButtons from './component/ActionButtons'
 import BottomActions from './component/BottomActions'
 import PackageVariantHeader from './component/PackageVariantHeader'
@@ -70,6 +74,12 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const [isLinkAja, setIsLinkAja] = useState(false)
   const [isChecked, setIsChecked] = useState(false)
 
+  const dataOldPembiayaan =
+    typeof window !== 'undefined'
+      ? JSON.parse(
+          sessionStorage.getItem(SESSION_STORAGE_CHANGE_PACKAGE) || '{}'
+        )
+      : {}
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsLinkAja(sessionStorage.getItem('isLinkAja') === 'true')
@@ -96,7 +106,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
   const { shareViaWhatsApp } = useGallerySharing()
   const { pushEvent } = useEventTracker()
   const {
-    isEmptyRoomType,
     selectedVariant,
     selectedVariantId,
     selectedRoomType,
@@ -298,6 +307,18 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
     shareViaWhatsApp(titlePackage, CALL_CENTER)
   }
 
+  const { dataProviders } = useUniqueSupportedProviders(!isPembiayaan)
+  const matchedProviders = useMemo(() => {
+    if (!dataProviders || !pkg.organizationInstanceId) return []
+
+    return dataProviders.filter(
+      (provider) =>
+        provider.supported_organizations.includes(
+          pkg.organizationInstanceId.toString()
+        ) && provider.specific_travel
+    )
+  }, [dataProviders, pkg.organizationInstanceId])
+
   // Shows loader when loading
   if (isLoading) {
     return <PackageVariantLoader />
@@ -311,8 +332,38 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       <PackageVariantHeader
         releasedAt={selectedVariant?.releasedAt ?? ''}
         packageType={pkg.packageType}
+        isPembiayaan={isPembiayaan}
       />
-
+      {isPembiayaan && (
+        <Fragment>
+          <div className="h-[0.5px] bg-[#c9c9c9] max-lg:hidden" />
+          <div className="flex flex-col gap-3">
+            <p className="text-m-regular">
+              Paket ini didukung oleh mitra pembiayaan :
+            </p>
+            <div className="flex flex-wrap gap-1">
+              {matchedProviders.map((provider) => (
+                <div
+                  key={provider.id}
+                  className="bg-primary-100 inline-flex items-center gap-1 rounded-full px-2.5 py-1"
+                >
+                  {provider.logo && (
+                    <Image
+                      src={provider.logo}
+                      alt={provider.name}
+                      width={16}
+                      height={16}
+                      className="rounded"
+                    />
+                  )}
+                  <span className="text-s-semibold">{provider.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="h-[0.5px] bg-[#c9c9c9] lg:hidden" />
+        </Fragment>
+      )}
       {/* Booking Released Info */}
       {selectedVariant &&
         differenceInDays(selectedVariant?.releasedAt as string, new Date()) <=
@@ -329,6 +380,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
           onVariantSelect={setSelectedVariantId}
           handleBadgePromo={handleBadgePromo}
           handlePushEvent={handlePushEvent}
+          packageType={pkg.packageType}
         />
       )}
 
@@ -365,6 +417,13 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
                     Number(selectedVariant?.package.dpAmount) *
                       (getTotalQty() + 1)
                   )
+              : isPembiayaan === 'change_package'
+                ? getTotalQty() === dataOldPembiayaan.quantity
+                : false
+          }
+          limitQuantity={
+            isPembiayaan === 'change_package'
+              ? dataOldPembiayaan.quantity
               : false
           }
         />
@@ -372,11 +431,6 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
       {/* Action buttons */}
       <ActionButtons
-        getPrice={getPrice}
-        selectedVariant={selectedVariant}
-        isEmptyRoomType={isEmptyRoomType}
-        selectedRoomType={selectedRoomType}
-        getTotalQty={getTotalQty}
         variants={variants}
         availableRoomTypes={availableRoomTypes}
         packageType={pkg.packageType}
@@ -430,7 +484,11 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         packageType={pkg.packageType}
         variantType={pkg.variantType}
         dataTenor={dataTenor}
+        isPembiayaan={isPembiayaan}
       />
+
+      {/* Modal for change package pembiayaan */}
+      <ModalChangePackagePembiayaan />
     </div>
   )
 }
