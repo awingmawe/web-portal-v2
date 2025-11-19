@@ -9,6 +9,7 @@ import {
   listSubmissionPembiayaan,
   submissionChangePackage,
   submissionPembiayaan,
+  submissionPembiayaanDetail,
 } from '@/services/banking-service'
 import {
   useSWRFetcher,
@@ -37,6 +38,43 @@ export function useGetSubmissionList(
     isLoading,
     mutate: boundMutate,
   } = useSWRFetcher([swrKey, query], () => fetcher(), swrConfig)
+
+  useEffect(() => {
+    if (error && showErrorToast) {
+      toast.error(error.message, {
+        description: error.code,
+        action: {
+          label: 'Coba Lagi',
+          onClick: () => boundMutate(),
+        },
+      })
+    }
+  }, [error, showErrorToast, boundMutate])
+
+  return {
+    data,
+    isLoading,
+    error,
+    refresh: boundMutate,
+  }
+}
+export function useGetSubmissionById(
+  id: number,
+  config?: Partial<SWRConfiguration> & {
+    showErrorToast?: boolean // Custom option
+  }
+) {
+  const { showErrorToast = true, ...swrConfig } = config || {}
+  const fetcher = async () => {
+    return await submissionPembiayaanDetail(id)
+  }
+  const swrKey = `get-submission-${id}`
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: boundMutate,
+  } = useSWRFetcher([swrKey, id], () => fetcher(), swrConfig)
 
   useEffect(() => {
     if (error && showErrorToast) {

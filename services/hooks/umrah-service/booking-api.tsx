@@ -69,9 +69,18 @@ export function useCreateBanking(config?: {
     'create-banking-booking',
     (data) => createBookingBanking(data),
     {
-      onSuccess: () => {
+      onSuccess: (result) => {
         mutate(
-          (key) => typeof key === 'string' && key.includes('get-order-payment')
+          (key) =>
+            Array.isArray(key) &&
+            typeof key[0] === 'string' &&
+            key[0] === `get-submission-${result.creditId}`
+        )
+        mutate(
+          (key) =>
+            Array.isArray(key) &&
+            typeof key[0] === 'string' &&
+            key[0] === `get-submission`
         )
       },
       onError: (err) => {
@@ -102,9 +111,18 @@ export function useChangePaymentMethodBanking(config?: {
     'change-payment-method-banking-booking',
     (data) => changePaymentMethodBookingBanking(data),
     {
-      onSuccess: () => {
+      onSuccess: (result) => {
         mutate(
-          (key) => typeof key === 'string' && key.includes('get-order-payment')
+          (key) =>
+            Array.isArray(key) &&
+            typeof key[0] === 'string' &&
+            key[0] === `get-submission-${result.creditId}`
+        )
+        mutate(
+          (key) =>
+            Array.isArray(key) &&
+            typeof key[0] === 'string' &&
+            key[0] === `get-submission`
         )
       },
       onError: (err) => {

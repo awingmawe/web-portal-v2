@@ -138,6 +138,17 @@ export function DetailTransactionBankingActions({
     isOrderPaymentLoading,
   })
 
+  // --- On Click Handler ---
+  const handleChangePayment = () => {
+    setOpen(false)
+    changePayment()
+  }
+
+  const handleCheckout = () => {
+    setOpen(false)
+    handlePayment()
+  }
+
   // --- Custom Hooks ---
   const { handleChangePackage } = useChangePackage(submission, targetHref)
 
@@ -191,12 +202,12 @@ export function DetailTransactionBankingActions({
     if (isCheckout) {
       dialogTitle = `Apakah Kamu Ingin Memilih Tawaran ${providerName}?`
       DialogBody = <DialogCheckoutContent submission={submission} />
-      onConfirm = () => handlePayment()
+      onConfirm = handleCheckout
       confirmText = 'Ya, Pilih'
     } else if (isWaitingPayment) {
       dialogTitle = 'Apakah Kamu ingin Mengubah Metode Pembayaran?'
       DialogBody = <DialogPaymentChangeContent />
-      onConfirm = () => changePayment()
+      onConfirm = handleChangePayment
       confirmText = 'Ya, Ubah'
     } else if (isChangePackage) {
       dialogTitle = 'Kuota Paket Tidak Tersedia'

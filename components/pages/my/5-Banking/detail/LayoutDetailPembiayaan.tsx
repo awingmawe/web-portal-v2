@@ -11,21 +11,37 @@ import WarningTextDetail from '@/components/pages/my/5-Banking/detail/common/War
 import { CardTransactionBankingStatus } from '@/components/pages/my/5-Banking/list/common/CardTransactionTagStatus'
 import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
-import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
+import { useGetSubmissionById } from '@/services/hooks/banking-service/submission-credits-api'
 import { isPast } from 'date-fns'
+import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
 import { Fragment } from 'react'
 
-export function LayoutDetailPembiayaan({
-  detail,
-}: {
-  detail: SubmissionCredit
-}) {
+export function LayoutDetailPembiayaan({ id }: { id: number }) {
   const router = useRouter()
-  const expiredDate = detail.applications[0]?.approved_expired_at
+  const { data: detail, isLoading: isDetailLoading } = useGetSubmissionById(
+    id,
+    {
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
+    }
+  )
+
+  // TODO: Change to skeleton loading
+  if (isDetailLoading && !detail)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="text-primary-500 h-10 w-10 animate-spin" />
+      </div>
+    )
+
+  // TODO: Change to text error
+  if (!detail) return null // Render nothing if detail is still undefined after loading
+
+  const expiredDate = detail?.applications[0]?.approved_expired_at
   const expiredDateFormatted = expiredDate
     ? formatDateToDDMMYYYY(new Date(expiredDate))
     : null

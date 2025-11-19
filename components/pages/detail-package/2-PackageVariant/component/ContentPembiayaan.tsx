@@ -8,7 +8,7 @@ import { Facility } from '@/constant/types/FacilityProps'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useUI } from '@/contexts/ui-context/context'
-import { usePembiayaan } from '@/hooks/pembiayaan/useSaveLocalStoragePembiayaan'
+import { usePembiayaanLocalStorage } from '@/hooks/pembiayaan/useSaveLocalStoragePembiayaan'
 import { dissolve } from '@/lib/animation-setup'
 import Placeholder from '@/public/images/no-image-placeholder.png'
 import Image from 'next/image'
@@ -48,7 +48,7 @@ const ContentPembiayaan = ({
     formattedDeparture,
     getTotalQty,
   } = usePackageVariant()
-  const { handleNextPembiayaan } = usePembiayaan()
+  const { handleNextPembiayaan } = usePembiayaanLocalStorage()
   const { setChangePackageModalOpen, setPembiayaanDrawerOpen } = useUI()
   const dataOldPembiayaan =
     typeof window !== 'undefined'
