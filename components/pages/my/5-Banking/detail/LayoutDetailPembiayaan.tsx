@@ -13,6 +13,7 @@ import MobileTopbar from '@/components/shared/mobile/TopbarMobile'
 import { MIDTRANS_CLIENT_KEY, SNAP_URL } from '@/constant/env'
 import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
 import { formatDateToDDMMYYYY } from '@/lib/utils'
+import { isPast } from 'date-fns'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
@@ -30,7 +31,7 @@ export function LayoutDetailPembiayaan({
     : null
   const packageData =
     detail.packageSnapshots[0].snapshot.package_variant.package
-
+  const isExpired = isPast(new Date(expiredDate || ''))
   return (
     <Fragment>
       <MobileTopbar
@@ -58,11 +59,11 @@ export function LayoutDetailPembiayaan({
           <div className="h-2 w-full self-stretch bg-neutral-100" />
           <DetailDataPemohon submission={detail} />
           <div className="h-2 w-full self-stretch bg-neutral-100" />
-          <DetailDataProvider submission={detail} />
+          <DetailDataProvider submission={detail} isExpired={isExpired} />
           <div className="h-2 w-full self-stretch bg-neutral-100" />
           <DetailManifestPembiayaan members={detail.manifests} />
         </div>
-        <div className="relative col-span-1  px-8 py-5 max-lg:order-1 max-lg:p-4 lg:border-l lg:border-neutral-100">
+        <div className="relative col-span-1 flex flex-col justify-between px-8 py-5 max-lg:order-1 max-lg:p-4 lg:border-l lg:border-neutral-100">
           <div className="z-15 flex flex-col gap-3 bg-white lg:sticky lg:top-30">
             <div className="lg:hidden">
               <CardTransactionBankingStatus status={detail.view_status} />
@@ -76,17 +77,19 @@ export function LayoutDetailPembiayaan({
             <WarningTextDetail
               status={detail.view_status}
               expiredDate={expiredDateFormatted || null}
+              isExpired={isExpired}
             />
             <DetailTransactionBankingActions
               cta={detail.view_cta}
               booking_id={detail.booking_id}
               application={detail.applications}
               submissionId={detail.id}
+              submission={detail}
             />
           </div>
 
           {/* Wrapper untuk membuat gambar ilustrasi sticky di bawah */}
-          <div className="sticky bottom-0 mt-auto w-full bg-white pt-3 max-lg:hidden">
+          <div className="bottom-0 mt-auto w-full bg-white pt-3 max-lg:hidden">
             <div className="relative block">
               <Image
                 src="/images/image-bangking.svg"

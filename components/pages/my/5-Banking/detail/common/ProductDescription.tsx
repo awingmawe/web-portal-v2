@@ -9,6 +9,7 @@ import Image from 'next/image'
 import { ChevronRightIcon } from '@/components/icons/chevron'
 import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
 import { formatDateToDDMMYYYY, isEmpty } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
 interface ProductDescriptionPembiayaanProps {
   // Komponen ini sekarang menerima 'submission' sebagai prop
@@ -18,6 +19,8 @@ interface ProductDescriptionPembiayaanProps {
 export default function ProductDescriptionPembiayaan({
   submission,
 }: ProductDescriptionPembiayaanProps) {
+  const router = useRouter()
+
   // Ambil snapshot paket yang relevan (misalnya yang pertama)
   // Tipe data Anda 'packageSnapshots' adalah array
   const packageSnapshot = submission.packageSnapshots?.[0]?.snapshot
@@ -43,6 +46,11 @@ export default function ProductDescriptionPembiayaan({
     new Date(packageSnapshot?.package_variant?.arrivalDate)
   )
 
+  const handleRedirectTravelDetail = () => {
+    router.push(
+      `/travel/${packageSnapshot.package_variant.package.organizationInstance.slug}`
+    )
+  }
   return (
     <div className="mx-auto w-full space-y-4 px-8 max-lg:space-y-3 max-lg:px-4">
       <div className="flex flex-col gap-3 max-lg:gap-2">
@@ -51,7 +59,10 @@ export default function ProductDescriptionPembiayaan({
           <p className="text-m-semibold max-lg:text-xs max-lg:leading-4">
             Data Produk
           </p>
-          <div className="flex items-center gap-1">
+          <div
+            className="flex cursor-pointer items-center gap-1"
+            onClick={handleRedirectTravelDetail}
+          >
             <Image
               width={32}
               height={32}

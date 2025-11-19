@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { SubmissionCredit } from '@/constant/types/SubmissionPembiayaan'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { formatCurrency, formatDateToDDMMYYYY } from '@/lib/utils'
-import Placeholder from '@/public/images/no-image-placeholder.png'
 import { formatInTimeZone } from 'date-fns-tz'
 import { id } from 'date-fns/locale'
 import Image from 'next/image'
@@ -102,7 +101,9 @@ function CardTransactionBankingComponent({
         <div className="flex items-center gap-3">
           <div className="max-lg:hidden">
             <ProviderWrapper
-              logo={data.applications[0].provider.logo || Placeholder.src}
+              logo={
+                data.applications[0].provider.logo || '/images/logo-koper.svg'
+              }
               name={data.applications[0].provider.name}
             />
           </div>
@@ -194,7 +195,7 @@ function CardTransactionBankingComponent({
         cta={data.view_cta}
         booking_id={data.booking_id}
         submissionId={data.id}
-        application={data.applications}
+        submission={data}
         createdAtWithHours={createdAtWithHours}
       />
     </Card>

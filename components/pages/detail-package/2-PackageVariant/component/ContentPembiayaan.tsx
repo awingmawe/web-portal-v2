@@ -3,10 +3,11 @@ import SelectHotel from '@/components/pages/detail-package/2-PackageVariant/comp
 import TravelDates from '@/components/pages/detail-package/2-PackageVariant/component/TravelDates'
 import BadgePromo from '@/components/shared/Badge'
 import { Button } from '@/components/ui/button'
-import { PACKAGE_TYPE } from '@/constant/env'
+import { PACKAGE_TYPE, SESSION_STORAGE_CHANGE_PACKAGE } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PackageVariant } from '@/constant/types/PackageProps'
 import { usePackageVariant } from '@/contexts/package-variant-context'
+import { useUI } from '@/contexts/ui-context/context'
 import { usePembiayaan } from '@/hooks/pembiayaan/useSaveLocalStoragePembiayaan'
 import { dissolve } from '@/lib/animation-setup'
 import Placeholder from '@/public/images/no-image-placeholder.png'
@@ -48,26 +49,42 @@ const ContentPembiayaan = ({
     getTotalQty,
   } = usePackageVariant()
   const { handleNextPembiayaan } = usePembiayaan()
+  const { setChangePackageModalOpen, setPembiayaanDrawerOpen } = useUI()
+  const dataOldPembiayaan =
+    typeof window !== 'undefined'
+      ? JSON.parse(
+          sessionStorage.getItem(SESSION_STORAGE_CHANGE_PACKAGE) || '{}'
+        )
+      : {}
   const variantName =
     selectedVariant?.name ||
     (selectedVariant ? `Varian ${selectedVariant.id}` : '')
   const hrefTo = '/banking/credit/form/step-1'
   const onClickNextPembiayaan = () => {
-    if (isPembiayaan !== 'change_package') {
-      handleNextPembiayaan({
-        selectedVariant,
-        selectedRoomType,
-        getPrice,
-        getTotalQty,
-        hrefTo,
-      })
+    if (isPembiayaan === 'change_package') {
+      // Tutup drawer saat ini, lalu buka drawer/modal berikutnya
+      setPembiayaanDrawerOpen(false)
+      setChangePackageModalOpen(true)
+      return
     }
+    handleNextPembiayaan({
+      selectedVariant,
+      selectedRoomType,
+      getPrice,
+      getTotalQty,
+      hrefTo,
+    })
     return
   }
   const textPembiayaan =
     isPembiayaan === 'change_package'
       ? 'Lanjut'
       : 'Lanjutkan Pengajuan Pembiayaan'
+
+  const isButtonDisabled =
+    isPembiayaan === 'change_package' &&
+    getTotalQty() < dataOldPembiayaan.quantity
+
   return (
     <div className="grid grid-cols-12 gap-4">
       {selectedVariant && (
@@ -136,6 +153,11 @@ const ContentPembiayaan = ({
               packageType={packageType}
               hideTotalPrice
               className="max-xl:flex-row max-lg:flex-col"
+              disabledAddOnly={
+                isPembiayaan === 'change_package' &&
+                getTotalQty() === dataOldPembiayaan.quantity
+              }
+              limitQuantity={dataOldPembiayaan.quantity}
             />
           </div>
 
@@ -156,10 +178,11 @@ const ContentPembiayaan = ({
                 className="w-full px-10 py-3"
                 variant="default"
                 disabled={
-                  isEmptyRoomType &&
-                  Object.values(selectedRoomType || {}).every(
-                    (value) => value === 0
-                  )
+                  (isEmptyRoomType &&
+                    Object.values(selectedRoomType || {}).every(
+                      (value) => value === 0
+                    )) ||
+                  isButtonDisabled
                 }
                 onClick={onClickNextPembiayaan}
               >

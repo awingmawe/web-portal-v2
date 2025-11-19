@@ -57,7 +57,17 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
 
   const { lg: isMobile, mounted } = useTailwindBreakpoint()
   const updateQueryParams = useUpdateQueryParams()
+  // Didalam list ini terdapat beberapa type
+  // 1. Search list umum: semua paket dimunculkan tanpa adanya filter khusus
+  // 2. Search list pembiayaan: paket hanya dimunculkan berdasarkan dari provider yang disupport saja
+  // - change_package: flow pembiayaan apabila paket yang diajukan kuotanya tidak tersedia dan provider yang diajukannya tidak dapat di filter
+  // - pembiayaan: flow pembiayaan ketika user sedang mencari paket yang support pembiayaan berdasarkan provider
   const isChangePackageFlow = searchParams.get('package') === 'change_package'
+  const isPembiayaanFlow = searchParams.get('package') === 'pembiayaan'
+  const packagePembiayaan = searchParams.get('package')
+  const isRecommendationShow = !isPembiayaanFlow && !isChangePackageFlow
+
+  const showBadgeProvider = isPembiayaanFlow || isChangePackageFlow
 
   const currentSort = searchParams.get('sort') || 'price-low' // Default sort
   const itemsPerPage = 9 // Define your items per page constant
@@ -68,12 +78,11 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     useGetOrganizationIdFromProviders(providerFilter, isEmpty(providerFilter))
 
   // Untuk menampilkan paket hanya jika pencarian dari pembiayaan
-  const packagePembiayaan = searchParams.get('package')
   const {
     dataProviders,
     uniqueSupportedProviders,
     isLoading: isLoadingSupportedProviders,
-  } = useUniqueSupportedProviders(packagePembiayaan !== 'pembiayaan')
+  } = useUniqueSupportedProviders(!showBadgeProvider)
 
   // First, initialize filters from URL
   useEffect(() => {
@@ -239,9 +248,6 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
     isLoadingSupportedProviders ||
     loading
 
-  const isRecommendationShow =
-    packagePembiayaan !== 'pembiayaan' && !isChangePackageFlow
-
   // Render no results component if there are no packages and not loading
   if (displayPackages.length === 0 && !isStillLoading) {
     return (
@@ -291,7 +297,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
                     <CardPackage
                       data={packageData}
                       eventCategory="search"
-                      dataProviders={!isRecommendationShow ? dataProviders : []} // kalo lagi flow pembiayaan maka munculkan data providernya supaya ada tag provider di card componentnya
+                      dataProviders={showBadgeProvider ? dataProviders : []} // kalo lagi flow pembiayaan maka munculkan data providernya supaya ada tag provider di card componentnya
                       isPembiayaan={packagePembiayaan}
                     />
                   )}
@@ -318,7 +324,7 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
                   <CardPackage
                     data={packageData}
                     eventCategory="search"
-                    dataProviders={!isRecommendationShow ? dataProviders : []} // kalo lagi flow pembiayaan maka munculkan data providernya supaya ada tag provider di card componentnya
+                    dataProviders={showBadgeProvider ? dataProviders : []} // kalo lagi flow pembiayaan maka munculkan data providernya supaya ada tag provider di card componentnya
                     isPembiayaan={packagePembiayaan}
                   />
                 )}

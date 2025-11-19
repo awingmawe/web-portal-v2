@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/drawer'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PackageVariant } from '@/constant/types/PackageProps'
+import { useUI } from '@/contexts/ui-context/context'
 import { X } from 'lucide-react'
 import React from 'react'
 
@@ -34,8 +35,13 @@ const PembiayaanDrawerMobile = React.memo(
     dataTenor: Facility[]
     isPembiayaan?: 'change_package' | 'pembiayaan'
   }) => {
+    const { isPembiayaanDrawerOpen, setPembiayaanDrawerOpen } = useUI()
+
     return (
-      <Drawer>
+      <Drawer
+        open={isPembiayaanDrawerOpen}
+        onOpenChange={setPembiayaanDrawerOpen}
+      >
         <DrawerTrigger className="w-fit" asChild>
           {children}
         </DrawerTrigger>

@@ -16,6 +16,12 @@ const SubmenuCards = () => {
       background: 'bg-primary-500',
     },
     {
+      icon: <SavingIcon size={25} color="white" />,
+      label: 'Pembiayaan Umroh',
+      href: '/banking/credit',
+      background: 'bg-[#03DAC8]',
+    },
+    {
       icon: <WukalaIcon width={25} height={25} />,
       label: 'Program Wukala',
       href: '/wukala',
@@ -32,12 +38,6 @@ const SubmenuCards = () => {
       label: 'Daftar Travel',
       href: '/travel/list',
       background: 'bg-[#0AF]',
-    },
-    {
-      icon: <SavingIcon size={25} color="white" />,
-      label: 'Pembiayaan Umroh',
-      href: '/banking/credit',
-      background: 'bg-[#03DAC8]',
     },
     {
       icon: <MoonIcon size={25} />,

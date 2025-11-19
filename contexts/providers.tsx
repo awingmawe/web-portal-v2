@@ -5,6 +5,8 @@ import { EventTrackerProvider } from '@/contexts/event-tracker/provider'
 import { GalleryProvider } from '@/contexts/gallery-package-context'
 import { ManifestProvider } from '@/contexts/manifest-context/provider'
 import { PackageVariantProvider } from '@/contexts/package-variant-context'
+import { PembiayaanProvider } from '@/contexts/pembiayaan-context/provider'
+import { UIProvider } from '@/contexts/ui-context/provider'
 import { UmrahPersonalProvider } from '@/contexts/umrah-personal/provider'
 import { ReactNode } from 'react'
 import { FilterProductProvider } from './filter-product-context'
@@ -22,20 +24,24 @@ export function ContextProviders({ children }: ProvidersProps) {
   return (
     // Nest providers inside each other, with the most global one at the top
     <EventTrackerProvider>
-      <FilterProductProvider>
-        <GalleryProvider>
-          <PackageVariantProvider>
-            <ManifestProvider>
-              <UmrahPersonalProvider>
-                {/* Add other providers here as needed */}
-                {/* <ThemeProvider> */}
-                <AuthProvider>{children}</AuthProvider>
-              </UmrahPersonalProvider>
-              {/* </ThemeProvider> */}
-            </ManifestProvider>
-          </PackageVariantProvider>
-        </GalleryProvider>
-      </FilterProductProvider>
+      <UIProvider>
+        <FilterProductProvider>
+          <GalleryProvider>
+            <PackageVariantProvider>
+              <PembiayaanProvider>
+                <ManifestProvider>
+                  <UmrahPersonalProvider>
+                    {/* Add other providers here as needed */}
+                    {/* <ThemeProvider> */}
+                    <AuthProvider>{children}</AuthProvider>
+                  </UmrahPersonalProvider>
+                  {/* </ThemeProvider> */}
+                </ManifestProvider>
+              </PembiayaanProvider>
+            </PackageVariantProvider>
+          </GalleryProvider>
+        </FilterProductProvider>
+      </UIProvider>
     </EventTrackerProvider>
   )
 }

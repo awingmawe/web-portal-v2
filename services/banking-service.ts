@@ -127,3 +127,15 @@ export async function submissionPembiayaanDetail(
 
   return client.get(`/banking/v2/credit/submissions/${id}`)
 }
+
+export async function submissionChangePackage({
+  id,
+  packageVariantId,
+}: {
+  id: number
+  packageVariantId: string
+}): Promise<AxiosResponse<any>> {
+  return apiWithAuth.put(`/banking/v2/credit/submissions/${id}/edit-package`, {
+    package_variant_id: packageVariantId,
+  })
+}

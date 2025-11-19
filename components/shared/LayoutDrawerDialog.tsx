@@ -78,7 +78,7 @@ const LayoutDrawerDialog: React.FC<LayoutDrawerDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent
-        className={`${size[sizeDialog || 'default']} rounded-[20px] px-8 py-4 ${
+        className={`${size[sizeDialog || 'default']} rounded-[20px] p-8 ${
           hideCloseButton ? '[&>button]:hidden' : ''
         }`}
         {...preventCloseEvents}

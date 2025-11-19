@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { LOCAL_STORAGE_PEMBIAYAAN } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
+import { usePembiayaan } from '@/contexts/pembiayaan-context/context'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { formatCurrency, parseCurrency } from '@/lib/utils'
 import { useCalculateFinancing } from '@/services/hooks/banking-service/credits-api'
@@ -33,6 +34,7 @@ export default function FinancingSimulation({
   showInput?: boolean
   showWarningMessage?: boolean
 }) {
+  const { setMonthlyPayment, setTenor } = usePembiayaan()
   const [selectedTenor, setSelectedTenor] = useState('')
   const [totalAmount, setTotalAmount] = useState(
     price ? formatCurrency(price) : ''
@@ -145,8 +147,14 @@ export default function FinancingSimulation({
         totalAmount: numericAmount,
         tenor: Number(selectedTenor),
       })
+      setTenor(selectedTenor)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTenor, price, totalAmount, setTotalAmount, create])
+
+  useEffect(() => {
+    setMonthlyPayment(String(data?.monthly_payment))
+  }, [create, data?.monthly_payment, setMonthlyPayment])
 
   return (
     <div className="mx-auto flex w-full flex-col gap-4">

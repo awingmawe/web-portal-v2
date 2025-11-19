@@ -1,9 +1,6 @@
 import CheckAvailibility from '@/components/pages/detail-package/2-PackageVariant/component/CheckAvaibility'
 import { Button } from '@/components/ui/button'
 import { PACKAGE_TYPE } from '@/constant/env'
-import { PackageVariant } from '@/constant/types/PackageProps'
-import { RoomType } from '@/contexts/package-variant-context'
-import { usePembiayaan } from '@/hooks/pembiayaan/useSaveLocalStoragePembiayaan'
 import { useRouter } from 'next/navigation'
 import React, { Fragment } from 'react'
 
@@ -15,11 +12,6 @@ interface ActionButtonsProps {
     quad: boolean
   }
   packageType: string
-  getPrice: () => number
-  selectedVariant?: PackageVariant | null
-  selectedRoomType: RoomType
-  isEmptyRoomType: boolean
-  getTotalQty: () => number
   token: string
   currency: string
   isPembiayaan: 'change_package' | 'pembiayaan'
@@ -32,11 +24,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   variants,
   availableRoomTypes,
   packageType,
-  getPrice,
-  isEmptyRoomType,
-  selectedVariant,
-  selectedRoomType,
-  getTotalQty,
   token,
   isPembiayaan,
   onCheckout,
@@ -44,16 +31,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   setIsPembiayaanModalOpen,
 }) => {
   const router = useRouter()
-  const { handleNextPembiayaan } = usePembiayaan()
-  const onClickPilihPaket = () => {
-    handleNextPembiayaan({
-      selectedVariant,
-      selectedRoomType,
-      getPrice,
-      getTotalQty,
-      hrefTo: '/banking/credit/form/step-1',
-    })
-  }
   if (isPembiayaan) {
     return (
       <Fragment>
@@ -61,11 +38,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           className="w-full rounded-full py-3 max-lg:hidden"
           variant="default"
           size="lg"
-          disabled={
-            isEmptyRoomType &&
-            Object.values(selectedRoomType || {}).every((value) => value === 0)
-          }
-          onClick={onClickPilihPaket}
+          onClick={() => {
+            setIsPembiayaanModalOpen(true)
+            handlePushEvent('click_paylater')
+          }}
         >
           Pilih Paket
         </Button>

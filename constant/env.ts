@@ -34,6 +34,7 @@ export const QRCODE_APPS = 'https://muslim101.id'
 export const LINK_PLAYSTORE = 'https://muslim101.id'
 export const LINK_APPSTORE = 'https://muslim101.id'
 export const LOCAL_STORAGE_PEMBIAYAAN = 'pembiayaan'
+export const SESSION_STORAGE_CHANGE_PACKAGE = 'changePackagePembiayaan'
 
 export const PACKAGE_TYPE = {
   HAJJ_SPECIAL: 'hajj-special',
