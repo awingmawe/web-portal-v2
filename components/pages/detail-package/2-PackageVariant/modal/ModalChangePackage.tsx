@@ -23,13 +23,18 @@ import React from 'react'
 
 interface LayoutDrawerDialogProps {
   hideCloseButton?: boolean
+  packageId?: number
+  packageName?: string
 }
 
 const ModalChangePackagePembiayaan: React.FC<LayoutDrawerDialogProps> = ({
   hideCloseButton,
+  packageId,
+  packageName,
 }) => {
   const { lg: isMobile } = useTailwindBreakpoint()
-  const { selectedVariantId } = usePackageVariant()
+  const { selectedVariantId, getPrice, selectedVariant, selectedRoomType } =
+    usePackageVariant()
   const {
     isChangePackageModalOpen,
     setChangePackageModalOpen,
@@ -49,12 +54,17 @@ const ModalChangePackagePembiayaan: React.FC<LayoutDrawerDialogProps> = ({
   const onClickChangePackage = async () => {
     changePackage({
       id: dataOldPembiayaan.id,
-      packageVariantId: selectedVariantId,
+      packageVariantId: Number(selectedVariantId),
+      jumlahJemaah: dataOldPembiayaan.quantity,
+      totalPrice: getPrice(),
+      packageId,
+      packageName,
+      packageVariantName: selectedVariant?.name,
+      roomType: selectedRoomType,
     })
       .then((res) => {
         toast.success(res.message || 'Berhasil mengganti paket pembiayaan')
-        sessionStorage.removeItem(SESSION_STORAGE_CHANGE_PACKAGE)
-        router.push(`my/banking/${res.id}`)
+        router.push(`/my/banking/${res.id}`)
       })
       .catch(() => {
         // Toast error sudah di-handle oleh hook `useSubmissionPembiayaan`

@@ -11,6 +11,7 @@ import {
   SubmissionCredit,
   SubmissionListResponse,
 } from '@/constant/types/SubmissionPembiayaan'
+import { RoomType } from '@/contexts/package-variant-context'
 import { api, apiWithAuth, createServerApiClient } from '@/services/common/http'
 import { AxiosResponse } from 'axios'
 import qs from 'query-string'
@@ -121,7 +122,7 @@ export async function getProviderByCoverage(
 
 export async function submissionPembiayaanDetail(
   id: number,
-  token: string
+  token?: string
 ): Promise<AxiosResponse<SubmissionCredit>> {
   const client = token ? createServerApiClient(token) : apiWithAuth
 
@@ -131,11 +132,32 @@ export async function submissionPembiayaanDetail(
 export async function submissionChangePackage({
   id,
   packageVariantId,
+  packageId,
+  packageVariantName,
+  roomType,
+  totalPrice,
+  jumlahJemaah,
+  packageName,
 }: {
   id: number
-  packageVariantId: string
+  packageVariantId: number
+  packageName: string
+  packageId: number
+  packageVariantName: string
+  roomType: RoomType
+  totalPrice: number
+  jumlahJemaah: number
 }): Promise<AxiosResponse<any>> {
   return apiWithAuth.put(`/banking/v2/credit/submissions/${id}/edit-package`, {
     package_variant_id: packageVariantId,
+    package_id: packageId,
+    package_variant_name: packageVariantName,
+    room_type: roomType,
+    double: roomType?.double,
+    triple: roomType?.triple,
+    quad: roomType?.quad,
+    total_price: totalPrice,
+    jumlah_jemaah: jumlahJemaah,
+    package_name: packageName,
   })
 }

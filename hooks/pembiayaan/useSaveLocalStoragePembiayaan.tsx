@@ -6,7 +6,7 @@ import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { mapSelectedPackagePembiayaan } from '@/lib/data-formatter'
 import { useRouter } from 'next/navigation'
 
-export const usePembiayaan = () => {
+export const usePembiayaanLocalStorage = () => {
   const router = useRouter()
   const handleNextPembiayaan = ({
     selectedVariant,

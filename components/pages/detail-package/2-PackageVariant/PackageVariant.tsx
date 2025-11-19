@@ -488,7 +488,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
       />
 
       {/* Modal for change package pembiayaan */}
-      <ModalChangePackagePembiayaan />
+      <ModalChangePackagePembiayaan
+        packageId={pkg.id}
+        packageName={pkg.title}
+      />
     </div>
   )
 }

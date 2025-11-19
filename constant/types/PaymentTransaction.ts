@@ -20,6 +20,7 @@ export interface PaymentTransaction {
   modifiedBy: string | null
   paymentLink: string
   directEvidence: string | null
+  creditId: number
   orderStatus: {
     id: number
     name: string

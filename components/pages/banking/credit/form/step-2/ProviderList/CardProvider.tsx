@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
+import renderHTML from 'react-render-html'
 
 type SupportType = 'supported' | 'not-supported-location' | 'not-supported-org'
 
@@ -45,7 +46,7 @@ const CardProvider = ({
   }
   return (
     <div
-      className={`h-[270px] ${checked && isSupported ? 'border-primary-500' : ''} col-span-1 rounded-[20px] border border-[#E8E8E880] bg-[#F7F7F780]`}
+      className={`h-[300px] ${checked && isSupported ? 'border-primary-500' : ''} col-span-1 rounded-[20px] border border-[#E8E8E880] bg-[#F7F7F780]`}
     >
       {/* Header Card and Provider Description */}
       <div
@@ -70,7 +71,7 @@ const CardProvider = ({
       </div>
 
       {/* Content */}
-      <div className="scrollbar-hide flex flex-col gap-2 overflow-y-auto p-4">
+      <div className="flex flex-col gap-2 overflow-hidden p-4">
         {/* Tampilkan pesan hanya jika tidak didukung */}
         {!isSupported && (
           <p className="text-error-500 text-m-medium">
@@ -107,7 +108,9 @@ const CardProvider = ({
           </p>
         )}
         <p className="text-m-semibold">Ketentuan</p>
-        <p className="text-m-regular text-neutral-500">{description}</p>
+        <div className="text-m-regular max-h-[130px] overflow-y-auto text-neutral-500">
+          {renderHTML(description)}
+        </div>
       </div>
     </div>
   )
