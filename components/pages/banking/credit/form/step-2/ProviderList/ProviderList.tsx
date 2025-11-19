@@ -315,20 +315,20 @@ const ProviderList = ({
             </div>
           }
           footerContent={
-            <div className="ml-auto flex min-w-[400px] items-center gap-3 max-lg:w-full">
+            <div className="ml-auto flex max-w-lg items-center gap-3 max-lg:w-full">
               <Button
                 variant="outline"
                 size="sm"
                 disabled={isSubmitting}
                 onClick={() => setIsConfirmationsOpen(false)}
-                className="border-primary-500 flex-1 border-2 px-10 max-lg:w-full"
+                className="border-primary-500 border-2 px-10 max-lg:w-full"
               >
                 Batal
               </Button>
               <Button
                 size="sm"
                 disabled={isSubmitting}
-                className="flex-1 px-10 max-lg:w-full"
+                className="px-10 max-lg:w-full"
                 onClick={onClickSubmission}
               >
                 Ajukan Sekarang
