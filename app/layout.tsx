@@ -1,4 +1,5 @@
 import MazeAnalytics from '@/components/shared/MazeAnalytics'
+import PopupPromo from '@/components/shared/PopupPromo'
 import QontakChatWidget from '@/components/shared/QontakChatWidget'
 import RemoveLocalReferralCode from '@/components/shared/RemoveLocalReferralCode'
 import { Toaster } from '@/components/ui/sonner'
@@ -55,6 +56,7 @@ export default async function RootLayout({
               <QontakChatWidget hide={isWebview ? true : false} />
             )}
           </ContextProviders>
+          <PopupPromo />
         </Suspense>
       </body>
     </html>
