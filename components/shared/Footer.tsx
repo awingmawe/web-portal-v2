@@ -2,6 +2,7 @@ import { AppStoreIcon } from '@/components/icons/appstore'
 import { CallSolidIcon } from '@/components/icons/call-solid'
 import { MailSolidIcon } from '@/components/icons/mail-solid'
 import { PlaystoreIcon } from '@/components/icons/playstore'
+import { CALL_CENTER } from '@/constant/env'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { Fragment } from 'react'
@@ -17,7 +18,7 @@ export default function Footer({
 }: FooterProps) {
   return (
     <footer
-      className={`${cn('w-full border border-t border-neutral-200 bg-white px-4 py-5   max-lg:mb-30 lg:pb-5', className)}`}
+      className={`${cn('-mb-10 w-full border border-t border-neutral-200 bg-white px-4 py-5 max-lg:mb-30 lg:pb-5', className)}`}
     >
       <section className="container mx-auto max-lg:px-4">
         {type == 'normal' && (
@@ -30,7 +31,7 @@ export default function Footer({
                 <ul className="list-none space-y-2">
                   <li>
                     <Link
-                      href="https://www.instagram.com/muslim101.id/"
+                      href="mailto:cs@muslim101.id"
                       className="text-m-regular flex items-center gap-2 text-neutral-900"
                     >
                       <MailSolidIcon /> cs@muslim101.id
@@ -38,7 +39,7 @@ export default function Footer({
                   </li>
                   <li>
                     <Link
-                      href="https://www.instagram.com/muslim101.id/"
+                      href={`https://wa.me/${CALL_CENTER}`}
                       className="text-m-regular flex items-center gap-2 text-neutral-900"
                     >
                       <CallSolidIcon /> +62 888‑8551‑101
@@ -85,7 +86,7 @@ export default function Footer({
                 <ul className="list-none space-y-2">
                   <li>
                     <Link
-                      href="/travel/list"
+                      href="/search?type=umrah"
                       className="text-m-regular text-neutral-900"
                     >
                       Umroh
@@ -93,7 +94,7 @@ export default function Footer({
                   </li>
                   <li>
                     <Link
-                      href="/wukala"
+                      href="/umrah-personal/landing"
                       className="text-m-regular text-neutral-900"
                     >
                       Umroh Personal
@@ -101,7 +102,7 @@ export default function Footer({
                   </li>
                   <li>
                     <Link
-                      href="/wukala"
+                      href="/search?type=hajj"
                       className="text-m-regular text-neutral-900"
                     >
                       Haji
