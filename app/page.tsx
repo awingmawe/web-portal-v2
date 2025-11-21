@@ -182,7 +182,7 @@ export default async function Home() {
       )}
       {/* End JSON-LD Scripts */}
       <Topbar type="homepage" token={token} />
-      <div className="absolute top-3.5 right-0 left-0 z-999 flex items-center px-4 lg:hidden">
+      <div className="absolute top-3.5 right-0 left-0 z-50 flex items-center px-4 lg:hidden">
         <Link
           href="/search-mobile-package"
           className={`flex-1 outline-none focus-within:outline-none focus-visible:outline-0 ${
@@ -209,7 +209,7 @@ export default async function Home() {
         <div className="container mx-auto max-xl:px-0">
           <PopupPromo />
           <LocationPermissionSection />
-          <ProgramCards className="absolute -top-19 left-0 z-99 px-4 py-3" />
+          <ProgramCards className="absolute -top-19 left-0 z-50 px-4 py-3" />
           <SubmenuCards />
           <UmrahPersonalBanner />
           <div className="mb-4 flex flex-col max-lg:flex-col-reverse">
