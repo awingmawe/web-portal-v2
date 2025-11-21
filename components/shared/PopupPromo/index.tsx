@@ -49,7 +49,7 @@ const PopupPromo: React.FC = () => {
         onInteractOutside={(e) => {
           e.preventDefault()
         }}
-        className="z-[999] w-sm max-w-sm bg-transparent shadow-none"
+        className="z-[9999] w-sm max-w-sm bg-transparent shadow-none"
       >
         <DialogHeader>
           <DialogTitle className="hidden" />
