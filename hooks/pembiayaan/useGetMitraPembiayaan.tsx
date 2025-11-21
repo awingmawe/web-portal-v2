@@ -31,7 +31,10 @@ export const useGetOrganizationIdFromProviders = (
     const selectedProviders = dataProviders.filter((p: Provider) =>
       selectedIds.includes(String(p.id))
     )
-    const orgIds = selectedProviders.flatMap((p) => p.supported_organizations)
+    const orgIds = selectedProviders.flatMap((p) =>
+      p.supported_organizations.length === 0 ? ['0'] : p.supported_organizations
+    )
+
     const uniqueOrgIds = [...new Set(orgIds)]
 
     return uniqueOrgIds.length > 0 ? uniqueOrgIds.join(',') : '0'

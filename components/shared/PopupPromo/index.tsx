@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTrigger,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { api } from '@/services/common/http'
 import { X } from 'lucide-react'
@@ -45,13 +45,18 @@ const PopupPromo: React.FC = () => {
 
   return (
     <Dialog open={isOpenPopup} onOpenChange={handleOpenChange}>
-      <DialogTrigger>Open</DialogTrigger>
-      <DialogContent className="z-[99] w-sm max-w-sm bg-transparent">
+      <DialogContent
+        onInteractOutside={(e) => {
+          e.preventDefault()
+        }}
+        className="z-[99] w-sm max-w-sm bg-transparent shadow-none"
+      >
         <DialogHeader>
+          <DialogTitle className="hidden" />
           <DialogClose asChild>
             <X
               size={36}
-              className="absolute top-7 right-7 cursor-pointer rounded-full bg-white p-1 p-2 hover:text-gray-600"
+              className="absolute top-7 right-7 cursor-pointer rounded-full bg-white p-1 hover:text-gray-600"
             />
           </DialogClose>
           <DialogDescription>

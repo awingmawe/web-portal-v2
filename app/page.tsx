@@ -14,6 +14,7 @@ import ProgramCards from '@/components/pages/homepage/mobile/ProgramCards'
 import SubmenuCards from '@/components/pages/homepage/mobile/SubmenuCards'
 import Footer from '@/components/shared/Footer'
 import BottomNavigation from '@/components/shared/mobile/BottomNavigation'
+import PopupPromo from '@/components/shared/PopupPromo'
 import Topbar from '@/components/shared/Topbar'
 import TopbarNotif from '@/components/shared/Topbar/TopbarNotification'
 import { Card, CardContent } from '@/components/ui/card'
@@ -206,6 +207,7 @@ export default async function Home() {
       <Banner />
       <main className="relative">
         <div className="container mx-auto max-xl:px-0">
+          <PopupPromo />
           <LocationPermissionSection />
           <ProgramCards className="absolute -top-19 left-0 z-99 px-4 py-3" />
           <SubmenuCards />
