@@ -45,7 +45,12 @@ const PopupPromo: React.FC = () => {
 
   return (
     <Dialog open={isOpenPopup} onOpenChange={handleOpenChange}>
-      <DialogContent className="z-[99] w-sm max-w-sm bg-transparent">
+      <DialogContent
+        onInteractOutside={(e) => {
+          e.preventDefault()
+        }}
+        className="z-[99] w-sm max-w-sm bg-transparent shadow-none"
+      >
         <DialogHeader>
           <DialogTitle className="hidden" />
           <DialogClose asChild>

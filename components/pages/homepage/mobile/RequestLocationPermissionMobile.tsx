@@ -15,7 +15,7 @@ export const LocationPermissionDrawer = ({
   handleActivate: () => void
 }) => {
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={setOpen} dismissible={false}>
       <DrawerContent className="flex gap-4 px-4 py-2.5 [&>button]:hidden ">
         <DrawerTitle className="flex justify-end">
           <X className="h-4 w-4 cursor-pointer" onClick={handleClose} />
