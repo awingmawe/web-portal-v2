@@ -13,7 +13,9 @@ import {
   RequestSubmissionPembiayaan,
 } from '@/constant/types/Pembiayaan'
 import { Provider } from '@/constant/types/Providers'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
+import { usePembiayaanFormEventData } from '@/hooks/pembiayaan/usePembiayaanEventData'
 import { useGetProviderPublic } from '@/services/hooks/banking-service/credits-api'
 import { useCreateSubmissionPembiayaan } from '@/services/hooks/banking-service/submission-credits-api'
 import { useRouter } from 'next/navigation'
@@ -27,6 +29,8 @@ const ProviderList = ({
   isLoading: boolean
 }) => {
   const router = useRouter()
+  const { pushEvent } = useEventTracker()
+  const formEventData = usePembiayaanFormEventData()
   const [selectedProviders, setSelectedProviders] = useState<
     ProviderSubmission[]
   >([])
@@ -182,6 +186,24 @@ const ProviderList = ({
         dataPembiayaan.selectedPackage.organizationId
       ),
     }
+
+    // Track click next event for step-2
+    pushEvent({
+      name: 'click_next_banking_credit',
+      category: 'banking-credit',
+      topic: 'umrah',
+      data: {
+        stepName: 'Data Provider',
+      },
+    })
+
+    // Track form submission event
+    pushEvent({
+      name: 'submit_banking_credit_umrah_form',
+      category: 'banking-credit',
+      topic: 'umrah',
+      data: formEventData,
+    })
 
     submitPembiayaan(payload)
       .then((res) => {

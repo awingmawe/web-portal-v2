@@ -280,7 +280,7 @@ export default async function DetailPackage({
                   0) && (
                 <div className="flex flex-col gap-3">
                   <div className="flex gap-3">
-                    <div className="bg-primary-500 h-auto w-[6px] rounded-full" />
+                    <div className="bg-primary-500 h-auto w-1.5 rounded-full" />
                     <p className="heading-3-semibold font-semibold max-lg:text-sm max-lg:leading-5">
                       Fasilitas & Lainnya
                     </p>

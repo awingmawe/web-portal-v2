@@ -7,7 +7,9 @@ export interface SelectedPackage {
   organizationId: number
   organizationName: string
   organizationCity: string
+  organizationCityId?: string
   organizationProvince: string
+  organizationProvinceId?: string
   organizationLocation: string
   organizationThumbnail: string
 
@@ -15,7 +17,11 @@ export interface SelectedPackage {
   packageVariantId: number
   packageId: number
   packageName: string
+  packageSlug?: string
   packageThumbnail: string
+  isLastCall?: boolean
+  tripDuration?: number
+  section?: string
 
   // Schedule Info
   departureDate: string
@@ -43,11 +49,16 @@ export interface SelectedPackage {
   meccaHotelName: string
   meccaHotelCity: string
   meccaHotelLocation: string
+  meccaHotelRating?: number
 
   // Hotel Info - Medina
   medinaHotelName: string
   medinaHotelCity: string
   medinaHotelLocation: string
+  medinaHotelRating?: number
+
+  // Hotel Rating (highest between Mecca and Medina)
+  hotelRating?: number
 }
 // --------------------------------------- END OF SELECTED PACKAGE ------------------------------------ //
 

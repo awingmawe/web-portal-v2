@@ -89,7 +89,7 @@ const DetailPackagePembiayaan = ({
   return (
     <div className="container mx-auto flex flex-col gap-4 max-lg:px-4">
       <p className="heading-4-semibold max-lg:hidden">Paket Pilihan</p>
-      <div className="flex flex-col gap-4 rounded-2xl border-1 border-neutral-200 px-6 py-4 max-lg:gap-2 max-lg:border-none max-lg:p-0">
+      <div className="flex flex-col gap-4 rounded-2xl border border-neutral-200 px-6 py-4 max-lg:gap-2 max-lg:border-none max-lg:p-0">
         {/* Ubah and Title Rincian Paket */}
         <div className="flex items-center justify-between lg:hidden">
           <p className="text-m-semibold">Rincian Paket</p>
@@ -113,7 +113,7 @@ const DetailPackagePembiayaan = ({
             alt={dataPembiayaan?.selectedPackage?.packageName || ''}
             width={120}
             height={120}
-            className="rounded-lg max-lg:!h-15 max-lg:!w-15"
+            className="rounded-lg max-lg:h-15! max-lg:w-15!"
           />
 
           <div className="flex w-full flex-row gap-3 max-lg:flex-col lg:items-center lg:justify-between">
@@ -126,7 +126,7 @@ const DetailPackagePembiayaan = ({
 
               {/* Organization Description (Desktop Only) */}
               <div className="flex items-center gap-1 max-lg:hidden">
-                <div className="rounded-full border-1 border-neutral-100 p-2">
+                <div className="rounded-full border border-neutral-100 p-2">
                   <Image
                     src={
                       dataPembiayaan?.selectedPackage?.organizationThumbnail ||
@@ -226,28 +226,28 @@ const DetailPackagePembiayaan = ({
             </div>
             <ItemsInformation
               icon={
-                <PlaneTakeoff size={20} className="max-lg:!h-4 max-lg:!w-4" />
+                <PlaneTakeoff size={20} className="max-lg:h-4! max-lg:w-4!" />
               }
               value={getDepartureArrivalText('departure')}
               title="Keberangkatan"
             />
             <ItemsInformation
               icon={
-                <PlaneLanding size={20} className="max-lg:!h-4 max-lg:!w-4" />
+                <PlaneLanding size={20} className="max-lg:h-4! max-lg:w-4!" />
               }
               value={getDepartureArrivalText('arrival')}
               title="Kepulangan"
             />
             <ItemsInformation
               icon={
-                <BuildingIcon size={20} className="max-lg:!h-4 max-lg:!w-4" />
+                <BuildingIcon size={20} className="max-lg:h-4! max-lg:w-4!" />
               }
               value={dataPembiayaan?.selectedPackage?.meccaHotelName}
               title="Hotel Makkah"
             />
             <ItemsInformation
               icon={
-                <BuildingIcon size={20} className="max-lg:!h-4 max-lg:!w-4" />
+                <BuildingIcon size={20} className="max-lg:h-4! max-lg:w-4!" />
               }
               value={dataPembiayaan?.selectedPackage?.medinaHotelName}
               title="Hotel Madinah"

@@ -12,7 +12,12 @@ import { Facility } from '@/constant/types/FacilityProps'
 import { GenericResponseV2 } from '@/constant/types/GeneralProps'
 import { Package } from '@/constant/types/PackageProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { useLocalStorageListener } from '@/hooks/common/useLocalStorageListener'
+import {
+  usePembiayaanCalculationEventData,
+  usePembiayaanPackageEventData,
+} from '@/hooks/pembiayaan/usePembiayaanEventData'
 import { mapProductsToCardData } from '@/lib/data-formatter'
 import { isEmpty } from '@/lib/utils'
 import Image from 'next/image'
@@ -79,6 +84,9 @@ const PackagePembiayaan = ({
   token: string
 }) => {
   const router = useRouter()
+  const { pushEvent } = useEventTracker()
+  const packageEventData = usePembiayaanPackageEventData()
+  const calculationEventData = usePembiayaanCalculationEventData()
 
   const [dataPembiayaan] = useLocalStorageListener<PembiayaanDataLocalStorage>(
     LOCAL_STORAGE_PEMBIAYAAN
@@ -102,6 +110,26 @@ const PackagePembiayaan = ({
   }, [dataPembiayaan])
 
   const onClickLinkPembiayaan = () => {
+    // Track event when clicking "Cari Paket Lain"
+    if (!dataPembiayaan) {
+      pushEvent({
+        name: 'click_other_package_banking_credit',
+        category: 'banking-credit',
+        topic: 'umrah',
+        data: calculationEventData,
+      })
+    }
+
+    // Track event when clicking "Lanjutkan Pengisian Permohonan"
+    if (dataPembiayaan) {
+      pushEvent({
+        name: 'click_umroh_banking_credit_continue',
+        category: 'banking-credit',
+        topic: 'umrah',
+        data: packageEventData,
+      })
+    }
+
     // Kalo sudah memilih paket pengajuan pembiaayan tetapi belum login
     // Lempar ke halaman login
     if (dataPembiayaan && !token) {
@@ -142,7 +170,7 @@ const PackagePembiayaan = ({
               Paket pilihan yang sudah tersedia pembiayaan{' '}
             </p>
           </div>
-          <div className="border-primary-500 flex flex-col gap-3 rounded-2xl border-1 p-4 max-lg:gap-2">
+          <div className="border-primary-500 flex flex-col gap-3 rounded-2xl border p-4 max-lg:gap-2">
             {/* Organization Name */}
             <div className="flex items-center gap-1">
               <Image
@@ -227,7 +255,7 @@ const PackagePembiayaan = ({
                   )}
 
                   {/* Divider */}
-                  <div className="w-[1px] self-stretch bg-neutral-100 lg:hidden" />
+                  <div className="w-px self-stretch bg-neutral-100 lg:hidden" />
 
                   {/* Triple */}
                   {!isEmpty(dataPembiayaan?.selectedRoomType?.triple) && (
@@ -248,7 +276,7 @@ const PackagePembiayaan = ({
                   )}
 
                   {/* Divider */}
-                  <div className="w-[1px] self-stretch bg-neutral-100 lg:hidden" />
+                  <div className="w-px self-stretch bg-neutral-100 lg:hidden" />
 
                   {/* Quad */}
                   {!isEmpty(dataPembiayaan?.selectedRoomType?.quad) && (
@@ -274,7 +302,7 @@ const PackagePembiayaan = ({
 
       <Button
         onClick={onClickLinkPembiayaan}
-        className="text-s-regular mx-auto mt-6 !flex w-fit rounded-full px-10 py-4 text-center transition-all duration-300"
+        className="text-s-regular mx-auto mt-6 flex! w-fit rounded-full px-10 py-4 text-center transition-all duration-300"
       >
         {linkPembiayaan?.label}
       </Button>

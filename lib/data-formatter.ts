@@ -62,13 +62,19 @@ export function mapProductsToCardData(
 export function mapSelectedPackagePembiayaan(
   data: PackageVariant
 ): SelectedPackage {
+  const meccaRating = data?.package?.meccaHotel?.rating || 0
+  const medinaRating = data?.package?.medinaHotel?.rating || 0
+  const hotelRating = Math.max(meccaRating, medinaRating)
+
   return {
     // Organization Info
     organizationId: data?.package?.organizationInstanceId || 0,
     organizationName: data?.package?.organizationInstanceName || '-',
     organizationCity: data?.package?.organizationInstance?.city?.name || '-',
+    organizationCityId: data?.package?.organizationInstance?.cityId,
     organizationProvince:
       data?.package?.organizationInstance?.province?.name || '-',
+    organizationProvinceId: data?.package?.organizationInstance?.provinceId,
     organizationLocation:
       data?.package?.organizationInstance?.city &&
       data?.package?.organizationInstance?.province
@@ -82,7 +88,11 @@ export function mapSelectedPackagePembiayaan(
     packageId: data?.package?.id || 0,
     packageVariantId: data?.id || 0,
     packageName: data?.package?.title || '-',
+    packageSlug: data?.package?.slug,
     packageThumbnail: data?.package?.thumbnail || Placeholder.src,
+    isLastCall: data?.isLastCall,
+    tripDuration: data?.tripDuration,
+    section: data?.package?.tag,
 
     // Schedule Info
     departureDate: formatDateToDDMMYYYY(new Date(data?.departureDate)),
@@ -120,6 +130,7 @@ export function mapSelectedPackagePembiayaan(
       data?.package?.meccaHotel?.name && data?.package?.meccaHotel?.cityName
         ? `${data.package.meccaHotel.name}, ${data.package.meccaHotel.cityName}`
         : '-',
+    meccaHotelRating: data?.package?.meccaHotel?.rating,
 
     // Hotel Info - Medina
     medinaHotelName: data?.package?.medinaHotel?.name || '-',
@@ -128,5 +139,9 @@ export function mapSelectedPackagePembiayaan(
       data?.package?.medinaHotel?.name && data?.package?.medinaHotel?.cityName
         ? `${data.package.medinaHotel.name}, ${data.package.medinaHotel.cityName}`
         : '-',
+    medinaHotelRating: data?.package?.medinaHotel?.rating,
+
+    // Hotel Rating (highest between Mecca and Medina)
+    hotelRating: hotelRating,
   }
 }
