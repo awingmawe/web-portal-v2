@@ -8,6 +8,9 @@ type PembiayaanContextProps = {
 
   setTenor: (tenor: string) => void
   tenor: string
+
+  setTotalPrice: (price: string) => void
+  totalPrice: string
 }
 
 export const PembiayaanContext = createContext<PembiayaanContextProps>({
@@ -16,6 +19,9 @@ export const PembiayaanContext = createContext<PembiayaanContextProps>({
 
   tenor: '',
   setTenor: () => {},
+
+  totalPrice: '',
+  setTotalPrice: () => {},
 })
 
 export const usePembiayaan = () => useContext(PembiayaanContext)

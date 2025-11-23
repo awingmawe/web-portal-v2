@@ -245,6 +245,7 @@ export function EventTrackerProvider({
 
   async function execute(payload: any, backgroundProcess?: boolean) {
     let localUserId = localStorage.getItem(LOCAL_STORAGE_USERID)
+    const showPhoneNumber = ['umrah-personal', 'banking-credit']
     if (localUserId == null || localUserId === 'null' || localUserId === '') {
       localUserId = uuid()
       localStorage.setItem(LOCAL_STORAGE_USERID, localUserId)
@@ -258,7 +259,7 @@ export function EventTrackerProvider({
       fullName: profile?.name || 'guest',
       username: profile?.username,
       joinDate: profile?.createdAt,
-      ...(payload.event.category === 'umrah-personal'
+      ...(showPhoneNumber.includes(payload.event.category)
         ? {
             phoneNumber: profile?.persona?.phoneNumber,
             phoneNumberVerified: profile?.phonenumberVerified,

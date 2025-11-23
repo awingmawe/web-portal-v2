@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button'
 import { PACKAGE_TYPE, SESSION_STORAGE_CHANGE_PACKAGE } from '@/constant/env'
 import { Facility } from '@/constant/types/FacilityProps'
 import { PackageVariant } from '@/constant/types/PackageProps'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { usePackageVariant } from '@/contexts/package-variant-context'
+import { usePembiayaan } from '@/contexts/pembiayaan-context/context'
 import { useUI } from '@/contexts/ui-context/context'
 import { usePembiayaanLocalStorage } from '@/hooks/pembiayaan/useSaveLocalStoragePembiayaan'
 import { dissolve } from '@/lib/animation-setup'
@@ -50,6 +52,8 @@ const ContentPembiayaan = ({
   } = usePackageVariant()
   const { handleNextPembiayaan } = usePembiayaanLocalStorage()
   const { setChangePackageModalOpen, setPembiayaanDrawerOpen } = useUI()
+  const { pushEvent } = useEventTracker()
+  const { tenor } = usePembiayaan()
   const dataOldPembiayaan =
     typeof window !== 'undefined'
       ? JSON.parse(
@@ -61,6 +65,42 @@ const ContentPembiayaan = ({
     (selectedVariant ? `Varian ${selectedVariant.id}` : '')
   const hrefTo = '/banking/credit/form/step-1'
   const onClickNextPembiayaan = () => {
+    // Track event for paylater continue
+    if (selectedVariant && isPembiayaan !== 'change_package') {
+      const meccaRating = selectedVariant.package?.meccaHotel?.rating || 0
+      const medinaRating = selectedVariant.package?.medinaHotel?.rating || 0
+      const hotelRating = Math.max(meccaRating, medinaRating)
+
+      pushEvent({
+        name: 'click_paylater_continue',
+        category: 'detail-package',
+        topic: 'umrah',
+        data: {
+          packageId: selectedVariant.package?.id || selectedVariant.packageId,
+          packageType: packageType,
+          title: title,
+          slug: selectedVariant.package?.slug,
+          hotelRating: hotelRating,
+          tripDuration: selectedVariant.tripDuration || numberOfDays,
+          travelName: selectedVariant.package?.organizationInstanceName,
+          travelCity: selectedVariant.package?.organizationInstance?.city?.name,
+          travelCityId: selectedVariant.package?.organizationInstance?.cityId,
+          travelProvinceName:
+            selectedVariant.package?.organizationInstance?.province?.name,
+          travelProvinceId:
+            selectedVariant.package?.organizationInstance?.provinceId,
+          section: selectedVariant.package.tag,
+          lastCall: selectedVariant.isLastCall,
+          price: getPrice(),
+          organizationId: selectedVariant.package?.organizationId,
+          organizationInstanceId:
+            selectedVariant.package?.organizationInstanceId,
+          tenor: tenor,
+          roomTypeQuantity: getTotalQty(),
+        },
+      })
+    }
+
     if (isPembiayaan === 'change_package') {
       // Tutup drawer saat ini, lalu buka drawer/modal berikutnya
       setPembiayaanDrawerOpen(false)
@@ -113,7 +153,7 @@ const ContentPembiayaan = ({
                     key={variant.id}
                     id={`variant-btn-${variant.id}`}
                     onClick={() => setSelectedVariantId(variant.id)}
-                    className={`${dissolve} ${variants.some((e) => e.discountAmount != '0') ? 'mt-5.5' : ''} hover:bg-primary-100 relative min-w-[90px] flex-shrink-0 cursor-pointer rounded-lg p-2.5 ${
+                    className={`${dissolve} ${variants.some((e) => e.discountAmount != '0') ? 'mt-5.5' : ''} hover:bg-primary-100 relative min-w-[90px] shrink-0 cursor-pointer rounded-lg p-2.5 ${
                       selectedVariantId === variant.id
                         ? 'border-primary-500 bg-primary-100 border-2'
                         : 'border-2 border-neutral-200 bg-transparent'
@@ -125,7 +165,7 @@ const ContentPembiayaan = ({
                     {variant.discountAmount &&
                       Number(variant.discountAmount) > 0 && (
                         <BadgePromo
-                          className="!text-s-semibold -top-[25px] left-0"
+                          className="text-s-semibold -top-[25px] left-0"
                           title={`Diskon ${handleBadgePromo(variant.discountType, variant.discountAmount, currency)}`}
                         />
                       )}

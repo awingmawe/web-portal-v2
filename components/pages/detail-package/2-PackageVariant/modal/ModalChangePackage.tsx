@@ -11,9 +11,15 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { toast } from '@/components/ui/sonner'
-import { SESSION_STORAGE_CHANGE_PACKAGE } from '@/constant/env'
+import {
+  LOCAL_STORAGE_PEMBIAYAAN,
+  SESSION_STORAGE_CHANGE_PACKAGE,
+} from '@/constant/env'
+import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { usePackageVariant } from '@/contexts/package-variant-context'
 import { useUI } from '@/contexts/ui-context/context'
+import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { useChangePackagePembiayaan } from '@/services/hooks/banking-service/submission-credits-api'
 import { DialogTitle } from '@radix-ui/react-dialog'
@@ -48,8 +54,12 @@ const ModalChangePackagePembiayaan: React.FC<LayoutDrawerDialogProps> = ({
   const dataOldPembiayaan = JSON.parse(
     sessionStorage.getItem(SESSION_STORAGE_CHANGE_PACKAGE) || '{}'
   )
+  const dataPembiayaan = localStorageUtils.getJSON(
+    LOCAL_STORAGE_PEMBIAYAAN
+  ) as PembiayaanDataLocalStorage
 
   const router = useRouter()
+  const { pushEvent } = useEventTracker()
   const { create: changePackage, isLoading } = useChangePackagePembiayaan()
   const onClickChangePackage = async () => {
     changePackage({
@@ -64,6 +74,16 @@ const ModalChangePackagePembiayaan: React.FC<LayoutDrawerDialogProps> = ({
     })
       .then((res) => {
         toast.success(res.message || 'Berhasil mengganti paket pembiayaan')
+
+        pushEvent({
+          name: 'click_change_package_banking_credit',
+          category: 'banking-credit',
+          topic: 'umrah',
+          data: {
+            packageId: dataPembiayaan?.selectedPackage?.packageId || null,
+            newPackageId: packageId || null,
+          },
+        })
         router.push(`/my/banking/${res.id}`)
       })
       .catch(() => {
@@ -126,7 +146,7 @@ const ModalChangePackagePembiayaan: React.FC<LayoutDrawerDialogProps> = ({
       onOpenChange={setChangePackageModalOpen}
     >
       <DialogContent
-        className={`!max-w-1/2 rounded-[20px] p-8 ${
+        className={`max-w-1/2! rounded-[20px] p-8 ${
           hideCloseButton ? '[&>button]:hidden' : ''
         }`}
       >

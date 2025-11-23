@@ -34,7 +34,7 @@ export default function FinancingSimulation({
   showInput?: boolean
   showWarningMessage?: boolean
 }) {
-  const { setMonthlyPayment, setTenor } = usePembiayaan()
+  const { setMonthlyPayment, setTenor, setTotalPrice } = usePembiayaan()
   const [selectedTenor, setSelectedTenor] = useState('')
   const [totalAmount, setTotalAmount] = useState(
     price ? formatCurrency(price) : ''
@@ -148,6 +148,7 @@ export default function FinancingSimulation({
         tenor: Number(selectedTenor),
       })
       setTenor(selectedTenor)
+      setTotalPrice(String(numericAmount))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTenor, price, totalAmount, setTotalAmount, create])
@@ -188,7 +189,7 @@ export default function FinancingSimulation({
             onChange={handleChange}
             onBlur={handleBlur}
             disabled={price !== undefined}
-            className="w-full rounded-full border-1 border-neutral-200 px-4 py-2.5"
+            className="w-full rounded-full border border-neutral-200 px-4 py-2.5"
           />
         </div>
       )}
@@ -203,7 +204,7 @@ export default function FinancingSimulation({
           value={selectedTenor}
           onValueChange={handleTenorChange}
         >
-          <SelectTrigger className="w-full rounded-full border-1 border-neutral-200 px-4 py-2.5">
+          <SelectTrigger className="w-full rounded-full border border-neutral-200 px-4 py-2.5">
             <SelectValue placeholder="Pilih tenor" />
           </SelectTrigger>
           <SelectContent className="rounded-2xl border-none shadow-[0px_6px_24px_0px_rgba(0,0,0,0.25)] outline-none">
@@ -267,7 +268,7 @@ export default function FinancingSimulation({
 
             {/* Skeleton untuk Warning Message */}
             <div className="bg-primary-100 flex items-start gap-2 rounded-lg p-3">
-              <Skeleton className="h-5 w-5 flex-shrink-0 rounded" />
+              <Skeleton className="h-5 w-5 shrink-0 rounded" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-3 w-full" />
                 <Skeleton className="h-3 w-3/4" />

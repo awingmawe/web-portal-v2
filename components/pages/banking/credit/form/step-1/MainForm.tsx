@@ -16,6 +16,7 @@ import {
 import { Facility } from '@/constant/types/FacilityProps'
 import { PembiayaanDataLocalStorage } from '@/constant/types/Pembiayaan'
 import { useAuth } from '@/contexts/auth/context'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { localStorageUtils } from '@/hooks/common/useLocalStorage'
 import { useTailwindBreakpoint } from '@/hooks/common/useMediaQuery'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -25,7 +26,7 @@ import { useForm } from 'react-hook-form'
 
 export const FormMessageErrorLayout = () => {
   return (
-    <div className="mt-[-8px] min-h-3">
+    <div className="-mt-2 min-h-3">
       <FormMessage />
     </div>
   )
@@ -55,6 +56,7 @@ export default function SubmissionStep1({
   loading: boolean
 }) {
   const router = useRouter()
+  const { pushEvent } = useEventTracker()
   const [isPemohonOpen, setIsPemohonOpen] = useState(false)
   const [isJemaahOpen, setIsJemaahOpen] = useState(false)
 
@@ -109,6 +111,16 @@ export default function SubmissionStep1({
 
     setIsLoadingSubmit(true)
     try {
+      // Track event for clicking next button
+      pushEvent({
+        name: 'click_next_banking_credit',
+        category: 'banking-credit',
+        topic: 'umrah',
+        data: {
+          stepName: 'Data Diri',
+        },
+      })
+
       localStorageUtils.updateJSON(LOCAL_STORAGE_PEMBIAYAAN, (prev) => ({
         ...(prev as PembiayaanDataLocalStorage),
         formData: values,
@@ -240,7 +252,7 @@ export default function SubmissionStep1({
               pembiayaan ini.
             </p>
           </div>
-          <div className="grid grid-cols-4 gap-4 rounded-2xl border-1 border-neutral-200 p-6">
+          <div className="grid grid-cols-4 gap-4 rounded-2xl border border-neutral-200 p-6">
             <DataDiriFields
               form={form}
               dataPekerjaan={dataPekerjaan}
