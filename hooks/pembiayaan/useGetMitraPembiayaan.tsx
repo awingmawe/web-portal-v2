@@ -11,7 +11,7 @@ import { useMemo } from 'react'
  * @returns Objek yang berisi `organizationInstanceId` yang dihitung dan status loading.
  */
 export const useGetOrganizationIdFromProviders = (
-  providerIds: string | null,
+  providerIds: string | null | undefined,
   isPaused: boolean
 ) => {
   const { data: dataProviders, isLoading } = useGetProviderPublic(
@@ -31,13 +31,20 @@ export const useGetOrganizationIdFromProviders = (
     const selectedProviders = dataProviders.filter((p: Provider) =>
       selectedIds.includes(String(p.id))
     )
+
     const orgIds = selectedProviders.flatMap((p) =>
-      p.supported_organizations.length === 0 ? ['0'] : p.supported_organizations
+      p.specific_travel
+        ? p.supported_organizations.length > 0
+          ? p.supported_organizations
+          : ['0']
+        : []
     )
+
+    console.log(orgIds)
 
     const uniqueOrgIds = [...new Set(orgIds)]
 
-    return uniqueOrgIds.length > 0 ? uniqueOrgIds.join(',') : '0'
+    return uniqueOrgIds.length > 0 ? uniqueOrgIds.join(',') : ''
   }, [dataProviders, providerIds])
 
   return {

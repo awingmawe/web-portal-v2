@@ -313,9 +313,10 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
 
     return dataProviders.filter(
       (provider) =>
+        provider.specific_travel &&
         provider.supported_organizations.includes(
           pkg.organizationInstanceId.toString()
-        ) && provider.specific_travel
+        )
     )
   }, [dataProviders, pkg.organizationInstanceId])
 
@@ -334,7 +335,7 @@ const PackageVariantComponent: React.FC<PackageVariantComponentProps> = ({
         packageType={pkg.packageType}
         isPembiayaan={isPembiayaan}
       />
-      {isPembiayaan && (
+      {isPembiayaan && matchedProviders && (
         <Fragment>
           <div className="h-[0.5px] bg-[#c9c9c9] max-lg:hidden" />
           <div className="flex flex-col gap-3">

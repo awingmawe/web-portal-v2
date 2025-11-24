@@ -143,10 +143,12 @@ export const CardPackage = memo(function CardPackage({
   const matchedProviders = useMemo(() => {
     if (!dataProviders || !organizationInstanceId) return []
 
-    return dataProviders.filter((provider) =>
-      provider.supported_organizations.includes(
-        organizationInstanceId.toString()
-      )
+    return dataProviders.filter(
+      (provider) =>
+        provider.specific_travel &&
+        provider.supported_organizations.includes(
+          organizationInstanceId.toString()
+        )
     )
   }, [dataProviders, organizationInstanceId])
 

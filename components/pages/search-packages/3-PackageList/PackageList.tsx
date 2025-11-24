@@ -77,8 +77,6 @@ export const PackageResults: React.FC<PackageResultsProps> = ({
   const { isLoading: isLoadingProvider, organizationInstanceId } =
     useGetOrganizationIdFromProviders(providerFilter, isEmpty(providerFilter))
 
-  console.log(organizationInstanceId, 'provider')
-
   // Untuk menampilkan paket hanya jika pencarian dari pembiayaan
   const {
     dataProviders,

@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/popover'
 import { ACCOUNT_URL } from '@/constant/env'
 import { useAuth } from '@/contexts/auth/context'
+import { useEventTracker } from '@/contexts/event-tracker/context'
 import { springTransition } from '@/lib/animation-setup'
 import { cn, ellipsis, isEmpty } from '@/lib/utils'
 import { useGetReference } from '@/services/hooks/general/reference'
@@ -63,6 +64,7 @@ interface TopbarContentProps {
     subMenu?: Array<{
       title: string
       href: string
+      eventName?: string | null
     }>
   }>
   type: string
@@ -76,6 +78,7 @@ interface TopbarContentProps {
   hoveredLink: string | null
   onMouseEnter: (href: string) => void
   onMouseLeave: () => void
+  onSubmenuClick: (title: string, href: string, eventName?: string | null) => void
 }
 
 // Animation variants defined outside component to prevent recreation on each render
@@ -216,6 +219,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
     hoveredLink,
     onMouseEnter,
     onMouseLeave,
+    onSubmenuClick,
   }) => {
     return (
       <Fragment>
@@ -263,6 +267,7 @@ const TopbarContent = React.memo<TopbarContentProps>(
                               key={sub.href}
                               className="focus:bg-primary-200 text-m-regular p-3 text-neutral-400 hover:bg-neutral-50"
                               href={sub.href}
+                              onClick={() => onSubmenuClick(sub.title, sub.href, sub.eventName)}
                             >
                               {sub.title}
                             </Link>
@@ -477,6 +482,7 @@ const Topbar: React.FC<TopbarProps> = ({
   const [loadingLogout, setLoadingLogout] = useState(false)
   const [qrApp, setQrApp] = useState<string>('')
   const { data } = useGetReference('qr_app')
+  const { pushEvent } = useEventTracker()
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -494,14 +500,17 @@ const Topbar: React.FC<TopbarProps> = ({
           {
             title: 'Umroh',
             href: '/search?type=umrah',
+            eventName: null,
           },
           {
             title: 'Umroh Personal',
             href: '/umrah-personal/landing',
+            eventName: null,
           },
           {
             title: 'Haji',
             href: '/search?type=hajj',
+            eventName: null,
           },
         ],
       },
@@ -512,6 +521,7 @@ const Topbar: React.FC<TopbarProps> = ({
           {
             title: 'Pembiayaan Umroh',
             href: '/banking/credit',
+            eventName: 'click_program_banking_credit_umrah',
           },
           // {
           //   title: 'Pembiayaan Haji',
@@ -520,6 +530,7 @@ const Topbar: React.FC<TopbarProps> = ({
           {
             title: 'Tabungan Umroh',
             href: '/banking/saving',
+            eventName: null,
           },
         ],
       },
@@ -555,6 +566,23 @@ const Topbar: React.FC<TopbarProps> = ({
     setHoveredLink(null)
   }, [])
 
+  const handleSubmenuClick = useCallback(
+    (title: string, href: string, eventName?: string | null) => {
+      if (eventName) {
+        pushEvent({
+          name: eventName,
+          category: 'home',
+          topic: 'banking',
+          data: {
+            label: title,
+            href: href,
+          },
+        })
+      }
+    },
+    [pushEvent]
+  )
+
   // Memoize the topbar content props to prevent unnecessary re-renders
   const topbarContentProps = useMemo(
     () => ({
@@ -570,6 +598,7 @@ const Topbar: React.FC<TopbarProps> = ({
       hoveredLink,
       onMouseEnter: handleMouseEnter,
       onMouseLeave: handleMouseLeave,
+      onSubmenuClick: handleSubmenuClick,
     }),
     [
       navLinks,
@@ -583,6 +612,7 @@ const Topbar: React.FC<TopbarProps> = ({
       hoveredLink,
       handleMouseEnter,
       handleMouseLeave,
+      handleSubmenuClick,
     ]
   )
 
