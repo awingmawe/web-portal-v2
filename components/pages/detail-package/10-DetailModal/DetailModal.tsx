@@ -29,7 +29,7 @@ interface DetailModalProps {
 const disclaimer = [
   {
     slug: 'umrah',
-    content: `Umroh Reguler adalah program perjalanan ibadah umroh yang dilaksanakan sesuai stkamur layanan dasar, mencakup pelaksanaan ibadah umroh di Makkah dan ziarah ke Madinah. Program ini difokuskan sepenuhnya untuk menjalankan ibadah, tanpa adanya tambahan agenda wisata ke negara lain.
+    content: `Umroh Reguler adalah program perjalanan ibadah umroh yang dilaksanakan sesuai standar layanan dasar, mencakup pelaksanaan ibadah umroh di Makkah dan ziarah ke Madinah. Program ini difokuskan sepenuhnya untuk menjalankan ibadah, tanpa adanya tambahan agenda wisata ke negara lain.
         Biasanya, durasi perjalanan umroh reguler berkisar antara 9 hingga 12 hari, dengan fasilitas yang bervariasi sesuai paket—mulai dari hotel bintang 3 hingga bintang 5. Program ini merupakan pilihan paling umum dan ekonomis bagi jamaah yang ingin menjalankan ibadah umroh secara khusyuk dan efisien, baik dari segi waktu maupun biaya.`,
   },
   {
