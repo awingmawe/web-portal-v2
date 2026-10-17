@@ -182,29 +182,31 @@ export default async function Home() {
       )}
       {/* End JSON-LD Scripts */}
       <Topbar type="homepage" token={token} />
-      <div className="absolute top-3.5 right-0 left-0 z-50 flex items-center px-4 lg:hidden">
-        <Link
-          href="/search-mobile-package"
-          className={`flex-1 outline-none focus-within:outline-none focus-visible:outline-0 ${
-            token ? 'max-w-[calc(100%-60px)]' : 'w-full'
-          }`}
-        >
-          <div className="flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-4 py-1.5">
-            <Search size={16} className="text-neutral-300" />
-            <p className="text-m-regular truncate text-neutral-300">
-              Cari paket, travel, hotel atau airlines...
-            </p>
-          </div>
-        </Link>
+      <div className="relative">
+        <div className="absolute top-3.5 right-0 left-0 z-50 flex items-center px-4 lg:hidden">
+          <Link
+            href="/search-mobile-package"
+            className={`flex-1 outline-none focus-within:outline-none focus-visible:outline-0 ${
+              token ? 'max-w-[calc(100%-60px)]' : 'w-full'
+            }`}
+          >
+            <div className="flex items-center gap-1 rounded-full border border-neutral-200 bg-white px-4 py-1.5">
+              <Search size={16} className="text-neutral-300" />
+              <p className="text-m-regular truncate text-neutral-300">
+                Cari paket, travel, hotel atau airlines...
+              </p>
+            </div>
+          </Link>
 
-        {token && (
-          <div className="ml-4">
-            <TopbarNotif token={token} />
-          </div>
-        )}
+          {token && (
+            <div className="ml-4">
+              <TopbarNotif token={token} />
+            </div>
+          )}
+        </div>
+
+        <Banner />
       </div>
-
-      <Banner />
       <main className="relative">
         <div className="container mx-auto max-xl:px-0">
           <PopupPromo />

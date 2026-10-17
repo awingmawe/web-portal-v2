@@ -267,6 +267,10 @@ export function EventTrackerProvider({
         : {}),
     }
 
+    if (process.env.NEXT_PUBLIC_ENABLE_MOCK !== 'false') {
+      return
+    }
+
     try {
       const signature = await createHmacSHA256(
         HMAC_SECRET as string,

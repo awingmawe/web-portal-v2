@@ -12,6 +12,7 @@ import { cookieNames } from '@/services/common/cookie'
 import { GoogleTagManager } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
+import DemoBanner from '@/components/shared/DemoBanner'
 import { Suspense } from 'react'
 import { SWRConfig } from 'swr'
 import './globals.css'
@@ -48,6 +49,7 @@ export default async function RootLayout({
           />
 
           <ContextProviders>
+            <DemoBanner />
             <SWRConfig>{children}</SWRConfig>
             <Toaster />
             <RemoveLocalReferralCode />

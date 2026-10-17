@@ -13,6 +13,12 @@ import { getLocalReferralCode } from '@/lib/utils'
 import { cookieNames } from '@/services/common/cookie'
 import { toast } from '@/components/ui/sonner'
 import { refreshToken } from '@/contexts/auth/shared/token'
+import { mockAdapter } from '@/mocks/mock-adapter'
+
+const USE_MOCK = process.env.NEXT_PUBLIC_ENABLE_MOCK !== 'false'
+if (USE_MOCK) {
+  axios.defaults.adapter = mockAdapter
+}
 
 // More specific header type
 interface RequestHeaders {
@@ -182,7 +188,8 @@ function createApiClient(baseURL: string, useAuth = false): AxiosInstance {
   const instance = axios.create({
     baseURL,
     withCredentials: true,
-    timeout: 30000, // Add reasonable timeout
+    timeout: USE_MOCK ? 5000 : 30000, // Short timeout in mock mode
+    adapter: USE_MOCK ? (mockAdapter as any) : undefined,
   })
 
   // Request interceptor
@@ -260,7 +267,8 @@ export function createServerApiClient(token: string): AxiosInstance {
   const instance = axios.create({
     baseURL: API_URL as string,
     withCredentials: true,
-    timeout: 30000,
+    timeout: USE_MOCK ? 5000 : 30000,
+    adapter: USE_MOCK ? (mockAdapter as any) : undefined,
   })
 
   // Request interceptor

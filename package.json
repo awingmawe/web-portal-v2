@@ -78,6 +78,7 @@
     "@types/react-json-to-csv": "^1.2.4",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
+    "playwright": "^1.64.1",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "square-flags": "https://github.com/kapowaz/square-flags",
