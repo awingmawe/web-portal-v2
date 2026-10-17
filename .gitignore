@@ -14,9 +14,11 @@ yarn.lock
 # testing
 /coverage
 
-# next.js
+# next.js & cloudflare
 /.next/
 /out/
+/.open-next/
+/.wrangler/
 
 # production
 /build

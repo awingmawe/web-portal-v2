@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:cloudflare": "opennextjs-cloudflare build",
+    "deploy:cloudflare": "opennextjs-cloudflare build && wrangler deploy",
+    "preview:cloudflare": "opennextjs-cloudflare build && wrangler dev",
     "start": "next start",
     "lint": "next lint"
   },
@@ -69,6 +72,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^1.20.12",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
@@ -84,7 +88,8 @@
     "square-flags": "https://github.com/kapowaz/square-flags",
     "tailwindcss": "^4",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.151.1"
   },
   "packageManager": "yarn@4.7.0"
 }
