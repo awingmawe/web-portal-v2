@@ -31,8 +31,29 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files and credentials
+.env
+.env.*
+.env*.local
+*.env
+!.env.example
+
+# security & credentials
+*.pem
+*.key
+*.cert
+*.crt
+*.p8
+*.p12
+*.pfx
+*.pkcs12
+*.keystore
+id_rsa*
+id_ed25519*
+*credential*
+*secret*.json
+*.token
+*.auth
 
 # vercel
 .vercel
